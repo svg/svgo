@@ -1,15 +1,16 @@
 {
   "name": "svgo",
-  "version": "0.0.1",
-  "description": "SVG Optimizer",
+  "version": "0.0.1-2",
+  "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": ["svgo", "svg", "optimize", "minify"],
-  "homepage": " ",
+  "homepage": "http://deepsweet.github.com/svgo",
   "bugs": {
     "url": "https://github.com/deepsweet/svgo/issues",
     "email": "kir@soulshine.in"
   },
   "author": "Kir Belevich <kir@soulshine.in> (https://github.com/deepsweet)",
   "contributors": [
+    "Sergey Belov <peimei@ya.ru> (http://github.com/arikon)"
   ],
   "repository": {
     "type": "git",
@@ -28,16 +29,23 @@
     "test-v": "./node_modules/.bin/mocha --reporter spec"
   },
   "dependencies": {
-    "inherit": "*",
-    "q": "0.8",
+    "sax": "0.4.x",
+    "q": "0.8.x",
     "q-fs": "",
     "coa": "0.3.x",
-    "sax": "0.4.x",
+    "inherit": ""
+  },
+  "devDependencies": {
     "mocha": "1.4.x",
-    "should": "",
-    "eyes": ""
+    "should": ""
   },
   "engines": {
-    "node": ">=0.4.0"
-  }
+    "node": ">=0.6.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/deepsweet/svgo/master/LICENSE"
+    }
+  ]
 }
