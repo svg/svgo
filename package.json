@@ -33,6 +33,7 @@
     "q": "0.8.x",
     "q-fs": "",
     "coa": "0.3.x",
+    "eyes": "",
     "inherit": ""
   },
   "devDependencies": {
