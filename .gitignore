@@ -1,0 +1,7 @@
+node_modules/
+*.sublime-*
+*~
+*.lock
+*.DS_Store
+*.swp
+*.min.svg

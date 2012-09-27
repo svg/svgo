@@ -1,0 +1,43 @@
+{
+  "name": "svgo",
+  "version": "0.0.1",
+  "description": "SVG Optimizer",
+  "keywords": ["svgo", "svg", "optimize", "minify"],
+  "homepage": " ",
+  "bugs": {
+    "url": "https://github.com/deepsweet/svgo/issues",
+    "email": "kir@soulshine.in"
+  },
+  "author": "Kir Belevich <kir@soulshine.in> (https://github.com/deepsweet)",
+  "contributors": [
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/deepsweet/svgo.git"
+  },
+  "main": "./lib/svgo.js",
+  "directories": {
+    "bin": "./bin",
+    "lib": "./lib"
+  },
+  "bin": {
+    "svgo": "./bin/svgo"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter min",
+    "test-v": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "dependencies": {
+    "inherit": "*",
+    "q": "0.8",
+    "q-fs": "",
+    "coa": "0.3.x",
+    "sax": "0.4.x",
+    "mocha": "1.4.*",
+    "should": "",
+    "eyes": ""
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  }
+}
