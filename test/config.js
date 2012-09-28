@@ -46,13 +46,11 @@ describe('config', function() {
     describe('extending default config with object', function() {
 
         var myConfig = {
-                config: {
-                    plugins: {
-                        directPass: [
-                            { name: 'removeDoctype', active: false },
-                            { name: 'myTestPlugin', active: true }
-                        ]
-                    }
+                plugins: {
+                    directPass: [
+                        { name: 'removeDoctype', active: false },
+                        { name: 'myTestPlugin', active: true }
+                    ]
                 }
             },
             result;
@@ -83,11 +81,15 @@ describe('config', function() {
     describe('extending default config with file', function() {
 
         var myConfig = {
-                config: './test/config.cfg'
+                coa: {
+                    config: './test/config.cfg'
+                }
             },
             result;
 
         before(function(done) {
+            // console.log(config(myConfig));
+
             config(myConfig).then(function(data) {
                 result = data;
                 done();
