@@ -55,6 +55,9 @@
                 "name": "removeViewBox",
                 "active": true
             },{
+                "name": "cleanupEnableBackground",
+                "active": true
+            },{
                 "name": "removeHiddenElems",
                 "active": true,
                 "params": {
