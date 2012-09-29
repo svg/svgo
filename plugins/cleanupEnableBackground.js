@@ -28,6 +28,7 @@ exports.cleanupEnableBackground = function(item, params) {
 
         if (match = item.attr('enable-background').value.match(regEnableBackground)) {
             if (
+                // TODO: not all containers have width/height attrs
                 item.attr('width').value == match[1] &&
                 item.attr('height').value == match[2]
             ) {
