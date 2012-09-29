@@ -30,7 +30,7 @@
     "svgo": "./bin/svgo"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter min"
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "dependencies": {
     "sax": "0.4.x",
