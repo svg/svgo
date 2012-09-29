@@ -31,8 +31,11 @@ Today we have:
 * [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeHiddenElems.js) ] remove a lot of hidden elements
 * [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
 * [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
+* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
+* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
+* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
 * [ [>](//github.com/deepsweet/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/convertColors.js) ] convert colors
+* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
 * [ [>](//github.com/deepsweet/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
 * [ [>](//github.com/deepsweet/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
 
