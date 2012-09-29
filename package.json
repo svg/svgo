@@ -1,8 +1,13 @@
 {
   "name": "svgo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
-  "keywords": ["svgo", "svg", "optimize", "minify"],
+  "keywords": [
+    "svgo",
+    "svg",
+    "optimize",
+    "minify"
+  ],
   "homepage": "http://deepsweet.github.com/svgo",
   "bugs": {
     "url": "https://github.com/deepsweet/svgo/issues",
