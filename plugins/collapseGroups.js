@@ -1,4 +1,4 @@
-var flatten = require('../lib/tools').flatten;
+var flattenOneLevel = require('../lib/tools').flattenOneLevel;
 
 /*
  * Collapse useless groups.
@@ -29,6 +29,8 @@ exports.collapseGroups = function(item, params) {
     // non-empty elements
     if (item.isElem() && !item.isEmpty()) {
 
+        var unflatten = false;
+
         item.content.forEach(function(g, i) {
 
             // non-empty groups
@@ -50,12 +52,17 @@ exports.collapseGroups = function(item, params) {
 
                 // collapse groups without attributes
                 if (!g.hasAttr()) {
+                    unflatten = true;
+
                     item.content.splice(i, 1, g.content);
-                    item.content = flatten(item.content);
                 }
             }
 
         });
+
+        if (unflatten) {
+            item.content = flattenOneLevel(item.content);
+        }
 
     }
 
