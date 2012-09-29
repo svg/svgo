@@ -34,22 +34,23 @@ exports.moveElemsAttrsToGroup = function(item, params) {
                     if (!Object.keys(intersection).length) {
                         intersection = g.attrs;
                     } else {
-                        intersection = intersectAttrs(intersection, g.attrs)
+                        intersection = intersectAttrs(intersection, g.attrs);
+
+                        if (!intersection) return false;
                     }
 
                     return true;
                 }
             });
 
-        if (every && Object.keys(intersection).length) {
 
+        if (every) {
             item.content.forEach(function(g) {
                 for (var name in intersection) {
                     g.removeAttr(name);
                     item.addAttr(intersection[name]);
                 }
             });
-
         }
 
     }
