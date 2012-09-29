@@ -44,6 +44,14 @@
                 "name": "removeDefaultPx",
                 "active": true
             },{
+                "name": "cleanupSVGElem",
+                "active": true,
+                "params": {
+                    "id": true,
+                    "version": true,
+                    "xmlspace": true
+                }
+            },{
                 "name": "removeHiddenElems",
                 "active": true,
                 "params": {
@@ -69,16 +77,6 @@
                     "text": true,
                     "tspan": true,
                     "tref": true
-                }
-            },{
-                "name": "removeSVGAttrs",
-                "active": true,
-                "params": {
-                    "id": true,
-                    "version": true,
-                    "x0": true,
-                    "y0": true,
-                    "xmlspace": true
                 }
             },{
                 "name": "convertColors",

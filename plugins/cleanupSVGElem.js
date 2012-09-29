@@ -1,3 +1,5 @@
+var regViewBox = /^0\s0\s(\d+)\s(\d+)$/;
+
 /**
  * Remove some useless svg element attributes.
  *
@@ -9,7 +11,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeSVGAttrs = function(item, params) {
+exports.cleanupSVGElem = function(item, params) {
 
     if (item.isElem('svg') && item.hasAttr()) {
 
@@ -41,6 +43,7 @@ exports.removeSVGAttrs = function(item, params) {
          * @example
          * <svg xml:space="preserve">
          */
+        // TODO: remove as a default value
         if (params.xmlspace) item.removeAttr('xml:space');
 
     }
