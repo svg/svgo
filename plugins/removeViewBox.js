@@ -6,6 +6,11 @@ var regViewBox = /^0\s0\s(\d+)\s(\d+)$/,
  *
  * @see http://www.w3.org/TR/SVG/coords.html#ViewBoxAttribute
  *
+ * @example
+ * <svg width="100" height="50" viewBox="0 0 100 50">
+ *             ⬇
+ * <svg width="100" height="50">
+ *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
