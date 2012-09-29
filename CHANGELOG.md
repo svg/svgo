@@ -1,4 +1,4 @@
-### [[>](//github.com/deepsweet/svgo/tree/v0.0.1)] 0.0.3 / 29.09.2012
+### [[>](//github.com/deepsweet/svgo/tree/v0.0.3)] 0.0.3 / 29.09.2012
 * plugins/collapseGroups bugfix
 * plugins/moveElemsAttrsToGroup bugfix
 * svgo now display --help if running w/o arguments
