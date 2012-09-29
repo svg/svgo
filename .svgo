@@ -52,6 +52,9 @@
                     "xmlspace": true
                 }
             },{
+                "name": "removeViewBox",
+                "active": true
+            },{
                 "name": "removeHiddenElems",
                 "active": true,
                 "params": {
