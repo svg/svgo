@@ -1,13 +1,31 @@
 {
-    "saxXMLParser": {
+    "svg2js": {
         "strict": true,
-        "options": {
-            "trim": true,
-            "normalize": true,
-            "lowercase": true,
-            "xmlns": true,
-            "position": false
-        }
+        "trim": true,
+        "normalize": true,
+        "lowercase": true,
+        "xmlns": true,
+        "position": false
+    },
+    "js2svg": {
+        "doctypeStart": "<!DOCTYPE",
+        "doctypeEnd": ">",
+        "procInstStart": "<?",
+        "procInstEnd": "?>",
+        "tagOpenStart": "<",
+        "tagOpenEnd": ">",
+        "tagCloseStart": "</",
+        "tagCloseEnd": ">",
+        "tagShortStart": "<",
+        "tagShortEnd": "/>",
+        "attrStart": "=\"",
+        "attrEnd": "\"",
+        "commentStart": "<!--",
+        "commentEnd": "-->",
+        "cdataStart": "<![CDATA[",
+        "cdataEnd": "]]>",
+        "indent": "    ",
+        "pretty": false
     },
     "plugins": {
         "directPass": [
