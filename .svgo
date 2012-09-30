@@ -24,6 +24,8 @@
         "commentEnd": "-->",
         "cdataStart": "<![CDATA[",
         "cdataEnd": "]]>",
+        "textStart": "",
+        "textEnd": "",
         "indent": "    ",
         "pretty": false
     },
