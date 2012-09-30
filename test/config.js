@@ -22,8 +22,12 @@ describe('config', function() {
             result.should.be.an.instanceOf(Object);
         });
 
-        it('result should have property "saxXMLParser" with instance of Object', function() {
-            result.should.have.property('saxXMLParser').with.instanceOf(Object);
+        it('result should have property "svg2js" with instance of Object', function() {
+            result.should.have.property('svg2js').with.instanceOf(Object);
+        });
+
+        it('result should have property "js2svg" with instance of Object', function() {
+            result.should.have.property('js2svg').with.instanceOf(Object);
         });
 
         it('result should have property "plugins" with instance of Object', function() {

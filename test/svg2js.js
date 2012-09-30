@@ -4,10 +4,18 @@ var should = require('should'),
 describe('svg2json\n\n  | <svg xmlns="http://www.w3.org/2000/svg">\n  |   <g>123</g>\n  | </svg>\n', function() {
 
     var svg = '<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>',
+        config = {
+            "strict": true,
+            "trim": true,
+            "normalize": true,
+            "lowercase": true,
+            "xmlns": true,
+            "position": false
+        },
         result;
 
     before(function(done) {
-        svg2js(svg).then(function(data) {
+        svg2js(svg, config).then(function(data) {
             result = data;
             done();
         });
