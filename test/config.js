@@ -92,8 +92,6 @@ describe('config', function() {
             result;
 
         before(function(done) {
-            // console.log(config(myConfig));
-
             config(myConfig).then(function(data) {
                 result = data;
                 done();
