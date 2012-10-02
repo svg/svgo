@@ -156,7 +156,7 @@ exports.removeHiddenElems = function(item, params) {
         if (
             params.pathEmptyD &&
             item.isElem('path') &&
-            !item.hasAttr('d')
+            (!item.hasAttr('d') || item.attr('d').value === '')
         ) return false;
 
         // Polyline with empty points
@@ -167,7 +167,7 @@ exports.removeHiddenElems = function(item, params) {
         if (
             params.polylineEmptyPoints &&
             item.isElem('polyline') &&
-            !item.hasAttr('points')
+            (!item.hasAttr('points') || item.attr('points').value === '')
         ) return false;
 
         // Polygon with empty points
@@ -178,7 +178,7 @@ exports.removeHiddenElems = function(item, params) {
         if (
             params.polygonEmptyPoints &&
             item.isElem('polygon') &&
-            !item.hasAttr('points')
+            (!item.hasAttr('points') || item.attr('points').value === '')
         ) return false;
 
     }
