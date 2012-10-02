@@ -1,5 +1,5 @@
 var regViewBox = /^0\s0\s(\d+)\s(\d+)$/,
-    viewBoxElems = ['svg', 'marker', 'pattern', 'symbol', 'view'];
+    viewBoxElems = ['svg', 'pattern'];
 
 /**
  * Remove viewBox attr which coincides with a width/height box.
