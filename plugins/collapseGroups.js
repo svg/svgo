@@ -16,7 +16,7 @@ var flattenOneLevel = require('../lib/tools').flattenOneLevel;
  *     </g>
  * </g>
  *         ⬇
- * <path d="..."/>
+ * <path attr1="val1" d="..."/>
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
