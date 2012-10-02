@@ -1,5 +1,5 @@
 var regEnableBackground = /^new\s0\s0\s(\d+)\s(\d+)$/,
-    container = require('./_collections').elems.container;
+    elems = ['svg', 'mask', 'pattern'];
 
 /**
  * Remove or cleanup enable-background attr which coincides with a width/height box.
@@ -20,15 +20,16 @@ var regEnableBackground = /^new\s0\s0\s(\d+)\s(\d+)$/,
 exports.cleanupEnableBackground = function(item, params) {
 
     if (
-        item.isElem(container) &&
+        item.isElem(elems) &&
         item.hasAttr('enable-background') &&
         item.hasAttr('width') &&
         item.hasAttr('height')
     ) {
 
+        var match;
+
         if (match = item.attr('enable-background').value.match(regEnableBackground)) {
             if (
-                // TODO: not all containers have width/height attrs
                 item.attr('width').value == match[1] &&
                 item.attr('height').value == match[2]
             ) {
