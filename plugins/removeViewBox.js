@@ -26,6 +26,8 @@ exports.removeViewBox = function(item, params) {
         item.hasAttr('height')
     ) {
 
+        var match;
+
         if (match = item.attr('viewBox').value.match(regViewBox)) {
             if (
                 item.attr('width').value == match[1] &&
