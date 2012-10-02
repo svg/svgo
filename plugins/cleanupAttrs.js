@@ -25,7 +25,7 @@ exports.cleanupAttrs = function(item, params) {
             }
 
             if (params.spaces) {
-                attr.value = attr.value.replace(regSpaces, '');
+                attr.value = attr.value.replace(regSpaces, ' ');
             }
 
         });
