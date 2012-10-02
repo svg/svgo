@@ -1,5 +1,6 @@
 var extend = require('../lib/tools').extend,
-    stylingProps = require('./_collections').stylingProps;
+    stylingProps = require('./_collections').stylingProps,
+    regCleanupStyle = /(:|;)\s+/g;
 
 /**
  * Convert style in attributes.
@@ -37,7 +38,7 @@ exports.convertStyleToAttrs = function(item, params) {
                     style = style.split(':');
 
                     var prop = style[0].trim(),
-                        val = style[1].replace(/^[\'\"](.+)[\'\"]$/, "$1").trim();
+                        val = style[1].replace(/^[\'\"](.+)[\'\"]$/, '$1').trim();
 
                     if (stylingProps.indexOf(prop) > -1) {
 
@@ -58,7 +59,9 @@ exports.convertStyleToAttrs = function(item, params) {
             extend(item.attrs, attrs);
 
             if (styles.length) {
-                item.attr('style').value = styles.join(';');
+                item.attr('style').value = styles.join(';')
+                                                .replace(regCleanupStyle, '$1')
+                                                .trim();
             } else {
                 item.removeAttr('style');
             }
