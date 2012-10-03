@@ -1,6 +1,6 @@
 {
   "name": "svgo",
-  "version": "0.0.5",
+  "version": "0.0.5-1",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
@@ -8,10 +8,9 @@
     "optimize",
     "minify"
   ],
-  "homepage": "http://deepsweet.github.com/svgo",
+  "homepage": "http://svg.github.com/svgo/",
   "bugs": {
-    "url": "https://github.com/deepsweet/svgo/issues",
-    "email": "kir@soulshine.in"
+    "url": "https://github.com/svg/svgo/issues"
   },
   "author": "Kir Belevich <kir@soulshine.in> (https://github.com/deepsweet)",
   "contributors": [
@@ -19,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/deepsweet/svgo.git"
+    "url": "git://github.com/svg/svgo.git"
   },
   "main": "./lib/svgo.js",
   "directories": {
@@ -49,7 +48,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://raw.github.com/deepsweet/svgo/master/LICENSE"
+      "url": "https://raw.github.com/svg/svgo/master/LICENSE"
     }
   ]
 }

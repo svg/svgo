@@ -2,7 +2,7 @@
 o-o o   o o--o o-o
  \   \ /  |  | | |
 o-o   o   o--o o-o
-             | 
+             |
           o--o
 ```
 
@@ -20,24 +20,24 @@ SVGO has a plugin-based architecture, so almost every optimization is a separate
 
 Today we have:
 
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/cleanupAttrs.js) ] cleanup attributes from newlines, trailing and repeating spaces
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeDoctype.js) ] remove doctype declaration
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeComments.js) ] remove comments
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeMetadata.js) ] remove metadata
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeDefaultPx.js) ] remove default "px" unit
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeHiddenElems.js) ] remove a lot of hidden elements
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
-* [ [>](//github.com/deepsweet/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
+* [ [>](//github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) ] cleanup attributes from newlines, trailing and repeating spaces
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeDoctype.js) ] remove doctype declaration
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeComments.js) ] remove comments
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove metadata
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeDefaultPx.js) ] remove default "px" unit
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove a lot of hidden elements
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
+* [ [>](//github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
+* [ [>](//github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
+* [ [>](//github.com/svg/svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
+* [ [>](//github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
+* [ [>](//github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
+* [ [>](//github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
+* [ [>](//github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
 
 But it's not only about rude removing, SVG has a strict [specification](http://www.w3.org/TR/SVG/expanded-toc.html) with a lot of opportunities for optimizations, default values, geometry hacking and more.
 
