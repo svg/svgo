@@ -1,5 +1,5 @@
 var should = require('should'),
-    config = require('../lib/config');
+    config = require('../../lib/config');
 
 describe('config', function() {
 
@@ -86,7 +86,7 @@ describe('config', function() {
 
         var myConfig = {
                 coa: {
-                    config: './test/config.cfg'
+                    config: './test/config/config.cfg'
                 }
             },
             result;

@@ -30,7 +30,7 @@
     "svgo": "./bin/svgo"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha --reporter spec --require should --recursive"
   },
   "dependencies": {
     "sax": "0.4.x",

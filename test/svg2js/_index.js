@@ -1,7 +1,7 @@
 var should = require('should'),
-    svg2js = require('../lib/svg2js');
+    svg2js = require('../../lib/svg2js');
 
-describe('svg2json\n\n  | <svg xmlns="http://www.w3.org/2000/svg">\n  |   <g>123</g>\n  | </svg>\n', function() {
+describe('svg2json', function() {
 
     var svg = '<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>',
         config = {
