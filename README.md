@@ -63,6 +63,7 @@ Options:
   -e ENABLE, --enable=ENABLE : Enable plugin
   -i INPUT, --input=INPUT : Input file (default: stdin)
   -o OUTPUT, --output=OUTPUT : Output file (default: stdout)
+  -p, --pretty : Make SVG pretty printed
 ```
 
 ```
@@ -73,10 +74,10 @@ cat test.svg | svgo -d removeDoctype -d removeComment > test.min.svg
 ```
 
 ## TODO
-It's only the very first public alpha :)
 
-1. documentation!
-2. phantomjs-based server-side SVG rendering "before vs after" tests
-3. more unit tests
-4. more plugins
-5. …
+1. PhantomJS-based server-side SVG rendering for "before vs after visual tests"
+2. documentation and "plugins how-to"
+3. more plugins
+4. more unit tests
+5. online SVGO web service
+6. …
