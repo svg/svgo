@@ -47,7 +47,7 @@ function getResult(name, index) {
         .then(function(min) {
             return readFile(name + '.' + index +'.should.svg')
                 .then(function(output) {
-                    return [min, output.toString()];
+                    return [min.data, output.toString()];
                 });
         });
 };
