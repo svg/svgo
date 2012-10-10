@@ -117,20 +117,7 @@
         "reversePass": [
             {
                 "name": "removeEmptyContainers",
-                "active": true,
-                "params": {
-                    "a": true,
-                    "defs": true,
-                    "glyph": true,
-                    "g": true,
-                    "marker": true,
-                    "mask": true,
-                    "missing-glyph": true,
-                    "pattern": true,
-                    "svg": true,
-                    "switch": true,
-                    "symbol": true
-                }
+                "active": true
             },{
                 "name": "moveElemsAttrsToGroup",
                 "active": true
