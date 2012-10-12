@@ -9,6 +9,7 @@
     "eqeqeq": true,
     "forin": false,
     "immed": true,
+    "multistr": true,
     "newcap": true,
     "nonew": true,
     "quotmark": "single",
