@@ -1,7 +1,7 @@
 /**
  * Convert absolute Path to relative,
  * trim useless delimiters and leading zeros,
- * decrease accuracy of floating points.
+ * decrease accuracy of floating-point numbers.
  *
  * @see http://www.w3.org/TR/SVG/paths.html#PathData
  *
@@ -170,6 +170,8 @@ exports.convertPathData = function(item, params) {
             }
         }
 
+        // S → s
+        // Q → q
         if (
             instruction === 'S' ||
             instruction === 'Q'
@@ -251,19 +253,21 @@ exports.convertPathData = function(item, params) {
             pathString = '';
 
         pathJS.forEach(function(path) {
+            // collapse repeated instructions if needed
             if (prevInstruction !== path.instruction) {
                 pathString += path.instruction;
             }
 
             if (path.data) {
                 path.data.forEach(function(item, i) {
+                    // there is no delimiter by default
                     var delimiter = '';
 
-                    // if item >= 0 and item index > 0
+                    // but if item >= 0 and item index > 0
                     // (M10 50)
                     // or if item >= 0 and item index === 0 and there is no new instruction
                     // (M 10 50 20 30)
-                    // then must be a space between an instruction and item
+                    // then must be a delimiter (space) between an instruction and item
                     if (
                         item >= 0 &&
                         (
@@ -274,12 +278,13 @@ exports.convertPathData = function(item, params) {
                         delimiter = ' ';
                     }
 
+                    // fixed-point numbers
                     // 12.754997 → 12.755
                     if (params.floatPrecision) {
                         item = +item.toFixed(params.floatPrecision);
                     }
 
-                    // remove float numbers leading zeros
+                    // remove floating-point numbers leading zeros
                     // 0.5 → .5
                     // -0.5 → -.5
                     if (params.leadingZero) {
