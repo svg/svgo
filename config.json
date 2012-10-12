@@ -112,6 +112,14 @@
                     "rgb2hex": true,
                     "shorthex": true
                 }
+            },{
+                "name": "convertPathData",
+                "active": true,
+                "params": {
+                    "relative": true,
+                    "floatPrecision": 3,
+                    "leadingZero": true
+                }
             }
         ],
         "reversePass": [
