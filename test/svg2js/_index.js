@@ -1,16 +1,15 @@
-var should = require('should'),
-    svg2js = require('../../lib/svg2js');
+var svg2js = require('../../lib/svg2js');
 
-describe('svg2json', function() {
+describe('svg2js', function() {
 
     var svg = '<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>',
         config = {
-            "strict": true,
-            "trim": true,
-            "normalize": true,
-            "lowercase": true,
-            "xmlns": true,
-            "position": false
+            strict: true,
+            trim: true,
+            normalize: true,
+            lowercase: true,
+            xmlns: true,
+            position: false
         },
         result;
 

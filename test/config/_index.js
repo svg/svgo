@@ -1,5 +1,4 @@
-var should = require('should'),
-    config = require('../../lib/config');
+var config = require('../../lib/config');
 
 describe('config', function() {
 

@@ -9,12 +9,12 @@ describe('plugins tests', function() {
 
     FS.readdirSync(__dirname).forEach(function(file) {
 
-        var match,
+        var match = file.match(regFilename),
             index,
             name,
             result;
 
-        if (match = file.match(regFilename)) {
+        if (match) {
             name = match[1];
             index = match[2];
 
@@ -50,7 +50,7 @@ function getResult(name, index) {
                     return [min.data, output.toString()];
                 });
         });
-};
+}
 
 function prepareConfig(name) {
 
@@ -69,8 +69,8 @@ function prepareConfig(name) {
             return config;
         });
 
-};
+}
 
 function readFile(path) {
     return QFS.read(PATH.resolve(__dirname, path));
-};
+}

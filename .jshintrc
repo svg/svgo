@@ -1,6 +1,9 @@
 {
     "globals": {
-        "phantom": false
+        "phantom": false,
+        "describe": false,
+        "before": false,
+        "it": false
     },
     "node": true,
     "strict": false,
