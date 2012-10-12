@@ -26,12 +26,12 @@ exports.cleanupEnableBackground = function(item, params) {
         item.hasAttr('height')
     ) {
 
-        var match;
+        var match = item.attr('enable-background').value.match(regEnableBackground);
 
-        if (match = item.attr('enable-background').value.match(regEnableBackground)) {
+        if (match) {
             if (
-                item.attr('width').value == match[1] &&
-                item.attr('height').value == match[2]
+                item.attr('width').value === match[1] &&
+                item.attr('height').value === match[2]
             ) {
                 if (item.isElem('svg')) {
                     item.removeAttr('enable-background');

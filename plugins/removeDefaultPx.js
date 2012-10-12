@@ -18,7 +18,7 @@ exports.removeDefaultPx = function(item, params) {
     if (item.isElem() && item.hasAttr()) {
 
         item.eachAttr(function(attr) {
-            attr.value = attr.value.replace(regValPx, "$1");
+            attr.value = attr.value.replace(regValPx, '$1');
         });
 
     }

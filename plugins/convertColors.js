@@ -16,8 +16,8 @@ var collections = require('./_collections'),
  * @author Jed Schmidt
  */
 function rgb2hex(rgb) {
-    return "#" + ((256 + rgb[0] << 8 | rgb[1]) << 8 | rgb[2]).toString(16).slice(1);
-};
+    return '#' + ((256 + rgb[0] << 8 | rgb[1]) << 8 | rgb[2]).toString(16).slice(1);
+}
 
 /**
  * Convert different colors formats in element attributes to hex.

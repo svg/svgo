@@ -1,5 +1,3 @@
-var regViewBox = /^0\s0\s(\d+)\s(\d+)$/;
-
 /**
  * Remove some useless svg element attributes.
  *
