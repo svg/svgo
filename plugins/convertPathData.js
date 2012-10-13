@@ -73,10 +73,16 @@ exports.convertPathData = function(item, params) {
                         point = converted.point;
                     }
 
-                    pathJS.push({
-                        instruction: instruction,
-                        data: data
-                    });
+                    if (params.lineShorthands && instruction === 'l') {
+                        lineShorthands(data).forEach(function(item) {
+                            pathJS.push(item);
+                        });
+                    } else {
+                        pathJS.push({
+                            instruction: instruction,
+                            data: data
+                        });
+                    }
 
                 }
             }
@@ -235,6 +241,67 @@ exports.convertPathData = function(item, params) {
         item.point = point;
 
         return item;
+
+    }
+
+    /**
+     * Detect and convert Lineto shorthands.
+     *
+     * @param {Array} items input items data
+     *
+     * @return {Array} output items data
+     */
+    function lineShorthands(items) {
+
+        var out = [];
+
+        function monkeys(data) {
+
+            // data pairs loop
+            for(var i = 0; i < data.length; i += 2) {
+                // if one item of a pair === 0
+                if (data[i] === 0 || data[i+1] === 0) {
+
+                    // then push preceding Lineto segment if needed
+                    if (i > 0) {
+                        out.push({
+                            instruction: 'l',
+                            data: data.slice(0, i)
+                        });
+                    }
+
+                    // and push new 'h'
+                    if (data[i+1] === 0) {
+                        out.push({
+                            instruction: 'h',
+                            data: [data[i]]
+                        });
+                    // or 'v' shorthand
+                    } else if (data[i] === 0) {
+                        out.push({
+                            instruction: 'v',
+                            data: [data[i+1]]
+                        });
+                    }
+
+                    // and loop for the rest of the data
+                    return monkeys(data.slice(i+2));
+
+                // or collect the rest of the data if nothing else is found
+                } else if (i + 2 === data.length) {
+                    out.push({
+                        instruction: 'l',
+                        data: data
+                    });
+                }
+            }
+
+            return out;
+
+        }
+
+        // bananas!
+        return monkeys(items);
 
     }
 

@@ -117,6 +117,7 @@
                 "active": true,
                 "params": {
                     "relative": true,
+                    "lineShorthands": true,
                     "floatPrecision": 3,
                     "leadingZero": true
                 }

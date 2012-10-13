@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="m10 50h10"/>
+    <path d="m10 50v10"/>
+    <path d="m10 50l10-20h-10"/>
+    <path d="m10 50l10-20v-10"/>
+    <path d="m10 50l10-20h-10l30 20"/>
+    <path d="m10 50l10-20v-10l20 30"/>
+</svg>
