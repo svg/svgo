@@ -1,5 +1,8 @@
 /**
  * Convert absolute Path to relative,
+ * collapse repeated instructions,
+ * detect and convert Lineto shorthands,
+ * remove useless instructions like "l0,0",
  * trim useless delimiters and leading zeros,
  * decrease accuracy of floating-point numbers.
  *

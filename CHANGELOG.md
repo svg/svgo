@@ -1,3 +1,14 @@
+### [ [>](//github.com/svg/svgo/tree/v0.0.7) ] 0.0.7 / 14.10.2012
+* new plugin [convertPathData](plugins/convertPathData.js)
+* --input data now can be a Data URI base64 string
+* --output data now can be a Data URI base64 string with --datauri flag
+* Travis CI
+* JSHint corrections + .jshintrc
+* [.editorconfig](http://editorconfig.org/)
+* display time spent on optimization
+* .svgo → config.json
+* lib/phantom_wrapper.js → lib/phantom.js
+
 ### [ [>](//github.com/svg/svgo/tree/v0.0.6) ] 0.0.6 / 04.10.2012
 * add --test option to make a visual comparison of two files (PhantomJS pre-required)
 * update README and CHANGELOG with the correct relative urls

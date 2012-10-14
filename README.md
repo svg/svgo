@@ -36,6 +36,7 @@ Today we have:
 * [ [>](svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
 * [ [>](svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
 * [ [>](svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
+* [ [>](svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, trim useless delimiters and much more
 * [ [>](svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
 * [ [>](svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
 
@@ -58,20 +59,32 @@ Usage:
 Options:
   -h, --help : Help
   -v, --version : Version
-  -c CONFIG, --config=CONFIG : Local config
-  -d DISABLE, --disable=DISABLE : Disable plugin
-  -e ENABLE, --enable=ENABLE : Enable plugin
-  -i INPUT, --input=INPUT : Input file (default: stdin)
-  -o OUTPUT, --output=OUTPUT : Output file (default: stdout)
-  -p, --pretty : Make SVG pretty printed
-  -t, --test : Make a visual comparison of two files (PhantomJS pre-required)
+  -i INPUT, --input=INPUT : Input: stdin (default) | filename | Data URI base64 string
+  -o OUTPUT, --output=OUTPUT : Output: stdout (default) | filename
+  -c CONFIG, --config=CONFIG : Local config file to extend default
+  --disable=DISABLE : Disable plugin by name
+  --enable=ENABLE : Enable plugin by name
+  --datauri : Output as Data URI base64 string
+  --pretty : Make SVG pretty printed
+  --test : Make a visual comparison of two files (PhantomJS pre-required)
 ```
+
+With files:
 
 ```
 svgo -i test.svg -o test.min.svg
 ```
+
+With stdin / stdout:
+
 ```
 cat test.svg | svgo -d removeDoctype -d removeComment > test.min.svg
+```
+
+With Data URI base64 strings:
+
+```
+svgo -i 'data:image/svg+xml;base64,…' -o test.min.svg
 ```
 
 ## TODO
