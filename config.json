@@ -118,6 +118,7 @@
                 "params": {
                     "relative": true,
                     "lineShorthands": true,
+                    "collapseRepeated": true,
                     "floatPrecision": 3,
                     "leadingZero": true
                 }

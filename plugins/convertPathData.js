@@ -62,7 +62,7 @@ exports.convertPathData = function(item, params) {
 
                     // absolute to relative
                     if (params.relative) {
-                        var converted = absolute2relative({
+                        var converted = convertToRelative({
                             instruction: instruction,
                             point: point,
                             data: data
@@ -99,7 +99,7 @@ exports.convertPathData = function(item, params) {
      *
      * @return {Object} output item
      */
-    function absolute2relative(item) {
+    function convertToRelative(item) {
 
         var instruction = item.instruction,
             data = item.data,
@@ -306,6 +306,45 @@ exports.convertPathData = function(item, params) {
     }
 
     /**
+     * Collapse repeated instructions data.
+     *
+     * @param {Array} items input array
+     *
+     * @return {Array} output array
+     */
+    function collapseRepeated(items) {
+
+        var prev;
+
+        return items.filter(function(item) {
+
+            // correct h or v
+            if (item.instruction === 'h' || item.instruction === 'v') {
+                item.data = item.data.slice(-1);
+            }
+
+            if (prev && item.instruction === prev.instruction) {
+                // increase previous h or v data with current
+                if (item.instruction === 'h' || item.instruction === 'v') {
+                    prev.data[0] += item.data[0];
+                // concat previous data with current
+                } else {
+                    prev.data = prev.data.concat(item.data);
+                }
+
+                // filter current item
+                return false;
+            }
+
+            prev = item;
+
+            return true;
+
+        });
+
+    }
+
+    /**
      * Convert path JS representation to string.
      *
      * @param {Array} pathJS JS representation array
@@ -319,11 +358,14 @@ exports.convertPathData = function(item, params) {
             // out path data string
             pathString = '';
 
+
+        if (params.collapseRepeated) {
+            pathJS = collapseRepeated(pathJS);
+        }
+
         pathJS.forEach(function(path) {
-            // collapse repeated instructions if needed
-            if (prevInstruction !== path.instruction) {
-                pathString += path.instruction;
-            }
+
+            pathString += path.instruction;
 
             if (path.data) {
                 path.data.forEach(function(item, i) {
@@ -331,17 +373,8 @@ exports.convertPathData = function(item, params) {
                     var delimiter = '';
 
                     // but if item >= 0 and item index > 0
-                    // (M10 50)
-                    // or if item >= 0 and item index === 0 and there is no new instruction
-                    // (M 10 50 20 30)
-                    // then must be a delimiter (space) between an instruction and item
-                    if (
-                        item >= 0 &&
-                        (
-                            i > 0 ||
-                            (i === 0 && prevInstruction === path.instruction)
-                        )
-                    ) {
+                    // then must be a delimiter (space) between items
+                    if (item >= 0 && i > 0) {
                         delimiter = ' ';
                     }
 
@@ -369,7 +402,6 @@ exports.convertPathData = function(item, params) {
                 });
             }
 
-            prevInstruction = path.instruction;
         });
 
         return pathString;
