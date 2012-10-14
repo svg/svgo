@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M 10,50 L 10,50"/>
     <path d="M 10,50 L 20,50"/>
     <path d="M 10,50 L 10,60"/>
     <path d="M 10,50 L 20,30 10,30"/>

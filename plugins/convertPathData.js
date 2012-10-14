@@ -271,13 +271,13 @@ exports.convertPathData = function(item, params) {
                     }
 
                     // and push new 'h'
-                    if (data[i+1] === 0) {
+                    if (data[i+1] === 0 && data[i] !== 0) {
                         out.push({
                             instruction: 'h',
                             data: [data[i]]
                         });
                     // or 'v' shorthand
-                    } else if (data[i] === 0) {
+                    } else if (data[i] === 0 && data[i+1] !== 0) {
                         out.push({
                             instruction: 'v',
                             data: [data[i+1]]
