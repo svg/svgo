@@ -353,11 +353,8 @@ exports.convertPathData = function(item, params) {
      */
     function js2path(pathJS) {
 
-            // previous instruction context
-        var prevInstruction,
             // out path data string
-            pathString = '';
-
+        var pathString = '';
 
         if (params.collapseRepeated) {
             pathJS = collapseRepeated(pathJS);
