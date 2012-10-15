@@ -23,7 +23,7 @@ var extend = require('../lib/tools').extend,
  */
 exports.convertStyleToAttrs = function(item, params) {
 
-    if (item.isElem() && item.hasAttr('style')) {
+    if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']
         var styles = item.attr('style').value.split(';').filter(function(style) {
                 return style;

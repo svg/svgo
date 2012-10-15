@@ -12,7 +12,7 @@ var regNewlines = /\n/g,
  */
 exports.cleanupAttrs = function(item, params) {
 
-    if (item.isElem() && item.hasAttr()) {
+    if (item.elem) {
 
         item.eachAttr(function(attr) {
 

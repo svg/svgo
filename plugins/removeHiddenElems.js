@@ -19,7 +19,7 @@
  */
 exports.removeHiddenElems = function(item, params) {
 
-    if (item.isElem()) {
+    if (item.elem) {
 
         // display="none"
         //

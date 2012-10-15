@@ -27,7 +27,7 @@ var flattenOneLevel = require('../lib/tools').flattenOneLevel;
 exports.collapseGroups = function(item, params) {
 
     // non-empty elements
-    if (item.isElem() && !item.isEmpty()) {
+    if (item.elem && !item.isEmpty()) {
 
         var unflatten = false;
 
@@ -37,10 +37,10 @@ exports.collapseGroups = function(item, params) {
             if (g.isElem('g') && !g.isEmpty()) {
 
                 // move group attibutes to the single content element
-                if (g.hasAttr() && g.content.length === 1) {
+                if (g.attrs && g.content.length === 1) {
                     var inner = g.content[0];
 
-                    if (inner.isElem()) {
+                    if (inner.elem) {
                         g.eachAttr(function(attr) {
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);
@@ -51,7 +51,7 @@ exports.collapseGroups = function(item, params) {
                 }
 
                 // collapse groups without attributes
-                if (!g.hasAttr()) {
+                if (!g.attrs) {
                     unflatten = true;
 
                     item.content.splice(i, 1, g.content);

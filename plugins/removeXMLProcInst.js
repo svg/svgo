@@ -12,6 +12,6 @@
  */
 exports.removeXMLProcInst = function(item, params) {
 
-    return !item.isProcInst();
+    return !item.processinginstruction;
 
 };

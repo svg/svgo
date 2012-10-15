@@ -9,7 +9,7 @@
  */
 exports.removeEmptyAttrs = function(item, params) {
 
-    if (item.isElem() && item.hasAttr()) {
+    if (item.elem) {
 
         item.eachAttr(function(attr) {
             if (attr.value === '') {

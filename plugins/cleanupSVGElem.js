@@ -11,7 +11,7 @@
  */
 exports.cleanupSVGElem = function(item, params) {
 
-    if (item.isElem('svg') && item.hasAttr()) {
+    if (item.isElem('svg') && item.attrs) {
 
         /**
          * Remove id attribute.

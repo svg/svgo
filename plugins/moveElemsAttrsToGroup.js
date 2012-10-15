@@ -30,7 +30,7 @@ exports.moveElemsAttrsToGroup = function(item, params) {
 
         var intersection = {},
             every = item.content.every(function(g) {
-                if (g.isElem() && g.hasAttr()) {
+                if (g.elem && g.attrs) {
                     if (!Object.keys(intersection).length) {
                         intersection = g.attrs;
                     } else {

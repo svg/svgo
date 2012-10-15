@@ -13,6 +13,6 @@
  */
 exports.removeComments = function(item, params) {
 
-    return !item.isComment();
+    return !item.comment;
 
 };

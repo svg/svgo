@@ -44,7 +44,7 @@ function rgb2hex(rgb) {
  */
 exports.convertColors = function(item, params) {
 
-    if (item.isElem() && item.hasAttr()) {
+    if (item.elem) {
 
         item.eachAttr(function(attr) {
 

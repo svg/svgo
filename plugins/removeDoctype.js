@@ -20,6 +20,6 @@
  */
 exports.removeDoctype = function(item, params) {
 
-    return !item.isDoctype();
+    return !item.doctype;
 
 };

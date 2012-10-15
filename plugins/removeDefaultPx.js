@@ -15,7 +15,7 @@ var regValPx = /^(\d+)px$/;
  */
 exports.removeDefaultPx = function(item, params) {
 
-    if (item.isElem() && item.hasAttr()) {
+    if (item.elem) {
 
         item.eachAttr(function(attr) {
             attr.value = attr.value.replace(regValPx, '$1');
