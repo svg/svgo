@@ -137,7 +137,10 @@
             }
         ],
         "full": [
-
+            {
+                "name": "removeUnusedNS",
+                "active": true
+            }
         ]
     }
 }
