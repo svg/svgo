@@ -36,7 +36,8 @@
     "q": "0.8.x",
     "q-fs": "",
     "coa": "0.3.x",
-    "inherit": ""
+    "inherit": "",
+    "node.extend": ""
   },
   "devDependencies": {
     "mocha": "1.4.x",
