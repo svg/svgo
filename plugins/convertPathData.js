@@ -369,6 +369,12 @@ exports.convertPathData = function(item, params) {
 
             if (path.data) {
                 path.data.forEach(function(item, i) {
+                    // fixed-point numbers
+                    // 12.754997 → 12.755
+                    if (params.floatPrecision) {
+                        item = +item.toFixed(params.floatPrecision);
+                    }
+
                     // there is no delimiter by default
                     var delimiter = '';
 
@@ -376,12 +382,6 @@ exports.convertPathData = function(item, params) {
                     // then must be a delimiter (space) between items
                     if (item >= 0 && i > 0) {
                         delimiter = ' ';
-                    }
-
-                    // fixed-point numbers
-                    // 12.754997 → 12.755
-                    if (params.floatPrecision) {
-                        item = +item.toFixed(params.floatPrecision);
                     }
 
                     // remove floating-point numbers leading zeros
