@@ -135,6 +135,9 @@
                 "name": "collapseGroups",
                 "active": true
             }
+        ],
+        "full": [
+
         ]
     }
 }
