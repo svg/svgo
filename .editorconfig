@@ -1,5 +1,11 @@
-# editorconfig.org
+; editorconfig.org
 root = true
+
+[GNUmakefile]
+indent_style = tab
+
+[package.json]
+indent_size = 2
 
 [*]
 indent_style = space
