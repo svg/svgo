@@ -20,25 +20,25 @@ SVGO has a plugin-based architecture, so almost every optimization is a separate
 
 Today we have:
 
-* [ [>](svgo/blob/master/plugins/cleanupAttrs.js) ] cleanup attributes from newlines, trailing and repeating spaces
-* [ [>](svgo/blob/master/plugins/removeDoctype.js) ] remove doctype declaration
-* [ [>](svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
-* [ [>](svgo/blob/master/plugins/removeComments.js) ] remove comments
-* [ [>](svgo/blob/master/plugins/removeMetadata.js) ] remove metadata
-* [ [>](svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
-* [ [>](svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
-* [ [>](svgo/blob/master/plugins/removeDefaultPx.js) ] remove default "px" unit
-* [ [>](svgo/blob/master/plugins/removeHiddenElems.js) ] remove a lot of hidden elements
-* [ [>](svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
-* [ [>](svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
-* [ [>](svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
-* [ [>](svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
-* [ [>](svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
-* [ [>](svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
-* [ [>](svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
-* [ [>](svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, trim useless delimiters and much more
-* [ [>](svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
-* [ [>](svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) ] cleanup attributes from newlines, trailing and repeating spaces
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) ] remove doctype declaration
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] remove comments
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove metadata
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDefaultPx.js) ] remove default "px" unit
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove a lot of hidden elements
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, trim useless delimiters and much more
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
 
 But it's not only about rude removing, SVG has a strict [specification](http://www.w3.org/TR/SVG/expanded-toc.html) with a lot of opportunities for optimizations, default values, geometry hacking and more.
 
@@ -78,7 +78,7 @@ svgo -i test.svg -o test.min.svg
 With stdin / stdout:
 
 ```
-cat test.svg | svgo -d removeDoctype -d removeComment > test.min.svg
+cat test.svg | svgo > test.min.svg
 ```
 
 With Data URI base64 strings:
@@ -90,7 +90,8 @@ svgo -i 'data:image/svg+xml;base64,…' -o test.min.svg
 ## TODO
 
 1. documentation and "plugins how-to"
-2. more plugins
-3. more unit tests
-4. online SVGO web service
-5. …
+2. batch folder optimization
+3. more plugins
+4. more unit tests
+5. online SVGO web service
+6. …
