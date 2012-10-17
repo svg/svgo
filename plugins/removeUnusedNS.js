@@ -1,5 +1,5 @@
 /**
- * Remove unused XLink namespace declaration.
+ * Remove unused namespaces declaration.
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
