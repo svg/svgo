@@ -46,32 +46,38 @@ exports.convertTransform = function(item, params) {
  */
 function convertTransform(item, attrName, params) {
 
-    var transforms = attr2js(item.attr(attrName).value, params);
+    var data = transform2js(item.attr(attrName).value);
 
-    if (transforms.length) {
-        item.attr(attrName).value = js2attr(transforms, params);
-    } else {
-        item.removeAttr(attrName);
+    if (params.convertToShorts) {
+        data = convertToShorts(data, params);
     }
+
+    if (params.removeUseless) {
+        data = removeUseless(data);
+    }
+
+    if (params.collapseIntoOne) {
+        data = collapseIntoOne(data, params);
+    }
+
+    item.attr(attrName).value = js2transform(data, params);
 
 }
 
 /**
- * Convert transforms string to JS representation.
+ * Convert transform string to JS representation.
  *
  * @param {String} transformString input string
  * @param {Object} params plugin params
  *
- * @return {[type]} output array
+ * @return {Array} output array
  */
-function attr2js(transformString, params) {
+function transform2js(transformString) {
 
         // JS representation of the transform data
     var transforms = [],
         // current transform context
-        current,
-        // multiply in any way
-        needToMultiply = false;
+        current;
 
     // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
     transformString.split(regTransformSplit).forEach(function(item) {
@@ -94,7 +100,20 @@ function attr2js(transformString, params) {
 
     });
 
-    // first step
+    return transforms;
+
+}
+
+/**
+ * Convert transforms to the shorthand alternatives.
+ *
+ * @param {Array} transforms input array
+ * @param {Object} params plugin params
+ *
+ * @return {Array} output array
+ */
+function convertToShorts(transforms, params) {
+
     for(var i = 0; i < transforms.length; i++) {
 
         var transform = transforms[i];
@@ -151,35 +170,56 @@ function attr2js(transformString, params) {
             transform = transforms[i];
         }
 
-        // remove useless transforms
-        if (params.useless) {
-            // translate(0), rotate(0), skewX(0), skewY(0)
-            if (
-                ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
-                transform.data[0] === 0
-            ) {
-                transforms.splice(i, 1);
-            // scale(1)
-            } else if (
-                transform.name === 'scale' &&
-                transform.data[0] === 1
-            ) {
-                transforms.splice(i, 1);
-            }
-        }
-
-        // if there is at least one matrix, then we need to multiply in any way
-        if (transforms.length > 1 && transforms[i].name === 'matrix') {
-            needToMultiply = true;
-        }
-
     }
 
-    // second step
+    return transforms;
+
+}
+
+/**
+ * Remove useless transforms.
+ *
+ * @param {Array} transforms input array
+ *
+ * @return {Array} output array
+ */
+function removeUseless(transforms) {
+
+    return transforms.filter(function(transform) {
+
+        // translate(0), rotate(0), skewX(0), skewY(0)
+        if (
+            ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
+            transform.data[0] === 0
+        ) {
+            return false;
+        // scale(1)
+        } else if (
+            transform.name === 'scale' &&
+            transform.data[0] === 1
+        ) {
+            return false;
+        }
+
+        return true;
+
+    });
+
+}
+
+/**
+ * Collapse multiple transforms into one.
+ *
+ * @param {Array} transforms input array
+ * @param {Object} params plugin params
+ *
+ * @return {Array} output array
+ */
+function collapseIntoOne(transforms, params) {
+
     if (
-        params.multiply &&
-        (needToMultiply ||
-        transforms.length >= 3)
+        (transforms.length >= 3 ||
+        transforms.some(function(i) { return i.name === 'matrix'; }))
     ) {
 
         // convert transforms objects to the matrices
@@ -190,11 +230,10 @@ function attr2js(transformString, params) {
         });
 
         // multiply all matrices into one
-
         transforms = {
             name: 'matrix',
             data: transforms.reduce(function(a, b) {
-                return multiplyMatrix(a, b);
+                return multiplyMatrices(a, b);
             })
         };
 
@@ -214,12 +253,12 @@ function attr2js(transformString, params) {
 /**
  * Convert transforms JS representation to string.
  *
- * @param {Array} pathJS JS representation array
+ * @param {Array} transformJS JS representation array
  * @param {Object} params plugin params
  *
  * @return {String} output string
  */
-function js2attr(transformJS, params) {
+function js2transform(transformJS, params) {
 
     var transformString = '';
 
@@ -413,14 +452,14 @@ function longTranslateScaleToShort(data) {
 }
 
 /**
- * Multiply matrix.
+ * Multiply matrices.
  *
  * @param {Array} a matrix A data
  * @param {Array} b matrix B data
  *
  * @return {Array} result
  */
-function multiplyMatrix(a, b) {
+function multiplyMatrices(a, b) {
 
     return [
         +(a[0] * b[0] + a[2] * b[1]).toFixed(3),

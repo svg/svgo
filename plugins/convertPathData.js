@@ -2,8 +2,6 @@ var cleanupOutData = require('../lib/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /(?=-)|[\s,]+/;
 
-// TODO: remove useless instructions
-
 /**
  * Convert absolute Path to relative,
  * collapse repeated instructions,
@@ -22,15 +20,23 @@ var cleanupOutData = require('../lib/tools').cleanupOutData,
  */
 exports.convertPathData = function(item, params) {
 
-    if (item.isElem('path')) {
+    if (item.isElem('path') && item.hasAttr('d')) {
 
-        item.attr('d').value = js2attr(
-            attr2js(
-                item.attr('d').value,
-                params
-            ),
-            params
-        );
+        var data = path2js(item.attr('d').value);
+
+        if (params.convertToRelative) {
+            data = convertToRelative(data, params);
+        }
+
+        if (params.removeUseless) {
+            data = removeUseless(data);
+        }
+
+        if (params.collapseRepeated) {
+            data = collapseRepeated(data);
+        }
+
+        item.attr('d').value = js2path(data, params);
 
     }
 
@@ -44,14 +50,12 @@ exports.convertPathData = function(item, params) {
  *
  * @return {Array} output array
  */
-function attr2js(pathString, params) {
+function path2js(pathString) {
 
         // JS representation of the path data
     var path = [],
         // current instruction context
-        instruction,
-        // current point
-        point = [0, 0];
+        instruction;
 
     // splitting path string into array like ['M', '10 50', 'L', '20 30']
     pathString.split(regPathInstructions).forEach(function(data) {
@@ -61,7 +65,7 @@ function attr2js(pathString, params) {
                 instruction = data;
 
                 // z - instruction w/o data
-                if (instruction === 'z' || instruction === 'Z') {
+                if ('Zz'.indexOf(instruction) > -1) {
                     path.push({
                         instruction: 'z'
                     });
@@ -74,35 +78,24 @@ function attr2js(pathString, params) {
                     return +str;
                 });
 
-                // absolute to relative
-                if (params.relative) {
-                    var converted = convertToRelative({
-                        instruction: instruction,
-                        point: point,
-                        data: data
-                    });
+                var pair = 0;
 
-                    instruction = converted.instruction;
-                    data = converted.data;
-                    point = converted.point;
+                if ('HhVv'.indexOf(instruction) > -1) {
+                    pair = 1;
+                } else if ('MmLlTt'.indexOf(instruction) > -1) {
+                    pair = 2;
+                } else if ('QqSs'.indexOf(instruction) > -1) {
+                    pair = 4;
+                } else if ('Cc'.indexOf(instruction) > -1) {
+                    pair = 6;
+                } else if ('Aa'.indexOf(instruction) > -1) {
+                    pair = 7;
                 }
 
-                // fixed-point numbers
-                // 12.754997 → 12.755
-                if (params.floatPrecision) {
-                    data = data.map(function(num) {
-                        return +num.toFixed(params.floatPrecision);
-                    });
-                }
-
-                if (params.lineShorthands && instruction === 'l') {
-                    lineShorthands(data).forEach(function(item) {
-                        path.push(item);
-                    });
-                } else {
+                while(data.length) {
                     path.push({
                         instruction: instruction,
-                        data: data
+                        data: data.splice(0, pair)
                     });
                 }
 
@@ -115,243 +108,198 @@ function attr2js(pathString, params) {
 }
 
 /**
- * Convert path JS representation to string.
+ * Convert absolute path data coordinates to relative.
  *
- * @param {Array} pathJS JS representation array
- * @param {Object} params plugin params
+ * @param {Object} item input array
  *
- * @return {String} output string
+ * @return {Object} output array
  */
-function js2attr(pathJS, params) {
+function convertToRelative(path, params) {
 
-        // out path data string
-    var pathString = '';
+    var point = [0, 0];
 
-    if (params.collapseRepeated) {
-        pathJS = collapseRepeated(pathJS);
-    }
+    path.forEach(function(item) {
 
-    pathJS.forEach(function(path) {
+        var instruction = item.instruction,
+            data = item.data;
 
-        pathString += path.instruction + (path.data ? cleanupOutData(path.data, params) : '');
+        if (data) {
+
+            // already relative
+            // recalculate current point
+            if ('mcslqta'.indexOf(instruction) > -1) {
+                var newPoint = data.slice(-2);
+                // x
+                point[0] += newPoint[0];
+                // y
+                point[1] += newPoint[1];
+            }
+
+            if (instruction === 'h') {
+                // x
+                point[0] += data[data.length - 1];
+            }
+
+            if (instruction === 'v') {
+                // y
+                point[1] += data[data.length - 1];
+            }
+
+            // absolute
+            // M → m
+            // L → l
+            // T → t
+            if ('MLT'.indexOf(instruction) > -1) {
+                instruction = instruction.toLowerCase();
+
+                // x y
+                // 0 1
+                // for(i = 0; i < data.length; i += 2) {
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+
+                    point[0] += data[0];
+                    point[1] += data[1];
+                // }
+            }
+
+            // C → c
+            if (instruction === 'C') {
+                instruction = 'c';
+
+                // x1 y1 x2 y2 x y
+                // 0  1  2  3  4 5
+                // for(i = 0; i < data.length; i += 6) {
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+                    data[2] -= point[0];
+                    data[3] -= point[1];
+                    data[4] -= point[0];
+                    data[5] -= point[1];
+
+                    point[0] += data[4];
+                    point[1] += data[5];
+                // }
+            }
+
+            // S → s
+            // Q → q
+            if ('SQ'.indexOf(instruction) > -1) {
+                instruction = instruction.toLowerCase();
+
+                // x1 y1 x y
+                // 0  1  2 3
+                // for(i = 0; i < data.length; i += 4) {
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+                    data[2] -= point[0];
+                    data[3] -= point[1];
+
+                    point[0] += data[2];
+                    point[1] += data[3];
+                // }
+            }
+
+            // A → a
+            if (instruction === 'A') {
+                instruction = 'a';
+
+                // rx ry x-axis-rotation large-arc-flag sweep-flag x y
+                // 0  1  2               3              4          5 6
+                // for(i = 0; i < data.length; i += 7) {
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+                    data[5] -= point[0];
+                    data[6] -= point[1];
+
+                    point[0] += data[5];
+                    point[1] += data[6];
+                // }
+            }
+
+            // H → h
+            if (instruction === 'H') {
+                instruction = 'h';
+
+                // for(i = 0; i < data.length; i++) {
+                    data[0] -= point[0];
+
+                    point[0] += data[0];
+                // }
+            }
+
+            // V → v
+            if (instruction === 'V') {
+                instruction = 'v';
+
+                // for(i = 0; i < data.length; i++) {
+                    data[0] -= point[1];
+
+                    point[1] += data[0];
+                // }
+            }
+
+            // horizontal and vertical line shorthands
+            // l 50 0 → h 50
+            // l 0 50 → v 50
+            if (params.lineShorthands && instruction === 'l') {
+                if (data[1] === 0) {
+                    instruction = 'h';
+                    data = [data[0]];
+                } else if (data[0] === 0) {
+                    instruction = 'v';
+                    data = [data[1]];
+                }
+            }
+
+            // fixed-point numbers
+            // 12.754997 → 12.755
+            if (params.floatPrecision) {
+                data = data.map(function(num) {
+                    return +num.toFixed(params.floatPrecision);
+                });
+            }
+
+            item.instruction = instruction;
+            item.data = data;
+
+        }
 
     });
 
-    return pathString;
-
-}
-
-
-/**
- * Convert absolute item's data coordinates ` relative.
- *
- * @param {Object} item input item
- *
- * @return {Object} output item
- */
-function convertToRelative(item) {
-
-    var instruction = item.instruction,
-        data = item.data,
-        point = item.point,
-        i;
-
-    // already relative
-    // recalculate current point
-    if (
-        instruction === 'm' ||
-        instruction === 'c' ||
-        instruction === 's' ||
-        instruction === 'l' ||
-        instruction === 'q' ||
-        instruction === 't' ||
-        instruction === 'a'
-    ) {
-        var newPoint = data.slice(-2);
-
-        // x
-        point[0] += newPoint[0];
-        // y
-        point[1] += newPoint[1];
-    }
-
-    if (instruction === 'h') {
-        // x
-        point[0] += data[data.length - 1];
-    }
-
-    if (instruction === 'v') {
-        // y
-        point[1] += data[data.length - 1];
-    }
-
-    // absolute
-    // M → m
-    // L → l
-    // T → t
-    if (
-        instruction === 'M' ||
-        instruction === 'L' ||
-        instruction === 'T'
-    ) {
-        instruction = instruction.toLowerCase();
-
-        // x y
-        // 0 1
-        for(i = 0; i < data.length; i += 2) {
-            data[i] -= point[0];
-            data[i+1] -= point[1];
-
-            point[0] += data[i];
-            point[1] += data[i+1];
-        }
-    }
-
-    // C → c
-    if (instruction === 'C') {
-        instruction = 'c';
-
-        // x1 y1 x2 y2 x y
-        // 0  1  2  3  4 5
-        for(i = 0; i < data.length; i += 6) {
-            data[i] -= point[0];
-            data[i+1] -= point[1];
-            data[i+2] -= point[0];
-            data[i+3] -= point[1];
-            data[i+4] -= point[0];
-            data[i+5] -= point[1];
-
-            point[0] += data[i+4];
-            point[1] += data[i+5];
-        }
-    }
-
-    // S → s
-    // Q → q
-    if (
-        instruction === 'S' ||
-        instruction === 'Q'
-    ) {
-        instruction = instruction.toLowerCase();
-
-        // x1 y1 x y
-        // 0  1  2 3
-        for(i = 0; i < data.length; i += 4) {
-            data[i] -= point[0];
-            data[i+1] -= point[1];
-            data[i+2] -= point[0];
-            data[i+3] -= point[1];
-
-            point[0] += data[i+2];
-            point[1] += data[i+3];
-        }
-    }
-
-    // A → a
-    if (instruction === 'A') {
-        instruction = 'a';
-
-        // rx ry x-axis-rotation large-arc-flag sweep-flag x y
-        // 0  1  2               3              4          5 6
-        for(i = 0; i < data.length; i += 7) {
-            data[i] -= point[0];
-            data[i+1] -= point[1];
-            data[i+5] -= point[0];
-            data[i+6] -= point[1];
-
-            point[0] += data[i+5];
-            point[1] += data[i+6];
-        }
-    }
-
-    // H → h
-    if (instruction === 'H') {
-        instruction = 'h';
-
-        for(i = 0; i < data.length; i++) {
-            data[i] -= point[0];
-
-            point[0] += data[i];
-        }
-    }
-
-    // V → v
-    if (instruction === 'V') {
-        instruction = 'v';
-
-        for(i = 0; i < data.length; i++) {
-            data[i] -= point[1];
-
-            point[1] += data[i];
-        }
-    }
-
-    item.instruction = instruction;
-    item.data = data;
-    item.point = point;
-
-    return item;
+    return path;
 
 }
 
 /**
- * Detect and convert Lineto shorthands.
+ * Remove useless path segments.
  *
- * @param {Array} items input items data
+ * @param {Array} path input array
  *
- * @return {Array} output items data
+ * @return {Array} output array
  */
-function lineShorthands(items) {
+function removeUseless(path) {
 
-    var out = [];
+    return path.filter(function(item) {
 
-    function monkeys(data) {
-
-        // data pairs loop
-        for(var i = 0; i < data.length; i += 2) {
-            // if one item of a pair === 0
-            if (data[i] === 0 || data[i+1] === 0) {
-
-                // then push preceding Lineto segment if needed
-                if (i > 0) {
-                    out.push({
-                        instruction: 'l',
-                        data: data.slice(0, i)
-                    });
-                }
-
-                // and push new 'h'
-                if (data[i+1] === 0 && data[i] !== 0) {
-                    out.push({
-                        instruction: 'h',
-                        data: [data[i]]
-                    });
-                // or 'v' shorthand
-                } else if (data[i] === 0 && data[i+1] !== 0) {
-                    out.push({
-                        instruction: 'v',
-                        data: [data[i+1]]
-                    });
-                }
-
-                // and loop for the rest of the data
-                return monkeys(data.slice(i+2));
-
-            // or collect the rest of the data if nothing else is found
-            } else if (i + 2 === data.length) {
-                out.push({
-                    instruction: 'l',
-                    data: data
-                });
-            }
+        // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
+        if (
+            'mMlLhHvVqQtTcCsS'.indexOf(item.instruction) > -1 &&
+            item.data.every(function(i) { return i === 0; })
+        ) {
+            return false;
+        // a 25,25 -30 0,1 0,0
+        } else if (
+            'aA'.indexOf(item.instruction) > -1 &&
+            item.data[5] === 0 &&
+            item.data[6] === 0
+        ) {
+            return false;
         }
 
-        return out;
+        return true;
 
-    }
-
-    // bananas!
-    return monkeys(items);
+    });
 
 }
 
@@ -367,11 +315,6 @@ function collapseRepeated(items) {
     var prev;
 
     return items.filter(function(item) {
-
-        // correct h or v
-        if (item.instruction === 'h' || item.instruction === 'v') {
-            item.data = item.data.slice(-1);
-        }
 
         if (prev && item.instruction === prev.instruction) {
             // increase previous h or v data with current
@@ -391,5 +334,28 @@ function collapseRepeated(items) {
         return true;
 
     });
+
+}
+
+/**
+ * Convert path JS representation to string.
+ *
+ * @param {Array} pathJS JS representation array
+ * @param {Object} params plugin params
+ *
+ * @return {String} output string
+ */
+function js2path(pathJS, params) {
+
+        // out path data string
+    var pathString = '';
+
+    pathJS.forEach(function(path) {
+
+        pathString += path.instruction + (path.data ? cleanupOutData(path.data, params) : '');
+
+    });
+
+    return pathString;
 
 }

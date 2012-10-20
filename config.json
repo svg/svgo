@@ -58,9 +58,6 @@
                     "spaces": true
                 }
             },{
-                "name": "removeEmptyAttrs",
-                "active": true
-            },{
                 "name": "removeDefaultPx",
                 "active": true
             },{
@@ -116,24 +113,29 @@
                 "name": "convertPathData",
                 "active": true,
                 "params": {
-                    "relative": true,
+                    "convertToRelative": true,
                     "lineShorthands": true,
-                    "collapseRepeated": true,
                     "floatPrecision": 3,
+                    "removeUseless": true,
+                    "collapseRepeated": true,
                     "leadingZero": true
                 }
             },{
                 "name": "convertTransform",
                 "active": true,
                 "params": {
+                    "convertToShorts": true,
+                    "floatPrecision": 3,
                     "matrixToTransform": true,
                     "shortTranslateScale": true,
                     "shortRotate": true,
-                    "multiply": true,
-                    "useless": true,
-                    "floatPrecision": 3,
+                    "removeUseless": true,
+                    "collapseIntoOne": true,
                     "leadingZero": true
                 }
+            },{
+                "name": "removeEmptyAttrs",
+                "active": true
             }
         ],
         "reversePass": [
