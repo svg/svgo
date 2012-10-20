@@ -45,6 +45,7 @@ exports.convertTransform = function(item, params) {
  * @return {[type]} [description]
  */
 function convertTransform(item, attrName, params) {
+
     var transforms = attr2js(item.attr(attrName).value, params);
 
     if (transforms.length) {
@@ -52,6 +53,7 @@ function convertTransform(item, attrName, params) {
     } else {
         item.removeAttr(attrName);
     }
+
 }
 
 /**
