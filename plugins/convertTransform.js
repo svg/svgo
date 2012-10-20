@@ -3,13 +3,11 @@ var cleanupOutData = require('../lib/tools').cleanupOutData,
     regTransformSplit = /(matrix|translate|scale|rotate|skewX|skewY)\s*\((.+?)\)[\s,]*/,
     regTransformDataSplit = /[\s,]+/;
 
-// TODO: remove useless transforms
-
 /**
  * Convert matrices to the short aliases,
  * convert long translate, scale or rotate transform notations to the shorts ones,
- * convert transforms to the matrices
- * and multiply them all into one.
+ * convert transforms to the matrices and multiply them all into one,
+ * remove useless transforms.
  *
  * @see http://www.w3.org/TR/SVG/coords.html#TransformMatrixDefined
  *
@@ -21,19 +19,40 @@ var cleanupOutData = require('../lib/tools').cleanupOutData,
  */
 exports.convertTransform = function(item, params) {
 
-    if (item.elem && item.hasAttr('transform')) {
+    if (item.elem) {
 
-        item.attr('transform').value = js2attr(
-            attr2js(
-                item.attr('transform').value,
-                params
-            ),
-            params
-        );
+        // transform
+        if (item.hasAttr('transform')) {
+            convertTransform(item, 'transform', params);
+        }
+
+        // gradientTransform
+        if (item.hasAttr('gradientTransform')) {
+            convertTransform(item, 'gradientTransform', params);
+        }
 
     }
 
 };
+
+/**
+ * Main function.
+ *
+ * @param {Object} item input item
+ * @param {String} attrName attribute name
+ * @param {Object} params plugin params
+ *
+ * @return {[type]} [description]
+ */
+function convertTransform(item, attrName, params) {
+    var transforms = attr2js(item.attr(attrName).value, params);
+
+    if (transforms.length) {
+        item.attr(attrName).value = js2attr(transforms, params);
+    } else {
+        item.removeAttr(attrName);
+    }
+}
 
 /**
  * Convert transforms string to JS representation.
@@ -49,6 +68,7 @@ function attr2js(transformString, params) {
     var transforms = [],
         // current transform context
         current,
+        // multiply in any way
         needToMultiply = false;
 
     // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
@@ -86,6 +106,14 @@ function attr2js(transformString, params) {
             transforms[i] = matrixToTransform(transform);
         }
 
+        // fixed-point numbers
+        // 12.754997 → 12.755
+        if (params.floatPrecision) {
+            transform.data = transform.data.map(function(num) {
+                return +num.toFixed(params.floatPrecision);
+            });
+        }
+
         // convert long translate or scale transform notations to the shorts ones
         if (
             params.shortTranslateScale &&
@@ -117,8 +145,28 @@ function attr2js(transformString, params) {
 
             // splice compensation
             i -= 2;
+
+            transform = transforms[i];
         }
 
+        // remove useless transforms
+        if (params.useless) {
+            // translate(0), rotate(0), skewX(0), skewY(0)
+            if (
+                ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
+                transform.data[0] === 0
+            ) {
+                transforms.splice(i, 1);
+            // scale(1)
+            } else if (
+                transform.name === 'scale' &&
+                transform.data[0] === 1
+            ) {
+                transforms.splice(i, 1);
+            }
+        }
+
+        // if there is at least one matrix, then we need to multiply in any way
         if (transforms.length > 1 && transforms[i].name === 'matrix') {
             needToMultiply = true;
         }
@@ -354,7 +402,7 @@ function longTranslateScaleToShort(data) {
 
     // translate(50 50) → translate(50)
     // scale(2 2) → scale(2)
-    if (data[1] && data[1] === data[0]) {
+    if (data[1] !== undefined && data[1] === data[0]) {
         data = [data[0]];
     }
 

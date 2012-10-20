@@ -130,6 +130,7 @@
                     "shortTranslateScale": true,
                     "shortRotate": true,
                     "multiply": true,
+                    "useless": true,
                     "floatPrecision": 3,
                     "leadingZero": true
                 }
