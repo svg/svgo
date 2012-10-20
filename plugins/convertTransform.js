@@ -41,8 +41,6 @@ exports.convertTransform = function(item, params) {
  * @param {Object} item input item
  * @param {String} attrName attribute name
  * @param {Object} params plugin params
- *
- * @return {[type]} [description]
  */
 function convertTransform(item, attrName, params) {
 
