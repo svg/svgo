@@ -6,13 +6,13 @@ o-o   o   o--o o-o
           o--o
 ```
 
-## SVGO [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.0.8 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 
 ## Why?
 
-SVG files, especially exported from various editors, usually contains a lot of redundant and useless information such as editor metadata, comments, hidden elements and other stuff that can be safely removed without affecting SVG rendering result.
+SVG files, especially exported from various editors, usually contains a lot of redundant and useless information such as editor metadata, comments, hidden elements, default values, non-optimal values and other stuff that can be safely removed or converted without affecting SVG rendering result.
 
 ## What it can do
 
@@ -41,8 +41,6 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] remove unused namespaces declaration
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
-
-But it's not only about rude removing, SVG has a strict [specification](http://www.w3.org/TR/SVG/expanded-toc.html) with a lot of opportunities for optimizations, default values, geometry hacking and more.
 
 How-to instructions and plugins API docs will coming ASAP.
 
