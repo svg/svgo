@@ -87,6 +87,14 @@ function attr2js(pathString, params) {
                     point = converted.point;
                 }
 
+                // fixed-point numbers
+                // 12.754997 → 12.755
+                if (params.floatPrecision) {
+                    data = data.map(function(num) {
+                        return +num.toFixed(params.floatPrecision);
+                    });
+                }
+
                 if (params.lineShorthands && instruction === 'l') {
                     lineShorthands(data).forEach(function(item) {
                         path.push(item);
@@ -135,7 +143,7 @@ function js2attr(pathJS, params) {
 
 
 /**
- * Convert absolute item's data coordinates to relative.
+ * Convert absolute item's data coordinates ` relative.
  *
  * @param {Object} item input item
  *
