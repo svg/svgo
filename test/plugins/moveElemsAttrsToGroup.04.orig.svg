@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="rotate(45)">
+        <g transform="scale(2)" attr="val">
+            <path d="..."/>
+        </g>
+        <circle attr="val" transform="scale(2)"/>
+    </g>
+</svg>

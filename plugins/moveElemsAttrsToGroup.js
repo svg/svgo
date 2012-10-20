@@ -29,6 +29,7 @@ exports.moveElemsAttrsToGroup = function(item, params) {
     if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
 
         var intersection = {},
+            hasTransform = false,
             every = item.content.every(function(g) {
                 if (g.elem && g.attrs) {
                     if (!Object.keys(intersection).length) {
@@ -48,7 +49,15 @@ exports.moveElemsAttrsToGroup = function(item, params) {
             item.content.forEach(function(g) {
                 for (var name in intersection) {
                     g.removeAttr(name);
-                    item.addAttr(intersection[name]);
+
+                    if (name === 'transform') {
+                        if (!hasTransform) {
+                            item.attr('transform').value += ' ' + intersection[name].value;
+                            hasTransform = true;
+                        }
+                    } else {
+                        item.addAttr(intersection[name]);
+                    }
                 }
             });
         }
