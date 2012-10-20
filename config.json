@@ -122,6 +122,17 @@
                     "floatPrecision": 3,
                     "leadingZero": true
                 }
+            },{
+                "name": "convertTransform",
+                "active": true,
+                "params": {
+                    "matrixToTransform": true,
+                    "shortTranslateScale": true,
+                    "shortRotate": true,
+                    "multiply": true,
+                    "floatPrecision": 3,
+                    "leadingZero": true
+                }
             }
         ],
         "reversePass": [
