@@ -1,3 +1,20 @@
+### [ [>](//github.com/svg/svgo/tree/v0.0.8) ] 0.0.8 / 20.10.2012
+* new plugin [convertTransform](plugins/convertTransform.js) (close [#5](https://github.com/svg/svgo/issues/5))
+* new plugin [removeUnusedNS](plugins/removeUnusedNS.js)
+* plugins/convertPathData: remove useless segments
+* plugins/convertPathData: a lot of refactoring
+* plugins/convertPathData: round numbers before conditions because of exponential notation (fix [#3](https://github.com/svg/svgo/issues/3))
+* plugins/moveElemsAttrsToGroup: merge split-level transforms instead of replacing (fix [#10](https://github.com/svg/svgo/issues/10))
+* lib/svg2js: catch and output xml parser errors (fix [#4](https://github.com/svg/svgo/issues/4))
+* lib/coa: open file for writing only when we are ready (fix [#2](https://github.com/svg/svgo/issues/2))
+* lib/tools: node.extend module
+* lib/plugins: refactoring
+* lib/js2svg: refactoring
+* lib/jsAPI: simplification and refactoring
+* absolute urls in README
+* update .editorconfig
+* update .travis.yml with nodejs 0.9
+
 ### [ [>](//github.com/svg/svgo/tree/v0.0.7) ] 0.0.7 / 14.10.2012
 * new plugin [convertPathData](plugins/convertPathData.js)
 * --input data now can be a Data URI base64 string
