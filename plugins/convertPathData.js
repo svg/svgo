@@ -154,13 +154,11 @@ function convertToRelative(path, params) {
 
                 // x y
                 // 0 1
-                // for(i = 0; i < data.length; i += 2) {
-                    data[0] -= point[0];
-                    data[1] -= point[1];
+                data[0] -= point[0];
+                data[1] -= point[1];
 
-                    point[0] += data[0];
-                    point[1] += data[1];
-                // }
+                point[0] += data[0];
+                point[1] += data[1];
             }
 
             // C → c
@@ -169,17 +167,15 @@ function convertToRelative(path, params) {
 
                 // x1 y1 x2 y2 x y
                 // 0  1  2  3  4 5
-                // for(i = 0; i < data.length; i += 6) {
-                    data[0] -= point[0];
-                    data[1] -= point[1];
-                    data[2] -= point[0];
-                    data[3] -= point[1];
-                    data[4] -= point[0];
-                    data[5] -= point[1];
+                data[0] -= point[0];
+                data[1] -= point[1];
+                data[2] -= point[0];
+                data[3] -= point[1];
+                data[4] -= point[0];
+                data[5] -= point[1];
 
-                    point[0] += data[4];
-                    point[1] += data[5];
-                // }
+                point[0] += data[4];
+                point[1] += data[5];
             }
 
             // S → s
@@ -189,15 +185,13 @@ function convertToRelative(path, params) {
 
                 // x1 y1 x y
                 // 0  1  2 3
-                // for(i = 0; i < data.length; i += 4) {
-                    data[0] -= point[0];
-                    data[1] -= point[1];
-                    data[2] -= point[0];
-                    data[3] -= point[1];
+                data[0] -= point[0];
+                data[1] -= point[1];
+                data[2] -= point[0];
+                data[3] -= point[1];
 
-                    point[0] += data[2];
-                    point[1] += data[3];
-                // }
+                point[0] += data[2];
+                point[1] += data[3];
             }
 
             // A → a
@@ -206,37 +200,31 @@ function convertToRelative(path, params) {
 
                 // rx ry x-axis-rotation large-arc-flag sweep-flag x y
                 // 0  1  2               3              4          5 6
-                // for(i = 0; i < data.length; i += 7) {
-                    data[0] -= point[0];
-                    data[1] -= point[1];
-                    data[5] -= point[0];
-                    data[6] -= point[1];
+                data[0] -= point[0];
+                data[1] -= point[1];
+                data[5] -= point[0];
+                data[6] -= point[1];
 
-                    point[0] += data[5];
-                    point[1] += data[6];
-                // }
+                point[0] += data[5];
+                point[1] += data[6];
             }
 
             // H → h
             if (instruction === 'H') {
                 instruction = 'h';
 
-                // for(i = 0; i < data.length; i++) {
-                    data[0] -= point[0];
+                data[0] -= point[0];
 
-                    point[0] += data[0];
-                // }
+                point[0] += data[0];
             }
 
             // V → v
             if (instruction === 'V') {
                 instruction = 'v';
 
-                // for(i = 0; i < data.length; i++) {
-                    data[0] -= point[1];
+                data[0] -= point[1];
 
-                    point[1] += data[0];
-                // }
+                point[1] += data[0];
             }
 
             // horizontal and vertical line shorthands
