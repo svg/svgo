@@ -44,6 +44,8 @@ exports.collapseGroups = function(item, params) {
                         g.eachAttr(function(attr) {
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);
+                            } else if (attr.name === 'transform') {
+                                inner.attr(attr.name).value = attr.value + ' ' + inner.attr(attr.name).value;
                             }
                             g.removeAttr(attr);
                         });
