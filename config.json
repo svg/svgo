@@ -118,7 +118,8 @@
                     "floatPrecision": 3,
                     "removeUseless": true,
                     "collapseRepeated": true,
-                    "leadingZero": true
+                    "leadingZero": true,
+                    "negativeExtraSpace": true
                 }
             },{
                 "name": "convertTransform",
@@ -131,7 +132,8 @@
                     "shortRotate": true,
                     "removeUseless": true,
                     "collapseIntoOne": true,
-                    "leadingZero": true
+                    "leadingZero": true,
+                    "negativeExtraSpace": false
                 }
             },{
                 "name": "removeEmptyAttrs",
