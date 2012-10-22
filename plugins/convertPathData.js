@@ -24,17 +24,9 @@ exports.convertPathData = function(item, params) {
 
         var data = path2js(item.attr('d').value);
 
-        if (params.convertToRelative) {
-            data = convertToRelative(data, params);
-        }
+        data = convertToRelative(data, params);
 
-        if (params.removeUseless) {
-            data = removeUseless(data);
-        }
-
-        if (params.collapseRepeated) {
-            data = collapseRepeated(data);
-        }
+        data = filters(data, params);
 
         item.attr('d').value = js2path(data, params);
 
@@ -110,25 +102,29 @@ function path2js(pathString) {
 /**
  * Convert absolute path data coordinates to relative.
  *
- * @param {Object} item input array
+ * @param {Array} path input path data
+ * @param {Object} params plugin params
  *
- * @return {Object} output array
+ * @return {Array} output path data
  */
 function convertToRelative(path, params) {
 
-    var point = [0, 0];
+    var instruction,
+        data,
+        newPoint,
+        point = [0, 0];
 
     path.forEach(function(item) {
 
-        var instruction = item.instruction,
-            data = item.data;
+        instruction = item.instruction;
+        data = item.data;
 
         if (data) {
 
             // already relative
             // recalculate current point
             if ('mcslqta'.indexOf(instruction) > -1) {
-                var newPoint = data.slice(-2);
+                newPoint = data.slice(-2);
                 // x
                 point[0] += newPoint[0];
                 // y
@@ -137,119 +133,122 @@ function convertToRelative(path, params) {
 
             if (instruction === 'h') {
                 // x
-                point[0] += data[data.length - 1];
+                point[0] += data[0];
             }
 
             if (instruction === 'v') {
                 // y
-                point[1] += data[data.length - 1];
-            }
-
-            // absolute
-            // M → m
-            // L → l
-            // T → t
-            if ('MLT'.indexOf(instruction) > -1) {
-                instruction = instruction.toLowerCase();
-
-                // x y
-                // 0 1
-                data[0] -= point[0];
-                data[1] -= point[1];
-
-                point[0] += data[0];
-                point[1] += data[1];
-            }
-
-            // C → c
-            if (instruction === 'C') {
-                instruction = 'c';
-
-                // x1 y1 x2 y2 x y
-                // 0  1  2  3  4 5
-                data[0] -= point[0];
-                data[1] -= point[1];
-                data[2] -= point[0];
-                data[3] -= point[1];
-                data[4] -= point[0];
-                data[5] -= point[1];
-
-                point[0] += data[4];
-                point[1] += data[5];
-            }
-
-            // S → s
-            // Q → q
-            if ('SQ'.indexOf(instruction) > -1) {
-                instruction = instruction.toLowerCase();
-
-                // x1 y1 x y
-                // 0  1  2 3
-                data[0] -= point[0];
-                data[1] -= point[1];
-                data[2] -= point[0];
-                data[3] -= point[1];
-
-                point[0] += data[2];
-                point[1] += data[3];
-            }
-
-            // A → a
-            if (instruction === 'A') {
-                instruction = 'a';
-
-                // rx ry x-axis-rotation large-arc-flag sweep-flag x y
-                // 0  1  2               3              4          5 6
-                data[0] -= point[0];
-                data[1] -= point[1];
-                data[5] -= point[0];
-                data[6] -= point[1];
-
-                point[0] += data[5];
-                point[1] += data[6];
-            }
-
-            // H → h
-            if (instruction === 'H') {
-                instruction = 'h';
-
-                data[0] -= point[0];
-
-                point[0] += data[0];
-            }
-
-            // V → v
-            if (instruction === 'V') {
-                instruction = 'v';
-
-                data[0] -= point[1];
-
                 point[1] += data[0];
             }
 
-            // horizontal and vertical line shorthands
-            // l 50 0 → h 50
-            // l 0 50 → v 50
-            if (params.lineShorthands && instruction === 'l') {
-                if (data[1] === 0) {
-                    instruction = 'h';
-                    data = [data[0]];
-                } else if (data[0] === 0) {
-                    instruction = 'v';
-                    data = [data[1]];
-                }
-            }
+            // convert absolute path data coordinates to relative
+            if (params.convertToRelative) {
 
-            // fixed-point numbers
-            // 12.754997 → 12.755
-            if (params.floatPrecision) {
-                data = data.map(function(num) {
-                    return +num.toFixed(params.floatPrecision);
-                });
+                // M → m
+                // L → l
+                // T → t
+                if ('MLT'.indexOf(instruction) > -1) {
+                    instruction = instruction.toLowerCase();
+
+                    // x y
+                    // 0 1
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+
+                    point[0] += data[0];
+                    point[1] += data[1];
+                }
+
+                // C → c
+                if (instruction === 'C') {
+                    instruction = 'c';
+
+                    // x1 y1 x2 y2 x y
+                    // 0  1  2  3  4 5
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+                    data[2] -= point[0];
+                    data[3] -= point[1];
+                    data[4] -= point[0];
+                    data[5] -= point[1];
+
+                    point[0] += data[4];
+                    point[1] += data[5];
+                }
+
+                // S → s
+                // Q → q
+                if ('SQ'.indexOf(instruction) > -1) {
+                    instruction = instruction.toLowerCase();
+
+                    // x1 y1 x y
+                    // 0  1  2 3
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+                    data[2] -= point[0];
+                    data[3] -= point[1];
+
+                    point[0] += data[2];
+                    point[1] += data[3];
+                }
+
+                // A → a
+                if (instruction === 'A') {
+                    instruction = 'a';
+
+                    // rx ry x-axis-rotation large-arc-flag sweep-flag x y
+                    // 0  1  2               3              4          5 6
+                    data[0] -= point[0];
+                    data[1] -= point[1];
+                    data[5] -= point[0];
+                    data[6] -= point[1];
+
+                    point[0] += data[5];
+                    point[1] += data[6];
+                }
+
+                // H → h
+                if (instruction === 'H') {
+                    instruction = 'h';
+
+                    data[0] -= point[0];
+
+                    point[0] += data[0];
+                }
+
+                // V → v
+                if (instruction === 'V') {
+                    instruction = 'v';
+
+                    data[0] -= point[1];
+
+                    point[1] += data[0];
+                }
+
+            // calculate new current point
+            } else {
+
+                if ('MCSLQTA'.indexOf(instruction) > -1) {
+                    newPoint = data.slice(-2);
+                    // x
+                    point[0] = newPoint[0];
+                    // y
+                    point[1] = newPoint[1];
+                }
+
+                if (instruction === 'H') {
+                    point[0] = data[0];
+                }
+
+                if (instruction === 'V') {
+                    point[1] = data[0];
+                }
+
             }
 
             item.instruction = instruction;
             item.data = data;
+            item.point = point.slice(0);
 
         }
 
@@ -260,87 +259,159 @@ function convertToRelative(path, params) {
 }
 
 /**
- * Remove useless path segments.
+ * Main filters loop.
  *
- * @param {Array} path input array
- *
- * @return {Array} output array
- */
-function removeUseless(path) {
-
-    return path.filter(function(item) {
-
-        // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
-        if (
-            'mMlLhHvVqQtTcCsS'.indexOf(item.instruction) > -1 &&
-            item.data.every(function(i) { return i === 0; })
-        ) {
-            return false;
-        // a 25,25 -30 0,1 0,0
-        } else if (
-            'aA'.indexOf(item.instruction) > -1 &&
-            item.data[5] === 0 &&
-            item.data[6] === 0
-        ) {
-            return false;
-        }
-
-        return true;
-
-    });
-
-}
-
-/**
- * Collapse repeated instructions data.
- *
- * @param {Array} items input array
- *
- * @return {Array} output array
- */
-function collapseRepeated(items) {
-
-    var prev;
-
-    return items.filter(function(item) {
-
-        if (prev && item.instruction === prev.instruction) {
-            // increase previous h or v data with current
-            if (item.instruction === 'h' || item.instruction === 'v') {
-                prev.data[0] += item.data[0];
-            // concat previous data with current
-            } else {
-                prev.data = prev.data.concat(item.data);
-            }
-
-            // filter current item
-            return false;
-        }
-
-        prev = item;
-
-        return true;
-
-    });
-
-}
-
-/**
- * Convert path JS representation to string.
- *
- * @param {Array} pathJS JS representation array
+ * @param {Array} path input path data
  * @param {Object} params plugin params
  *
- * @return {String} output string
+ * @return {Array} output path data
  */
-function js2path(pathJS, params) {
+function filters(path, params) {
+
+    var instruction,
+        data,
+        point = [0, 0],
+        prev = {
+            point: [0, 0]
+        };
+
+    path = path.filter(function(item) {
+
+        instruction = item.instruction;
+        data = item.data;
+        point = item.point;
+
+        if (data) {
+
+            // decrease accuracy of floating-point numbers
+            if (params.floatPrecision) {
+                data = data.map(function(num) {
+                    return round(num, params.floatPrecision);
+                });
+            }
+
+            // horizontal and vertical line shorthands
+            // l 50 0 → h 50
+            // l 0 50 → v 50
+            if (
+                params.lineShorthands &&
+                'Ll'.indexOf(instruction) > -1
+            ) {
+                var lowerCase = instruction === instruction.toLowerCase();
+
+                if (point[1] - prev.point[1] === 0) {
+                    instruction = lowerCase ? 'h' : 'H';
+                    data = [data[0]];
+                } else if (point[0] - prev.point[0] === 0) {
+                    instruction = lowerCase ? 'v' : 'V';
+                    data = [data[1]];
+                }
+            }
+
+            // remove useless path segments
+            // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
+            if (
+                params.removeUseless &&
+                'mlhvqtcs'.indexOf(instruction) > -1 &&
+                data.every(function(i) { return i === 0; })
+            ) {
+                return false;
+            }
+
+            // a 25,25 -30 0,1 0,0
+            if (
+                'aA'.indexOf(item.instruction) > -1 &&
+                point[0] - prev.point[0] === 0 &&
+                point[1] - prev.point[1] === 0
+            ) {
+                return false;
+            }
+
+            // M25,25 L25,25 C 25,25 25,25 25,25
+            if (
+                params.removeUseless &&
+                'MLHVQTCS'.indexOf(instruction) > -1
+            ) {
+                var i = -1,
+                    every = data.every(function(d) {
+                        return d - prev.point[++i % 2] === 0;
+                    });
+
+                if (every) {
+                    return false;
+                }
+            }
+
+            // collapse repeated instructions data
+            if (
+                params.collapseRepeated &&
+                prev.item &&
+                instruction === prev.item.instruction
+            ) {
+                // increase previous h or v data with current
+                if (instruction === 'h' || instruction === 'v') {
+                    prev.item.data[0] += data[0];
+                // replace previous H or V data with current
+                } else if (instruction === 'H' || instruction === 'V') {
+                    prev.item.data[0] = data[0];
+                // concat previous data with current
+                } else {
+                    prev.item.data = prev.item.data.concat(data);
+                }
+
+                // filter current item
+                return false;
+            }
+
+            item.instruction = instruction;
+            item.data = data;
+
+            prev = {
+                item: item,
+                point: point.slice(0)
+            };
+
+        }
+
+        return true;
+
+    });
+
+    return path;
+
+}
+
+/**
+ * Decrease accuracy of floating-point numbers
+ * keeping a specified number of decimals.
+ *
+ * @param {Number} num input number
+ * @param {Number} fixed number of decimals
+ *
+ * @return {Number} output number
+ */
+function round(num, fixed) {
+
+    return +num.toFixed(fixed);
+
+}
+
+/**
+ * Convert path array to string.
+ *
+ * @param {Array} path input path data
+ * @param {Object} params plugin params
+ *
+ * @return {String} output path string
+ */
+function js2path(path, params) {
 
         // out path data string
     var pathString = '';
 
-    pathJS.forEach(function(path) {
+    path.forEach(function(item) {
 
-        pathString += path.instruction + (path.data ? cleanupOutData(path.data, params) : '');
+        pathString += item.instruction + (item.data ? cleanupOutData(item.data, params) : '');
 
     });
 
