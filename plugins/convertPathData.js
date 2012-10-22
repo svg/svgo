@@ -1,6 +1,7 @@
 var cleanupOutData = require('../lib/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
-    regPathData = /(?=-)|[\s,]+/;
+    regPathData = /(?=-)|[\s,]+/,
+    pathElems = ['path', 'glyph', 'missing-glyph'];
 
 /**
  * Convert absolute Path to relative,
@@ -20,7 +21,7 @@ var cleanupOutData = require('../lib/tools').cleanupOutData,
  */
 exports.convertPathData = function(item, params) {
 
-    if (item.isElem('path') && item.hasAttr('d')) {
+    if (item.isElem(pathElems) && item.hasAttr('d')) {
 
         var data = path2js(item.attr('d').value);
 
