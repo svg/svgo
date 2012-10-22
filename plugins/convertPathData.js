@@ -384,10 +384,10 @@ function filters(path, params) {
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
  *
- * @param {Number} num input number
+ * @param {Array} data input data array
  * @param {Number} fixed number of decimals
  *
- * @return {Number} output number
+ * @return {Array} output data array
  */
 function roundData(data, fixed) {
 
