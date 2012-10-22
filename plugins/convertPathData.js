@@ -124,21 +124,20 @@ function convertToRelative(path, params) {
             // already relative
             // recalculate current point
             if ('mcslqta'.indexOf(instruction) > -1) {
+
                 newPoint = data.slice(-2);
-                // x
+
                 point[0] += newPoint[0];
-                // y
                 point[1] += newPoint[1];
-            }
 
-            if (instruction === 'h') {
-                // x
+            } else if (instruction === 'h') {
+
                 point[0] += data[0];
-            }
 
-            if (instruction === 'v') {
-                // y
+            } else if (instruction === 'v') {
+
                 point[1] += data[0];
+
             }
 
             // convert absolute path data coordinates to relative
@@ -148,6 +147,7 @@ function convertToRelative(path, params) {
                 // L → l
                 // T → t
                 if ('MLT'.indexOf(instruction) > -1) {
+
                     instruction = instruction.toLowerCase();
 
                     // x y
@@ -157,10 +157,10 @@ function convertToRelative(path, params) {
 
                     point[0] += data[0];
                     point[1] += data[1];
-                }
 
                 // C → c
-                if (instruction === 'C') {
+                } else if (instruction === 'C') {
+
                     instruction = 'c';
 
                     // x1 y1 x2 y2 x y
@@ -174,11 +174,11 @@ function convertToRelative(path, params) {
 
                     point[0] += data[4];
                     point[1] += data[5];
-                }
 
                 // S → s
                 // Q → q
-                if ('SQ'.indexOf(instruction) > -1) {
+                } else if ('SQ'.indexOf(instruction) > -1) {
+
                     instruction = instruction.toLowerCase();
 
                     // x1 y1 x y
@@ -190,10 +190,10 @@ function convertToRelative(path, params) {
 
                     point[0] += data[2];
                     point[1] += data[3];
-                }
 
                 // A → a
-                if (instruction === 'A') {
+                } else if (instruction === 'A') {
+
                     instruction = 'a';
 
                     // rx ry x-axis-rotation large-arc-flag sweep-flag x y
@@ -205,43 +205,45 @@ function convertToRelative(path, params) {
 
                     point[0] += data[5];
                     point[1] += data[6];
-                }
 
                 // H → h
-                if (instruction === 'H') {
+                } else if (instruction === 'H') {
+
                     instruction = 'h';
 
                     data[0] -= point[0];
 
                     point[0] += data[0];
-                }
 
                 // V → v
-                if (instruction === 'V') {
+                } else if (instruction === 'V') {
+
                     instruction = 'v';
 
                     data[0] -= point[1];
 
                     point[1] += data[0];
+
                 }
 
             // calculate new current point
             } else {
 
                 if ('MCSLQTA'.indexOf(instruction) > -1) {
+
                     newPoint = data.slice(-2);
-                    // x
+
                     point[0] = newPoint[0];
-                    // y
                     point[1] = newPoint[1];
-                }
 
-                if (instruction === 'H') {
+                } else if (instruction === 'H') {
+
                     point[0] = data[0];
-                }
 
-                if (instruction === 'V') {
+                } else if (instruction === 'V') {
+
                     point[1] = data[0];
+
                 }
 
             }
@@ -283,11 +285,8 @@ function filters(path, params) {
 
         if (data) {
 
-            // decrease accuracy of floating-point numbers
             if (params.floatPrecision) {
-                data = data.map(function(num) {
-                    return round(num, params.floatPrecision);
-                });
+                data = roundData(data, params.floatPrecision);
             }
 
             // horizontal and vertical line shorthands
@@ -309,37 +308,37 @@ function filters(path, params) {
             }
 
             // remove useless path segments
-            // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
-            if (
-                params.removeUseless &&
-                'mlhvqtcs'.indexOf(instruction) > -1 &&
-                data.every(function(i) { return i === 0; })
-            ) {
-                return false;
-            }
+            if (params.removeUseless) {
 
-            // a 25,25 -30 0,1 0,0
-            if (
-                'aA'.indexOf(item.instruction) > -1 &&
-                point[0] - prev.point[0] === 0 &&
-                point[1] - prev.point[1] === 0
-            ) {
-                return false;
-            }
-
-            // M25,25 L25,25 C 25,25 25,25 25,25
-            if (
-                params.removeUseless &&
-                'MLHVQTCS'.indexOf(instruction) > -1
-            ) {
-                var i = -1,
-                    every = data.every(function(d) {
-                        return d - prev.point[++i % 2] === 0;
-                    });
-
-                if (every) {
+                // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
+                if (
+                    'mlhvqtcs'.indexOf(instruction) > -1 &&
+                    data.every(function(i) { return i === 0; })
+                ) {
                     return false;
                 }
+
+                // M25,25 L25,25 C 25,25 25,25 25,25
+                if ('MLHVQTCS'.indexOf(instruction) > -1) {
+                    var i = -1,
+                        every = data.every(function(d) {
+                            return d - prev.point[++i % 2] === 0;
+                        });
+
+                    if (every) {
+                        return false;
+                    }
+                }
+
+                // a 25,25 -30 0,1 0,0
+                if (
+                    'aA'.indexOf(item.instruction) > -1 &&
+                    point[0] - prev.point[0] === 0 &&
+                    point[1] - prev.point[1] === 0
+                ) {
+                    return false;
+                }
+
             }
 
             // collapse repeated instructions data
@@ -383,16 +382,18 @@ function filters(path, params) {
 
 /**
  * Decrease accuracy of floating-point numbers
- * keeping a specified number of decimals.
+ * in path data keeping a specified number of decimals.
  *
  * @param {Number} num input number
  * @param {Number} fixed number of decimals
  *
  * @return {Number} output number
  */
-function round(num, fixed) {
+function roundData(data, fixed) {
 
-    return +num.toFixed(fixed);
+    return data.map(function(num) {
+        return +num.toFixed(fixed);
+    });
 
 }
 
