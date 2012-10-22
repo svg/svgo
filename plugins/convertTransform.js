@@ -31,6 +31,11 @@ exports.convertTransform = function(item, params) {
             convertTransform(item, 'gradientTransform', params);
         }
 
+        // patternTransform
+        if (item.hasAttr('patternTransform')) {
+            convertTransform(item, 'patternTransform', params);
+        }
+
     }
 
 };
