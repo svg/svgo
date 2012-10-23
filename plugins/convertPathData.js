@@ -276,13 +276,16 @@ function filters(path, params) {
         point = [0, 0],
         prev = {
             point: [0, 0]
-        };
+        },
+        index = 0;
 
     path = path.filter(function(item) {
 
         instruction = item.instruction;
         data = item.data;
         point = item.point;
+
+        index++;
 
         if (data) {
 
@@ -308,19 +311,25 @@ function filters(path, params) {
                 }
             }
 
-            // remove useless path segments
+            // remove useless non-first path segments
             if (params.removeUseless) {
 
                 // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
-                    'mlhvqtcs'.indexOf(instruction) > -1 &&
+                    (
+                     'lhvqtcs'.indexOf(instruction) > -1 ||
+                     (instruction === 'm' && index > 1)
+                    ) &&
                     data.every(function(i) { return i === 0; })
                 ) {
                     return false;
                 }
 
                 // M25,25 L25,25 C 25,25 25,25 25,25
-                if ('MLHVQTCS'.indexOf(instruction) > -1) {
+                if (
+                    'LHVQTCS'.indexOf(instruction) > -1 ||
+                    (instruction === 'M' && index > 1)
+                ) {
                     var i = -1,
                         every = data.every(function(d) {
                             return d - prev.point[++i % 2] === 0;
