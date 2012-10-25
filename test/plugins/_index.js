@@ -41,7 +41,7 @@ function getResult(name, index) {
         .then(function(config) {
             return readFile(name + '.' + index + '.orig.svg')
                 .then(function(input) {
-                    return SVGO(input.toString(), config);
+                    return new SVGO(config).optimize(input.toString());
                 });
         })
         .then(function(min) {
