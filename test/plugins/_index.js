@@ -1,9 +1,33 @@
-var QFS = require('q-fs'),
+var INHERIT = require('inherit'),
+    QFS = require('q-fs'),
     FS = require('fs'),
     PATH = require('path'),
-    CONFIG = require('../../lib/config'),
-    SVGO = require('../../lib/svgo'),
     regFilename = /^(.*)\.(\d+)\.orig\.svg$/;
+
+var MySVGO = INHERIT(require('../../lib/svgo'), {
+
+        enableOnlyOne: function(name) {
+
+            this.config = this.config.then(function(config) {
+
+                for (var type in config.plugins) {
+                    config.plugins[type].forEach(function(plugin) {
+                        plugin.active = plugin.name === name;
+                    });
+                }
+
+                return config;
+
+            });
+
+        }
+
+    }),
+    mySVGO = new MySVGO({
+        js2svg: {
+            pretty: true
+        }
+    });
 
 describe('plugins tests', function() {
 
@@ -37,12 +61,11 @@ describe('plugins tests', function() {
 });
 
 function getResult(name, index) {
-    return prepareConfig(name)
-        .then(function(config) {
-            return readFile(name + '.' + index + '.orig.svg')
-                .then(function(input) {
-                    return SVGO(input.toString(), config);
-                });
+    return readFile(name + '.' + index + '.orig.svg')
+        .then(function(input) {
+            mySVGO.enableOnlyOne(name);
+
+            return mySVGO.optimize(input.toString());
         })
         .then(function(min) {
             return readFile(name + '.' + index +'.should.svg')
@@ -50,25 +73,6 @@ function getResult(name, index) {
                     return [min.data, output.toString()];
                 });
         });
-}
-
-function prepareConfig(name) {
-
-    return CONFIG()
-        .then(function(config) {
-            for (var type in config.plugins) {
-                config.plugins[type].forEach(function(plugin) {
-                    if (plugin.name !== name) {
-                        plugin.active = false;
-                    }
-                });
-            }
-
-            config.js2svg.pretty = true;
-
-            return config;
-        });
-
 }
 
 function readFile(path) {
