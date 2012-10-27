@@ -25,11 +25,13 @@ exports.convertPathData = function(item, params) {
 
         var data = path2js(item.attr('d').value);
 
-        data = convertToRelative(data, params);
+        if (data.length) {
+            data = convertToRelative(data, params);
 
-        data = filters(data, params);
+            data = filters(data, params);
 
-        item.attr('d').value = js2path(data, params);
+            item.attr('d').value = js2path(data, params);
+        }
 
     }
 
@@ -71,25 +73,30 @@ function path2js(pathString) {
                     return +str;
                 });
 
-                var pair = 0;
+                // very stupid defense strategy
+                if (!isNaN(data[0])) {
 
-                if ('HhVv'.indexOf(instruction) > -1) {
-                    pair = 1;
-                } else if ('MmLlTt'.indexOf(instruction) > -1) {
-                    pair = 2;
-                } else if ('QqSs'.indexOf(instruction) > -1) {
-                    pair = 4;
-                } else if ('Cc'.indexOf(instruction) > -1) {
-                    pair = 6;
-                } else if ('Aa'.indexOf(instruction) > -1) {
-                    pair = 7;
-                }
+                    var pair = 0;
 
-                while(data.length) {
-                    path.push({
-                        instruction: instruction,
-                        data: data.splice(0, pair)
-                    });
+                    if ('HhVv'.indexOf(instruction) > -1) {
+                        pair = 1;
+                    } else if ('MmLlTt'.indexOf(instruction) > -1) {
+                        pair = 2;
+                    } else if ('QqSs'.indexOf(instruction) > -1) {
+                        pair = 4;
+                    } else if ('Cc'.indexOf(instruction) > -1) {
+                        pair = 6;
+                    } else if ('Aa'.indexOf(instruction) > -1) {
+                        pair = 7;
+                    }
+
+                    while(data.length) {
+                        path.push({
+                            instruction: instruction,
+                            data: data.splice(0, pair)
+                        });
+                    }
+
                 }
 
             }
