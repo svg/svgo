@@ -1,13 +1,6 @@
 {
-    "plugins": {
-        "directPass": [
-            {
-                "name": "removeDoctype",
-                "active": false
-            },{
-                "name": "myTestPlugin",
-                "active": true
-            }
-        ]
-    }
+    "plugins": [{
+        "name": "removeDoctype",
+        "active": false
+    }]
 }

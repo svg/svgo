@@ -1,5 +1,21 @@
 var config = require('../../lib/config');
 
+function getPlugin(name, config) {
+
+    var found;
+
+    config.plugins.forEach(function(group) {
+        group.forEach(function(plugin) {
+            if (plugin.name === name) {
+                found = plugin;
+            }
+        });
+    });
+
+    return found;
+
+}
+
 describe('config', function() {
 
     describe('default config', function() {
@@ -10,7 +26,8 @@ describe('config', function() {
             config().then(function(data) {
                 result = data;
                 done();
-            });
+            })
+            .end();
         });
 
         it('result should exists', function() {
@@ -29,59 +46,37 @@ describe('config', function() {
             result.should.have.property('js2svg').with.instanceOf(Object);
         });
 
-        it('result should have property "plugins" with instance of Object', function() {
-            result.should.have.property('plugins').with.instanceOf(Object);
-        });
-
-        it('plugins should have property "directPass" with instance of Array', function() {
-            result.plugins.should.have.property('directPass').with.instanceOf(Array);
-        });
-
-        it('directPass should include "removeDoctype" plugin with default params', function() {
-            result.plugins.directPass.should.includeEql({
-                name: 'removeDoctype',
-                active: true
-            });
+        it('result should have property "plugins" with instance of Array', function() {
+            result.should.have.property('plugins').with.instanceOf(Array);
         });
 
     });
 
-    describe('extending default config with object', function() {
+    describe('extend default config with object', function() {
 
-        var myConfig = {
-                plugins: {
-                    directPass: [
-                        { name: 'removeDoctype', active: false },
-                        { name: 'myTestPlugin', active: true }
-                    ]
-                }
-            },
-            result;
+        var result,
+            myConfig = {
+                plugins: [{
+                    name: 'removeDoctype',
+                    active: false
+                }]
+            };
 
         before(function(done) {
             config(myConfig).then(function(data) {
                 result = data;
                 done();
-            });
+            })
+            .end();
         });
 
-        it('directPass should include extended "removeDoctype" plugin', function() {
-            result.plugins.directPass.should.includeEql({
-                name: 'removeDoctype',
-                active: false
-            });
-        });
-
-        it('directPass should include new "myTestPlugin" plugin', function() {
-            result.plugins.directPass.should.includeEql({
-                name: 'myTestPlugin',
-                active: true
-            });
+        it('result should exists', function() {
+            getPlugin('removeDoctype', result).active.should.be.false;
         });
 
     });
 
-    describe('extending default config with file', function() {
+    describe('extend default config with file', function() {
 
         var myConfig = {
                 coa: {
@@ -94,21 +89,12 @@ describe('config', function() {
             config(myConfig).then(function(data) {
                 result = data;
                 done();
-            });
+            })
+            .end();
         });
 
-        it('directPass should include extended "removeDoctype" plugin', function() {
-            result.plugins.directPass.should.includeEql({
-                name: 'removeDoctype',
-                active: false
-            });
-        });
-
-        it('directPass should include new "myTestPlugin" plugin', function() {
-            result.plugins.directPass.should.includeEql({
-                name: 'myTestPlugin',
-                active: true
-            });
+        it('result should exists', function() {
+            getPlugin('removeDoctype', result).active.should.be.false;
         });
 
     });

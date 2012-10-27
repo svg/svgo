@@ -10,11 +10,12 @@ var MySVGO = INHERIT(require('../../lib/svgo'), {
 
             this.config = this.config.then(function(config) {
 
-                for (var type in config.plugins) {
-                    config.plugins[type].forEach(function(plugin) {
+                config.plugins.forEach(function(group) {
+                    group.forEach(function(plugin) {
                         plugin.active = plugin.name === name;
                     });
-                }
+
+                });
 
                 return config;
 
