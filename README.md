@@ -88,9 +88,9 @@ svgo -i 'data:image/svg+xml;base64,…' -o test.min.svg
 
 ## TODO
 
-1. documentation and "plugins how-to"
-2. batch folder optimization
-3. more plugins
-4. more unit tests
-5. online SVGO web service
+1. batch folder optimization
+2. more plugins
+3. SVGO GUI (crossplatform?) via awesome [node-webkit](https://github.com/rogerwang/node-webkit)
+4. online SVGO web service
+5. more unit tests
 6. …
