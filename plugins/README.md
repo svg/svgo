@@ -145,41 +145,41 @@ But that's not all ;) We got rid of a loop copypasting, but every plugin still r
 And of course, writing plugins would not have been so cool without some sugar API:
 
 ##### isElem([param])
-Determine if item is an element (any, with a specific name or in a names array).
-@param {String|Array} [param] element name or names arrays
-@return {Boolean}
+  * Determine if item is an element (any, with a specific name or in a names array).
+  * @param {String|Array} [param] element name or names arrays
+  * @return {Boolean}
 
 ##### isEmpty()
-Determine if element is empty.
-@return {Boolean}
+  * Determine if element is empty.
+  * @return {Boolean}
 
 ##### hasAttr([attr], [val])
-Determine if element has an attribute (any, or by name or by name + value).
-@param {String} [name] attribute name
-@param {String} [val] attribute value (will be toString()'ed)
-@return {Boolean}
+  * Determine if element has an attribute (any, or by name or by name + value).
+  * @param {String} [name] attribute name
+  * @param {String} [val] attribute value (will be toString()'ed)
+  * @return {Boolean}
 
 ##### attr(name, [val])
-Get a specific attribute from an element (by name or name + value).
-@param {String} name attribute name
-@param {String} [val] attribute value (will be toString()'ed)
-@return {Object|Undefined}
+  * Get a specific attribute from an element (by name or name + value).
+  * @param {String} name attribute name
+  * @param {String} [val] attribute value (will be toString()'ed)
+  * @return {Object|Undefined}
 
 ##### removeAttr(name, [val])
-Remove a specific attribute (by name or name + val).
-@param {String} name attribute name
-@param {String} [val] attribute value
-@return {Boolean}
+  * Remove a specific attribute (by name or name + val).
+  * @param {String} name attribute name
+  * @param {String} [val] attribute value
+  * @return {Boolean}
 
 ##### addAttr(attr)
-Add an attribute.
-@param {Object} attr attribute object
-@return {Object} created attribute
+  * Add an attribute.
+  * @param {Object} attr attribute object
+  * @return {Object} created attribute
 
 ##### eachAttr(callback)
-Iterates over all attributes.
-@param {Function} callback
-@return {Boolean} false if there are no any attributes
+  * Iterates over all attributes.
+  * @param {Function} callback
+  * @return {Boolean} false if there are no any attributes
 
 #### 3.3 tests
 
