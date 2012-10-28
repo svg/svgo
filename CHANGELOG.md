@@ -1,3 +1,19 @@
+### [ [>](//github.com/svg/svgo/tree/v0.0.9) ] 0.0.9 / 29.10.2012
+* [plugins how-to](https://github.com/svg/svgo/tree/master/plugins#readme) (close [#27](https://github.com/svg/svgo/issues/27))
+* allow any plugin of any type to go in any order (close [#14](https://github.com/svg/svgo/issues/14))
+* allow to do a multiple optimizations with one init (close [#25](https://github.com/svg/svgo/issues/25))
+* plugins/convertPathData: global refactoring
+* plugins/convertPathData: do all the tricks with absolute coords too (fix [#22](https://github.com/svg/svgo/issues/22))
+* plugins/convertPathData: accumulation of rounding errors (fix [#23](https://github.com/svg/svgo/issues/23))
+* plugins/convertPathData: prevent an infinity loop on invalid path data (fix [#26](https://github.com/svg/svgo/issues/26))
+* plugins/convertPathData: do not remove very first M from the path data (fix [#24](https://github.com/svg/svgo/issues/24))
+* plugins/convertPathData: optimize path data in <glyph> and <missing-glyph> (close [#20](https://github.com/svg/svgo/issues/20))
+* plugins/convertTransform: add patternTransform attribute to the process (close [#15](https://github.com/svg/svgo/issues/15))
+* plugins/convertTransform: Firefox: removing extra space in front of negative number is alowed only in path data, but not in transform (fix [#12](https://github.com/svg/svgo/issues/12))
+* plugins/removeXMLProcInst: remove only 'xml' but not 'xml-stylesheet' (fix [#21](https://github.com/svg/svgo/issues/15))
+* plugins/collapseGroups: merge split-level transforms (fix [#13](https://github.com/svg/svgo/issues/13))
+* jsdoc corrections
+
 ### [ [>](//github.com/svg/svgo/tree/v0.0.8) ] 0.0.8 / 20.10.2012
 * new plugin [convertTransform](plugins/convertTransform.js) (close [#5](https://github.com/svg/svgo/issues/5))
 * new plugin [removeUnusedNS](plugins/removeUnusedNS.js)

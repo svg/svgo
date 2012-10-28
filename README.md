@@ -6,7 +6,7 @@ o-o   o   o--o o-o
           o--o
 ```
 
-## SVGO v0.0.8 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.0.9 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 
