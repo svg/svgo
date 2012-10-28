@@ -47,7 +47,7 @@ exports.collapseGroups = function(item, params) {
                             } else if (attr.name === 'transform') {
                                 inner.attr(attr.name).value = attr.value + ' ' + inner.attr(attr.name).value;
                             }
-                            g.removeAttr(attr);
+                            g.removeAttr(attr.name);
                         });
                     }
                 }
