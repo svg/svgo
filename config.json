@@ -127,7 +127,7 @@
             "active": true,
             "type": "perItem",
             "params": {
-                "convertToRelative": true,
+                "straightCurves": true,
                 "lineShorthands": true,
                 "floatPrecision": 3,
                 "removeUseless": true,

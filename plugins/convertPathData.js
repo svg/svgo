@@ -26,7 +26,7 @@ exports.convertPathData = function(item, params) {
         var data = path2js(item.attr('d').value);
 
         if (data.length) {
-            data = convertToRelative(data, params);
+            data = convertToRelative(data);
 
             data = filters(data, params);
 
@@ -115,7 +115,7 @@ function path2js(pathString) {
  *
  * @return {Array} output path data
  */
-function convertToRelative(path, params) {
+function convertToRelative(path) {
 
     var instruction,
         data,
@@ -149,110 +149,84 @@ function convertToRelative(path, params) {
             }
 
             // convert absolute path data coordinates to relative
-            if (params.convertToRelative) {
+            // M → m
+            // L → l
+            // T → t
+            if ('MLT'.indexOf(instruction) > -1) {
 
-                // M → m
-                // L → l
-                // T → t
-                if ('MLT'.indexOf(instruction) > -1) {
+                instruction = instruction.toLowerCase();
 
-                    instruction = instruction.toLowerCase();
+                // x y
+                // 0 1
+                data[0] -= point[0];
+                data[1] -= point[1];
 
-                    // x y
-                    // 0 1
-                    data[0] -= point[0];
-                    data[1] -= point[1];
+                point[0] += data[0];
+                point[1] += data[1];
 
-                    point[0] += data[0];
-                    point[1] += data[1];
+            // C → c
+            } else if (instruction === 'C') {
 
-                // C → c
-                } else if (instruction === 'C') {
+                instruction = 'c';
 
-                    instruction = 'c';
+                // x1 y1 x2 y2 x y
+                // 0  1  2  3  4 5
+                data[0] -= point[0];
+                data[1] -= point[1];
+                data[2] -= point[0];
+                data[3] -= point[1];
+                data[4] -= point[0];
+                data[5] -= point[1];
 
-                    // x1 y1 x2 y2 x y
-                    // 0  1  2  3  4 5
-                    data[0] -= point[0];
-                    data[1] -= point[1];
-                    data[2] -= point[0];
-                    data[3] -= point[1];
-                    data[4] -= point[0];
-                    data[5] -= point[1];
+                point[0] += data[4];
+                point[1] += data[5];
 
-                    point[0] += data[4];
-                    point[1] += data[5];
+            // S → s
+            // Q → q
+            } else if ('SQ'.indexOf(instruction) > -1) {
 
-                // S → s
-                // Q → q
-                } else if ('SQ'.indexOf(instruction) > -1) {
+                instruction = instruction.toLowerCase();
 
-                    instruction = instruction.toLowerCase();
+                // x1 y1 x y
+                // 0  1  2 3
+                data[0] -= point[0];
+                data[1] -= point[1];
+                data[2] -= point[0];
+                data[3] -= point[1];
 
-                    // x1 y1 x y
-                    // 0  1  2 3
-                    data[0] -= point[0];
-                    data[1] -= point[1];
-                    data[2] -= point[0];
-                    data[3] -= point[1];
+                point[0] += data[2];
+                point[1] += data[3];
 
-                    point[0] += data[2];
-                    point[1] += data[3];
+            // A → a
+            } else if (instruction === 'A') {
 
-                // A → a
-                } else if (instruction === 'A') {
+                instruction = 'a';
 
-                    instruction = 'a';
+                // rx ry x-axis-rotation large-arc-flag sweep-flag x y
+                // 0  1  2               3              4          5 6
+                data[5] -= point[0];
+                data[6] -= point[1];
 
-                    // rx ry x-axis-rotation large-arc-flag sweep-flag x y
-                    // 0  1  2               3              4          5 6
-                    data[0] -= point[0];
-                    data[1] -= point[1];
-                    data[5] -= point[0];
-                    data[6] -= point[1];
+                point[0] += data[5];
+                point[1] += data[6];
 
-                    point[0] += data[5];
-                    point[1] += data[6];
+            // H → h
+            } else if (instruction === 'H') {
 
-                // H → h
-                } else if (instruction === 'H') {
+                instruction = 'h';
 
-                    instruction = 'h';
+                data[0] -= point[0];
 
-                    data[0] -= point[0];
+                point[0] += data[0];
 
-                    point[0] += data[0];
+            // V → v
+            } else if (instruction === 'V') {
 
-                // V → v
-                } else if (instruction === 'V') {
+                instruction = 'v';
 
-                    instruction = 'v';
+                data[0] -= point[1];
 
-                    data[0] -= point[1];
-
-                    point[1] += data[0];
-
-                }
-
-            // calculate new current point
-            } else {
-
-                if ('MCSLQTA'.indexOf(instruction) > -1) {
-
-                    newPoint = data.slice(-2);
-
-                    point[0] = newPoint[0];
-                    point[1] = newPoint[1];
-
-                } else if (instruction === 'H') {
-
-                    point[0] = data[0];
-
-                } else if (instruction === 'V') {
-
-                    point[1] = data[0];
-
-                }
+                point[1] += data[0];
 
             }
 
@@ -300,20 +274,131 @@ function filters(path, params) {
                 data = roundData(data, params.floatPrecision);
             }
 
+            // convert straight curves into lines segments
+            if (params.straightCurves) {
+
+                // c
+                if (
+                    instruction === 'c' &&
+                    isCurveStraightLine(
+                        [ 0, data[0], data[2], data[4] ],
+                        [ 0, data[1], data[3], data[5] ]
+                    )
+                ) {
+                    instruction = 'l';
+                    data = data.slice(-2);
+                }
+
+                // s
+                else if (instruction === 's') {
+
+                    // c + s
+                    if (
+                        prev.item &&
+                        prev.item.instruction === 'c' &&
+                        isCurveStraightLine(
+                            [ prev.item.data[2], prev.item.data[4], data[0], data[2] ],
+                            [ prev.item.data[3], prev.item.data[5], data[1], data[3] ]
+                        )
+                    ) {
+                        instruction = 'l';
+                        data = data.slice(-2);
+                    }
+
+                    // s + s
+                    else if (
+                        prev.item &&
+                        prev.item.instruction === 's' &&
+                        isCurveStraightLine(
+                            [ prev.item.data[0], prev.item.data[2], data[0], data[2] ],
+                            [ prev.item.data[1], prev.item.data[3], data[1], data[3] ]
+                        )
+                    ) {
+                        instruction = 'l';
+                        data = data.slice(-2);
+                    }
+
+                    // [^cs] + s
+                    else if (
+                        isCurveStraightLine(
+                            [ 0, data[0], data[2] ],
+                            [ 0, data[1], data[3] ]
+                        )
+                    ) {
+                        instruction = 'l';
+                        data = data.slice(-2);
+                    }
+
+                }
+
+                // q
+                else if (
+                    instruction === 'q' &&
+                    isCurveStraightLine(
+                        [ 0, data[0], data[2] ],
+                        [ 0, data[1], data[3] ]
+                    )
+                ) {
+                    // save the original one for the future potential q + t conversion
+                    item.original = {
+                        instruction: instruction,
+                        data: data
+                    };
+
+                    instruction = 'l';
+                    data = data.slice(-2);
+                }
+
+                else if (instruction === 't') {
+
+                    // q (original) + t
+                    if (
+                        prev.item &&
+                        prev.item.original &&
+                        prev.item.original.instruction === 'q'
+                    ) {
+                        if (isCurveStraightLine(
+                            [ prev.item.original.data[0], prev.item.original.data[2], data[0] ],
+                            [ prev.item.original.data[1], prev.item.original.data[3], data[1] ]
+                        )) {
+                            instruction = 'l';
+                            data = data.slice(-2);
+                        } else {
+                            prev.item.instruction = 'q';
+                            prev.item.data = prev.item.original.data;
+                        }
+                    }
+
+                    // [^qt] + t
+                    else if (!prev.item || 'qt'.indexOf(prev.item.instruction) === -1) {
+                        instruction = 'l';
+                        data = data.slice(-2);
+                    }
+
+                }
+
+                // a
+                else if (
+                    instruction === 'a' &&
+                    (data[0] === 0 || data[1] === 0)
+                ) {
+                    instruction = 'l';
+                    data = data.slice(-2);
+                }
+            }
+
             // horizontal and vertical line shorthands
             // l 50 0 → h 50
             // l 0 50 → v 50
             if (
                 params.lineShorthands &&
-                'Ll'.indexOf(instruction) > -1
+                instruction === 'l'
             ) {
-                var lowerCase = instruction === instruction.toLowerCase();
-
-                if (point[1] - prev.point[1] === 0) {
-                    instruction = lowerCase ? 'h' : 'H';
+                if (data[1] === 0) {
+                    instruction = 'h';
                     data = [data[0]];
-                } else if (point[0] - prev.point[0] === 0) {
-                    instruction = lowerCase ? 'v' : 'V';
+                } else if (data[0] === 0) {
+                    instruction = 'v';
                     data = [data[1]];
                 }
             }
@@ -332,26 +417,11 @@ function filters(path, params) {
                     return false;
                 }
 
-                // M25,25 L25,25 C 25,25 25,25 25,25
-                if (
-                    'LHVQTCS'.indexOf(instruction) > -1 ||
-                    (instruction === 'M' && index > 1)
-                ) {
-                    var i = -1,
-                        every = data.every(function(d) {
-                            return d - prev.point[++i % 2] === 0;
-                        });
-
-                    if (every) {
-                        return false;
-                    }
-                }
-
                 // a 25,25 -30 0,1 0,0
                 if (
-                    'aA'.indexOf(item.instruction) > -1 &&
-                    point[0] - prev.point[0] === 0 &&
-                    point[1] - prev.point[1] === 0
+                    instruction === 'a' &&
+                    data[5] === 0 &&
+                    data[6] === 0
                 ) {
                     return false;
                 }
@@ -367,13 +437,13 @@ function filters(path, params) {
                 // increase previous h or v data with current
                 if (instruction === 'h' || instruction === 'v') {
                     prev.item.data[0] += data[0];
-                // replace previous H or V data with current
-                } else if (instruction === 'H' || instruction === 'V') {
-                    prev.item.data[0] = data[0];
                 // concat previous data with current
                 } else {
                     prev.item.data = prev.item.data.concat(data);
                 }
+
+                // if there was an original then remove it because of the new data
+                delete prev.item.original;
 
                 // filter current item
                 return false;
@@ -411,6 +481,32 @@ function roundData(data, fixed) {
     return data.map(function(num) {
         return +num.toFixed(fixed);
     });
+
+}
+
+/**
+ * Checks if curve is a straight line by calculating a polygon area.
+ *
+ * @see http://www.mathopenref.com/coordpolygonarea2.html
+ *
+ * @param {Array} xs array of curve points x-coordinates
+ * @param {Array} ys array of curve points y-coordinates
+ *
+ * @return {Boolean}
+ */
+
+function isCurveStraightLine(xs, ys) {
+
+    var points = xs.length,
+        area = 0,
+        j = points - 1;
+
+    for (var i=0; i < points; i++) {
+        area += (xs[j] + xs[i]) * (ys[j] - ys[i]);
+        j = i;
+    }
+
+    return !+area.toFixed(2);
 
 }
 
