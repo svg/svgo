@@ -29,7 +29,9 @@
     "svgo": "./bin/svgo"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec --require should --recursive"
+    "test": "./node_modules/.bin/mocha --reporter spec --require should --recursive",
+    "libcov": "./node_modules/.bin/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib",
+    "cover": "./node_modules/.bin/mocha --reporter mocha-istanbul --require should test/config test/svg2js"
   },
   "dependencies": {
     "sax": "~0.4",
