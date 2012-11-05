@@ -32,16 +32,18 @@
     "test": "./node_modules/.bin/mocha --reporter spec --require should --recursive"
   },
   "dependencies": {
-    "sax": "0.4.x",
-    "q": "0.8.x",
-    "q-fs": "",
-    "coa": "0.3.x",
+    "sax": "~0.4",
+    "q": "~0.8",
+    "q-fs": "~0.1",
+    "coa": "~0.3",
     "inherit": "",
     "node.extend": ""
   },
   "devDependencies": {
-    "mocha": "1.4.x",
-    "should": ""
+    "mocha": "~1.6",
+    "should": "~1",
+    "istanbul": "~0.1",
+    "mocha-istanbul": ""
   },
   "engines": {
     "node": ">=0.6.0"

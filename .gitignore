@@ -1,7 +1,4 @@
 node_modules/
+lib-cov/
+html-report/
 *.sublime-*
-*~
-*.lock
-*.DS_Store
-*.swp
-*.min.svg
