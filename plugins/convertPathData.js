@@ -380,6 +380,7 @@ function filters(path, params) {
             // convert curves into smooth shorthands
             if (params.curveSmoothShorthands && prev.item) {
 
+                // curveto
                 if (instruction === 'c') {
 
                     // c + c → c + s
@@ -414,11 +415,28 @@ function filters(path, params) {
 
                 }
 
-                // q → t
-                else if (
-                    prev.item.instruction === 'q' &&
-                    instruction === 'q'
-                ) {
+                // quadratic Bézier curveto
+                else if (instruction === 'q') {
+
+                    // q + q → q + t
+                    if (
+                        prev.item.instruction === 'q' &&
+                        data[0] === (prev.item.data[2] - prev.item.data[0]) &&
+                        data[1] === (prev.item.data[3] - prev.item.data[1])
+                    ) {
+                        instruction = 't';
+                        data = data.slice(2);
+                    }
+
+                    // t + q → t + t
+                    else if (
+                        prev.item.instruction === 't' &&
+                        data[2] === prev.item.data[0] &&
+                        data[3] === prev.item.data[1]
+                    ) {
+                        instruction = 't';
+                        data = data.slice(2);
+                    }
 
                 }
 
