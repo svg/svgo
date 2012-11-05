@@ -292,34 +292,7 @@ function filters(path, params) {
                 // s
                 else if (instruction === 's') {
 
-                    // c + s
                     if (
-                        prev.item &&
-                        prev.item.instruction === 'c' &&
-                        isCurveStraightLine(
-                            [ prev.item.data[2], prev.item.data[4], data[0], data[2] ],
-                            [ prev.item.data[3], prev.item.data[5], data[1], data[3] ]
-                        )
-                    ) {
-                        instruction = 'l';
-                        data = data.slice(-2);
-                    }
-
-                    // s + s
-                    else if (
-                        prev.item &&
-                        prev.item.instruction === 's' &&
-                        isCurveStraightLine(
-                            [ prev.item.data[0], prev.item.data[2], data[0], data[2] ],
-                            [ prev.item.data[1], prev.item.data[3], data[1], data[3] ]
-                        )
-                    ) {
-                        instruction = 'l';
-                        data = data.slice(-2);
-                    }
-
-                    // [^cs] + s
-                    else if (
                         isCurveStraightLine(
                             [ 0, data[0], data[2] ],
                             [ 0, data[1], data[3] ]
@@ -333,6 +306,7 @@ function filters(path, params) {
 
                 // q
                 else if (
+                    prev.item &&
                     instruction === 'q' &&
                     isCurveStraightLine(
                         [ 0, data[0], data[2] ],
@@ -401,6 +375,53 @@ function filters(path, params) {
                     instruction = 'v';
                     data = [data[1]];
                 }
+            }
+
+            // convert curves into smooth shorthands
+            if (params.curveSmoothShorthands && prev.item) {
+
+                if (instruction === 'c') {
+
+                    // c + c → c + s
+                    if (
+                        prev.item.instruction === 'c' &&
+                        data[0] === -(prev.item.data[2] - prev.item.data[4]) &&
+                        data[1] === -(prev.item.data[3] - prev.item.data[5])
+                    ) {
+                        instruction = 's';
+                        data = data.slice(2);
+                    }
+
+                    // s + c → s + s
+                    else if (
+                        prev.item.instruction === 's' &&
+                        data[0] === -(prev.item.data[0] - prev.item.data[2]) &&
+                        data[1] === -(prev.item.data[1] - prev.item.data[3])
+                    ) {
+                        instruction = 's';
+                        data = data.slice(2);
+                    }
+
+                    // [^cs] + c → [^cs] + s
+                    else if (
+                        'cs'.indexOf(prev.item.instruction) === -1 &&
+                        data[0] === 0 &&
+                        data[1] === 0
+                    ) {
+                        instruction = 's';
+                        data = data.slice(2);
+                    }
+
+                }
+
+                // q → t
+                else if (
+                    prev.item.instruction === 'q' &&
+                    instruction === 'q'
+                ) {
+
+                }
+
             }
 
             // remove useless non-first path segments
