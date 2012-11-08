@@ -39,7 +39,8 @@
     "q-fs": "~0.1",
     "coa": "~0.3.7",
     "inherit": "",
-    "node.extend": ""
+    "node.extend": "",
+    "yamljs": "~0.1.3"
   },
   "devDependencies": {
     "mocha": "~1.6",

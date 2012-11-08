@@ -1,0 +1,4 @@
+plugins:
+
+  - name: removeDoctype
+    active: false

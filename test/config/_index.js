@@ -81,7 +81,7 @@ describe('config', function() {
 
         var myConfig = {
                 coa: {
-                    config: './test/config/config.json'
+                    config: './test/config/config.yml'
                 }
             },
             result;
