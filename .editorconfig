@@ -14,3 +14,6 @@ indent_style = tab
 
 [package.json]
 indent_size = 2
+
+[*.yml]
+indent_size = 2
