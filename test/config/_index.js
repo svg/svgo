@@ -28,7 +28,7 @@ describe('config', function() {
                 result = data;
                 done();
             })
-            .end();
+            .done();
         });
 
         it('result should exists', function() {
@@ -68,7 +68,7 @@ describe('config', function() {
                 result = data;
                 done();
             })
-            .end();
+            .done();
         });
 
         it('result should exists', function() {
@@ -91,7 +91,7 @@ describe('config', function() {
                 result = data;
                 done();
             })
-            .end();
+            .done();
         });
 
         it('result should exists', function() {

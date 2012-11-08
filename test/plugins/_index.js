@@ -49,7 +49,7 @@ describe('plugins tests', function() {
 
                     done();
                 })
-                .end();
+                .done();
             });
 
             it(name + '.' + index, function() {
