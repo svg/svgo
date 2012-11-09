@@ -1,5 +1,4 @@
 ## TOC
-## TOC
 * [Intro](#intro)
 * [How it works](#how-it-works)
   * [config](#1-config)
