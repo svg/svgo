@@ -1,14 +1,15 @@
 ## TOC
-1. [Intro](#intro)
-2. [How it works](#how-it-works)
-  1. [config](#1-config)
-  2. [svg2js](#2-svg2js)
-  3. [plugins](#3-plugins)
-      1. [types](#31-types)
-      2. [API](#32-api)
-      3. [tests](#33-tests)
-  4. [js2svg](#4-js2svg)
-3. [What's next](#whats-next)
+## TOC
+* [Intro](#intro)
+* [How it works](#how-it-works)
+  * [config](#1-config)
+  * [svg2js](#2-svg2js)
+  * [plugins](#3-plugins)
+      * [types](#31-types)
+      * [API](#32-api)
+      * [tests](#33-tests)
+  * [js2svg](#4-js2svg)
+* [What's next](#whats-next)
 
 
 ## Intro
