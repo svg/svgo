@@ -66,7 +66,7 @@ function getResult(name, index) {
         .then(function(input) {
             mySVGO.enableOnlyOne(name);
 
-            return mySVGO.optimize(input.toString());
+            return mySVGO.fromString(input.toString());
         })
         .then(function(min) {
             return readFile(name + '.' + index +'.should.svg')
