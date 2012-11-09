@@ -1,4 +1,4 @@
-var intersectAttrs = require('../lib/tools').intersectAttrs;
+var intersectAttrs = require('../lib/svgo/tools').intersectAttrs;
 
 /**
  * Collapse content's intersected attributes to the existing group wrapper.

@@ -1,4 +1,4 @@
-var flattenOneLevel = require('../lib/tools').flattenOneLevel;
+var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel;
 
 /*
  * Collapse useless groups.

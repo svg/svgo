@@ -1,5 +1,5 @@
 var cover = process.argv[3] === 'mocha-istanbul',
-    config = require(cover ? '../../lib-cov/config' : '../../lib/config');
+    config = require(cover ? '../../lib-cov/svgo/config' : '../../lib/svgo/config');
 
 function getPlugin(name, config) {
 

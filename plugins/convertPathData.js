@@ -1,4 +1,4 @@
-var cleanupOutData = require('../lib/tools').cleanupOutData,
+var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /(?=-)|[\s,]+/,
     pathElems = ['path', 'glyph', 'missing-glyph'];

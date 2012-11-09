@@ -1,5 +1,5 @@
 var cover = process.argv[3] === 'mocha-istanbul',
-    svg2js = require(cover ? '../../lib-cov/svg2js' : '../../lib/svg2js');
+    svg2js = require(cover ? '../../lib-cov/svgo/svg2js' : '../../lib/svgo/svg2js');
 
 describe('svg2js', function() {
 
