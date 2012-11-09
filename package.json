@@ -50,10 +50,8 @@
   "engines": {
     "node": ">=0.6.0"
   },
-  "licenses": [
-    {
+  "licenses": [{
       "type": "MIT",
       "url": "https://raw.github.com/svg/svgo/master/LICENSE"
-    }
-  ]
+  }]
 }
