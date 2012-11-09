@@ -1,3 +1,16 @@
+## TOC
+1. [Intro](#intro)
+2. [How it works](#how-it-works)
+  1. [config](#1-config)
+  2. [svg2js](#2-svg2js)
+  3. [plugins](#3-plugins)
+      1. [types](#31-types)
+      2. [API](#32-api)
+      3. [tests](#33-tests)
+  4. [js2svg](#4-js2svg)
+3. [What's next](#whats-next)
+
+
 ## Intro
 So, as [mentioned earlier](https://github.com/svg/svgo#what-it-can-do), SVGO has a plugin-based architecture and almost every optimization is a separate plugin.
 
@@ -5,32 +18,27 @@ Plugins can delete and modify SVG elements, collapse contents, move attributes a
 
 ## How it works
 ### 1. config
-SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/config.json), which contains all the SVGO settings, including plugins. Something like this:
+SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/config.yml), which contains all the SVGO settings, including plugins. Something like this:
 
-```js
-{
-    …,
-    …,
-    "plugins": [
-        {
-            "name": "myTestPlugin",
-            "active": true,
-            "type": "perItem",
-            "params": {
-                "testParam": true,
-                "testParam2": 3
-            }
-        },{
-            "name": "myTestPlugin2",
-            "active": false,
-            "type": "perItemReverse"
-        },{
-            "name": "myTestPlugin3",
-            "active": true,
-            "type": "full"
-        }
-    ]
-}
+```yaml
+plugins:
+
+  - name: myTestPlugin
+    active: true
+    type: perItem
+    params:
+      testParam: true
+      testParam2: 3
+      
+  - name: myTestPlugin2
+    active: false
+    type: perItemReverse
+
+  - name: myTestPlugin3
+    active: true
+    type: full
+
+    …
 ```
 
 It's important to note that every plugin:
@@ -124,20 +132,18 @@ In the simplest case plugins process can be represented as "each plugin runs ove
 
 But that's not all ;) We got rid of a loop copypasting, but every plugin still runs over all the SVG-as-JS data, which is not very optimal. Actually, at the first step where we got a config, there was a collapsing of consecutive plugins with the same type, so ultimately one loop wraps a group of plugins:
 
-```js
-{
-    …,
-    …,
-    "plugins": [
-        [perItem group],
-        [perItemReverse group],
-        …,
-        [perItem group],
-        …,
-        [full group],
-        …
-    ]
-}
+```yaml
+plugins
+
+  - [perItem group],
+  - [perItemReverse group],
+  - …
+  - [perItem group],
+  - …
+  - [full group]
+  - …
+
+  …
 ```
 
 #### 3.2 API
