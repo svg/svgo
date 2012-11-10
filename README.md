@@ -74,7 +74,7 @@ Arguments:
   OUTPUT : Alias to --output
 ```
 
-With files:
+* with files:
 
 ```sh
 $ svgo test.svg
@@ -83,13 +83,13 @@ $ svgo test.svg
 $ svgo test.svg test.min.svg
 ```
 
-With STDIN / STDOUT:
+* with STDIN / STDOUT:
 
 ```sh
 $ cat test.svg | svgo -i - -o - > test.min.svg
 ```
 
-With strings (even with Data URI base64):
+* with strings (even with Data URI base64):
 
 ```sh
 $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
@@ -97,7 +97,8 @@ $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
 ```sh
 $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 ```
-With [GUI](https://github.com/svg/svgo-gui) (currently Mac OS X app only).
+* with [GUI](https://github.com/svg/svgo-gui) (currently Mac OS X app only)
+* as a Nodejs module - [examples](https://github.com/svg/svgo/tree/master/examples)
 
 ## TODO
 
