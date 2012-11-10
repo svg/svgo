@@ -6,7 +6,7 @@ o-o   o   o--o o-o
           o--o
 ```
 
-## SVGO [v0.0.9](https://github.com/svg/svgo/tree/v0.0.9) [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 
@@ -47,50 +47,62 @@ Want to know how it works and how to write your own plugin? [Of course you want 
 
 ## How to use
 
-```
-npm install -g svgo
+Latest stable version docs are [here](https://github.com/svg/svgo/tree/v0.0.9).
+
+```sh
+$ [sudo] npm install -g svgo
 ```
 
-```
+```sh
 Usage:
   svgo [OPTIONS] [ARGS]
 
 Options:
   -h, --help : Help
   -v, --version : Version
-  -i INPUT, --input=INPUT : Input: stdin (default) | filename | Data URI base64 string
-  -o OUTPUT, --output=OUTPUT : Output: stdout (default) | filename
+  -i INPUT, --input=INPUT : Input file, "-" for STDIN
+  -s STRING, --string=STRING : Input SVG data string
+  -o OUTPUT, --output=OUTPUT : Output file (by default the same as the input), "-" for STDOUT
   -c CONFIG, --config=CONFIG : Local config file to extend default
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name
   --datauri : Output as Data URI base64 string
   --pretty : Make SVG pretty printed
-  --test : Make a visual comparison of two files (PhantomJS pre-required)
+
+Arguments:
+  INPUT : Alias to --input
+  OUTPUT : Alias to --output
 ```
 
 With files:
 
+```sh
+$ svgo test.svg
 ```
-svgo -i test.svg -o test.min.svg
-```
-
-With stdin / stdout:
-
-```
-cat test.svg | svgo > test.min.svg
+```sh
+$ svgo test.svg test.min.svg
 ```
 
-With Data URI base64 strings:
+With STDIN / STDOUT:
 
+```sh
+$ cat test.svg | svgo -i - -o - > test.min.svg
 ```
-svgo -i 'data:image/svg+xml;base64,…' -o test.min.svg
+
+With strings (even with Data URI base64):
+
+```sh
+$ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
 ```
+```sh
+$ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
+```
+With [GUI](https://github.com/svg/svgo-gui) (currently Mac OS X app only).
 
 ## TODO
 
 1. batch folder optimization
 2. more plugins
-3. SVGO GUI (crossplatform?) via awesome [node-webkit](https://github.com/rogerwang/node-webkit)
-4. online SVGO web service
-5. more unit tests
-6. …
+3. online SVGO web service
+4. more unit tests
+5. …
