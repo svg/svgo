@@ -62,6 +62,7 @@ Options:
   -v, --version : Version
   -i INPUT, --input=INPUT : Input file, "-" for STDIN
   -s STRING, --string=STRING : Input SVG data string
+  -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file (by default the same as the input), "-" for STDOUT
   -c CONFIG, --config=CONFIG : Local config file to extend default
   --disable=DISABLE : Disable plugin by name
@@ -87,6 +88,12 @@ $ svgo test.svg test.min.svg
 
 ```sh
 $ cat test.svg | svgo -i - -o - > test.min.svg
+```
+
+* with folder
+
+```sh
+$ svgo -f ../path/to/folder/with/svg/files
 ```
 
 * with strings (even with Data URI base64):

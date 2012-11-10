@@ -3,7 +3,7 @@ var SVGO = require('../lib/svgo'),
 
 svgo
     // optimize SVG file
-    .fromFile('../examples/test.svg')
+    .fromFile('examples/test.svg')
     // get optimized result
     .then(function(min) {
 
