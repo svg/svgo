@@ -36,7 +36,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, trim useless delimiters and much more
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, convert one segment to another, trim useless delimiters and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] collapse multiple transforms into one, convert matrices to the short aliases and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] remove unused namespaces declaration
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
@@ -47,7 +47,7 @@ Want to know how it works and how to write your own plugin? [Of course you want 
 
 ## How to use
 
-Latest stable version docs are [here](https://github.com/svg/svgo/tree/v0.0.9).
+Latest stable version docs are [here](https://github.com/svg/svgo/tree/v0.0.9#readme).
 
 ```sh
 $ [sudo] npm install -g svgo
