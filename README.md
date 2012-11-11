@@ -47,7 +47,7 @@ Want to know how it works and how to write your own plugin? [Of course you want 
 
 ## How to use
 
-Latest stable version docs are [here](https://github.com/svg/svgo/tree/v0.0.9#readme).
+Latest stable v0.0.9 from npm and docs are [here](https://github.com/svg/svgo/tree/v0.0.9).
 
 ```sh
 $ [sudo] npm install -g svgo
