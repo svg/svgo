@@ -107,6 +107,13 @@ $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 * with [GUI](https://github.com/svg/svgo-gui) (currently Mac OS X app only)
 * as a Nodejs module - [examples](https://github.com/svg/svgo/tree/master/examples)
 
+## TODO
+
+* [v0.1.0](https://github.com/svg/svgo/issues?milestone=2&state=open)
+* [v0.1.1](https://github.com/svg/svgo/issues?milestone=3&state=open)
+* [v0.1.2](https://github.com/svg/svgo/issues?milestone=4&state=open)
+
+
 ## License
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
