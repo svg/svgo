@@ -98,7 +98,6 @@ plugins:
         straightCurves: true
         lineShorthands: true
         curveSmoothShorthands: true
-        collapseMovetoLineto: true
         floatPrecision: 3
         removeUseless: true
         collapseRepeated: true

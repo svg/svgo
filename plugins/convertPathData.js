@@ -472,18 +472,6 @@ function filters(path, params) {
 
             }
 
-            // collapse moveto + lineto
-            if (
-                params.collapseMovetoLineto &&
-                prev.item &&
-                prev.item.instruction === 'm' &&
-                instruction === 'l'
-            ) {
-                prev.item.data = prev.item.data.concat(data);
-
-                return false;
-            }
-
             // collapse repeated instructions data
             if (
                 params.collapseRepeated &&
