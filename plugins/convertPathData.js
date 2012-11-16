@@ -454,7 +454,7 @@ function filters(path, params) {
                 // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
                     (
-                     'Mmlhvqtcs'.indexOf(instruction) > -1
+                     'mlhvqtcs'.indexOf(instruction) > -1
                     ) &&
                     data.every(function(i) { return i === 0; })
                 ) {
