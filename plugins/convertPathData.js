@@ -127,6 +127,7 @@ function convertToRelative(path) {
         instruction = item.instruction;
         data = item.data;
 
+        // data !== !z
         if (data) {
 
             // already relative
@@ -154,7 +155,10 @@ function convertToRelative(path) {
             // T → t
             if ('MLT'.indexOf(instruction) > -1) {
 
-                instruction = instruction.toLowerCase();
+                // toLowerCase() only if current point != [0, 0]
+                if (point[0] !== 0 && point[1] !== 0) {
+                    instruction = instruction.toLowerCase();
+                }
 
                 // x y
                 // 0 1
@@ -236,6 +240,11 @@ function convertToRelative(path) {
 
         }
 
+        // !data === z, reset current point
+        else {
+            point = [0, 0];
+        }
+
     });
 
     return path;
@@ -257,16 +266,13 @@ function filters(path, params) {
         point = [0, 0],
         prev = {
             point: [0, 0]
-        },
-        index = 0;
+        };
 
     path = path.filter(function(item) {
 
         instruction = item.instruction;
         data = item.data;
         point = item.point;
-
-        index++;
 
         if (data) {
 
@@ -448,8 +454,7 @@ function filters(path, params) {
                 // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
                     (
-                     'lhvqtcs'.indexOf(instruction) > -1 ||
-                     (instruction === 'm' && index > 1)
+                     'Mmlhvqtcs'.indexOf(instruction) > -1
                     ) &&
                     data.every(function(i) { return i === 0; })
                 ) {
