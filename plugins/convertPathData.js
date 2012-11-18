@@ -155,8 +155,8 @@ function convertToRelative(path) {
             // T → t
             if ('MLT'.indexOf(instruction) > -1) {
 
-                // toLowerCase() only if current point != [0, 0]
-                if (point[0] !== 0 && point[1] !== 0) {
+                // don't convert M if point is [0, 0]
+                if (instruction !== 'M' || point[0] !== 0 && point[1] !== 0) {
                     instruction = instruction.toLowerCase();
                 }
 
