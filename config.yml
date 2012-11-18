@@ -20,10 +20,6 @@ plugins:
       active: true
       type: perItem
 
-    - name: convertStyleToAttrs
-      active: true
-      type: perItem
-
     - name: cleanupAttrs
       active: true
       type: perItem
@@ -31,6 +27,10 @@ plugins:
         newlines: true
         trim: true
         spaces: true
+
+    - name: convertStyleToAttrs
+      active: true
+      type: perItem
 
     - name: removeDefaultPx
       active: true
