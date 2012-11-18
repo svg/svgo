@@ -1,7 +1,8 @@
-var intersectAttrs = require('../lib/svgo/tools').intersectAttrs;
+var nonInheritedAttrs = require('./_collections').nonInheritedAttrs;
 
 /**
- * Collapse content's intersected attributes to the existing group wrapper.
+ * Collapse content's intersected and inheritable
+ * attributes to the existing group wrapper.
  *
  * @example
  * <g attr1="val1">
@@ -35,7 +36,7 @@ exports.moveElemsAttrsToGroup = function(item, params) {
                     if (!Object.keys(intersection).length) {
                         intersection = g.attrs;
                     } else {
-                        intersection = intersectAttrs(intersection, g.attrs);
+                        intersection = intersectInheritableAttrs(intersection, g.attrs);
 
                         if (!intersection) return false;
                     }
@@ -44,9 +45,10 @@ exports.moveElemsAttrsToGroup = function(item, params) {
                 }
             });
 
-
         if (every) {
+
             item.content.forEach(function(g) {
+
                 for (var name in intersection) {
                     g.removeAttr(name);
 
@@ -59,9 +61,42 @@ exports.moveElemsAttrsToGroup = function(item, params) {
                         item.addAttr(intersection[name]);
                     }
                 }
+
             });
+
         }
 
     }
 
 };
+
+/**
+ * Intersect inheritable attributes.
+ *
+ * @param {Object} a first attrs object
+ * @param {Object} b second attrs object
+ *
+ * @return {Object} intersected attrs object
+ */
+function intersectInheritableAttrs(a, b) {
+
+    var c = {};
+
+    for (var n in a) {
+        if (
+            b.hasOwnProperty(n) &&
+            nonInheritedAttrs.indexOf(n) === -1 &&
+            a[n].name === b[n].name &&
+            a[n].value === b[n].value &&
+            a[n].prefix === b[n].prefix &&
+            a[n].local === b[n].local
+        ) {
+            c[n] = a[n];
+        }
+    }
+
+    if (!Object.keys(c).length) return false;
+
+    return c;
+
+}

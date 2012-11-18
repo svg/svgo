@@ -105,6 +105,28 @@ var attrs = exports.attrs = {
     'documentEvent': ['onunload', 'onabort', 'onerror', 'onresize', 'onscroll', 'onzoom']
 };
 
+// http://www.w3.org/TR/SVG/propidx.html
+exports.nonInheritedAttrs = [
+    'alignment-baseline',
+    'baseline-shift',
+    'clip',
+    'clip-path',
+    'display',
+    'dominant-baseline',
+    'enable-background',
+    'filter',
+    'flood-color',
+    'flood-opacity',
+    'lighting-color',
+    'mask',
+    'opacity',
+    'overflow',
+    'stop-color',
+    'stop-opacity',
+    'text-decoration', // TODO: "see prose"
+    'unicode-bidi'
+];
+
 // http://www.w3.org/TR/SVG/single-page.html#types-ColorKeywords
 exports.colorsNames = {
     'aliceblue': '#f0f8ff',
