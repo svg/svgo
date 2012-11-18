@@ -1,142 +1,142 @@
 plugins:
 
-    - name: removeDoctype
-      active: true
-      type: perItem
+  - name: removeDoctype
+    active: true
+    type: perItem
 
-    - name: removeXMLProcInst
-      active: true
-      type: perItem
+  - name: removeXMLProcInst
+    active: true
+    type: perItem
 
-    - name: removeComments
-      active: true
-      type: perItem
+  - name: removeComments
+    active: true
+    type: perItem
 
-    - name: removeMetadata
-      active: true
-      type: perItem
+  - name: removeMetadata
+    active: true
+    type: perItem
 
-    - name: removeEditorsNSData
-      active: true
-      type: perItem
+  - name: removeEditorsNSData
+    active: true
+    type: perItem
 
-    - name: cleanupAttrs
-      active: true
-      type: perItem
-      params:
-        newlines: true
-        trim: true
-        spaces: true
+  - name: cleanupAttrs
+    active: true
+    type: perItem
+    params:
+      newlines: true
+      trim: true
+      spaces: true
 
-    - name: convertStyleToAttrs
-      active: true
-      type: perItem
+  - name: convertStyleToAttrs
+    active: true
+    type: perItem
 
-    - name: removeDefaultPx
-      active: true
-      type: perItem
+  - name: removeDefaultPx
+    active: true
+    type: perItem
 
-    - name: cleanupSVGElem
-      active: true
-      type: perItem
-      params:
-        id: true
-        version: true
-        xmlspace: true
+  - name: cleanupSVGElem
+    active: true
+    type: perItem
+    params:
+      id: true
+      version: true
+      xmlspace: true
 
-    - name: removeViewBox
-      active: true
-      type: perItem
+  - name: removeViewBox
+    active: true
+    type: perItem
 
-    - name: cleanupEnableBackground
-      active: true
-      type: perItem
+  - name: cleanupEnableBackground
+    active: true
+    type: perItem
 
-    - name: cleanupEnableBackground
-      active: true
-      type: perItem
+  - name: cleanupEnableBackground
+    active: true
+    type: perItem
 
-    - name: removeHiddenElems
-      active: true
-      type: perItem
-      params:
-        displayNone: true
-        opacity0: true
-        circleR0: true
-        ellipseRX0: true
-        ellipseRY0: true
-        rectWidth0: true
-        rectHeight0: true
-        patternWidth0: true
-        patternHeight0: true
-        imageWidth0: true
-        imageHeight0: true
-        pathEmptyD: true
-        polylineEmptyPoints: true
-        polygonEmptyPoints: true
+  - name: removeHiddenElems
+    active: true
+    type: perItem
+    params:
+      displayNone: true
+      opacity0: true
+      circleR0: true
+      ellipseRX0: true
+      ellipseRY0: true
+      rectWidth0: true
+      rectHeight0: true
+      patternWidth0: true
+      patternHeight0: true
+      imageWidth0: true
+      imageHeight0: true
+      pathEmptyD: true
+      polylineEmptyPoints: true
+      polygonEmptyPoints: true
 
-    - name: removeEmptyText
-      active: true
-      type: perItem
-      params:
-        text: true
-        tspan: true
-        tref: true
+  - name: removeEmptyText
+    active: true
+    type: perItem
+    params:
+      text: true
+      tspan: true
+      tref: true
 
-    - name: convertColors
-      active: true
-      type: perItem
-      params:
-        names2hex: true
-        rgb2hex: true
-        shorthex: true
+  - name: convertColors
+    active: true
+    type: perItem
+    params:
+      names2hex: true
+      rgb2hex: true
+      shorthex: true
 
-    - name: convertPathData
-      active: true
-      type: perItem
-      params:
-        straightCurves: true
-        lineShorthands: true
-        curveSmoothShorthands: true
+  - name: convertPathData
+    active: true
+    type: perItem
+    params:
+      straightCurves: true
+      lineShorthands: true
+      curveSmoothShorthands: true
+      floatPrecision: 3
+      removeUseless: true
+      collapseRepeated: true
+      leadingZero: true
+      negativeExtraSpace: true
+
+  - name: moveElemsAttrsToGroup
+    active: true
+    type: perItemReverse
+
+  - name: convertTransform
+    active: true
+    type: perItem
+    params:
+        convertToShorts: true
         floatPrecision: 3
+        matrixToTransform: true
+        shortTranslateScale: true
+        shortRotate: true
         removeUseless: true
-        collapseRepeated: true
+        collapseIntoOne: true
         leadingZero: true
-        negativeExtraSpace: true
+        negativeExtraSpace: false
 
-    - name: moveElemsAttrsToGroup
-      active: true
-      type: perItemReverse
+  - name: removeEmptyAttrs
+    active: true
+    type: perItem
 
-    - name: convertTransform
-      active: true
-      type: perItem
-      params:
-          convertToShorts: true
-          floatPrecision: 3
-          matrixToTransform: true
-          shortTranslateScale: true
-          shortRotate: true
-          removeUseless: true
-          collapseIntoOne: true
-          leadingZero: true
-          negativeExtraSpace: false
+  - name: removeEmptyContainers
+    active: true
+    type: perItemReverse
 
-    - name: removeEmptyAttrs
-      active: true
-      type: perItem
+  - name: collapseGroups
+    active: true
+    type: perItemReverse
 
-    - name: removeEmptyContainers
-      active: true
-      type: perItemReverse
-
-    - name: collapseGroups
-      active: true
-      type: perItemReverse
-
-    - name: removeUnusedNS
-      active: true
-      type: full
+  - name: removeUnusedNS
+    active: true
+    type: full
 
 svg2js:
 
