@@ -18,7 +18,7 @@ Plugins can delete and modify SVG elements, collapse contents, move attributes a
 
 ## How it works
 ### 1. config
-SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/config.yml), which contains all the SVGO settings, including plugins. Something like this:
+SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/.svgo.yml), which contains all the SVGO settings, including plugins. Something like this:
 
 ```yaml
 plugins:
@@ -29,7 +29,7 @@ plugins:
     params:
       testParam: true
       testParam2: 3
-      
+
   - name: myTestPlugin2
     active: false
     type: perItemReverse
