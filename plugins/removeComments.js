@@ -13,6 +13,8 @@
  */
 exports.removeComments = function(item, params) {
 
-    return !item.comment;
+    if (item.comment && item.comment.charAt(0) !== '!') {
+        return false;
+    }
 
 };
