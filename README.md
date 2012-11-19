@@ -1,10 +1,4 @@
-```
-o-o o   o o--o o-o
- \   \ /  |  | | |
-o-o   o   o--o o-o
-             |
-          o--o
-```
+![logo](https://raw.github.com/svg/svgo/master/logo200x200.png)
 
 ## SVGO [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
@@ -114,6 +108,8 @@ $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 * [v0.1.2](https://github.com/svg/svgo/issues?milestone=4&state=open)
 
 
-## License
+## License and copyrights
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
+
+Logo by [Yegor Bolshakov](http://xizzzy.ru/).
