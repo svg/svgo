@@ -74,7 +74,7 @@ function path2js(pathString) {
                 });
 
                 // very stupid defense strategy
-                if (!isNaN(data[0])) {
+                if (typeof data[0] === 'number' && !isNaN(data[0])) {
 
                     var pair = 0;
 
