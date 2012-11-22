@@ -2,3 +2,4 @@ node_modules/
 lib-cov/
 html-report/
 *.sublime-*
+npm-debug.log

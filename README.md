@@ -1,6 +1,6 @@
 ![logo](https://raw.github.com/svg/svgo/master/logo200x200.png)
 
-## SVGO [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.1.0 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 
@@ -27,11 +27,11 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupSVGElem.js) ] cleanup SVG element from useless attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, convert one segment to another, trim useless delimiters and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] collapse multiple transforms into one, convert matrices to the short aliases and much more
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] remove unknown elements content and attributes, remove attrs with default values
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] remove unused namespaces declaration
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
@@ -40,8 +40,6 @@ Want to know how it works and how to write your own plugin? [Of course you want 
 
 
 ## How to use
-
-Latest stable v0.0.9 from npm and docs are [here](https://github.com/svg/svgo/tree/v0.0.9).
 
 ```sh
 $ [sudo] npm install -g svgo
@@ -103,7 +101,6 @@ $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 
 ## TODO
 
-* [v0.1.0](https://github.com/svg/svgo/issues?milestone=2&state=open)
 * [v0.1.1](https://github.com/svg/svgo/issues?milestone=3&state=open)
 * [v0.1.2](https://github.com/svg/svgo/issues?milestone=4&state=open)
 

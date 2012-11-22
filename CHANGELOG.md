@@ -1,3 +1,31 @@
+### [ [>](//github.com/svg/svgo/tree/v0.1.0) ] 0.1.0 / 22.11.2012
+* new plugin [plugins/removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) (close [#6](https://github.com/svg/svgo/issues/6))
+* plugins/convertPathData: convert straight curves into lines segments (close [#17](https://github.com/svg/svgo/issues/17)); remove an absolute coords conversions
+* plugins/convertPathData: convert quadratic Bézier curveto into smooth shorthand (close [#31](https://github.com/svg/svgo/issues/31))
+* plugins/convertPathData: convert curveto into smooth shorthand (close [#30](https://github.com/svg/svgo/issues/30))
+* lib/svgo: global API refactoring (close [#37](https://github.com/svg/svgo/issues/37))
+* lib/svgo: fatal and stupid error in stream chunks concatenation (fix [#40](https://github.com/svg/svgo/issues/40))
+* lib/coa: batch folder optimization (close [#29](https://github.com/svg/svgo/issues/29))
+* lib/coa: support arguments as aliases to `--input` and `--output` (close [#28](https://github.com/svg/svgo/issues/28))
+* project logo by [Egor Bolhshakov](http://xizzzy.ru/)
+* move modules to `./lib/svgo/`
+* rename and convert `config.json` to `.svgo.yml`
+* add [./docs/](https://github.com/svg/svgo/tree/master/docs)
+* plugins/convertPathData: don't remove first `M` even if it's `0,0`
+* plugins/convertPathData: stronger defense from infinite loop
+* plugins/moveElemsAttrsToGroup: should affect only inheritable attributes (fix [#46](https://github.com/svg/svgo/issues/46))* 
+* plugins/removeComments: ignore comments which starts with '!' (close [#43](https://github.com/svg/svgo/issues/43))
+* config: `cleanupAttrs` should be before `convertStyleToAttrs` (fix [#44](https://github.com/svg/svgo/issues/44))* 
+* lib/svgo/jsAPI: add `eachAttr()` optional context param
+* temporarily remove PhantomJS and `--test` (close [#38](https://github.com/svg/svgo/issues/38))
+* q@0.8.10 compatibility: 'end is deprecated, use done instead' fix
+* add [Istanbul](https://github.com/gotwarlost/istanbul) code coverage
+* update dependencies versions and gitignore
+* README: add TODO section with versions milestones
+* update README with License section
+* update LICENSE with russian translation
+* `.editorconfig`: 2 spaces for YAML
+
 ### [ [>](//github.com/svg/svgo/tree/v0.0.9) ] 0.0.9 / 29.10.2012
 * [plugins how-to](https://github.com/svg/svgo/tree/master/plugins#readme) (close [#27](https://github.com/svg/svgo/issues/27))
 * allow any plugin of any type to go in any order (close [#14](https://github.com/svg/svgo/issues/14))
