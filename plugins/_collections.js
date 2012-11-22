@@ -1,3 +1,822 @@
+// http://www.w3.org/TR/SVG/intro.html#Definitions
+var elemsGroups = exports.elemsGroups = {
+    animation: ['animate', 'animateColor', 'animateMotion', 'animateTransform', 'set'],
+    descriptive: ['desc', 'metadata', 'title'],
+    shape: ['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect'],
+    structural: ['defs', 'g', 'svg', 'symbol', 'use'],
+    gradient: ['linearGradient', 'radialGradient'],
+    container: ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol']
+};
+
+// var defaults = exports.defaults = {
+//     'externalResourcesRequired': 'false',
+//     'xlink:type': 'simple'
+// };
+
+// http://www.w3.org/TR/SVG/intro.html#Definitions
+var attrsGroups = exports.attrsGroups = {
+    animationAddition: ['additive', 'accumulate'],
+    animationAttributeTarget: ['attributeType', 'attributeName'],
+    animationEvent: ['onbegin', 'onend', 'onrepeat', 'onload'],
+    animationTiming: ['begin', 'dur', 'end', 'min', 'max', 'restart', 'repeatCount', 'repeatDur', 'fill'],
+    animationValue: ['calcMode', 'values', 'keyTimes', 'keySplines', 'from', 'to', 'by'],
+    conditionalProcessing: ['requiredFeatures', 'requiredExtensions', 'systemLanguage'],
+    core: ['id', 'xml:base', 'xml:lang', 'xml:space'],
+    graphicalEvent: ['onfocusin', 'onfocusout', 'onactivate', 'onclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onload'],
+    presentation: ['alignment-baseline', 'baseline-shift', 'clip', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cursor', 'direction', 'display', 'dominant-baseline', 'enable-background', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'glyph-orientation-horizontal', 'glyph-orientation-vertical', 'image-rendering', 'kerning', 'letter-spacing', 'lighting-color', 'marker-end', 'marker-mid', 'marker-start', 'mask', 'opacity', 'overflow', 'pointer-events', 'shape-rendering', 'stop-color', 'stop-opacity', 'stroke', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke-width', 'text-anchor', 'text-decoration', 'text-rendering', 'unicode-bidi', 'visibility', 'word-spacing', 'writing-mode'],
+    xlink: ['xlink:href', 'xlink:show', 'xlink:actuate', 'xlink:type', 'xlink:role', 'xlink:arcrole', 'xlink:title'],
+    documentEvent: ['onunload', 'onabort', 'onerror', 'onresize', 'onscroll', 'onzoom'],
+    filterPrimitive: ['x', 'y', 'width', 'height'],
+    transferFunction: ['type', 'tableValues', 'slope', 'intercept', 'amplitude', 'exponent', 'offset']
+};
+
+var groupDefaults = exports.groupDefaults = {
+    filterPrimitive: {x: '0', y: '0', width: '100%', height: '100%'},
+    transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
+};
+
+// http://www.w3.org/TR/SVG/eltindex.html
+exports.elems = {
+    a: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            attrsGroups.xlink,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'target'
+        ],
+        defaults: {
+            target: '_self'
+        },
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive,
+            elemsGroups.shape,
+            elemsGroups.structural,
+            elemsGroups.gradient,
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    altGlyph: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            attrsGroups.xlink,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'x',
+            'y',
+            'dx',
+            'dy',
+            'glyphRef',
+            'format',
+            'rotate'
+        ],
+        content: []
+    },
+    altGlyphDef: {
+        attrs: [attrsGroups.core],
+        content: ['glyphRef']
+    },
+    altGlyphItem: {
+        attrs: [attrsGroups.core],
+        content: [
+            'glyphRef',
+            'altGlyphItem'
+        ]
+    },
+    animate: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.animationAddition,
+            attrsGroups.animationAttributeTarget,
+            attrsGroups.animationEvent,
+            attrsGroups.animationTiming,
+            attrsGroups.animationValue,
+            attrsGroups.presentation,
+            attrsGroups.xlink,
+            'externalResourcesRequired'
+        ],
+        content: [elemsGroups.descriptive]
+    },
+    animateColor: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.animationEvent,
+            attrsGroups.xlink,
+            attrsGroups.animationAttributeTarget,
+            attrsGroups.animationTiming,
+            attrsGroups.animationValue,
+            attrsGroups.animationAddition,
+            attrsGroups.presentation,
+            'externalResourcesRequired'
+        ],
+        content: [elemsGroups.descriptive]
+    },
+    animateMotion: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.animationEvent,
+            attrsGroups.xlink,
+            attrsGroups.animationTiming,
+            attrsGroups.animationValue,
+            attrsGroups.animationAddition,
+            'externalResourcesRequired',
+            'path',
+            'keyPoints',
+            'rotate',
+            'origin'
+        ],
+        defaults: {
+            'rotate': '0'
+        },
+        content: [
+            elemsGroups.descriptive,
+            'mpath'
+        ]
+    },
+    animateTransform: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.animationEvent,
+            attrsGroups.xlink,
+            attrsGroups.animationAttributeTarget,
+            attrsGroups.animationTiming,
+            attrsGroups.animationValue,
+            attrsGroups.animationAddition,
+            'externalResourcesRequired',
+            'type'
+        ],
+        defaults: {
+            type: 'translate'
+        },
+        content: [elemsGroups.descriptive]
+    },
+    circle: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'cx',
+            'cy',
+            'r'
+        ],
+        defaults: {
+            cx: 0,
+            cy: 0
+        },
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive
+        ]
+    },
+    clipPath: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'clipPathUnits'
+        ],
+        defaults: {
+            clipPathUnits: 'userSpaceOnUse'
+        },
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive,
+            elemsGroups.shape,
+            'text',
+            'use'
+        ]
+    },
+    'color-profile': {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.xlink,
+            'local',
+            'name',
+            'rendering-intent'
+        ],
+        defaults: {
+            name: 'sRGB',
+            'rendering-intent': 'auto'
+        },
+        content: [elemsGroups.descriptive]
+    },
+    cursor: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.conditionalProcessing,
+            attrsGroups.xlink,
+            'externalResourcesRequired',
+            'x',
+            'y'
+        ],
+        defaults: {
+            x: '0',
+            y: '0'
+        },
+        content: [elemsGroups.descriptive]
+    },
+    defs: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform'
+        ],
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive,
+            elemsGroups.shape,
+            elemsGroups.structural,
+            elemsGroups.gradient,
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    desc: {
+        attrs: [
+            attrsGroups.core,
+            'class',
+            'style'
+        ]
+    },
+    ellipse: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'cx',
+            'cy',
+            'rx',
+            'ry'
+        ],
+        defaults: {
+            cx: '0',
+            cy: '0'
+        },
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive
+        ]
+    },
+    feBlend: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            // TODO: in - 'If no value is provided and this is the first filter primitive,
+            // then this filter primitive will use SourceGraphic as its input'
+            'in',
+            'in2',
+            'mode'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            mode: 'normal'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feColorMatrix: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in',
+            'type',
+            'values'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            type: 'matrix'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feComponentTransfer: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        content: [
+            'feFuncA',
+            'feFuncB',
+            'feFuncG',
+            'feFuncR'
+        ]
+    },
+    feComposite: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in',
+            'in2',
+            'operator',
+            'k1',
+            'k2',
+            'k3',
+            'k4'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            operator: 'over',
+            k1: '0',
+            k2: '0',
+            k3: '0',
+            k4: '0'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feConvolveMatrix: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in',
+            'order',
+            'kernelMatrix',
+            // TODO: divisor - 'The default value is the sum of all values in kernelMatrix,
+            // with the exception that if the sum is zero, then the divisor is set to 1'
+            'divisor',
+            'bias',
+            // TODO: targetX - 'By default, the convolution matrix is centered in X over each
+            // pixel of the input image (i.e., targetX = floor ( orderX / 2 ))'
+            'targetX',
+            'targetY',
+            'edgeMode',
+            // TODO: kernelUnitLength - 'The first number is the <dx> value. The second number
+            // is the <dy> value. If the <dy> value is not specified, it defaults to the same value as <dx>'
+            'kernelUnitLength',
+            'preserveAlpha'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            order: '3',
+            bias: '0',
+            edgeMode: 'duplicate',
+            preserveAlpha: 'false'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feDiffuseLighting: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in',
+            'surfaceScale',
+            'diffuseConstant',
+            'kernelUnitLength'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            surfaceScale: '1',
+            diffuseConstant: '1'
+        },
+        content: [
+            elemsGroups.descriptive,
+            // TODO: 'exactly one light source element, in any order'
+            'feDistantLight',
+            'fePointLight',
+            'feSpotLight'
+        ]
+    },
+    feDisplacementMap: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in',
+            'in2',
+            'scale',
+            'xChannelSelector',
+            'yChannelSelector'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            scale: '0',
+            xChannelSelector: 'A',
+            yChannelSelector: 'A'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feDistantLight: {
+        attrs: [
+            attrsGroups.core,
+            'azimuth',
+            'elevation'
+        ],
+        defaults: {
+            azimuth: '0',
+            elevation: '0'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feFlood: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        content: [
+            'animate',
+            'animateColor',
+            'set'
+        ]
+    },
+    feFuncA: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.transferFunction
+        ],
+        groupDefaults: groupDefaults.transferFunction,
+        content: [
+            'set',
+            'animate'
+        ]
+    },
+    feFuncB: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.transferFunction
+        ],
+        groupDefaults: groupDefaults.transferFunction,
+        content: [
+            'set',
+            'animate'
+        ]
+    },
+    feFuncG: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.transferFunction
+        ],
+        groupDefaults: groupDefaults.transferFunction,
+        content: [
+            'set',
+            'animate'
+        ]
+    },
+    feFuncR: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.transferFunction
+        ],
+        groupDefaults: groupDefaults.transferFunction,
+        content: [
+            'set',
+            'animate'
+        ]
+    },
+    feGaussianBlur: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.filterPrimitive,
+            'class',
+            'style',
+            'in',
+            'stdDeviation'
+        ],
+        groupDefaults: groupDefaults.filterPrimitive,
+        defaults: {
+            stdDeviation: '0'
+        },
+        content: [
+            'set',
+            'animate'
+        ]
+    },
+    feImage: {},
+    feMerge: {},
+    feMergeNode: {},
+    feMorphology: {},
+    feOffset: {},
+    fePointLight: {},
+    feSpecularLighting: {},
+    feSpotLight: {},
+    feTile: {},
+    feTurbulence: {},
+    filter: {},
+    font: {},
+    'font-face': {},
+    'font-face-format': {},
+    'font-face-name': {},
+    'font-face-src': {},
+    'font-face-uri': {},
+    foreignObject: {},
+    g: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform'
+        ],
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive,
+            elemsGroups.shape,
+            elemsGroups.structural,
+            elemsGroups.gradient,
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    glyph: {},
+    glyphRef: {},
+    hkern: {},
+    image: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.conditionalProcessing,
+            attrsGroups.graphicalEvent,
+            attrsGroups.xlink,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'preserveAspectRatio',
+            'transform',
+            'x',
+            'y',
+            'width',
+            'height',
+            'xlink:href'
+        ],
+        defaults: {
+            x: '0',
+            y: '0',
+            preserveAspectRatio: 'xMidYMid meet'
+        },
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive
+        ]
+    },
+    line: {},
+    linearGradient: {
+        attrs: [
+            attrsGroups.core,
+            attrsGroups.presentation,
+            attrsGroups.xlink,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'x1',
+            'y1',
+            'x2',
+            'y2',
+            'gradientUnits',
+            'gradientTransform',
+            'spreadMethod',
+            'xlink:href'
+        ],
+        defaults: {
+            x1: '0',
+            y1: '0',
+            x2: '100%',
+            y2: '0',
+            spreadMethod: 'pad'
+        },
+        content: [
+            elemsGroups.descriptive,
+            'animate',
+            'animateTransform',
+            'set',
+            'stop'
+        ]
+    },
+    marker: {},
+    mask: {},
+    metadata: {},
+    'missing-glyph': {},
+    mpath: {},
+    path: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'd',
+            'pathLength'
+        ],
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive
+        ]
+    },
+    pattern: {},
+    polygon: {},
+    polyline: {},
+    radialGradient: {
+        defaults: {
+            cx: '50%',
+            cy: '50%',
+            r: '50%'
+        }
+    },
+    rect: {},
+    script: {},
+    set: {},
+    stop: {},
+    style: {},
+    svg: {
+        attrs: [
+            attrsGroups.conditionalProcessing,
+            attrsGroups.core,
+            attrsGroups.documentEvent,
+            attrsGroups.graphicalEvent,
+            attrsGroups.presentation,
+            'class',
+            'style',
+            'x',
+            'y',
+            'width',
+            'height',
+            'viewBox',
+            'preserveAspectRatio',
+            'zoomAndPan',
+            'version',
+            'baseProfile',
+            'contentScriptType',
+            'contentStyleType'
+        ],
+        defaults: {
+            x: '0',
+            y: '0',
+            width: '100%',
+            height: '100%',
+            preserveAspectRatio: 'xMidYMid meet',
+            zoomAndPan: 'magnify',
+            version: '1.1',
+            baseProfile: 'none',
+            contentScriptType: 'application/ecmascript',
+            contentStyleType: 'text/css'
+        },
+        content: [
+            elemsGroups.animation,
+            elemsGroups.descriptive,
+            elemsGroups.shape,
+            elemsGroups.structural,
+            elemsGroups.gradient,
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    switch: {},
+    symbol: {},
+    text: {},
+    textPath: {},
+    title: {},
+    tref: {},
+    tspan: {},
+    use: {},
+    view: {},
+    vkern: {}
+};
+
+
 // http://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
 exports.editorNamespaces = [
     'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
@@ -78,32 +897,6 @@ exports.stylingProps = [
     'text-anchor',
     'writing-mode'
 ];
-
-// http://www.w3.org/TR/SVG/intro.html#Definitions
-var elems = exports.elems = {
-    'animation': ['animate', 'animateColor', 'animateMotion', 'animateTransform', 'set'],
-    'descriptive': ['desc', 'metadata', 'title'],
-    'shape': ['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect'],
-    'structural': ['defs', 'g', 'svg', 'symbol', 'use'],
-    'gradient': ['linearGradient', 'radialGradient'],
-    // http://www.w3.org/TR/SVG/intro.html#TermContainerElement
-    'container': ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol']
-};
-
-// http://www.w3.org/TR/SVG/intro.html#Definitions
-var attrs = exports.attrs = {
-    'animationAddition': ['additive', 'accumulate'],
-    'animationAttributeTarget': ['attributeType', 'attributeName'],
-    'animationEvent': ['onbegin', 'onend', 'onrepeat', 'onload'],
-    'animationTiming': ['begin', 'dur', 'end', 'min', 'max', 'restart', 'repeatCount', 'repeatDur', 'fill'],
-    'animationValue': ['calcMode', 'values', 'keyTimes', 'keySplines', 'from', 'to', 'by'],
-    'conditionalProcessing': ['requiredFeatures', 'requiredExtensions', 'systemLanguage'],
-    'core': ['id', 'xml:base', 'xml:lang', 'xml:space'],
-    'graphicalEvent': ['onfocusin', 'onfocusout', 'onactivate', 'onclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onload'],
-    'presentation': ['alignment-baseline', 'baseline-shift', 'clip', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cursor', 'direction', 'display', 'dominant-baseline', 'enable-background', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'glyph-orientation-horizontal', 'glyph-orientation-vertical', 'image-rendering', 'kerning', 'letter-spacing', 'lighting-color', 'marker-end', 'marker-mid', 'marker-start', 'mask', 'opacity', 'overflow', 'pointer-events', 'shape-rendering', 'stop-color', 'stop-opacity', 'stroke', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke-width', 'text-anchor', 'text-decoration', 'text-rendering', 'unicode-bidi', 'visibility', 'word-spacing', 'writing-mode'],
-    'xlink': ['xlink:href', 'xlink:show', 'xlink:actuate', 'xlink:type', 'xlink:role', 'xlink:arcrole', 'xlink:title'],
-    'documentEvent': ['onunload', 'onabort', 'onerror', 'onresize', 'onscroll', 'onzoom']
-};
 
 // http://www.w3.org/TR/SVG/propidx.html
 exports.nonInheritedAttrs = [

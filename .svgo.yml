@@ -36,13 +36,13 @@ plugins:
     active: true
     type: perItem
 
-  - name: cleanupSVGElem
+  - name: removeUnknownsAndDefaults
     active: true
     type: perItem
     params:
-      id: true
-      version: true
-      xmlspace: true
+      unknownContent: true
+      unknownAttrs: true
+      defaultAttrs: true
 
   - name: removeViewBox
     active: true

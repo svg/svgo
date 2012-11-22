@@ -1,4 +1,4 @@
-var container = require('./_collections').elems.container;
+var container = require('./_collections').elemsGroups.container;
 
 /**
  * Remove empty containers.
