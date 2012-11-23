@@ -31,6 +31,7 @@ var attrsGroups = exports.attrsGroups = {
 };
 
 var groupDefaults = exports.groupDefaults = {
+    core: {'xml:space': 'preserve'},
     filterPrimitive: {x: '0', y: '0', width: '100%', height: '100%'},
     transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
 };
@@ -49,6 +50,9 @@ exports.elems = {
             'externalResourcesRequired',
             'transform',
             'target'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             target: '_self'
@@ -97,14 +101,23 @@ exports.elems = {
             'format',
             'rotate'
         ],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         content: []
     },
     altGlyphDef: {
         attrs: [attrsGroups.core],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         content: ['glyphRef']
     },
     altGlyphItem: {
         attrs: [attrsGroups.core],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         content: [
             'glyphRef',
             'altGlyphItem'
@@ -123,6 +136,9 @@ exports.elems = {
             attrsGroups.xlink,
             'externalResourcesRequired'
         ],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         content: [elemsGroups.descriptive]
     },
     animateColor: {
@@ -137,6 +153,9 @@ exports.elems = {
             attrsGroups.animationAddition,
             attrsGroups.presentation,
             'externalResourcesRequired'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         content: [elemsGroups.descriptive]
     },
@@ -154,6 +173,9 @@ exports.elems = {
             'keyPoints',
             'rotate',
             'origin'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             'rotate': '0'
@@ -176,6 +198,9 @@ exports.elems = {
             'externalResourcesRequired',
             'type'
         ],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         defaults: {
             type: 'translate'
         },
@@ -194,6 +219,9 @@ exports.elems = {
             'cx',
             'cy',
             'r'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             cx: 0,
@@ -215,6 +243,9 @@ exports.elems = {
             'transform',
             'clipPathUnits'
         ],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         defaults: {
             clipPathUnits: 'userSpaceOnUse'
         },
@@ -234,6 +265,9 @@ exports.elems = {
             'name',
             'rendering-intent'
         ],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         defaults: {
             name: 'sRGB',
             'rendering-intent': 'auto'
@@ -248,6 +282,9 @@ exports.elems = {
             'externalResourcesRequired',
             'x',
             'y'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             x: '0',
@@ -265,6 +302,9 @@ exports.elems = {
             'style',
             'externalResourcesRequired',
             'transform'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         content: [
             elemsGroups.animation,
@@ -297,6 +337,9 @@ exports.elems = {
             attrsGroups.core,
             'class',
             'style'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ]
     },
     ellipse: {
@@ -313,6 +356,9 @@ exports.elems = {
             'cy',
             'rx',
             'ry'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             cx: '0',
@@ -336,7 +382,10 @@ exports.elems = {
             'in2',
             'mode'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             mode: 'normal'
         },
@@ -356,7 +405,10 @@ exports.elems = {
             'type',
             'values'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             type: 'matrix'
         },
@@ -374,7 +426,10 @@ exports.elems = {
             'style',
             'in'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         content: [
             'feFuncA',
             'feFuncB',
@@ -397,7 +452,10 @@ exports.elems = {
             'k3',
             'k4'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             operator: 'over',
             k1: '0',
@@ -434,7 +492,10 @@ exports.elems = {
             'kernelUnitLength',
             'preserveAlpha'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             order: '3',
             bias: '0',
@@ -458,7 +519,10 @@ exports.elems = {
             'diffuseConstant',
             'kernelUnitLength'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             surfaceScale: '1',
             diffuseConstant: '1'
@@ -484,7 +548,10 @@ exports.elems = {
             'xChannelSelector',
             'yChannelSelector'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             scale: '0',
             xChannelSelector: 'A',
@@ -500,6 +567,9 @@ exports.elems = {
             attrsGroups.core,
             'azimuth',
             'elevation'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             azimuth: '0',
@@ -518,7 +588,10 @@ exports.elems = {
             'class',
             'style'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         content: [
             'animate',
             'animateColor',
@@ -530,7 +603,10 @@ exports.elems = {
             attrsGroups.core,
             attrsGroups.transferFunction
         ],
-        groupDefaults: groupDefaults.transferFunction,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.transferFunction
+        ],
         content: [
             'set',
             'animate'
@@ -541,7 +617,10 @@ exports.elems = {
             attrsGroups.core,
             attrsGroups.transferFunction
         ],
-        groupDefaults: groupDefaults.transferFunction,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.transferFunction
+        ],
         content: [
             'set',
             'animate'
@@ -552,7 +631,9 @@ exports.elems = {
             attrsGroups.core,
             attrsGroups.transferFunction
         ],
-        groupDefaults: groupDefaults.transferFunction,
+        groupDefaults: [
+            groupDefaults.transferFunction
+        ],
         content: [
             'set',
             'animate'
@@ -563,7 +644,10 @@ exports.elems = {
             attrsGroups.core,
             attrsGroups.transferFunction
         ],
-        groupDefaults: groupDefaults.transferFunction,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.transferFunction
+        ],
         content: [
             'set',
             'animate'
@@ -579,7 +663,10 @@ exports.elems = {
             'in',
             'stdDeviation'
         ],
-        groupDefaults: groupDefaults.filterPrimitive,
+        groupDefaults: [
+            groupDefaults.core,
+            groupDefaults.filterPrimitive
+        ],
         defaults: {
             stdDeviation: '0'
         },
@@ -616,6 +703,9 @@ exports.elems = {
             'style',
             'externalResourcesRequired',
             'transform'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         content: [
             elemsGroups.animation,
@@ -664,6 +754,9 @@ exports.elems = {
             'height',
             'xlink:href'
         ],
+        groupDefaults: [
+            groupDefaults.core
+        ],
         defaults: {
             x: '0',
             y: '0',
@@ -691,6 +784,9 @@ exports.elems = {
             'gradientTransform',
             'spreadMethod',
             'xlink:href'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             x1: '0',
@@ -724,6 +820,9 @@ exports.elems = {
             'transform',
             'd',
             'pathLength'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         content: [
             elemsGroups.animation,
@@ -765,6 +864,9 @@ exports.elems = {
             'baseProfile',
             'contentScriptType',
             'contentStyleType'
+        ],
+        groupDefaults: [
+            groupDefaults.core
         ],
         defaults: {
             x: '0',

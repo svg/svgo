@@ -18,9 +18,12 @@ for (var elem in elems) {
     // extend defaults with groupDefaults
     if (elem.groupDefaults) {
         elem.defaults = elem.defaults || {};
-        for(var groupDefault in elem.groupDefaults) {
-            elem.defaults[groupDefault] = elem.groupDefaults[groupDefault];
-        }
+
+        elem.groupDefaults.forEach(function(groupDefaults) {
+            for(var groupDefault in groupDefaults) {
+                elem.defaults[groupDefault] = groupDefaults[groupDefault];
+            }
+        });
     }
 }
 
@@ -63,7 +66,10 @@ exports.removeUnknownsAndDefaults = function(item, params) {
 
             item.eachAttr(function(attr) {
 
-                if (attr.name !== 'xmlns' && !attr.prefix) {
+                if (
+                    attr.name !== 'xmlns' &&
+                    (attr.prefix === 'xml' || !attr.prefix)
+                ) {
                     if (
                         // unknown attrs
                         (params.unknownAttrs &&
