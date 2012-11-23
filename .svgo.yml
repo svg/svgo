@@ -145,7 +145,7 @@ svg2js:
   normalize: true
   lowercase: true
   xmlns: true
-  position: true
+  position: false
 
 js2svg:
 
