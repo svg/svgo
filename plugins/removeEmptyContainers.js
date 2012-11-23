@@ -19,6 +19,6 @@ var container = require('./_collections').elemsGroups.container;
  */
 exports.removeEmptyContainers = function(item, params) {
 
-    return !(item.isElem(container) && item.isEmpty());
+    return !(item.isElem(container) && !item.isElem('svg') && item.isEmpty());
 
 };
