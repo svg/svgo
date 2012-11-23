@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g attr1="val1" attr2="val2" attr3="val3">
+    <g attr1="val1" fill="red" color="#000">
         <g opacity="1">
             text
         </g>

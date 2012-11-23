@@ -1,4 +1,4 @@
-var nonInheritedAttrs = require('./_collections').nonInheritedAttrs;
+var inheritableAttrs = require('./_collections').inheritableAttrs;
 
 /**
  * Collapse content's intersected and inheritable
@@ -85,7 +85,7 @@ function intersectInheritableAttrs(a, b) {
     for (var n in a) {
         if (
             b.hasOwnProperty(n) &&
-            nonInheritedAttrs.indexOf(n) === -1 &&
+            inheritableAttrs.indexOf(n) > -1 &&
             a[n].name === b[n].name &&
             a[n].value === b[n].value &&
             a[n].prefix === b[n].prefix &&

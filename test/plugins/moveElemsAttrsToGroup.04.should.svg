@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g transform="rotate(45) scale(2)" attr="val">
+    <g transform="rotate(45) scale(2)" fill="red">
         <g>
             <path d="..."/>
         </g>
