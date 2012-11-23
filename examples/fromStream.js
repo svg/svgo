@@ -10,9 +10,9 @@ svgo
     // optimize stream
     .fromStream(fileStream)
     // get optimized result
-    .then(function(min) {
+    .then(function(result) {
 
-        console.log(min);
+        console.log(result);
         // output:
         // {
         //     // optimized SVG data string
@@ -21,8 +21,8 @@ svgo
         //     info: {
         //         width: '10',
         //         height: '20',
-        //         startBytes: 59,
-        //         endBytes: 38
+        //         inBytes: 59,
+        //         outBytes: 38
         //     }
         // }
 

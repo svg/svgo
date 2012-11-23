@@ -5,9 +5,9 @@ svgo
     // optimize SVG data string
     .fromString('<svg version="1.1" width="10" height="20">test</svg>')
     // get optimized result
-    .then(function(min) {
+    .then(function(result) {
 
-        console.log(min);
+        console.log(result);
         // output:
         // {
         //     // optimized SVG data string
@@ -16,8 +16,8 @@ svgo
         //     info: {
         //         width: '10',
         //         height: '20',
-        //         startBytes: 52,
-        //         endBytes: 38
+        //         inBytes: 52,
+        //         outBytes: 38
         //     }
         // }
 
