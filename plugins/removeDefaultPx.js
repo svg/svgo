@@ -1,4 +1,4 @@
-var regValPx = /^(\d+)px$/;
+var regValPx = /^(-?(?:[0-9]+|[0-9]*\.[0-9]+))px$/;
 
 /**
  * Remove default "px" unit from attributes values.
