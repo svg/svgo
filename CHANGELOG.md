@@ -1,3 +1,9 @@
+### [ [>](//github.com/svg/svgo/tree/v0.1.1) ] 0.1.1 / 23.11.2012
+* plugins/moveElemsAttrsToGroup: fix inheitable only attrs array (fix [#47](https://github.com/svg/svgo/issues/47))
+* plugins/removeEmptyContainers: do not remove an empty 'svg' element (fix [#48](https://github.com/svg/svgo/issues/48))
+* plugins/removeDefaultPx: should also understand a floating-numbers too (fix [#49](https://github.com/svg/svgo/issues/49))
+* plugins/removeUnknownsAndDefaults: merge multiple groupDefaults attrs (close [#50](https://github.com/svg/svgo/issues/50))
+
 ### [ [>](//github.com/svg/svgo/tree/v0.1.0) ] 0.1.0 / 22.11.2012
 * new plugin [plugins/removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) (close [#6](https://github.com/svg/svgo/issues/6))
 * plugins/convertPathData: convert straight curves into lines segments (close [#17](https://github.com/svg/svgo/issues/17)); remove an absolute coords conversions

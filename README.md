@@ -1,6 +1,6 @@
 ![logo](https://raw.github.com/svg/svgo/master/logo200x200.png)
 
-## SVGO v0.1.0 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.1.1 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 
@@ -101,7 +101,6 @@ $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 
 ## TODO
 
-* [v0.1.1](https://github.com/svg/svgo/issues?milestone=3&state=open)
 * [v0.1.2](https://github.com/svg/svgo/issues?milestone=4&state=open)
 
 
