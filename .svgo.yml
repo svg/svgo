@@ -40,6 +40,7 @@ plugins:
     active: true
     type: perItem
     params:
+      SVGid: true
       unknownContent: true
       unknownAttrs: true
       defaultAttrs: true

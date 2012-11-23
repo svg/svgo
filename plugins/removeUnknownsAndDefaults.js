@@ -44,6 +44,11 @@ exports.removeUnknownsAndDefaults = function(item, params) {
 
         var elem = item.elem;
 
+        // remove SVG id attr
+        if (params.SVGid && elem === 'svg') {
+            item.removeAttr('id');
+        }
+
         // remove unknown element's content
         if (
             params.unknownContent &&
