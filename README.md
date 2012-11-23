@@ -101,8 +101,8 @@ $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 
 ## TODO
 
-* [v0.1.2](https://github.com/svg/svgo/issues?milestone=4&state=open)
-* [v0.1.3](https://github.com/svg/svgo/issues?milestone=4&state=open)
+* [v0.1.3](https://github.com/svg/svgo/issues?milestone=5&state=open)
+* [v0.1.4](https://github.com/svg/svgo/issues?milestone=6&state=open)
 
 
 ## License and copyrights
