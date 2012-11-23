@@ -1,8 +1,8 @@
 ### [ [>](//github.com/svg/svgo/tree/v0.1.2) ] 0.1.2 / 24.11.2012
-* lib/svgo/svg2js: correct 'onerror' failure (fix #51](https://github.com/svg/svgo/issues/51))
-* config: disable sax-js position tracking by default (fix #52](https://github.com/svg/svgo/issues/52))
-* lib/svgo: rename 'startBytes' to 'inBytes' and 'endBytes' to 'outBytes (close #53](https://github.com/svg/svgo/issues/53))
-* plugins/removeUnknownsAndDefaults: remove SVG id attr (close #54](https://github.com/svg/svgo/issues/54))
+* lib/svgo/svg2js: correct 'onerror' failure (fix [#51](https://github.com/svg/svgo/issues/51))
+* config: disable sax-js position tracking by default (fix [#52](https://github.com/svg/svgo/issues/52))
+* lib/svgo: rename 'startBytes' to 'inBytes' and 'endBytes' to 'outBytes (close [#53](https://github.com/svg/svgo/issues/53))
+* plugins/removeUnknownsAndDefaults: remove SVG id attr (close [#54](https://github.com/svg/svgo/issues/54))
 
 ### [ [>](//github.com/svg/svgo/tree/v0.1.1) ] 0.1.1 / 23.11.2012
 * plugins/moveElemsAttrsToGroup: fix inheitable only attrs array (fix [#47](https://github.com/svg/svgo/issues/47))
