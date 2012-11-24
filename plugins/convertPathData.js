@@ -120,6 +120,7 @@ function convertToRelative(path) {
     var instruction,
         data,
         newPoint,
+        index = 0,
         point = [0, 0];
 
     path.forEach(function(item) {
@@ -127,12 +128,18 @@ function convertToRelative(path) {
         instruction = item.instruction;
         data = item.data;
 
+        index++;
+
         // data !== !z
         if (data) {
 
             // already relative
             // recalculate current point
             if ('mcslqta'.indexOf(instruction) > -1) {
+
+                if (instruction === 'm' && index === 1) {
+                    instruction = 'M';
+                }
 
                 newPoint = data.slice(-2);
 
