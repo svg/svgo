@@ -37,7 +37,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
 
-Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/tree/master/plugins#readme).
+Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 
 
 ## How to use
