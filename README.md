@@ -46,7 +46,7 @@ Want to know how it works and how to write your own plugin? [Of course you want 
 $ [sudo] npm install -g svgo
 ```
 
-```sh
+```
 Usage:
   svgo [OPTIONS] [ARGS]
 
@@ -70,33 +70,28 @@ Arguments:
 
 * with files:
 
-```sh
-$ svgo test.svg
-```
-```sh
-$ svgo test.svg test.min.svg
-```
+        $ svgo test.svg
+
+    or:
+
+        $ svgo test.svg test.min.svg
 
 * with STDIN / STDOUT:
 
-```sh
-$ cat test.svg | svgo -i - -o - > test.min.svg
-```
+        $ cat test.svg | svgo -i - -o - > test.min.svg
 
 * with folder
 
-```sh
-$ svgo -f ../path/to/folder/with/svg/files
-```
+        $ svgo -f ../path/to/folder/with/svg/files
 
-* with strings (even with Data URI base64):
+* with strings:
 
-```sh
-$ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
-```
-```sh
-$ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
-```
+        $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
+
+    or event with Data URI base64:
+
+        $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
+
 * with [GUI](https://github.com/svg/svgo-gui) (currently Mac OS X app only)
 * as a Nodejs module - [examples](https://github.com/svg/svgo/tree/master/examples)
 
