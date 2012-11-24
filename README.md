@@ -88,7 +88,7 @@ Arguments:
 
         $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
 
-    or event with Data URI base64:
+    or even with Data URI base64:
 
         $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 
