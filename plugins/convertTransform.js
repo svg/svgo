@@ -193,12 +193,14 @@ function removeUseless(transforms) {
         // translate(0), rotate(0), skewX(0), skewY(0)
         if (
             ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
+            transform.data.length === 1 &&
             transform.data[0] === 0
         ) {
             return false;
         // scale(1)
         } else if (
             transform.name === 'scale' &&
+            transform.data.length === 1 &&
             transform.data[0] === 1
         ) {
             return false;
