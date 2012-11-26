@@ -1,7 +1,8 @@
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /(?=-)|[\s,]+/,
-    pathElems = ['path', 'glyph', 'missing-glyph'];
+    pathElems = ['path', 'glyph', 'missing-glyph'],
+    hasMarkerMid;
 
 /**
  * Convert absolute Path to relative,
@@ -22,6 +23,8 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
 exports.convertPathData = function(item, params) {
 
     if (item.isElem(pathElems) && item.hasAttr('d')) {
+
+        hasMarkerMid = item.hasAttr('marker-mid');
 
         var data = path2js(item.attr('d').value);
 
@@ -76,11 +79,25 @@ function path2js(pathString) {
                 // very stupid defense strategy
                 if (typeof data[0] === 'number' && !isNaN(data[0])) {
 
+                    // deal with very first 'Mm' and multiple points data
+                    if ('Mm'.indexOf(instruction) > -1) {
+
+                        path.push({
+                            instruction: instruction,
+                            data: data.splice(0, 2)
+                        });
+
+                        if (data.length) {
+                            instruction = instruction === instruction.toLowerCase() ? 'l' : 'L';
+                        }
+
+                    }
+
                     var pair = 0;
 
                     if ('HhVv'.indexOf(instruction) > -1) {
                         pair = 1;
-                    } else if ('MmLlTt'.indexOf(instruction) > -1) {
+                    } else if ('LlTt'.indexOf(instruction) > -1) {
                         pair = 2;
                     } else if ('QqSs'.indexOf(instruction) > -1) {
                         pair = 4;
@@ -120,7 +137,6 @@ function convertToRelative(path) {
     var instruction,
         data,
         newPoint,
-        index = 0,
         point = [0, 0];
 
     path.forEach(function(item) {
@@ -128,18 +144,12 @@ function convertToRelative(path) {
         instruction = item.instruction;
         data = item.data;
 
-        index++;
-
         // data !== !z
         if (data) {
 
             // already relative
             // recalculate current point
             if ('mcslqta'.indexOf(instruction) > -1) {
-
-                if (instruction === 'm' && index === 1) {
-                    instruction = 'M';
-                }
 
                 newPoint = data.slice(-2);
 
@@ -461,7 +471,7 @@ function filters(path, params) {
                 // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
                     (
-                     'mlhvqtcs'.indexOf(instruction) > -1
+                     'lhvqtcs'.indexOf(instruction) > -1
                     ) &&
                     data.every(function(i) { return i === 0; })
                 ) {
@@ -482,6 +492,7 @@ function filters(path, params) {
             // collapse repeated instructions data
             if (
                 params.collapseRepeated &&
+                !hasMarkerMid &&
                 prev.item &&
                 instruction === prev.item.instruction
             ) {
