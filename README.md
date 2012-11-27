@@ -1,4 +1,4 @@
-<img src="http://soulshine.in/svgo/logo.svg" width="200" height="200" alt="logo"/>
+<img src="http://soulshine.in/svgo/logo.svg?v2" width="200" height="200" alt="logo"/>
 
 ## SVGO v0.1.2 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
