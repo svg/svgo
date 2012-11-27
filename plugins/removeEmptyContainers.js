@@ -12,12 +12,11 @@ var container = require('./_collections').elemsGroups.container;
  * <g><marker><a/></marker></g>
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeEmptyContainers = function(item, params) {
+exports.removeEmptyContainers = function(item) {
 
     return !(item.isElem(container) && !item.isElem('svg') && item.isEmpty());
 

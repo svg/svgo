@@ -7,6 +7,7 @@
     },
     "node": true,
     "strict": false,
+    "expr": true,
     "curly": false,
     "camelcase": true,
     "eqeqeq": true,

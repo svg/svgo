@@ -19,12 +19,11 @@ var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel;
  * <path attr1="val1" d="..."/>
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.collapseGroups = function(item, params) {
+exports.collapseGroups = function(item) {
 
     // non-empty elements
     if (item.elem && !item.isEmpty()) {

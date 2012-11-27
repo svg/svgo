@@ -568,7 +568,9 @@ function isCurveStraightLine(xs, ys) {
         j = i;
     }
 
-    return !+area.toFixed(2);
+    if (+area.toFixed(2)) return false;
+
+    return true;
 
 }
 

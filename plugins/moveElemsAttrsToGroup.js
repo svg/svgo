@@ -20,12 +20,11 @@ var inheritableAttrs = require('./_collections').inheritableAttrs;
  * </g>
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.moveElemsAttrsToGroup = function(item, params) {
+exports.moveElemsAttrsToGroup = function(item) {
 
     if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
 

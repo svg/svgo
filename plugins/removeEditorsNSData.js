@@ -10,12 +10,11 @@ var editorNamespaces = require('./_collections').editorNamespaces,
  * <path sodipodi:nodetypes="cccc"/>
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeEditorsNSData = function(item, params) {
+exports.removeEditorsNSData = function(item) {
 
     if (item.elem) {
 

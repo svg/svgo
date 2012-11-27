@@ -33,7 +33,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec --require should --recursive",
-    "cover": "./node_modules/.bin/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib && ./node_modules/.bin/mocha --reporter mocha-istanbul --require should test/config test/svg2js"
+    "cover": "./node_modules/.bin/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib && ./node_modules/.bin/mocha --reporter mocha-istanbul --require should test/config test/svg2js",
+    "jshint": "jshint --show-non-errors ."
   },
   "dependencies": {
     "sax": "~0.4",

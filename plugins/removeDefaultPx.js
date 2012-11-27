@@ -8,12 +8,11 @@ var regValPx = /^(-?(?:[0-9]+|[0-9]*\.[0-9]+))px$/;
  * http://www.w3.org/TR/SVG/coords.html#Units
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeDefaultPx = function(item, params) {
+exports.removeDefaultPx = function(item) {
 
     if (item.elem) {
 
