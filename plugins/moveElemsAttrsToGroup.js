@@ -1,3 +1,5 @@
+'use strict';
+
 var inheritableAttrs = require('./_collections').inheritableAttrs;
 
 /**

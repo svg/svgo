@@ -1,3 +1,5 @@
+'use strict';
+
 var regViewBox = /^0\s0\s(\d+)\s(\d+)$/,
     viewBoxElems = ['svg', 'pattern'];
 

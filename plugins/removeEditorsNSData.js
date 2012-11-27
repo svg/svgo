@@ -1,3 +1,5 @@
+'use strict';
+
 var editorNamespaces = require('./_collections').editorNamespaces,
     prefixes = [];
 

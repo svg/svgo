@@ -1,3 +1,5 @@
+'use strict';
+
 var cover = process.argv[3] === 'mocha-istanbul',
     svg2js = require(cover ? '../../lib-cov/svgo/svg2js' : '../../lib/svgo/svg2js');
 

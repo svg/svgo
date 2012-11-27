@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove some useless svg element attributes.
  *

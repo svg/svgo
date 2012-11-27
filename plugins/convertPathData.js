@@ -1,3 +1,5 @@
+'use strict';
+
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /(?=-)|[\s,]+/,

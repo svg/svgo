@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove XML Processing Instruction.
  *

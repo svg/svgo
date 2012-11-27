@@ -1,3 +1,5 @@
+'use strict';
+
 var extend = require('../lib/svgo/tools').extend,
     stylingProps = require('./_collections').stylingProps,
     regCleanupStyle = /(:|;)\s+/g;

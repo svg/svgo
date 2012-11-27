@@ -1,3 +1,5 @@
+'use strict';
+
 var container = require('./_collections').elemsGroups.container;
 
 /**

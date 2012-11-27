@@ -1,3 +1,5 @@
+'use strict';
+
 // http://www.w3.org/TR/SVG/intro.html#Definitions
 var elemsGroups = exports.elemsGroups = {
     animation: ['animate', 'animateColor', 'animateMotion', 'animateTransform', 'set'],

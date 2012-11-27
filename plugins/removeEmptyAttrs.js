@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove attributes with empty values.
  *

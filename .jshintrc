@@ -6,7 +6,7 @@
         "it": false
     },
     "node": true,
-    "strict": false,
+    "globalstrict": true,
     "expr": true,
     "curly": false,
     "camelcase": true,

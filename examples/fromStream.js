@@ -1,3 +1,5 @@
+'use strict';
+
 var FS = require('fs'),
     PATH = require('path'),
     path = PATH.resolve(__dirname, '../examples/test.svg'),

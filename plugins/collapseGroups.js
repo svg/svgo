@@ -1,3 +1,5 @@
+'use strict';
+
 var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel;
 
 /*

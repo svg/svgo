@@ -1,3 +1,5 @@
+'use strict';
+
 var regEnableBackground = /^new\s0\s0\s(\d+)\s(\d+)$/,
     elems = ['svg', 'mask', 'pattern'];
 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove unused namespaces declaration.
  *

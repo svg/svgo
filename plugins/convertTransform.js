@@ -1,3 +1,5 @@
+'use strict';
+
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/,
     regTransformSplit = /(matrix|translate|scale|rotate|skewX|skewY)\s*\((.+?)\)[\s,]*/,
