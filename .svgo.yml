@@ -36,6 +36,13 @@ plugins:
     active: true
     type: perItem
 
+  - name: roundNumericValues
+    active: true
+    type: perItem
+    params:
+      floatPrecision: 3
+      leadingZero: true
+
   - name: removeUnknownsAndDefaults
     active: true
     type: perItem
