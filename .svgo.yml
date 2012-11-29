@@ -32,16 +32,13 @@ plugins:
     active: true
     type: perItem
 
-  - name: removeDefaultPx
-    active: true
-    type: perItem
-
-  - name: roundNumericValues
+  - name: cleanupNumericValues
     active: true
     type: perItem
     params:
       floatPrecision: 3
       leadingZero: true
+      defaultPx: true
 
   - name: removeUnknownsAndDefaults
     active: true

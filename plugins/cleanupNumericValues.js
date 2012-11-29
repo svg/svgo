@@ -4,7 +4,8 @@ var regNumericValues = /^([\-+]?\d*\.?\d+)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero;
 
 /**
- * Round numeric values to the fixed precision.
+ * Round numeric values to the fixed precision,
+ * remove default 'px' units.
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
@@ -12,7 +13,7 @@ var regNumericValues = /^([\-+]?\d*\.?\d+)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
  *
  * @author Kir Belevich
  */
-exports.roundNumericValues = function(item, params) {
+exports.cleanupNumericValues = function(item, params) {
 
     if (item.isElem()) {
 
@@ -23,15 +24,21 @@ exports.roundNumericValues = function(item, params) {
 
             // if attribute value matches regNumericValues
             if (match) {
-                // then round it to the fixed precision
-                var num = +(+match[1]).toFixed(params.floatPrecision) + (match[2] || '');
+                    // round it to the fixed precision
+                var num = +(+match[1]).toFixed(params.floatPrecision),
+                    units = match[2] || '';
 
                 // and remove leading zero
                 if (params.leadingZero) {
                     num = removeLeadingZero(num);
                 }
 
-                attr.value = num;
+                // remove default 'px' units
+                if (params.defaultPx && units === 'px') {
+                    units = '';
+                }
+
+                attr.value = num + units;
             }
         });
 
