@@ -81,21 +81,24 @@ function path2js(pathString) {
                 // very stupid defense strategy
                 if (typeof data[0] === 'number' && !isNaN(data[0])) {
 
+                    var index = 0,
+                        pair = 2;
+
                     // deal with very first 'Mm' and multiple points data
                     if ('Mm'.indexOf(instruction) > -1) {
 
                         path.push({
                             instruction: instruction,
-                            data: data.splice(0, 2)
+                            data: data.slice(index, index + pair)
                         });
+
+                        index += pair;
 
                         if (data.length) {
                             instruction = instruction === instruction.toLowerCase() ? 'l' : 'L';
                         }
 
                     }
-
-                    var pair = 0;
 
                     if ('HhVv'.indexOf(instruction) > -1) {
                         pair = 1;
@@ -109,11 +112,13 @@ function path2js(pathString) {
                         pair = 7;
                     }
 
-                    while(data.length) {
+                    while(index < data.length) {
                         path.push({
                             instruction: instruction,
-                            data: data.splice(0, pair)
+                            data: data.slice(index, index + pair)
                         });
+
+                        index += pair;
                     }
 
                 }
