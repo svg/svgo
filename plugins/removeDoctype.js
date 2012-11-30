@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove DOCTYPE declaration.
  *
@@ -13,12 +15,11 @@
  * q"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeDoctype = function(item, params) {
+exports.removeDoctype = function(item) {
 
     return !item.doctype;
 

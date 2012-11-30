@@ -1,3 +1,5 @@
+'use strict';
+
 var regViewBox = /^0\s0\s(\d+)\s(\d+)$/,
     viewBoxElems = ['svg', 'pattern'];
 
@@ -12,12 +14,11 @@ var regViewBox = /^0\s0\s(\d+)\s(\d+)$/,
  * <svg width="100" height="50">
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeViewBox = function(item, params) {
+exports.removeViewBox = function(item) {
 
     if (
         item.isElem(viewBoxElems) &&

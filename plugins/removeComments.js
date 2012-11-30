@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove comments.
  *
@@ -6,12 +8,11 @@
  * Plug-In . SVG Version: 6.00 Build 0)  -->
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeComments = function(item, params) {
+exports.removeComments = function(item) {
 
     if (item.comment && item.comment.charAt(0) !== '!') {
         return false;

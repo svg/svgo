@@ -1,3 +1,5 @@
+'use strict';
+
 var INHERIT = require('inherit'),
     QFS = require('q-fs'),
     FS = require('fs'),

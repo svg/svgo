@@ -1,3 +1,5 @@
+'use strict';
+
 var SVGO = require('../lib/svgo'),
     svgo = new SVGO(/*{ custom config object }*/);
 

@@ -1,13 +1,14 @@
+'use strict';
+
 /**
  * Remove attributes with empty values.
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeEmptyAttrs = function(item, params) {
+exports.removeEmptyAttrs = function(item) {
 
     if (item.elem) {
 

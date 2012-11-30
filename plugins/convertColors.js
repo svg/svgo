@@ -1,3 +1,5 @@
+'use strict';
+
 var collections = require('./_collections'),
     regRGB = /^rgb\((\d+%?),\s*(\d+%?),\s*(\d+%?)\)$/,
     regHEX = /^\#(([a-fA-F0-9])\2){3}$/;

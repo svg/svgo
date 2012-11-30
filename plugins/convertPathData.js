@@ -1,7 +1,10 @@
+'use strict';
+
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /(?=-)|[\s,]+/,
-    pathElems = ['path', 'glyph', 'missing-glyph'];
+    pathElems = ['path', 'glyph', 'missing-glyph'],
+    hasMarkerMid;
 
 /**
  * Convert absolute Path to relative,
@@ -22,6 +25,8 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
 exports.convertPathData = function(item, params) {
 
     if (item.isElem(pathElems) && item.hasAttr('d')) {
+
+        hasMarkerMid = item.hasAttr('marker-mid');
 
         var data = path2js(item.attr('d').value);
 
@@ -76,11 +81,28 @@ function path2js(pathString) {
                 // very stupid defense strategy
                 if (typeof data[0] === 'number' && !isNaN(data[0])) {
 
-                    var pair = 0;
+                    var index = 0,
+                        pair = 2;
+
+                    // deal with very first 'Mm' and multiple points data
+                    if ('Mm'.indexOf(instruction) > -1) {
+
+                        path.push({
+                            instruction: instruction,
+                            data: data.slice(index, index + pair)
+                        });
+
+                        index += pair;
+
+                        if (data.length) {
+                            instruction = instruction === instruction.toLowerCase() ? 'l' : 'L';
+                        }
+
+                    }
 
                     if ('HhVv'.indexOf(instruction) > -1) {
                         pair = 1;
-                    } else if ('MmLlTt'.indexOf(instruction) > -1) {
+                    } else if ('LlTt'.indexOf(instruction) > -1) {
                         pair = 2;
                     } else if ('QqSs'.indexOf(instruction) > -1) {
                         pair = 4;
@@ -90,11 +112,13 @@ function path2js(pathString) {
                         pair = 7;
                     }
 
-                    while(data.length) {
+                    while(index < data.length) {
                         path.push({
                             instruction: instruction,
-                            data: data.splice(0, pair)
+                            data: data.slice(index, index + pair)
                         });
+
+                        index += pair;
                     }
 
                 }
@@ -454,7 +478,7 @@ function filters(path, params) {
                 // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
                     (
-                     'mlhvqtcs'.indexOf(instruction) > -1
+                     'lhvqtcs'.indexOf(instruction) > -1
                     ) &&
                     data.every(function(i) { return i === 0; })
                 ) {
@@ -475,6 +499,7 @@ function filters(path, params) {
             // collapse repeated instructions data
             if (
                 params.collapseRepeated &&
+                !hasMarkerMid &&
                 prev.item &&
                 instruction === prev.item.instruction
             ) {
@@ -550,7 +575,9 @@ function isCurveStraightLine(xs, ys) {
         j = i;
     }
 
-    return !+area.toFixed(2);
+    if (+area.toFixed(2)) return false;
+
+    return true;
 
 }
 

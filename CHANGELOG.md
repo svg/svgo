@@ -1,16 +1,31 @@
-### [ [>](//github.com/svg/svgo/tree/v0.1.2) ] 0.1.2 / 24.11.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.1.3) ] 0.1.3 / 30.11.2012
+* new plugin [plugins/cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) (close [#8](https://github.com/svg/svgo/issues/8))
+* plugins/removeDefaultPx functionality now included in plugins/removeUnknownsAndDefaults
+* plugins/removeUnknownsAndDefaults: refactoring and picking up the complete elems+attrs collection (close [#59](https://github.com/svg/svgo/issues/59))
+* plugins/convertTransform: error in matrices multiplication (fix [#58](https://github.com/svg/svgo/issues/58))
+* plugins/convertTransform: mark translate() and scale() as useless only with one param (fix [#57](https://github.com/svg/svgo/issues/57))
+* plugins/convertPathData: drastic speed improvement with huge Path data
+* plugins/convertPathData: fix the very first Mm with multiple points (fix [#56](https://github.com/svg/svgo/issues/56))
+* plugins/moveElemsAttrsToGroup: additional check for transform attr
+* brand-new project `logo.svg`
+* `.travis.yml`: build only master branch
+* global `'use strict'`
+* `.jshintignore`
+* README and CHANGELOG: minor corrections
+
+### [ [>](https://github.com/svg/svgo/tree/v0.1.2) ] 0.1.2 / 24.11.2012
 * lib/svgo/svg2js: correct 'onerror' failure (fix [#51](https://github.com/svg/svgo/issues/51))
 * config: disable sax-js position tracking by default (fix [#52](https://github.com/svg/svgo/issues/52))
 * lib/svgo: rename 'startBytes' to 'inBytes' and 'endBytes' to 'outBytes' (close [#53](https://github.com/svg/svgo/issues/53))
 * plugins/removeUnknownsAndDefaults: remove SVG id attr (close [#54](https://github.com/svg/svgo/issues/54))
 
-### [ [>](//github.com/svg/svgo/tree/v0.1.1) ] 0.1.1 / 23.11.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.1.1) ] 0.1.1 / 23.11.2012
 * plugins/moveElemsAttrsToGroup: fix inheitable only attrs array (fix [#47](https://github.com/svg/svgo/issues/47))
 * plugins/removeEmptyContainers: do not remove an empty 'svg' element (fix [#48](https://github.com/svg/svgo/issues/48))
 * plugins/removeDefaultPx: should also understand a floating-numbers too (fix [#49](https://github.com/svg/svgo/issues/49))
 * plugins/removeUnknownsAndDefaults: merge multiple groupDefaults attrs (close [#50](https://github.com/svg/svgo/issues/50))
 
-### [ [>](//github.com/svg/svgo/tree/v0.1.0) ] 0.1.0 / 22.11.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.1.0) ] 0.1.0 / 22.11.2012
 * new plugin [plugins/removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) (close [#6](https://github.com/svg/svgo/issues/6))
 * plugins/convertPathData: convert straight curves into lines segments (close [#17](https://github.com/svg/svgo/issues/17)); remove an absolute coords conversions
 * plugins/convertPathData: convert quadratic Bézier curveto into smooth shorthand (close [#31](https://github.com/svg/svgo/issues/31))
@@ -38,7 +53,7 @@
 * update LICENSE with russian translation
 * `.editorconfig`: 2 spaces for YAML
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.9) ] 0.0.9 / 29.10.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.9) ] 0.0.9 / 29.10.2012
 * [plugins how-to](https://github.com/svg/svgo/tree/master/plugins#readme) (close [#27](https://github.com/svg/svgo/issues/27))
 * allow any plugin of any type to go in any order (close [#14](https://github.com/svg/svgo/issues/14))
 * allow to do a multiple optimizations with one init (close [#25](https://github.com/svg/svgo/issues/25))
@@ -54,7 +69,7 @@
 * plugins/collapseGroups: merge split-level transforms (fix [#13](https://github.com/svg/svgo/issues/13))
 * jsdoc corrections
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.8) ] 0.0.8 / 20.10.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.8) ] 0.0.8 / 20.10.2012
 * new plugin [convertTransform](plugins/convertTransform.js) (close [#5](https://github.com/svg/svgo/issues/5))
 * new plugin [removeUnusedNS](plugins/removeUnusedNS.js)
 * plugins/convertPathData: remove useless segments
@@ -71,7 +86,7 @@
 * update .editorconfig
 * update .travis.yml with nodejs 0.9
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.7) ] 0.0.7 / 14.10.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.7) ] 0.0.7 / 14.10.2012
 * new plugin [convertPathData](plugins/convertPathData.js)
 * --input data now can be a Data URI base64 string
 * --output data now can be a Data URI base64 string with --datauri flag
@@ -82,33 +97,33 @@
 * .svgo → config.json
 * lib/phantom_wrapper.js → lib/phantom.js
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.6) ] 0.0.6 / 04.10.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.6) ] 0.0.6 / 04.10.2012
 * add --test option to make a visual comparison of two files (PhantomJS pre-required)
 * update README and CHANGELOG with the correct relative urls
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.5) ] 0.0.5 / 03.10.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.5) ] 0.0.5 / 03.10.2012
 * every plugin now has [at least one test](plugins)
 * removeViewBox, cleanupEnableBackground, removeEditorsNSData, convertStyleToAttrs and collapseGroups plugins fixes
 * new --pretty option for the pretty printed SVG
 * lib/config refactoring
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.4) ] 0.0.4 / 30.09.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.4) ] 0.0.4 / 30.09.2012
 * new plugin [removeViewBox](plugins/removeViewBox.js)
 * new plugin [cleanupEnableBackground](plugins/cleanupEnableBackground.js)
 * display useful info after successful optimization
 * 'npm test' with 'spec' mocha output by default
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.3) ] 0.0.3 / 29.09.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.3) ] 0.0.3 / 29.09.2012
 * plugins/collapseGroups bugfix
 * plugins/moveElemsAttrsToGroup bugfix
 * svgo now display --help if running w/o arguments
 * massive jsdoc updates
 * plugins engine main filter function optimization
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.2) ] 0.0.2 / 28.09.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.2) ] 0.0.2 / 28.09.2012
 * add --disable and --enable command line options
 * add an empty values rejecting to coa.js
 * update README
 
-### [ [>](//github.com/svg/svgo/tree/v0.0.1) ] 0.0.1 / 27.09.2012
+### [ [>](https://github.com/svg/svgo/tree/v0.0.1) ] 0.0.1 / 27.09.2012
 * initial public version

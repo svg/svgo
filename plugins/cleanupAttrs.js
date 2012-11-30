@@ -1,3 +1,5 @@
+'use strict';
+
 var regNewlines = /\n/g,
     regSpaces = /\s{2,}/g;
 

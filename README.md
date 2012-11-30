@@ -1,6 +1,6 @@
-![logo](https://raw.github.com/svg/svgo/master/logo200x200.png)
+<img src="http://soulshine.in/svgo/logo.svg?v3" width="200" height="200" alt="logo"/>
 
-## SVGO v0.1.2 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.1.3 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 ![](//mc.yandex.ru/watch/18431326)
@@ -22,20 +22,20 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove metadata
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDefaultPx.js) ] remove default "px" unit
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove a lot of hidden elements
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove hidden elements
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute when possible
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute when possible
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, convert one segment to another, trim useless delimiters and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] collapse multiple transforms into one, convert matrices to the short aliases and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] remove unknown elements content and attributes, remove attrs with default values
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] remove unused namespaces declaration
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] round numeric values to the fixed precision, remove default 'px' units
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] move elements attributes to the existing group wrapper
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse groups
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse useless groups
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 
@@ -97,8 +97,8 @@ Arguments:
 
 ## TODO
 
-* [v0.1.3](https://github.com/svg/svgo/issues?milestone=5&state=open)
 * [v0.1.4](https://github.com/svg/svgo/issues?milestone=6&state=open)
+* [v0.1.5](https://github.com/svg/svgo/issues?milestone=7&state=open)
 
 
 ## License and copyrights

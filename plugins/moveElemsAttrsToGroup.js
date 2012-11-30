@@ -1,3 +1,5 @@
+'use strict';
+
 var inheritableAttrs = require('./_collections').inheritableAttrs;
 
 /**
@@ -20,12 +22,11 @@ var inheritableAttrs = require('./_collections').inheritableAttrs;
  * </g>
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.moveElemsAttrsToGroup = function(item, params) {
+exports.moveElemsAttrsToGroup = function(item) {
 
     if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
 
@@ -53,7 +54,7 @@ exports.moveElemsAttrsToGroup = function(item, params) {
                     g.removeAttr(name);
 
                     if (name === 'transform') {
-                        if (!hasTransform) {
+                        if (!hasTransform && item.hasAttr('transform')) {
                             item.attr('transform').value += ' ' + intersection[name].value;
                             hasTransform = true;
                         }

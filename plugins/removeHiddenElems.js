@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Remove hidden elements with disabled rendering:
  * - display="none"

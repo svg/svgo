@@ -1,3 +1,5 @@
+'use strict';
+
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/,
     regTransformSplit = /(matrix|translate|scale|rotate|skewX|skewY)\s*\((.+?)\)[\s,]*/,
@@ -193,12 +195,14 @@ function removeUseless(transforms) {
         // translate(0), rotate(0), skewX(0), skewY(0)
         if (
             ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
+            transform.data.length === 1 &&
             transform.data[0] === 0
         ) {
             return false;
         // scale(1)
         } else if (
             transform.name === 'scale' &&
+            transform.data.length === 1 &&
             transform.data[0] === 1
         ) {
             return false;
@@ -236,7 +240,7 @@ function collapseIntoOne(transforms, params) {
         transforms = {
             name: 'matrix',
             data: transforms.reduce(function(a, b) {
-                return multiplyMatrices(a, b);
+                return multiplyTransformMatrices(a, b);
             })
         };
 
@@ -455,21 +459,21 @@ function longTranslateScaleToShort(data) {
 }
 
 /**
- * Multiply matrices.
+ * Multiply transformation matrices.
  *
  * @param {Array} a matrix A data
  * @param {Array} b matrix B data
  *
  * @return {Array} result
  */
-function multiplyMatrices(a, b) {
+function multiplyTransformMatrices(a, b) {
 
     return [
         +(a[0] * b[0] + a[2] * b[1]).toFixed(3),
         +(a[1] * b[0] + a[3] * b[1]).toFixed(3),
         +(a[0] * b[2] + a[2] * b[3]).toFixed(3),
         +(a[1] * b[2] + a[3] * b[3]).toFixed(3),
-        +(a[0] * b[4] + a[2] * b[5]).toFixed(3),
+        +(a[0] * b[4] + a[2] * b[5] + a[4]).toFixed(3),
         +(a[1] * b[4] + a[3] * b[5] + a[5]).toFixed(3)
     ];
 

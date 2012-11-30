@@ -1,3 +1,5 @@
+'use strict';
+
 var extend = require('../lib/svgo/tools').extend,
     stylingProps = require('./_collections').stylingProps,
     regCleanupStyle = /(:|;)\s+/g;
@@ -16,12 +18,11 @@ var extend = require('../lib/svgo/tools').extend,
  * <g fill="#000" color="#fff" slyle="-webkit-blah: blah">
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.convertStyleToAttrs = function(item, params) {
+exports.convertStyleToAttrs = function(item) {
 
     if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']

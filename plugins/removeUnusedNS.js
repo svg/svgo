@@ -1,13 +1,14 @@
+'use strict';
+
 /**
  * Remove unused namespaces declaration.
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.removeUnusedNS = function(data, params) {
+exports.removeUnusedNS = function(data) {
 
     var svgElem,
         xmlnsCollection = [];

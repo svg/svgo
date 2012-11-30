@@ -1,3 +1,5 @@
+'use strict';
+
 var regEnableBackground = /^new\s0\s0\s(\d+)\s(\d+)$/,
     elems = ['svg', 'mask', 'pattern'];
 
@@ -12,12 +14,11 @@ var regEnableBackground = /^new\s0\s0\s(\d+)\s(\d+)$/,
  * <svg width="100" height="50">
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.cleanupEnableBackground = function(item, params) {
+exports.cleanupEnableBackground = function(item) {
 
     if (
         item.isElem(elems) &&
