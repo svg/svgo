@@ -54,7 +54,7 @@ exports.moveElemsAttrsToGroup = function(item) {
                     g.removeAttr(name);
 
                     if (name === 'transform') {
-                        if (!hasTransform) {
+                        if (!hasTransform && item.hasAttr('transform')) {
                             item.attr('transform').value += ' ' + intersection[name].value;
                             hasTransform = true;
                         }
