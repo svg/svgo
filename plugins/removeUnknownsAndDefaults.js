@@ -1,30 +1,39 @@
 'use strict';
 
-var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel,
-    elems = require('./_collections').elems;
+var collections = require('./_collections'),
+    elems = collections.elems,
+    attrsGroups = collections.attrsGroups,
+    elemsGroups = collections.elemsGroups,
+    attrsGroupsDefaults = collections.attrsGroupsDefaults;
 
-// flatten and extend all collection references
+// collect and extend all references
 for (var elem in elems) {
     elem = elems[elem];
 
-    // attrs
-    if (elem.attrs) {
-        elem.attrs = flattenOneLevel(elem.attrs);
-    }
+    if (elem.attrsGroups) {
+        elem.attrs = elem.attrs || [];
 
-    // contennt
-    if (elem.content) {
-        elem.content = flattenOneLevel(elem.content);
-    }
+        elem.attrsGroups.forEach(function(attrsGroupName) {
+            elem.attrs = elem.attrs.concat(attrsGroups[attrsGroupName]);
 
-    // extend defaults with groupDefaults
-    if (elem.groupDefaults) {
-        elem.defaults = elem.defaults || {};
+            var groupDefaults = attrsGroupsDefaults[attrsGroupName];
 
-        elem.groupDefaults.forEach(function(groupDefaults) {
-            for(var groupDefault in groupDefaults) {
-                elem.defaults[groupDefault] = groupDefaults[groupDefault];
+            if (groupDefaults) {
+                elem.defaults = elem.defaults || {};
+
+                for(var attrName in groupDefaults) {
+                    elem.defaults[attrName] = groupDefaults[attrName];
+                }
             }
+        });
+
+    }
+
+    if (elem.contentGroups) {
+        elem.content = elem.content || [];
+
+        elem.contentGroups.forEach(function(contentGroupName) {
+            elem.content = elem.content.concat(elemsGroups[contentGroupName]);
         });
     }
 }

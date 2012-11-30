@@ -1,13 +1,15 @@
 'use strict';
 
 // http://www.w3.org/TR/SVG/intro.html#Definitions
-var elemsGroups = exports.elemsGroups = {
+exports.elemsGroups = {
     animation: ['animate', 'animateColor', 'animateMotion', 'animateTransform', 'set'],
     descriptive: ['desc', 'metadata', 'title'],
     shape: ['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect'],
     structural: ['defs', 'g', 'svg', 'symbol', 'use'],
     gradient: ['linearGradient', 'radialGradient'],
-    container: ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol']
+    container: ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol'],
+    textContentChild: ['altGlyph', 'textPath', 'tref', 'tspan'],
+    lightSource: ['feDiffuseLighting', 'feSpecularLighting', 'feDistantLight', 'fePointLight', 'feSpotLight']
 };
 
 // var defaults = exports.defaults = {
@@ -16,7 +18,7 @@ var elemsGroups = exports.elemsGroups = {
 // };
 
 // http://www.w3.org/TR/SVG/intro.html#Definitions
-var attrsGroups = exports.attrsGroups = {
+exports.attrsGroups = {
     animationAddition: ['additive', 'accumulate'],
     animationAttributeTarget: ['attributeType', 'attributeName'],
     animationEvent: ['onbegin', 'onend', 'onrepeat', 'onload'],
@@ -32,39 +34,41 @@ var attrsGroups = exports.attrsGroups = {
     transferFunction: ['type', 'tableValues', 'slope', 'intercept', 'amplitude', 'exponent', 'offset']
 };
 
-var groupDefaults = exports.groupDefaults = {
+exports.attrsGroupsDefaults = {
     core: {'xml:space': 'preserve'},
     filterPrimitive: {x: '0', y: '0', width: '100%', height: '100%'},
+    presentation: {'stop-color': '#000', 'stop-opacity': '1'},
     transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
 };
 
 // http://www.w3.org/TR/SVG/eltindex.html
 exports.elems = {
     a: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation',
+            'xlink'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
-            attrsGroups.xlink,
             'class',
             'style',
             'externalResourcesRequired',
             'transform',
             'target'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             target: '_self'
         },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
         content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive,
-            elemsGroups.shape,
-            elemsGroups.structural,
-            elemsGroups.gradient,
             'a',
             'altGlyphDef',
             'clipPath',
@@ -86,12 +90,14 @@ exports.elems = {
         ]
     },
     altGlyph: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation',
+            'xlink'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
-            attrsGroups.xlink,
             'class',
             'style',
             'externalResourcesRequired',
@@ -102,23 +108,19 @@ exports.elems = {
             'glyphRef',
             'format',
             'rotate'
-        ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
-        content: []
+        ]
     },
     altGlyphDef: {
-        attrs: [attrsGroups.core],
-        groupDefaults: [
-            groupDefaults.core
+        attrsGroups: [
+            'core'
         ],
-        content: ['glyphRef']
+        content: [
+            'glyphRef'
+        ]
     },
     altGlyphItem: {
-        attrs: [attrsGroups.core],
-        groupDefaults: [
-            groupDefaults.core
+        attrsGroups: [
+            'core'
         ],
         content: [
             'glyphRef',
@@ -126,94 +128,100 @@ exports.elems = {
         ]
     },
     animate: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'animationAddition',
+            'animationAttributeTarget',
+            'animationEvent',
+            'animationTiming',
+            'animationValue',
+            'presentation',
+            'xlink'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.animationAddition,
-            attrsGroups.animationAttributeTarget,
-            attrsGroups.animationEvent,
-            attrsGroups.animationTiming,
-            attrsGroups.animationValue,
-            attrsGroups.presentation,
-            attrsGroups.xlink,
             'externalResourcesRequired'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
-        content: [elemsGroups.descriptive]
+        contentGroups: [
+            'descriptive'
+        ]
     },
     animateColor: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'animationEvent',
+            'xlink',
+            'animationAttributeTarget',
+            'animationTiming',
+            'animationValue',
+            'animationAddition',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.animationEvent,
-            attrsGroups.xlink,
-            attrsGroups.animationAttributeTarget,
-            attrsGroups.animationTiming,
-            attrsGroups.animationValue,
-            attrsGroups.animationAddition,
-            attrsGroups.presentation,
             'externalResourcesRequired'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
-        content: [elemsGroups.descriptive]
+        contentGroups: [
+            'descriptive'
+        ]
     },
     animateMotion: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'animationEvent',
+            'xlink',
+            'animationTiming',
+            'animationValue',
+            'animationAddition'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.animationEvent,
-            attrsGroups.xlink,
-            attrsGroups.animationTiming,
-            attrsGroups.animationValue,
-            attrsGroups.animationAddition,
             'externalResourcesRequired',
             'path',
             'keyPoints',
             'rotate',
             'origin'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             'rotate': '0'
         },
+        contentGroups: [
+            'descriptive'
+        ],
         content: [
-            elemsGroups.descriptive,
             'mpath'
         ]
     },
     animateTransform: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'animationEvent',
+            'xlink',
+            'animationAttributeTarget',
+            'animationTiming',
+            'animationValue',
+            'animationAddition'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.animationEvent,
-            attrsGroups.xlink,
-            attrsGroups.animationAttributeTarget,
-            attrsGroups.animationTiming,
-            attrsGroups.animationValue,
-            attrsGroups.animationAddition,
             'externalResourcesRequired',
             'type'
-        ],
-        groupDefaults: [
-            groupDefaults.core
         ],
         defaults: {
             type: 'translate'
         },
-        content: [elemsGroups.descriptive]
+        contentGroups: [
+            'descriptive'
+        ]
     },
     circle: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
             'class',
             'style',
             'externalResourcesRequired',
@@ -222,98 +230,99 @@ exports.elems = {
             'cy',
             'r'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
-            cx: 0,
-            cy: 0
+            cx: '0',
+            cy: '0'
         },
-        content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive
+        contentGroups: [
+            'animation',
+            'descriptive'
         ]
     },
     clipPath: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.presentation,
             'class',
             'style',
             'externalResourcesRequired',
             'transform',
             'clipPathUnits'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             clipPathUnits: 'userSpaceOnUse'
         },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape'
+        ],
         content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive,
-            elemsGroups.shape,
             'text',
             'use'
         ]
     },
     'color-profile': {
+        attrsGroups: [
+            'core',
+            'xlink'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.xlink,
             'local',
             'name',
             'rendering-intent'
-        ],
-        groupDefaults: [
-            groupDefaults.core
         ],
         defaults: {
             name: 'sRGB',
             'rendering-intent': 'auto'
         },
-        content: [elemsGroups.descriptive]
+        contentGroups: [
+            'descriptive'
+        ]
     },
     cursor: {
+        attrsGroups: [
+            'core',
+            'conditionalProcessing',
+            'xlink'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.conditionalProcessing,
-            attrsGroups.xlink,
             'externalResourcesRequired',
             'x',
             'y'
-        ],
-        groupDefaults: [
-            groupDefaults.core
         ],
         defaults: {
             x: '0',
             y: '0'
         },
-        content: [elemsGroups.descriptive]
+        contentGroups: [
+            'descriptive'
+        ]
     },
     defs: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
             'class',
             'style',
             'externalResourcesRequired',
             'transform'
         ],
-        groupDefaults: [
-            groupDefaults.core
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
         ],
         content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive,
-            elemsGroups.shape,
-            elemsGroups.structural,
-            elemsGroups.gradient,
             'a',
             'altGlyphDef',
             'clipPath',
@@ -335,21 +344,22 @@ exports.elems = {
         ]
     },
     desc: {
+        attrsGroups: [
+            'core'
+        ],
         attrs: [
-            attrsGroups.core,
             'class',
             'style'
-        ],
-        groupDefaults: [
-            groupDefaults.core
         ]
     },
     ellipse: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
             'class',
             'style',
             'externalResourcesRequired',
@@ -359,23 +369,22 @@ exports.elems = {
             'rx',
             'ry'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             cx: '0',
             cy: '0'
         },
-        content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive
+        contentGroups: [
+            'animation',
+            'descriptive'
         ]
     },
     feBlend: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             // TODO: in - 'If no value is provided and this is the first filter primitive,
@@ -383,10 +392,6 @@ exports.elems = {
             'in',
             'in2',
             'mode'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         defaults: {
             mode: 'normal'
@@ -397,19 +402,17 @@ exports.elems = {
         ]
     },
     feColorMatrix: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in',
             'type',
             'values'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         defaults: {
             type: 'matrix'
@@ -420,17 +423,15 @@ exports.elems = {
         ]
     },
     feComponentTransfer: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         content: [
             'feFuncA',
@@ -440,10 +441,12 @@ exports.elems = {
         ]
     },
     feComposite: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in',
@@ -453,10 +456,6 @@ exports.elems = {
             'k2',
             'k3',
             'k4'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         defaults: {
             operator: 'over',
@@ -471,10 +470,12 @@ exports.elems = {
         ]
     },
     feConvolveMatrix: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in',
@@ -494,10 +495,6 @@ exports.elems = {
             'kernelUnitLength',
             'preserveAlpha'
         ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
-        ],
         defaults: {
             order: '3',
             bias: '0',
@@ -510,10 +507,12 @@ exports.elems = {
         ]
     },
     feDiffuseLighting: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in',
@@ -521,16 +520,14 @@ exports.elems = {
             'diffuseConstant',
             'kernelUnitLength'
         ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
-        ],
         defaults: {
             surfaceScale: '1',
             diffuseConstant: '1'
         },
+        contentGroups: [
+            'descriptive'
+        ],
         content: [
-            elemsGroups.descriptive,
             // TODO: 'exactly one light source element, in any order'
             'feDistantLight',
             'fePointLight',
@@ -538,10 +535,12 @@ exports.elems = {
         ]
     },
     feDisplacementMap: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in',
@@ -549,10 +548,6 @@ exports.elems = {
             'scale',
             'xChannelSelector',
             'yChannelSelector'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         defaults: {
             scale: '0',
@@ -565,13 +560,12 @@ exports.elems = {
         ]
     },
     feDistantLight: {
+        attrsGroups: [
+            'core'
+        ],
         attrs: [
-            attrsGroups.core,
             'azimuth',
             'elevation'
-        ],
-        groupDefaults: [
-            groupDefaults.core
         ],
         defaults: {
             azimuth: '0',
@@ -583,16 +577,14 @@ exports.elems = {
         ]
     },
     feFlood: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         content: [
             'animate',
@@ -601,13 +593,9 @@ exports.elems = {
         ]
     },
     feFuncA: {
-        attrs: [
-            attrsGroups.core,
-            attrsGroups.transferFunction
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.transferFunction
+        attrsGroups: [
+            'core',
+            'transferFunction'
         ],
         content: [
             'set',
@@ -615,13 +603,9 @@ exports.elems = {
         ]
     },
     feFuncB: {
-        attrs: [
-            attrsGroups.core,
-            attrsGroups.transferFunction
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.transferFunction
+        attrsGroups: [
+            'core',
+            'transferFunction'
         ],
         content: [
             'set',
@@ -629,12 +613,9 @@ exports.elems = {
         ]
     },
     feFuncG: {
-        attrs: [
-            attrsGroups.core,
-            attrsGroups.transferFunction
-        ],
-        groupDefaults: [
-            groupDefaults.transferFunction
+        attrsGroups: [
+            'core',
+            'transferFunction'
         ],
         content: [
             'set',
@@ -642,13 +623,9 @@ exports.elems = {
         ]
     },
     feFuncR: {
-        attrs: [
-            attrsGroups.core,
-            attrsGroups.transferFunction
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.transferFunction
+        attrsGroups: [
+            'core',
+            'transferFunction'
         ],
         content: [
             'set',
@@ -656,18 +633,16 @@ exports.elems = {
         ]
     },
     feGaussianBlur: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.filterPrimitive,
             'class',
             'style',
             'in',
             'stdDeviation'
-        ],
-        groupDefaults: [
-            groupDefaults.core,
-            groupDefaults.filterPrimitive
         ],
         defaults: {
             stdDeviation: '0'
@@ -677,44 +652,419 @@ exports.elems = {
             'animate'
         ]
     },
-    feImage: {},
-    feMerge: {},
-    feMergeNode: {},
-    feMorphology: {},
-    feOffset: {},
-    fePointLight: {},
-    feSpecularLighting: {},
-    feSpotLight: {},
-    feTile: {},
-    feTurbulence: {},
-    filter: {},
-    font: {},
-    'font-face': {},
-    'font-face-format': {},
-    'font-face-name': {},
-    'font-face-src': {},
-    'font-face-uri': {},
-    foreignObject: {},
-    g: {
+    feImage: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive',
+            'xlink'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'preserveAspectRatio',
+            'xlink:href'
+        ],
+        defaults: {
+            preserveAspectRatio: 'xMidYMid meet'
+        },
+        content: [
+            'animate',
+            'animateTransform',
+            'set'
+        ]
+    },
+    feMerge: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
+        attrs: [
+            'class',
+            'style'
+        ],
+        content: [
+            'feMergeNode'
+        ]
+    },
+    feMergeNode: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'in'
+        ],
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feMorphology: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'in',
+            'operator',
+            'radius'
+        ],
+        defaults: {
+            operator: 'erode',
+            radius: '0'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feOffset: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'in',
+            'dx',
+            'dy'
+        ],
+        defaults: {
+            dx: '0',
+            dy: '0'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    fePointLight: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'x',
+            'y',
+            'z'
+        ],
+        defaults: {
+            x: '0',
+            y: '0',
+            z: '0'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feSpecularLighting: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'in',
+            'surfaceScale',
+            'specularConstant',
+            'specularExponent',
+            'kernelUnitLength'
+        ],
+        defaults: {
+            surfaceScale: '1',
+            specularConstant: '1',
+            specularExponent: '1'
+        },
+        contentGroups: [
+            'descriptive',
+            // TODO: exactly one 'light source element'
+            'lightSource'
+        ]
+    },
+    feSpotLight: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'x',
+            'y',
+            'z',
+            'pointsAtX',
+            'pointsAtY',
+            'pointsAtZ',
+            'specularExponent',
+            'limitingConeAngle'
+        ],
+        defaults: {
+            x: '0',
+            y: '0',
+            z: '0',
+            pointsAtX: '0',
+            pointsAtY: '0',
+            pointsAtZ: '0',
+            specularExponent: '1'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feTile: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'in'
+        ],
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    feTurbulence: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'filterPrimitive'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'baseFrequency',
+            'numOctaves',
+            'seed',
+            'stitchTiles',
+            'type'
+        ],
+        defaults: {
+            baseFrequency: '0',
+            numOctaves: '1',
+            seed: '0',
+            stitchTiles: 'noStitch',
+            type: 'turbulence'
+        },
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    filter: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'x',
+            'y',
+            'width',
+            'height',
+            'filterRes',
+            'filterUnits',
+            'primitiveUnits',
+            'xlink:href'
+        ],
+        defaults: {
+            primitiveUnits: 'userSpaceOnUse',
+            x: '-10%',
+            y: '-10%',
+            width: '120%',
+            height: '120%'
+        },
+        contentGroups: [
+            'descriptive',
+            'filter'
+        ],
+        content: [
+            'animate',
+            'set'
+        ]
+    },
+    font: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'horiz-origin-x',
+            'horiz-origin-y',
+            'horiz-adv-x',
+            'vert-origin-x',
+            'vert-origin-y',
+            'vert-adv-y'
+        ],
+        defaults: {
+            'horiz-origin-x': '0',
+            'horiz-origin-y': '0'
+        },
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            'font-face',
+            'glyph',
+            'hkern',
+            'missing-glyph',
+            'vkern'
+        ]
+    },
+    'font-face': {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'font-family',
+            'font-style',
+            'font-variant',
+            'font-weight',
+            'font-stretch',
+            'font-size',
+            'unicode-range',
+            'units-per-em',
+            'panose-1',
+            'stemv',
+            'stemh',
+            'slope',
+            'cap-height',
+            'x-height',
+            'accent-height',
+            'ascent',
+            'descent',
+            'widths',
+            'bbox',
+            'ideographic',
+            'alphabetic',
+            'mathematical',
+            'hanging',
+            'v-ideographic',
+            'v-alphabetic',
+            'v-mathematical',
+            'v-hanging',
+            'underline-position',
+            'underline-thickness',
+            'strikethrough-position',
+            'strikethrough-thickness',
+            'overline-position',
+            'overline-thickness'
+        ],
+        defaults: {
+            'font-style': 'all',
+            'font-variant': 'normal',
+            'font-weight': 'all',
+            'font-stretch': 'normal',
+            'unicode-range': 'U+0-10FFFF',
+            'units-per-em': '1000',
+            'panose-1': '0 0 0 0 0 0 0 0 0 0',
+            'slope': '0'
+        },
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            // TODO: "at most one 'font-face-src' element"
+            'font-face-src'
+        ]
+    },
+    // TODO: empty content
+    'font-face-format': {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'string'
+        ]
+    },
+    'font-face-name': {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'name'
+        ]
+    },
+    'font-face-src': {
+        attrsGroups: [
+            'core'
+        ],
+        content: [
+            'font-face-name',
+            'font-face-uri'
+        ]
+    },
+    'font-face-uri': {
+        attrsGroups: [
+            'core',
+            'xlink'
+        ],
+        attrs: [
+            'xlink:href'
+        ],
+        content: [
+            'font-face-format'
+        ]
+    },
+    foreignObject: {
+        attrsGroups: [
+            'core',
+            'conditionalProcessing',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'x',
+            'y',
+            'width',
+            'height'
+        ],
+        defaults: {
+            x: 0,
+            y: 0
+        }
+    },
+    g: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
             'class',
             'style',
             'externalResourcesRequired',
             'transform'
         ],
-        groupDefaults: [
-            groupDefaults.core
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
         ],
         content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive,
-            elemsGroups.shape,
-            elemsGroups.structural,
-            elemsGroups.gradient,
             'a',
             'altGlyphDef',
             'clipPath',
@@ -735,16 +1085,119 @@ exports.elems = {
             'view'
         ]
     },
-    glyph: {},
-    glyphRef: {},
-    hkern: {},
-    image: {
+    glyph: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.conditionalProcessing,
-            attrsGroups.graphicalEvent,
-            attrsGroups.xlink,
-            attrsGroups.presentation,
+            'class',
+            'style',
+            'd',
+            'horiz-adv-x',
+            'vert-origin-x',
+            'vert-origin-y',
+            'vert-adv-y',
+            'unicode',
+            'glyph-name',
+            'orientation',
+            'arabic-form',
+            'lang'
+        ],
+        defaults: {
+            'arabic-form': 'initial'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ],
+    },
+    glyphRef: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'd',
+            'horiz-adv-x',
+            'vert-origin-x',
+            'vert-origin-y',
+            'vert-adv-y'
+        ],
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    hkern: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'u1',
+            'g1',
+            'u2',
+            'g2',
+            'k'
+        ]
+    },
+    image: {
+        attrsGroups: [
+            'core',
+            'conditionalProcessing',
+            'graphicalEvent',
+            'xlink',
+            'presentation'
+        ],
+        attrs: [
             'class',
             'style',
             'externalResourcesRequired',
@@ -756,25 +1209,51 @@ exports.elems = {
             'height',
             'xlink:href'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             x: '0',
             y: '0',
             preserveAspectRatio: 'xMidYMid meet'
         },
-        content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive
+        contentGroups: [
+            'animation',
+            'descriptive'
         ]
     },
-    line: {},
-    linearGradient: {
+    line: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.core,
-            attrsGroups.presentation,
-            attrsGroups.xlink,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'x1',
+            'y1',
+            'x2',
+            'y2'
+        ],
+        defaults: {
+            x1: '0',
+            y1: '0',
+            x2: '0',
+            y2: '0'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive'
+        ]
+    },
+    linearGradient: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
             'class',
             'style',
             'externalResourcesRequired',
@@ -787,9 +1266,6 @@ exports.elems = {
             'spreadMethod',
             'xlink:href'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             x1: '0',
             y1: '0',
@@ -797,25 +1273,189 @@ exports.elems = {
             y2: '0',
             spreadMethod: 'pad'
         },
+        contentGroups: [
+            'descriptive'
+        ],
         content: [
-            elemsGroups.descriptive,
             'animate',
             'animateTransform',
             'set',
             'stop'
         ]
     },
-    marker: {},
-    mask: {},
-    metadata: {},
-    'missing-glyph': {},
-    mpath: {},
-    path: {
+    marker: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'viewBox',
+            'preserveAspectRatio',
+            'refX',
+            'refY',
+            'markerUnits',
+            'markerWidth',
+            'markerHeight',
+            'orient'
+        ],
+        defaults: {
+            markerUnits: 'strokeWidth',
+            refX: '0',
+            refY: '0',
+            markerWidth: '3',
+            markerHeight: '3'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    mask: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'x',
+            'y',
+            'width',
+            'height',
+            'maskUnits',
+            'maskContentUnits'
+        ],
+        defaults: {
+            maskUnits: 'objectBoundingBox',
+            maskContentUnits: 'userSpaceOnUse',
+            x: '-10%',
+            y: '-10%',
+            width: '120%',
+            height: '120%'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    metadata: {
+        attrsGroups: [
+            'core'
+        ]
+    },
+    'missing-glyph': {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'd',
+            'horiz-adv-x',
+            'vert-origin-x',
+            'vert-origin-y',
+            'vert-adv-y'
+        ],
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    mpath: {
+        attrsGroups: [
+            'core',
+            'xlink'
+        ],
+        attrs: [
+            'externalResourcesRequired',
+            'xlink:href'
+        ],
+        contentGroups: [
+            'descriptive'
+        ]
+    },
+    path: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
             'class',
             'style',
             'externalResourcesRequired',
@@ -823,36 +1463,235 @@ exports.elems = {
             'd',
             'pathLength'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
-        content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive
+        contentGroups: [
+            'animation',
+            'descriptive'
         ]
     },
-    pattern: {},
-    polygon: {},
-    polyline: {},
-    radialGradient: {
+    pattern: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'viewBox',
+            'preserveAspectRatio',
+            'x',
+            'y',
+            'width',
+            'height',
+            'patternUnits',
+            'patternContentUnits',
+            'patternTransform',
+            'xlink:href'
+        ],
         defaults: {
+            patternUnits: 'objectBoundingBox',
+            patternContentUnits: 'userSpaceOnUse',
+            x: '0',
+            y: '0',
+            width: '0',
+            height: '0',
+            preserveAspectRatio: 'xMidYMid meet'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    polygon: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'points'
+        ],
+        contentGroups: [
+            'animation',
+            'descriptive'
+        ]
+    },
+    polyline: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'points'
+        ],
+        contentGroups: [
+            'animation',
+            'descriptive'
+        ]
+    },
+    radialGradient: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'cx',
+            'cy',
+            'r',
+            'fx',
+            'fy',
+            'gradientUnits',
+            'gradientTransform',
+            'spreadMethod',
+            'xlink:href'
+        ],
+        defaults: {
+            gradientUnits: 'objectBoundingBox',
             cx: '50%',
             cy: '50%',
             r: '50%'
-        }
+        },
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            'animate',
+            'animateTransform',
+            'set',
+            'stop'
+        ]
     },
-    rect: {},
-    script: {},
-    set: {},
-    stop: {},
-    style: {},
-    svg: {
+    rect: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
         attrs: [
-            attrsGroups.conditionalProcessing,
-            attrsGroups.core,
-            attrsGroups.documentEvent,
-            attrsGroups.graphicalEvent,
-            attrsGroups.presentation,
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'x',
+            'y',
+            'width',
+            'height',
+            'rx',
+            'ry'
+        ],
+        defaults: {
+            x: '0',
+            y: '0'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive'
+        ]
+    },
+    script: {
+        attrsGroups: [
+            'core',
+            'xlink'
+        ],
+        attrs: [
+            'externalResourcesRequired',
+            'type',
+            'xlink:href'
+        ]
+    },
+    set: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'animation',
+            'xlink',
+            'animationAttributeTarget',
+            'animationTiming',
+        ],
+        attrs: [
+            'externalResourcesRequired',
+            'to'
+        ],
+        contentGroups: [
+            'descriptive'
+        ]
+    },
+    stop: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'offset'
+        ],
+        contentGroups: [
+            'animate',
+            'animateColor',
+            'set'
+        ]
+    },
+    style: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'type',
+            'media',
+            'title'
+        ]
+    },
+    svg: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'documentEvent',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
             'class',
             'style',
             'x',
@@ -867,9 +1706,6 @@ exports.elems = {
             'contentScriptType',
             'contentStyleType'
         ],
-        groupDefaults: [
-            groupDefaults.core
-        ],
         defaults: {
             x: '0',
             y: '0',
@@ -882,12 +1718,14 @@ exports.elems = {
             contentScriptType: 'application/ecmascript',
             contentStyleType: 'text/css'
         },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
         content: [
-            elemsGroups.animation,
-            elemsGroups.descriptive,
-            elemsGroups.shape,
-            elemsGroups.structural,
-            elemsGroups.gradient,
             'a',
             'altGlyphDef',
             'clipPath',
@@ -908,18 +1746,265 @@ exports.elems = {
             'view'
         ]
     },
-    switch: {},
-    symbol: {},
-    text: {},
-    textPath: {},
-    title: {},
-    tref: {},
-    tspan: {},
-    use: {},
-    view: {},
-    vkern: {}
+    switch: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform'
+        ],
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape'
+        ],
+        content: [
+            'a',
+            'foreignObject',
+            'g',
+            'image',
+            'svg',
+            'switch',
+            'text',
+            'use'
+        ]
+    },
+    symbol: {
+        attrsGroups: [
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'preserveAspectRatio',
+            'viewBox'
+        ],
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'shape',
+            'structural',
+            'gradient'
+        ],
+        content: [
+            'a',
+            'altGlyphDef',
+            'clipPath',
+            'color-profile',
+            'cursor',
+            'filter',
+            'font',
+            'font-face',
+            'foreignObject',
+            'image',
+            'marker',
+            'mask',
+            'pattern',
+            'script',
+            'style',
+            'switch',
+            'text',
+            'view'
+        ]
+    },
+    text: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'lengthAdjust',
+            'x',
+            'y',
+            'dx',
+            'dy',
+            'rotate',
+            'textLength'
+        ],
+        defaults: {
+            x: '0',
+            y: '0',
+            lengthAdjust: 'spacing'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive',
+            'textContentChild'
+        ],
+        content: [
+            'a'
+        ]
+    },
+    textPath: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'xlink:href',
+            'startOffset',
+            'method',
+            'spacing'
+        ],
+        defaults: {
+            startOffset: '0',
+            method: 'align',
+            spacing: 'exact'
+        },
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            'a',
+            'altGlyph',
+            'animate',
+            'animateColor',
+            'set',
+            'tref',
+            'tspan'
+        ]
+    },
+    title: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'class',
+            'style'
+        ]
+    },
+    tref: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'xlink:href'
+        ],
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            'animate',
+            'animateColor',
+            'set'
+        ]
+    },
+    tspan: {
+        attrsGroups: [
+            'conditionalProcessing',
+            'core',
+            'graphicalEvent',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'x',
+            'y',
+            'dx',
+            'dy',
+            'rotate',
+            'textLength',
+            'lengthAdjust'
+        ],
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            'a',
+            'altGlyph',
+            'animate',
+            'animateColor',
+            'set',
+            'tref',
+            'tspan'
+        ]
+    },
+    use: {
+        attrsGroups: [
+            'core',
+            'conditionalProcessing',
+            'graphicalEvent',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'externalResourcesRequired',
+            'transform',
+            'x',
+            'y',
+            'width',
+            'height',
+            'xlink:href'
+        ],
+        defaults: {
+            x: '0',
+            y: '0'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive'
+        ]
+    },
+    view: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'externalResourcesRequired',
+            'viewBox',
+            'preserveAspectRatio',
+            'zoomAndPan',
+            'viewTarget'
+        ],
+        contentGroups: [
+            'descriptive'
+        ]
+    },
+    vkern: {
+        attrsGroups: [
+            'core'
+        ],
+        attrs: [
+            'u1',
+            'g1',
+            'u2',
+            'g2',
+            'k'
+        ]
+    }
 };
-
 
 // http://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
 exports.editorNamespaces = [
