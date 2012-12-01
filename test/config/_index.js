@@ -102,4 +102,104 @@ describe('config', function() {
 
     });
 
+    describe('extend default config with file that does not exist', function() {
+
+        var myConfig = {
+                coa: {
+                    config: './test/config/unknown.yml'
+                }
+            },
+            result;
+
+        before(function(done) {
+            config(myConfig).then(function(data) {
+                result = data;
+                done();
+            })
+            .done();
+        });
+
+        it('result should exists', function() {
+            result.should.exists;
+        });
+
+        it('result should be an instance of Object', function() {
+            result.should.be.an.instanceOf(Object);
+        });
+
+    });
+
+    describe('change plugins states with --disable', function() {
+
+        var myConfig = {
+                coa: {
+                    disable: ['removeDoctype', 'cleanupAttrs', 'unknownPlugin']
+                }
+            },
+            result;
+
+        before(function(done) {
+            config(myConfig).then(function(data) {
+                result = data;
+                done();
+            })
+            .done();
+        });
+
+        it('removeDoctype plugin should be disabled', function() {
+            getPlugin('removeDoctype', result).active.should.be.false;
+        });
+
+        it('cleanupAttrs plugin should be disabled', function() {
+            getPlugin('cleanupAttrs', result).active.should.be.false;
+        });
+
+    });
+
+    describe('change plugins states with --enable', function() {
+
+        var myConfig = {
+                coa: {
+                    enable: ['removeDoctype']
+                }
+            },
+            result;
+
+        before(function(done) {
+            config(myConfig).then(function(data) {
+                result = data;
+                done();
+            })
+            .done();
+        });
+
+        it('removeDoctype plugin should be disabled', function() {
+            getPlugin('removeDoctype', result).active.should.be.true;
+        });
+
+    });
+
+    describe('change config.js2svg.pretty with --pretty', function() {
+
+        var myConfig = {
+                coa: {
+                    pretty: true
+                }
+            },
+            result;
+
+        before(function(done) {
+            config(myConfig).then(function(data) {
+                result = data;
+                done();
+            })
+            .done();
+        });
+
+        it('removeDoctype plugin should be disabled', function() {
+            result.js2svg.pretty.should.be.true;
+        });
+
+    });
+
 });

@@ -1,11 +1,13 @@
 'use strict';
 
 var cover = process.argv[3] === 'mocha-istanbul',
+    QFS = require('q-fs'),
+    PATH = require('path'),
     svg2js = require(cover ? '../../lib-cov/svgo/svg2js' : '../../lib/svgo/svg2js');
 
 describe('svg2js', function() {
 
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>',
+    var path = PATH.resolve(__dirname, './test.svg'),
         config = {
             strict: true,
             trim: true,
@@ -17,9 +19,11 @@ describe('svg2js', function() {
         result;
 
     before(function(done) {
-        svg2js(svg, config).then(function(data) {
-            result = data;
-            done();
+        QFS.read(path).then(function(svg) {
+            svg2js(svg.toString(), config).then(function(data) {
+                result = data;
+                done();
+            });
         });
     });
 
@@ -37,17 +41,37 @@ describe('svg2js', function() {
             result.should.have.property('content').with.instanceOf(Array);
         });
 
-        it('content should have length 1', function() {
-            result.content.should.have.length(1);
+        it('content should have length 4', function() {
+            result.content.should.have.length(4);
         });
 
-        it('content[0] should have property "elem" with value "svg"', function() {
-            result.content[0].should.have.property('elem', 'svg');
+        it('content[0] should have property "processinginstruction" with instance of Object', function() {
+            result.content[0].should.have.property('processinginstruction').with.instanceOf(Object);
+        });
+
+        it('processinginstruction should have property "name" with value "xml"', function() {
+            result.content[0].processinginstruction.should.have.property('name', 'xml');
+        });
+
+        it('processinginstruction should have property "body" with value "version=\"1.0\" encoding=\"utf-8\""', function() {
+            result.content[0].processinginstruction.should.have.property('body', 'version=\"1.0\" encoding=\"utf-8\"');
+        });
+
+        it('content[1] should have property "comment" with value "Generator: Adobe Illustrator…"', function() {
+            result.content[1].should.have.property('comment', 'Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)');
+        });
+
+        it('content[2] should have property "doctype" with value " svg PUBLIC…"', function() {
+            result.content[2].should.have.property('doctype', ' svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"');
+        });
+
+        it('content[3] should have property "elem" with value "svg"', function() {
+            result.content[3].should.have.property('elem', 'svg');
         });
 
         it('svg should have properties "prefix" and "local', function() {
-            result.content[0].should.have.property('prefix');
-            result.content[0].should.have.property('local');
+            result.content[3].should.have.property('prefix');
+            result.content[3].should.have.property('local');
         });
 
     });
@@ -55,33 +79,33 @@ describe('svg2js', function() {
     describe('attributes', function() {
 
         it('svg should have property "attrs" with instance of Object', function() {
-            result.content[0].should.have.property('attrs').with.instanceOf(Object);
+            result.content[3].should.have.property('attrs').with.instanceOf(Object);
         });
 
         it('svg.attrs should have property "xmlns" with instance of Object', function() {
-            result.content[0].attrs.should.have.property('xmlns').with.instanceOf(Object);
+            result.content[3].attrs.should.have.property('xmlns').with.instanceOf(Object);
         });
 
         it('svg.attrs.xmlns should have properties "name", "value", "prefix", "local" and "uri"', function() {
-            result.content[0].attrs.xmlns.should.have.property('name');
-            result.content[0].attrs.xmlns.should.have.property('prefix');
-            result.content[0].attrs.xmlns.should.have.property('local');
+            result.content[3].attrs.xmlns.should.have.property('name');
+            result.content[3].attrs.xmlns.should.have.property('prefix');
+            result.content[3].attrs.xmlns.should.have.property('local');
         });
 
         it('svg.attrs.xmlns.name shoud be equal "xmlns"', function() {
-            result.content[0].attrs.xmlns.name.should.equal('xmlns');
+            result.content[3].attrs.xmlns.name.should.equal('xmlns');
         });
 
         it('svg.attrs.xmlns.value shoud be equal "http://www.w3.org/2000/svg"', function() {
-            result.content[0].attrs.xmlns.value.should.equal('http://www.w3.org/2000/svg');
+            result.content[3].attrs.xmlns.value.should.equal('http://www.w3.org/2000/svg');
         });
 
         it('svg.attrs.xmlns.prefix shoud be equal "xmlns"', function() {
-            result.content[0].attrs.xmlns.prefix.should.equal('xmlns');
+            result.content[3].attrs.xmlns.prefix.should.equal('xmlns');
         });
 
         it('svg.attrs.xmlns.local shoud be empty ""', function() {
-            result.content[0].attrs.xmlns.local.should.be.empty;
+            result.content[3].attrs.xmlns.local.should.be.empty;
         });
 
     });
@@ -89,101 +113,12 @@ describe('svg2js', function() {
     describe('content', function() {
 
         it('svg should have property "content" with instance of Array', function() {
-            result.content[0].should.have.property('content').with.instanceOf(Array);
+            result.content[3].should.have.property('content').with.instanceOf(Array);
         });
 
-        it('svg.content should have length 1', function() {
-            result.content[0].content.should.have.length(1);
+        it('svg.content should have length 2', function() {
+            result.content[3].content.should.have.length(2);
         });
-
-    });
-
-    describe('API', function() {
-
-        describe('isElem()', function() {
-
-            it('svg should have property "isElem" with instance of Function', function() {
-                result.content[0].should.have.property('isElem').with.instanceOf(Function);
-            });
-
-            it('svg.sNode() should be true', function() {
-                result.content[0].isElem().should.be.true;
-            });
-
-            it('svg.isElem("svg") should be true', function() {
-                result.content[0].isElem('svg').should.be.true;
-            });
-
-            it('svg.isElem("trololo") should be false', function() {
-                result.content[0].isElem('123').should.be.false;
-            });
-
-            it('svg.isElem(["svg", "trololo"]) should be true', function() {
-                result.content[0].isElem(['svg', 'trololo']).should.be.true;
-            });
-
-        });
-
-        describe('hasAttr()', function() {
-
-            it('svg should have property "hasAttr" with instance of Function', function() {
-                result.content[0].should.have.property('hasAttr').with.instanceOf(Function);
-            });
-
-            it('svg.hasAttr() should be true', function() {
-                result.content[0].hasAttr().should.be.true;
-            });
-
-            it('svg.hasAttr("xmlns") should be true', function() {
-                result.content[0].hasAttr('xmlns').should.be.true;
-            });
-
-            it('svg.hasAttr("xmlns", "http://www.w3.org/2000/svg") should be true', function() {
-                result.content[0].hasAttr('xmlns', 'http://www.w3.org/2000/svg').should.be.true;
-            });
-
-            it('svg.hasAttr("xmlns", "trololo") should be false', function() {
-                result.content[0].hasAttr('xmlns', 'trololo').should.be.false;
-            });
-
-            it('svg.hasAttr("trololo") should be false', function() {
-                result.content[0].hasAttr('trololo').should.be.false;
-            });
-
-            it('svg.hasAttr("trololo", "ololo") should be false', function() {
-                result.content[0].hasAttr('trololo', 'ololo').should.be.false;
-            });
-
-            it('svg.g.hasAttr() should be false', function() {
-                result.content[0].content[0].hasAttr().should.be.false;
-            });
-
-            it('svg.g.hasAttr("trololo") should be false', function() {
-                result.content[0].content[0].hasAttr('trololo').should.be.false;
-            });
-
-            it('svg.g.hasAttr("trololo", "ololo") should be false', function() {
-                result.content[0].content[0].hasAttr('trololo', 'ololo').should.be.false;
-            });
-
-        });
-
-        describe('isEmpty()', function() {
-
-            it('svg should have property "isEmpty" with instance of Function', function() {
-                result.content[0].should.have.property('isEmpty').with.instanceOf(Function);
-            });
-
-            it('svg.isEmpty() should be false', function() {
-                result.content[0].isEmpty().should.be.false;
-            });
-
-            it('svg.g.isEmpty() should be true', function() {
-                result.content[0].content[0].isEmpty().should.be.true;
-            });
-
-        });
-
 
     });
 
