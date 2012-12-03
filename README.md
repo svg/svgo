@@ -1,8 +1,11 @@
+**english** | [русский](https://github.com/svg/svgo/blob/master/README.ru.md)
+- - -
+
 <img src="http://soulshine.in/svgo/logo.svg?v3" width="200" height="200" alt="logo"/>
 
 ## SVGO v0.1.3 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
-**SVG** **O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
+**SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](//mc.yandex.ru/watch/18431326)
 
 ## Why?
@@ -19,16 +22,16 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) ] remove doctype declaration
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] remove comments
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove metadata
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove `<metadata>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove hidden elements
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove viewBox attribute when possible
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup enable-background attribute when possible
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove `viewBox` attribute when possible
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup `enable-background` attribute when possible
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from `rgb()` to `#rrggbb`, from `#rrggbb` to `#rgb`)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative, convert one segment to another, trim useless delimiters and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] collapse multiple transforms into one, convert matrices to the short aliases and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] remove unknown elements content and attributes, remove attrs with default values
