@@ -51,7 +51,7 @@ It's important to note that every plugin:
 - - -
 
 ### 2. svg2js
-SVGO converts SVG-as-XML data into SVG-as-JS representation. Something like this:
+SVGO converts SVG-as-XML data into SVG-as-JS AST representation. Something like this:
 
 ```xml
 <?xml version="1.0" standalone="no"?>
@@ -118,15 +118,15 @@ It's important to note that:
 - - -
 
 ### 3. plugins
-SVGO applies all plugins from the config to SVG-as-JS data. See a lot of examples in the [plugins directory](https://github.com/svg/svgo/tree/master/plugins) above.
+SVGO applies all plugins from the config to AST data. See a lot of examples in the [plugins directory](https://github.com/svg/svgo/tree/master/plugins) above.
 
 
 #### 3.1 types
-In the simplest case plugins process can be represented as "each plugin runs over all SVG-as-JS data items and perform some actions". But 90% of typical optimizations requires some actions only on one (current) item from the data, so there is no sense to copypaste a recursive per-item loop every time on every plugin. And that's why we have a three types of plugins:
+In the simplest case plugins applying process can be represented as "each plugin runs over all AST data items and perform some actions". But 90% of typical optimizations requires some actions only on one (current) item from the data, so there is no sense to copypaste a recursive per-item loop every time on every plugin. And that's why we have a three types of plugins:
 
 * `perItem` - plugin works only with one current item, inside a "from the outside into the depths" recursive loop (default)
 * `perItemReverse` - plugin works only with one current item, inside a "from the depths to the outside" recursive loop (useful when you need to collapse elements one after other)
-* `full` - plugin works with the full SVG-as-JS data and must returns the same
+* `full` - plugin works with the full AST and must returns the same
 
 `perItem` and `perItemReverse` plugins runs inside the recursive `Array.prototype.filter` loop, so if a plugin wants to remove current item then it should just `return false`.
 
@@ -182,9 +182,10 @@ And of course, writing plugins would not have been so cool without some sugar AP
   * @param {Object} attr attribute object
   * @return {Object} created attribute
 
-##### eachAttr(callback)
+##### eachAttr(callback, [context])
   * Iterates over all attributes.
   * @param {Function} callback
+  * @param {Object} [context] callback context
   * @return {Boolean} false if there are no any attributes
 
 #### 3.3 tests
@@ -200,9 +201,8 @@ You can see a lot of examples in the [test/plugins directory](https://github.com
 - - -
 
 ### 4. js2svg
-SVGO converts SVG-as-JS representation into SVG-as-XML data string.
+SVGO converts AST back into SVG-as-XML data string.
 
 ## What's next
 1. Write your own plugin :) or
-2. Give me an idea of new plugin or API method
-3. Pull request my crooked english
+2. Give me an idea of new optimization or API method
