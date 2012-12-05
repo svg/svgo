@@ -5,7 +5,7 @@
 
 ## SVGO v0.1.4 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
-**SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
+**SVG O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 ![](//mc.yandex.ru/watch/18431326)
 
 ## Why?
