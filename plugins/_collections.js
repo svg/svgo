@@ -9,7 +9,8 @@ exports.elemsGroups = {
     gradient: ['linearGradient', 'radialGradient'],
     container: ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol'],
     textContentChild: ['altGlyph', 'textPath', 'tref', 'tspan'],
-    lightSource: ['feDiffuseLighting', 'feSpecularLighting', 'feDistantLight', 'fePointLight', 'feSpotLight']
+    lightSource: ['feDiffuseLighting', 'feSpecularLighting', 'feDistantLight', 'fePointLight', 'feSpotLight'],
+    filterPrimitive: ['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feFlood', 'feGaussianBlur', 'feImage', 'feMerge', 'feMorphology', 'feOffset', 'feSpecularLighting', 'feTile', 'feTurbulence']
 };
 
 // var defaults = exports.defaults = {
@@ -938,7 +939,7 @@ exports.elems = {
         },
         contentGroups: [
             'descriptive',
-            'filter'
+            'filterPrimitive'
         ],
         content: [
             'animate',
