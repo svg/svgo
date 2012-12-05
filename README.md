@@ -100,8 +100,8 @@ Arguments:
 
 ## TODO
 
-* [v0.1.4](https://github.com/svg/svgo/issues?milestone=6&state=open)
-* [v0.1.5](https://github.com/svg/svgo/issues?milestone=7&state=open)
+* [v0.1.x](https://github.com/svg/svgo/issues?milestone=6&state=open)
+* [v0.2.x](https://github.com/svg/svgo/issues?milestone=7&state=open)
 
 
 ## License and copyrights
