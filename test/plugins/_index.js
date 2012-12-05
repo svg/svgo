@@ -7,7 +7,7 @@ var CHAI = require('chai'),
     PATH = require('path'),
     regFilename = /^(.*)\.(\d+)\.orig\.svg$/;
 
-require('mocha-as-promised')();
+require('mocha-as-promised')(require('mocha'));
 CHAI.use(require('chai-as-promised'));
 CHAI.should();
 
