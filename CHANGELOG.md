@@ -1,3 +1,11 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.1.4) ] 0.1.4 / 05.12.2012
+* plugins/_collections: more defaults
+* `README.ru.md`
+* `docs/how-it-works/ru.md`
+* mocha + mocha-as-promised + chai + chai-as-promised + should + istanbul = <3
+* update dependencies semvers in `package.json`
+* `v0.1.x` and `v0.2.x` milestones
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.1.3) ] 0.1.3 / 30.11.2012
 * new plugin [plugins/cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) (close [#8](https://github.com/svg/svgo/issues/8))
 * plugins/removeDefaultPx functionality now included in plugins/removeUnknownsAndDefaults
