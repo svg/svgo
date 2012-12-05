@@ -1,7 +1,12 @@
 'use strict';
 
-var cover = process.argv[3] === 'mocha-istanbul',
+var CHAI = require('chai'),
+    cover = process.argv[3] === 'mocha-istanbul',
     config = require(cover ? '../../lib-cov/svgo/config' : '../../lib/svgo/config');
+
+require('mocha-as-promised')();
+CHAI.use(require('chai-as-promised'));
+CHAI.should();
 
 function getPlugin(name, config) {
 
@@ -23,81 +28,141 @@ describe('config', function() {
 
     describe('default config', function() {
 
-        var result;
+        var defaultConfig = config();
 
-        before(function(done) {
-            config().then(function(data) {
-                result = data;
-                done();
-            })
-            .done();
+        it('should fulfilled', function() {
+            return defaultConfig.should.fulfilled;
         });
 
-        it('result should exists', function() {
-            result.should.exist;
+        it('should eventually be an Object', function() {
+            return defaultConfig.should.eventually.be.an('object');
         });
 
-        it('result should be an instance of Object', function() {
-            result.should.be.an.instanceOf(Object);
+        it('should eventually have property "svg2js"', function() {
+            return defaultConfig.should.eventually.have.property('svg2js');
         });
 
-        it('result should have property "svg2js" with instance of Object', function() {
-            result.should.have.property('svg2js').with.instanceOf(Object);
+        it('should eventually have property "js2svg"', function() {
+            return defaultConfig.should.eventually.have.property('js2svg');
         });
 
-        it('result should have property "js2svg" with instance of Object', function() {
-            result.should.have.property('js2svg').with.instanceOf(Object);
-        });
-
-        it('result should have property "plugins" with instance of Array', function() {
-            result.should.have.property('plugins').with.instanceOf(Array);
+        it('should eventually have property "plugins"', function() {
+            return defaultConfig.should.eventually.have.property('plugins');
         });
 
     });
 
-    describe('extend default config with object', function() {
+    describe('extend with object', function() {
 
-        var result,
-            myConfig = {
+        var myConfig = {
                 plugins: [{
                     name: 'removeDoctype',
                     active: false
                 }]
-            };
+            },
+            extendedConfig = config(myConfig);
 
-        before(function(done) {
-            config(myConfig).then(function(data) {
-                result = data;
-                done();
-            })
-            .done();
-        });
-
-        it('result should exists', function() {
-            getPlugin('removeDoctype', result).active.should.be.false;
+        it('removeDoctype plugin should be disabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('removeDoctype', data).active.should.be.false;
+            });
         });
 
     });
 
-    describe('extend default config with file', function() {
+    describe('extend with file', function() {
 
         var myConfig = {
                 coa: {
                     config: './test/config/config.yml'
                 }
             },
-            result;
+            extendedConfig = config(myConfig);
 
-        before(function(done) {
-            config(myConfig).then(function(data) {
-                result = data;
-                done();
-            })
-            .done();
+        it('removeDoctype plugin should be disabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('removeDoctype', data).active.should.be.false;
+            });
         });
 
-        it('result should exists', function() {
-            getPlugin('removeDoctype', result).active.should.be.false;
+    });
+
+    describe('extend with file that does not exist', function() {
+
+        var myConfig = {
+                coa: {
+                    config: './test/config/unknown.yml'
+                }
+            },
+            extendedConfig = config(myConfig);
+
+        it('removeDoctype plugin should be enabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('removeDoctype', data).active.should.be.true;
+            });
+        });
+
+    });
+
+    describe('change plugins states with --disable', function() {
+
+        var myConfig = {
+                coa: {
+                    disable: ['removeDoctype', 'cleanupAttrs', 'unknownPlugin']
+                }
+            },
+            extendedConfig = config(myConfig);
+
+        it('removeDoctype plugin should be disabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('removeDoctype', data).active.should.be.false;
+            });
+        });
+
+        it('cleanupAttrs plugin should be disabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('cleanupAttrs', data).active.should.be.false;
+            });
+        });
+
+    });
+
+    describe('change plugins states with --enable', function() {
+
+        var myConfig = {
+                coa: {
+                    enable: ['removeDoctype', 'cleanupAttrs', 'unknownPlugin']
+                }
+            },
+            extendedConfig = config(myConfig);
+
+        it('removeDoctype plugin should be disabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('removeDoctype', data).active.should.be.true;
+            });
+        });
+
+        it('cleanupAttrs plugin should be disabled', function() {
+            return extendedConfig.then(function(data) {
+                return getPlugin('cleanupAttrs', data).active.should.be.true;
+            });
+        });
+
+    });
+
+    describe('change config.js2svg.pretty with --pretty', function() {
+
+        var myConfig = {
+                coa: {
+                    pretty: true
+                }
+            },
+            extendedConfig = config(myConfig);
+
+        it('config.js2svg.pretty should be true', function() {
+            return extendedConfig.then(function(data) {
+                return data.js2svg.pretty.should.be.true;
+            });
         });
 
     });

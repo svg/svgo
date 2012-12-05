@@ -9,7 +9,8 @@ exports.elemsGroups = {
     gradient: ['linearGradient', 'radialGradient'],
     container: ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol'],
     textContentChild: ['altGlyph', 'textPath', 'tref', 'tspan'],
-    lightSource: ['feDiffuseLighting', 'feSpecularLighting', 'feDistantLight', 'fePointLight', 'feSpotLight']
+    lightSource: ['feDiffuseLighting', 'feSpecularLighting', 'feDistantLight', 'fePointLight', 'feSpotLight'],
+    filterPrimitive: ['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feFlood', 'feGaussianBlur', 'feImage', 'feMerge', 'feMorphology', 'feOffset', 'feSpecularLighting', 'feTile', 'feTurbulence']
 };
 
 // var defaults = exports.defaults = {
@@ -37,7 +38,56 @@ exports.attrsGroups = {
 exports.attrsGroupsDefaults = {
     core: {'xml:space': 'preserve'},
     filterPrimitive: {x: '0', y: '0', width: '100%', height: '100%'},
-    presentation: {'stop-color': '#000', 'stop-opacity': '1'},
+    presentation: {
+        clip: 'auto',
+        'clip-path': 'none',
+        'clip-rule': 'nonzero',
+        mask: 'none',
+        opacity: '1',
+        'stop-color': '#000',
+        'stop-opacity': '1',
+        'fill-opacity': '1',
+        'fill-rule': 'nonzero',
+        fill: '#000',
+        stroke: 'none',
+        'stroke-width': '1',
+        'stroke-linecap': 'butt',
+        'stroke-linejoin': 'miter',
+        'stroke-miterlimit': '4',
+        'stroke-dasharray': 'none',
+        'stroke-dashoffset': '0',
+        'stroke-opacity': '1',
+        display: 'inline',
+        visibility: 'visible',
+        'marker-start': 'none',
+        'marker-mid': 'none',
+        'marker-end': 'none',
+        'color-interpolation': 'sRGB',
+        'color-interpolation-filters': 'linearRGB',
+        'color-rendering': 'auto',
+        'shape-rendering': 'auto',
+        'text-rendering': 'auto',
+        'image-rendering': 'auto',
+        'font-style': 'normal',
+        'font-variant': 'normal',
+        'font-weight': 'normal',
+        'font-stretch': 'normal',
+        'font-size': 'medium',
+        'font-size-adjust': 'none',
+        kerning: 'auto',
+        'letter-spacing': 'normal',
+        'word-spacing': 'normal',
+        'text-decoration': 'none',
+        'text-anchor': 'start',
+        'writing-mode': 'lr-tb',
+        'glyph-orientation-vertical': 'auto',
+        'glyph-orientation-horizontal': '0deg',
+        direction: 'ltr',
+        'unicode-bidi': 'normal',
+        'dominant-baseline': 'auto',
+        'alignment-baseline': 'baseline',
+        'baseline-shift': 'baseline'
+    },
     transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
 };
 
@@ -889,7 +939,7 @@ exports.elems = {
         },
         contentGroups: [
             'descriptive',
-            'filter'
+            'filterPrimitive'
         ],
         content: [
             'animate',
