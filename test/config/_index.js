@@ -4,7 +4,7 @@ var CHAI = require('chai'),
     cover = process.argv[3] === 'mocha-istanbul',
     config = require(cover ? '../../lib-cov/svgo/config' : '../../lib/svgo/config');
 
-require('mocha-as-promised')();
+require('mocha-as-promised')(require('mocha'));
 CHAI.use(require('chai-as-promised'));
 CHAI.should();
 

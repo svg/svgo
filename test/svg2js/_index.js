@@ -15,7 +15,7 @@ var CHAI = require('chai'),
         position: false
     };
 
-require('mocha-as-promised')();
+require('mocha-as-promised')(require('mocha'));
 CHAI.use(require('chai-as-promised'));
 CHAI.should();
 
