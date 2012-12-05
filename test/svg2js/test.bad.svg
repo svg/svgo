@@ -6,7 +6,7 @@
     width="120px" height="120px" viewBox="0 0 120 120"
     enable-background="new 0 0 120 120" xml:space="preserve"
 >
-    <style type="text/css"><![CDATA[
+    style type="text/css"><![CDATA[
         svg { fill: red; }
     ]]></style>
     <g>
@@ -15,5 +15,4 @@
             <text>test</text>
         </g>
     </g>
-    <g style="color: black"></g>
 </svg>

@@ -1,10 +1,15 @@
 'use strict';
 
-var INHERIT = require('inherit'),
+var CHAI = require('chai'),
+    INHERIT = require('inherit'),
     QFS = require('q-fs'),
     FS = require('fs'),
     PATH = require('path'),
     regFilename = /^(.*)\.(\d+)\.orig\.svg$/;
+
+require('mocha-as-promised')();
+CHAI.use(require('chai-as-promised'));
+CHAI.should();
 
 var MySVGO = INHERIT(require('../../lib/svgo'), {
 
@@ -38,24 +43,16 @@ describe('plugins tests', function() {
 
         var match = file.match(regFilename),
             index,
-            name,
-            result;
+            name;
 
         if (match) {
             name = match[1];
             index = match[2];
 
-            before(function(done) {
-                getResult(name, index).then(function(data) {
-                    result = data;
-
-                    done();
-                })
-                .done();
-            });
-
             it(name + '.' + index, function() {
-                result[0].should.be.equal(result[1]);
+                return getResult(name, index).then(function(data) {
+                    return data[0].should.be.equal(data[1]);
+                });
             });
         }
 
