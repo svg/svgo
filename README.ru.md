@@ -95,8 +95,10 @@ Arguments:
 
         $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 
-* с помощью [GUI](https://github.com/svg/svgo-gui)
+* с помощью GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * как модуль Node.js – [examples](https://github.com/svg/svgo/tree/master/examples)
+* как таск для Grunt – [svgo-grunt](https://github.com/svg/svgo-grunt)
+* как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 
 ## TODO
 
