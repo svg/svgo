@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.1.5) ] 0.1.5 / 06.12.2012
+* E-notated numbers in paths not recognised (fix [#63](https://github.com/svg/svgo/issues/63))
+* update README with `svgo-grunt` and `svgo-osx-folder-action`
+* fix `mocha-as-promised` plug in node 0.6
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.1.4) ] 0.1.4 / 05.12.2012
 * plugins/_collections: more defaults
 * `README.ru.md`
