@@ -1,6 +1,6 @@
 'use strict';
 
-var regNumericValues = /^([\-+]?\d*\.?\d+)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
+var regNumericValues = /^([\-+]?\d*\.?\d+(\.\d+)?([eE][\-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero;
 
 /**
@@ -26,7 +26,7 @@ exports.cleanupNumericValues = function(item, params) {
             if (match) {
                     // round it to the fixed precision
                 var num = +(+match[1]).toFixed(params.floatPrecision),
-                    units = match[2] || '';
+                    units = match[4] || '';
 
                 // and remove leading zero
                 if (params.leadingZero) {

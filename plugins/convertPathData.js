@@ -2,7 +2,7 @@
 
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
-    regPathData = /(?=-)|[\s,]+/,
+    regPathData = /[\-+]?\d*\.?\d+(\.\d+)?([eE][\-+]?\d+)?/g,
     pathElems = ['path', 'glyph', 'missing-glyph'],
     hasMarkerMid;
 
@@ -73,16 +73,16 @@ function path2js(pathString) {
             // data item
             } else {
 
-                // M 35.898 14.374 L 35.898 14.374 → M35.898 14.374L35.898 14.374
-                data = data.trim().split(regPathData).map(function(str) {
-                    return +str;
-                });
+                data = data.trim().match(regPathData);
 
-                // very stupid defense strategy
-                if (typeof data[0] === 'number' && !isNaN(data[0])) {
+                if (data) {
 
                     var index = 0,
                         pair = 2;
+
+                    data = data.map(function(str) {
+                        return +str;
+                    });
 
                     // deal with very first 'Mm' and multiple points data
                     if ('Mm'.indexOf(instruction) > -1) {
