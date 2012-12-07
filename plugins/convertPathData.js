@@ -35,6 +35,8 @@ exports.convertPathData = function(item, params) {
 
             data = filters(data, params);
 
+            data = collapseRepeated(data, params);
+
             item.attr('d').value = js2path(data, params);
         }
 
@@ -496,28 +498,6 @@ function filters(path, params) {
 
             }
 
-            // collapse repeated instructions data
-            if (
-                params.collapseRepeated &&
-                !hasMarkerMid &&
-                prev.item &&
-                instruction === prev.item.instruction
-            ) {
-                // increase previous h or v data with current
-                if (instruction === 'h' || instruction === 'v') {
-                    prev.item.data[0] += data[0];
-                // concat previous data with current
-                } else {
-                    prev.item.data = prev.item.data.concat(data);
-                }
-
-                // if there was an original then remove it because of the new data
-                delete prev.item.original;
-
-                // filter current item
-                return false;
-            }
-
             item.instruction = instruction;
             item.data = data;
 
@@ -531,6 +511,52 @@ function filters(path, params) {
         return true;
 
     });
+
+    return path;
+
+}
+
+// collapse repeated instructions data
+/**
+ * Collapse repeated instructions data
+ *
+ * @param {Array} path input path data
+ * @param {Object} params plugin params
+ *
+ * @return {Array} output path data
+ */
+function collapseRepeated(path, params) {
+
+    if (params.collapseRepeated) {
+
+        var prev;
+
+        path = path.filter(function(item) {
+
+            if (
+                !hasMarkerMid &&
+                prev &&
+                item.instruction === prev.instruction
+            ) {
+                // increase previous h or v data with current
+                if (item.instruction === 'h' || item.instruction === 'v') {
+                    prev.data[0] += item.data[0];
+                // concat previous data with current
+                } else {
+                    prev.data = prev.data.concat(item.data);
+                }
+
+                // filter current item
+                return false;
+            }
+
+            prev = item;
+
+            return true;
+
+        });
+
+    }
 
     return path;
 
