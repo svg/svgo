@@ -129,7 +129,7 @@ function convertToShorts(transforms, params) {
             transforms.length < 3 &&
             transform.name === 'matrix'
         ) {
-            transforms[i] = matrixToTransform(transform);
+            transforms[i] = matrixToTransform(transform, params);
         }
 
         // fixed-point numbers
@@ -233,7 +233,7 @@ function collapseIntoOne(transforms, params) {
         transforms = transforms.map(function(transform) {
             return transform.name === 'martix' ?
                 transform :
-                transformToMatrix(transform);
+                transformToMatrix(transform, params);
         });
 
         // multiply all matrices into one
@@ -246,7 +246,7 @@ function collapseIntoOne(transforms, params) {
 
         // and try to get a jackpot
         if (params.matrixToTransform) {
-            transforms = matrixToTransform(transforms);
+            transforms = matrixToTransform(transforms, params);
         }
 
         transforms = [transforms];
@@ -299,24 +299,24 @@ var mth = {
         return Math.cos(this.rad(deg));
     },
 
-    acos: function(val) {
-        return Math.round(this.deg(Math.acos(val)));
+    acos: function(val, floatPrecision) {
+        return +(this.deg(Math.acos(val)).toFixed(floatPrecision));
     },
 
     sin: function(deg) {
         return Math.sin(this.rad(deg));
     },
 
-    asin: function(val) {
-        return Math.round(this.deg(Math.asin(val)));
+    asin: function(val, floatPrecision) {
+        return +(this.deg(Math.asin(val)).toFixed(floatPrecision));
     },
 
     tan: function(deg) {
         return Math.tan(this.rad(deg));
     },
 
-    atan: function(val) {
-        return Math.round(this.deg(Math.atan(val)));
+    atan: function(val, floatPrecision) {
+        return +(this.deg(Math.atan(val)).toFixed(floatPrecision));
     }
 
 };
@@ -371,7 +371,7 @@ function transformToMatrix(transform) {
  *
  * @return {Object} transform object
  */
-function matrixToTransform(transform) {
+function matrixToTransform(transform, params) {
 
     var data = transform.data;
 
@@ -402,12 +402,12 @@ function matrixToTransform(transform) {
         data[4] === 0 &&
         data[5] === 0
     ) {
-        var a1 = mth.acos(data[0]),
-            a2 = mth.asin(data[1]);
+        var a1 = mth.acos(data[0], params.floatPrecision),
+            a2 = mth.asin(data[1], params.floatPrecision);
 
         a1 = a2 < 0 ? -a1 : a1;
 
-        if (a1 === a2) {
+        if (Math.round(a1) === Math.round(a2)) {
             transform.name = 'rotate';
             transform.data = [a1];
         }
@@ -421,7 +421,7 @@ function matrixToTransform(transform) {
        data[5] === 0
     ) {
         transform.name = 'skewX';
-        transform.data = [mth.atan(data[2])];
+        transform.data = [mth.atan(data[2], params.floatPrecision)];
 
     // [1, tan(a), 0, 1, 0, 0] → skewY(a)
     } else if (
@@ -432,7 +432,7 @@ function matrixToTransform(transform) {
        data[5] === 0
     ) {
         transform.name = 'skewY';
-        transform.data = [mth.atan(data[1])];
+        transform.data = [mth.atan(data[1], params.floatPrecision)];
     }
 
     return transform;
