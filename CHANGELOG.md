@@ -1,3 +1,9 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.1.6) ] 0.1.6 / 07.12.2012
+* plugins/convertPathData: collapse repeated instructions only after curveSmoothShorthands (fix [#64](https://github.com/svg/svgo/issues/64))
+* lib/svgo/coa: handle 'there is nothing to optimize' case and display a message about it (fix [#61](https://github.com/svg/svgo/issues/61))
+* plugins/cleanupSVGElem: delete as useless artefact
+
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.1.5) ] 0.1.5 / 06.12.2012
 * E-notated numbers in paths not recognised (fix [#63](https://github.com/svg/svgo/issues/63))
 * update README with `svgo-grunt` and `svgo-osx-folder-action`
