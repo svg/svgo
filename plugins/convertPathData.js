@@ -146,7 +146,8 @@ function convertToRelative(path) {
     var instruction,
         data,
         newPoint,
-        point = [0, 0];
+        point = [0, 0],
+        subpathPoint = [0, 0];
 
     path.forEach(function(item) {
 
@@ -165,6 +166,10 @@ function convertToRelative(path) {
                 point[0] += newPoint[0];
                 point[1] += newPoint[1];
 
+                if (instruction === 'm') {
+                    subpathPoint = point.slice(-2);
+                }
+
             } else if (instruction === 'h') {
 
                 point[0] += data[0];
@@ -177,14 +182,29 @@ function convertToRelative(path) {
 
             // convert absolute path data coordinates to relative
             // M → m
+            if (instruction === 'M') {
+
+                if (point[0] !== 0 && point[1] !== 0) {
+                    instruction = 'm';
+                }
+
+                // x y
+                // 0 1
+                data[0] -= point[0];
+                data[1] -= point[1];
+
+                point[0] += data[0];
+                point[1] += data[1];
+
+                 subpathPoint = point.slice(-2);
+
+            }
+
             // L → l
             // T → t
-            if ('MLT'.indexOf(instruction) > -1) {
+            else if ('LT'.indexOf(instruction) > -1) {
 
-                // don't convert M if point is [0, 0]
-                if (instruction !== 'M' || point[0] !== 0 && point[1] !== 0) {
-                    instruction = instruction.toLowerCase();
-                }
+                instruction = instruction.toLowerCase();
 
                 // x y
                 // 0 1
@@ -268,7 +288,7 @@ function convertToRelative(path) {
 
         // !data === z, reset current point
         else {
-            point = [0, 0];
+            point = subpathPoint;
         }
 
     });

@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.1.7) ] 0.1.7 / 08.12.2012
+* plugins/convertPathData: incorrect interpretation of `z + m` (fix [#69](https://github.com/svg/svgo/issues/69))
+* plugins/convertTransform: do a more accurate floating numbers rounding in `matrixToTransform()` (fix [#68](https://github.com/svg/svgo/issues/68))
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.1.6) ] 0.1.6 / 07.12.2012
 * plugins/convertPathData: collapse repeated instructions only after curveSmoothShorthands (fix [#64](https://github.com/svg/svgo/issues/64))
 * lib/svgo/coa: handle 'there is nothing to optimize' case and display a message about it (fix [#61](https://github.com/svg/svgo/issues/61))
