@@ -147,12 +147,15 @@ function convertToRelative(path) {
         data,
         newPoint,
         point = [0, 0],
-        subpathPoint = [0, 0];
+        subpathPoint = [0, 0],
+        index = 0;
 
     path.forEach(function(item) {
 
         instruction = item.instruction;
         data = item.data;
+
+        index++;
 
         // data !== !z
         if (data) {
@@ -184,19 +187,17 @@ function convertToRelative(path) {
             // M → m
             if (instruction === 'M') {
 
-                if (point[0] !== 0 && point[1] !== 0) {
+                if (index > 1) {
                     instruction = 'm';
                 }
 
-                // x y
-                // 0 1
                 data[0] -= point[0];
                 data[1] -= point[1];
 
                 point[0] += data[0];
                 point[1] += data[1];
 
-                 subpathPoint = point.slice(-2);
+                subpathPoint = point.slice(-2);
 
             }
 
