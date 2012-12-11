@@ -40,6 +40,14 @@ plugins:
       leadingZero: true
       defaultPx: true
 
+  - name: convertColors
+    active: true
+    type: perItem
+    params:
+      names2hex: true
+      rgb2hex: true
+      shorthex: true
+
   - name: removeUnknownsAndDefaults
     active: true
     type: perItem
@@ -48,6 +56,13 @@ plugins:
       unknownContent: true
       unknownAttrs: true
       defaultAttrs: true
+
+  - name: removeUselessStrokeAndFill
+    active: true
+    type: perItem
+    params:
+      stroke: true
+      fill: true
 
   - name: removeViewBox
     active: true
@@ -87,14 +102,6 @@ plugins:
       text: true
       tspan: true
       tref: true
-
-  - name: convertColors
-    active: true
-    type: perItem
-    params:
-      names2hex: true
-      rgb2hex: true
-      shorthex: true
 
   - name: convertPathData
     active: true
