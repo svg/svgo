@@ -1,3 +1,11 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.1.8) ] 0.1.8 / 11.12.2012
+* new plugin [plugins/removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) (close [#75](https://github.com/svg/svgo/issues/75))
+* new plugin [plugins/removeUnusedIDs](https://github.com/svg/svgo/blob/master/plugins/removeUnusedIDs.js) (close [#76](https://github.com/svg/svgo/issues/76))
+* plugins/convertPathData: wrong M interpretation in some cases (fix [#73](https://github.com/svg/svgo/issues/73))
+* plugins/cleanupAttrs: use `isElem()` API
+* `.travis.yml`: check all branches
+
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.1.7) ] 0.1.7 / 08.12.2012
 * plugins/convertPathData: incorrect interpretation of `z + m` (fix [#69](https://github.com/svg/svgo/issues/69))
 * plugins/convertTransform: do a more accurate floating numbers rounding in `matrixToTransform()` (fix [#68](https://github.com/svg/svgo/issues/68))
