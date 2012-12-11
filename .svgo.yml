@@ -150,6 +150,10 @@ plugins:
     active: true
     type: full
 
+  - name: removeUnusedIDs
+    active: true
+    type: full
+
 svg2js:
 
   strict: true
