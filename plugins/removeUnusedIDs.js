@@ -14,7 +14,7 @@ var referencesProps = require('./_collections').referencesProps,
  *
  * @author Kir Belevich
  */
-exports.removeUnusedID = function(data) {
+exports.removeUnusedIDs = function(data) {
 
     var IDs = {},
         referencesIDs = [],
