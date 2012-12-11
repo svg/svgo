@@ -2072,6 +2072,19 @@ exports.editorNamespaces = [
     'http://ns.adobe.com/XPath/1.0/'
 ];
 
+// http://www.w3.org/TR/SVG/linking.html#processingIRI
+exports.referencesProps = [
+    'clip-path',
+    'color-profile',
+    'fill',
+    'filter',
+    'marker-start',
+    'marker-mid',
+    'marker-end',
+    'mask',
+    'stroke'
+];
+
 // http://www.w3.org/TR/SVG/styling.html#SVGStylingProperties
 exports.stylingProps = [
     'font',
