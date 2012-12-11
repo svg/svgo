@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <linearGradient id="myGradient">
+        <linearGradient id="gradient001">
             <stop offset="5%" stop-color="#F60"/>
             <stop offset="95%" stop-color="#FF6"/>
         </linearGradient>
@@ -9,7 +9,7 @@
         </text>
     </defs>
     <g id="g001">
-        <circle id="circle001" fill="url(#myGradient)" cx="60" cy="60" r="50"/>
+        <circle id="circle001" fill="url(#gradient001)" cx="60" cy="60" r="50"/>
         <tref xlink:href="#referencedText"/>
     </g>
 </svg>
