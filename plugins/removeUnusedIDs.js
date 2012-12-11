@@ -3,11 +3,10 @@
 var referencesProps = require('./_collections').referencesProps,
     regReferencesUrl = /^url\(#(.+?)\)$/,
     regReferencesHref = /^#(.+?)$/,
-    styleOrScript = ['style', 'script'],
-    hasStyleOrScript = false;
+    styleOrScript = ['style', 'script'];
 
 /**
- * Remove unused IDs
+ * Remove unused ID
  * (only if there are no any <style> or <script>).
  *
  * @param {Object} item current iteration item
@@ -18,7 +17,8 @@ var referencesProps = require('./_collections').referencesProps,
 exports.removeUnusedIDs = function(data) {
 
     var IDs = {},
-        referencesIDs = [];
+        referencesIDs = [],
+        hasStyleOrScript = false;
 
     /**
      * Bananas!
