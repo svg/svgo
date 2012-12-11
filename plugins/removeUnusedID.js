@@ -7,7 +7,7 @@ var referencesProps = require('./_collections').referencesProps,
     hasStyleOrScript = false;
 
 /**
- * Remove unused IDs
+ * Remove unused ID
  * (only if there are no any <style> or <script>).
  *
  * @param {Object} item current iteration item
@@ -15,7 +15,7 @@ var referencesProps = require('./_collections').referencesProps,
  *
  * @author Kir Belevich
  */
-exports.removeUnusedIDs = function(data) {
+exports.removeUnusedID = function(data) {
 
     var IDs = {},
         referencesIDs = [];

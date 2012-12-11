@@ -150,7 +150,7 @@ plugins:
     active: true
     type: full
 
-  - name: removeUnusedIDs
+  - name: removeUnusedID
     active: true
     type: full
 
