@@ -184,4 +184,5 @@ js2svg:
   textStart: ''
   textEnd: ''
   indent: '    '
+  html: true
   pretty: false
