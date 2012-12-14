@@ -95,6 +95,16 @@ Arguments:
 
         $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
 
+* with SVGZ:
+
+    from `.svgz` to `.svg`:
+
+        $ gunzip -c test.svgz | svgo -i - -o test.min.svg
+
+    from `.svg` to `.svgz`:
+
+        $ svgo test.svg -o - | gzip -cfq9 > test.svgz
+
 * with GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [svgo-grunt](https://github.com/svg/svgo-grunt)
