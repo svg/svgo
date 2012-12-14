@@ -15,18 +15,22 @@ svgo
     .then(function(result) {
 
         console.log(result);
-        // output:
-        // {
-        //     // optimized SVG data string
-        //     data: '<svg width="10" height="20">test</svg>'
-        //     // additional info such as width/height and start/end bytes length
-        //     info: {
-        //         width: '10',
-        //         height: '20',
-        //         inBytes: 59,
-        //         outBytes: 38
-        //     }
-        // }
+        /*
+            output:
+
+            {
+                // optimized SVG data string
+                data: '<svg width="10" height="20">test</svg>'
+                // additional info such as width/height and start/end bytes length
+                info: {
+                    width: '10',
+                    height: '20',
+                    inBytes: 59,
+                    outBytes: 38,
+                    time: N
+                }
+            }
+        */
 
     })
     // end promises chain
