@@ -165,23 +165,29 @@ svg2js:
 
 js2svg:
 
-  doctypeStart: '<!DOCTYPE'
-  doctypeEnd: '>'
-  procInstStart: '<?'
-  procInstEnd: '?>'
-  tagOpenStart: '<'
-  tagOpenEnd: '>'
-  tagCloseStart: '</'
-  tagCloseEnd: '>'
-  tagShortStart: '<'
-  tagShortEnd: '/>'
-  attrStart: '="'
-  attrEnd: '"'
-  commentStart: '<!--'
-  commentEnd: '-->'
-  cdataStart: '<![CDATA['
-  cdataEnd: ']]>'
-  textStart: ''
-  textEnd: ''
-  indent: '    '
+  doctypeStart: "<!DOCTYPE"
+  doctypeEnd: ">"
+  procInstStart: "<?"
+  procInstEnd: "?>"
+  tagOpenStart: "<"
+  tagOpenEnd: ">"
+  tagCloseStart: "</"
+  tagCloseEnd: ">"
+  tagShortStart: "<"
+  tagShortEnd: "/>"
+  attrStart: "=\""
+  attrEnd: "\""
+  commentStart: "<!--"
+  commentEnd: "-->"
+  cdataStart: "<![CDATA["
+  cdataEnd: "]]>"
+  textStart: ""
+  textEnd: ""
+  indent: "    "
+  entities:
+    "&": "&amp;"
+    "'": "&apos;"
+    "\"": "&quot;"
+    ">": "&gt;"
+    "<": "&lt;"
   pretty: false

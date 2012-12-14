@@ -5,8 +5,42 @@ var referencesProps = require('./_collections').referencesProps,
     regReferencesHref = /^#(.+?)$/,
     styleOrScript = ['style', 'script'];
 
+function replaceLast(str, char) {
+    str = str.split('');
+    str[str.length - 1] = char;
+    return str.join('');
+}
+
+function replaceFirst(str, char) {
+    str = str.split('');
+    str[0] = char;
+    return str.join('');
+}
+
+function generateID(prev) {
+    var next;
+
+    if (prev.charCodeAt(prev.length - 1) === 122) {
+        next = replaceAt(prev, 'A');
+    } else if (prev.charCodeAt(prev.length - 1) === 90) {
+        next = replaceAt(prev, 'A');
+    } else {
+        next = replaceAt(prev, String.fromCharCode(prev.charCodeAt(prev.length - 1) + 1));
+    }
+
+    // if (prev.length === 1) {
+    //     if (prev.charCodeAt(0) === 122) {
+    //         next = String.fromCharCode(65);
+    //     } else if (prev.charCodeAt(0) === 90) {
+    //         next = 'aa';
+    //     }
+    // } else if (prev.length === 2) {
+
+    // }
+}
+
 /**
- * Remove unused ID
+ * Remove unused IDs
  * (only if there are no any <style> or <script>).
  *
  * @param {Object} item current iteration item
