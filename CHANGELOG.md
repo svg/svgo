@@ -1,3 +1,13 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.1.9) ] 0.1.9 / 17.12.2012
+* plugins/cleanupIDs: renamed from removeUnusedIDs; minify used IDs (fix [#7](https://github.com/svg/svgo/issues/7))
+* lib/svgo/js2svg: restore HTML entities back (fix [#80](https://github.com/svg/svgo/issues/80) + [#81](https://github.com/svg/svgo/issues/81))
+* plugins/removeDoctype: do not remove if custom XML entities presents (fix [#77](https://github.com/svg/svgo/issues/77))
+* lib/svgo/coa: refactoring, colors and fix [#70](https://github.com/svg/svgo/issues/70)
+* lib/svgo: store elapsed time in result object
+* usage examples with SVGZ (close [#18](https://github.com/svg/svgo/issues/18))
+* more optimized logo
+* update `.gitignore`
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.1.8) ] 0.1.8 / 11.12.2012
 * new plugin [plugins/removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) (close [#75](https://github.com/svg/svgo/issues/75))
 * new plugin [plugins/removeUnusedIDs](https://github.com/svg/svgo/blob/master/plugins/removeUnusedIDs.js) (close [#76](https://github.com/svg/svgo/issues/76))
