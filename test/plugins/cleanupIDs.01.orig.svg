@@ -8,8 +8,11 @@
             referenced text
         </text>
     </defs>
+    <g id="g001">
+        <circle id="circle001" fill="url(#gradient001)" cx="60" cy="60" r="50"/>
+        <tref xlink:href="#referencedText"/>
+    </g>
     <g>
-        <circle fill="url(#gradient001)" cx="60" cy="60" r="50"/>
         <tref xlink:href="#referencedText"/>
     </g>
 </svg>

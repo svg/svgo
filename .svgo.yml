@@ -150,9 +150,12 @@ plugins:
     active: true
     type: full
 
-  - name: removeUnusedIDs
+  - name: cleanupIDs
     active: true
     type: full
+    params:
+      remove: true
+      minify: true
 
 svg2js:
 
