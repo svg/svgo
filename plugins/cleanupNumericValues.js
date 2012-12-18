@@ -23,7 +23,7 @@ exports.cleanupNumericValues = function(item, params) {
             match = attr.value.match(regNumericValues);
 
             // if attribute value matches regNumericValues
-            if (match) {
+            if ("version" != attr.name && match) {
                     // round it to the fixed precision
                 var num = +(+match[1]).toFixed(params.floatPrecision),
                     units = match[4] || '';
