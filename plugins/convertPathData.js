@@ -2,7 +2,7 @@
 
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
-    regPathData = /[\-+]?\d*\.?\d+(\.\d+)?([eE][\-+]?\d+)?/g,
+    regPathData = /[\-+]?\d*\.?\d+([eE][\-+]?\d+)?/g,
     pathElems = ['path', 'glyph', 'missing-glyph'],
     hasMarkerMid;
 
