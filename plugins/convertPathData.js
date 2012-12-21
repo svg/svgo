@@ -4,7 +4,9 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /[\-+]?\d*\.?\d+([eE][\-+]?\d+)?/g,
     pathElems = ['path', 'glyph', 'missing-glyph'],
-    hasMarkerMid;
+    hasMarkerMid,
+    transform2js = require('./_transforms.js').transform2js,
+    transformsMultiply = require('./_transforms.js').transformsMultiply;
 
 /**
  * Convert absolute Path to relative,
@@ -30,12 +32,20 @@ exports.convertPathData = function(item, params) {
 
         var data = path2js(item.attr('d').value);
 
+
+        // TODO: get rid of functions returns
         if (data.length) {
             data = convertToRelative(data);
 
+            if (params.applyTransforms) {
+                data = applyTransforms(item, data);
+            }
+
             data = filters(data, params);
 
-            data = collapseRepeated(data, params);
+            if (params.collapseRepeated) {
+                data = collapseRepeated(data, params);
+            }
 
             item.attr('d').value = js2path(data, params);
         }
@@ -49,7 +59,6 @@ exports.convertPathData = function(item, params) {
  *
  * @param {String} pathString input string
  * @param {Object} params plugin params
- *
  * @return {Array} output array
  */
 function path2js(pathString) {
@@ -138,7 +147,6 @@ function path2js(pathString) {
  *
  * @param {Array} path input path data
  * @param {Object} params plugin params
- *
  * @return {Array} output path data
  */
 function convertToRelative(path) {
@@ -299,11 +307,115 @@ function convertToRelative(path) {
 }
 
 /**
+ * Apply transformation(s) to the Path data.
+ *
+ * @param {Object} elem current element
+ * @param {Array} path input path data
+ * @return {Array} output path data
+ */
+function applyTransforms(elem, path) {
+
+    // if there are no 'stroke' attr and 'a' segments
+    if (
+        elem.hasAttr('transform') &&
+        !elem.hasAttr('stroke') &&
+        path.every(function(i) { return i.instruction !== 'a'; })
+    ) {
+
+        var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
+            currentPoint;
+
+        // if there is a translate() transform
+        if (matrix.data[4] !== 0 || matrix.data[5] !== 0) {
+
+            // then apply it only to the first absoluted M
+            currentPoint = transformPoint(matrix.data, path[0].data[0], path[0].data[1]);
+            path[0].data[0] = currentPoint[0];
+            path[0].data[1] = currentPoint[1];
+
+            // clear translate() data from transform matrix
+            matrix.data[4] = 0;
+            matrix.data[5] = 0;
+
+            // apply transform to other segments
+            path.slice(1).forEach(function(pathItem) {
+                pathItem = transformData(matrix, pathItem);
+            });
+
+        } else {
+
+            path.forEach(function(pathItem) {
+                pathItem = transformData(matrix, pathItem);
+            });
+
+        }
+
+        // remove transform attr
+        elem.removeAttr('transform');
+
+    }
+
+    return path;
+
+}
+
+/**
+ * Apply transformation(s) to the Path item data.
+ *
+ * @param {Array} matrix transform 3x3 matrix
+ * @param {Object} item input Path item
+ * @return {Object} output Path item
+ */
+function transformData(matrix, item) {
+
+    if (item.data) {
+
+        var currentPoint;
+
+        // h
+        if (item.instruction === 'h') {
+            item.instruction = 'l';
+            item.data[1] = 0;
+        // v
+        } else if (item.instruction === 'v') {
+            item.instruction = 'l';
+            item.data[1] = item.data[0];
+            item.data[0] = 0;
+        }
+
+        for (var i = 0; i < item.data.length; i += 2) {
+            currentPoint = transformPoint(matrix.data, item.data[i], item.data[i + 1]);
+            item.data[i] = currentPoint[0];
+            item.data[i + 1] = currentPoint[1];
+        }
+
+    }
+
+    return item;
+
+}
+
+/**
+ * Apply transform 3x3 matrix to x-y point.
+ *
+ * @param {Array} matrix transform 3x3 matrix
+ * @param {Array} point x-y point
+ * @return {Array} point with new coordinates
+ */
+function transformPoint(matrix, x, y) {
+
+    return [
+        matrix[0] * x + matrix[2] * y + matrix[4],
+        matrix[1] * x + matrix[3] * y + matrix[5]
+    ];
+
+}
+
+/**
  * Main filters loop.
  *
  * @param {Array} path input path data
  * @param {Object} params plugin params
- *
  * @return {Array} output path data
  */
 function filters(path, params) {
@@ -537,47 +649,40 @@ function filters(path, params) {
 
 }
 
-// collapse repeated instructions data
 /**
  * Collapse repeated instructions data
  *
  * @param {Array} path input path data
- * @param {Object} params plugin params
- *
  * @return {Array} output path data
  */
-function collapseRepeated(path, params) {
+function collapseRepeated(path) {
 
-    if (params.collapseRepeated) {
+    var prev;
 
-        var prev;
+    path = path.filter(function(item) {
 
-        path = path.filter(function(item) {
-
-            if (
-                !hasMarkerMid &&
-                prev &&
-                item.instruction === prev.instruction
-            ) {
-                // increase previous h or v data with current
-                if (item.instruction === 'h' || item.instruction === 'v') {
-                    prev.data[0] += item.data[0];
-                // concat previous data with current
-                } else {
-                    prev.data = prev.data.concat(item.data);
-                }
-
-                // filter current item
-                return false;
+        if (
+            !hasMarkerMid &&
+            prev &&
+            item.instruction === prev.instruction
+        ) {
+            // increase previous h or v data with current
+            if (item.instruction === 'h' || item.instruction === 'v') {
+                prev.data[0] += item.data[0];
+            // concat previous data with current
+            } else {
+                prev.data = prev.data.concat(item.data);
             }
 
-            prev = item;
+            // filter current item
+            return false;
+        }
 
-            return true;
+        prev = item;
 
-        });
+        return true;
 
-    }
+    });
 
     return path;
 
@@ -589,7 +694,6 @@ function collapseRepeated(path, params) {
  *
  * @param {Array} data input data array
  * @param {Number} fixed number of decimals
- *
  * @return {Array} output data array
  */
 function roundData(data, fixed) {
@@ -607,7 +711,6 @@ function roundData(data, fixed) {
  *
  * @param {Array} xs array of curve points x-coordinates
  * @param {Array} ys array of curve points y-coordinates
- *
  * @return {Boolean}
  */
 
@@ -633,12 +736,11 @@ function isCurveStraightLine(xs, ys) {
  *
  * @param {Array} path input path data
  * @param {Object} params plugin params
- *
  * @return {String} output path string
  */
 function js2path(path, params) {
 
-        // out path data string
+        // output path data string
     var pathString = '';
 
     path.forEach(function(item) {

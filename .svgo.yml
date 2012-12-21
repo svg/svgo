@@ -107,6 +107,7 @@ plugins:
     active: true
     type: perItem
     params:
+      applyTransforms: true
       straightCurves: true
       lineShorthands: true
       curveSmoothShorthands: true
