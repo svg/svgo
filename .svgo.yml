@@ -128,7 +128,8 @@ plugins:
         convertToShorts: true
         floatPrecision: 3
         matrixToTransform: true
-        shortTranslateScale: true
+        shortTranslate: true
+        shortScale: true
         shortRotate: true
         removeUseless: true
         collapseIntoOne: true

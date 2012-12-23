@@ -108,13 +108,26 @@ function convertToShorts(transforms, params) {
             });
         }
 
-        // convert long translate or scale transform notations to the shorts ones
+        // convert long translate transform notation to the shorts one
+        // translate(10 0) → translate(10)
         if (
-            params.shortTranslateScale &&
-            (transform.name === 'translate' ||
-             transform.name === 'scale')
+            params.shortTranslate &&
+            transform.name === 'translate' &&
+            transform.data.length === 2 &&
+            transform.data[1] === 0
         ) {
-            transform.data = longTranslateScaleToShort(transform.data);
+            transform.data = [transform.data[0]];
+        }
+
+        // convert long scale transform notation to the shorts one
+        // scale(2 2) → scale(2)
+        if (
+            params.shortScale &&
+            transform.name === 'scale' &&
+            transform.data.length === 2 &&
+            transform.data[0] === transform.data[1]
+        ) {
+            transform.data = [transform.data[0]];
         }
 
         // convert long rotate transform notation to the short one
