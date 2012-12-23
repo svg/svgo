@@ -144,6 +144,13 @@ plugins:
     active: true
     type: perItemReverse
 
+  - name: cleanupIDs
+    active: true
+    type: full
+    params:
+      remove: true
+      minify: true
+
   - name: collapseGroups
     active: true
     type: perItemReverse
@@ -151,13 +158,6 @@ plugins:
   - name: removeUnusedNS
     active: true
     type: full
-
-  - name: cleanupIDs
-    active: true
-    type: full
-    params:
-      remove: true
-      minify: true
 
 svg2js:
 
