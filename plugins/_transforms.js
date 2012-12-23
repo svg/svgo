@@ -117,7 +117,7 @@ var mth = exports.mth = {
  * @param {Object} data matrix transform object
  * @return {Object} transform object
  */
-var matrixToTransform = exports.matrixToTransform = function(transform, params) {
+exports.matrixToTransform = function(transform, params) {
 
     var data = transform.data;
 
