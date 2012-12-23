@@ -1,12 +1,12 @@
 {
   "name": "svgo",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [ "svgo", "svg", "optimize", "minify" ],
   "homepage": "http://svg.github.com/svgo/",
   "bugs": {
     "url": "https://github.com/svg/svgo/issues",
-    "email": "svgo@soulshine.in"
+    "email": "kir@soulshine.in"
   },
   "author": {
     "name": "Kir Belevich",
