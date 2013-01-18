@@ -7,7 +7,7 @@ exports.elemsGroups = {
     shape: ['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect'],
     structural: ['defs', 'g', 'svg', 'symbol', 'use'],
     gradient: ['linearGradient', 'radialGradient'],
-    container: ['a', 'defs', 'glyph', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol'],
+    container: ['a', 'defs', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol'],
     textContentChild: ['altGlyph', 'textPath', 'tref', 'tspan'],
     lightSource: ['feDiffuseLighting', 'feSpecularLighting', 'feDistantLight', 'fePointLight', 'feSpotLight'],
     filterPrimitive: ['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feFlood', 'feGaussianBlur', 'feImage', 'feMerge', 'feMorphology', 'feOffset', 'feSpecularLighting', 'feTile', 'feTurbulence']
