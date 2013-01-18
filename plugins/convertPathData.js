@@ -3,7 +3,7 @@
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /[\-+]?\d*\.?\d+([eE][\-+]?\d+)?/g,
-    pathElems = ['path', 'glyph', 'missing-glyph'],
+    pathElems = require('./_collections.js').pathElems,
     hasMarkerMid,
     transform2js = require('./_transforms.js').transform2js,
     transformsMultiply = require('./_transforms.js').transformsMultiply;

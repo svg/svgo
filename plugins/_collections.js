@@ -13,6 +13,8 @@ exports.elemsGroups = {
     filterPrimitive: ['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feFlood', 'feGaussianBlur', 'feImage', 'feMerge', 'feMorphology', 'feOffset', 'feSpecularLighting', 'feTile', 'feTurbulence']
 };
 
+exports.pathElems = ['path', 'glyph', 'missing-glyph'];
+
 // var defaults = exports.defaults = {
 //     'externalResourcesRequired': 'false',
 //     'xlink:type': 'simple'

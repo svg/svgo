@@ -1,6 +1,7 @@
 'use strict';
 
-var inheritableAttrs = require('./_collections').inheritableAttrs;
+var inheritableAttrs = require('./_collections').inheritableAttrs,
+    pathElems = require('./_collections.js').pathElems;
 
 /**
  * Collapse content's intersected and inheritable
@@ -32,34 +33,47 @@ exports.moveElemsAttrsToGroup = function(item) {
 
         var intersection = {},
             hasTransform = false,
-            every = item.content.every(function(g) {
-                if (g.elem && g.attrs) {
+            intersected = item.content.every(function(inner) {
+                if (inner.isElem() && inner.hasAttr()) {
                     if (!Object.keys(intersection).length) {
-                        intersection = g.attrs;
+                        intersection = inner.attrs;
                     } else {
-                        intersection = intersectInheritableAttrs(intersection, g.attrs);
+                        intersection = intersectInheritableAttrs(intersection, inner.attrs);
 
                         if (!intersection) return false;
                     }
 
                     return true;
                 }
+            }),
+            allPath = item.content.every(function(inner) {
+                return inner.isElem(pathElems);
             });
 
-        if (every) {
+        if (intersected) {
 
             item.content.forEach(function(g) {
 
                 for (var name in intersection) {
-                    g.removeAttr(name);
 
-                    if (name === 'transform') {
-                        if (!hasTransform && item.hasAttr('transform')) {
-                            item.attr('transform').value += ' ' + intersection[name].value;
-                            hasTransform = true;
+                    if (!allPath || name !== 'transform') {
+
+                        g.removeAttr(name);
+
+                        if (name === 'transform') {
+                            if (!hasTransform) {
+                                if (item.hasAttr('transform')) {
+                                    item.attr('transform').value += ' ' + intersection[name].value;
+                                } else {
+                                    item.addAttr(intersection[name]);
+                                }
+
+                                hasTransform = true;
+                            }
+                        } else {
+                            item.addAttr(intersection[name]);
                         }
-                    } else {
-                        item.addAttr(intersection[name]);
+
                     }
                 }
 

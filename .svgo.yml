@@ -103,6 +103,14 @@ plugins:
       tspan: true
       tref: true
 
+  - name: moveElemsAttrsToGroup
+    active: true
+    type: perItemReverse
+
+  - name: moveGroupAttrsToElems
+    active: true
+    type: perItemReverse
+
   - name: convertPathData
     active: true
     type: perItem
@@ -116,10 +124,6 @@ plugins:
       collapseRepeated: true
       leadingZero: true
       negativeExtraSpace: true
-
-  - name: moveElemsAttrsToGroup
-    active: true
-    type: perItemReverse
 
   - name: convertTransform
     active: true
