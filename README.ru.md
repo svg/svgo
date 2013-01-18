@@ -3,7 +3,7 @@
 
 <img src="http://soulshine.in/svgo/logo.svg?v3" width="200" height="200" alt="logo"/>
 
-## SVGO v0.2.0 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.2.1 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](//mc.yandex.ru/watch/18431326)
@@ -39,6 +39,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] удаление неиспользуемых и сокращение используемых ID
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] округление дробных чисел до заданной точности, удаление `px` как единицы измерения по-умолчанию
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] перемещение совпадающих атрибутов у всех элементов внутри группы `<g>`
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] перемещение некоторых атрибутов группы на элементы внутри
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] схлопывание бесполезных групп `<g>`
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
