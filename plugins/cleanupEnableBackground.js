@@ -1,6 +1,6 @@
 'use strict';
 
-var regEnableBackground = /^new\s0\s0\s(\d+)\s(\d+)$/,
+var regEnableBackground = /^new\s0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
     elems = ['svg', 'mask', 'pattern'];
 
 /**
@@ -32,7 +32,7 @@ exports.cleanupEnableBackground = function(item) {
         if (match) {
             if (
                 item.attr('width').value === match[1] &&
-                item.attr('height').value === match[2]
+                item.attr('height').value === match[3]
             ) {
                 if (item.isElem('svg')) {
                     item.removeAttr('enable-background');
