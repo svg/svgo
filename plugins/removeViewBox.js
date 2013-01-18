@@ -1,6 +1,6 @@
 'use strict';
 
-var regViewBox = /^0\s0\s(\d+)\s(\d+)$/,
+var regViewBox = /^0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
     viewBoxElems = ['svg', 'pattern'];
 
 /**
@@ -32,7 +32,7 @@ exports.removeViewBox = function(item) {
         if (match) {
             if (
                 item.attr('width').value === match[1] &&
-                item.attr('height').value === match[2]
+                item.attr('height').value === match[3]
             ) {
                 item.removeAttr('viewBox');
             }
