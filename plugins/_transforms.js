@@ -200,7 +200,7 @@ var transformToMatrix = exports.transformToMatrix = function(transform) {
     switch(transform.name) {
         case 'translate':
             // [1, 0, 0, 1, tx, ty]
-            matrix = [1, 0, 0, 1, transform.data[0], transform.data[1] || transform.data[0]];
+            matrix = [1, 0, 0, 1, transform.data[0], transform.data[1] || 0];
             break;
         case 'scale':
             // [sx, 0, 0, sy, 0, 0]
