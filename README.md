@@ -3,7 +3,7 @@
 
 <img src="http://soulshine.in/svgo/logo.svg?v3" width="200" height="200" alt="logo"/>
 
-## SVGO v0.2.1 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.2.2 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 ![](//mc.yandex.ru/watch/18431326)

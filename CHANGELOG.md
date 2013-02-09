@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.2.2) ] 0.2.2 / 09.02.2013
+* plugins/convertTransforms: wrong translate() shorthand (fix [#94](https://github.com/svg/svgo/issues/94))
+* [yaml.js](https://github.com/jeremyfa/yaml.js) → [js-yaml](https://github.com/nodeca/js-yaml)
+* update outdated deps
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.2.1) ] 0.2.1 / 18.01.2013
 * plugins/moveElemsAttrsToGroup + plugins/moveGroupAttrsToElems: move or just leave transform attr from Group to the inner Path Elems (close [#86](https://github.com/svg/svgo/issues/86))
 * plugins/removeViewBox: doesn't catch floating-point numbers (fix [#88](https://github.com/svg/svgo/issues/88))
