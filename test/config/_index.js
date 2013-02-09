@@ -34,8 +34,8 @@ describe('config', function() {
             return defaultConfig.should.fulfilled;
         });
 
-        it('should eventually be an Object', function() {
-            return defaultConfig.should.eventually.be.an('object');
+        it('should eventually be an instance of Object', function() {
+            return defaultConfig.should.eventually.be.an.instanceOf(Object);
         });
 
         it('should eventually have property "svg2js"', function() {

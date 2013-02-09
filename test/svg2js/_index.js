@@ -40,8 +40,8 @@ describe('svg2js', function() {
                     return root.should.eventually.exist;
                 });
 
-                it('should eventually be an Object', function() {
-                    return root.should.eventually.be.an('object');
+                it('should eventually be an instance of Object', function() {
+                    return root.should.eventually.be.an.instanceOf(Object);
                 });
 
                 it('should eventually have property "content"', function() {
@@ -60,12 +60,12 @@ describe('svg2js', function() {
                     return content.should.eventually.exist;
                 });
 
-                it('should eventually be an Array', function() {
-                    return content.should.eventually.be.an('array');
+                it('should eventually be an instance of Array', function() {
+                    return content.should.eventually.be.an.instanceOf(Array);
                 });
 
                 it('should eventually have length 4', function() {
-                    return content.should.eventually.have.length(4);
+                    return content.should.eventually.have.lengthOf(4);
                 });
 
             });
@@ -80,8 +80,8 @@ describe('svg2js', function() {
                     return processinginstruction.should.eventually.exist;
                 });
 
-                it('should eventually be an Object', function() {
-                    return processinginstruction.should.eventually.be.an('object');
+                it('should eventually be an instance of Object', function() {
+                    return processinginstruction.should.eventually.be.an.instanceOf(Object);
                 });
 
                 it('should eventually have property "name" with value "xml"', function() {
@@ -160,8 +160,8 @@ describe('svg2js', function() {
                     return attrs.should.eventually.exist;
                 });
 
-                it('should eventually be an Object', function() {
-                    return attrs.should.be.an('object');
+                it('should eventually be an instance of Object', function() {
+                    return attrs.should.be.an.instanceOf(Object);
                 });
 
             });
@@ -176,8 +176,8 @@ describe('svg2js', function() {
                     return version.should.eventually.exist;
                 });
 
-                it('should eventually be an Object', function() {
-                    return version.should.eventually.be.an('object');
+                it('should eventually be an instance of Object', function() {
+                    return version.should.eventually.be.an.instanceOf(Object);
                 });
 
                 it('should eventually have property name: "version"', function() {
@@ -210,12 +210,12 @@ describe('svg2js', function() {
                 return content.should.eventually.exist;
             });
 
-            it('should eventually be an Array', function() {
-                return content.should.eventually.be.an('array');
+            it('should eventually be an instance of Array', function() {
+                return content.should.eventually.be.an.instanceOf(Array);
             });
 
             it('should eventually have length 3', function() {
-                return content.should.eventually.have.length(3);
+                return content.should.eventually.have.lengthOf(3);
             });
 
         });
