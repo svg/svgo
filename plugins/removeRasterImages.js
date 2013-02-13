@@ -15,7 +15,7 @@ exports.removeRasterImages = function(item) {
     if (
         item.isElem('image') &&
         item.hasAttr('xlink:href') &&
-        /(\.|image\/)(jpg|png)/.test(item.attr('xlink:href').value)
+        /(\.|image\/)(jpg|png|gif)/.test(item.attr('xlink:href').value)
     ) {
         return false;
     }
