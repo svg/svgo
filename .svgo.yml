@@ -32,6 +32,10 @@ plugins:
     active: true
     type: perItem
 
+  - name: removeRasterImages
+    active: false
+    type: perItem
+
   - name: cleanupNumericValues
     active: true
     type: perItem
