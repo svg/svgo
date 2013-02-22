@@ -1,7 +1,7 @@
 'use strict';
 
 var regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/,
-    regTransformSplit = /(matrix|translate|scale|rotate|skewX|skewY)\s*\((.+?)\)[\s,]*/,
+    regTransformSplit = /(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/,
     regTransformDataSplit = /[\s,]+/;
 
 /**
