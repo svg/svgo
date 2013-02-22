@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.2.3) ] 0.2.3 / 22.02.2013
+* new plugin [plugins/removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) (fix [#101](https://github.com/svg/svgo/issues/101))
+* new plugin [plugins/removeRasterImages](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) (close [#98](https://github.com/svg/svgo/issues/98))
+* plugins/convertTransform: bug with trailing spaces in transform value string (fix [#103](https://github.com/svg/svgo/issues/103))
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.2.2) ] 0.2.2 / 09.02.2013
 * plugins/convertTransforms: wrong translate() shorthand (fix [#94](https://github.com/svg/svgo/issues/94))
 * [yaml.js](https://github.com/jeremyfa/yaml.js) → [js-yaml](https://github.com/nodeca/js-yaml)
