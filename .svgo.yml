@@ -61,6 +61,10 @@ plugins:
       unknownAttrs: true
       defaultAttrs: true
 
+  - name: removeNonInheritableGroupAttrs
+    active: true
+    type: perItem
+
   - name: removeUselessStrokeAndFill
     active: true
     type: perItem

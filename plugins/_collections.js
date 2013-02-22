@@ -15,11 +15,6 @@ exports.elemsGroups = {
 
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
-// var defaults = exports.defaults = {
-//     'externalResourcesRequired': 'false',
-//     'xlink:type': 'simple'
-// };
-
 // http://www.w3.org/TR/SVG/intro.html#Definitions
 exports.attrsGroups = {
     animationAddition: ['additive', 'accumulate'],
