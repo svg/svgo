@@ -1,12 +1,10 @@
 'use strict';
 
-var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
-    regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
-    regPathData = /[\-+]?\d*\.?\d+([eE][\-+]?\d+)?/g,
-    pathElems = require('./_collections.js').pathElems,
-    hasMarkerMid,
-    transform2js = require('./_transforms.js').transform2js,
-    transformsMultiply = require('./_transforms.js').transformsMultiply;
+var pathElems = require('./_collections.js').pathElems,
+    path2js = require('./_path.js').path2js,
+    js2path = require('./_path.js').js2path,
+    applyTransforms = require('./_path.js').applyTransforms,
+    hasMarkerMid;
 
 /**
  * Convert absolute Path to relative,
@@ -47,100 +45,14 @@ exports.convertPathData = function(item, params) {
                 data = collapseRepeated(data, params);
             }
 
+            item.pathJS = data;
+
             item.attr('d').value = js2path(data, params);
         }
 
     }
 
 };
-
-/**
- * Convert path string to JS representation.
- *
- * @param {String} pathString input string
- * @param {Object} params plugin params
- * @return {Array} output array
- */
-function path2js(pathString) {
-
-        // JS representation of the path data
-    var path = [],
-        // current instruction context
-        instruction;
-
-    // splitting path string into array like ['M', '10 50', 'L', '20 30']
-    pathString.split(regPathInstructions).forEach(function(data) {
-        if (data) {
-            // instruction item
-            if (regPathInstructions.test(data)) {
-                instruction = data;
-
-                // z - instruction w/o data
-                if ('Zz'.indexOf(instruction) > -1) {
-                    path.push({
-                        instruction: 'z'
-                    });
-                }
-            // data item
-            } else {
-
-                data = data.trim().match(regPathData);
-
-                if (data) {
-
-                    var index = 0,
-                        pair = 2;
-
-                    data = data.map(function(str) {
-                        return +str;
-                    });
-
-                    // deal with very first 'Mm' and multiple points data
-                    if ('Mm'.indexOf(instruction) > -1) {
-
-                        path.push({
-                            instruction: instruction,
-                            data: data.slice(index, index + pair)
-                        });
-
-                        index += pair;
-
-                        if (data.length) {
-                            instruction = instruction === instruction.toLowerCase() ? 'l' : 'L';
-                        }
-
-                    }
-
-                    if ('HhVv'.indexOf(instruction) > -1) {
-                        pair = 1;
-                    } else if ('LlTt'.indexOf(instruction) > -1) {
-                        pair = 2;
-                    } else if ('QqSs'.indexOf(instruction) > -1) {
-                        pair = 4;
-                    } else if ('Cc'.indexOf(instruction) > -1) {
-                        pair = 6;
-                    } else if ('Aa'.indexOf(instruction) > -1) {
-                        pair = 7;
-                    }
-
-                    while(index < data.length) {
-                        path.push({
-                            instruction: instruction,
-                            data: data.slice(index, index + pair)
-                        });
-
-                        index += pair;
-                    }
-
-                }
-
-            }
-        }
-    });
-
-    return path;
-
-}
 
 /**
  * Convert absolute path data coordinates to relative.
@@ -303,111 +215,6 @@ function convertToRelative(path) {
     });
 
     return path;
-
-}
-
-/**
- * Apply transformation(s) to the Path data.
- *
- * @param {Object} elem current element
- * @param {Array} path input path data
- * @return {Array} output path data
- */
-function applyTransforms(elem, path) {
-
-    // if there are no 'stroke' attr and 'a' segments
-    if (
-        elem.hasAttr('transform') &&
-        !elem.hasAttr('stroke') &&
-        path.every(function(i) { return i.instruction !== 'a'; })
-    ) {
-
-        var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
-            currentPoint;
-
-        // if there is a translate() transform
-        if (matrix.data[4] !== 0 || matrix.data[5] !== 0) {
-
-            // then apply it only to the first absoluted M
-            currentPoint = transformPoint(matrix.data, path[0].data[0], path[0].data[1]);
-            path[0].data[0] = currentPoint[0];
-            path[0].data[1] = currentPoint[1];
-
-            // clear translate() data from transform matrix
-            matrix.data[4] = 0;
-            matrix.data[5] = 0;
-
-            // apply transform to other segments
-            path.slice(1).forEach(function(pathItem) {
-                pathItem = transformData(matrix, pathItem);
-            });
-
-        } else {
-
-            path.forEach(function(pathItem) {
-                pathItem = transformData(matrix, pathItem);
-            });
-
-        }
-
-        // remove transform attr
-        elem.removeAttr('transform');
-
-    }
-
-    return path;
-
-}
-
-/**
- * Apply transformation(s) to the Path item data.
- *
- * @param {Array} matrix transform 3x3 matrix
- * @param {Object} item input Path item
- * @return {Object} output Path item
- */
-function transformData(matrix, item) {
-
-    if (item.data) {
-
-        var currentPoint;
-
-        // h
-        if (item.instruction === 'h') {
-            item.instruction = 'l';
-            item.data[1] = 0;
-        // v
-        } else if (item.instruction === 'v') {
-            item.instruction = 'l';
-            item.data[1] = item.data[0];
-            item.data[0] = 0;
-        }
-
-        for (var i = 0; i < item.data.length; i += 2) {
-            currentPoint = transformPoint(matrix.data, item.data[i], item.data[i + 1]);
-            item.data[i] = currentPoint[0];
-            item.data[i + 1] = currentPoint[1];
-        }
-
-    }
-
-    return item;
-
-}
-
-/**
- * Apply transform 3x3 matrix to x-y point.
- *
- * @param {Array} matrix transform 3x3 matrix
- * @param {Array} point x-y point
- * @return {Array} point with new coordinates
- */
-function transformPoint(matrix, x, y) {
-
-    return [
-        matrix[0] * x + matrix[2] * y + matrix[4],
-        matrix[1] * x + matrix[3] * y + matrix[5]
-    ];
 
 }
 
@@ -728,27 +535,5 @@ function isCurveStraightLine(xs, ys) {
     if (+area.toFixed(2)) return false;
 
     return true;
-
-}
-
-/**
- * Convert path array to string.
- *
- * @param {Array} path input path data
- * @param {Object} params plugin params
- * @return {String} output path string
- */
-function js2path(path, params) {
-
-        // output path data string
-    var pathString = '';
-
-    path.forEach(function(item) {
-
-        pathString += item.instruction + (item.data ? cleanupOutData(item.data, params) : '');
-
-    });
-
-    return pathString;
 
 }
