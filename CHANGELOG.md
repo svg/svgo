@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.2.4) ] 0.2.4 / 05.04.2013
+* new plugin [plugins/cropAndCenterAlongPath](https://github.com/svg/svgo/blob/master/plugins/cropAndCenterAlongPath.js) for the [Fontello](https://github.com/fontello) project
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.2.3) ] 0.2.3 / 22.02.2013
 * new plugin [plugins/removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) (fix [#101](https://github.com/svg/svgo/issues/101))
 * new plugin [plugins/removeRasterImages](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) (close [#98](https://github.com/svg/svgo/issues/98))
