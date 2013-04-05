@@ -1,9 +1,9 @@
 [english](https://github.com/svg/svgo/blob/master/README.md) | **русский**
 - - -
 
-<img src="http://soulshine.in/svgo/logo.svg?v3" width="200" height="200" alt="logo"/>
+<img src="http://soulshine.in/svgo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO v0.2.2 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.2.4 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](https://mc.yandex.ru/watch/18431326)
@@ -64,7 +64,7 @@ Options:
   -s STRING, --string=STRING : Input SVG data string
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file (by default the same as the input), "-" for STDOUT
-  -c CONFIG, --config=CONFIG : Local config file to extend default
+  -c CONFIG, --config=CONFIG : Local config file
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name
   --datauri : Output as Data URI base64 string
