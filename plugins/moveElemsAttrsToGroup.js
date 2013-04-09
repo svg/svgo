@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItemReverse';
+
+exports.active = true;
+
 var inheritableAttrs = require('./_collections').inheritableAttrs,
     pathElems = require('./_collections.js').pathElems;
 
@@ -27,7 +31,7 @@ var inheritableAttrs = require('./_collections').inheritableAttrs,
  *
  * @author Kir Belevich
  */
-exports.moveElemsAttrsToGroup = function(item) {
+exports.fn = function(item) {
 
     if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
 

@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 /**
  * Remove DOCTYPE declaration.
  *
@@ -25,7 +29,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeDoctype = function(item) {
+exports.fn = function(item) {
 
     // remove doctype only if custom XML entities declaration block does not presents
     // http://en.wikipedia.org/wiki/Document_Type_Definition#Entity_declarations

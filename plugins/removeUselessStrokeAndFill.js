@@ -1,5 +1,14 @@
 'use strict';
 
+exports.type = 'peItem';
+
+exports.active = true;
+
+exports.params = {
+    stroke: true,
+    fill: true
+};
+
 var regStrokeProps = /^stroke/,
     regFillProps = /^fill/;
 
@@ -12,7 +21,7 @@ var regStrokeProps = /^stroke/,
  *
  * @author Kir Belevich
  */
-exports.removeUselessStrokeAndFill = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.isElem()) {
 

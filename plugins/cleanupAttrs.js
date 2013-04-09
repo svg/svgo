@@ -1,5 +1,15 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    newlines: true,
+    trim: true,
+    spaces: true
+};
+
 var regNewlines = /\n/g,
     regSpaces = /\s{2,}/g;
 
@@ -12,7 +22,7 @@ var regNewlines = /\n/g,
  *
  * @author Kir Belevich
  */
-exports.cleanupAttrs = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.isElem()) {
 

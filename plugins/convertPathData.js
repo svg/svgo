@@ -1,5 +1,21 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    applyTransforms: true,
+    straightCurves: true,
+    lineShorthands: true,
+    curveSmoothShorthands: true,
+    floatPrecision: 3,
+    removeUseless: true,
+    collapseRepeated: true,
+    leadingZero: true,
+    negativeExtraSpace: true
+};
+
 var pathElems = require('./_collections.js').pathElems,
     path2js = require('./_path.js').path2js,
     js2path = require('./_path.js').js2path,
@@ -22,7 +38,7 @@ var pathElems = require('./_collections.js').pathElems,
  *
  * @author Kir Belevich
  */
-exports.convertPathData = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.isElem(pathElems) && item.hasAttr('d')) {
 

@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItemReverse';
+
+exports.active = true;
+
 var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel;
 
 /*
@@ -25,7 +29,7 @@ var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel;
  *
  * @author Kir Belevich
  */
-exports.collapseGroups = function(item) {
+exports.fn = function(item) {
 
     // non-empty elements
     if (item.elem && !item.isEmpty()) {

@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 /**
  * Remove <metadata>.
  *
@@ -10,7 +14,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeMetadata = function(item) {
+exports.fn = function(item) {
 
     return !item.isElem('metadata');
 

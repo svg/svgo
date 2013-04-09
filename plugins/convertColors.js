@@ -1,25 +1,18 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    names2hex: true,
+    rgb2hex: true,
+    shorthex: true
+};
+
 var collections = require('./_collections'),
     regRGB = /^rgb\((\d+%?),\s*(\d+%?),\s*(\d+%?)\)$/,
     regHEX = /^\#(([a-fA-F0-9])\2){3}$/;
-
-/**
- * Convert [r, g, b] to #rrggbb.
- *
- * @see https://gist.github.com/983535
- *
- * @example
- * rgb2hex([255, 255, 255]) // '#ffffff'
- *
- * @param {Array} rgb [r, g, b]
- * @return {String} #rrggbb
- *
- * @author Jed Schmidt
- */
-function rgb2hex(rgb) {
-    return '#' + ((256 + rgb[0] << 8 | rgb[1]) << 8 | rgb[2]).toString(16).slice(1);
-}
 
 /**
  * Convert different colors formats in element attributes to hex.
@@ -44,7 +37,7 @@ function rgb2hex(rgb) {
  *
  * @author Kir Belevich
  */
-exports.convertColors = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.elem) {
 
@@ -88,3 +81,20 @@ exports.convertColors = function(item, params) {
     }
 
 };
+
+/**
+ * Convert [r, g, b] to #rrggbb.
+ *
+ * @see https://gist.github.com/983535
+ *
+ * @example
+ * rgb2hex([255, 255, 255]) // '#ffffff'
+ *
+ * @param {Array} rgb [r, g, b]
+ * @return {String} #rrggbb
+ *
+ * @author Jed Schmidt
+ */
+function rgb2hex(rgb) {
+    return '#' + ((256 + rgb[0] << 8 | rgb[1]) << 8 | rgb[2]).toString(16).slice(1);
+}

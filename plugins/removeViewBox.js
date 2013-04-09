@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 var regViewBox = /^0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
     viewBoxElems = ['svg', 'pattern'];
 
@@ -18,7 +22,7 @@ var regViewBox = /^0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE
  *
  * @author Kir Belevich
  */
-exports.removeViewBox = function(item) {
+exports.fn = function(item) {
 
     if (
         item.isElem(viewBoxElems) &&

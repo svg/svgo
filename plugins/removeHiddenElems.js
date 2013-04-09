@@ -1,5 +1,26 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    displayNone: true,
+    opacity0: true,
+    circleR0: true,
+    ellipseRX0: true,
+    ellipseRY0: true,
+    rectWidth0: true,
+    rectHeight0: true,
+    patternWidth0: true,
+    patternHeight0: true,
+    imageWidth0: true,
+    imageHeight0: true,
+    pathEmptyD: true,
+    polylineEmptyPoints: true,
+    polygonEmptyPoints: true
+};
+
 /**
  * Remove hidden elements with disabled rendering:
  * - display="none"
@@ -19,7 +40,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeHiddenElems = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.elem) {
 

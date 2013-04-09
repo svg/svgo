@@ -1,5 +1,22 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+      convertToShorts: true,
+      floatPrecision: 3,
+      matrixToTransform: true,
+      shortTranslate: true,
+      shortScale: true,
+      shortRotate: true,
+      removeUseless: true,
+      collapseIntoOne: true,
+      leadingZero: true,
+      negativeExtraSpace: false
+};
+
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     transform2js = require('./_transforms.js').transform2js,
     transformsMultiply = require('./_transforms.js').transformsMultiply,
@@ -19,7 +36,7 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
  *
  * @author Kir Belevich
  */
-exports.convertTransform = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.elem) {
 

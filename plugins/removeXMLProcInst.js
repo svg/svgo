@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 /**
  * Remove XML Processing Instruction.
  *
@@ -11,7 +15,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeXMLProcInst = function(item) {
+exports.fn = function(item) {
 
     return !(item.processinginstruction && item.processinginstruction.name === 'xml');
 

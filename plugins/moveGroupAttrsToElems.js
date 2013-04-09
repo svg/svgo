@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItemReverse';
+
+exports.active = true;
+
 var pathElems = require('./_collections.js').pathElems;
 
 /**
@@ -21,7 +25,7 @@ var pathElems = require('./_collections.js').pathElems;
  *
  * @author Kir Belevich
  */
-exports.moveGroupAttrsToElems = function(item) {
+exports.fn = function(item) {
 
     // move group transform attr to content's pathElems
     if (

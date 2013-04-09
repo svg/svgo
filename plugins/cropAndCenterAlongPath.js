@@ -1,5 +1,17 @@
 'use strict';
 
+exports.type = 'full';
+
+exports.active = false;
+
+exports.params = {
+    hcrop: true,
+    vcenter: true,
+    floatPrecision: 3,
+    leadingZero: true,
+    negativeExtraSpace: true
+};
+
 var relative2absolute = require('./_path.js').relative2absolute,
     computeCubicBoundingBox = require('./_path.js').computeCubicBoundingBox,
     computeQuadraticBoundingBox = require('./_path.js').computeQuadraticBoundingBox,
@@ -7,7 +19,7 @@ var relative2absolute = require('./_path.js').relative2absolute,
     js2path = require('./_path.js').js2path,
     extend = require('../lib/svgo/tools').extend;
 
-exports.cropAndCenterAlongPath = function(data, params) {
+exports.fn = function(data, params) {
 
     data.content.forEach(function(item) {
 
