@@ -32,7 +32,7 @@
     "example": "./examples"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec test/plugins test/svg2js",
+    "test": "./node_modules/.bin/mocha",
     "cover": "./node_modules/.bin/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib && ./node_modules/.bin/mocha --reporter mocha-istanbul --recursive",
     "jshint": "jshint --show-non-errors ."
   },
@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "mocha": "~1.9.0",
+    "should": "~1.2.0",
     "istanbul": "~0.1.0",
     "mocha-istanbul": ""
   },
