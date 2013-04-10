@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-var EXTEND = require('node.extend'),
+var EXTEND = require('whet.extend'),
     stylingProps = require('./_collections').stylingProps,
     regCleanupStyle = /(:|;)\s+/g;
 

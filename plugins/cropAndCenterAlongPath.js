@@ -17,7 +17,7 @@ var relative2absolute = require('./_path.js').relative2absolute,
     computeQuadraticBoundingBox = require('./_path.js').computeQuadraticBoundingBox,
     applyTransforms = require('./_path.js').applyTransforms,
     js2path = require('./_path.js').js2path,
-    extend = require('../lib/svgo/tools').extend;
+    EXTEND = require('whet.extend');
 
 exports.fn = function(data, params) {
 

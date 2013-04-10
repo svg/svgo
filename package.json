@@ -41,11 +41,10 @@
     "coa": "~0.3.7",
     "js-yaml": "",
     "colors": "~0.6.0",
-    "node.extend": ""
+    "whet.extend": ""
   },
   "devDependencies": {
-    "mocha": "~1.8.0",
-    "chai": "~1.5.0",
+    "mocha": "~1.9.0",
     "istanbul": "~0.1.0",
     "mocha-istanbul": ""
   },
