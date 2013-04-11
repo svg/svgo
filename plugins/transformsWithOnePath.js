@@ -5,8 +5,13 @@ exports.type = 'full';
 exports.active = false;
 
 exports.params = {
-    hcrop: true,
-    vcenter: true,
+    width: false,
+    height: false,
+    scale: false,
+    shiftX: false,
+    shiftY: false,
+    hcrop: false,
+    vcenter: false,
     floatPrecision: 3,
     leadingZero: true,
     negativeExtraSpace: true
@@ -32,7 +37,7 @@ exports.fn = function(data, params) {
             var svgElem = item,
                 pathElem = svgElem.content[0],
                 // get absoluted Path data
-                path = relative2absolute(extend(true, [], pathElem.pathJS)),
+                path = relative2absolute(EXTEND(true, [], pathElem.pathJS)),
                 xs = [],
                 ys = [],
                 currentPoint = [0, 0],
@@ -192,17 +197,49 @@ exports.fn = function(data, params) {
                 svgHeight = +svgElem.attr('height').value,
                 realWidth = Math.ceil(xmax - xmin),
                 realHeight = Math.ceil(ymax - ymin),
+                centerX = realWidth / 2,
+                centerY = realHeight / 2,
                 transform = '';
 
+            // hcrop
             if (params.hcrop) {
-                transform += 'translate(' + (-xmin) + ' 0)';
+                transform += ' translate(' + (-xmin) + ' 0)';
+
+                svgElem.attr('width').value = realWidth;
             }
 
+            // vcenter
             if (params.vcenter) {
                 transform += ' translate(0 ' + (((svgHeight - realHeight) / 2) - ymin) + ')';
             }
 
+            // scale
+            if (params.scale) {
+                var scale = params.scale;
+
+                realWidth = realWidth * scale;
+                realHeight = realHeight * scale;
+
+                transform += ' translate(' + (-centerX * (scale - 1)) + ', ' + (-centerY * (scale - 1)) + ') scale(' + scale + ')';
+            }
+
+            // shiftX
+            if (params.shiftX) {
+                var shiftX = params.shiftX;
+
+                transform += ' translate(' + realWidth * shiftX + ')';
+            }
+
+            // shiftY
+            if (params.shiftY) {
+                var shiftY = params.shiftY;
+
+                transform += ' translate(0, ' + realHeight * shiftY + ')';
+            }
+
             if (transform) {
+                console.log(transform);
+
                 pathElem.addAttr({
                     name: 'transform',
                     prefix: '',
@@ -211,21 +248,29 @@ exports.fn = function(data, params) {
                 });
 
                 path = applyTransforms(pathElem, pathElem.pathJS);
+
+                // transformed data rounding
+                path.forEach(function(pathItem) {
+                    if (pathItem.data) {
+                        pathItem.data = pathItem.data.map(function(num) {
+                            return +num.toFixed(params.floatPrecision);
+                        });
+                    }
+                });
+
+                // save new
+                pathElem.attr('d').value = js2path(path, params);
             }
 
-            // transformed data rounding
-            path.forEach(function(pathItem) {
-                if (pathItem.data) {
-                    pathItem.data = pathItem.data.map(function(num) {
-                        return +num.toFixed(params.floatPrecision);
-                    });
-                }
-            });
+            // width
+            if (params.width) {
+                svgElem.attr('width').value = params.width;
+            }
 
-            path = js2path(path, params);
-
-            pathElem.attr('d').value = path;
-            svgElem.attr('width').value = realWidth;
+            // height
+            if (params.height) {
+                svgElem.attr('height').value = params.height;
+            }
 
         }
 
