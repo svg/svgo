@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="m100,200 300,400 z m100,200 L 300,400"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="m100 200l300 400zm100 200h100"/>
+</svg>

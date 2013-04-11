@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="rotate(45)">
+        <g transform="scale(2)" fill="red">
+            <path d="..."/>
+        </g>
+        <circle fill="red" transform="scale(2)"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="rotate(45) scale(2)" fill="red">
+        <g>
+            <path d="..."/>
+        </g>
+        <circle/>
+    </g>
+</svg>

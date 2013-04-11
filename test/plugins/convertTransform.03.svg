@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="matrix(1 0 0 1 50 100)"/>
+    <g transform="matrix(0.5 0 0 2 0 0)"/>
+    <g transform="matrix(0.707 -0.707 0.707 0.707 0 0)"/>
+    <g transform="matrix(1 0 0.466 1 0 0)"/>
+    <g transform="matrix(1 0.466 0 1 0 0)"/>
+    <g transform="matrix(1 0 0 1 50 90) matrix(1 0 0 1 60 20) matrix(1 0 0 1 20 40)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(50 100)"/>
+    <g transform="scale(.5 2)"/>
+    <g transform="rotate(-45.009)"/>
+    <g transform="skewX(24.986)"/>
+    <g transform="skewY(24.986)"/>
+    <g transform="translate(130 150)"/>
+</svg>

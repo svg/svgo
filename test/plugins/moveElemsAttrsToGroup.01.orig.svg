@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-    <g attr1="val1">
-        <g fill="red">
-            text
-        </g>
-        <circle fill="red" attr3="val3"/>
-    </g>
-</svg>

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(50) scale(2)"/>
-    <g transform="translate(50) scale(2)"/>
-    <g transform="rotate(45 10 20)"/>
-    <g transform="scale(2) rotate(45 10 20)"/>
-    <g transform="rotate(45 10 20) scale(2)"/>
-</svg>

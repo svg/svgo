@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-    <circle fill="none" fill-rule="evenodd" cx="60" cy="60" r="50"/>
-    <circle fill="red" fill-opacity="0" cx="60" cy="60" r="50"/>
-    <circle fill="red" fill-opacity=".5" cx="60" cy="60" r="50"/>
-</svg>

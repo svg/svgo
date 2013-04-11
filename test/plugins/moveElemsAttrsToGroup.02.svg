@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g attr1="val1">
+        <g fill="red" color="#000">
+            text
+        </g>
+        <circle fill="red" color="#000"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g attr1="val1" fill="red" color="#000">
+        <g>
+            text
+        </g>
+        <circle/>
+    </g>
+</svg>
