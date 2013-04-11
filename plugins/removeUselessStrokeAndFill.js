@@ -1,6 +1,6 @@
 'use strict';
 
-exports.type = 'peItem';
+exports.type = 'perItem';
 
 exports.active = true;
 
