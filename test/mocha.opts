@@ -1,3 +1,4 @@
 --reporter spec
 --require should
 test/config
+test/svg2js
