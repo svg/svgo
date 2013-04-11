@@ -7,7 +7,7 @@ describe('config', function() {
 
     describe('default config', function() {
 
-        var config = CONFIG.extend();
+        var config = CONFIG();
 
         it('should be an instance of Object', function() {
             config.should.be.an.instanceOf(Object);
@@ -25,7 +25,7 @@ describe('config', function() {
 
     describe('extend config with object', function() {
 
-        var config = CONFIG.extend({
+        var config = CONFIG({
                 plugins: [
                     { removeDoctype: false },
                     { convertColors: { shorthex: false } },
@@ -84,7 +84,8 @@ describe('config', function() {
 
     describe('replace default config with custom', function() {
 
-        var config = CONFIG.replace({
+        var config = CONFIG({
+                full: true,
                 plugins: [
                     { removeDoctype: true }
                 ]
