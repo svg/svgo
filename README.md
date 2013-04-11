@@ -43,6 +43,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] move some group attributes to the content elements
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse useless groups
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] remove raster images (disabled by default)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePath.js) ] merge multiple Paths into one
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 

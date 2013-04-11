@@ -1,3 +1,6 @@
+# replace default config
+# full: true
+
 plugins:
 
   # - name
@@ -35,6 +38,6 @@ plugins:
   - convertTransform
   - removeEmptyAttrs
   - removeEmptyContainers
+  - mergePaths
   - cleanupIDs
   - removeUnusedNS
-  - cropAndCenterAlongPath
