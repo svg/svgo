@@ -4,3 +4,4 @@ html-report/
 bin/svgo-profiling
 *.sublime-*
 *.log
+.DS_Store
