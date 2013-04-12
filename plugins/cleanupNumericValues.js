@@ -1,5 +1,15 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    floatPrecision: 3,
+    leadingZero: true,
+    defaultPx: true
+};
+
 var regNumericValues = /^([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero;
 
@@ -13,7 +23,7 @@ var regNumericValues = /^([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)(px|pt|pc|mm|cm|m|in|f
  *
  * @author Kir Belevich
  */
-exports.cleanupNumericValues = function(item, params) {
+exports.fn = function(item, params) {
 
     if (item.isElem()) {
 

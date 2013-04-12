@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 /**
  * Remove attributes with empty values.
  *
@@ -8,7 +12,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeEmptyAttrs = function(item) {
+exports.fn = function(item) {
 
     if (item.elem) {
 

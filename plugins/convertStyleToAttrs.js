@@ -1,6 +1,10 @@
 'use strict';
 
-var extend = require('../lib/svgo/tools').extend,
+exports.type = 'perItem';
+
+exports.active = true;
+
+var EXTEND = require('whet.extend'),
     stylingProps = require('./_collections').stylingProps,
     regCleanupStyle = /(:|;)\s+/g;
 
@@ -22,7 +26,7 @@ var extend = require('../lib/svgo/tools').extend,
  *
  * @author Kir Belevich
  */
-exports.convertStyleToAttrs = function(item) {
+exports.fn = function(item) {
 
     if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']
@@ -57,7 +61,7 @@ exports.convertStyleToAttrs = function(item) {
                 return true;
             });
 
-            extend(item.attrs, attrs);
+            EXTEND(item.attrs, attrs);
 
             if (styles.length) {
                 item.attr('style').value = styles.join(';')

@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-    <path fill="red" d="M118.8 186.9l79.2 124.6-96.6-25.8 8.7-49.4c17.4-98.8 89.85-79.45 81.15-30.05s63.75 68.75 72.45 19.35q13.05-74.1 87.9 75.2t193.2 51.6z"/>
-    <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100 200l200 200h-200v-100c0-200 150-200 150-100s150 100 150 0q0-150 200 100t400 0z"/>
-    <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100 200l200 200h-200v-100c0-200 150-200 150-100s150 100 150 0q0-150 200 100t400 0a150 150 0 1 0 150-150z"/>
-</svg>

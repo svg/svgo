@@ -3,7 +3,7 @@
 
 <img src="http://soulshine.in/svgo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO v0.2.4 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.3.0 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](https://mc.yandex.ru/watch/18431326)
@@ -43,6 +43,8 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] перемещение некоторых атрибутов группы на элементы внутри
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] схлопывание бесполезных групп `<g>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] удаление растровых изображений (выключено по умолчанию)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePath.js) ] склеивание нескольких Path в одну кривую
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 
@@ -64,10 +66,10 @@ Options:
   -s STRING, --string=STRING : Input SVG data string
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file (by default the same as the input), "-" for STDOUT
-  -c CONFIG, --config=CONFIG : Local config file
+  --config=CONFIG : Config file to extend or replace default
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name
-  --datauri : Output as Data URI base64 string
+  --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --pretty : Make SVG pretty printed
 
 Arguments:
@@ -116,7 +118,7 @@ Arguments:
 
 ## TODO
 
-* [v0.2.x](https://github.com/svg/svgo/issues?milestone=7&state=open)
+* [v0.3.x](https://github.com/svg/svgo/issues?milestone=7&state=open)
 
 
 ## Лицензия и копирайты

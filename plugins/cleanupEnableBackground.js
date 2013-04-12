@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 var regEnableBackground = /^new\s0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
     elems = ['svg', 'mask', 'pattern'];
 
@@ -18,7 +22,7 @@ var regEnableBackground = /^new\s0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]
  *
  * @author Kir Belevich
  */
-exports.cleanupEnableBackground = function(item) {
+exports.fn = function(item) {
 
     if (
         item.isElem(elems) &&

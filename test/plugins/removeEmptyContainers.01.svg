@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <marker>
+            <a/>
+        </marker>
+    </g>
+    <path d="..."/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="..."/>
+</svg>

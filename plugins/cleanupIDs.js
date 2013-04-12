@@ -1,5 +1,14 @@
 'use strict';
 
+exports.type = 'full';
+
+exports.active = true;
+
+exports.params = {
+    remove: true,
+    minify: true
+};
+
 var referencesProps = require('./_collections').referencesProps,
     regReferencesUrl = /^url\(#(.+?)\)$/,
     regReferencesHref = /^#(.+?)$/,
@@ -19,7 +28,7 @@ var referencesProps = require('./_collections').referencesProps,
  *
  * @author Kir Belevich
  */
-exports.cleanupIDs = function(data, params) {
+exports.fn = function(data, params) {
 
     var currentID,
         currentIDstring,

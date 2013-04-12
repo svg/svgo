@@ -1,41 +1,9 @@
 'use strict';
 
-var CHAI = require('chai'),
-    INHERIT = require('inherit'),
-    QFS = require('q-fs'),
-    FS = require('fs'),
+var FS = require('fs'),
     PATH = require('path'),
-    regFilename = /^(.*)\.(\d+)\.orig\.svg$/;
-
-require('mocha-as-promised')(require('mocha'));
-CHAI.use(require('chai-as-promised'));
-CHAI.should();
-
-var MySVGO = INHERIT(require('../../lib/svgo'), {
-
-        enableOnlyOne: function(name) {
-
-            this.config = this.config.then(function(config) {
-
-                config.plugins.forEach(function(group) {
-                    group.forEach(function(plugin) {
-                        plugin.active = plugin.name === name;
-                    });
-
-                });
-
-                return config;
-
-            });
-
-        }
-
-    }),
-    mySVGO = new MySVGO({
-        js2svg: {
-            pretty: true
-        }
-    });
+    regFilename = /^(.*)\.(\d+)\.svg$/,
+    SVGO = require('../../lib/svgo');
 
 describe('plugins tests', function() {
 
@@ -43,38 +11,47 @@ describe('plugins tests', function() {
 
         var match = file.match(regFilename),
             index,
-            name;
+            name,
+            svgo,
+            plugins;
 
         if (match) {
+
             name = match[1];
             index = match[2];
 
-            it(name + '.' + index, function() {
-                return getResult(name, index).then(function(data) {
-                    return data[0].should.be.equal(data[1]);
-                });
+            file = PATH.resolve(__dirname, file);
+
+            plugins = {};
+            plugins[name] = true;
+
+            svgo = new SVGO({
+                full: true,
+                plugins: [ plugins ],
+                js2svg: { pretty: true }
             });
+
+            it(name + '.' + index, function(done) {
+
+                FS.readFile(file, 'utf8', function(err, data) {
+
+                    var splitted = data.split('@@@'),
+                        orig = splitted[0],
+                        should = splitted[1];
+
+                    svgo.optimize(orig, function(result) {
+                        result = '\n\n' + result.data;
+
+                        result.should.be.equal(should);
+                        done();
+                    });
+
+                });
+
+            });
+
         }
 
     });
 
 });
-
-function getResult(name, index) {
-    return readFile(name + '.' + index + '.orig.svg')
-        .then(function(input) {
-            mySVGO.enableOnlyOne(name);
-
-            return mySVGO.fromString(input.toString());
-        })
-        .then(function(min) {
-            return readFile(name + '.' + index +'.should.svg')
-                .then(function(output) {
-                    return [min.data, output.toString()];
-                });
-        });
-}
-
-function readFile(path) {
-    return QFS.read(PATH.resolve(__dirname, path));
-}

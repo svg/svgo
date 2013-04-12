@@ -1,5 +1,15 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    text: true,
+    tspan: true,
+    tref: true
+};
+
 /**
  * Remove empty Text elements.
  *
@@ -21,7 +31,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeEmptyText = function(item, params) {
+exports.fn = function(item, params) {
 
     // Remove empty text element
     if (

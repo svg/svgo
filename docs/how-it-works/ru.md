@@ -23,20 +23,11 @@ SVGO читает, парсит и/или расширяет [конфиг по 
 ```yaml
 plugins:
 
-  - name: myTestPlugin
-    active: true
-    type: perItem
-    params:
-      testParam: true
-      testParam2: 3
-
-  - name: myTestPlugin2
-    active: false
-    type: perItemReverse
-
-  - name: myTestPlugin3
-    active: true
-    type: full
+  - myTestPlugin
+  - myTestPlugin2
+  - myTestPlugin3
+      param1: 1
+      param2: 2
 
     …
 ```
@@ -44,9 +35,8 @@ plugins:
 Важно отметить, что каждый плагин:
 
   * находится в определённой позиции в массиве плагинов
-  * может быть включён через `"active": true` и выключен через `"active": false`
+  * может быть включён через `name: true` и выключен через `name: false`
   * может иметь свои собственные параметры `params`, которые будут доступны позже в коде плагина
-  * должен быть одного из трёх типов: `perItem`, `perItemReverse` и `full` (мы вернёмся к этому позже)
 
 - - -
 

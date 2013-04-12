@@ -1,3 +1,16 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.3.0) ] 0.3.0 / 12.04.2013
+* global refactoring: getting rid of the many dependencies
+* new plugin [plugins/mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js)
+* new plugin [plugins/transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) (renamed and featured `cropAndCenterAlongPath`)
+* config: replace default config with `full: true`
+* coa: JSON string as value of `--config`
+* coa: different types of Data URI strings (close [#105](https://github.com/svg/svgo/issues/105))
+* plugins/_transforms: allow spaces at the beginning of transform
+* Travis CI: Nodejs 0.10 & 0.11
+* `node.extend` → `whet.extend`
+* update `.gitignore`
+* update docs
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.2.4) ] 0.2.4 / 05.04.2013
 * new plugin [plugins/cropAndCenterAlongPath](https://github.com/svg/svgo/blob/master/plugins/cropAndCenterAlongPath.js) for the [Fontello](https://github.com/fontello) project
 

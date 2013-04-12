@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 var inheritableAttrs = require('./_collections').inheritableAttrs,
     presentationAttrs = require('./_collections').attrsGroups.presentation,
     excludedAttrs = ['display', 'opacity'];
@@ -12,7 +16,7 @@ var inheritableAttrs = require('./_collections').inheritableAttrs,
  *
  * @author Kir Belevich
  */
-exports.removeNonInheritableGroupAttrs = function(item) {
+exports.fn = function(item) {
 
     if (item.isElem('g')) {
 

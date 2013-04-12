@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = false;
+
 /**
  * Remove raster images references in <image>.
  *
@@ -10,7 +14,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeRasterImages = function(item) {
+exports.fn = function(item) {
 
     if (
         item.isElem('image') &&

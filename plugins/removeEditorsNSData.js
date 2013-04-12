@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
 var editorNamespaces = require('./_collections').editorNamespaces,
     prefixes = [];
 
@@ -16,7 +20,7 @@ var editorNamespaces = require('./_collections').editorNamespaces,
  *
  * @author Kir Belevich
  */
-exports.removeEditorsNSData = function(item) {
+exports.fn = function(item) {
 
     if (item.elem) {
 

@@ -1,216 +1,44 @@
+# replace default config
+# full: true
+
 plugins:
 
-  - name: removeDoctype
-    active: true
-    type: perItem
+  # - name
+  #
+  # or:
+  # - name: false
+  # - name: true
+  #
+  # or:
+  # - name:
+  #     param1: 1
+  #     param2: 2
 
-  - name: removeXMLProcInst
-    active: true
-    type: perItem
-
-  - name: removeComments
-    active: true
-    type: perItem
-
-  - name: removeMetadata
-    active: true
-    type: perItem
-
-  - name: removeEditorsNSData
-    active: true
-    type: perItem
-
-  - name: cleanupAttrs
-    active: true
-    type: perItem
-    params:
-      newlines: true
-      trim: true
-      spaces: true
-
-  - name: convertStyleToAttrs
-    active: true
-    type: perItem
-
-  - name: removeRasterImages
-    active: false
-    type: perItem
-
-  - name: cleanupNumericValues
-    active: true
-    type: perItem
-    params:
-      floatPrecision: 3
-      leadingZero: true
-      defaultPx: true
-
-  - name: convertColors
-    active: true
-    type: perItem
-    params:
-      names2hex: true
-      rgb2hex: true
-      shorthex: true
-
-  - name: removeUnknownsAndDefaults
-    active: true
-    type: perItem
-    params:
-      SVGid: true
-      unknownContent: true
-      unknownAttrs: true
-      defaultAttrs: true
-
-  - name: removeNonInheritableGroupAttrs
-    active: true
-    type: perItem
-
-  - name: removeUselessStrokeAndFill
-    active: true
-    type: perItem
-    params:
-      stroke: true
-      fill: true
-
-  - name: removeViewBox
-    active: true
-    type: perItem
-
-  - name: cleanupEnableBackground
-    active: true
-    type: perItem
-
-  - name: removeHiddenElems
-    active: true
-    type: perItem
-    params:
-      displayNone: true
-      opacity0: true
-      circleR0: true
-      ellipseRX0: true
-      ellipseRY0: true
-      rectWidth0: true
-      rectHeight0: true
-      patternWidth0: true
-      patternHeight0: true
-      imageWidth0: true
-      imageHeight0: true
-      pathEmptyD: true
-      polylineEmptyPoints: true
-      polygonEmptyPoints: true
-
-  - name: removeEmptyText
-    active: true
-    type: perItem
-    params:
-      text: true
-      tspan: true
-      tref: true
-
-  - name: moveElemsAttrsToGroup
-    active: true
-    type: perItemReverse
-
-  - name: collapseGroups
-    active: true
-    type: perItemReverse
-
-  - name: moveGroupAttrsToElems
-    active: true
-    type: perItemReverse
-
-  - name: convertPathData
-    active: true
-    type: perItem
-    params:
-      applyTransforms: true
-      straightCurves: true
-      lineShorthands: true
-      curveSmoothShorthands: true
-      floatPrecision: 3
-      removeUseless: true
-      collapseRepeated: true
-      leadingZero: true
-      negativeExtraSpace: true
-
-  - name: convertTransform
-    active: true
-    type: perItem
-    params:
-        convertToShorts: true
-        floatPrecision: 3
-        matrixToTransform: true
-        shortTranslate: true
-        shortScale: true
-        shortRotate: true
-        removeUseless: true
-        collapseIntoOne: true
-        leadingZero: true
-        negativeExtraSpace: false
-
-  - name: removeEmptyAttrs
-    active: true
-    type: perItem
-
-  - name: removeEmptyContainers
-    active: true
-    type: perItemReverse
-
-  - name: cleanupIDs
-    active: true
-    type: full
-    params:
-      remove: true
-      minify: true
-
-  - name: removeUnusedNS
-    active: true
-    type: full
-
-  - name: cropAndCenterAlongPath
-    active: false
-    type: full
-    params:
-      hcrop: true
-      vcenter: true
-      floatPrecision: 3
-      leadingZero: true
-      negativeExtraSpace: true
-
-svg2js:
-
-  strict: true
-  trim: true
-  normalize: true
-  lowercase: true
-  xmlns: true
-  position: false
-
-js2svg:
-
-  doctypeStart: "<!DOCTYPE"
-  doctypeEnd: ">"
-  procInstStart: "<?"
-  procInstEnd: "?>"
-  tagOpenStart: "<"
-  tagOpenEnd: ">"
-  tagCloseStart: "</"
-  tagCloseEnd: ">"
-  tagShortStart: "<"
-  tagShortEnd: "/>"
-  attrStart: "=\""
-  attrEnd: "\""
-  commentStart: "<!--"
-  commentEnd: "-->"
-  cdataStart: "<![CDATA["
-  cdataEnd: "]]>"
-  textStart: ""
-  textEnd: ""
-  indent: "    "
-  entities:
-    "&": "&amp;"
-    "'": "&apos;"
-    "\"": "&quot;"
-    ">": "&gt;"
-    "<": "&lt;"
-  pretty: false
+  - removeDoctype
+  - removeXMLProcInst
+  - removeComments
+  - removeMetadata
+  - removeEditorsNSData
+  - cleanupAttrs
+  - convertStyleToAttrs
+  - removeRasterImages
+  - cleanupNumericValues
+  - convertColors
+  - removeUnknownsAndDefaults
+  - removeNonInheritableGroupAttrs
+  - removeUselessStrokeAndFill
+  - removeViewBox
+  - cleanupEnableBackground
+  - removeHiddenElems
+  - removeEmptyText
+  - moveElemsAttrsToGroup
+  - collapseGroups
+  - moveGroupAttrsToElems
+  - convertPathData
+  - convertTransform
+  - removeEmptyAttrs
+  - removeEmptyContainers
+  - mergePaths
+  - cleanupIDs
+  - removeUnusedNS
+  - transformsWithOnePath

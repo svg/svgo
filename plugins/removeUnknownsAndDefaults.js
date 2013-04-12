@@ -1,5 +1,16 @@
 'use strict';
 
+exports.type = 'perItem';
+
+exports.active = true;
+
+exports.params = {
+    SVGid: true,
+    unknownContent: true,
+    unknownAttrs: true,
+    defaultAttrs: true
+};
+
 var collections = require('./_collections'),
     elems = collections.elems,
     attrsGroups = collections.attrsGroups,
@@ -48,7 +59,7 @@ for (var elem in elems) {
  *
  * @author Kir Belevich
  */
-exports.removeUnknownsAndDefaults = function(item, params) {
+exports.fn = function(item, params) {
 
     // elems w/o namespace prefix
     if (item.isElem() && !item.prefix) {

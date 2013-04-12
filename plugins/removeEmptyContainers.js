@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'perItemReverse';
+
+exports.active = true;
+
 var container = require('./_collections').elemsGroups.container;
 
 /**
@@ -18,7 +22,7 @@ var container = require('./_collections').elemsGroups.container;
  *
  * @author Kir Belevich
  */
-exports.removeEmptyContainers = function(item) {
+exports.fn = function(item) {
 
     return !(item.isElem(container) && !item.isElem('svg') && item.isEmpty());
 

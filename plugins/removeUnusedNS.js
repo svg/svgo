@@ -1,5 +1,9 @@
 'use strict';
 
+exports.type = 'full';
+
+exports.active = true;
+
 /**
  * Remove unused namespaces declaration.
  *
@@ -8,7 +12,7 @@
  *
  * @author Kir Belevich
  */
-exports.removeUnusedNS = function(data) {
+exports.fn = function(data) {
 
     var svgElem,
         xmlnsCollection = [];
