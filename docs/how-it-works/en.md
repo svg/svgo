@@ -23,20 +23,11 @@ SVGO reads, parses and/or extends the [default config](https://github.com/svg/sv
 ```yaml
 plugins:
 
-  - name: myTestPlugin
-    active: true
-    type: perItem
-    params:
-      testParam: true
-      testParam2: 3
-
-  - name: myTestPlugin2
-    active: false
-    type: perItemReverse
-
-  - name: myTestPlugin3
-    active: true
-    type: full
+  - myTestPlugi
+  - myTestPlugin2: false
+  - myTestPlugin3:
+      param1: 1
+      param2: 2
 
     …
 ```
@@ -44,9 +35,8 @@ plugins:
 It's important to note that every plugin:
 
   * has its specific position in the plugins array
-  * can be turned on with `"active": true` and off with `"active": false`
+  * can be turned on with `name: true` and off with `name: false`
   * can have its own `params` which will be available later inside a plugin
-  * must be one of three types: `perItem`, `perItemReverse` and `full` (we'll return to this later)
 
 - - -
 
