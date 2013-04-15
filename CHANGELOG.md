@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.3.1) ] 0.3.1 / 15.04.2013
+* plugins/transformsWithOnePath: resize SVG and automatically rescale inner Path
+* better errors handling
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.0) ] 0.3.0 / 12.04.2013
 * global refactoring: getting rid of the many dependencies
 * new plugin [plugins/mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js)

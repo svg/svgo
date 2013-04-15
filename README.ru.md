@@ -3,7 +3,7 @@
 
 <img src="http://soulshine.in/svgo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO v0.3.0 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO v0.3.1 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](https://mc.yandex.ru/watch/18431326)
@@ -43,7 +43,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] перемещение некоторых атрибутов группы на элементы внутри
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] схлопывание бесполезных групп `<g>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] удаление растровых изображений (выключено по умолчанию)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePath.js) ] склеивание нескольких Path в одну кривую
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] склеивание нескольких Path в одну кривую
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
