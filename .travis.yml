@@ -6,14 +6,12 @@ node_js:
   - 0.10
   - 0.11
 
-branches:
-  only:
-    - master
-
-branches:
-  only:
-    - master
-
 matrix:
   allow_failures:
     - node_js: 0.11
+
+branches:
+  only:
+    - master
+
+script: make travis

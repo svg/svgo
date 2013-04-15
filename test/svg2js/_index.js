@@ -3,8 +3,9 @@
 var SHOULD = require('should'),
     FS = require('fs'),
     PATH = require('path'),
-    cover = process.argv[3] === 'mocha-istanbul',
-    svg2js = require(cover ? '../../lib-cov/svgo/svg2js' : '../../lib/svgo/svg2js');
+    SVG2JS = require(process.env.COVERAGE ?
+                     '../../lib-cov/svgo/svg2js' :
+                     '../../lib/svgo/svg2js');
 
 describe('svg2js', function() {
 
@@ -20,7 +21,7 @@ describe('svg2js', function() {
                     throw err;
                 }
 
-                svg2js(data, function(result) {
+                SVG2JS(data, function(result) {
                     root = result;
                     done();
                 });

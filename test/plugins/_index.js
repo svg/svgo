@@ -3,7 +3,9 @@
 var FS = require('fs'),
     PATH = require('path'),
     regFilename = /^(.*)\.(\d+)\.svg$/,
-    SVGO = require('../../lib/svgo');
+    SVGO = require(process.env.COVERAGE ?
+                   '../../lib-cov/svgo':
+                   '../../lib/svgo');
 
 describe('plugins tests', function() {
 
