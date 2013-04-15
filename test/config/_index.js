@@ -1,7 +1,8 @@
 'use strict';
 
-var cover = process.argv[3] === 'mocha-istanbul',
-    CONFIG = require(cover ? '../../lib-cov/svgo/config' : '../../lib/svgo/config');
+var CONFIG = require(process.env.COVERAGE ?
+                     '../../lib-cov/svgo/config' :
+                     '../../lib/svgo/config');
 
 describe('config', function() {
 

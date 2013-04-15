@@ -32,9 +32,7 @@
     "example": "./examples"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
-    "cover": "./node_modules/.bin/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib && ./node_modules/.bin/mocha --reporter mocha-istanbul --recursive",
-    "jshint": "jshint --show-non-errors ."
+    "test": "make test"
   },
   "dependencies": {
     "sax": "~0.5.0",
@@ -47,7 +45,8 @@
     "mocha": "~1.9.0",
     "should": "~1.2.0",
     "istanbul": "~0.1.0",
-    "mocha-istanbul": ""
+    "mocha-istanbul": "",
+    "coveralls": ""
   },
   "engines": {
     "node": ">=0.6.0"
