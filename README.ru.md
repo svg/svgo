@@ -3,7 +3,7 @@
 
 <img src="http://soulshine.in/svgo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO v0.3.1 [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
+## SVGO [![NPM version](https://badge.fury.io/js/svgo.png)](https://npmjs.org/package/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.png)](http://travis-ci.org/svg/svgo)
 
 **SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](https://mc.yandex.ru/watch/18431326)
