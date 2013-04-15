@@ -5,13 +5,24 @@ exports.type = 'full';
 exports.active = false;
 
 exports.params = {
+    // width and height to resize SVG and rescale inner Path
     width: false,
     height: false,
+
+    // scale inner Path without resizing SVG
     scale: false,
+
+    // shiftX/Y inner Path
     shiftX: false,
     shiftY: false,
+
+    // crop SVG width along the real width of inner Path
     hcrop: false,
+
+    // vertical center inner Path inside SVG height
     vcenter: false,
+
+    // stringify params
     floatPrecision: 3,
     leadingZero: true,
     negativeExtraSpace: true
@@ -194,18 +205,29 @@ exports.fn = function(data, params) {
                 xmax = Math.max.apply(this, xs).toFixed(params.floatPrecision),
                 ymin = Math.min.apply(this, ys).toFixed(params.floatPrecision),
                 ymax = Math.max.apply(this, ys).toFixed(params.floatPrecision),
+                svgWidth = +svgElem.attr('width').value,
                 svgHeight = +svgElem.attr('height').value,
                 realWidth = Math.ceil(xmax - xmin),
                 realHeight = Math.ceil(ymax - ymin),
                 centerX = realWidth / 2,
                 centerY = realHeight / 2,
-                transform = '';
+                transform = '',
+                scale;
 
             // hcrop
             if (params.hcrop) {
                 transform += ' translate(' + (-xmin) + ' 0)';
 
                 svgElem.attr('width').value = realWidth;
+            }
+
+            if (params.width && params.height) {
+                scale = Math.min(params.width / svgWidth, params.height / svgHeight);
+
+                svgElem.attr('width').value = params.width;
+                svgElem.attr('height').value = params.height;
+
+                transform += ' scale(' + scale + ')';
             }
 
             // vcenter
@@ -215,7 +237,7 @@ exports.fn = function(data, params) {
 
             // scale
             if (params.scale) {
-                var scale = params.scale;
+                scale = params.scale;
 
                 realWidth = realWidth * scale;
                 realHeight = realHeight * scale;
@@ -227,7 +249,7 @@ exports.fn = function(data, params) {
             if (params.shiftX) {
                 var shiftX = params.shiftX;
 
-                transform += ' translate(' + realWidth * shiftX + ')';
+                transform += ' translate(' + realWidth * shiftX + ', 0)';
             }
 
             // shiftY
@@ -238,7 +260,6 @@ exports.fn = function(data, params) {
             }
 
             if (transform) {
-                console.log(transform);
 
                 pathElem.addAttr({
                     name: 'transform',
@@ -260,16 +281,6 @@ exports.fn = function(data, params) {
 
                 // save new
                 pathElem.attr('d').value = js2path(path, params);
-            }
-
-            // width
-            if (params.width) {
-                svgElem.attr('width').value = params.width;
-            }
-
-            // height
-            if (params.height) {
-                svgElem.attr('height').value = params.height;
             }
 
         }
