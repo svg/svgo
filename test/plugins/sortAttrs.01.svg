@@ -1,0 +1,9 @@
+<svg foo="bar" xmlns="http://www.w3.org/2000/svg" height="10" baz="quux" width="10" hello="world">
+    test
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" foo="bar" baz="quux" hello="world">
+    test
+</svg>
