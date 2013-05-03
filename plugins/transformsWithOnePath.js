@@ -61,7 +61,7 @@ exports.fn = function(data, params) {
             path.forEach(function(pathItem) {
 
                 // ML
-                if (pathItem.instruction === 'ML') {
+                if ('ML'.indexOf(pathItem.instruction) > -1) {
 
                     pathItem.data.forEach(function(d, i) {
 
