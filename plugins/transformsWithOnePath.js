@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+ * Thanks to http://fontello.com project for sponsoring this plugin
+ */
+
 exports.type = 'full';
 
 exports.active = false;
@@ -61,7 +65,7 @@ exports.fn = function(data, params) {
             path.forEach(function(pathItem) {
 
                 // ML
-                if (pathItem.instruction === 'ML') {
+                if ('ML'.indexOf(pathItem.instruction) > -1) {
 
                     pathItem.data.forEach(function(d, i) {
 

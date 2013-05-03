@@ -258,7 +258,7 @@ function filters(path, params) {
 
         if (data) {
 
-            if (params.floatPrecision) {
+            if (params.floatPrecision !== false) {
                 data = roundData(data, params.floatPrecision);
             }
 

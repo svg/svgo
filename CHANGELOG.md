@@ -1,3 +1,13 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.3.2) ] 0.3.2 / 03.05.2013
+* new plugin [plugins/sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js)
+* plugins/transformsWithOnePath: buggy hcrop (fix [#111](https://github.com/svg/svgo/issues/111))
+* Impossible to set output presision to 0 (no fractional part) (fix [#110](https://github.com/svg/svgo/issues/110))
+* Istanbul + coveralls.io
+* update README with NPM version from badge.fury.io
+* update README with dependency status from gemnasium.com
+* npmignore unneeded files
+* reoptimized project logo
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.1) ] 0.3.1 / 15.04.2013
 * plugins/transformsWithOnePath: resize SVG and automatically rescale inner Path
 * better errors handling
