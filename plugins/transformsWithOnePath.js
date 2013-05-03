@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+ * Thanks to http://fontello.com project for sponsoring this plugin
+ */
+
 exports.type = 'full';
 
 exports.active = false;

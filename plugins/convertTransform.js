@@ -119,7 +119,7 @@ function convertToShorts(transforms, params) {
 
         // fixed-point numbers
         // 12.754997 → 12.755
-        if (params.floatPrecision) {
+        if (params.floatPrecision !== false) {
             transform.data = transform.data.map(function(num) {
                 return +num.toFixed(params.floatPrecision);
             });
