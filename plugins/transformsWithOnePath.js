@@ -218,13 +218,45 @@ exports.fn = function(data, params) {
                 transform = '',
                 scale;
 
+            // width & height
             if (params.width && params.height) {
+
                 scale = Math.min(params.width / svgWidth, params.height / svgHeight);
+
+                realWidth = realWidth * scale;
+                realHeight = realHeight * scale;
 
                 svgElem.attr('width').value = params.width;
                 svgElem.attr('height').value = params.height;
 
                 transform += ' scale(' + scale + ')';
+
+            // width
+            } else if (params.width && !params.height) {
+
+                scale = params.width / svgWidth;
+
+                realWidth = realWidth * scale;
+                realHeight = realHeight * scale;
+
+                svgElem.attr('width').value = params.width;
+                svgElem.attr('height').value = svgHeight * scale;
+
+                transform += ' scale(' + scale + ')';
+
+            // height
+            } else if (params.height && !params.width) {
+
+                scale = params.height / svgHeight;
+
+                realWidth = realWidth * scale;
+                realHeight = realHeight * scale;
+
+                svgElem.attr('width').value = svgWidth * scale;
+                svgElem.attr('height').value = params.height;
+
+                transform += ' scale(' + scale + ')';
+
             }
 
             // shiftX
