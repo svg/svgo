@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.3.3) ] 0.3.3 / 05.05.2013
+* plugins/convertPathData: convert very first m to M, fix applyTransforms with translate() (fix [#112](https://github.com/svg/svgo/issues/112))
+* plugins/transformsWithOnePath: fix real width/height rounding; fix scale transform origin; reorder transforms
+* plugins/transformsWithOnePath: ability to set new width or height independently with auto rescaling
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.2) ] 0.3.2 / 03.05.2013
 * new plugin [plugins/sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js)
 * plugins/transformsWithOnePath: buggy hcrop (fix [#111](https://github.com/svg/svgo/issues/111))
