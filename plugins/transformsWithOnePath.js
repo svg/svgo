@@ -211,19 +211,12 @@ exports.fn = function(data, params) {
                 ymax = Math.max.apply(this, ys).toFixed(params.floatPrecision),
                 svgWidth = +svgElem.attr('width').value,
                 svgHeight = +svgElem.attr('height').value,
-                realWidth = Math.ceil(xmax - xmin),
-                realHeight = Math.ceil(ymax - ymin),
+                realWidth = Math.round(xmax - xmin),
+                realHeight = Math.round(ymax - ymin),
                 centerX = realWidth / 2,
                 centerY = realHeight / 2,
                 transform = '',
                 scale;
-
-            // hcrop
-            if (params.hcrop) {
-                transform += ' translate(' + (-xmin) + ' 0)';
-
-                svgElem.attr('width').value = realWidth;
-            }
 
             if (params.width && params.height) {
                 scale = Math.min(params.width / svgWidth, params.height / svgHeight);
@@ -232,21 +225,6 @@ exports.fn = function(data, params) {
                 svgElem.attr('height').value = params.height;
 
                 transform += ' scale(' + scale + ')';
-            }
-
-            // vcenter
-            if (params.vcenter) {
-                transform += ' translate(0 ' + (((svgHeight - realHeight) / 2) - ymin) + ')';
-            }
-
-            // scale
-            if (params.scale) {
-                scale = params.scale;
-
-                realWidth = realWidth * scale;
-                realHeight = realHeight * scale;
-
-                transform += ' translate(' + (-centerX * (scale - 1)) + ', ' + (-centerY * (scale - 1)) + ') scale(' + scale + ')';
             }
 
             // shiftX
@@ -261,6 +239,35 @@ exports.fn = function(data, params) {
                 var shiftY = params.shiftY;
 
                 transform += ' translate(0, ' + realHeight * shiftY + ')';
+            }
+
+            // scale
+            if (params.scale) {
+                scale = params.scale;
+
+                realWidth = realWidth * scale;
+                realHeight = realHeight * scale;
+
+                centerX = realWidth / 2;
+                centerY = realHeight / 2;
+
+                if (params.shiftX || params.shiftY) {
+                    transform += ' scale(' + scale + ')';
+                } else {
+                    transform += ' translate(' + (-centerX * (scale - 1)) + ', ' + (-centerY * (scale - 1)) + ') scale(' + scale + ')';
+                }
+            }
+
+            // hcrop
+            if (params.hcrop) {
+                transform += ' translate(' + (-xmin) + ' 0)';
+
+                svgElem.attr('width').value = realWidth;
+            }
+
+            // vcenter
+            if (params.vcenter) {
+                transform += ' translate(0 ' + (((svgHeight - realHeight) / 2) - ymin) + ')';
             }
 
             if (transform) {
