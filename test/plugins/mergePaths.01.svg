@@ -5,6 +5,7 @@
     <path d="M 30,30 z"/>
     <path d="M 30,30 z" fill="#f00"/>
     <path d="M 40,40 z"/>
+    <path d="m 50,50 z"/>
 </svg>
 
 @@@
@@ -13,5 +14,5 @@
     <path d="M 0,0 zM 10,10 zM 20,20"/>
     <path d="M 30,30 z"/>
     <path d="M 30,30 z" fill="#f00"/>
-    <path d="M 40,40 z"/>
+    <path d="M 40,40 z m 50,50 z"/>
 </svg>
