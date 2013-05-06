@@ -228,13 +228,13 @@ function convertToRelative(path) {
 
             item.instruction = instruction;
             item.data = data;
-            item.point = point.slice(0);
 
         }
 
         // !data === z, reset current point
         else {
             point = subpathPoint;
+            mM = false;
         }
 
     });
@@ -254,16 +254,12 @@ function filters(path, params) {
 
     var instruction,
         data,
-        point = [0, 0],
-        prev = {
-            point: [0, 0]
-        };
+        prev;
 
     path = path.filter(function(item) {
 
         instruction = item.instruction;
         data = item.data;
-        point = item.point;
 
         if (data) {
 
@@ -303,7 +299,7 @@ function filters(path, params) {
 
                 // q
                 else if (
-                    prev.item &&
+                    prev &&
                     instruction === 'q' &&
                     isCurveStraightLine(
                         [ 0, data[0], data[2] ],
@@ -324,24 +320,24 @@ function filters(path, params) {
 
                     // q (original) + t
                     if (
-                        prev.item &&
-                        prev.item.original &&
-                        prev.item.original.instruction === 'q'
+                        prev &&
+                        prev.original &&
+                        prev.original.instruction === 'q'
                     ) {
                         if (isCurveStraightLine(
-                            [ prev.item.original.data[0], prev.item.original.data[2], data[0] ],
-                            [ prev.item.original.data[1], prev.item.original.data[3], data[1] ]
+                            [ prev.original.data[0], prev.original.data[2], data[0] ],
+                            [ prev.original.data[1], prev.original.data[3], data[1] ]
                         )) {
                             instruction = 'l';
                             data = data.slice(-2);
                         } else {
-                            prev.item.instruction = 'q';
-                            prev.item.data = prev.item.original.data;
+                            prev.instruction = 'q';
+                            prev.data = prev.original.data;
                         }
                     }
 
                     // [^qt] + t
-                    else if (!prev.item || 'qt'.indexOf(prev.item.instruction) === -1) {
+                    else if (!prev || 'qt'.indexOf(prev.instruction) === -1) {
                         instruction = 'l';
                         data = data.slice(-2);
                     }
@@ -375,16 +371,16 @@ function filters(path, params) {
             }
 
             // convert curves into smooth shorthands
-            if (params.curveSmoothShorthands && prev.item) {
+            if (params.curveSmoothShorthands && prev) {
 
                 // curveto
                 if (instruction === 'c') {
 
                     // c + c → c + s
                     if (
-                        prev.item.instruction === 'c' &&
-                        data[0] === -(prev.item.data[2] - prev.item.data[4]) &&
-                        data[1] === -(prev.item.data[3] - prev.item.data[5])
+                        prev.instruction === 'c' &&
+                        data[0] === -(prev.data[2] - prev.data[4]) &&
+                        data[1] === -(prev.data[3] - prev.data[5])
                     ) {
                         instruction = 's';
                         data = data.slice(2);
@@ -392,9 +388,9 @@ function filters(path, params) {
 
                     // s + c → s + s
                     else if (
-                        prev.item.instruction === 's' &&
-                        data[0] === -(prev.item.data[0] - prev.item.data[2]) &&
-                        data[1] === -(prev.item.data[1] - prev.item.data[3])
+                        prev.instruction === 's' &&
+                        data[0] === -(prev.data[0] - prev.data[2]) &&
+                        data[1] === -(prev.data[1] - prev.data[3])
                     ) {
                         instruction = 's';
                         data = data.slice(2);
@@ -402,7 +398,7 @@ function filters(path, params) {
 
                     // [^cs] + c → [^cs] + s
                     else if (
-                        'cs'.indexOf(prev.item.instruction) === -1 &&
+                        'cs'.indexOf(prev.instruction) === -1 &&
                         data[0] === 0 &&
                         data[1] === 0
                     ) {
@@ -417,9 +413,9 @@ function filters(path, params) {
 
                     // q + q → q + t
                     if (
-                        prev.item.instruction === 'q' &&
-                        data[0] === (prev.item.data[2] - prev.item.data[0]) &&
-                        data[1] === (prev.item.data[3] - prev.item.data[1])
+                        prev.instruction === 'q' &&
+                        data[0] === (prev.data[2] - prev.data[0]) &&
+                        data[1] === (prev.data[3] - prev.data[1])
                     ) {
                         instruction = 't';
                         data = data.slice(2);
@@ -427,9 +423,9 @@ function filters(path, params) {
 
                     // t + q → t + t
                     else if (
-                        prev.item.instruction === 't' &&
-                        data[2] === prev.item.data[0] &&
-                        data[3] === prev.item.data[1]
+                        prev.instruction === 't' &&
+                        data[2] === prev.data[0] &&
+                        data[3] === prev.data[1]
                     ) {
                         instruction = 't';
                         data = data.slice(2);
@@ -466,10 +462,7 @@ function filters(path, params) {
             item.instruction = instruction;
             item.data = data;
 
-            prev = {
-                item: item,
-                point: point.slice(0)
-            };
+            prev = item;
 
         }
 

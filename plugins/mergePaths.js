@@ -16,7 +16,8 @@ exports.fn = function(item) {
 
     if (item.isElem() && !item.isEmpty()) {
 
-        var prevContentItem;
+        var prevContentItem,
+            delim = '';
 
         item.content = item.content.filter(function(contentItem) {
 
@@ -30,7 +31,13 @@ exports.fn = function(item) {
                 contentItem.hasAttr('d') &&
                 Object.keys(contentItem.attrs).length === 1
             ) {
-                prevContentItem.attr('d').value += contentItem.attr('d').value;
+                // "zM", but "z m"
+                // looks like a FontForge parsing bug
+                if (contentItem.attr('d').value.charAt(0) === 'm') {
+                    delim = ' ';
+                }
+
+                prevContentItem.attr('d').value += delim + contentItem.attr('d').value;
 
                 return false;
             }

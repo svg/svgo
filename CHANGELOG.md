@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.3.4) ] 0.3.4 / 06.05.2013
+* plugins/convertPathData: fix m->M bug in some cases
+* plugins/transformsWithOnePath: fix last point calculation for C/S/Q/T
+* plugins/mergePaths: add space delimiter between z and m
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.3) ] 0.3.3 / 05.05.2013
 * plugins/convertPathData: convert very first m to M, fix applyTransforms with translate() (fix [#112](https://github.com/svg/svgo/issues/112))
 * plugins/transformsWithOnePath: fix real width/height rounding; fix scale transform origin; reorder transforms
