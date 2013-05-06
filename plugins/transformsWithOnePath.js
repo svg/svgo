@@ -55,12 +55,12 @@ exports.fn = function(data, params) {
                 path = relative2absolute(EXTEND(true, [], pathElem.pathJS)),
                 xs = [],
                 ys = [],
-                currentPoint = [0, 0],
-                controlPoint,
+                controlPoint = [0, 0],
                 cubicBoundingBox,
                 quadraticBoundingBox,
                 i,
-                segment;
+                segment,
+                lastPoint = [0, 0];
 
             path.forEach(function(pathItem) {
 
@@ -77,12 +77,18 @@ exports.fn = function(data, params) {
 
                     });
 
+                    controlPoint = pathItem.data.slice(-2);
+                    lastPoint = pathItem.data.slice(-2);
+
                 // H
                 } else if (pathItem.instruction === 'H') {
 
                     pathItem.data.forEach(function(d) {
                         xs.push(d);
                     });
+
+                    controlPoint[0] = pathItem.data[pathItem.data.length - 2];
+                    lastPoint[0] = pathItem.data[pathItem.data.length - 2];
 
                 // V
                 } else if (pathItem.instruction === 'V') {
@@ -91,6 +97,9 @@ exports.fn = function(data, params) {
                         ys.push(d);
                     });
 
+                    controlPoint[1] = pathItem.data[pathItem.data.length - 1];
+                    lastPoint[1] = pathItem.data[pathItem.data.length - 1];
+
                 // C
                 } else if (pathItem.instruction === 'C') {
 
@@ -98,7 +107,7 @@ exports.fn = function(data, params) {
 
                         segment = pathItem.data.slice(i, i + 6);
 
-                        cubicBoundingBox = computeCubicBoundingBox.apply(this, currentPoint.concat(segment));
+                        cubicBoundingBox = computeCubicBoundingBox.apply(this, lastPoint.concat(segment));
 
                         xs.push(cubicBoundingBox.minx);
                         xs.push(cubicBoundingBox.maxx);
@@ -112,8 +121,7 @@ exports.fn = function(data, params) {
                             2 * segment[5] - segment[3]
                         ];
 
-                        currentPoint[0] = segment[4];
-                        currentPoint[1] = segment[5];
+                        lastPoint = pathItem.data.slice(-2);
 
                     }
 
@@ -124,7 +132,7 @@ exports.fn = function(data, params) {
 
                         segment = pathItem.data.slice(i, i + 4);
 
-                        cubicBoundingBox = computeCubicBoundingBox.apply(this, currentPoint.concat(controlPoint).concat(segment));
+                        cubicBoundingBox = computeCubicBoundingBox.apply(this, lastPoint.concat(controlPoint).concat(segment));
 
                         xs.push(cubicBoundingBox.minx);
                         xs.push(cubicBoundingBox.maxx);
@@ -138,8 +146,7 @@ exports.fn = function(data, params) {
                             2 * segment[3] - controlPoint[1],
                         ];
 
-                        currentPoint[0] = segment[2];
-                        currentPoint[1] = segment[3];
+                        lastPoint = pathItem.data.slice(-2);
 
                     }
 
@@ -150,7 +157,7 @@ exports.fn = function(data, params) {
 
                         segment = pathItem.data.slice(i, i + 4);
 
-                        quadraticBoundingBox = computeQuadraticBoundingBox.apply(this, currentPoint.concat(segment));
+                        quadraticBoundingBox = computeQuadraticBoundingBox.apply(this, lastPoint.concat(segment));
 
                         xs.push(quadraticBoundingBox.minx);
                         xs.push(quadraticBoundingBox.maxx);
@@ -164,8 +171,7 @@ exports.fn = function(data, params) {
                             2 * segment[3] - segment[1]
                         ];
 
-                        currentPoint[0] = segment[2];
-                        currentPoint[1] = segment[3];
+                        lastPoint = pathItem.data.slice(-2);
 
                     }
 
@@ -176,7 +182,7 @@ exports.fn = function(data, params) {
 
                         segment = pathItem.data.slice(i, i + 2);
 
-                        quadraticBoundingBox = computeQuadraticBoundingBox.apply(this, currentPoint.concat(controlPoint).concat(segment));
+                        quadraticBoundingBox = computeQuadraticBoundingBox.apply(this, lastPoint.concat(controlPoint).concat(segment));
 
                         xs.push(quadraticBoundingBox.minx);
                         xs.push(quadraticBoundingBox.maxx);
@@ -184,22 +190,16 @@ exports.fn = function(data, params) {
                         ys.push(quadraticBoundingBox.miny);
                         ys.push(quadraticBoundingBox.maxy);
 
+                        // TODO: BUGGY
                         // reflected control point for the next possible T
                         controlPoint = [
-                            2 * segment[0] - segment[0],
-                            2 * segment[1] - segment[1]
+                            2 * segment[0] - lastPoint[0],
+                            2 * segment[1] - lastPoint[1]
                         ];
 
-                        currentPoint[0] = segment[0];
-                        currentPoint[1] = segment[1];
+                        lastPoint = pathItem.data.slice(-2);
 
                     }
-
-                }
-
-                if (pathItem.data) {
-
-                    currentPoint = pathItem.point;
 
                 }
 
@@ -213,8 +213,6 @@ exports.fn = function(data, params) {
                 svgHeight = +svgElem.attr('height').value,
                 realWidth = Math.round(xmax - xmin),
                 realHeight = Math.round(ymax - ymin),
-                centerX = realWidth / 2,
-                centerY = realHeight / 2,
                 transform = '',
                 scale;
 
@@ -226,8 +224,8 @@ exports.fn = function(data, params) {
                 realWidth = realWidth * scale;
                 realHeight = realHeight * scale;
 
-                svgElem.attr('width').value = params.width;
-                svgElem.attr('height').value = params.height;
+                svgWidth = svgElem.attr('width').value = params.width;
+                svgHeight = svgElem.attr('height').value = params.height;
 
                 transform += ' scale(' + scale + ')';
 
@@ -239,8 +237,8 @@ exports.fn = function(data, params) {
                 realWidth = realWidth * scale;
                 realHeight = realHeight * scale;
 
-                svgElem.attr('width').value = params.width;
-                svgElem.attr('height').value = svgHeight * scale;
+                svgWidth = svgElem.attr('width').value = params.width;
+                svgHeight = svgElem.attr('height').value = svgHeight * scale;
 
                 transform += ' scale(' + scale + ')';
 
@@ -252,8 +250,8 @@ exports.fn = function(data, params) {
                 realWidth = realWidth * scale;
                 realHeight = realHeight * scale;
 
-                svgElem.attr('width').value = svgWidth * scale;
-                svgElem.attr('height').value = params.height;
+                svgWidth = svgElem.attr('width').value = svgWidth * scale;
+                svgHeight = svgElem.attr('height').value = params.height;
 
                 transform += ' scale(' + scale + ')';
 
@@ -261,32 +259,28 @@ exports.fn = function(data, params) {
 
             // shiftX
             if (params.shiftX) {
-                var shiftX = params.shiftX;
-
-                transform += ' translate(' + realWidth * shiftX + ', 0)';
+                transform += ' translate(' + realWidth * params.shiftX + ', 0)';
             }
 
             // shiftY
             if (params.shiftY) {
-                var shiftY = params.shiftY;
-
-                transform += ' translate(0, ' + realHeight * shiftY + ')';
+                transform += ' translate(0, ' + realHeight * params.shiftY + ')';
             }
 
             // scale
             if (params.scale) {
                 scale = params.scale;
 
+                var shiftX = svgWidth / 2,
+                    shiftY = svgHeight / 2;
+
                 realWidth = realWidth * scale;
                 realHeight = realHeight * scale;
-
-                centerX = realWidth / 2;
-                centerY = realHeight / 2;
 
                 if (params.shiftX || params.shiftY) {
                     transform += ' scale(' + scale + ')';
                 } else {
-                    transform += ' translate(' + (-centerX * (scale - 1)) + ', ' + (-centerY * (scale - 1)) + ') scale(' + scale + ')';
+                    transform += ' translate(' + shiftX + ' ' + shiftY + ') scale(' + scale + ') translate(-' + shiftX + ' -' + shiftY + ')';
                 }
             }
 

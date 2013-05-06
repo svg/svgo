@@ -192,7 +192,6 @@ exports.applyTransforms = function(elem, path) {
     ) {
 
         var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
-            currentPoint = [0, 0],
             newPoint;
 
         path.forEach(function(pathItem) {
@@ -238,11 +237,6 @@ exports.applyTransforms = function(elem, path) {
                     }
 
                 }
-
-                currentPoint[0] += pathItem.data[pathItem.data.length - 2];
-                currentPoint[1] += pathItem.data[pathItem.data.length - 1];
-
-                pathItem.point = currentPoint.slice(0);
 
             }
 
