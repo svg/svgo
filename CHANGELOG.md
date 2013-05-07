@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.3.5) ] 0.3.5 / 07.05.2013
+* plugins/transformsWithOnePath: fix curves bounding box calculation
+* plugins/transformsWithOnePath: fix possible c+t or q+s bug
+
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.4) ] 0.3.4 / 06.05.2013
 * plugins/convertPathData: fix m->M bug in some cases
 * plugins/transformsWithOnePath: fix last point calculation for C/S/Q/T
