@@ -55,12 +55,13 @@ exports.fn = function(data, params) {
                 path = relative2absolute(EXTEND(true, [], pathElem.pathJS)),
                 xs = [],
                 ys = [],
-                controlPoint = [0, 0],
+                cubicСontrolPoint = [0, 0],
+                quadraticСontrolPoint = [0, 0],
+                lastPoint = [0, 0],
                 cubicBoundingBox,
                 quadraticBoundingBox,
                 i,
-                segment,
-                lastPoint = [0, 0];
+                segment;
 
             path.forEach(function(pathItem) {
 
@@ -75,8 +76,7 @@ exports.fn = function(data, params) {
                         }
                     }
 
-                    controlPoint = pathItem.data.slice(-2);
-                    lastPoint = pathItem.data.slice(-2);
+                    lastPoint = cubicСontrolPoint = quadraticСontrolPoint = pathItem.data.slice(-2);
 
                 // H
                 } else if (pathItem.instruction === 'H') {
@@ -85,8 +85,7 @@ exports.fn = function(data, params) {
                         xs.push(d);
                     });
 
-                    controlPoint[0] = pathItem.data[pathItem.data.length - 2];
-                    lastPoint[0] = pathItem.data[pathItem.data.length - 2];
+                    lastPoint[0] = cubicСontrolPoint[0] = quadraticСontrolPoint[0] = pathItem.data[pathItem.data.length - 2];
 
                 // V
                 } else if (pathItem.instruction === 'V') {
@@ -95,8 +94,7 @@ exports.fn = function(data, params) {
                         ys.push(d);
                     });
 
-                    controlPoint[1] = pathItem.data[pathItem.data.length - 1];
-                    lastPoint[1] = pathItem.data[pathItem.data.length - 1];
+                    lastPoint[1] = cubicСontrolPoint[1] = quadraticСontrolPoint[1] = pathItem.data[pathItem.data.length - 1];
 
                 // C
                 } else if (pathItem.instruction === 'C') {
@@ -114,7 +112,7 @@ exports.fn = function(data, params) {
                         ys.push(cubicBoundingBox.maxy);
 
                         // reflected control point for the next possible S
-                        controlPoint = [
+                        cubicСontrolPoint = [
                             2 * segment[4] - segment[2],
                             2 * segment[5] - segment[3]
                         ];
@@ -130,7 +128,7 @@ exports.fn = function(data, params) {
 
                         segment = pathItem.data.slice(i, i + 4);
 
-                        cubicBoundingBox = computeCubicBoundingBox.apply(this, lastPoint.concat(controlPoint).concat(segment));
+                        cubicBoundingBox = computeCubicBoundingBox.apply(this, lastPoint.concat(cubicСontrolPoint).concat(segment));
 
                         xs.push(cubicBoundingBox.minx);
                         xs.push(cubicBoundingBox.maxx);
@@ -139,9 +137,9 @@ exports.fn = function(data, params) {
                         ys.push(cubicBoundingBox.maxy);
 
                         // reflected control point for the next possible S
-                        controlPoint = [
-                            2 * segment[2] - controlPoint[0],
-                            2 * segment[3] - controlPoint[1],
+                        cubicСontrolPoint = [
+                            2 * segment[2] - cubicСontrolPoint[0],
+                            2 * segment[3] - cubicСontrolPoint[1],
                         ];
 
                         lastPoint = segment.slice(-2);
@@ -164,7 +162,7 @@ exports.fn = function(data, params) {
                         ys.push(quadraticBoundingBox.maxy);
 
                         // reflected control point for the next possible T
-                        controlPoint = [
+                        quadraticСontrolPoint = [
                             2 * segment[2] - segment[0],
                             2 * segment[3] - segment[1]
                         ];
@@ -180,7 +178,7 @@ exports.fn = function(data, params) {
 
                         segment = pathItem.data.slice(i, i + 2);
 
-                        quadraticBoundingBox = computeQuadraticBoundingBox.apply(this, lastPoint.concat(controlPoint).concat(segment));
+                        quadraticBoundingBox = computeQuadraticBoundingBox.apply(this, lastPoint.concat(quadraticСontrolPoint).concat(segment));
 
                         xs.push(quadraticBoundingBox.minx);
                         xs.push(quadraticBoundingBox.maxx);
@@ -189,9 +187,9 @@ exports.fn = function(data, params) {
                         ys.push(quadraticBoundingBox.maxy);
 
                         // reflected control point for the next possible T
-                        controlPoint = [
-                            2 * segment[0] - controlPoint[0],
-                            2 * segment[1] - controlPoint[1]
+                        quadraticСontrolPoint = [
+                            2 * segment[0] - quadraticСontrolPoint[0],
+                            2 * segment[1] - quadraticСontrolPoint[1]
                         ];
 
                         lastPoint = segment.slice(-2);
