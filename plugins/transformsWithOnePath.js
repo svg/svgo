@@ -67,15 +67,13 @@ exports.fn = function(data, params) {
                 // ML
                 if ('ML'.indexOf(pathItem.instruction) > -1) {
 
-                    pathItem.data.forEach(function(d, i) {
-
+                    for (i = 0; i < pathItem.data.length; i++) {
                         if (i % 2 === 0) {
-                            xs.push(d);
+                            xs.push(pathItem.data[i]);
                         } else {
-                            ys.push(d);
+                            ys.push(pathItem.data[i]);
                         }
-
-                    });
+                    }
 
                     controlPoint = pathItem.data.slice(-2);
                     lastPoint = pathItem.data.slice(-2);
@@ -121,7 +119,7 @@ exports.fn = function(data, params) {
                             2 * segment[5] - segment[3]
                         ];
 
-                        lastPoint = pathItem.data.slice(-2);
+                        lastPoint = segment.slice(-2);
 
                     }
 
@@ -146,7 +144,7 @@ exports.fn = function(data, params) {
                             2 * segment[3] - controlPoint[1],
                         ];
 
-                        lastPoint = pathItem.data.slice(-2);
+                        lastPoint = segment.slice(-2);
 
                     }
 
@@ -171,7 +169,7 @@ exports.fn = function(data, params) {
                             2 * segment[3] - segment[1]
                         ];
 
-                        lastPoint = pathItem.data.slice(-2);
+                        lastPoint = segment.slice(-2);
 
                     }
 
@@ -190,14 +188,13 @@ exports.fn = function(data, params) {
                         ys.push(quadraticBoundingBox.miny);
                         ys.push(quadraticBoundingBox.maxy);
 
-                        // TODO: BUGGY
                         // reflected control point for the next possible T
                         controlPoint = [
-                            2 * segment[0] - lastPoint[0],
-                            2 * segment[1] - lastPoint[1]
+                            2 * segment[0] - controlPoint[0],
+                            2 * segment[1] - controlPoint[1]
                         ];
 
-                        lastPoint = pathItem.data.slice(-2);
+                        lastPoint = segment.slice(-2);
 
                     }
 
