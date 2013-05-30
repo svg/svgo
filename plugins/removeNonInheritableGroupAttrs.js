@@ -5,7 +5,7 @@ exports.type = 'perItem';
 exports.active = true;
 
 var inheritableAttrs = require('./_collections').inheritableAttrs,
-    presentationAttrs = require('./_collections').attrsGroups.presentation,
+    attrsGroups = require('./_collections').attrsGroups,
     excludedAttrs = ['display', 'opacity'];
 
 /**
@@ -22,9 +22,12 @@ exports.fn = function(item) {
 
         item.eachAttr(function(attr) {
             if (
-                presentationAttrs.indexOf(attr.name) !== -1 &&
-                excludedAttrs.indexOf(attr.name) === -1 &&
-                inheritableAttrs.indexOf(attr.name) === -1
+                ~attrsGroups.presentation.indexOf(attr.name) &&
+                ~attrsGroups.graphicalEvent.indexOf(attr.name) &&
+                ~attrsGroups.core.indexOf(attr.name) &&
+                ~attrsGroups.conditionalProcessing.indexOf(attr.name) &&
+                !~excludedAttrs.indexOf(attr.name) &&
+                !~inheritableAttrs.indexOf(attr.name)
             ) {
                 item.removeAttr(attr.name);
             }
