@@ -45,8 +45,7 @@
     "mocha": "~1.9.0",
     "should": "~1.2.0",
     "istanbul": "~0.1.0",
-    "mocha-istanbul": "",
-    "coveralls": ""
+    "mocha-istanbul": ""
   },
   "engines": {
     "node": ">=0.6.0"

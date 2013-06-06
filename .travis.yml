@@ -14,5 +14,3 @@ matrix:
 branches:
   only:
     - master
-
-script: make travis
