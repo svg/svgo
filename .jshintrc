@@ -20,6 +20,5 @@
     "undef": true,
     "unused": true,
     "loopfunc": true,
-    "trailing": true,
-    "es5": true
+    "trailing": true
 }

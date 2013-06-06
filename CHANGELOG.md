@@ -1,3 +1,10 @@
+
+### [ [>](https://github.com/svg/svgo/tree/v0.3.6) ] 0.3.6 / 06.06.2013
+* plugins/removeNonInheritableGroupAttrs: more attrs groups to exclude (fix [#116](https://github.com/svg/svgo/issues/116) & [#118](https://github.com/svg/svgo/issues/118))
+* lib/coa: optimize folder file by file (temp fix #114](https://github.com/svg/svgo/issues/114))
+* `.jshintrc`: JSHint 2.0
+* temporarily disable node-coveralls
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.5) ] 0.3.5 / 07.05.2013
 * plugins/transformsWithOnePath: fix curves bounding box calculation
 * plugins/transformsWithOnePath: fix possible c+t or q+s bug
