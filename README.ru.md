@@ -113,7 +113,7 @@ Arguments:
 
 * с помощью GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * как модуль Node.js – [examples](https://github.com/svg/svgo/tree/master/examples)
-* как таск для Grunt – [svgo-grunt](https://github.com/svg/svgo-grunt)
+* как таск для Grunt – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 
 ## TODO
