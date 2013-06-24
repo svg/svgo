@@ -1,7 +1,15 @@
 
+### [ [>](https://github.com/svg/svgo/tree/v0.3.7) ] 0.3.7 / 24.06.2013
+* do not remove `result` attribute from filter primitives (fix [#122](https://github.com/svg/svgo/issues/122))
+* plugins/cleanupAttrs: replace newline with space when needed (fix [#119](https://github.com/svg/svgo/issues/119))
+* lib/coa: look for config file in current folder
+* lib/coa: always traverse all files in the given folder
+* deprecate svgo-grunt in favor of [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
+* re-enable node-coveralls
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.6) ] 0.3.6 / 06.06.2013
 * plugins/removeNonInheritableGroupAttrs: more attrs groups to exclude (fix [#116](https://github.com/svg/svgo/issues/116) & [#118](https://github.com/svg/svgo/issues/118))
-* lib/coa: optimize folder file by file (temp fix #114](https://github.com/svg/svgo/issues/114))
+* lib/coa: optimize folder file by file (temp fix [#114](https://github.com/svg/svgo/issues/114))
 * `.jshintrc`: JSHint 2.0
 * temporarily disable node-coveralls
 
