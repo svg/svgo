@@ -10,7 +10,8 @@ exports.params = {
     spaces: true
 };
 
-var regNewlines = /\n/g,
+var regNewlinesNeedSpace = /(\S)\n(\S)/g,
+    regNewlines = /\n/g,
     regSpaces = /\s{2,}/g;
 
 /**
@@ -29,6 +30,12 @@ exports.fn = function(item, params) {
         item.eachAttr(function(attr) {
 
             if (params.newlines) {
+                // new line which requires a space instead of themselve
+                attr.value = attr.value.replace(regNewlinesNeedSpace, function(match, p1, p2) {
+                    return p1 + ' ' + p2;
+                });
+
+                // simple new line
                 attr.value = attr.value.replace(regNewlines, '');
             }
 
