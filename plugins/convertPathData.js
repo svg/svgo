@@ -494,8 +494,9 @@ function collapseRepeated(path) {
             // increase previous h or v data with current
             if (item.instruction === 'h' || item.instruction === 'v') {
                 prev.data[0] += item.data[0];
-            // concat previous data with current
-            } else {
+            // concat previous data with current, but skip z
+            } else
+            if (item.instruction !== 'z') {
                 prev.data = prev.data.concat(item.data);
             }
 
