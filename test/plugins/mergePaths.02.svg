@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0,0 z" fill="#fff" stroke="#333"/>
+    <path d="M 10,10 z" fill="#fff" stroke="#333"/>
+    <path d="M 20,20" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#f00"/>
+    <path d="M 40,40 z"/>
+    <path d="m 50,50 z"/>
+    <path d="M 40,40"/>
+    <path d="m 50,50"/>
+    <path d="M 40,40 z" fill="#fff" stroke="#333"/>
+    <path d="m 50,50 z" fill="#fff" stroke="#333"/>
+    <path d="M 40,40" fill="#fff" stroke="#333"/>
+    <path d="m 50,50" fill="#fff" stroke="#333"/>
+    <path d="m 50,50 z" fill="#fff" stroke="#333"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0,0 zM 10,10 zM 20,20" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#fff" stroke="#333"/>
+    <path d="M 30,30 z" fill="#f00"/>
+    <path d="M 40,40 z m 50,50 zM 40,40 m 50,50"/>
+    <path d="M 40,40 z m 50,50 zM 40,40 m 50,50" fill="#fff" stroke="#333"/>
+    <path d="m 50,50 z" fill="#fff" stroke="#333"/>
+</svg>
