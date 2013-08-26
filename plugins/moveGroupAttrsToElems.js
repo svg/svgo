@@ -1,10 +1,13 @@
 'use strict';
 
-exports.type = 'perItemReverse';
+exports.type = 'perItem';
 
 exports.active = true;
 
-var pathElems = require('./_collections.js').pathElems;
+var pathElems = require('./_collections.js').pathElems.slice();
+
+pathElems.push('g');
+pathElems.push('text');
 
 /**
  * Move group attrs to the content elements.
