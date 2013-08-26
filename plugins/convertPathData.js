@@ -6,6 +6,7 @@ exports.active = true;
 
 exports.params = {
     applyTransforms: true,
+    applyTransformsStroked: true,
     straightCurves: true,
     lineShorthands: true,
     curveSmoothShorthands: true,
@@ -52,7 +53,7 @@ exports.fn = function(item, params) {
             data = convertToRelative(data);
 
             if (params.applyTransforms) {
-                data = applyTransforms(item, data);
+                data = applyTransforms(item, data, params.applyTransformsStroked, params.floatPrecision);
             }
 
             data = filters(data, params);
