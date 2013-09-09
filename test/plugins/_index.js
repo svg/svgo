@@ -33,22 +33,19 @@ describe('plugins tests', function() {
                 js2svg: { pretty: true }
             });
 
-            it(name + '.' + index, function(done) {
+            it(name + '.' + index, function() {
 
-                FS.readFile(file, 'utf8', function(err, data) {
+                var data = FS.readFileSync(file, 'utf8');
 
-                    var splitted = data.split('@@@'),
-                        orig = splitted[0],
-                        should = splitted[1];
+                var splitted = data.split('@@@'),
+                    orig = splitted[0],
+                    should = splitted[1];
 
-                    svgo.optimize(orig, function(result) {
-                        result = '\n\n' + result.data;
 
-                        result.should.be.equal(should);
-                        done();
-                    });
+                var result = svgo.optimize(orig) 
+                result = '\n\n' + result.data;
 
-                });
+                result.should.be.equal(should);
 
             });
 

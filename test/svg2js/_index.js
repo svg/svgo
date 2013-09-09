@@ -14,18 +14,11 @@ describe('svg2js', function() {
         var filepath = PATH.resolve(__dirname, './test.svg'),
             root;
 
-        before(function(done) {
+        before(function() {
 
-            FS.readFile(filepath, 'utf8', function(err, data) {
-                if (err) {
-                    throw err;
-                }
+        var data = FS.readFileSync(filepath, 'utf8');
 
-                SVG2JS(data, function(result) {
-                    root = result;
-                    done();
-                });
-            });
+        root = SVG2JS(data);
 
         });
 
