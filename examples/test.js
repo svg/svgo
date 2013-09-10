@@ -7,14 +7,10 @@ var FS = require('fs'),
     svgo = new SVGO(/*{ custom config object }*/);
 
 FS.readFile(filepath, 'utf8', function(err, data) {
-
     if (err) {
         throw err;
     }
-
-    svgo.optimize(data, function(result) {
-
-        console.log(result);
+    console.log(svgo.optimize(data));
 
         // {
         //     // optimized SVG data string
@@ -25,7 +21,5 @@ FS.readFile(filepath, 'utf8', function(err, data) {
         //         height: '20'
         //     }
         // }
-
-    });
 
 });
