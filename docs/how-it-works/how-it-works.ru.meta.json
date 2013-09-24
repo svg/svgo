@@ -1,0 +1,13 @@
+{
+    "title": "Как работает SVGO",
+    "createDate": "04-12-2012",
+    "editDate": "12-04-2013",
+    "summary": "Увлекательный рассказ о том как работает SVGO.",
+    "thumbnail": "",
+    "authors": ["belevich-kir"],
+    "tags": ["tools"],
+    "categories": [{"name": "Оптимизаторы/SVGO", "url": "optimizers/svgo", "order": "20/30"}],
+    "translators": [],
+    "url": "/docs/how-it-works/",
+    "type": "tools"
+}

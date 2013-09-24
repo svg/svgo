@@ -20,7 +20,7 @@ Plugins can delete and modify SVG elements, collapse contents, move attributes a
 ### 1. config
 SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/.svgo.yml), which contains all the SVGO settings, including plugins. Something like this:
 
-```yaml
+```
 plugins:
 
   - myTestPlugi
@@ -122,7 +122,7 @@ In the simplest case plugins applying process can be represented as "each plugin
 
 But that's not all ;) We got rid of a loop copypasting, but every plugin still runs over all the SVG-as-JS data, which is not very optimal. Actually, at the first step where we got a config, there was a collapsing of consecutive plugins with the same type, so ultimately one loop wraps a group of plugins:
 
-```yaml
+```
 plugins
 
   - [perItem group],
