@@ -45,7 +45,7 @@ exports.fn = function(item) {
                 if (g.attrs && g.content.length === 1) {
                     var inner = g.content[0];
 
-                    if (inner.elem) {
+                    if (inner.elem && !(g.hasAttr('transform') && g.hasAttr('clip-path') && inner.hasAttr('transform'))) {
                         g.eachAttr(function(attr) {
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);

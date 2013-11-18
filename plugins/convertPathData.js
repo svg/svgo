@@ -6,6 +6,7 @@ exports.active = true;
 
 exports.params = {
     applyTransforms: true,
+    applyTransformsStroked: true,
     straightCurves: true,
     lineShorthands: true,
     curveSmoothShorthands: true,
@@ -52,7 +53,7 @@ exports.fn = function(item, params) {
             data = convertToRelative(data);
 
             if (params.applyTransforms) {
-                data = applyTransforms(item, data);
+                data = applyTransforms(item, data, params.applyTransformsStroked, params.floatPrecision);
             }
 
             data = filters(data, params);
@@ -492,7 +493,7 @@ function collapseRepeated(path) {
             item.instruction === prev.instruction
         ) {
             // increase previous h or v data with current
-            if (item.instruction === 'h' || item.instruction === 'v') {
+            if ((item.instruction === 'h' || item.instruction === 'v')&& (prev.data[0] >= 0) == (item.data[0] >= 0)) {
                 prev.data[0] += item.data[0];
             // concat previous data with current
             } else {

@@ -32,8 +32,8 @@ plugins:
   - removeHiddenElems
   - removeEmptyText
   - moveElemsAttrsToGroup
-  - collapseGroups
   - moveGroupAttrsToElems
+  - collapseGroups
   - convertPathData
   - convertTransform
   - removeEmptyAttrs

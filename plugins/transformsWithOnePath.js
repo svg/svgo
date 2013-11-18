@@ -300,7 +300,7 @@ exports.fn = function(data, params) {
                     value: transform
                 });
 
-                path = applyTransforms(pathElem, pathElem.pathJS);
+                path = applyTransforms(pathElem, pathElem.pathJS, true, params.floatPrecision);
 
                 // transformed data rounding
                 path.forEach(function(pathItem) {

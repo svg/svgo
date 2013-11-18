@@ -180,72 +180,103 @@ exports.relative2absolute = function(data) {
  *
  * @param {Object} elem current element
  * @param {Array} path input path data
+ * @param {Boolean} applyTransformsStroked whether to apply transforms to stroked lines.
+ * @param {Number} floatPrecision precision (used for stroke width)
  * @return {Array} output path data
  */
-exports.applyTransforms = function(elem, path) {
-
+exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrecision) {
     // if there are no 'stroke' attr and 'a' segments
     if (
-        elem.hasAttr('transform') &&
-        !elem.hasAttr('stroke') &&
-        path.every(function(i) { return i.instruction !== 'a'; })
+        !elem.hasAttr('transform') ||
+        !path.every(function(i) { return i.instruction !== 'a'; })
     ) {
+      return path;
+    }
+    var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
+          newPoint, sx, sy, strokeWidth;
 
-        var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
-            newPoint;
+    if (elem.hasAttr('stroke') || elem.hasAttr('stroke-width')){
+      if (!applyTransformsStroked){
+        return path;
+      }
+      if (matrix.name == 'matrix'){
+        sx = +Math.sqrt(matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]).toFixed(floatPrecision);
+        sy = +Math.sqrt(matrix.data[2] * matrix.data[2] + matrix.data[3] * matrix.data[3]).toFixed(floatPrecision);
+      } else if (matrix.name == 'scale'){
+        sx = +matrix.data[0].toFixed(floatPrecision);
+        sy = +matrix.data[1].toFixed(floatPrecision);
+      } else {
+        sx = 1;
+        sy = 1;
+      }
 
-        path.forEach(function(pathItem) {
+      if (sx !== sy){
+        return path;
+      }
+      if (sx !== 1){
+        if (elem.hasAttr('stroke-width')){
+          elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value * sx;
+        } else {
+          elem.addAttr({
+              name: 'stroke-width',
+              prefix: '',
+              local: 'stroke-width',
+              value: sx
+          });
+        }
+      }
+    }
 
-            if (pathItem.data) {
+    path.forEach(function(pathItem) {
 
-                // h -> l
-                if (pathItem.instruction === 'h') {
+        if (pathItem.data) {
 
-                    pathItem.instruction = 'l';
-                    pathItem.data[1] = 0;
+            // h -> l
+            if (pathItem.instruction === 'h') {
 
-                // v -> l
-                } else if (pathItem.instruction === 'v') {
+                pathItem.instruction = 'l';
+                pathItem.data[1] = 0;
 
-                    pathItem.instruction = 'l';
-                    pathItem.data[1] = pathItem.data[0];
-                    pathItem.data[0] = 0;
+            // v -> l
+            } else if (pathItem.instruction === 'v') {
 
-                }
+                pathItem.instruction = 'l';
+                pathItem.data[1] = pathItem.data[0];
+                pathItem.data[0] = 0;
 
-                // if there is a translate() transform
-                if (pathItem.instruction === 'M' &&
-                    (matrix.data[4] !== 0 ||
-                    matrix.data[5] !== 0)
-                ) {
+            }
 
-                    // then apply it only to the first absoluted M
-                    newPoint = transformPoint(matrix.data, pathItem.data[0], pathItem.data[1]);
-                    pathItem.data[0] = newPoint[0];
-                    pathItem.data[1] = newPoint[1];
+            // if there is a translate() transform
+            if (pathItem.instruction === 'M' &&
+                (matrix.data[4] !== 0 ||
+                matrix.data[5] !== 0)
+            ) {
 
-                    // clear translate() data from transform matrix
-                    matrix.data[4] = 0;
-                    matrix.data[5] = 0;
+                // then apply it only to the first absoluted M
+                newPoint = transformPoint(matrix.data, pathItem.data[0], pathItem.data[1]);
+                pathItem.data[0] = newPoint[0];
+                pathItem.data[1] = newPoint[1];
 
-                } else {
+                // clear translate() data from transform matrix
+                matrix.data[4] = 0;
+                matrix.data[5] = 0;
 
-                    for (var i = 0; i < pathItem.data.length; i += 2) {
-                        newPoint = transformPoint(matrix.data, pathItem.data[i], pathItem.data[i + 1]);
-                        pathItem.data[i] = newPoint[0];
-                        pathItem.data[i + 1] = newPoint[1];
-                    }
+            } else {
 
+                for (var i = 0; i < pathItem.data.length; i += 2) {
+                    newPoint = transformPoint(matrix.data, pathItem.data[i], pathItem.data[i + 1]);
+                    pathItem.data[i] = newPoint[0];
+                    pathItem.data[i + 1] = newPoint[1];
                 }
 
             }
 
-        });
+        }
 
-        // remove transform attr
-        elem.removeAttr('transform');
+    });
 
-    }
+    // remove transform attr
+    elem.removeAttr('transform');
 
     return path;
 
