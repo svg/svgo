@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.4.1) ] 0.4.1 / 18.11.2013
+* node >=0.8.0
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.0) ] 0.4.0 / 18.11.2013
 * merge almost all pull-requests
 * update dependencies
