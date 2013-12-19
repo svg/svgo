@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.4.2) ] 0.4.2 / 19.12.2013
+* add `lcov.info` to npmignore
+* fix `js-yaml` version to suppress deprecation warning in stdout
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.1) ] 0.4.1 / 18.11.2013
 * node >=0.8.0
 
