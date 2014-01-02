@@ -35,7 +35,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "sax": "~0.5.0",
+    "sax": "~0.6.0",
     "coa": "~0.4.0",
     "js-yaml": "~2.1.0",
     "colors": "~0.6.0",
