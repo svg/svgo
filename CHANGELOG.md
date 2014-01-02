@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.4.3) ] 0.4.3 / 02.01.2014
+* new plugin [plugins/convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) (close [#96](https://github.com/svg/svgo/issues/96))
+* update sax version to fix [#140](https://github.com/svg/svgo/issues/140)
+* update deps
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.2) ] 0.4.2 / 19.12.2013
 * add `lcov.info` to npmignore
 * fix `js-yaml` version to suppress deprecation warning in stdout
