@@ -44,7 +44,7 @@
   "devDependencies": {
     "mocha": "~1.14.0",
     "should": "~2.1.0",
-    "istanbul": "~0.1.0",
+    "istanbul": "~0.2.0",
     "mocha-istanbul": "",
     "coveralls": ""
   },
