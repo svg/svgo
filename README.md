@@ -44,6 +44,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] collapse useless groups
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] remove raster images (disabled by default)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] merge multiple Paths into one
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] convert some basic shapes to path
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] apply transforms, crop by real width, center vertical alignment and resize SVG with one Path inside
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
