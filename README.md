@@ -23,6 +23,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] remove comments
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove `<metadata>`
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] remove `<title>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove hidden elements

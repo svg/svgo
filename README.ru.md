@@ -23,6 +23,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] удаление XML-инструкций
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] удаление комментариев
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] удаление `<metadata>`
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] удаление `<title>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] удаление пространств имён различных редакторов, их элементов и атрибутов
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] удаление пустых атрибутов
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] удаление скрытых элементов
