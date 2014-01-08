@@ -62,7 +62,8 @@ for (var elem in elems) {
  */
 exports.fn = function(item, params) {
 
-    var inheritable = [ ];
+    var inheritable = { }, hasInheritable = false,
+        key, attr;
 
     // elems w/o namespace prefix
     if (item.isElem() && !item.prefix) {
@@ -128,17 +129,22 @@ exports.fn = function(item, params) {
         ) {
             item.eachAttr(function(attr) {
                 if (attrsInheritable.indexOf(attr.name) >= 0) {
-                    inheritable.push(attr.name);
+                    inheritable[attr.name] = attr.value;
+                    hasInheritable = true;
                 }
             });
 
-            if (inheritable.length) {
+            if (hasInheritable) {
                 item.content.forEach(function(content, i) {
-                    inheritable.forEach( function(inheritable, i) {
-                        if (content.hasAttr(inheritable)) {
-                            content.attr(inheritable).overriden = true;
+                    for (key in inheritable) {
+                        attr = content.attr(key);
+
+                        if (attr.value === inheritable[key]) {
+                            content.removeAttr(attr.name);
+                        } else {
+                            attr.overriden = true;
                         }
-                    } );
+                    }
                 } );
             }
         }
