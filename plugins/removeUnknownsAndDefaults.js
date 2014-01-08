@@ -15,7 +15,8 @@ var collections = require('./_collections'),
     elems = collections.elems,
     attrsGroups = collections.attrsGroups,
     elemsGroups = collections.elemsGroups,
-    attrsGroupsDefaults = collections.attrsGroupsDefaults;
+    attrsGroupsDefaults = collections.attrsGroupsDefaults,
+    attrsInheritable = collections.inheritableAttrs;
 
 // collect and extend all references
 for (var elem in elems) {
@@ -61,6 +62,8 @@ for (var elem in elems) {
  */
 exports.fn = function(item, params) {
 
+    var inheritable = [ ];
+
     // elems w/o namespace prefix
     if (item.isElem() && !item.prefix) {
 
@@ -99,13 +102,17 @@ exports.fn = function(item, params) {
                 ) {
                     if (
                         // unknown attrs
-                        (params.unknownAttrs &&
-                         elems[elem].attrs.indexOf(attr.name) === -1) ||
+                        (
+                            params.unknownAttrs &&
+                            elems[elem].attrs.indexOf(attr.name) === -1
+                        ) ||
                         // attrs with default values
-                        (params.defaultAttrs &&
-                         elems[elem].defaults &&
-                         elems[elem].defaults[attr.name] === attr.value
-                         )
+                        (
+                            params.defaultAttrs &&
+                            elems[elem].defaults &&
+                            !attr.overriden &&
+                            elems[elem].defaults[attr.name] === attr.value
+                        )
                     ) {
                         item.removeAttr(attr.name);
                     }
@@ -113,6 +120,27 @@ exports.fn = function(item, params) {
 
             });
 
+        }
+
+        // mark overriden attributes for group content
+        if (elem === 'g' &&
+            item.content
+        ) {
+            item.eachAttr(function(attr) {
+                if (attrsInheritable.indexOf(attr.name) >= 0) {
+                    inheritable.push(attr.name);
+                }
+            });
+
+            if (inheritable.length) {
+                item.content.forEach(function(content, i) {
+                    inheritable.forEach( function(inheritable, i) {
+                        if (content.hasAttr(inheritable)) {
+                            content.attr(inheritable).overriden = true;
+                        }
+                    } );
+                } );
+            }
         }
 
     }
