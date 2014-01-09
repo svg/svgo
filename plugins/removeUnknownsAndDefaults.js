@@ -139,16 +139,17 @@ exports.fn = function(item, params) {
                     for (key in inheritable) {
                         attr = content.attr(key);
 
-                        if (attr.value === inheritable[key]) {
-                            content.removeAttr(attr.name);
-                        } else {
-                            attr.overriden = true;
+                        if (attr) {
+                            if (attr.value === inheritable[key]) {
+                                content.removeAttr(attr.name);
+                            } else {
+                                attr.overriden = true;
+                            }
                         }
                     }
                 } );
             }
         }
-
     }
 
 };
