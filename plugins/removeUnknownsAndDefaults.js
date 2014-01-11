@@ -8,7 +8,8 @@ exports.params = {
     SVGid: true,
     unknownContent: true,
     unknownAttrs: true,
-    defaultAttrs: true
+    defaultAttrs: true,
+    uselessOverrides: true
 };
 
 var collections = require('./_collections'),
@@ -62,7 +63,7 @@ for (var elem in elems) {
  */
 exports.fn = function(item, params) {
 
-    var inheritable = { }, hasInheritable = false,
+    var inheritable = { },
         key, attr;
 
     // elems w/o namespace prefix
@@ -111,8 +112,14 @@ exports.fn = function(item, params) {
                         (
                             params.defaultAttrs &&
                             elems[elem].defaults &&
-                            !attr.overriden &&
-                            elems[elem].defaults[attr.name] === attr.value
+                            elems[elem].defaults[attr.name] === attr.value &&
+                            (!item.inheritedAttrs || undefined === item.inheritedAttrs[attr.name])
+                        ) ||
+                        // useless overrides
+                        (
+                            params.uselessOverrides &&
+                            item.inheritedAttrs &&
+                            item.inheritedAttrs[attr.name] === attr.value
                         )
                     ) {
                         item.removeAttr(attr.name);
@@ -127,24 +134,21 @@ exports.fn = function(item, params) {
         if (elem === 'g' &&
             item.content
         ) {
+            if (item.inheritedAttrs) {
+                for (key in item.inheritedAttrs) {
+                    inheritable[key] = item.inheritedAttrs[key];
+                }
+            }
+
             item.eachAttr(function(attr) {
                 if (attrsInheritable.indexOf(attr.name) >= 0) {
                     inheritable[attr.name] = attr.value;
-                    hasInheritable = true;
                 }
             });
 
-            if (hasInheritable) {
+            if (Object.keys(inheritable).length) {
                 item.content.forEach(function(content, i) {
-                    for (key in inheritable) {
-                        attr = content.attr(key);
-
-                        if (attr.value === inheritable[key]) {
-                            content.removeAttr(attr.name);
-                        } else {
-                            attr.overriden = true;
-                        }
-                    }
+                    content.inheritedAttrs = inheritable;
                 } );
             }
         }
