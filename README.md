@@ -116,6 +116,7 @@ Arguments:
 * with GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
+* as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * as an OSX Folder Action – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 
 ## TODO
