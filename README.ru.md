@@ -119,11 +119,6 @@ Arguments:
 * как таск для Gulp – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 
-## TODO
-
-* [v0.3.x](https://github.com/svg/svgo/issues?milestone=7&state=open)
-
-
 ## Лицензия и копирайты
 
 Данное программное обеспечение выпускается под [лицензией MIT](https://github.com/svg/svgo/blob/master/LICENSE).

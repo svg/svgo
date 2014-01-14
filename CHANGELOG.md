@@ -1,3 +1,10 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.4.4) ] 0.4.4 / 14.01.2014
+* new plugin [plugins/removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) (disabled by default, close [#159](https://github.com/svg/svgo/issues/159))
+* plugins/convertPathData: skip data concatenation for z instruction in collapseRepeated
+* plugins/removeUnknownsAndDefaults: do not remove overriden attributes with default values (fix [#161](https://github.com/svg/svgo/issues/161) and [#168](https://github.com/svg/svgo/issues/168))
+* plugins/removeViewBox: disable by default (fix [#139](https://github.com/svg/svgo/issues/139))
+* update README with [gulp task](https://github.com/ben-eb/gulp-svgmin)
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.3) ] 0.4.3 / 02.01.2014
 * new plugin [plugins/convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) (close [#96](https://github.com/svg/svgo/issues/96))
 * update sax version to fix [#140](https://github.com/svg/svgo/issues/140)
