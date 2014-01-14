@@ -2,7 +2,7 @@
 
 exports.type = 'perItem';
 
-exports.active = true;
+exports.active = false;
 
 var regViewBox = /^0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
     viewBoxElems = ['svg', 'pattern'];
