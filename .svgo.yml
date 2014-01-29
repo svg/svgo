@@ -44,3 +44,4 @@ plugins:
   - removeUnusedNS
   - transformsWithOnePath
   - sortAttrs
+  - removeTitle
