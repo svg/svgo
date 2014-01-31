@@ -2057,6 +2057,7 @@ exports.elems = {
 exports.editorNamespaces = [
     'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
     'http://www.inkscape.org/namespaces/inkscape',
+    'http://www.bohemiancoding.com/sketch/ns',
     'http://ns.adobe.com/AdobeIllustrator/10.0/',
     'http://ns.adobe.com/Graphs/1.0/',
     'http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/',
