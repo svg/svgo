@@ -82,16 +82,17 @@ function convertToRelative(path) {
 
     var instruction,
         data,
+        mM,
         newPoint,
         point = [0, 0],
         subpathPoint = [0, 0],
-        index = 0,
-        mM = false;
+        index = 0;
 
     path.forEach(function(item) {
 
         instruction = item.instruction;
         data = item.data;
+        mM = false;
 
         index++;
 
@@ -235,7 +236,6 @@ function convertToRelative(path) {
         // !data === z, reset current point
         else {
             point = subpathPoint;
-            mM = false;
         }
 
     });
