@@ -3,7 +3,7 @@
   "version": "0.4.4",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [ "svgo", "svg", "optimize", "minify" ],
-  "homepage": "http://svg.github.com/svgo/",
+  "homepage": "https://github.com/svg/svgo",
   "bugs": {
     "url": "https://github.com/svg/svgo/issues",
     "email": "kir@soulshine.in"
