@@ -44,5 +44,4 @@ plugins:
   - removeUnusedNS
   - transformsWithOnePath
   - sortAttrs
-  - removeDimensions
   - removeAttrs
