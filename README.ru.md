@@ -47,6 +47,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] склеивание нескольких Path в одну кривую
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] конвертирование простых форм в Path
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] !!translation needed - remove attributes by pattern
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 
