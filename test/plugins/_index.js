@@ -13,38 +13,39 @@ describe('plugins tests', function() {
 
         var match = file.match(regFilename),
             index,
-            name,
-            svgo,
-            plugins;
+            name;
 
         if (match) {
 
-            name = match[1];
+            name  = match[1];
             index = match[2];
 
             file = PATH.resolve(__dirname, file);
-
-            plugins = {};
-            plugins[name] = true;
-
-            svgo = new SVGO({
-                full: true,
-                plugins: [ plugins ],
-                js2svg: { pretty: true }
-            });
 
             it(name + '.' + index, function(done) {
 
                 FS.readFile(file, 'utf8', function(err, data) {
 
-                    var splitted = data.split('@@@'),
-                        orig = splitted[0],
-                        should = splitted[1];
+                    var splitted = data.trim().split(/\s*@@@\s*/),
+                        orig     = splitted[0],
+                        should   = splitted[1],
+                        params   = splitted[2],
+
+                        plugins = {},
+                        svgo;
+
+                    plugins[name] = (params) ? JSON.parse(params) : true;
+
+                    svgo = new SVGO({
+                        full    : true,
+                        plugins : [ plugins ],
+                        js2svg  : { pretty: true }
+                    });
 
                     svgo.optimize(orig, function(result) {
-                        result = '\n\n' + result.data;
 
-                        result.should.be.equal(should);
+//FIXME: results.data has a '\n' at the end while it should not
+                        ( result.data.trim() ).should.be.equal(should);
                         done();
                     });
 

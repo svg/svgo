@@ -45,3 +45,4 @@ plugins:
   - transformsWithOnePath
   - sortAttrs
   - removeDimensions
+  - removeAttrs

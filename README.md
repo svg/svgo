@@ -48,6 +48,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] convert some basic shapes to path
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] apply transforms, crop by real width, center vertical alignment and resize SVG with one Path inside
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] remove width/height attributes if viewBox is present
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] remove attributes by pattern
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 
