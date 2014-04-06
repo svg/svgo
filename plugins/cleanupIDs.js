@@ -6,7 +6,8 @@ exports.active = true;
 
 exports.params = {
     remove: true,
-    minify: true
+    minify: true,
+    prefix: ''
 };
 
 var referencesProps = require('./_collections').referencesProps,
@@ -123,7 +124,7 @@ exports.fn = function(data, params) {
                 // replace referenced IDs with the minified ones
                 if (params.minify) {
 
-                    currentIDstring = getIDstring(currentID = generateID(currentID));
+                    currentIDstring = getIDstring(currentID = generateID(currentID), params);
                     IDs[k].attr('id').value = currentIDstring;
 
                     referencesIDs[k].forEach(function(attr) {
@@ -190,9 +191,9 @@ function generateID(currentID) {
  * @param {Array} arr input ID array
  * @return {String} output ID string
  */
-function getIDstring(arr) {
+function getIDstring(arr, params) {
 
-    var str = '';
+    var str = params.prefix;
 
     arr.forEach(function(i) {
         str += generateIDchars[i];
