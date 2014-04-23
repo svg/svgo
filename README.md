@@ -37,6 +37,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] collapse multiple transforms into one, convert matrices to the short aliases and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] remove unknown elements content and attributes, remove attrs with default values
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) ] remove non-inheritable group's "presentation" attributes
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] remove useless stroke and fill attrs.
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] remove unused namespaces declaration
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] remove unused and minify used IDs
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] round numeric values to the fixed precision, remove default 'px' units
@@ -46,6 +47,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] remove raster images (disabled by default)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] merge multiple Paths into one
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] convert some basic shapes to path
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) ] sort element attributes for epic readability (disabled by default)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] apply transforms, crop by real width, center vertical alignment and resize SVG with one Path inside (disabled by default)
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
