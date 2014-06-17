@@ -1315,7 +1315,6 @@ exports.elems = {
         ],
         defaults: {
             x1: '0',
-            y1: '0',
             x2: '100%',
             y2: '0',
             spreadMethod: 'pad'
