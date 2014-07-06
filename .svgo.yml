@@ -44,4 +44,4 @@ plugins:
   - removeUnusedNS
   - transformsWithOnePath
   - sortAttrs
-  - prefixIDs
+  
