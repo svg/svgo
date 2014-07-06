@@ -35,7 +35,8 @@ describe('config', function() {
             }),
             removeDoctype = getPlugin('removeDoctype', config.plugins),
             convertColors = getPlugin('convertColors', config.plugins),
-            removeRasterImages = getPlugin('removeRasterImages', config.plugins);
+            removeRasterImages = getPlugin('removeRasterImages', config.plugins),
+            prefixIDs = getPlugin('prefixIDs', config.plugins);
 
         it('removeDoctype plugin should be disabled', function() {
             return removeDoctype.active.should.be.false;
