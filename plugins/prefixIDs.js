@@ -5,7 +5,7 @@ exports.type = 'perItem';
 exports.active = true;
 
 exports.params = {
-    prefix: ""
+    prefix: "pre-"
 };
 
 var regReferencesUrl = /^url\(#(.+?)\)$/;
