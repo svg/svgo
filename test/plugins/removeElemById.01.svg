@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="parent">
+        <g id="test_to_delete">
+            <rect id="some_grandchild"/>
+        </g>
+        <g id="some_child">
+            <circle id="im_staying"/>
+            <rect id="test_child_to_delete"/>
+        </g>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="parent">
+        <g id="some_child">
+            <circle id="im_staying"/>
+        </g>
+    </g>
+</svg>
