@@ -9,12 +9,13 @@ exports.params = {
 };
 
 /**
- * Cleanup attributes values from newlines, trailing and repeating spaces.
+ * Removes specific elements (by their ID). This plugin can delete multiple 
+ * ids, as specified in the "ids" array
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
  *
- * @author Kir Belevich
+ * @author Michael Porath (@poezn)
  */
 exports.fn = function(item, params) {
 	var idsToDelete = params.ids;
