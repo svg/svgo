@@ -29,7 +29,7 @@
             referenced text
         </text>
     </defs>
-    <g>
+    <g id="g001">
         <circle fill="url(#a)" cx="60" cy="60" r="50"/>
         <tref xlink:href="#b"/>
     </g>

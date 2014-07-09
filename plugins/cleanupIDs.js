@@ -6,7 +6,8 @@ exports.active = true;
 
 exports.params = {
     remove: true,
-    minify: true
+    minify: true,
+    keepGroupIds: true
 };
 
 var referencesProps = require('./_collections').referencesProps,
@@ -142,7 +143,15 @@ exports.fn = function(data, params) {
         if (params.remove) {
 
             for(var ID in IDs) {
-                IDs[ID].removeAttr('id');
+
+                var item = IDs[ID];
+                // skip if keeping ids for <g> elements
+                if (item.elem === "g" && params.keepGroupIds) {
+                    continue;
+                }
+
+
+                item.removeAttr('id');
             }
 
         }
