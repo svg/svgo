@@ -145,7 +145,6 @@ exports.fn = function(data, params) {
             for(var ID in IDs) {
 
                 var item = IDs[ID];
-                console.log(item)
                 // skip if keeping ids for <g> elements
                 if (item.elem === "g" && params.keepGroupIds) {
                     continue;
