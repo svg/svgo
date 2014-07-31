@@ -19,10 +19,10 @@
     <path d="M10 50"/>
     <path d="M10 50h10"/>
     <path d="M10 50v10"/>
-    <path d="M10 50l10-20h-10"/>
-    <path d="M10 50l10-20v-10"/>
-    <path d="M10 50l10-20h-10l30 20"/>
-    <path d="M10 50l10-20v-10l20 30"/>
+    <path d="M10 50l10-20H10"/>
+    <path d="M10 50l10-20V20"/>
+    <path d="M10 50l10-20H10l30 20"/>
+    <path d="M10 50l10-20V20l20 30"/>
     <path d="M10 50h20"/>
     <path d="M10 50h20"/>
     <path d="M10 50h30"/>

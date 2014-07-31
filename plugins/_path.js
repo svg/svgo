@@ -254,8 +254,8 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
 
                 // then apply it only to the first absoluted M
                 newPoint = transformPoint(matrix.data, pathItem.data[0], pathItem.data[1]);
-                pathItem.data[0] = newPoint[0];
-                pathItem.data[1] = newPoint[1];
+                pathItem.data[0] = pathItem.coords[0] = newPoint[0];
+                pathItem.data[1] = pathItem.coords[1] = newPoint[1];
 
                 // clear translate() data from transform matrix
                 matrix.data[4] = 0;
@@ -268,6 +268,9 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
                     pathItem.data[i] = newPoint[0];
                     pathItem.data[i + 1] = newPoint[1];
                 }
+
+                pathItem.coords[0] = pathItem.base[0] + pathItem.data[pathItem.data.length - 2]
+                pathItem.coords[1] = pathItem.base[1] + pathItem.data[pathItem.data.length - 1]
 
             }
 

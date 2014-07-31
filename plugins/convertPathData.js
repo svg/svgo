@@ -13,6 +13,7 @@ exports.params = {
     floatPrecision: 3,
     removeUseless: true,
     collapseRepeated: true,
+    utilizeAbsolute: true,
     leadingZero: true,
     negativeExtraSpace: true
 };
@@ -21,6 +22,9 @@ var pathElems = require('./_collections.js').pathElems,
     path2js = require('./_path.js').path2js,
     js2path = require('./_path.js').js2path,
     applyTransforms = require('./_path.js').applyTransforms,
+    cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
+    precision,
+    error,
     hasMarkerMid;
 
 /**
@@ -43,14 +47,15 @@ exports.fn = function(item, params) {
 
     if (item.isElem(pathElems) && item.hasAttr('d')) {
 
+        precision = params.floatPrecision;
+        error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
         hasMarkerMid = item.hasAttr('marker-mid');
 
         var data = path2js(item.attr('d').value);
 
-
         // TODO: get rid of functions returns
         if (data.length) {
-            data = convertToRelative(data);
+            convertToRelative(data);
 
             if (params.applyTransforms) {
                 data = applyTransforms(item, data, params.applyTransformsStroked, params.floatPrecision);
@@ -60,6 +65,10 @@ exports.fn = function(item, params) {
 
             if (params.collapseRepeated) {
                 data = collapseRepeated(data, params);
+            }
+
+            if (params.utilizeAbsolute) {
+                data = convertToMixed(data, params);
             }
 
             item.pathJS = data;
@@ -80,20 +89,14 @@ exports.fn = function(item, params) {
  */
 function convertToRelative(path) {
 
-    var instruction,
-        data,
-        newPoint,
-        point = [0, 0],
+    var point = [0, 0],
         subpathPoint = [0, 0],
-        index = 0,
         mM = false;
 
-    path.forEach(function(item) {
+    path.forEach(function(item, index) {
 
-        instruction = item.instruction;
-        data = item.data;
-
-        index++;
+        var instruction = item.instruction,
+            data = item.data;
 
         // data !== !z
         if (data) {
@@ -102,13 +105,13 @@ function convertToRelative(path) {
             // recalculate current point
             if ('mcslqta'.indexOf(instruction) > -1) {
 
-                newPoint = data.slice(-2);
+                var newPoint = data.slice(-2);
 
                 point[0] += newPoint[0];
                 point[1] += newPoint[1];
 
                 if (instruction === 'm') {
-                    if (index === 1) {
+                    if (index === 0) {
                         instruction = 'M';
                         mM = true;
                     }
@@ -127,23 +130,22 @@ function convertToRelative(path) {
             }
 
             // convert absolute path data coordinates to relative
+            // if "M" was not transformed from "m"
             // M → m
-            if (instruction === 'M') {
+            if (
+                instruction === 'M' &&
+                (!mM || index > 0)
+            ) {
 
-                if (index > 1) {
-                    instruction = 'm';
-                }
+                if (index > 0) instruction = 'm';
 
-                // if "M" was not transformed from "m"
-                if (!mM) {
-                    data[0] -= point[0];
-                    data[1] -= point[1];
+                data[0] -= point[0];
+                data[1] -= point[1];
 
-                    point[0] += data[0];
-                    point[1] += data[1];
+                point[0] += data[0];
+                point[1] += data[1];
 
-                    subpathPoint = point.slice(-2);
-                }
+                subpathPoint = point.slice(-2);
 
             }
 
@@ -230,13 +232,19 @@ function convertToRelative(path) {
             item.instruction = instruction;
             item.data = data;
 
+            // store absolute coordinates for later use
+            item.coords = point.slice(-2);
+
         }
 
         // !data === z, reset current point
         else {
+            item.coords = subpathPoint.slice(0);
             point = subpathPoint;
             mM = false;
         }
+
+        item.base = index > 0 ? path[index - 1].coords : [0, 0];
 
     });
 
@@ -253,19 +261,61 @@ function convertToRelative(path) {
  */
 function filters(path, params) {
 
-    var instruction,
-        data,
+    var relSubpoint = [0, 0],
+        pathBase = [0, 0],
         prev;
 
     path = path.filter(function(item) {
 
-        instruction = item.instruction;
-        data = item.data;
+        var instruction = item.instruction,
+            data = item.data;
 
         if (data) {
 
-            if (params.floatPrecision !== false) {
-                data = roundData(data, params.floatPrecision);
+            if (instruction === 's') {
+                var sdata = [0, 0].concat(data);
+
+                if (prev && 'cs'.indexOf(prev.instruction) > -1) {
+                    var pdata = prev.data,
+                        n = pdata.length;
+
+                    // (-x, -y) of the prev tangent point relative to the current point
+                    sdata[0] = pdata[n - 2] - pdata[n - 4];
+                    sdata[1] = pdata[n - 1] - pdata[n - 3];
+                }
+
+            }
+
+            // Rounding relative coordinates, taking in account accummulating error
+            // to get closer to absolute coordinates. Sum of rounded value remains same:
+            // l .25 3 .25 2 .25 3 .25 2 -> l .3 3 .2 2 .3 3 .2 2
+            if (precision !== false) {
+                if ('mltqsc'.indexOf(instruction) > -1) {
+                    for (var i = data.length; i--;) {
+                        data[i] += item.base[i % 2] - relSubpoint[i % 2];
+                    }
+                } else if (instruction == 'h') {
+                    data[0] += item.base[0] - relSubpoint[0];
+                } else if (instruction == 'v') {
+                    data[0] += item.base[1] - relSubpoint[1];
+                } else if (instruction == 'a') {
+                    data[5] += item.base[0] - relSubpoint[0];
+                    data[6] += item.base[1] - relSubpoint[1];
+                }
+                roundData(data);
+
+                if      (instruction == 'h') relSubpoint[0] += data[0];
+                else if (instruction == 'v') relSubpoint[1] += data[0];
+                else {
+                    relSubpoint[0] += data[data.length - 2];
+                    relSubpoint[1] += data[data.length - 1];
+                }
+                roundData(relSubpoint);
+
+                if (instruction.toLowerCase() == 'm') {
+                    pathBase[0] = relSubpoint[0];
+                    pathBase[1] = relSubpoint[1];
+                }
             }
 
             // convert straight curves into lines segments
@@ -284,18 +334,15 @@ function filters(path, params) {
                 }
 
                 // s
-                else if (instruction === 's') {
-
-                    if (
-                        isCurveStraightLine(
-                            [ 0, data[0], data[2] ],
-                            [ 0, data[1], data[3] ]
-                        )
-                    ) {
-                        instruction = 'l';
-                        data = data.slice(-2);
-                    }
-
+                else if (
+                    instruction === 's' &&
+                    isCurveStraightLine(
+                        [ 0, sdata[0], sdata[2], sdata[4] ],
+                        [ 0, sdata[1], sdata[3], sdata[5] ]
+                    )
+                ) {
+                    instruction = 'l';
+                    data = data.slice(-2);
                 }
 
                 // q
@@ -364,10 +411,10 @@ function filters(path, params) {
             ) {
                 if (data[1] === 0) {
                     instruction = 'h';
-                    data = [data[0]];
+                    data.pop();
                 } else if (data[0] === 0) {
                     instruction = 'v';
-                    data = [data[1]];
+                    data.shift();
                 }
             }
 
@@ -439,7 +486,7 @@ function filters(path, params) {
             // remove useless non-first path segments
             if (params.removeUseless) {
 
-                // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
+                // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
                     (
                      'lhvqtcs'.indexOf(instruction) > -1
@@ -465,7 +512,88 @@ function filters(path, params) {
 
             prev = item;
 
+        } else {
+
+            // z resets coordinates
+            relSubpoint[0] = pathBase[0];
+            relSubpoint[1] = pathBase[1];
+
         }
+
+        return true;
+
+    });
+
+    return path;
+
+}
+
+/**
+ * Writes data in shortest form using absolute or relative coordinates.
+ *
+ * @param {Array} data input path data
+ * @return {Boolean} output
+ */
+function convertToMixed(path, params) {
+
+    var currentPoint = [0, 0],
+        prev = path[0];
+
+    path = path.filter(function(item, index) {
+
+        if (index == 0) return true;
+        if (!item.data) {
+            prev = item;
+            return true;
+        }
+
+        var instruction = item.instruction,
+            data = item.data,
+            adata = data && data.slice(0);
+
+        if ('mltqsc'.indexOf(instruction) > -1) {
+            for (var i = adata.length; i--;) {
+                adata[i] += item.base[i % 2];
+            }
+        } else if (instruction == 'h') {
+                adata[0] += item.base[0];
+        } else if (instruction == 'v') {
+                adata[0] += item.base[1];
+        } else if (instruction == 'a') {
+                adata[5] += item.base[0];
+                adata[6] += item.base[1];
+        }
+
+        roundData(adata);
+
+        var absoluteDataStr = cleanupOutData(adata, params),
+            relativeDataStr = cleanupOutData(data, params);
+
+        // Convert to absolute coordinates if it's shorter.
+        // v-20 -> V0
+        // Don't convert if it fits following previous instruction.
+        // l20 30-10-50 instead of l20 30L20 30
+        if (
+            absoluteDataStr.length < relativeDataStr.length &&
+            !(
+                params.negativeExtraSpace && instruction == prev.instruction &&
+                absoluteDataStr.length == relativeDataStr.length - 1 &&
+                (data[0] < 0 || 0 < data[0] && data[0] < 1 && prev.data[prev.data.length - 1] % 1)
+            )
+        ) {
+            if (instruction.toUpperCase() != prev.instruction) {
+                item.instruction = instruction.toUpperCase();
+                item.data = adata;
+            } else {
+                prev.data = prev.data.concat(adata);
+                return false;
+            }
+        } else if (instruction == prev.instruction) {
+            prev.data = prev.data.concat(data);
+            return false;
+        }
+
+        prev = item;
 
         return true;
 
@@ -481,7 +609,7 @@ function filters(path, params) {
  * @param {Array} path input path data
  * @return {Array} output path data
  */
-function collapseRepeated(path) {
+function collapseRepeated(path, params) {
 
     var prev;
 
@@ -490,18 +618,24 @@ function collapseRepeated(path) {
         if (
             !hasMarkerMid &&
             prev &&
-            item.instruction === prev.instruction
+            item.instruction === prev.instruction &&
+            (
+                !item.data ||
+                'hv'.indexOf(item.instruction) > -1 && (prev.data[0] >= 0) == (item.data[0] >= 0) ||
+                !params.utilizeAbsolute
+            )
         ) {
             // increase previous h or v data with current
-            if ((item.instruction === 'h' || item.instruction === 'v') && (prev.data[0] >= 0) == (item.data[0] >= 0)) {
+            if ('hv'.indexOf(item.instruction) > -1) {
                 prev.data[0] += item.data[0];
             // concat previous data with current if it is not z
-            } else if (item.instruction !== 'z') {
+            } else if (item.data) {
                 prev.data = prev.data.concat(item.data);
             }
 
-            // filter current item
+            // filter out current item
             return false;
+
         }
 
         prev = item;
@@ -517,23 +651,40 @@ function collapseRepeated(path) {
 /**
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
+ * Smart rounds values like 2.349 to 2.35.
  *
  * @param {Array} data input data array
  * @param {Number} fixed number of decimals
  * @return {Array} output data array
  */
-function roundData(data, fixed) {
+function roundData(data) {
 
-    return data.map(function(num) {
-        return +num.toFixed(fixed);
-    });
+    function round(data) {
+        for (var i = data.length; i--;) {
+            data[i] = +data[i].toFixed(precision)
+        }
+        return data;
+    }
+
+    function strongRound(data) {
+        for (var i = data.length; i--;) {
+            var rounded = +data[i].toFixed(precision - 1);
+            data[i] = +Math.abs(rounded - data[i]).toFixed(precision) > error ?
+                +data[i].toFixed(precision) :
+                rounded;
+        }
+        return data;
+    }
+
+    roundData = precision > 0 ? strongRound : round;
+
+    return roundData(data);
 
 }
 
 /**
- * Checks if curve is a straight line by calculating a polygon area.
- *
- * @see http://www.mathopenref.com/coordpolygonarea2.html
+ * Checks if a curve is a straight line by measuring distance
+ * from middle points to the line formed by end points.
  *
  * @param {Array} xs array of curve points x-coordinates
  * @param {Array} ys array of curve points y-coordinates
@@ -542,16 +693,20 @@ function roundData(data, fixed) {
 
 function isCurveStraightLine(xs, ys) {
 
-    var points = xs.length,
-        area = 0,
-        j = points - 1;
+    // Get line equation a·x + b·y + c = 0 coefficients a, b, c by start and end points.
+    var i = xs.length - 1,
+        a = ys[0] - ys[i], // y1 − y2
+        b = xs[i] - xs[0], // x2 − x1
+        c = xs[0] * ys[i] - xs[i] * ys[0], // x1·y2 − x2·y1
+        d = 1 / (a * a + b * b); // same part for all points
 
-    for (var i=0; i < points; i++) {
-        area += (xs[j] + xs[i]) * (ys[j] - ys[i]);
-        j = i;
+    if (!isFinite(d)) return false; // curve that ends at start point isn't the case
+
+    // Distance from point (x0, y0) to the line is sqrt((c − a·x0 − b·y0)² / (a² + b²))
+    while (--i) {
+        if (Math.sqrt(Math.pow(c - a * xs[i] - b * ys[i], 2) * d) > error)
+            return false;
     }
-
-    if (+area.toFixed(2)) return false;
 
     return true;
 
