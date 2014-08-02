@@ -1,6 +1,6 @@
 {
   "name": "svgo",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [ "svgo", "svg", "optimize", "minify" ],
   "homepage": "https://github.com/svg/svgo",
@@ -17,6 +17,10 @@
     "name": "Sergey Belov",
     "email": "peimei@ya.ru",
     "url": "http://github.com/arikon"
+  }, {
+    "name": "Lev Solntsev",
+    "email": "lev.sun@ya.ru",
+    "url": "http://github.com/GreLI"
   }],
   "repository": {
     "type": "git",
@@ -39,14 +43,14 @@
     "coa": "~0.4.0",
     "js-yaml": "~2.1.0",
     "colors": "~0.6.0",
-    "whet.extend": ""
+    "whet.extend": "~0.9.9"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
     "should": "~2.1.0",
     "istanbul": "~0.2.0",
-    "mocha-istanbul": "",
-    "coveralls": ""
+    "mocha-istanbul": "~0.2.0",
+    "coveralls": "~2.11.1"
   },
   "engines": {
     "node": ">=0.8.0"
