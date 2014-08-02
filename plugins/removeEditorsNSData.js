@@ -7,6 +7,10 @@ exports.active = true;
 var editorNamespaces = require('./_collections').editorNamespaces,
     prefixes = [];
 
+exports.params = {
+    additionalNamespaces: []
+};
+
 /**
  * Remove editors namespaces, elements and attributes.
  *
@@ -16,11 +20,16 @@ var editorNamespaces = require('./_collections').editorNamespaces,
  * <path sodipodi:nodetypes="cccc"/>
  *
  * @param {Object} item current iteration item
+ * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
+exports.fn = function(item, params) {
+
+    if (Array.isArray(params.additionalNamespaces)) {
+        editorNamespaces = editorNamespaces.concat(params.additionalNamespaces);
+    }
 
     if (item.elem) {
 
