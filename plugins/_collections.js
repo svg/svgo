@@ -1180,7 +1180,7 @@ exports.elems = {
             'switch',
             'text',
             'view'
-        ],
+        ]
     },
     glyphRef: {
         attrsGroups: [
@@ -1694,7 +1694,7 @@ exports.elems = {
             'animation',
             'xlink',
             'animationAttributeTarget',
-            'animationTiming',
+            'animationTiming'
         ],
         attrs: [
             'externalResourcesRequired',
