@@ -1,3 +1,13 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.4.5) ] 0.4.5 / 02.02.2014
+* significally improved plugin [plugins/convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js):
+  - Now data is being written relative or absolute whichever is shorter. You can turn it off by setting ``utilizeAbsolute`` to ``false``.
+  - Smarter rounding: values like 2.499 now rounds to 2.5. Rounding now takes in account accumulutive error meaning that points will not be misplaced due to rounding more than it neccessary.
+  - Fixed couple bugs.
+* ``--output`` option now can be a folder along with ``--folder``, thanks to @mako-taco.
+* [plugins/cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) now have ``prefix`` option in case you want to combine multiple svg later (by @DanielMazurkiewicz).
+* Quotes now being escaped in attributes (by @ditesh).
+* Minor bugfixes.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.4) ] 0.4.4 / 14.01.2014
 * new plugin [plugins/removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) (disabled by default, close [#159](https://github.com/svg/svgo/issues/159))
 * plugins/convertPathData: skip data concatenation for z instruction in collapseRepeated
