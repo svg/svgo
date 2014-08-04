@@ -41,14 +41,14 @@
   "dependencies": {
     "sax": "~0.6.0",
     "coa": "~0.4.0",
-    "js-yaml": "~2.1.0",
+    "js-yaml": "~3.1.0",
     "colors": "~0.6.0",
     "whet.extend": "~0.9.9"
   },
   "devDependencies": {
-    "mocha": "~1.14.0",
-    "should": "~2.1.0",
-    "istanbul": "~0.2.0",
+    "mocha": "~1.21.3",
+    "should": "~4.0.4",
+    "istanbul": "~0.3.0",
     "mocha-istanbul": "~0.2.0",
     "coveralls": "~2.11.1"
   },
