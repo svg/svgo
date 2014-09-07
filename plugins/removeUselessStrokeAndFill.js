@@ -48,7 +48,14 @@ exports.fn = function(item, params) {
         ) {
             item.eachAttr(function(attr) {
                 if (regFillProps.test(attr.name)) {
-                    item.removeAttr(attr.name);
+                    if (
+                        attr.name !== 'fill-rule' ||
+                        (attr.name === 'fill-rule' &&
+                        attr.value === 'nonzero'
+                        )
+                    ) {
+                        item.removeAttr(attr.name);
+                    }
                 }
             });
 
