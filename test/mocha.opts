@@ -3,3 +3,4 @@
 test/config
 test/svg2js
 test/plugins
+test/jsapi
