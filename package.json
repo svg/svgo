@@ -41,7 +41,7 @@
   "dependencies": {
     "sax": "~0.6.0",
     "coa": "~0.4.0",
-    "js-yaml": "~2.1.0",
+    "js-yaml": "~3.2.2",
     "colors": "~0.6.0",
     "whet.extend": "~0.9.9"
   },
