@@ -50,8 +50,8 @@ exports.fn = function(item, params) {
                 if (
                     regFillProps.test(attr.name) &&
                     (attr.name !== 'fill-rule' ||
-                    (attr.name === 'fill-rule' &&
-                    attr.value === 'nonzero')
+                     attr.name === 'fill-rule' &&
+                     attr.value === 'nonzero'
                     )
                 ) {
                     item.removeAttr(attr.name);
