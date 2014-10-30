@@ -47,15 +47,14 @@ exports.fn = function(item, params) {
             item.hasAttr('fill-opacity', '0')
         ) {
             item.eachAttr(function(attr) {
-                if (regFillProps.test(attr.name)) {
-                    if (
-                        attr.name !== 'fill-rule' ||
-                        (attr.name === 'fill-rule' &&
-                        attr.value === 'nonzero'
-                        )
-                    ) {
-                        item.removeAttr(attr.name);
-                    }
+                if (
+                    regFillProps.test(attr.name) &&
+                    (attr.name !== 'fill-rule' ||
+                    (attr.name === 'fill-rule' &&
+                    attr.value === 'nonzero')
+                    )
+                ) {
+                    item.removeAttr(attr.name);
                 }
             });
 
