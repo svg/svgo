@@ -493,6 +493,7 @@ function filters(path, params) {
                     ) &&
                     data.every(function(i) { return i === 0; })
                 ) {
+                    path[index] = prev;
                     return false;
                 }
 
@@ -502,6 +503,7 @@ function filters(path, params) {
                     data[5] === 0 &&
                     data[6] === 0
                 ) {
+                    path[index] = prev;
                     return false;
                 }
 
@@ -586,10 +588,14 @@ function convertToMixed(path, params) {
                 item.data = adata;
             } else {
                 prev.data = prev.data.concat(adata);
+                prev.coords = item.coords;
+                path[index] = prev;
                 return false;
             }
         } else if (instruction == prev.instruction) {
             prev.data = prev.data.concat(data);
+            prev.coords = item.coords;
+            path[index] = prev;
             return false;
         }
 
