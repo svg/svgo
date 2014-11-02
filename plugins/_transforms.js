@@ -51,11 +51,31 @@ exports.transform2js = function(transformString) {
  */
 exports.transformsMultiply = function(transforms) {
 
+    var simple = true,
+        scalex = 1,
+        scaley = 1,
+        rotate = 0;
+
     // convert transforms objects to the matrices
     transforms = transforms.map(function(transform) {
-        return transform.name === 'martix' ?
-            transform :
-            transformToMatrix(transform);
+        if (transform.name === 'matrix') {
+            simple = false;
+            return transform.data;
+        } else if (simple) {
+            if (transform.name == 'scale') {
+                scalex *= transform.data[0];
+                scaley *= transform.data[1];
+            } else if (transform.name == 'rotate') {
+                if (scalex.toFixed(9) == scaley.toFixed(9)) {
+                    rotate += transform.data[0];
+                } else {
+                    simple = false;
+                }
+            } else if (transform.name != 'translate') {
+                simple = false;
+            }
+        }
+        return transformToMatrix(transform);
     });
 
     // multiply all matrices into one
@@ -64,7 +84,16 @@ exports.transformsMultiply = function(transforms) {
         data: transforms.reduce(function(a, b) {
             return multiplyTransformMatrices(a, b);
         })
-    };
+    }
+
+    if (simple) {
+        transforms.splitted = {
+            scalex: scalex,
+            scaley: scaley,
+            rotate: rotate,
+            isSimple: true
+        }
+    }
 
     return transforms;
 

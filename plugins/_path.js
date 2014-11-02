@@ -188,14 +188,12 @@ exports.relative2absolute = function(data) {
  */
 exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrecision) {
     // if there are no 'stroke' attr and 'a' segments
-    if (
-        !elem.hasAttr('transform') ||
-        !path.every(function(i) { return i.instruction !== 'a'; })
-    ) {
-      return path;
-    }
+    if (!elem.hasAttr('transform'))
+        return path;
+
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
-          newPoint, sx, sy, strokeWidth;
+        splittedMatrix = matrix.splitted || splitMatrix(matrix.data),
+        newPoint, sx, sy, strokeWidth;
 
     if (elem.hasAttr('stroke') || elem.hasAttr('stroke-width')){
       if (!applyTransformsStroked){
@@ -228,6 +226,32 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
           });
         }
       }
+    }
+
+    // If an 'a' command can't be transformed directly, convert path to curves.
+    if (!splittedMatrix.isSimple && path.some(function(i) { return i.instruction == 'a' })) {
+        var prev;
+        path = path.reduce(function(newPath, item){
+            if (item.instruction == 'a') {
+                var curves = a2c.apply(0, [0, 0].concat(item.data)),
+                    curveData;
+                while ((curveData = curves.splice(0,6)).length) {
+                    item = {
+                        instruction: 'c',
+                        data: curveData,
+                        base: prev.coords
+                    };
+                    item.coords = [item.base[0] + item.data[4], item.base[1] + item.data[5]];
+                    prev = item;
+                    newPath.push(item);
+                }
+            } else {
+                newPath.push(item);
+                if (prev) item.base = prev.coords;
+                prev = item;
+            }
+            return newPath;
+        }, []);
     }
 
     path.forEach(function(pathItem) {
@@ -266,10 +290,22 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
 
             } else {
 
-                for (var i = 0; i < pathItem.data.length; i += 2) {
-                    newPoint = transformPoint(matrix.data, pathItem.data[i], pathItem.data[i + 1]);
-                    pathItem.data[i] = newPoint[0];
-                    pathItem.data[i + 1] = newPoint[1];
+                if (pathItem.instruction == 'a') {
+
+                    pathItem.data[0] *= splittedMatrix.scalex;
+                    pathItem.data[1] *= splittedMatrix.scaley;
+                    pathItem.data[2] += splittedMatrix.rotate;
+                    newPoint = transformPoint(matrix.data, pathItem.data[5], pathItem.data[6]);
+                    pathItem.data[5] = newPoint[0];
+                    pathItem.data[6] = newPoint[1];
+
+                } else {
+
+                    for (var i = 0; i < pathItem.data.length; i += 2) {
+                        newPoint = transformPoint(matrix.data, pathItem.data[i], pathItem.data[i + 1]);
+                        pathItem.data[i] = newPoint[0];
+                        pathItem.data[i + 1] = newPoint[1];
+                    }
                 }
 
                 pathItem.coords[0] = pathItem.base[0] + pathItem.data[pathItem.data.length - 2]
@@ -520,4 +556,152 @@ exports.js2path = function(path, params) {
 
     return pathString;
 
+};
+
+/* Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
+ * Thanks to Dmitry Baranovskiy for his great work!
+ */
+
+function norm(a) {
+    return a[0] * a[0] + a[1] * a[1];
+}
+
+function normalize(a) {
+    var mag = Math.sqrt(norm(a));
+    if (a[0]) a[0] /= mag;
+    if (a[1]) a[1] /= mag;
+}
+
+function deg(rad) {
+    return rad * 180 / Math.PI % 360;
+}
+
+ function determinant(matrix) {
+    return matrix[0] * matrix[3] - matrix[1] * matrix[2];
+};
+
+/* Splits matrix into primitive transformations
+ = (object) in format:
+ o dx (number) translation by x
+ o dy (number) translation by y
+ o scalex (number) scale by x
+ o scaley (number) scale by y
+ o shear (number) shear
+ o rotate (number) rotation in deg
+ o isSimple (boolean) could it be represented via simple transformations
+ */
+
+function splitMatrix(matrix) {
+    var out = {};
+    // translation
+    out.dx = matrix[4];
+    out.dy = matrix[5];
+    // scale and shear
+    var row = [[matrix[0] , matrix[2] ], [matrix[1] , matrix[3]]];
+    out.scalex = Math.sqrt(norm(row[0]));
+    normalize(row[0]);
+    out.shear = row[0][0] * row[1][0] + row[0][1] * row[1][1];
+    row[1] = [row[1][0] - row[0][0] * out.shear, row[1][1] - row[0][1] * out.shear];
+    out.scaley = Math.sqrt(norm(row[1]));
+    normalize(row[1]);
+    out.shear /= out.scaley;
+    if (determinant(matrix) < 0) {
+        out.scalex = -out.scalex;
+    }
+    // rotation
+    var sin = -row[0][1],
+        cos = row[1][1];
+    if (cos < 0) {
+        out.rotate = deg(Math.acos(cos));
+        if (sin < 0) {
+            out.rotate = 360 - out.rotate;
+        }
+    } else {
+        out.rotate = deg(Math.asin(sin));
+    }
+    out.isSimple = !+out.shear.toFixed(9) && (out.scalex.toFixed(9) == out.scaley.toFixed(9) || !out.rotate);
+    return out;
+};
+
+function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
+    // for more information of where this Math came from visit:
+    // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
+    var _120 = Math.PI * 120 / 180,
+        rad = Math.PI / 180 * (+angle || 0),
+        res = [],
+        rotateX = function(x, y, rad) { return x * Math.cos(rad) - y * Math.sin(rad) },
+        rotateY = function(x, y, rad) { return x * Math.sin(rad) + y * Math.cos(rad) };
+    if (!recursive) {
+        x1 = rotateX(x1, y1, -rad);
+        y1 = rotateY(x1, y1, -rad);
+        x2 = rotateX(x2, y2, -rad);
+        y2 = rotateY(x2, y2, -rad);
+        var cos = Math.cos(Math.PI / 180 * angle),
+            sin = Math.sin(Math.PI / 180 * angle),
+            x = (x1 - x2) / 2,
+            y = (y1 - y2) / 2;
+        var h = (x * x) / (rx * rx) + (y * y) / (ry * ry);
+        if (h > 1) {
+            h = Math.sqrt(h);
+            rx = h * rx;
+            ry = h * ry;
+        }
+        var rx2 = rx * rx,
+            ry2 = ry * ry,
+            k = (large_arc_flag == sweep_flag ? -1 : 1) *
+                Math.sqrt(Math.abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x))),
+            cx = k * rx * y / ry + (x1 + x2) / 2,
+            cy = k * -ry * x / rx + (y1 + y2) / 2,
+            f1 = Math.asin(((y1 - cy) / ry).toFixed(9)),
+            f2 = Math.asin(((y2 - cy) / ry).toFixed(9));
+
+        f1 = x1 < cx ? Math.PI - f1 : f1;
+        f2 = x2 < cx ? Math.PI - f2 : f2;
+        f1 < 0 && (f1 = Math.PI * 2 + f1);
+        f2 < 0 && (f2 = Math.PI * 2 + f2);
+        if (sweep_flag && f1 > f2) {
+            f1 = f1 - Math.PI * 2;
+        }
+        if (!sweep_flag && f2 > f1) {
+            f2 = f2 - Math.PI * 2;
+        }
+    } else {
+        f1 = recursive[0];
+        f2 = recursive[1];
+        cx = recursive[2];
+        cy = recursive[3];
+    }
+    var df = f2 - f1;
+    if (Math.abs(df) > _120) {
+        var f2old = f2,
+            x2old = x2,
+            y2old = y2;
+        f2 = f1 + _120 * (sweep_flag && f2 > f1 ? 1 : -1);
+        x2 = cx + rx * Math.cos(f2);
+        y2 = cy + ry * Math.sin(f2);
+        res = a2c(x2, y2, rx, ry, angle, 0, sweep_flag, x2old, y2old, [f2, f2old, cx, cy]);
+    }
+    df = f2 - f1;
+    var c1 = Math.cos(f1),
+        s1 = Math.sin(f1),
+        c2 = Math.cos(f2),
+        s2 = Math.sin(f2),
+        t = Math.tan(df / 4),
+        hx = 4 / 3 * rx * t,
+        hy = 4 / 3 * ry * t,
+        m = [
+            - hx * s1, hy * c1,
+            x2 + hx * s2 - x1, y2 - hy * c2 - y1,
+            x2 - x1, y2 - y1
+        ];
+    if (recursive) {
+        return m.concat(res);
+    } else {
+        res = m.concat(res);
+        var newres = [];
+        for (var i = 0, n = res.length; i < n; i++) {
+            newres[i] = i % 2 ? rotateY(res[i - 1], res[i], rad) : rotateX(res[i], res[i + 1], rad);
+        }
+        return newres;
+    }
 };
