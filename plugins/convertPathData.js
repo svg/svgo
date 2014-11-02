@@ -91,7 +91,8 @@ function convertToRelative(path) {
 
     var point = [0, 0],
         subpathPoint = [0, 0],
-        mM = false;
+        mM = false,
+        baseItem;
 
     path.forEach(function(item, index) {
 
@@ -117,6 +118,7 @@ function convertToRelative(path) {
                     }
 
                     subpathPoint = point.slice(-2);
+                    baseItem = item;
                 }
 
             } else if (instruction === 'h') {
@@ -146,6 +148,7 @@ function convertToRelative(path) {
                 point[1] += data[1];
 
                 subpathPoint = point.slice(-2);
+                baseItem = item;
 
             }
 
@@ -239,7 +242,7 @@ function convertToRelative(path) {
 
         // !data === z, reset current point
         else {
-            item.coords = subpathPoint.slice(0);
+            item.coords = baseItem.coords;
             point = subpathPoint;
             mM = false;
         }
