@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
+    <path transform="translate(100,0)" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
     <path fill="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
     <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
     <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 a150,150 0 1,0 150,-150 z"/>
@@ -10,6 +11,7 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 0v100l70-50zm70 50l70-50v100z"/>
     <path fill="red" d="M118.8 186.9L198 311.5l-96.6-25.8 8.7-49.4c17.4-98.8 89.85-79.45 81.15-30.05S255 275 263.7 225.6q13.05-74.1 87.9 75.2t193.2 51.6z"/>
     <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100 200l200 200H100V300c0-200 150-200 150-100s150 100 150 0q0-150 200 100t400 0z"/>
     <path fill="red" stroke="red" transform="rotate(15) scale(.5) skewX(5) translate(200,100)" d="M100 200l200 200H100V300c0-200 150-200 150-100s150 100 150 0q0-150 200 100t400 0a150 150 0 1 0 150-150z"/>

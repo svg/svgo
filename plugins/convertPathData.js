@@ -268,7 +268,7 @@ function filters(path, params) {
         pathBase = [0, 0],
         prev;
 
-    path = path.filter(function(item) {
+    path = path.filter(function(item, index) {
 
         var instruction = item.instruction,
             data = item.data;
