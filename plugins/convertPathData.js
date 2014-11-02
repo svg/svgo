@@ -629,7 +629,7 @@ function collapseRepeated(path, params) {
             prev &&
             item.instruction === prev.instruction &&
             (
-                !item.data ||
+                'mz'.indexOf(item.instruction) > -1 ||
                 'hv'.indexOf(item.instruction) > -1 && (prev.data[0] >= 0) == (item.data[0] >= 0) ||
                 !params.utilizeAbsolute
             )
@@ -637,10 +637,14 @@ function collapseRepeated(path, params) {
             // increase previous h or v data with current
             if ('hv'.indexOf(item.instruction) > -1) {
                 prev.data[0] += item.data[0];
+            } else if (item.instruction === 'm') {
+                prev.data[0] += item.data[0];
+                prev.data[1] += item.data[1];
             // concat previous data with current if it is not z
             } else if (item.data) {
                 prev.data = prev.data.concat(item.data);
             }
+            prev.coords = item.coords;
 
             // filter out current item
             return false;
