@@ -187,8 +187,10 @@ exports.relative2absolute = function(data) {
  * @return {Array} output path data
  */
 exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrecision) {
-    // if there are no 'stroke' attr and 'a' segments
-    if (!elem.hasAttr('transform'))
+    // if there are no 'stroke' attr and references to other objects such as
+    // gradiends or clip-path which are also subjects to transform.
+    if (!elem.hasAttr('transform') ||
+        elem.someAttr(function(attr) { return ~attr.value.indexOf('url(') }))
         return path;
 
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
