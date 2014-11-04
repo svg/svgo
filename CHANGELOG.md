@@ -2,7 +2,7 @@
 * added ``--multipass`` command line option which repeatedly applies optimizations like collapsing groups (by @dfilatov)
 * exposed JSAPI as a factory method (by @mistakster)
 * added removeDesc plugin (by @dwabyick), disabled by default
-* [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill) plugin is disabled by default since it's unable to check inherited properties
+* [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) plugin is disabled by default since it's unable to check inherited properties
 * transformations now apply to paths with arcs in [plugins/convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js)
 * a lot of bug fixes mostly related to transformations
 
