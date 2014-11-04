@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="a">
+       <path d="..."/>
+    </clipPath>
+    <g clip-path="url(#a)">
+        <path d="..." transform="scale(.2)"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="a">
+        <path d="..."/>
+    </clipPath>
+    <g clip-path="url(#a)">
+        <path d="..." transform="scale(.2)"/>
+    </g>
+</svg>
