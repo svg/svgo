@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#000">
+        <g id="star">
+            <path id="bar" d="..."/>
+        </g>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#000">
+        <g id="star">
+            <path id="bar" d="..."/>
+        </g>
+    </g>
+</svg>

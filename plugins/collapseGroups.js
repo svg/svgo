@@ -42,10 +42,10 @@ exports.fn = function(item) {
             if (g.isElem('g') && !g.isEmpty()) {
 
                 // move group attibutes to the single content element
-                if (g.attrs && g.content.length === 1) {
+                if (g.hasAttr() && g.content.length === 1) {
                     var inner = g.content[0];
 
-                    if (inner.elem &&
+                    if (inner.isElem() && !inner.hasAttr('id') &&
                         !(g.hasAttr('clip-path') &&
                             (g.hasAttr('transform') || inner.hasAttr('transform')))
                     ) {
@@ -61,7 +61,7 @@ exports.fn = function(item) {
                 }
 
                 // collapse groups without attributes
-                if (!g.attrs) {
+                if (!g.hasAttr()) {
                     unflatten = true;
 
                     item.content.splice(i, 1, g.content);
