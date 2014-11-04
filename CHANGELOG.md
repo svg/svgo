@@ -1,4 +1,4 @@
-### [ [>](https://github.com/svg/svgo/tree/v0.4.5) ] 0.5.0 / 05.11.2014
+### [ [>](https://github.com/svg/svgo/tree/v0.5.0) ] 0.5.0 / 05.11.2014
 * added ``--multipass`` command line option which repeatedly applies optimizations like collapsing groups (by @dfilatov)
 * exposed JSAPI as a factory method (by @mistakster)
 * added removeDesc plugin (by @dwabyick), disabled by default
