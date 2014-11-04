@@ -1,4 +1,12 @@
-### [ [>](https://github.com/svg/svgo/tree/v0.4.5) ] 0.4.5 / 02.02.2014
+### [ [>](https://github.com/svg/svgo/tree/v0.4.5) ] 0.5.0 / 05.11.2014
+* added ``--multipass`` command line option which repeatedly applies optimizations like collapsing groups (by @dfilatov)
+* exposed JSAPI as a factory method (by @mistakster)
+* added removeDesc plugin (by @dwabyick), disabled by default
+* [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill) plugin is disabled by default since it's unable to check inherited properties
+* transformations now apply to paths with arcs in [plugins/convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js)
+* a lot of bug fixes mostly related to transformations
+
+### [ [>](https://github.com/svg/svgo/tree/v0.4.5) ] 0.4.5 / 02.08.2014
 * significally improved plugin [plugins/convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js):
   - Now data is being written relative or absolute whichever is shorter. You can turn it off by setting ``utilizeAbsolute`` to ``false``.
   - Smarter rounding: values like 2.499 now rounds to 2.5. Rounding now takes in account accumulutive error meaning that points will not be misplaced due to rounding more than it neccessary.
