@@ -629,7 +629,7 @@ function collapseRepeated(path, params) {
             prev &&
             item.instruction === prev.instruction &&
             (
-                'mz'.indexOf(item.instruction) > -1 ||
+                'Mmz'.indexOf(item.instruction) > -1 ||
                 'hv'.indexOf(item.instruction) > -1 && (prev.data[0] >= 0) == (item.data[0] >= 0) ||
                 !params.utilizeAbsolute
             )
@@ -637,7 +637,7 @@ function collapseRepeated(path, params) {
             // increase previous h or v data with current
             if ('hv'.indexOf(item.instruction) > -1) {
                 prev.data[0] += item.data[0];
-            } else if (item.instruction === 'm') {
+            } else if (item.instruction.toLowerCase() === 'm') {
                 prev.data[0] += item.data[0];
                 prev.data[1] += item.data[1];
             // concat previous data with current if it is not z
