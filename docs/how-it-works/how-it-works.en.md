@@ -1,23 +1,29 @@
 ## TOC
 * [Intro](#intro)
 * [How it works](#how-it-works)
-  * [config](#1-config)
-  * [svg2js](#2-svg2js)
-  * [plugins](#3-plugins)
-      * [types](#31-types)
-      * [API](#32-api)
-      * [tests](#33-tests)
-  * [js2svg](#4-js2svg)
+  * [Config](#config)
+  * [svg2js](#svg2js)
+  * [Plugins](#plugins)
+      * [Types](#types)
+      * [API](#api)
+      * [Tests](#tests)
+  * [js2svg](#js2svg)
 * [What's next](#whats-next)
 
+<a name="intro"></a>
 
 ## Intro
 So, as [mentioned earlier](https://github.com/svg/svgo#what-it-can-do), SVGO has a plugin-based architecture and almost every optimization is a separate plugin.
 
 Plugins can delete and modify SVG elements, collapse contents, move attributes and do any other actions you want.
 
+<a name="how-it-works"></a>
+
 ## How it works
-### 1. config
+
+<a name="config"></a>
+
+### 1. Config
 SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/.svgo.yml), which contains all the SVGO settings, including plugins. Something like this:
 
 ```
@@ -39,6 +45,8 @@ It's important to note that every plugin:
   * can have its own `params` which will be available later inside a plugin
 
 - - -
+
+<a name="svg2js"></a>
 
 ### 2. svg2js
 SVGO converts SVG-as-XML data into SVG-as-JS AST representation. Something like this:
@@ -107,11 +115,14 @@ It's important to note that:
 
 - - -
 
-### 3. plugins
+<a name="plugins"></a>
+
+### 3. Plugins
 SVGO applies all plugins from the config to AST data. See a lot of examples in the [plugins directory](https://github.com/svg/svgo/tree/master/plugins) above.
 
+<a name="types"></a>
 
-#### 3.1 types
+#### 3.1 Types
 In the simplest case plugins applying process can be represented as "each plugin runs over all AST data items and perform some actions". But 90% of typical optimizations requires some actions only on one (current) item from the data, so there is no sense to copypaste a recursive per-item loop every time on every plugin. And that's why we have a three types of plugins:
 
 * `perItem` - plugin works only with one current item, inside a "from the outside into the depths" recursive loop (default)
@@ -135,50 +146,60 @@ plugins
 
   …
 ```
+<a name="api"></a>
 
 #### 3.2 API
 
 And of course, writing plugins would not have been so cool without some sugar API:
 
 ##### isElem([param])
-  * Determine if item is an element (any, with a specific name or in a names array).
+Determine if item is an element (any, with a specific name or in a names array).
+
   * @param {String|Array} [param] element name or names arrays
   * @return {Boolean}
 
 ##### isEmpty()
-  * Determine if element is empty.
+Determine if element is empty.
+
   * @return {Boolean}
 
 ##### hasAttr([attr], [val])
-  * Determine if element has an attribute (any, or by name or by name + value).
+Determine if element has an attribute (any, or by name or by name + value).
+
   * @param {String} [name] attribute name
   * @param {String} [val] attribute value (will be toString()'ed)
   * @return {Boolean}
 
 ##### attr(name, [val])
-  * Get a specific attribute from an element (by name or name + value).
+Get a specific attribute from an element (by name or name + value).
+
   * @param {String} name attribute name
   * @param {String} [val] attribute value (will be toString()'ed)
   * @return {Object|Undefined}
 
 ##### removeAttr(name, [val])
-  * Remove a specific attribute (by name or name + val).
+Remove a specific attribute (by name or name + val).
+
   * @param {String} name attribute name
   * @param {String} [val] attribute value
   * @return {Boolean}
 
 ##### addAttr(attr)
-  * Add an attribute.
+Add an attribute.
+
   * @param {Object} attr attribute object
   * @return {Object} created attribute
 
 ##### eachAttr(callback, [context])
-  * Iterates over all attributes.
+Iterate over all attributes.
+
   * @param {Function} callback
   * @param {Object} [context] callback context
   * @return {Boolean} false if there are no any attributes
 
-#### 3.3 tests
+<a name="tests"></a>
+
+#### 3.3 Tests
 
 There is nothing easier than testing your plugin:
 
@@ -190,8 +211,12 @@ You can see a lot of examples in the [test/plugins directory](https://github.com
 
 - - -
 
+<a name="js2svg"></a>
+
 ### 4. js2svg
 SVGO converts AST back into SVG-as-XML data string.
+
+<a name="whats-next"></a>
 
 ## What's next
 1. Write your own plugin :) or
