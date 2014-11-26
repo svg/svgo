@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <glyph d="L5 5L5 6L10 10"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <glyph d="L5 5L10 10"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0L5 5L5 6L10 10L10 5L5 10z"/>
+    <path d="c 50,0 50,100 100,100 c 50,0 50,-100 100,-100"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0L5 5L10 10L10 5L5 10z"/>
+    <path d="c50 0 50 100 100 100c50 0 50 -100 100 -100"/>
+</svg>

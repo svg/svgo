@@ -43,6 +43,7 @@
     "coa": "~0.4.1",
     "js-yaml": "~3.2.2",
     "colors": "~1.0.3",
+    "simplify-js": "^1.2.1",
     "whet.extend": "~0.9.9"
   },
   "devDependencies": {

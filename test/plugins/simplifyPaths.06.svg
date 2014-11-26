@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle cx="" cy="" r="10" fill="red">
+        <animateMotion
+            dur="1s"
+            repeatDur="indefinite"
+            path="L5 5L5 6L10 10" />
+    </circle>
+    <circle cx="" cy="" r="5" fill="green">
+        <animate dur="1s" from="L5 5L5 6L10 10" to="L5 5L5 6L10 10" attributeName="d" attributeType="XML"/>
+    </circle>
+    <circle cx="" cy="" r="5" fill="green">
+        <animate dur="1s" values="L5 5L5 6L10 10;L5 5L5 6L10 10" attributeName="d" attributeType="XML"/>
+    </circle>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle cx="" cy="" r="10" fill="red">
+        <animateMotion dur="1s" repeatDur="indefinite" path="L5 5L10 10"/>
+    </circle>
+    <circle cx="" cy="" r="5" fill="green">
+        <animate dur="1s" from="L5 5L10 10" to="L5 5L10 10" attributeName="d" attributeType="XML"/>
+    </circle>
+    <circle cx="" cy="" r="5" fill="green">
+        <animate dur="1s" values="L5 5L10 10;L5 5L10 10" attributeName="d" attributeType="XML"/>
+    </circle>
+</svg>
