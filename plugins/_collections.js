@@ -2092,7 +2092,7 @@ exports.stylingProps = [
     'font-stretch',
     'font-style',
     'font-variant',
-    'font-weight',,
+    'font-weight',
     'direction',
     'letter-spacing',
     'text-decoration',
