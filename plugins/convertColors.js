@@ -7,7 +7,8 @@ exports.active = true;
 exports.params = {
     names2hex: true,
     rgb2hex: true,
-    shorthex: true
+    shorthex: true,
+    shortname: true
 };
 
 var collections = require('./_collections'),
@@ -31,6 +32,9 @@ var collections = require('./_collections'),
  * Convert long hex to short hex:
  * #aabbcc ➡ #abc
  *
+ * Convert hex to short name
+ * #000080 ➡ navy
+ *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
  * @return {Boolean} if false, item will be filtered out
@@ -46,7 +50,6 @@ exports.fn = function(item, params) {
             if (collections.colorsProps.indexOf(attr.name) > -1) {
 
                 var val = attr.value.toLowerCase(),
-                    tmp = val,
                     match;
 
                 // Convert color name keyword to long hex
@@ -72,7 +75,12 @@ exports.fn = function(item, params) {
                     val = '#' + match[0][1] + match[0][3] + match[0][5];
                 }
 
-                if (tmp !== val) attr.value = val;
+                // Convert hex to short name
+                if (params.shortname && val in collections.colorsShortNames) {
+                    val = collections.colorsShortNames[val];
+                }
+
+                attr.value = val;
 
             }
 
