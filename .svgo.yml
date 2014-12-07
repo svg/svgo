@@ -23,6 +23,7 @@ plugins:
   - convertStyleToAttrs
   - removeRasterImages
   - cleanupNumericValues
+  - cleanupListOfValues
   - convertColors
   - removeUnknownsAndDefaults
   - removeNonInheritableGroupAttrs
