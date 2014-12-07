@@ -102,7 +102,7 @@ exports.fn = function(item, params) {
                     units = '';
                 }
 
-                roundedListArr.push(num);
+                roundedListArr.push(num+units);
 
             }
             // if attribute value is "new"(only enable-background).
