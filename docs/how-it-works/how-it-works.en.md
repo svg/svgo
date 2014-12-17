@@ -13,7 +13,7 @@
 <a name="intro"></a>
 
 ## Intro
-So, as [mentioned earlier](https://github.com/svg/svgo#what-it-can-do), SVGO has a plugin-based architecture and almost every optimization is a separate plugin.
+So, as [mentioned earlier](https://ru.bem.info/tools/optimizers/svgo/svgo/), SVGO has a plugin-based architecture and almost every optimization is a separate plugin.
 
 Plugins can delete and modify SVG elements, collapse contents, move attributes and do any other actions you want.
 

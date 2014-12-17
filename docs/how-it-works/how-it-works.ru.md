@@ -14,7 +14,7 @@
 
 ## Введение
 
-Итак, как уже было [сказано ранее](https://github.com/svg/svgo#what-it-can-do), SVGO имеет плагинную архитектуру, в которой практически каждая оптимизация является отдельным плагином.
+Итак, как уже было [сказано ранее](https://ru.bem.info/tools/optimizers/svgo/svgo/), SVGO имеет плагинную архитектуру, в которой практически каждая оптимизация является отдельным плагином.
 
 Плагины могут удалять и изменять SVG элементы, схлопывать контент, перемещать атрибуты и выполнять любые другие действия, которые вы захотите.
 
@@ -198,8 +198,8 @@ Iterate over all attributes.
   * @param {Function} callback
   * @param {Object} [context] callback context
   * @return {Boolean} false if there are no any attributes
-  
-<a name="tests"></a>  
+
+<a name="tests"></a>
 
 #### 3.3 Тесты
 
