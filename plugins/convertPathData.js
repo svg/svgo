@@ -242,7 +242,8 @@ function convertToRelative(path) {
 
         // !data === z, reset current point
         else {
-            item.coords = baseItem.coords;
+            if(baseItem)
+                item.coords = baseItem.coords;
             point = subpathPoint;
             mM = false;
         }
