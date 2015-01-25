@@ -5,6 +5,7 @@ var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regNumericValues = /[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
+    referencesProps = require('./_collections.js').referencesProps,
     cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero;
 
@@ -190,7 +191,9 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
     // if there are no 'stroke' attr and references to other objects such as
     // gradiends or clip-path which are also subjects to transform.
     if (!elem.hasAttr('transform') ||
-        elem.someAttr(function(attr) { return ~attr.value.indexOf('url(') }))
+        elem.someAttr(function(attr) {
+            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(')
+        }))
         return path;
 
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),

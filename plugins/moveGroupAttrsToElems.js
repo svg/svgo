@@ -4,7 +4,9 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-var pathElems = require('./_collections.js').pathElems.slice();
+var collections = require('./_collections.js'),
+    pathElems = collections.pathElems.slice(),
+    referencesProps = collections.referencesProps;
 
 pathElems.push('g');
 pathElems.push('text');
@@ -35,7 +37,9 @@ exports.fn = function(item) {
         item.isElem('g') &&
         item.hasAttr('transform') &&
         !item.isEmpty() &&
-        !item.someAttr(function(attr) { return ~attr.value.indexOf('url(') }) &&
+        !item.someAttr(function(attr) {
+            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(')
+        }) &&
         item.content.every(function(inner) {
             return inner.isElem(pathElems);
         })
