@@ -2,7 +2,7 @@
 
 var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regPathData = /[\-+]?\d*\.?\d+([eE][\-+]?\d+)?/g,
-    regValue = /[+-]?\d+(?:e[+-]?\d+)?|[+-]?\d*\.\d+(?:e[+-]?\d+)?/i,
+    regNumericValues = /[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
     cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
@@ -217,8 +217,8 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
       }
       if (sx !== 1){
         if (elem.hasAttr('stroke-width')){
-          elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value
-            .replace(regValue, function(num) { return removeLeadingZero(num * sx) });
+          elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
+            .replace(regNumericValues, function(num) { return removeLeadingZero(num * sx) });
         } else {
           elem.addAttr({
               name: 'stroke-width',
