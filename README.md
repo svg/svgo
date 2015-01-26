@@ -117,6 +117,7 @@ Arguments:
         $ svgo test.svg -o - | gzip -cfq9 > test.svgz
 
 * with GUI – [svgo-gui](https://github.com/svg/svgo-gui)
+* as a web app - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
