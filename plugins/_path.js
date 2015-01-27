@@ -232,7 +232,7 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
               name: 'stroke-width',
               prefix: '',
               local: 'stroke-width',
-              value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * sx) });
+              value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * sx) })
           });
         }
       }
