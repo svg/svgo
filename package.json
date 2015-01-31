@@ -43,7 +43,8 @@
     "coa": "~0.4.1",
     "js-yaml": "~3.2.2",
     "colors": "~1.0.3",
-    "whet.extend": "~0.9.9"
+    "whet.extend": "~0.9.9",
+    "mkdirp": "~0.5.0"
   },
   "devDependencies": {
     "mocha": "~2.0.1",
