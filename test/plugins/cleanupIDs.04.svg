@@ -221,165 +221,59 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <text id="a">
-            referenced text
-        </text>
-        <text id="b">
-            referenced text
-        </text>
-        <text id="c">
-            referenced text
-        </text>
-        <text id="d">
-            referenced text
-        </text>
-        <text id="e">
-            referenced text
-        </text>
-        <text id="f">
-            referenced text
-        </text>
-        <text id="g">
-            referenced text
-        </text>
-        <text id="h">
-            referenced text
-        </text>
-        <text id="i">
-            referenced text
-        </text>
-        <text id="j">
-            referenced text
-        </text>
-        <text id="k">
-            referenced text
-        </text>
-        <text id="l">
-            referenced text
-        </text>
-        <text id="m">
-            referenced text
-        </text>
-        <text id="n">
-            referenced text
-        </text>
-        <text id="o">
-            referenced text
-        </text>
-        <text id="p">
-            referenced text
-        </text>
-        <text id="q">
-            referenced text
-        </text>
-        <text id="r">
-            referenced text
-        </text>
-        <text id="s">
-            referenced text
-        </text>
-        <text id="t">
-            referenced text
-        </text>
-        <text id="u">
-            referenced text
-        </text>
-        <text id="v">
-            referenced text
-        </text>
-        <text id="w">
-            referenced text
-        </text>
-        <text id="x">
-            referenced text
-        </text>
-        <text id="y">
-            referenced text
-        </text>
-        <text id="z">
-            referenced text
-        </text>
-        <text id="A">
-            referenced text
-        </text>
-        <text id="B">
-            referenced text
-        </text>
-        <text id="C">
-            referenced text
-        </text>
-        <text id="D">
-            referenced text
-        </text>
-        <text id="E">
-            referenced text
-        </text>
-        <text id="F">
-            referenced text
-        </text>
-        <text id="G">
-            referenced text
-        </text>
-        <text id="H">
-            referenced text
-        </text>
-        <text id="I">
-            referenced text
-        </text>
-        <text id="J">
-            referenced text
-        </text>
-        <text id="K">
-            referenced text
-        </text>
-        <text id="L">
-            referenced text
-        </text>
-        <text id="M">
-            referenced text
-        </text>
-        <text id="N">
-            referenced text
-        </text>
-        <text id="O">
-            referenced text
-        </text>
-        <text id="P">
-            referenced text
-        </text>
-        <text id="Q">
-            referenced text
-        </text>
-        <text id="R">
-            referenced text
-        </text>
-        <text id="S">
-            referenced text
-        </text>
-        <text id="T">
-            referenced text
-        </text>
-        <text id="U">
-            referenced text
-        </text>
-        <text id="V">
-            referenced text
-        </text>
-        <text id="W">
-            referenced text
-        </text>
-        <text id="X">
-            referenced text
-        </text>
-        <text id="Y">
-            referenced text
-        </text>
-        <text id="Z">
-            referenced text
-        </text>
-        <text id="aa">
-            referenced text
-        </text>
+        <text id="a">referenced text</text>
+        <text id="b">referenced text</text>
+        <text id="c">referenced text</text>
+        <text id="d">referenced text</text>
+        <text id="e">referenced text</text>
+        <text id="f">referenced text</text>
+        <text id="g">referenced text</text>
+        <text id="h">referenced text</text>
+        <text id="i">referenced text</text>
+        <text id="j">referenced text</text>
+        <text id="k">referenced text</text>
+        <text id="l">referenced text</text>
+        <text id="m">referenced text</text>
+        <text id="n">referenced text</text>
+        <text id="o">referenced text</text>
+        <text id="p">referenced text</text>
+        <text id="q">referenced text</text>
+        <text id="r">referenced text</text>
+        <text id="s">referenced text</text>
+        <text id="t">referenced text</text>
+        <text id="u">referenced text</text>
+        <text id="v">referenced text</text>
+        <text id="w">referenced text</text>
+        <text id="x">referenced text</text>
+        <text id="y">referenced text</text>
+        <text id="z">referenced text</text>
+        <text id="A">referenced text</text>
+        <text id="B">referenced text</text>
+        <text id="C">referenced text</text>
+        <text id="D">referenced text</text>
+        <text id="E">referenced text</text>
+        <text id="F">referenced text</text>
+        <text id="G">referenced text</text>
+        <text id="H">referenced text</text>
+        <text id="I">referenced text</text>
+        <text id="J">referenced text</text>
+        <text id="K">referenced text</text>
+        <text id="L">referenced text</text>
+        <text id="M">referenced text</text>
+        <text id="N">referenced text</text>
+        <text id="O">referenced text</text>
+        <text id="P">referenced text</text>
+        <text id="Q">referenced text</text>
+        <text id="R">referenced text</text>
+        <text id="S">referenced text</text>
+        <text id="T">referenced text</text>
+        <text id="U">referenced text</text>
+        <text id="V">referenced text</text>
+        <text id="W">referenced text</text>
+        <text id="X">referenced text</text>
+        <text id="Y">referenced text</text>
+        <text id="Z">referenced text</text>
+        <text id="aa">referenced text</text>
     </defs>
     <tref xlink:href="#a"/>
     <tref xlink:href="#a"/>

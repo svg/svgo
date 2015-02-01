@@ -25,9 +25,7 @@
             <stop offset="5%" stop-color="#F60"/>
             <stop offset="95%" stop-color="#FF6"/>
         </linearGradient>
-        <text id="b">
-            referenced text
-        </text>
+        <text id="b">referenced text</text>
     </defs>
     <g>
         <circle fill="url(#a)" cx="60" cy="60" r="50"/>
