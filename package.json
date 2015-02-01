@@ -39,17 +39,17 @@
     "test": "make test"
   },
   "dependencies": {
-    "sax": "~0.6.0",
+    "sax": "~0.6.1",
     "coa": "~0.4.1",
-    "js-yaml": "~3.2.2",
+    "js-yaml": "~3.2.5",
     "colors": "~1.0.3",
     "whet.extend": "~0.9.9",
     "mkdirp": "~0.5.0"
   },
   "devDependencies": {
-    "mocha": "~2.0.1",
-    "should": "~4.3.0",
-    "istanbul": "~0.3.2",
+    "mocha": "~2.1.0",
+    "should": "~4.6.2",
+    "istanbul": "~0.3.5",
     "mocha-istanbul": "~0.2.0",
     "coveralls": "~2.11.2"
   },
