@@ -18,7 +18,6 @@ var referencesProps = require('./_collections').referencesProps,
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     ],
-    idPrefix = 'id-', // prefix IDs so that values like '__proto__' don't break the work
     maxIDindex = generateIDchars.length - 1;
 
 /**
@@ -36,6 +35,7 @@ exports.fn = function(data, params) {
         currentIDstring,
         IDs = {},
         referencesIDs = {},
+        idPrefix = 'id-', // prefix IDs so that values like '__proto__' don't break the work
         hasStyleOrScript = false;
 
     /**
@@ -75,7 +75,7 @@ exports.fn = function(data, params) {
                             match = attr.value.match(regReferencesUrl);
 
                             if (match) {
-                                if (referencesIDs[match[1]]) {
+                                if (referencesIDs[idPrefix + match[1]]) {
                                     referencesIDs[idPrefix + match[1]].push(attr);
                                 } else {
                                     referencesIDs[idPrefix + match[1]] = [attr];
@@ -88,7 +88,7 @@ exports.fn = function(data, params) {
                             match = attr.value.match(regReferencesHref);
 
                             if (match) {
-                                if (referencesIDs[match[1]]) {
+                                if (referencesIDs[idPrefix + match[1]]) {
                                     referencesIDs[idPrefix + match[1]].push(attr);
                                 } else {
                                     referencesIDs[idPrefix + match[1]] = [attr];
