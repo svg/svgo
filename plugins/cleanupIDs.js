@@ -18,6 +18,7 @@ var referencesProps = require('./_collections').referencesProps,
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     ],
+    idPrefix = 'id-', // prefix IDs so that values like '__proto__' don't break the work
     maxIDindex = generateIDchars.length - 1;
 
 /**
@@ -66,7 +67,7 @@ exports.fn = function(data, params) {
                     item.eachAttr(function(attr) {
                         // save IDs
                         if (attr.name === 'id') {
-                            IDs[item.attr('id').value] = item;
+                            IDs[idPrefix + item.attr('id').value] = item;
                         }
 
                         // save IDs url() references
@@ -75,9 +76,9 @@ exports.fn = function(data, params) {
 
                             if (match) {
                                 if (referencesIDs[match[1]]) {
-                                    referencesIDs[match[1]].push(attr);
+                                    referencesIDs[idPrefix + match[1]].push(attr);
                                 } else {
-                                    referencesIDs[match[1]] = [attr];
+                                    referencesIDs[idPrefix + match[1]] = [attr];
                                 }
                             }
                         }
@@ -88,9 +89,9 @@ exports.fn = function(data, params) {
 
                             if (match) {
                                 if (referencesIDs[match[1]]) {
-                                    referencesIDs[match[1]].push(attr);
+                                    referencesIDs[idPrefix + match[1]].push(attr);
                                 } else {
-                                    referencesIDs[match[1]] = [attr];
+                                    referencesIDs[idPrefix + match[1]] = [attr];
                                 }
                             }
                         }
@@ -128,7 +129,7 @@ exports.fn = function(data, params) {
                     IDs[k].attr('id').value = currentIDstring;
 
                     referencesIDs[k].forEach(function(attr) {
-                        attr.value = attr.value.replace('#' + k, '#' + currentIDstring);
+                        attr.value = attr.value.replace('#' + k.replace(idPrefix, ''), '#' + currentIDstring);
                     });
 
                 }
