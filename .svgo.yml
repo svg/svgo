@@ -35,12 +35,12 @@ plugins:
   - convertShapeToPath
   - moveElemsAttrsToGroup
   - moveGroupAttrsToElems
-  - collapseGroups
   - convertPathData
   - convertTransform
   - removeEmptyAttrs
   - removeEmptyContainers
   - mergePaths
+  - collapseGroups
   - cleanupIDs
   - removeUnusedNS
   - transformsWithOnePath
