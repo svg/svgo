@@ -45,10 +45,10 @@ exports.fn = function(item) {
                 if (g.hasAttr() && g.content.length === 1) {
                     var inner = g.content[0];
 
-                    if (inner.isElem() && !inner.hasAttr('id') &&
-                        !(g.hasAttr('clip-path') &&
-                            (g.hasAttr('transform') || inner.hasAttr('transform')))
-                    ) {
+                    if (inner.isElem() && !inner.hasAttr('id') && (
+                        !g.hasAttr('clip-path') ||
+                        inner.isElem('g') && !g.hasAttr('transform') && !inner.hasAttr('transform')
+                    )) {
                         g.eachAttr(function(attr) {
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);
