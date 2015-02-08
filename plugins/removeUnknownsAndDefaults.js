@@ -64,7 +64,7 @@ for (var elem in elems) {
 exports.fn = function(item, params) {
 
     var inheritable = { },
-        key, attr;
+        key;
 
     // elems w/o namespace prefix
     if (item.isElem() && !item.prefix) {
@@ -147,7 +147,7 @@ exports.fn = function(item, params) {
             });
 
             if (Object.keys(inheritable).length) {
-                item.content.forEach(function(content, i) {
+                item.content.forEach(function(content) {
                     content.inheritedAttrs = inheritable;
                 } );
             }

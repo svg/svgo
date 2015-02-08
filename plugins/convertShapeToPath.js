@@ -20,7 +20,7 @@ var empty = { value: 0 },
  *
  * @author Lev Solntsev
  */
-exports.fn = function(item, params) {
+exports.fn = function(item) {
 
     if (
         item.isElem('rect') &&

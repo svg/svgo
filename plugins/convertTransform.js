@@ -232,22 +232,3 @@ function js2transform(transformJS, params) {
     return transformString;
 
 }
-
-/**
- * Convert long translate or scale transforms to the shorts ones.
- *
- * @param {Array} data transform data
- *
- * @return {Array} output data
- */
-function longTranslateScaleToShort(data) {
-
-    // translate(50 50) → translate(50)
-    // scale(2 2) → scale(2)
-    if (data[1] !== undefined && data[1] === data[0]) {
-        data = [data[0]];
-    }
-
-    return data;
-
-}

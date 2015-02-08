@@ -10,7 +10,7 @@
     "expr": true,
     "curly": false,
     "camelcase": true,
-    "eqeqeq": true,
+    "eqeqeq": false,
     "forin": false,
     "immed": true,
     "multistr": true,

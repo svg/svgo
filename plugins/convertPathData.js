@@ -542,8 +542,7 @@ function filters(path, params) {
  */
 function convertToMixed(path, params) {
 
-    var currentPoint = [0, 0],
-        prev = path[0];
+    var prev = path[0];
 
     path = path.filter(function(item, index) {
 
@@ -675,7 +674,7 @@ function roundData(data) {
 
     function round(data) {
         for (var i = data.length; i--;) {
-            data[i] = +data[i].toFixed(precision)
+            data[i] = +data[i].toFixed(precision);
         }
         return data;
     }

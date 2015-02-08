@@ -201,7 +201,7 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
         splittedMatrix = matrix.splitted || splitMatrix(matrix.data),
         stroke = elem.computedAttr('stroke'),
-        newPoint, sx, sy, strokeWidth;
+        newPoint, sx, sy;
 
     if (stroke && stroke.value != 'none'){
       if (!applyTransformsStroked){
@@ -318,8 +318,8 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
                     }
                 }
 
-                pathItem.coords[0] = pathItem.base[0] + pathItem.data[pathItem.data.length - 2]
-                pathItem.coords[1] = pathItem.base[1] + pathItem.data[pathItem.data.length - 1]
+                pathItem.coords[0] = pathItem.base[0] + pathItem.data[pathItem.data.length - 2];
+                pathItem.coords[1] = pathItem.base[1] + pathItem.data[pathItem.data.length - 1];
 
             }
 
@@ -586,9 +586,9 @@ function deg(rad) {
     return rad * 180 / Math.PI % 360;
 }
 
- function determinant(matrix) {
+function determinant(matrix) {
     return matrix[0] * matrix[3] - matrix[1] * matrix[2];
-};
+}
 
 /* Splits matrix into primitive transformations
  = (object) in format:
@@ -631,7 +631,7 @@ function splitMatrix(matrix) {
     }
     out.isSimple = !+out.shear.toFixed(9) && (out.scalex.toFixed(9) == out.scaley.toFixed(9) || !out.rotate);
     return out;
-};
+}
 
 function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
@@ -646,9 +646,7 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         y1 = rotateY(x1, y1, -rad);
         x2 = rotateX(x2, y2, -rad);
         y2 = rotateY(x2, y2, -rad);
-        var cos = Math.cos(Math.PI / 180 * angle),
-            sin = Math.sin(Math.PI / 180 * angle),
-            x = (x1 - x2) / 2,
+        var x = (x1 - x2) / 2,
             y = (y1 - y2) / 2;
         var h = (x * x) / (rx * rx) + (y * y) / (ry * ry);
         if (h > 1) {
@@ -714,4 +712,4 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         }
         return newres;
     }
-};
+}

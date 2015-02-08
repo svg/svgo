@@ -42,7 +42,7 @@ exports.fn = function(item, params) {
     }
 
     if ( item.hasAttr('enable-background') ) {
-        roundValues(item.attrs["enable-background"]);
+        roundValues(item.attrs['enable-background']);
     }
 
     if ( item.hasAttr('viewBox') ) {
@@ -50,7 +50,7 @@ exports.fn = function(item, params) {
     }
 
     if ( item.hasAttr('stroke-dasharray') ) {
-        roundValues(item.attrs["stroke-dasharray"]);
+        roundValues(item.attrs['stroke-dasharray']);
     }
 
     if ( item.hasAttr('dx') ) {
@@ -77,7 +77,7 @@ exports.fn = function(item, params) {
             matchNew,
             lists = $prop.value,
             listsArr = lists.split(regSeparator),
-            roundedListArr = new Array(),
+            roundedListArr = [],
             roundedList;
 
         listsArr.forEach(function(elem){
@@ -108,13 +108,13 @@ exports.fn = function(item, params) {
             // if attribute value is "new"(only enable-background).
             else if(matchNew){
 
-                roundedListArr.push("new");
+                roundedListArr.push('new');
 
             }
 
         });
 
-        roundedList = roundedListArr.join(" ");
+        roundedList = roundedListArr.join(' ');
         $prop.value = roundedList;
 
     }

@@ -61,7 +61,7 @@ exports.fn = function(item) {
                     for(var i = 0, I = contentItemKeys.length; i < I; i++){
                       attrName = contentItemKeys[i];
                       if (attrName != 'd'){
-                        if(typeof prevContentItem.attrs[attrName] === "undefined"){
+                        if(typeof prevContentItem.attrs[attrName] === 'undefined'){
                           equalData = false;
                           break;
                         } else if (prevContentItem.attrs[attrName].value !== contentItem.attrs[attrName].value){
