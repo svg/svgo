@@ -6,6 +6,7 @@ exports.active = true;
 
 var EXTEND = require('whet.extend'),
     stylingProps = require('./_collections').stylingProps,
+    regDeclarationBlock = /\s*((?:[\w-]+|\\(?:[0-9a-f]{1,6}|.)\s?)*)\s*:\s*((?:[^'"();\\]+|\\(?:[0-9a-f]{1,6}|.)\s?|'(?:[^'\\\n\r]|\\(?:[0-9a-f]{1,6}|\r\n|.)\s?)*'|"(?:[^"\\\n\r]|\\(?:[0-9a-f]{1,6}|\r\n|.)\s?)*"|[\w-]+\((?:[^'"()]+|'(?:[^'\\\n\r]|\\(?:[0-9a-f]{1,6}|\r\n|.)\s?)*'|"(?:[^"\\\n\r]|\\(?:[0-9a-f]{1,6}|\r\n|.)\s?)*")*\))*|[^;]*)\s*(?:;\s*|$)/ig,
     regCleanupStyle = /(:|;)\s+/g;
 
 /**
@@ -30,18 +31,21 @@ exports.fn = function(item) {
 
     if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']
-        var styles = item.attr('style').value.split(';').filter(function(style) {
-                return style;
-            }),
+        var styleValue = item.attr('style').value,
+            styles = [],
             attrs = {};
+
+        regDeclarationBlock.lastIndex = 0;
+        for (var rule, decl; rule = regDeclarationBlock.exec(styleValue);) {
+            decl = [rule[1], rule[2]];
+            decl.toString = stringifyDeclaration;
+            styles.push(decl);
+        }
 
         if (styles.length) {
 
             styles = styles.filter(function(style) {
                 if (style) {
-                    // ['opacity', 1]
-                    style = style.split(':');
-
                     var prop = style[0].trim(),
                         val = style[1].replace(/^[\'\"](.+)[\'\"]$/, '$1').trim();
 
@@ -65,8 +69,8 @@ exports.fn = function(item) {
 
             if (styles.length) {
                 item.attr('style').value = styles.join(';')
-                                                .replace(regCleanupStyle, '$1')
-                                                .trim();
+                    .replace(regCleanupStyle, '$1')
+                    .trim();
             } else {
                 item.removeAttr('style');
             }
@@ -76,3 +80,7 @@ exports.fn = function(item) {
     }
 
 };
+
+function stringifyDeclaration() {
+    return this.join(':');
+}
