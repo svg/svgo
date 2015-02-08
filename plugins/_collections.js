@@ -1387,7 +1387,8 @@ exports.elems = {
     mask: {
         attrsGroups: [
             'conditionalProcessing',
-            'core'
+            'core',
+            'presentation'
         ],
         attrs: [
             'class',
