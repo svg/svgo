@@ -3,16 +3,7 @@
        <path d="..."/>
     </clipPath>
     <g clip-path="url(#a)">
-        <path d="..."/>
-    </g>
-    <g clip-path="url(#a)">
         <path d="..." transform="scale(.2)"/>
-    </g>
-    <g clip-path="url(#a)">
-        <g transform="scale(.2)">
-            <path d="..."/>
-            <path d="..."/>
-        </g>
     </g>
 </svg>
 
@@ -23,15 +14,6 @@
         <path d="..."/>
     </clipPath>
     <g clip-path="url(#a)">
-        <path d="..."/>
-    </g>
-    <g clip-path="url(#a)">
         <path d="..." transform="scale(.2)"/>
-    </g>
-    <g clip-path="url(#a)">
-        <g transform="scale(.2)">
-            <path d="..."/>
-            <path d="..."/>
-        </g>
     </g>
 </svg>

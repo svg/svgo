@@ -5,4 +5,5 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://" y="10" test:attr="val">
-test</svg>
+    test
+</svg>
