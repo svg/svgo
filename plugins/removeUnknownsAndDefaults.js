@@ -9,7 +9,8 @@ exports.params = {
     unknownContent: true,
     unknownAttrs: true,
     defaultAttrs: true,
-    uselessOverrides: true
+    uselessOverrides: true,
+    keepDataAttrs: true
 };
 
 var collections = require('./_collections'),
@@ -100,7 +101,8 @@ exports.fn = function(item, params) {
 
                 if (
                     attr.name !== 'xmlns' &&
-                    (attr.prefix === 'xml' || !attr.prefix)
+                    (attr.prefix === 'xml' || !attr.prefix) &&
+                    (!params.keepDataAttrs || attr.name.indexOf('data-') != 0)
                 ) {
                     if (
                         // unknown attrs
