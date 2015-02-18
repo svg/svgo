@@ -2338,7 +2338,7 @@ exports.colorsNames = {
     'wheat': '#f5deb3',
     'white': '#fff',
     'whitesmoke': '#f5f5f5',
-    'yellow': '#ff00',
+    'yellow': '#ff0',
     'yellowgreen': '#9acd32'
 };
 
