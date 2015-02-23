@@ -26,7 +26,7 @@ var EXTEND = require('whet.extend'),
     regDeclarationBlock = new RegExp(rAttr + ':' + rValue + rDeclEnd, 'ig'),
 
     // Comments expression. Honors escape sequences and strings.
-    regStripComments = new RegExp(g(rEscape, rSingleQuotes, rQuotes, '/\\*[^]*\\*/'), 'ig');
+    regStripComments = new RegExp(g(rEscape, rSingleQuotes, rQuotes, '/\\*[^]*?\\*/'), 'ig');
 
 /**
  * Convert style in attributes. Cleanups comments and illegal declarations (without colon) as a side effect.
