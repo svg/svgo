@@ -20,6 +20,7 @@ plugins:
   - removeMetadata
   - removeEditorsNSData
   - cleanupAttrs
+  - cleanupIDs
   - convertStyleToAttrs
   - removeRasterImages
   - cleanupNumericValues
@@ -41,7 +42,6 @@ plugins:
   - removeEmptyAttrs
   - removeEmptyContainers
   - mergePaths
-  - cleanupIDs
   - removeUnusedNS
   - transformsWithOnePath
   - sortAttrs

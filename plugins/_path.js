@@ -7,7 +7,7 @@ var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     transformsMultiply = require('./_transforms').transformsMultiply,
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
-    defaultStrokeWidth = { value: collections.attrsGroupsDefaults.presentation['stroke-width'] },
+    defaultStrokeWidth = collections.attrsGroupsDefaults.presentation['stroke-width'],
     cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero;
 
@@ -222,7 +222,7 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
         return path;
       }
       if (sx !== 1){
-        var strokeWidth = (elem.computedAttr('stroke-width') || defaultStrokeWidth).value;
+        var strokeWidth = elem.computedAttr('stroke-width') || defaultStrokeWidth;
 
         if (elem.hasAttr('stroke-width')){
           elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
