@@ -61,10 +61,8 @@ exports.fn = function(item) {
         })
 
         regDeclarationBlock.lastIndex = 0;
-        for (var rule, decl; rule = regDeclarationBlock.exec(styleValue);) {
-            decl = [rule[1], rule[2]];
-            decl.toString = stringifyDeclaration;
-            styles.push(decl);
+        for (var rule; rule = regDeclarationBlock.exec(styleValue);) {
+            styles.push([rule[1], rule[2]]);
         }
 
         if (styles.length) {
@@ -97,7 +95,9 @@ exports.fn = function(item) {
             EXTEND(item.attrs, attrs);
 
             if (styles.length) {
-                item.attr('style').value = styles.join(';');
+                item.attr('style').value = styles
+                    .map(function(declaration) { return declaration.join(':') })
+                    .join(';');
             } else {
                 item.removeAttr('style');
             }
@@ -110,8 +110,4 @@ exports.fn = function(item) {
 
 function g() {
     return '(?:' + Array.prototype.join.call(arguments, '|') + ')';
-}
-
-function stringifyDeclaration() {
-    return this.join(':');
 }
