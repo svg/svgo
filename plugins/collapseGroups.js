@@ -4,8 +4,6 @@ exports.type = 'perItemReverse';
 
 exports.active = true;
 
-var flattenOneLevel = require('../lib/svgo/tools').flattenOneLevel;
-
 /*
  * Collapse useless groups.
  *
@@ -34,8 +32,6 @@ exports.fn = function(item) {
     // non-empty elements
     if (item.elem && !item.isEmpty()) {
 
-        var unflatten = false;
-
         item.content.forEach(function(g, i) {
 
             // non-empty groups
@@ -62,17 +58,11 @@ exports.fn = function(item) {
 
                 // collapse groups without attributes
                 if (!g.hasAttr()) {
-                    unflatten = true;
-
-                    item.content.splice(i, 1, g.content);
+                    item.spliceContent(i, 1, g.content);
                 }
             }
 
         });
-
-        if (unflatten) {
-            item.content = flattenOneLevel(item.content);
-        }
 
     }
 
