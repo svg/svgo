@@ -11,8 +11,7 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path d="M 0,0 zM 10,10 zM 20,20"/>
-    <path d="M 30,30 z"/>
+    <path d="M 0,0 zM 10,10 zM 20,20M 30,30 z"/>
     <path d="M 30,30 z" fill="#f00"/>
-    <path d="M 40,40 z m 50,50 z"/>
+    <path d="M 40,40 zM 50,50 z"/>
 </svg>
