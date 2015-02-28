@@ -82,19 +82,17 @@ exports.fn = function(item) {
         item.hasAttr('points')
     ) {
 
-        var points = item.attr('points').value.trim(),
-            coords = [];
-
-        for (var num; num = regNumber.exec(points);)
-            coords.push(+num);
-
+        var coords = (item.attr('points').value.match(regNumber) || []).map(Number);
         if (coords.length < 4) return false;
+
+        var closePath = item.isElem('polygon') &&
+                (item.computedAttr('id') || (item.computedAttr('stroke') || 'none') != 'none');
 
         item.addAttr({
                 name: 'd',
                 value: 'M' + coords.slice(0,2).join(' ') +
                        'L' + coords.slice(2).join(' ') +
-                       (item.isElem('polygon') ? 'z' : ''),
+                       (closePath ? 'z' : ''),
                 prefix: '',
                 local: 'd'
             });
