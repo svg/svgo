@@ -4,6 +4,9 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+var path2js = require('./_path.js').path2js,
+    relative2absolute = require('./_path.js').relative2absolute;
+
 /**
  * Merge multiple Paths into one.
  *
@@ -14,59 +17,47 @@ exports.active = true;
  */
 exports.fn = function(item) {
 
-    if (item.isElem() && !item.isEmpty()) {
+    if (!item.isElem() || item.isEmpty()) return;
 
-        var prevContentItem,
-            prevContentItemKeys = null;
+    var prevContentItem,
+        prevContentItemKeys = null;
 
-        item.content = item.content.filter(function(contentItem) {
+    item.content = item.content.filter(function(contentItem) {
 
-            // merge only <path d="...z" />
-            if (prevContentItem &&
-                prevContentItem.isElem('path') &&
-                prevContentItem.hasAttr('d') &&
-                contentItem.isElem('path') &&
-                contentItem.hasAttr('d')
-            ) {
+        if (prevContentItem &&
+            prevContentItem.isElem('path') &&
+            prevContentItem.hasAttr('d') &&
+            contentItem.isElem('path') &&
+            contentItem.hasAttr('d')
+        ) {
 
-                if (prevContentItemKeys == null) {
-                    prevContentItemKeys = Object.keys(prevContentItem.attrs);
-                }
+            if (prevContentItemKeys == null) {
+                prevContentItemKeys = Object.keys(prevContentItem.attrs);
+            }
 
-                var contentItemKeys = Object.keys(contentItem.attrs);
-                if (contentItemKeys.length > 1 || prevContentItemKeys.length > 1) {
-                    if (contentItemKeys.length != prevContentItemKeys.length) {
-                        prevContentItem = contentItem;
-                        prevContentItemKeys = null;
-                        return true;
-                    }
+            var contentItemAttrs = Object.keys(contentItem.attrs),
+                equalData = prevContentItemKeys.length == contentItemAttrs.length &&
+                    contentItemAttrs.every(function(key) {
+                        return key == 'd' ||
+                            prevContentItem.hasAttr(key) &&
+                            prevContentItem.attr(key).value == contentItem.attr(key).value;
+                    });
 
-                    var equalData = contentItemKeys.every(function(key) {
-                            return key == 'd' ||
-                                prevContentItem.hasAttr(key) &&
-                                prevContentItem.attr(key).value == contentItem.attr(key).value;
-                        });
-                    if (!equalData) {
-                        prevContentItem = contentItem;
-                        prevContentItemKeys = null;
-                        return true;
-                    }
+            if (equalData) {
+                var prevPathJS = prevContentItem.pathJS;
+                if (prevContentItem.pathJS) {
+                    prevPathJS.push.apply(prevPathJS, contentItem.pathJS);
                 }
 
                 prevContentItem.attr('d').value += contentItem.attr('d').value.replace(/m/i, 'M');
-
-                var pathJS = prevContentItem.pathJS;
-                if (pathJS) {
-                    pathJS.push.apply(pathJS, contentItem.pathJS);
-                }
                 return false;
             }
+        }
 
-            prevContentItem = contentItem;
-            prevContentItemKeys = null;
-            return true;
+        prevContentItem = contentItem;
+        prevContentItemKeys = null;
+        return true;
 
-        });
-    }
+    });
 
 };
