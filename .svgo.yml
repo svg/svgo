@@ -20,8 +20,8 @@ plugins:
   - removeMetadata
   - removeEditorsNSData
   - cleanupAttrs
-  - cleanupIDs
   - convertStyleToAttrs
+  - cleanupIDs
   - removeRasterImages
   - cleanupNumericValues
   - cleanupListOfValues

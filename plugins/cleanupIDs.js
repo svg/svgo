@@ -46,10 +46,7 @@ exports.fn = function(data, params) {
      */
     function monkeys(items) {
 
-        var i = 0,
-            length = items.content.length;
-
-        while(i < length) {
+        for (var i = 0; i < items.content.length; i++) {
 
             var item = items.content[i],
                 match;
@@ -67,7 +64,7 @@ exports.fn = function(data, params) {
                     item.eachAttr(function(attr) {
                         // save IDs
                         if (attr.name === 'id') {
-                            IDs[idPrefix + item.attr('id').value] = item;
+                            IDs[idPrefix + attr.value] = item;
                         }
 
                         // save IDs url() references
@@ -105,8 +102,6 @@ exports.fn = function(data, params) {
                 }
 
             }
-
-            i++;
 
         }
 
