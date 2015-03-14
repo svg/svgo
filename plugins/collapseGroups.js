@@ -30,7 +30,7 @@ exports.active = true;
 exports.fn = function(item) {
 
     // non-empty elements
-    if (item.elem && !item.isEmpty()) {
+    if (item.isElem() && !item.isElem('switch') && !item.isEmpty()) {
 
         item.content.forEach(function(g, i) {
 
