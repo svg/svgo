@@ -48,7 +48,7 @@ exports.fn = function(item) {
                         g.eachAttr(function(attr) {
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);
-                            } else if (attr.name === 'transform') {
+                            } else if (attr.name == 'transform' || attr.name == 'class') {
                                 inner.attr(attr.name).value = attr.value + ' ' + inner.attr(attr.name).value;
                             }
                             g.removeAttr(attr.name);
