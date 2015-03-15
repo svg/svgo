@@ -33,8 +33,10 @@ exports.fn = function(item, params) {
 
         if (prevContentItem &&
             prevContentItem.isElem('path') &&
+            prevContentItem.isEmpty() &&
             prevContentItem.hasAttr('d') &&
             contentItem.isElem('path') &&
+            contentItem.isEmpty() &&
             contentItem.hasAttr('d')
         ) {
 
