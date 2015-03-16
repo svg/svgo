@@ -4,8 +4,14 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.params = {
+    collapseRepeated: true,
+    leadingZero: true,
+    negativeExtraSpace: true
+};
+
 var path2js = require('./_path.js').path2js,
-    relative2absolute = require('./_path.js').relative2absolute;
+    js2path = require('./_path.js').js2path;
 
 /**
  * Merge multiple Paths into one.
@@ -13,13 +19,13 @@ var path2js = require('./_path.js').path2js,
  * @param {Object} item current iteration item
  * @return {Boolean} if false, item will be filtered out
  *
- * @author Kir Belevich
+ * @author Kir Belevich, Lev Solntsev
  */
-exports.fn = function(item) {
+exports.fn = function(item, params) {
 
     if (!item.isElem() || item.isEmpty()) return;
 
-    var prevContentItem,
+    var prevContentItem = null,
         prevContentItemKeys = null;
 
     item.content = item.content.filter(function(contentItem) {
@@ -31,7 +37,7 @@ exports.fn = function(item) {
             contentItem.hasAttr('d')
         ) {
 
-            if (prevContentItemKeys == null) {
+            if (!prevContentItemKeys) {
                 prevContentItemKeys = Object.keys(prevContentItem.attrs);
             }
 
@@ -41,15 +47,12 @@ exports.fn = function(item) {
                         return key == 'd' ||
                             prevContentItem.hasAttr(key) &&
                             prevContentItem.attr(key).value == contentItem.attr(key).value;
-                    });
+                    }),
+                prevPathJS = path2js(prevContentItem),
+                curPathJS = path2js(contentItem);
 
             if (equalData) {
-                var prevPathJS = prevContentItem.pathJS;
-                if (prevContentItem.pathJS) {
-                    prevPathJS.push.apply(prevPathJS, contentItem.pathJS);
-                }
-
-                prevContentItem.attr('d').value += contentItem.attr('d').value.replace(/m/i, 'M');
+                js2path(prevContentItem, prevPathJS.concat(curPathJS), params);
                 return false;
             }
         }

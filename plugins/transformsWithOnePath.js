@@ -32,11 +32,13 @@ exports.params = {
     negativeExtraSpace: true
 };
 
-var relative2absolute = require('./_path.js').relative2absolute,
-    computeCubicBoundingBox = require('./_path.js').computeCubicBoundingBox,
-    computeQuadraticBoundingBox = require('./_path.js').computeQuadraticBoundingBox,
-    applyTransforms = require('./_path.js').applyTransforms,
-    js2path = require('./_path.js').js2path,
+var _path = require('./_path.js'),
+    relative2absolute = _path.relative2absolute,
+    computeCubicBoundingBox = _path.computeCubicBoundingBox,
+    computeQuadraticBoundingBox = _path.computeQuadraticBoundingBox,
+    applyTransforms = _path.applyTransforms,
+    js2path = _path.js2path,
+    path2js = _path.path2js,
     EXTEND = require('whet.extend');
 
 exports.fn = function(data, params) {
@@ -52,7 +54,7 @@ exports.fn = function(data, params) {
             var svgElem = item,
                 pathElem = svgElem.content[0],
                 // get absoluted Path data
-                path = relative2absolute(EXTEND(true, [], pathElem.pathJS)),
+                path = relative2absolute(EXTEND(true, [], path2js(pathElem))),
                 xs = [],
                 ys = [],
                 cubicСontrolPoint = [0, 0],
@@ -312,7 +314,7 @@ exports.fn = function(data, params) {
                 });
 
                 // save new
-                pathElem.attr('d').value = js2path(path, params);
+                js2path(pathElem, path, params);
             }
 
         }

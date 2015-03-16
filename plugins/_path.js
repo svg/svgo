@@ -1,8 +1,8 @@
 'use strict';
 
 var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
-    regPathData = /[\-+]?\d*\.?\d+([eE][\-+]?\d+)?/g,
-    regNumericValues = /[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/,
+    regPathData = /[-+]?(?:\d*\.\d+|\d+\.?)([eE][-+]?\d+)?/g,
+    regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
     collections = require('./_collections.js'),
@@ -18,85 +18,69 @@ var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
  * @param {Object} params plugin params
  * @return {Array} output array
  */
-exports.path2js = function(pathString) {
+exports.path2js = function(path) {
+    if (path.pathJS) return path.pathJS;
 
-        // JS representation of the path data
-    var path = [],
-        // current instruction context
-        instruction;
+    var paramsLength = { // Number of parameters of every path command
+            H: 1, V: 1, M: 2, L: 2, T: 2, Q: 4, S: 4, C: 6, A: 7,
+            h: 1, v: 1, m: 2, l: 2, t: 2, q: 4, s: 4, c: 6, a: 7
+        },
+        pathData = [],   // JS representation of the path data
+        instruction, // current instruction context
+        startMoveto = false;
 
     // splitting path string into array like ['M', '10 50', 'L', '20 30']
-    pathString.split(regPathInstructions).forEach(function(data) {
-        if (data) {
-            // instruction item
-            if (regPathInstructions.test(data)) {
-                instruction = data;
+    path.attr('d').value.split(regPathInstructions).forEach(function(data) {
+        if (!data) return;
+        if (!startMoveto) {
+            if (data == 'M' || data == 'm') {
+                startMoveto = true;
+            } else return;
+        }
 
-                // z - instruction w/o data
-                if ('Zz'.indexOf(instruction) > -1) {
-                    path.push({
-                        instruction: 'z'
-                    });
-                }
-            // data item
-            } else {
+        // instruction item
+        if (regPathInstructions.test(data)) {
+            instruction = data;
 
-                data = data.trim().match(regPathData);
+            // z - instruction w/o data
+            if (instruction == 'Z' || instruction == 'z') {
+                pathData.push({
+                    instruction: 'z'
+                });
+            }
+        // data item
+        } else {
+            data = data.match(regPathData);
+            if (!data) return;
 
-                if (data) {
+            data = data.map(Number);
 
-                    var index = 0,
-                        pair = 2;
+            // Subsequent moveto pairs of coordinates are threated as implicit lineto commands
+            // http://www.w3.org/TR/SVG/paths.html#PathDataMovetoCommands
+            if (instruction == 'M' || instruction == 'm') {
+                pathData.push({
+                    instruction: pathData.length == 0 ? 'M' : instruction,
+                    data: data.splice(0, 2)
+                });
+                instruction = instruction == 'M' ? 'L' : 'l';
+            }
 
-                    data = data.map(function(str) {
-                        return +str;
-                    });
-
-                    // deal with very first 'Mm' and multiple points data
-                    if ('Mm'.indexOf(instruction) > -1) {
-
-                        path.push({
-                            instruction: instruction,
-                            data: data.slice(index, index + pair)
-                        });
-
-                        index += pair;
-
-                        if (data.length) {
-                            instruction = instruction === instruction.toLowerCase() ? 'l' : 'L';
-                        }
-
-                    }
-
-                    if ('HhVv'.indexOf(instruction) > -1) {
-                        pair = 1;
-                    } else if ('LlTt'.indexOf(instruction) > -1) {
-                        pair = 2;
-                    } else if ('QqSs'.indexOf(instruction) > -1) {
-                        pair = 4;
-                    } else if ('Cc'.indexOf(instruction) > -1) {
-                        pair = 6;
-                    } else if ('Aa'.indexOf(instruction) > -1) {
-                        pair = 7;
-                    }
-
-                    while(index < data.length) {
-                        path.push({
-                            instruction: instruction,
-                            data: data.slice(index, index + pair)
-                        });
-
-                        index += pair;
-                    }
-
-                }
-
+            for (var pair = paramsLength[instruction]; data.length;) {
+                pathData.push({
+                    instruction: instruction,
+                    data: data.splice(0, pair)
+                });
             }
         }
     });
 
-    return path;
+    // First moveto is actually absolute. Subsequent coordinates were separated above.
+    if (pathData.length && pathData[0].instruction == 'm') {
+        pathData[0].instruction = 'M';
+    }
+    path.pathJS = pathData;
 
+    return pathData;
 };
 
 /**
@@ -105,79 +89,76 @@ exports.path2js = function(pathString) {
  * @param {Array} data input data
  * @return {Array} output data
  */
-exports.relative2absolute = function(data) {
-
+var relative2absolute = exports.relative2absolute = function(data) {
     var currentPoint = [0, 0],
         subpathPoint = [0, 0],
         i;
 
-    data.forEach(function(item) {
+    data = data.map(function(item) {
 
-        if (item.instruction === 'M') {
+        var instruction = item.instruction,
+            itemData = item.data && item.data.slice();
 
-            currentPoint = item.data.slice(-2);
-            subpathPoint = item.data.slice(-2);
+        if (instruction == 'M') {
 
-        } else if ('mlcsqta'.indexOf(item.instruction) > -1) {
+            set(currentPoint, itemData);
+            set(subpathPoint, itemData);
 
-            for (i = 0; i < item.data.length; i++) {
-                if (i % 2 === 0) {
-                    item.data[i] += currentPoint[0];
-                } else {
-                    item.data[i] += currentPoint[1];
-                }
+        } else if ('mlcsqt'.indexOf(instruction) > -1) {
 
-                if (i > 0) {
-                    var index = i + 1;
+            for (i = 0; i < itemData.length; i++) {
+                itemData[i] += currentPoint[i % 2];
+            }
+            set(currentPoint, itemData);
 
-                    if ('mlt'.indexOf(item.instruction) > -1 && index % 2 === 0) {
-                        currentPoint[0] = item.data[i - 1];
-                        currentPoint[1] = item.data[i];
-                    } else if ('qs'.indexOf(item.instruction) > -1 && index % 4 === 0) {
-                        currentPoint[0] = item.data[i - 1];
-                        currentPoint[1] = item.data[i];
-                    } else if (item.instruction === 'c' && index % 6 === 0) {
-                        currentPoint[0] = item.data[i - 1];
-                        currentPoint[1] = item.data[i];
-                    } else if (item.instruction === 'a' && index % 7 === 0) {
-                        currentPoint[0] = item.data[i - 1];
-                        currentPoint[1] = item.data[i];
-                    }
-                }
+            if (instruction == 'm') {
+                set(subpathPoint, itemData);
             }
 
-            if (item.instruction === 'm') {
-                subpathPoint = item.data.slice(-2);
-            }
+        } else if (instruction == 'a') {
 
-        } else if (item.instruction === 'h') {
+            itemData[5] += currentPoint[0];
+            itemData[6] += currentPoint[1];
+            set(currentPoint, itemData);
 
-            for (i = 0; i < item.data.length; i++) {
-                item.data[i] += currentPoint[0];
-            }
+        } else if (instruction == 'h') {
 
-            currentPoint[0] = item.data[item.data.length - 1];
+            itemData[0] += currentPoint[0];
+            currentPoint[0] = itemData[0];
 
-        } else if (item.instruction === 'v') {
+        } else if (instruction == 'v') {
 
-            for (i = 0; i < item.data.length; i++) {
-                item.data[i] += currentPoint[1];
-            }
+            itemData[0] += currentPoint[1];
+            currentPoint[1] = itemData[0];
 
-            currentPoint[1] = item.data[item.data.length - 1];
+        } else if ('MZLCSQTA'.indexOf(instruction) > -1) {
 
-        } else {
+            set(currentPoint, itemData);
 
-            currentPoint = subpathPoint;
+        } else if (instruction == 'H') {
+
+            currentPoint[0] = itemData[0];
+
+        } else if (instruction == 'V') {
+
+            currentPoint[1] = itemData[0];
+
+        } else if (instruction == 'z') {
+
+            set(currentPoint, subpathPoint);
 
         }
 
-        item.instruction = item.instruction.toUpperCase();
+        return instruction == 'z' ?
+            { instruction: 'z' } :
+            {
+                instruction: instruction.toUpperCase(),
+                data: itemData
+            };
 
     });
 
     return data;
-
 };
 
 /**
@@ -241,27 +222,26 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
     // If an 'a' command can't be transformed directly, convert path to curves.
     if (!splittedMatrix.isSimple && path.some(function(i) { return i.instruction == 'a' })) {
         var prev;
-        path = path.reduce(function(newPath, item){
+        path.forEach(function(item, index, path){
             if (item.instruction == 'a') {
                 var curves = a2c.apply(0, [0, 0].concat(item.data)),
+                    items = [],
                     curveData;
                 while ((curveData = curves.splice(0,6)).length) {
-                    item = {
+                    var base = prev.coords;
+                    items.push(prev = {
                         instruction: 'c',
                         data: curveData,
+                        coords: [base[0] + item.data[4], base[1] + item.data[5]],
                         base: prev.coords
-                    };
-                    item.coords = [item.base[0] + item.data[4], item.base[1] + item.data[5]];
-                    prev = item;
-                    newPath.push(item);
+                    });
                 }
+                path.splice.apply(path, [index, 1].concat(items));
             } else {
-                newPath.push(item);
                 if (prev) item.base = prev.coords;
                 prev = item;
             }
-            return newPath;
-        }, []);
+        });
     }
 
     path.forEach(function(pathItem) {
@@ -291,8 +271,8 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
 
                 // then apply it only to the first absoluted M
                 newPoint = transformPoint(matrix.data, pathItem.data[0], pathItem.data[1]);
-                pathItem.data[0] = pathItem.coords[0] = newPoint[0];
-                pathItem.data[1] = pathItem.coords[1] = newPoint[1];
+                set(pathItem.data, newPoint);
+                set(pathItem.coords, newPoint);
 
                 // clear translate() data from transform matrix
                 matrix.data[4] = 0;
@@ -553,20 +533,62 @@ function computeQuadraticFirstDerivativeRoot(a, b, c) {
  * @param {Object} params plugin params
  * @return {String} output path string
  */
-exports.js2path = function(path, params) {
+exports.js2path = function(path, data, params) {
 
-        // output path data string
-    var pathString = '';
+    path.pathJS = data;
 
-    path.forEach(function(item) {
+    if (params.collapseRepeated) {
+        data = collapseRepeated(data);
+    }
 
-        pathString += item.instruction + (item.data ? cleanupOutData(item.data, params) : '');
-
-    });
-
-    return pathString;
+    path.attr('d').value = data.reduce(function(pathString, item) {
+        return pathString += item.instruction + (item.data ? cleanupOutData(item.data, params) : '');
+    }, '');
 
 };
+
+/**
+ * Collapse repeated instructions data
+ *
+ * @param {Array} path input path data
+ * @return {Array} output path data
+ */
+function collapseRepeated(data) {
+
+    var prev,
+        prevIndex;
+
+    // copy an array and modifieds item to keep original data untouched
+    data = data.reduce(function(newPath, item) {
+        if (
+            prev && item.data &&
+            item.instruction == prev.instruction
+        ) {
+            // concat previous data with current
+            prev = newPath[prevIndex] = {
+                instruction: prev.instruction,
+                data: prev.data.concat(item.data),
+                coords: item.coords,
+                base: prev.base
+            }
+        } else {
+            newPath.push(item);
+            prev = item;
+            prevIndex = newPath.length - 1;
+        }
+
+        return newPath;
+    }, []);
+
+    return data;
+
+}
+
+function set(dest, source) {
+    dest[0] = source[source.length - 2];
+    dest[1] = source[source.length - 1];
+    return dest;
+}
 
 /* Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
  * Thanks to Dmitry Baranovskiy for his great work!

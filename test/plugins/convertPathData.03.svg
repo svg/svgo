@@ -19,7 +19,7 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path d="M10 50m10 10"/>
+    <path d="M20 60"/>
     <path d="M10 50l10 10"/>
     <path d="M10 50l10-20 20 30"/>
     <path d="M10 50l10-20 20 30"/>

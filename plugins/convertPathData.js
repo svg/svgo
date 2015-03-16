@@ -51,7 +51,7 @@ exports.fn = function(item, params) {
         error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
         hasMarkerMid = item.hasAttr('marker-mid');
 
-        var data = path2js(item.attr('d').value);
+        var data = path2js(item);
 
         // TODO: get rid of functions returns
         if (data.length) {
@@ -63,17 +63,11 @@ exports.fn = function(item, params) {
 
             data = filters(data, params);
 
-            if (params.collapseRepeated) {
-                data = collapseRepeated(data, params);
-            }
-
             if (params.utilizeAbsolute) {
                 data = convertToMixed(data, params);
             }
 
-            item.pathJS = data;
-
-            item.attr('d').value = js2path(data, params);
+            js2path(item, data, params);
         }
 
     }
@@ -91,7 +85,6 @@ function convertToRelative(path) {
 
     var point = [0, 0],
         subpathPoint = [0, 0],
-        mM = false,
         baseItem;
 
     path.forEach(function(item, index) {
@@ -106,18 +99,12 @@ function convertToRelative(path) {
             // recalculate current point
             if ('mcslqta'.indexOf(instruction) > -1) {
 
-                var newPoint = data.slice(-2);
-
-                point[0] += newPoint[0];
-                point[1] += newPoint[1];
+                point[0] += data[data.length - 2];
+                point[1] += data[data.length - 1];
 
                 if (instruction === 'm') {
-                    if (index === 0) {
-                        instruction = 'M';
-                        mM = true;
-                    }
-
-                    subpathPoint = point.slice(-2);
+                    subpathPoint[0] = point[0];
+                    subpathPoint[1] = point[1];
                     baseItem = item;
                 }
 
@@ -134,20 +121,16 @@ function convertToRelative(path) {
             // convert absolute path data coordinates to relative
             // if "M" was not transformed from "m"
             // M → m
-            if (
-                instruction === 'M' &&
-                (!mM || index > 0)
-            ) {
+            if (instruction === 'M') {
 
                 if (index > 0) instruction = 'm';
 
                 data[0] -= point[0];
                 data[1] -= point[1];
 
-                point[0] += data[0];
-                point[1] += data[1];
+                subpathPoint[0] = point[0] += data[0];
+                subpathPoint[1] = point[1] += data[1];
 
-                subpathPoint = point.slice(-2);
                 baseItem = item;
 
             }
@@ -241,11 +224,12 @@ function convertToRelative(path) {
         }
 
         // !data === z, reset current point
-        else {
-            if(baseItem)
+        else if (instruction == 'z') {
+            if (baseItem) {
                 item.coords = baseItem.coords;
-            point = subpathPoint;
-            mM = false;
+            }
+            point[0] = subpathPoint[0];
+            point[1] = subpathPoint[1];
         }
 
         item.base = index > 0 ? path[index - 1].coords : [0, 0];
@@ -267,7 +251,7 @@ function filters(path, params) {
 
     var relSubpoint = [0, 0],
         pathBase = [0, 0],
-        prev;
+        prev = {};
 
     path = path.filter(function(item, index) {
 
@@ -279,7 +263,7 @@ function filters(path, params) {
             if (instruction === 's') {
                 var sdata = [0, 0].concat(data);
 
-                if (prev && 'cs'.indexOf(prev.instruction) > -1) {
+                if ('cs'.indexOf(prev.instruction) > -1) {
                     var pdata = prev.data,
                         n = pdata.length;
 
@@ -351,7 +335,6 @@ function filters(path, params) {
 
                 // q
                 else if (
-                    prev &&
                     instruction === 'q' &&
                     isCurveStraightLine(
                         [ 0, data[0], data[2] ],
@@ -372,7 +355,6 @@ function filters(path, params) {
 
                     // q (original) + t
                     if (
-                        prev &&
                         prev.original &&
                         prev.original.instruction === 'q'
                     ) {
@@ -389,7 +371,7 @@ function filters(path, params) {
                     }
 
                     // [^qt] + t
-                    else if (!prev || 'qt'.indexOf(prev.instruction) === -1) {
+                    else if ('qt'.indexOf(prev.instruction) < 0) {
                         instruction = 'l';
                         data = data.slice(-2);
                     }
@@ -422,8 +404,30 @@ function filters(path, params) {
                 }
             }
 
+            // collapse repeated commands
+            // h 20 h 30 -> h 50
+            if (
+                params.collapseRepeated &&
+                !hasMarkerMid &&
+                ('mhv'.indexOf(instruction) > -1) &&
+                prev.instruction &&
+                instruction == prev.instruction.toLowerCase() &&
+                (
+                    (instruction != 'h' && instruction != 'v') ||
+                    (prev.data[0] >= 0) == (item.data[0] >= 0)
+            )) {
+                prev.data[0] += data[0];
+                if (instruction != 'h' && instruction != 'v') {
+                    prev.data[1] += data[1];
+                }
+                prev.coords = item.coords;
+                if (prev.original) prev.original = null;
+                path[index] = prev;
+                return false;
+            }
+
             // convert curves into smooth shorthands
-            if (params.curveSmoothShorthands && prev) {
+            if (params.curveSmoothShorthands && prev.instruction) {
 
                 // curveto
                 if (instruction === 'c') {
@@ -523,6 +527,8 @@ function filters(path, params) {
             // z resets coordinates
             relSubpoint[0] = pathBase[0];
             relSubpoint[1] = pathBase[1];
+            if (prev.instruction == 'z') return false;
+            prev = item;
 
         }
 
@@ -581,74 +587,15 @@ function convertToMixed(path, params) {
         if (
             absoluteDataStr.length < relativeDataStr.length &&
             !(
-                params.negativeExtraSpace && instruction == prev.instruction &&
+                params.negativeExtraSpace &&
+                instruction == prev.instruction &&
+                prev.instruction.charCodeAt(0) > 96 &&
                 absoluteDataStr.length == relativeDataStr.length - 1 &&
                 (data[0] < 0 || 0 < data[0] && data[0] < 1 && prev.data[prev.data.length - 1] % 1)
             )
         ) {
-            if (instruction.toUpperCase() != prev.instruction) {
-                item.instruction = instruction.toUpperCase();
-                item.data = adata;
-            } else {
-                prev.data = prev.data.concat(adata);
-                prev.coords = item.coords;
-                path[index] = prev;
-                return false;
-            }
-        } else if (instruction == prev.instruction) {
-            prev.data = prev.data.concat(data);
-            prev.coords = item.coords;
-            path[index] = prev;
-            return false;
-        }
-
-        prev = item;
-
-        return true;
-
-    });
-
-    return path;
-
-}
-
-/**
- * Collapse repeated instructions data
- *
- * @param {Array} path input path data
- * @return {Array} output path data
- */
-function collapseRepeated(path, params) {
-
-    var prev;
-
-    path = path.filter(function(item) {
-
-        if (
-            !hasMarkerMid &&
-            prev &&
-            item.instruction === prev.instruction &&
-            (
-                'Mmz'.indexOf(item.instruction) > -1 ||
-                'hv'.indexOf(item.instruction) > -1 && (prev.data[0] >= 0) == (item.data[0] >= 0) ||
-                !params.utilizeAbsolute
-            )
-        ) {
-            // increase previous h or v data with current
-            if ('hv'.indexOf(item.instruction) > -1) {
-                prev.data[0] += item.data[0];
-            } else if (item.instruction.toLowerCase() === 'm') {
-                prev.data[0] += item.data[0];
-                prev.data[1] += item.data[1];
-            // concat previous data with current if it is not z
-            } else if (item.data) {
-                prev.data = prev.data.concat(item.data);
-            }
-            prev.coords = item.coords;
-
-            // filter out current item
-            return false;
-
+            item.instruction = instruction.toUpperCase();
+            item.data = adata;
         }
 
         prev = item;
