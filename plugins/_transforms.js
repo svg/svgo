@@ -31,9 +31,20 @@ exports.transform2js = function(transformString) {
             // else if item is data
             } else {
                 // then split it into [10, 50] and collect as context.data
-                current.data = item.split(regTransformDataSplit).map(function(i) {
-                    return +i;
-                });
+                current.data = item.split(regTransformDataSplit).map(Number);
+
+                // 'rotate' has optional parameters <cx> <cy> which specify the point to rotate about.
+                // equivalent to 'translate(<cx>, <cy>) rotate(<rotate-angle>) translate(-<cx>, -<cy>)'
+                if (current.name == 'rotate' && current.data.length == 3) {
+                    transforms.push({
+                        name: 'translate',
+                        data: [-current.data[1], -current.data[2]]
+                    });
+                    transforms.splice(transforms.length - 2, 0, {
+                        name: 'translate',
+                        data: current.data.splice(1)
+                    });
+                }
             }
         }
 
