@@ -2,11 +2,18 @@
 
 exports.type = 'perItem';
 
-exports.active = false;
+exports.active = true;
+
+exports.params = {
+    removeAny: false
+};
+
+var standardDescs = /^Created with/;
 
 /**
- * Remove <desc>.
- * Disabled by default cause it may be used for accessibility.
+ * Removes <desc>.
+ * Removes only standard editors content or empty elements 'cause it can be used for accessibility.
+ * Enable parameter 'removeAny' to remove any description.
  *
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc
  *
@@ -15,8 +22,9 @@ exports.active = false;
  *
  * @author Daniel Wabyick
  */
-exports.fn = function(item) {
+exports.fn = function(item, params) {
 
-    return !item.isElem('desc');
+    return !item.isElem('desc') || !(params.removeAny || item.isEmpty() ||
+            standardDescs.test(item.content[0].text));
 
 };
