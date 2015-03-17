@@ -71,6 +71,7 @@ exports.fn = function(item, params) {
         if (
             params.circleR0 &&
             item.isElem('circle') &&
+            item.isEmpty() &&
             item.hasAttr('r', '0')
         ) return false;
 
@@ -83,6 +84,7 @@ exports.fn = function(item, params) {
         if (
             params.ellipseRX0 &&
             item.isElem('ellipse') &&
+            item.isEmpty() &&
             item.hasAttr('rx', '0')
         ) return false;
 
@@ -95,6 +97,7 @@ exports.fn = function(item, params) {
         if (
             params.ellipseRY0 &&
             item.isElem('ellipse') &&
+            item.isEmpty() &&
             item.hasAttr('ry', '0')
         ) return false;
 
@@ -107,6 +110,7 @@ exports.fn = function(item, params) {
         if (
             params.rectWidth0 &&
             item.isElem('rect') &&
+            item.isEmpty() &&
             item.hasAttr('width', '0')
         ) return false;
 
@@ -120,6 +124,7 @@ exports.fn = function(item, params) {
             params.rectHeight0 &&
             params.rectWidth0 &&
             item.isElem('rect') &&
+            item.isEmpty() &&
             item.hasAttr('height', '0')
         ) return false;
 
