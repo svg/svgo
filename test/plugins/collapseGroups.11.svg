@@ -4,6 +4,12 @@
             <path id="bar" d="..."/>
         </g>
     </g>
+    <g>
+        <animate id="frame0" attributeName="visibility" values="visible" dur="33ms" begin="0s;frame27.end"/>
+        <path d="..." fill="#272727"/>
+        <path d="..." fill="#404040"/>
+        <path d="..." fill="#2d2d2d"/>
+    </g>
 </svg>
 
 @@@
@@ -13,5 +19,11 @@
         <g id="star">
             <path id="bar" d="..."/>
         </g>
+    </g>
+    <g>
+        <animate id="frame0" attributeName="visibility" values="visible" dur="33ms" begin="0s;frame27.end"/>
+        <path d="..." fill="#272727"/>
+        <path d="..." fill="#404040"/>
+        <path d="..." fill="#2d2d2d"/>
     </g>
 </svg>

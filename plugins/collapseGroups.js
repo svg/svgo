@@ -57,7 +57,7 @@ exports.fn = function(item) {
                 }
 
                 // collapse groups without attributes
-                if (!g.hasAttr()) {
+                if (!g.hasAttr() && !g.content.some(function(item) { return item.isElem('animate') })) {
                     item.spliceContent(i, 1, g.content);
                 }
             }
