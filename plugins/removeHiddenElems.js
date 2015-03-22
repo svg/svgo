@@ -21,6 +21,8 @@ exports.params = {
     polygonEmptyPoints: true
 };
 
+var regValidPath = /m.*[lhvcsqta]/i;
+
 /**
  * Remove hidden elements with disabled rendering:
  * - display="none"
@@ -184,7 +186,7 @@ exports.fn = function(item, params) {
         if (
             params.pathEmptyD &&
             item.isElem('path') &&
-            !item.hasAttr('d')
+            (!item.hasAttr('d') || !regValidPath.test(item.attr('d').value))
         ) return false;
 
         // Polyline with empty points
