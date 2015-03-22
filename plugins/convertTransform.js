@@ -80,14 +80,23 @@ function convertTransform(item, attrName, params) {
 
     if (
         params.collapseIntoOne &&
-        (data.length >= 3 ||
-         data.some(function(i) { return i.name === 'matrix'; })
+        (
+            data.length >= 3 ||
+            data.length == 2 &&
+            (
+                data[0].name === 'matrix' || data[1].name === 'matrix' ||
+                data[0].name == data[1].name
+            )
         )
     ) {
         data = [transformsMultiply(data, params)];
 
         if (params.matrixToTransform) {
             data = [matrixToTransform(data[0], params)];
+        }
+
+        if (params.removeUseless) {
+            data = removeUseless(data);
         }
     }
 
@@ -192,8 +201,11 @@ function removeUseless(transforms) {
         // translate(0), rotate(0), skewX(0), skewY(0)
         if (
             ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
-            transform.data.length === 1 &&
-            transform.data[0] === 0
+            (transform.data.length === 1 || transform.name === 'rotate') &&
+            transform.data[0] === 0 ||
+            transform.name === 'translate' &&
+            transform.data[0] === 0 &&
+            transform.data[1] === 0
         ) {
             return false;
         // scale(1)
