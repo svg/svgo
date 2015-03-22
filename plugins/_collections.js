@@ -255,9 +255,6 @@ exports.elems = {
             'externalResourcesRequired',
             'type'
         ],
-        defaults: {
-            type: 'translate'
-        },
         contentGroups: [
             'descriptive'
         ]
