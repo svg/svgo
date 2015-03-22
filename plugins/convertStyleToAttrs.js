@@ -73,7 +73,7 @@ exports.fn = function(item) {
                         val = style[1];
 
                     if (rQuotedString.test(val)) {
-                        val = val.substring(1, val.length - 1);
+                        val = val.slice(1, -1);
                     }
 
                     if (stylingProps.indexOf(prop) > -1) {

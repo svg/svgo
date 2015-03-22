@@ -12,7 +12,9 @@ exports.params = {
 };
 
 var collections = require('./_collections'),
-    regRGB = /^rgb\((\d+%?),\s*(\d+%?),\s*(\d+%?)\)$/,
+    rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)',
+    rComma = '\\s*,\\s*',
+    regRGB = new RegExp('^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'),
     regHEX = /^\#(([a-fA-F0-9])\2){3}$/;
 
 /**
@@ -60,11 +62,10 @@ exports.fn = function(item, params) {
                 // Convert rgb() to long hex
                 if (params.rgb2hex && (match = val.match(regRGB))) {
                     match = match.slice(1, 4).map(function(m) {
-                        if (m.indexOf('%') > -1) {
+                        if (m.indexOf('%') > -1)
                             m = Math.round(parseFloat(m) * 2.55);
-                        }
 
-                        return +m;
+                        return Math.max(0, Math.min(m, 255));
                     });
 
                     val = rgb2hex(match);
@@ -104,5 +105,5 @@ exports.fn = function(item, params) {
  * @author Jed Schmidt
  */
 function rgb2hex(rgb) {
-    return '#' + ((256 + rgb[0] << 8 | rgb[1]) << 8 | rgb[2]).toString(16).slice(1);
+    return '#' + ("00000" + (rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16)).slice(-6).toUpperCase();
 }
