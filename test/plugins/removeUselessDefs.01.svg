@@ -1,0 +1,16 @@
+<svg>
+    <defs>
+        <path d="..."/>
+        <g>
+            <path d="..." id="a"/>
+        </g>
+    </defs>
+</svg>
+
+@@@
+
+<svg>
+    <defs>
+        <path d="..." id="a"/>
+    </defs>
+</svg>
