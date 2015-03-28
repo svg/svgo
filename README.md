@@ -24,7 +24,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] remove comments
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove `<metadata>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] remove `<title>` (disabled by default)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] remove `<desc>` (disabled by default)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] remove `<desc>` (only non-meaningful by default)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] remove elements of `<defs>` without `id`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
@@ -39,7 +39,7 @@ Today we have:
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] collapse multiple transforms into one, convert matrices to the short aliases and much more
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] remove unknown elements content and attributes, remove attrs with default values
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) ] remove non-inheritable group's "presentation" attributes
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] remove useless stroke and fill attrs (disabled by default)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] remove useless stroke and fill attrs
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] remove unused namespaces declaration
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] remove unused and minify used IDs
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] round numeric values to the fixed precision, remove default 'px' units

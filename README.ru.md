@@ -24,7 +24,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] удаление комментариев
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] удаление `<metadata>`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] удаление `<title>` (отключена по умолчанию)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] удаление `<desc>` (отключена по умолчанию)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] удаление `<desc>` (по умолчанию только незначимых)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] удаление элементов в `<defs>` без `id`
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] удаление пространств имён различных редакторов, их элементов и атрибутов
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] удаление пустых атрибутов
@@ -39,7 +39,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] схлопывание нескольких трансформаций в одну, конвертирование матриц в короткие алиасы и многое другое
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] удаление неизвестных элементов, контента и атрибутов
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) ] удаление ненаследуемых "презентационных" атрибутов групп
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] удаление неиспользуемых атрибутов stroke-* и fill-* (выключено по умолчанию)
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] удаление неиспользуемых атрибутов stroke-* и fill-*
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] удаление  деклараций неиспользуемых пространств имён
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] удаление неиспользуемых и сокращение используемых ID
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] округление дробных чисел до заданной точности, удаление `px` как единицы измерения по-умолчанию
