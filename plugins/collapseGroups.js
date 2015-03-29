@@ -4,6 +4,8 @@ exports.type = 'perItemReverse';
 
 exports.active = true;
 
+var animationElems = require('./_collections').elemsGroups.animation;
+
 /*
  * Collapse useless groups.
  *
@@ -57,7 +59,7 @@ exports.fn = function(item) {
                 }
 
                 // collapse groups without attributes
-                if (!g.hasAttr() && !g.content.some(function(item) { return item.isElem('animate') })) {
+                if (!g.hasAttr() && !g.content.some(function(item) { return item.isElem(animationElems) })) {
                     item.spliceContent(i, 1, g.content);
                 }
             }
