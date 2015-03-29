@@ -4,8 +4,11 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+var nonRendering = require('./_collections').elemsGroups.nonRendering,
+    defs;
+
 /**
- * Removes content of defs without ids and thus useless.
+ * Removes content of defs and properties that aren't rendered directly without ids.
  *
  * @param {Object} item current iteration item
  * @return {Boolean} if false, item will be filtered out
@@ -16,10 +19,14 @@ exports.fn = function(item) {
 
     if (item.isElem('defs')) {
 
-        if (!item.isEmpty())
-            item.content = item.content.reduce(getUsefulItems, []);
+        defs = item;
+        item.content = (item.content || []).reduce(getUsefulItems, []);
 
         if (item.isEmpty()) return false;
+
+    } else if (item.isElem(nonRendering) && !item.hasAttr('id')) {
+
+        return false;
 
     }
 
@@ -30,6 +37,7 @@ function getUsefulItems(usefulItems, item) {
     if (item.hasAttr('id')) {
 
         usefulItems.push(item);
+        item.parentNode = defs;
 
     } else if (!item.isEmpty()) {
 
