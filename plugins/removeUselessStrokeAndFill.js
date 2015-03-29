@@ -11,7 +11,9 @@ exports.params = {
 
 var shape = require('./_collections').elemsGroups.shape,
     regStrokeProps = /^stroke/,
-    regFillProps = /^fill-/;
+    regFillProps = /^fill-/,
+    styleOrScript = ['style', 'script'],
+    hasStyleOrScript = false;
 
 /**
  * Remove useless stroke and fill attrs.
@@ -24,7 +26,11 @@ var shape = require('./_collections').elemsGroups.shape,
  */
 exports.fn = function(item, params) {
 
-    if (item.isElem(shape) && !item.computedAttr('id')) {
+    if (item.isElem(styleOrScript)) {
+        hasStyleOrScript = true;
+    }
+
+    if (!hasStyleOrScript && item.isElem(shape) && !item.computedAttr('id')) {
 
         var stroke = params.stroke && item.computedAttr('stroke'),
             fill = params.fill && !item.computedAttr('fill', 'none');
