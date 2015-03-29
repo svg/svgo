@@ -6,7 +6,8 @@ exports.elemsGroups = {
     descriptive: ['desc', 'metadata', 'title'],
     shape: ['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect'],
     structural: ['defs', 'g', 'svg', 'symbol', 'use'],
-    gradient: ['linearGradient', 'radialGradient'],
+    paintServer: ['solidColor', 'linearGradient', 'radialGradient', 'meshGradient', 'pattern', 'hatch'],
+    nonRendering: ['linearGradient', 'radialGradient', 'pattern', 'clipPath', 'mask', 'marker', 'symbol', 'filter', 'solidColor'],
     container: ['a', 'defs', 'g', 'marker', 'mask', 'missing-glyph', 'pattern', 'svg', 'switch', 'symbol'],
     textContent: ['altGlyph', 'altGlyphDef', 'altGlyphItem', 'glyph', 'glyphRef', 'textPath', 'text', 'tref', 'tspan'],
     textContentChild: ['altGlyph', 'textPath', 'tref', 'tspan'],
@@ -24,7 +25,7 @@ exports.attrsGroups = {
     animationTiming: ['begin', 'dur', 'end', 'min', 'max', 'restart', 'repeatCount', 'repeatDur', 'fill'],
     animationValue: ['calcMode', 'values', 'keyTimes', 'keySplines', 'from', 'to', 'by'],
     conditionalProcessing: ['requiredFeatures', 'requiredExtensions', 'systemLanguage'],
-    core: ['id', 'xml:base', 'xml:lang', 'xml:space'],
+    core: ['id', 'tabindex', 'xml:base', 'xml:lang', 'xml:space'],
     graphicalEvent: ['onfocusin', 'onfocusout', 'onactivate', 'onclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onload'],
     presentation: ['alignment-baseline', 'baseline-shift', 'buffered-rendering', 'clip', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cursor', 'direction', 'display', 'dominant-baseline', 'enable-background', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'glyph-orientation-horizontal', 'glyph-orientation-vertical', 'image-rendering', 'kerning', 'letter-spacing', 'lighting-color', 'marker-end', 'marker-mid', 'marker-start', 'mask', 'opacity', 'overflow', 'pointer-events', 'shape-rendering', 'solid-color', 'solid-opacity', 'stop-color', 'stop-opacity', 'stroke', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke-width', 'paint-order', 'text-anchor', 'text-decoration', 'text-rendering', 'unicode-bidi', 'vector-effect', 'viewport-fill', 'viewport-fill-opacity', 'visibility', 'word-spacing', 'writing-mode'],
     xlink: ['xlink:href', 'xlink:show', 'xlink:actuate', 'xlink:type', 'xlink:role', 'xlink:arcrole', 'xlink:title'],
@@ -121,7 +122,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -372,7 +373,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1114,7 +1115,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1164,7 +1165,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1206,7 +1207,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1227,6 +1228,59 @@ exports.elems = {
             'switch',
             'text',
             'view'
+        ]
+    },
+    hatch: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'x',
+            'y',
+            'pitch',
+            'rotate',
+            'hatchUnits',
+            'hatchContentUnits',
+            'transform'
+        ],
+        defaults: {
+            hatchUnits: 'objectBoundingBox',
+            hatchContentUnits: 'userSpaceOnUse',
+            x: '0',
+            y: '0',
+            pitch: '0',
+            rotate: '0'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive'
+        ],
+        content: [
+            'hatchPath'
+        ]
+    },
+    hatchPath: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'd',
+            'offset'
+        ],
+        defaults: {
+            offset: '0'
+        },
+        contentGroups: [
+            'animation',
+            'descriptive'
         ]
     },
     hkern: {
@@ -1365,7 +1419,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1418,7 +1472,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1465,7 +1519,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1555,9 +1609,9 @@ exports.elems = {
         contentGroups: [
             'animation',
             'descriptive',
+            'paintServer',
             'shape',
-            'structural',
-            'gradient'
+            'structural'
         ],
         content: [
             'a',
@@ -1633,6 +1687,7 @@ exports.elems = {
             'r',
             'fx',
             'fy',
+            'fr',
             'gradientUnits',
             'gradientTransform',
             'spreadMethod',
@@ -1651,6 +1706,61 @@ exports.elems = {
             'animate',
             'animateTransform',
             'set',
+            'stop'
+        ]
+    },
+    meshGradient: {
+        attrsGroups: [
+            'core',
+            'presentation',
+            'xlink'
+        ],
+        attrs: [
+            'class',
+            'style',
+            'x',
+            'y',
+            'gradientUnits',
+            'transform'
+        ],
+        contentGroups: [
+            'descriptive',
+            'paintServer',
+            'animation',
+        ],
+        content: [
+            'meshRow'
+        ]
+    },
+    meshRow: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style'
+        ],
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
+            'meshPatch'
+        ]
+    },
+    meshPatch: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style'
+        ],
+        contentGroups: [
+            'descriptive'
+        ],
+        content: [
             'stop'
         ]
     },
@@ -1710,6 +1820,19 @@ exports.elems = {
             'descriptive'
         ]
     },
+    solidColor: {
+        attrsGroups: [
+            'core',
+            'presentation'
+        ],
+        attrs: [
+            'class',
+            'style'
+        ],
+        contentGroups: [
+            'paintServer'
+        ]
+    },
     stop: {
         attrsGroups: [
             'core',
@@ -1718,7 +1841,8 @@ exports.elems = {
         attrs: [
             'class',
             'style',
-            'offset'
+            'offset',
+            'path'
         ],
         contentGroups: [
             'animate',
@@ -1776,7 +1900,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
@@ -1846,7 +1970,7 @@ exports.elems = {
             'descriptive',
             'shape',
             'structural',
-            'gradient'
+            'paintServer'
         ],
         content: [
             'a',
