@@ -5,7 +5,6 @@ exports.type = 'perItem';
 exports.active = true;
 
 exports.params = {
-    SVGid: true,
     unknownContent: true,
     unknownAttrs: true,
     defaultAttrs: true,
@@ -68,11 +67,6 @@ exports.fn = function(item, params) {
     if (item.isElem() && !item.prefix) {
 
         var elem = item.elem;
-
-        // remove SVG id attr
-        if (params.SVGid && elem === 'svg') {
-            item.removeAttr('id');
-        }
 
         // remove unknown element's content
         if (
