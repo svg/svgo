@@ -64,9 +64,6 @@ for (var elem in elems) {
  */
 exports.fn = function(item, params) {
 
-    var inheritable = { },
-        key;
-
     // elems w/o namespace prefix
     if (item.isElem() && !item.prefix) {
 
@@ -114,14 +111,15 @@ exports.fn = function(item, params) {
                         (
                             params.defaultAttrs &&
                             elems[elem].defaults &&
-                            elems[elem].defaults[attr.name] === attr.value &&
-                            (!item.inheritedAttrs || undefined === item.inheritedAttrs[attr.name])
-                        ) ||
+                            elems[elem].defaults[attr.name] === attr.value && (
+                                attrsInheritable.indexOf(attr.name) < 0 ||
+                                !item.parentNode.computedAttr(attr.name)
+                        )) ||
                         // useless overrides
                         (
                             params.uselessOverrides &&
-                            item.inheritedAttrs &&
-                            item.inheritedAttrs[attr.name] === attr.value
+                            attrsInheritable.indexOf(attr.name) > -1 &&
+                            item.parentNode.computedAttr(attr.name, attr.value)
                         )
                     ) {
                         item.removeAttr(attr.name);
@@ -130,29 +128,6 @@ exports.fn = function(item, params) {
 
             });
 
-        }
-
-        // mark overriden attributes for group content
-        if (elem === 'g' &&
-            item.content
-        ) {
-            if (item.inheritedAttrs) {
-                for (key in item.inheritedAttrs) {
-                    inheritable[key] = item.inheritedAttrs[key];
-                }
-            }
-
-            item.eachAttr(function(attr) {
-                if (attrsInheritable.indexOf(attr.name) >= 0) {
-                    inheritable[attr.name] = attr.value;
-                }
-            });
-
-            if (Object.keys(inheritable).length) {
-                item.content.forEach(function(content) {
-                    content.inheritedAttrs = inheritable;
-                } );
-            }
         }
 
     }
