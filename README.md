@@ -71,7 +71,7 @@ Options:
   -i INPUT, --input=INPUT : Input file, "-" for STDIN
   -s STRING, --string=STRING : Input SVG data string
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
-  -o OUTPUT, --output=OUTPUT : Output file (by default the same as the input), "-" for STDOUT
+  -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   --config=CONFIG : Config file to extend or replace default
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name
@@ -98,6 +98,10 @@ Arguments:
 * with folder
 
         $ svgo -f ../path/to/folder/with/svg/files
+
+    or:
+
+        $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
 
 * with strings:
 

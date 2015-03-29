@@ -49,6 +49,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] удаление растровых изображений (выключено по умолчанию)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] склеивание нескольких Path в одну кривую
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] конвертирование простых форм в Path
+* [ [>](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) ] сортировка атрибутов элементов для удобочитаемости (выключено по умолчанию)
 * [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
@@ -61,25 +62,25 @@ $ [sudo] npm install -g svgo
 ```
 
 ```
-Usage:
+Выполнение:
   svgo [OPTIONS] [ARGS]
 
-Options:
-  -h, --help : Help
-  -v, --version : Version
-  -i INPUT, --input=INPUT : Input file, "-" for STDIN
-  -s STRING, --string=STRING : Input SVG data string
-  -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
-  -o OUTPUT, --output=OUTPUT : Output file (by default the same as the input), "-" for STDOUT
-  --config=CONFIG : Config file to extend or replace default
-  --disable=DISABLE : Disable plugin by name
-  --enable=ENABLE : Enable plugin by name
-  --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
-  --pretty : Make SVG pretty printed
+Параметры:
+  -h, --help : Помощь
+  -v, --version : Версия программы
+  -i INPUT, --input=INPUT : Входной файл, "-" для STDIN
+  -s STRING, --string=STRING : Входная строка SVG
+  -f FOLDER, --folder=FOLDER : Входная папка, оптимизирует и перезаписывает все файлы *.svg
+  -o OUTPUT, --output=OUTPUT : Выходной файл или папка (совпадает с входным по умолчанию), "-" для STDOUT
+  --config=CONFIG : Файл конфигурации для расширения и замены настроек
+  --disable=DISABLE : Выключение плагина по имени
+  --enable=ENABLE : Включение плагина по имени
+  --datauri=DATAURI : Результат в виде строки Data URI (base64, URI encoded или unencoded)
+  --pretty : Удобочитаемое форматирование SVG
 
-Arguments:
-  INPUT : Alias to --input
-  OUTPUT : Alias to --output
+Аргументы:
+  INPUT : Аналогично --input
+  OUTPUT : Аналогично --output
 ```
 
 * с файлами:
@@ -90,13 +91,17 @@ Arguments:
 
         $ svgo test.svg test.min.svg
 
-* с STDIN / STDOUT:
+* со STDIN / STDOUT:
 
         $ cat test.svg | svgo -i - -o - > test.min.svg
 
 * с папками
 
         $ svgo -f ../path/to/folder/with/svg/files
+
+    или:
+
+        $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
 
 * со строками:
 
@@ -117,6 +122,7 @@ Arguments:
         $ svgo test.svg -o - | gzip -cfq9 > test.svgz
 
 * с помощью GUI – [svgo-gui](https://github.com/svg/svgo-gui)
+* в виде веб-приложения - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * как модуль Node.js – [examples](https://github.com/svg/svgo/tree/master/examples)
 * как таск для Grunt – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * как таск для Gulp – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
