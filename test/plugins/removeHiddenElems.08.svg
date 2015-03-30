@@ -2,11 +2,14 @@
     <g>
         <path/>
         <path d="z"/>
+        <path d="M 45,757 164,802"/>
     </g>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g/>
+    <g>
+        <path d="M 45,757 164,802"/>
+    </g>
 </svg>

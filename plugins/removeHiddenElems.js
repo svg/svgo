@@ -21,7 +21,7 @@ exports.params = {
     polygonEmptyPoints: true
 };
 
-var regValidPath = /m.*[lhvcsqta]/i;
+var regValidPath = /m/i;
 
 /**
  * Remove hidden elements with disabled rendering:
