@@ -72,6 +72,7 @@ Options:
   -s STRING, --string=STRING : Input SVG data string
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
+  -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
   --config=CONFIG : Config file to extend or replace default
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name

@@ -72,6 +72,7 @@ $ [sudo] npm install -g svgo
   -s STRING, --string=STRING : Входная строка SVG
   -f FOLDER, --folder=FOLDER : Входная папка, оптимизирует и перезаписывает все файлы *.svg
   -o OUTPUT, --output=OUTPUT : Выходной файл или папка (совпадает с входным по умолчанию), "-" для STDOUT
+  -p PRECISION, --precision=PRECISION : Число цифр после запятой, переопределяет параметры плагинов
   --config=CONFIG : Файл конфигурации для расширения и замены настроек
   --disable=DISABLE : Выключение плагина по имени
   --enable=ENABLE : Включение плагина по имени
