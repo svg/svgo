@@ -222,25 +222,23 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
 
     // If an 'a' command can't be transformed directly, convert path to curves.
     if (!splittedMatrix.isSimple && path.some(function(i) { return i.instruction == 'a' })) {
-        var prev;
         path.forEach(function(item, index, path){
+            var prev = index && path[index - 1];
             if (item.instruction == 'a') {
                 var curves = a2c.apply(0, [0, 0].concat(item.data)),
                     items = [],
                     curveData;
                 while ((curveData = curves.splice(0,6)).length) {
-                    var base = prev.coords;
                     items.push(prev = {
                         instruction: 'c',
                         data: curveData,
-                        coords: [base[0] + item.data[4], base[1] + item.data[5]],
+                        coords: [prev.coords[0] + curveData[4], prev.coords[1] + curveData[5]],
                         base: prev.coords
                     });
                 }
                 path.splice.apply(path, [index, 1].concat(items));
             } else {
                 if (prev) item.base = prev.coords;
-                prev = item;
             }
         });
     }
