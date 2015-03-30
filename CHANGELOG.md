@@ -1,3 +1,22 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.5.1) ] 0.5.1 / 30.03.2015
+* added new command-line option to set precision in floating point numbers.
+* fixed all known image-disruptive bugs
+* Notably [mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) plugin now checks for possible intersections to avoid side-effects
+* new plugin [removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) to remove elements in ``<defs>`` and similar non-rendering elements without an ``id`` and thus cannot be used
+* fix for ``--multipass`` command line option (by @dfilatov)
+* improved [cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) and [convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) plugins (by @YetiOr)
+* new plugin for image manipulation [cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) (by @kiyopikko)
+* fixed fail on comments after closing root ``</svg>`` tag
+* updated parsing to account meaningful spaces in ``<text>``
+* ``data-*`` attributes are now preserved in [removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js)
+* prevented plugins from failing in ``<foreignObject>``
+* [cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) plugin now converts other units to pixels (if it's better)
+* [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) plugin is enabled again with correct work in case of inherited attributes
+* fixed fail on images with incorrect paths like ``<path d="z"/>``
+* svgo now understands if an input is a folder (remember, you can set output to folder as well)
+* added support for some properties from SVG 2 like ``vector-effect="non-scaling-stroke"``
+* removed option to remove an ``id`` on root ``<svg>`` tag in [removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) since it's already being done in [cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js)
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.0) ] 0.5.0 / 05.11.2014
 * added ``--multipass`` command line option which repeatedly applies optimizations like collapsing groups (by @dfilatov)
 * exposed JSAPI as a factory method (by @mistakster)
