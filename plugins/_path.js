@@ -651,22 +651,20 @@ exports.interesects = function(path1, path2) {
         return sub(supportPoint(a, direction), supportPoint(b, minus(direction)));
     }
 
-    // Compute farthest polygon point in particular direction.
+    // Computes farthest polygon point in particular direction.
+    // Thanks to knowledge of min/max x and y coordinates we can choose a quadrant to search in.
+    // Since we're working on convex hull, the dot product is increasing until we find the farthest point.
     function supportPoint(polygon, direction) {
-        // Choose a quadrant to search in. In the worst case only one quadrant would be iterated.
         var index = direction[1] >= 0 ?
-                direction[0] < 0 ? polygon.maxY : polygon.maxX : // [1, 0] lands right on maxX
+                direction[0] < 0 ? polygon.maxY : polygon.maxX :
                 direction[0] < 0 ? polygon.minX : polygon.minY,
-            max = dot(polygon[index], direction);
-
-        for (var i = index; i < polygon.length; i++) {
-            var value = dot(polygon[i], direction);
-            if (value >= max) {
-                index = i;
-                max = value;
-            } else break; // surely we've found the maximum since we've choosen a quadrant
+            max = -Infinity,
+            value;
+        while ((value = dot(polygon[index], direction)) > max) {
+            max = value;
+            index = ++index % polygon.length;
         }
-        return polygon[index];
+        return polygon[(index || polygon.length) - 1];
     }
 };
 
@@ -831,25 +829,29 @@ function convexHull(points) {
     });
 
     var lower = [],
-        minY = 0;
+        minY = 0,
+        bottom = 0;
     for (var i = 0; i < points.length; i++) {
         while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], points[i]) <= 0) {
             lower.pop();
         }
         if (points[i][1] < points[minY][1]) {
-            minY = lower.length;
+            minY = i;
+            bottom = lower.length;
         }
         lower.push(points[i]);
     }
 
     var upper = [],
-        maxY = points.length - 1;
-    for (var i = points.length ; i--;) {
+        maxY = points.length - 1,
+        top = 0;
+    for (var i = points.length; i--;) {
         while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], points[i]) <= 0) {
             upper.pop();
         }
         if (points[i][1] > points[maxY][1]) {
-            maxY = upper.length;
+            maxY = i;
+            top = upper.length;
         }
         upper.push(points[i]);
     }
@@ -862,8 +864,8 @@ function convexHull(points) {
 
     hull.minX = 0; // by sorting
     hull.maxX = lower.length;
-    hull.minY = minY;
-    hull.maxY = (lower.length + maxY) % hull.length;
+    hull.minY = bottom;
+    hull.maxY = (lower.length + top) % hull.length;
 
     return hull;
 }
