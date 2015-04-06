@@ -563,11 +563,16 @@ function collapseRepeated(data) {
             item.instruction == prev.instruction
         ) {
             // concat previous data with current
-            prev = newPath[prevIndex] = {
-                instruction: prev.instruction,
-                data: prev.data.concat(item.data),
-                coords: item.coords,
-                base: prev.base
+            if (item.instruction != 'M') {
+                prev = newPath[prevIndex] = {
+                    instruction: prev.instruction,
+                    data: prev.data.concat(item.data),
+                    coords: item.coords,
+                    base: prev.base
+                }
+            } else {
+                prev.data = item.data;
+                prev.coords = item.coords;
             }
         } else {
             newPath.push(item);

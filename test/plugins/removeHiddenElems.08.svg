@@ -2,7 +2,11 @@
     <g>
         <path/>
         <path d="z"/>
-        <path d="M 45,757 164,802"/>
+        <path d="M 50 50"/>
+        <path d="M1.25.75"/>
+        <path d="M 50 50 20 20"/>
+        <path d="M 50,50 20,20"/>
+        <path d="M 50 50 H 10"/>
     </g>
 </svg>
 
@@ -10,6 +14,8 @@
 
 <svg xmlns="http://www.w3.org/2000/svg">
     <g>
-        <path d="M 45,757 164,802"/>
+        <path d="M 50 50 20 20"/>
+        <path d="M 50,50 20,20"/>
+        <path d="M 50 50 H 10"/>
     </g>
 </svg>

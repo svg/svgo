@@ -21,7 +21,7 @@ exports.params = {
     polygonEmptyPoints: true
 };
 
-var regValidPath = /m/i;
+var regValidPath = /M\s*(?:[+-]?(?:\d*\.\d+|\d+(?!\.\d)\.?)(?!\d)\s*,?\s*){2}\D*\d/i;
 
 /**
  * Remove hidden elements with disabled rendering:
