@@ -4,6 +4,7 @@
     <g transform="translate(10 20) rotate(45) translate(-10 -20)"/>
     <g transform="scale(2) translate(10 20) rotate(45) translate(-10 -20)"/>
     <g transform="translate(10 20) rotate(45) translate(-10 -20) scale(2)"/>
+    <g transform="translate(15, 3) translate(13) rotate(47 39.885486 39.782373)"/>
 </svg>
 
 @@@
@@ -14,4 +15,5 @@
     <g transform="rotate(45 10 20)"/>
     <g transform="scale(2) rotate(45 10 20)"/>
     <g transform="rotate(45 10 20) scale(2)"/>
+    <g transform="matrix(.682 .731 -.731 .682 69.778 -13.519)"/>
 </svg>

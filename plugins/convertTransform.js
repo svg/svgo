@@ -198,7 +198,7 @@ function removeUseless(transforms) {
 
     return transforms.filter(function(transform) {
 
-        // translate(0), rotate(0), skewX(0), skewY(0)
+        // translate(0[, 0]), rotate(0[, cx, cy]), skewX(0), skewY(0)
         if (
             ['translate', 'rotate', 'skewX', 'skewY'].indexOf(transform.name) > -1 &&
             (transform.data.length === 1 || transform.name === 'rotate') &&

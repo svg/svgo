@@ -32,19 +32,6 @@ exports.transform2js = function(transformString) {
             } else {
                 // then split it into [10, 50] and collect as context.data
                 current.data = item.split(regTransformDataSplit).map(Number);
-
-                // 'rotate' has optional parameters <cx> <cy> which specify the point to rotate about.
-                // equivalent to 'translate(<cx>, <cy>) rotate(<rotate-angle>) translate(-<cx>, -<cy>)'
-                if (current.name == 'rotate' && current.data.length == 3) {
-                    transforms.push({
-                        name: 'translate',
-                        data: [-current.data[1], -current.data[2]]
-                    });
-                    transforms.splice(transforms.length - 2, 0, {
-                        name: 'translate',
-                        data: current.data.splice(1)
-                    });
-                }
             }
         }
 
@@ -247,11 +234,13 @@ var transformToMatrix = exports.transformToMatrix = function(transform) {
             matrix = [transform.data[0], 0, 0, transform.data[1] || transform.data[0], 0, 0];
             break;
         case 'rotate':
-            // [cos(a), sin(a), -sin(a), cos(a), 0, 0]
+            // [cos(a), sin(a), -sin(a), cos(a), x, y]
             var cos = mth.cos(transform.data[0]),
-                sin = mth.sin(transform.data[0]);
+                sin = mth.sin(transform.data[0]),
+                cx = transform.data[1] || 0,
+                cy = transform.data[2] || 0;
 
-            matrix = [cos, sin, -sin, cos, 0, 0];
+            matrix = [cos, sin, -sin, cos, (1 - cos) * cx + sin * cy, (1 - cos) * cy - sin * cx];
             break;
         case 'skewX':
             // [1, 0, tan(a), 1, 0, 0]
