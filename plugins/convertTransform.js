@@ -6,7 +6,7 @@ exports.active = true;
 
 exports.params = {
       convertToShorts: true,
-      floatPrecision: 3,
+      transformPrecision: 5,
       matrixToTransform: true,
       shortTranslate: true,
       shortScale: true,
@@ -89,10 +89,10 @@ function convertTransform(item, attrName, params) {
             )
         )
     ) {
-        data = [transformsMultiply(data, params)];
+        data = [transformsMultiply(data, params.transformPrecision)];
 
         if (params.matrixToTransform) {
-            data = [matrixToTransform(data[0], params)];
+            data = [matrixToTransform(data[0], params.transformPrecision)];
         }
 
         if (params.removeUseless) {
@@ -123,14 +123,14 @@ function convertToShorts(transforms, params) {
             transforms.length < 3 &&
             transform.name === 'matrix'
         ) {
-            transforms[i] = matrixToTransform(transform, params);
+            transforms[i] = matrixToTransform(transform, params.transformPrecision);
         }
 
         // fixed-point numbers
         // 12.754997 → 12.755
-        if (params.floatPrecision !== false) {
+        if (params.transformPrecision !== false) {
             transform.data = transform.data.map(function(num) {
-                return +num.toFixed(params.floatPrecision);
+                return +num.toFixed(params.transformPrecision);
             });
         }
 
@@ -237,7 +237,7 @@ function js2transform(transformJS, params) {
     // collect output value string
     transformJS.forEach(function(transform) {
 
-        transformString += (transformString ? ' ' : '') + transform.name + '(' + cleanupOutData(transform.data, params) + ')';
+        transformString += (transformString && ' ') + transform.name + '(' + cleanupOutData(transform.data, params) + ')';
 
     });
 

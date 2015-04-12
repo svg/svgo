@@ -15,5 +15,5 @@
     <g transform="rotate(45 10 20)"/>
     <g transform="scale(2) rotate(45 10 20)"/>
     <g transform="rotate(45 10 20) scale(2)"/>
-    <g transform="matrix(.682 .731 -.731 .682 69.778 -13.519)"/>
+    <g transform="matrix(.682 .73135 -.73135 .682 69.77863 -13.51954)"/>
 </svg>

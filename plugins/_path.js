@@ -180,7 +180,7 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
         }))
         return path;
 
-    var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
+    var matrix = transformsMultiply(transform2js(elem.attr('transform').value), 9),
         splittedMatrix = matrix.splitted || splitMatrix(matrix.data),
         stroke = elem.computedAttr('stroke'),
         newPoint, sx, sy;

@@ -47,7 +47,7 @@ exports.transform2js = function(transformString) {
  * @param {Array} input transforms array
  * @return {Array} output matrix array
  */
-exports.transformsMultiply = function(transforms) {
+exports.transformsMultiply = function(transforms, precision) {
 
     var simple = true,
         scalex = 1,
@@ -64,7 +64,7 @@ exports.transformsMultiply = function(transforms) {
                 scalex *= transform.data[0];
                 scaley *= transform.data[1];
             } else if (transform.name == 'rotate') {
-                if (scalex.toFixed(9) == scaley.toFixed(9)) {
+                if (scalex.toFixed(precision) == scaley.toFixed(precision)) {
                     rotate += transform.data[0];
                 } else {
                     simple = false;
@@ -80,7 +80,7 @@ exports.transformsMultiply = function(transforms) {
     transforms = {
         name: 'matrix',
         data: transforms.reduce(function(a, b) {
-            return multiplyTransformMatrices(a, b);
+            return multiplyTransformMatrices(a, b, precision);
         })
     }
 
@@ -144,7 +144,7 @@ var mth = exports.mth = {
  * @param {Object} data matrix transform object
  * @return {Object} transform object
  */
-exports.matrixToTransform = function(transform, params) {
+exports.matrixToTransform = function(transform, precision) {
 
     var data = transform.data;
 
@@ -175,8 +175,8 @@ exports.matrixToTransform = function(transform, params) {
         data[4] === 0 &&
         data[5] === 0
     ) {
-        var a1 = mth.acos(data[0], params.floatPrecision),
-            a2 = mth.asin(data[1], params.floatPrecision);
+        var a1 = mth.acos(data[0], precision),
+            a2 = mth.asin(data[1], precision);
 
         a1 = a2 < 0 ? -a1 : a1;
 
@@ -194,7 +194,7 @@ exports.matrixToTransform = function(transform, params) {
        data[5] === 0
     ) {
         transform.name = 'skewX';
-        transform.data = [mth.atan(data[2], params.floatPrecision)];
+        transform.data = [mth.atan(data[2], precision)];
 
     // [1, tan(a), 0, 1, 0, 0] → skewY(a)
     } else if (
@@ -205,7 +205,7 @@ exports.matrixToTransform = function(transform, params) {
        data[5] === 0
     ) {
         transform.name = 'skewY';
-        transform.data = [mth.atan(data[1], params.floatPrecision)];
+        transform.data = [mth.atan(data[1], precision)];
     }
 
     return transform;
@@ -263,15 +263,15 @@ var transformToMatrix = exports.transformToMatrix = function(transform) {
  * @param {Array} b matrix B data
  * @return {Array} result
  */
-function multiplyTransformMatrices(a, b) {
+function multiplyTransformMatrices(a, b, precision) {
 
     return [
-        +(a[0] * b[0] + a[2] * b[1]).toFixed(3),
-        +(a[1] * b[0] + a[3] * b[1]).toFixed(3),
-        +(a[0] * b[2] + a[2] * b[3]).toFixed(3),
-        +(a[1] * b[2] + a[3] * b[3]).toFixed(3),
-        +(a[0] * b[4] + a[2] * b[5] + a[4]).toFixed(3),
-        +(a[1] * b[4] + a[3] * b[5] + a[5]).toFixed(3)
+        +(a[0] * b[0] + a[2] * b[1]).toFixed(precision),
+        +(a[1] * b[0] + a[3] * b[1]).toFixed(precision),
+        +(a[0] * b[2] + a[2] * b[3]).toFixed(precision),
+        +(a[1] * b[2] + a[3] * b[3]).toFixed(precision),
+        +(a[0] * b[4] + a[2] * b[5] + a[4]).toFixed(precision),
+        +(a[1] * b[4] + a[3] * b[5] + a[5]).toFixed(precision)
     ];
 
 }
