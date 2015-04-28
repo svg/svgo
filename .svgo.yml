@@ -48,3 +48,4 @@ plugins:
   - sortAttrs
   - removeTitle
   - removeDesc
+  - addClassesToSVGElement
