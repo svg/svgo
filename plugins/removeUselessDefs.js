@@ -34,7 +34,7 @@ exports.fn = function(item) {
 
 function getUsefulItems(usefulItems, item) {
 
-    if (item.hasAttr('id')) {
+    if (item.hasAttr('id') || item.isElem('style')) {
 
         usefulItems.push(item);
         item.parentNode = defs;
