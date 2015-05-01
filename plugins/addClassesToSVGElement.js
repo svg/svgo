@@ -2,7 +2,7 @@
 
 exports.type = 'full';
 
-exports.active = true;
+exports.active = false;
 
 /**
  * Add classnames to an outer <svg> element.
