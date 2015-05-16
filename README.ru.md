@@ -18,39 +18,39 @@ SVGO имеет расширяемую архитектуру, в которой
 
 Сегодня у нас есть:
 
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) ] удаление переносов строк и лишних пробелов
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) ] удаление doctype
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] удаление XML-инструкций
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] удаление комментариев
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] удаление `<metadata>`
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] удаление `<title>` (отключена по умолчанию)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] удаление `<desc>` (по умолчанию только незначимых)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] удаление элементов в `<defs>` без `id`
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] удаление пространств имён различных редакторов, их элементов и атрибутов
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] удаление пустых атрибутов
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] удаление скрытых элементов
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] удаление пустых текстовых элементов
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] удаление пустых элементов-контейнеров
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] удаление атрибута `viewBox`, когда это возможно
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] удаление или оптимизация атрибута `enable-background`, когда это возможно
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] конвертирование стилей в атрибуте `style` в отдельные svg-атрибуты
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] конвертирование цветовых значений: из `rgb()` в `#rrggbb`, из `#rrggbb` в `#rgb`
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] конвертирование данных Path в относительные или абсолютные координаты, смотря что короче, конвертирование одних типов сегментов в другие, удаление ненужных разделителей, умное округление и тому подобное
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] схлопывание нескольких трансформаций в одну, конвертирование матриц в короткие алиасы и многое другое
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] удаление неизвестных элементов, контента и атрибутов
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) ] удаление ненаследуемых "презентационных" атрибутов групп
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] удаление неиспользуемых атрибутов stroke-* и fill-*
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] удаление  деклараций неиспользуемых пространств имён
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] удаление неиспользуемых и сокращение используемых ID
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] округление дробных чисел до заданной точности, удаление `px` как единицы измерения по-умолчанию
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] перемещение совпадающих атрибутов у всех элементов внутри группы `<g>`
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] перемещение некоторых атрибутов группы на элементы внутри
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] схлопывание бесполезных групп `<g>`
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] удаление растровых изображений (выключено по умолчанию)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] склеивание нескольких Path в одну кривую
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] конвертирование простых форм в Path
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) ] сортировка атрибутов элементов для удобочитаемости (выключено по умолчанию)
-* [ [>](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
+* [ [ cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) ] удаление переносов строк и лишних пробелов
+* [ [ removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) ] удаление doctype
+* [ [ removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] удаление XML-инструкций
+* [ [ removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] удаление комментариев
+* [ [ removeMetadata](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] удаление `<metadata>`
+* [ [ removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] удаление `<title>` (отключена по умолчанию)
+* [ [ removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] удаление `<desc>` (по умолчанию только незначимых)
+* [ [ removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] удаление элементов в `<defs>` без `id`
+* [ [ removeEditorsNSData](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] удаление пространств имён различных редакторов, их элементов и атрибутов
+* [ [ removeEmptyAttrs](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] удаление пустых атрибутов
+* [ [ removeHiddenElems](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] удаление скрытых элементов
+* [ [ removeEmptyText](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] удаление пустых текстовых элементов
+* [ [ removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] удаление пустых элементов-контейнеров
+* [ [ removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] удаление атрибута `viewBox`, когда это возможно
+* [ [ cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] удаление или оптимизация атрибута `enable-background`, когда это возможно
+* [ [ convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] конвертирование стилей в атрибуте `style` в отдельные svg-атрибуты
+* [ [ convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] конвертирование цветовых значений: из `rgb()` в `#rrggbb`, из `#rrggbb` в `#rgb`
+* [ [ convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] конвертирование данных Path в относительные или абсолютные координаты, смотря что короче, конвертирование одних типов сегментов в другие, удаление ненужных разделителей, умное округление и тому подобное
+* [ [ convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] схлопывание нескольких трансформаций в одну, конвертирование матриц в короткие алиасы и многое другое
+* [ [ removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] удаление неизвестных элементов, контента и атрибутов
+* [ [ removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) ] удаление ненаследуемых "презентационных" атрибутов групп
+* [ [ removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) ] удаление неиспользуемых атрибутов stroke-* и fill-*
+* [ [ removeUnusedNS](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] удаление  деклараций неиспользуемых пространств имён
+* [ [ cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] удаление неиспользуемых и сокращение используемых ID
+* [ [ cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] округление дробных чисел до заданной точности, удаление `px` как единицы измерения по-умолчанию
+* [ [ moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] перемещение совпадающих атрибутов у всех элементов внутри группы `<g>`
+* [ [ moveGroupAttrsToElems](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] перемещение некоторых атрибутов группы на элементы внутри
+* [ [ collapseGroups](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] схлопывание бесполезных групп `<g>`
+* [ [ removeRasterImage](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) ] удаление растровых изображений (выключено по умолчанию)
+* [ [ mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) ] склеивание нескольких Path в одну кривую
+* [ [ convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] конвертирование простых форм в Path
+* [ [ sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) ] сортировка атрибутов элементов для удобочитаемости (выключено по умолчанию)
+* [ [ transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 
