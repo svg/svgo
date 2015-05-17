@@ -11,6 +11,7 @@ exports.params = {
     lineShorthands: true,
     curveSmoothShorthands: true,
     floatPrecision: 3,
+    transformPrecision: 5,
     removeUseless: true,
     collapseRepeated: true,
     utilizeAbsolute: true,
@@ -58,7 +59,7 @@ exports.fn = function(item, params) {
             convertToRelative(data);
 
             if (params.applyTransforms) {
-                data = applyTransforms(item, data, params.applyTransformsStroked, params.floatPrecision);
+                data = applyTransforms(item, data, params);
             }
 
             data = filters(data, params);

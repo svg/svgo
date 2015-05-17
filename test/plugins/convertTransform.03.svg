@@ -12,8 +12,8 @@
 <svg xmlns="http://www.w3.org/2000/svg">
     <g transform="translate(50 100)"/>
     <g transform="scale(.5 2)"/>
-    <g transform="rotate(-45.00865)"/>
-    <g transform="skewX(24.98552)"/>
-    <g transform="skewY(24.98552)"/>
+    <g transform="rotate(-45)"/>
+    <g transform="skewX(25)"/>
+    <g transform="skewY(25)"/>
     <g transform="translate(130 150)"/>
 </svg>

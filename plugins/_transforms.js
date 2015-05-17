@@ -25,9 +25,7 @@ exports.transform2js = function(transformString) {
             // if item is a translate function
             if (regTransformTypes.test(item)) {
                 // then collect it and change current context
-                transforms.push(current = {
-                    name: item
-                });
+                transforms.push(current = { name: item });
             // else if item is data
             } else {
                 // then split it into [10, 50] and collect as context.data
@@ -80,7 +78,7 @@ exports.transformsMultiply = function(transforms, precision) {
     transforms = {
         name: 'matrix',
         data: transforms.reduce(function(a, b) {
-            return multiplyTransformMatrices(a, b, precision);
+            return multiplyTransformMatrices(a, b);
         })
     }
 
@@ -139,77 +137,79 @@ var mth = exports.mth = {
 };
 
 /**
- * Convert matrix data to the transform alias.
+ * Decompose matrix into simple transforms. See
+ * http://www.maths-informatique-jeux.com/blog/frederic/?post/2013/12/01/Decomposition-of-2D-transform-matrices
  *
  * @param {Object} data matrix transform object
- * @return {Object} transform object
+ * @return {Object|Array} transforms array or original transform object
  */
-exports.matrixToTransform = function(transform, precision) {
+exports.matrixToTransform = function(transform, params) {
+    var floatPrecision = params.floatPrecision,
+        data = transform.data,
+        transforms = [],
+        sx = +Math.sqrt(data[0] * data[0] + data[1] * data[1]).toFixed(params.transformPrecision),
+        sy = +((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(params.transformPrecision),
+        colsSum = data[0] * data[2] + data[1] * data[3],
+        rowsSum = data[0] * data[1] + data[2] * data[3],
+        scaleBefore = rowsSum || +(sx == sy);
 
-    var data = transform.data;
-
-    // [1, 0, 0, 1, tx, ty] → translate(tx, ty)
-    if (
-        data[0] === 1 &&
-        data[1] === 0 &&
-        data[2] === 0 &&
-        data[3] === 1
-    ) {
-        transform.name  = 'translate';
-        transform.data = [data[4], data[5]];
-
-    // [sx, 0, 0, sy, 0, 0] → scale(sx, sy)
-    } else if (
-        data[1] === 0 &&
-        data[2] === 0 &&
-        data[4] === 0 &&
-        data[5] === 0
-    ) {
-        transform.name = 'scale';
-        transform.data = [data[0], data[3]];
-
-    // [cos(a), sin(a), -sin(a), cos(a), 0 0] → rotate(a)
-    } else if (
-        data[0] === data[3] &&
-        data[1] === -data[2] &&
-        data[4] === 0 &&
-        data[5] === 0
-    ) {
-        var a1 = mth.acos(data[0], precision),
-            a2 = mth.asin(data[1], precision);
-
-        a1 = a2 < 0 ? -a1 : a1;
-
-        if (Math.round(a1) === Math.round(a2)) {
-            transform.name = 'rotate';
-            transform.data = [a1];
-        }
-
-    // [1, 0, tan(a), 1, 0, 0] → skewX(a)
-    } else if (
-       data[0] === 1 &&
-       data[1] === 0 &&
-       data[3] === 1 &&
-       data[4] === 0 &&
-       data[5] === 0
-    ) {
-        transform.name = 'skewX';
-        transform.data = [mth.atan(data[2], precision)];
-
-    // [1, tan(a), 0, 1, 0, 0] → skewY(a)
-    } else if (
-       data[0] === 1 &&
-       data[2] === 0 &&
-       data[3] === 1 &&
-       data[4] === 0 &&
-       data[5] === 0
-    ) {
-        transform.name = 'skewY';
-        transform.data = [mth.atan(data[1], precision)];
+    // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
+    if (data[4] || data[5]) {
+        transforms.push({ name: 'translate', data: data.slice(4, data[5] ? 6 : 5) });
     }
 
-    return transform;
+    // [sx, 0, tan(a)·sy, sy, 0, 0] → skewX(a)·scale(sx, sy)
+    if (!data[1] && data[2]) {
+        transforms.push({ name: 'skewX', data: [mth.atan(data[2] / sy, floatPrecision)] });
 
+    // [sx, sx·tan(a), 0, sy, 0, 0] → skewY(a)·scale(sx, sy)
+    } else if (data[1] && !data[2]) {
+        transforms.push({ name: 'skewY', data: [mth.atan(data[1] / data[0], floatPrecision)] });
+        sx = data[0];
+        sy = data[3];
+
+    // [sx·cos(a), sx·sin(a), sy·-sin(a), sy·cos(a), x, y] → rotate(a[, cx, cy])·(scale or skewX) or
+    // [sx·cos(a), sy·sin(a), sx·-sin(a), sy·cos(a), x, y] → scale(sx, sy)·rotate(a[, cx, cy]) (if !scaleBefore)
+    } else if (!colsSum || (sx == 1 && sy == 1) || !scaleBefore) {
+        if (!scaleBefore) {
+            sx = Math.sqrt(data[0] * data[0] + data[2] * data[2]);
+            sy = Math.sqrt(data[1] * data[1] + data[3] * data[3]);
+            transforms.push({ name: 'scale', data: [sx, sy] });
+        }
+        var a1 = mth.acos(data[0] / sx, floatPrecision),
+            a2 = mth.asin(data[1] / (rowsSum ? sx : sy), floatPrecision),
+            rotate = [a1.toFixed(floatPrecision) * (data[1] < 0 ? -1 : 1)];
+
+        if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
+
+        if (rowsSum && colsSum) transforms.push({
+            name: 'skewX',
+            data: [mth.atan(colsSum / (sx * sx), floatPrecision)]
+        })
+
+        // rotate(a, cx, cy) can consume translate() within optional arguments cx, cy (rotation point)
+        if (rotate[0] && (data[4] || data[5])) {
+            transforms.shift();
+            var cos = data[0] / sx,
+                sin = data[1] / (scaleBefore ? sx : sy),
+                x = data[4] * (scaleBefore || sy),
+                y = data[5] * (scaleBefore || sx),
+                denom = (Math.pow(1 - cos, 2) + Math.pow(sin, 2)) * (scaleBefore || sx * sy);
+            rotate.push(((1 - cos) * x - sin * y) / denom);
+            rotate.push(((1 - cos) * y + sin * x) / denom);
+        }
+
+    // Too many transformations, return original matrix if it isn't just a scale/translate
+    } else if (data[1] || data[2]) {
+        return transform;
+    }
+
+    if (scaleBefore && (sx != 1 || sy != 1) || !transforms.length) transforms.push({
+        name: 'scale',
+        data: sx == sy ? [sx] : [sx, sy]
+    });
+
+    return transforms;
 };
 
 /**
@@ -218,13 +218,13 @@ exports.matrixToTransform = function(transform, precision) {
  * @param {Object} transform transform object
  * @return {Array} matrix data
  */
-var transformToMatrix = exports.transformToMatrix = function(transform) {
+function transformToMatrix(transform) {
 
     if (transform.name === 'matrix') return transform.data;
 
     var matrix;
 
-    switch(transform.name) {
+    switch (transform.name) {
         case 'translate':
             // [1, 0, 0, 1, tx, ty]
             matrix = [1, 0, 0, 1, transform.data[0], transform.data[1] || 0];
@@ -263,15 +263,15 @@ var transformToMatrix = exports.transformToMatrix = function(transform) {
  * @param {Array} b matrix B data
  * @return {Array} result
  */
-function multiplyTransformMatrices(a, b, precision) {
+function multiplyTransformMatrices(a, b) {
 
     return [
-        +(a[0] * b[0] + a[2] * b[1]).toFixed(precision),
-        +(a[1] * b[0] + a[3] * b[1]).toFixed(precision),
-        +(a[0] * b[2] + a[2] * b[3]).toFixed(precision),
-        +(a[1] * b[2] + a[3] * b[3]).toFixed(precision),
-        +(a[0] * b[4] + a[2] * b[5] + a[4]).toFixed(precision),
-        +(a[1] * b[4] + a[3] * b[5] + a[5]).toFixed(precision)
+        a[0] * b[0] + a[2] * b[1],
+        a[1] * b[0] + a[3] * b[1],
+        a[0] * b[2] + a[2] * b[3],
+        a[1] * b[2] + a[3] * b[3],
+        a[0] * b[4] + a[2] * b[5] + a[4],
+        a[1] * b[4] + a[3] * b[5] + a[5]
     ];
 
 }

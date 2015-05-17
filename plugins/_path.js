@@ -167,11 +167,10 @@ var relative2absolute = exports.relative2absolute = function(data) {
  *
  * @param {Object} elem current element
  * @param {Array} path input path data
- * @param {Boolean} applyTransformsStroked whether to apply transforms to stroked lines.
- * @param {Number} floatPrecision precision (used for stroke width)
+ * @param {Object} params whether to apply transforms to stroked lines and transform precision (used for stroke width)
  * @return {Array} output path data
  */
-exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrecision) {
+exports.applyTransforms = function(elem, path, params) {
     // if there are no 'stroke' attr and references to other objects such as
     // gradiends or clip-path which are also subjects to transform.
     if (!elem.hasAttr('transform') ||
@@ -183,41 +182,32 @@ exports.applyTransforms = function(elem, path, applyTransformsStroked, floatPrec
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value), 9),
         splittedMatrix = matrix.splitted || splitMatrix(matrix.data),
         stroke = elem.computedAttr('stroke'),
-        newPoint, sx, sy;
+        transformPrecision = params.transformPrecision,
+        newPoint, scale;
 
-    if (stroke && stroke.value != 'none'){
-      if (!applyTransformsStroked){
-        return path;
-      }
-      if (matrix.name == 'matrix'){
-        sx = +Math.sqrt(matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]).toFixed(floatPrecision);
-        sy = +Math.sqrt(matrix.data[2] * matrix.data[2] + matrix.data[3] * matrix.data[3]).toFixed(floatPrecision);
-      } else if (matrix.name == 'scale'){
-        sx = +matrix.data[0].toFixed(floatPrecision);
-        sy = +matrix.data[1].toFixed(floatPrecision);
-      } else {
-        sx = 1;
-        sy = 1;
-      }
+    if (stroke && stroke.value != 'none') {
+        if (!params.applyTransformsStroked ||
+            (matrix.data[0] != matrix.data[3] || matrix.data[1] != -matrix.data[2]) &&
+            (matrix.data[0] != -matrix.data[3] || matrix.data[1] != matrix.data[2]))
+            return path;
 
-      if (sx !== sy){
-        return path;
-      }
-      if (sx !== 1){
-        var strokeWidth = elem.computedAttr('stroke-width') || defaultStrokeWidth;
+        scale = +Math.sqrt(matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]).toFixed(transformPrecision);
 
-        if (elem.hasAttr('stroke-width')){
-          elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
-            .replace(regNumericValues, function(num) { return removeLeadingZero(num * sx) });
-        } else {
-          elem.addAttr({
-              name: 'stroke-width',
-              prefix: '',
-              local: 'stroke-width',
-              value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * sx) })
-          });
+        if (scale !== 1) {
+            var strokeWidth = elem.computedAttr('stroke-width') || defaultStrokeWidth;
+
+            if (elem.hasAttr('stroke-width')) {
+                elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
+                    .replace(regNumericValues, function(num) { return removeLeadingZero(num * scale) });
+            } else {
+                elem.addAttr({
+                    name: 'stroke-width',
+                    prefix: '',
+                    local: 'stroke-width',
+                    value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * scale) })
+                });
+            }
         }
-      }
     }
 
     // If an 'a' command can't be transformed directly, convert path to curves.
