@@ -5,6 +5,7 @@ var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
+    transformArc = require('./_transforms').transformArc,
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
     defaultStrokeWidth = collections.attrsGroupsDefaults.presentation['stroke-width'],
@@ -179,8 +180,7 @@ exports.applyTransforms = function(elem, path, params) {
         }))
         return path;
 
-    var matrix = transformsMultiply(transform2js(elem.attr('transform').value), 9),
-        splittedMatrix = matrix.splitted || splitMatrix(matrix.data),
+    var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
         stroke = elem.computedAttr('stroke'),
         transformPrecision = params.transformPrecision,
         newPoint, scale;
@@ -208,29 +208,6 @@ exports.applyTransforms = function(elem, path, params) {
                 });
             }
         }
-    }
-
-    // If an 'a' command can't be transformed directly, convert path to curves.
-    if (!splittedMatrix.isSimple && path.some(function(i) { return i.instruction == 'a' })) {
-        path.forEach(function(item, index, path){
-            var prev = index && path[index - 1];
-            if (item.instruction == 'a') {
-                var curves = a2c.apply(0, [0, 0].concat(item.data)),
-                    items = [],
-                    curveData;
-                while ((curveData = curves.splice(0,6)).length) {
-                    items.push(prev = {
-                        instruction: 'c',
-                        data: curveData,
-                        coords: [prev.coords[0] + curveData[4], prev.coords[1] + curveData[5]],
-                        base: prev.coords
-                    });
-                }
-                path.splice.apply(path, [index, 1].concat(items));
-            } else {
-                if (prev) item.base = prev.coords;
-            }
-        });
     }
 
     path.forEach(function(pathItem) {
@@ -271,9 +248,17 @@ exports.applyTransforms = function(elem, path, params) {
 
                 if (pathItem.instruction == 'a') {
 
-                    pathItem.data[0] *= splittedMatrix.scalex;
-                    pathItem.data[1] *= splittedMatrix.scaley;
-                    pathItem.data[2] += splittedMatrix.rotate;
+                    transformArc(pathItem.data, matrix.data);
+
+                    // reduce number of digits in rotation angle
+                    if (Math.abs(pathItem.data[2]) > 80) {
+                        var a = pathItem.data[0],
+                            rotation = pathItem.data[2];
+                        pathItem.data[0] = pathItem.data[1];
+                        pathItem.data[1] = a;
+                        pathItem.data[2] = rotation + (rotation > 0 ? -90 : 90);
+                    }
+
                     newPoint = transformPoint(matrix.data, pathItem.data[5], pathItem.data[6]);
                     pathItem.data[5] = newPoint[0];
                     pathItem.data[6] = newPoint[1];
@@ -872,67 +857,6 @@ function cross(o, a, b) {
 /* Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
  * Thanks to Dmitry Baranovskiy for his great work!
  */
-
-function norm(a) {
-    return a[0] * a[0] + a[1] * a[1];
-}
-
-function normalize(a) {
-    var mag = Math.sqrt(norm(a));
-    if (a[0]) a[0] /= mag;
-    if (a[1]) a[1] /= mag;
-}
-
-function deg(rad) {
-    return rad * 180 / Math.PI % 360;
-}
-
-function determinant(matrix) {
-    return matrix[0] * matrix[3] - matrix[1] * matrix[2];
-}
-
-/* Splits matrix into primitive transformations
- = (object) in format:
- o dx (number) translation by x
- o dy (number) translation by y
- o scalex (number) scale by x
- o scaley (number) scale by y
- o shear (number) shear
- o rotate (number) rotation in deg
- o isSimple (boolean) could it be represented via simple transformations
- */
-
-function splitMatrix(matrix) {
-    var out = {};
-    // translation
-    out.dx = matrix[4];
-    out.dy = matrix[5];
-    // scale and shear
-    var row = [[matrix[0] , matrix[2] ], [matrix[1] , matrix[3]]];
-    out.scalex = Math.sqrt(norm(row[0]));
-    normalize(row[0]);
-    out.shear = row[0][0] * row[1][0] + row[0][1] * row[1][1];
-    row[1] = [row[1][0] - row[0][0] * out.shear, row[1][1] - row[0][1] * out.shear];
-    out.scaley = Math.sqrt(norm(row[1]));
-    normalize(row[1]);
-    out.shear /= out.scaley;
-    if (determinant(matrix) < 0) {
-        out.scalex = -out.scalex;
-    }
-    // rotation
-    var sin = -row[0][1],
-        cos = row[1][1];
-    if (cos < 0) {
-        out.rotate = deg(Math.acos(cos));
-        if (sin < 0) {
-            out.rotate = 360 - out.rotate;
-        }
-    } else {
-        out.rotate = deg(Math.asin(sin));
-    }
-    out.isSimple = !+out.shear.toFixed(9) && (out.scalex.toFixed(9) == out.scaley.toFixed(9) || !out.rotate);
-    return out;
-}
 
 function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
