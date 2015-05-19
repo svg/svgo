@@ -56,8 +56,5 @@
   "engines": {
     "node": ">=0.10.0"
   },
-  "licenses": [{
-      "type": "MIT",
-      "url": "https://raw.github.com/svg/svgo/master/LICENSE"
-  }]
+  "license": "MIT"
 }
