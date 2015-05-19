@@ -602,7 +602,7 @@ function set(dest, source) {
  * @param {Array} path2 JS path representation
  * @return {Boolean}
  */
-exports.interesects = function(path1, path2) {
+exports.intersects = function(path1, path2) {
     if (path1.length < 3 || path2.length < 3) return false; // nothing to fill
 
     // Collect points of every subpath.
