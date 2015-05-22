@@ -99,6 +99,24 @@ exports.fn = function(item) {
 
         item.renameElem('path')
             .removeAttr('points');
-    }
 
+    } else if (item.isElem('circle')) {
+        var cx = item.attr('cx').value;
+        var cy = item.attr('cy').value;
+        var r = item.attr('r').value;
+        var pathData =
+            'M' + cx + ' ' + cy +
+            'm' + (-r) + ' 0' +
+            'a' + r + ' ' + r + ' 0 1 0 ' + (r*2) + ' 0' +
+            'a' + r + ' ' + r + ' 0 1 0 ' + (-r*2) + ' 0z';
+
+        item.renameElem('path');
+        item.removeAttr(['cx', 'cy', 'r']);
+        item.addAttr({
+            name: 'd',
+            value: pathData,
+            prefix: '',
+            local: 'd'
+        });
+    }
 };
