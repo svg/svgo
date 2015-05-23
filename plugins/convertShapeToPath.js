@@ -104,11 +104,14 @@ exports.fn = function(item) {
         var cx = item.attr('cx').value;
         var cy = item.attr('cy').value;
         var r = item.attr('r').value;
-        var pathData =
-            'M' + cx + ' ' + cy +
-            'm' + (-r) + ' 0' +
+		var pathData;
+
+        if (isNaN(cx-r)) return;
+
+        pathData =
+            'M' + (cx-r) + ' ' + cy +
             'a' + r + ' ' + r + ' 0 1 0 ' + (r*2) + ' 0' +
-            'a' + r + ' ' + r + ' 0 1 0 ' + (-r*2) + ' 0z';
+            ' ' + r + ' ' + r + ' 0 1 0 ' + (-r*2) + ' 0z';
 
         item.renameElem('path');
         item.removeAttr(['cx', 'cy', 'r']);
