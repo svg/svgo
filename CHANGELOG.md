@@ -1,3 +1,15 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.5.2) ] 0.5.2 / 24.05.2015
+* Introduced new `transformPrecision` option for better image quality (defaults to 5) in “[convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js)” and “[convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js)” (for the purpose of applying transformations) plugins.
+* Matrix transformations now can be decomposed into a combination of few simple transforms like `translate`, `rotate`, `scale`.
+* Arcs (paths `arcto` command) are now correctly being transformed into another arcs without being converting to Bezier curves.
+* Fixed an issue with “[mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js)” failing to detect paths intersection in some cases.
+* Fixed a bug with “[removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js)” removing some paths, which was introduced in [v0.5.1](https://github.com/svg/svgo/tree/v0.5.1).
+* Fixed a bug with transformation having `rotate()` with optional parameters.
+* Patterns with inherited attributes are no longer being removed.
+* Styles are no longer being removed from `<desc>` (by @dennari).
+* SVGO no longer breaks during parsing.
+* Added `clone()` method to JSAPI (by @jakearchibald)
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.1) ] 0.5.1 / 30.03.2015
 * added new command-line option to set precision in floating point numbers.
 * fixed all known image-disruptive bugs
