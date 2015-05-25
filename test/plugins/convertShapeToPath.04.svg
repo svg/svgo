@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<circle cx="100" cy="100" r="20"/>
+	<circle cx="100" cy="100" r="20" fill="#666"/>
+	<circle cx="100" cy="100" r="20%" fill="#666"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M80 100a20 20 0 1 0 40 0 20 20 0 1 0 -40 0z"/>
+    <path fill="#666" d="M80 100a20 20 0 1 0 40 0 20 20 0 1 0 -40 0z"/>
+    <circle cx="100" cy="100" r="20%" fill="#666"/>
+</svg>
