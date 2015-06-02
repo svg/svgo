@@ -103,6 +103,62 @@ describe('config', function() {
 
     });
 
+
+    describe('custom plugins', function() {
+
+        describe('extend config with custom plugin', function() {
+            var config = CONFIG({
+                    plugins: [
+                        {
+                            aCustomPlugin: {
+                                type: 'perItem',
+                                fn: function() { }
+                            }
+                        }
+                    ]
+                }),
+                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+
+            it('custom plugin should be enabled', function() {
+                return customPlugin.active.should.be.true;
+            });
+
+            it('custom plugin should have been given a name', function() {
+                return customPlugin.name.should.equal('aCustomPlugin');
+            });
+        });
+
+        describe('replace default config with custom plugin', function() {
+
+            var config = CONFIG({
+                    full: true,
+                    plugins: [
+                        {
+                            aCustomPlugin: {
+                                type: 'perItem',
+                                fn: function() { }
+                            }
+                        }
+                    ]
+                }),
+                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+
+            it('config.plugins should have length 1', function() {
+                return config.plugins.should.have.length(1);
+            });
+
+            it('custom plugin should be enabled', function() {
+                return customPlugin.active.should.be.true;
+            });
+
+            it('custom plugin should have been given a name', function() {
+                return customPlugin.name.should.equal('aCustomPlugin');
+            });
+
+        });
+
+    });
+
 });
 
 function getPlugin(name, plugins) {
