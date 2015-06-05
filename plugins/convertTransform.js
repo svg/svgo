@@ -342,6 +342,10 @@ function round(data) {
  */
 function smartRound(precision, data) {
     for (var i = data.length, tolerance = Math.pow(.1, precision); i--;) {
+        //Making sure we never go below 0 on toFixed...
+        if (precision < 1.0){
+            precision = 1.0;
+        }
         var rounded = +data[i].toFixed(precision - 1);
         data[i] = +Math.abs(rounded - data[i]).toFixed(precision) >= tolerance ?
             +data[i].toFixed(precision) :
