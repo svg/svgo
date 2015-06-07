@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'round numeric values to the fixed precision, remove default \'px\' units';
+
 exports.params = {
     floatPrecision: 3,
     leadingZero: true,

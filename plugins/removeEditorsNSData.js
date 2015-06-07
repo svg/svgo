@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'remove editors namespaces, elements and attributes';
+
 var editorNamespaces = require('./_collections').editorNamespaces,
     prefixes = [];
 

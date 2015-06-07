@@ -4,6 +4,8 @@ exports.type = 'full';
 
 exports.active = true;
 
+exports.description = 'remove unused namespaces declaration';
+
 /**
  * Remove unused namespaces declaration.
  *

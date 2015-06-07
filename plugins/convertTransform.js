@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'collapse multiple transforms into one, convert matrices to the short aliases and much more';
+
 exports.params = {
     convertToShorts: true,
     // degPrecision: 3, // transformPrecision (or matrix precision) - 2 by default

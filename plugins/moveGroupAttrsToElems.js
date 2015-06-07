@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'move some group attributes to the content elements';
+
 var collections = require('./_collections.js'),
     pathElems = collections.pathElems.concat(['g', 'text']),
     referencesProps = collections.referencesProps;

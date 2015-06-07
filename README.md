@@ -78,6 +78,7 @@ Options:
   --enable=ENABLE : Enable plugin by name
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --pretty : Make SVG pretty printed
+  --show-plugins : Show available plugins and exit
 
 Arguments:
   INPUT : Alias to --input

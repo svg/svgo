@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'remove XML processing instructions';
+
 /**
  * Remove XML Processing Instruction.
  *

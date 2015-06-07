@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'merge multiple Paths into one';
+
 exports.params = {
     collapseRepeated: true,
     leadingZero: true,

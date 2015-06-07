@@ -4,6 +4,8 @@ exports.type = 'perItemReverse';
 
 exports.active = true;
 
+exports.description = 'collapse useless groups';
+
 var animationElems = require('./_collections').elemsGroups.animation;
 
 /*
