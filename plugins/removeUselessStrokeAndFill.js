@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'remove useless stroke and fill attrs';
+
 exports.params = {
     stroke: true,
     fill: true

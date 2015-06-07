@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'Convert style in attributes. Cleanups comments and illegal declarations (without colon) as a side effect';
+
 var EXTEND = require('whet.extend'),
     stylingProps = require('./_collections').stylingProps,
     rEscape = '\\\\(?:[0-9a-f]{1,6}\\s?|\\r\\n|.)',                 // Like \" or \2051. Code points consume one space.

@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'remove hidden elements';
+
 exports.params = {
     displayNone: true,
     opacity0: true,

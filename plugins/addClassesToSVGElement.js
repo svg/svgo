@@ -4,6 +4,8 @@ exports.type = 'full';
 
 exports.active = false;
 
+exports.description = 'Add classnames to an outer <svg> element.';
+
 /**
  * Add classnames to an outer <svg> element.
  *

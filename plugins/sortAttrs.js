@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = false;
 
+exports.description = 'sort element attributes for epic readability (disabled by default)';
+
 exports.params = {
 	order: [
 		'xmlns',

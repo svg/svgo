@@ -4,6 +4,8 @@ exports.type = 'full';
 
 exports.active = true;
 
+exports.description = 'remove or cleanup enable-background attribute when possible';
+
 /**
  * Remove or cleanup enable-background attr which coincides with a width/height box.
  *

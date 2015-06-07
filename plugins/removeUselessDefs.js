@@ -4,6 +4,8 @@ exports.type = 'perItem';
 
 exports.active = true;
 
+exports.description = 'remove elements of <defs> without id';
+
 var nonRendering = require('./_collections').elemsGroups.nonRendering,
     defs;
 

@@ -78,6 +78,7 @@ $ [sudo] npm install -g svgo
   --enable=ENABLE : Включение плагина по имени
   --datauri=DATAURI : Результат в виде строки Data URI (base64, URI encoded или unencoded)
   --pretty : Удобочитаемое форматирование SVG
+  --show-plugins : доступные плагины
 
 Аргументы:
   INPUT : Аналогично --input
