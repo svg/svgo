@@ -176,7 +176,7 @@ exports.applyTransforms = function(elem, path, params) {
     // gradiends or clip-path which are also subjects to transform.
     if (!elem.hasAttr('transform') ||
         elem.someAttr(function(attr) {
-            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(')
+            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
         }))
         return path;
 
@@ -198,13 +198,13 @@ exports.applyTransforms = function(elem, path, params) {
 
             if (elem.hasAttr('stroke-width')) {
                 elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
-                    .replace(regNumericValues, function(num) { return removeLeadingZero(num * scale) });
+                    .replace(regNumericValues, function(num) { return removeLeadingZero(num * scale); });
             } else {
                 elem.addAttr({
                     name: 'stroke-width',
                     prefix: '',
                     local: 'stroke-width',
-                    value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * scale) })
+                    value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * scale); })
                 });
             }
         }
@@ -544,7 +544,7 @@ function collapseRepeated(data) {
                     data: prev.data.concat(item.data),
                     coords: item.coords,
                     base: prev.base
-                }
+                };
             } else {
                 prev.data = item.data;
                 prev.coords = item.coords;
@@ -649,6 +649,8 @@ exports.intersects = function(path1, path2) {
 };
 
 function processSimplex(simplex, direction) {
+    /* jshint -W004 */
+
     // we only need to handle to 1-simplex and 2-simplex
     if (simplex.length == 2) { // 1-simplex
         var a = simplex[1],
@@ -744,27 +746,27 @@ function gatherPoints(points, item, index, path) {
             break;
         case 'C':
             // Approximate quibic Bezier curve with middle points between control points
-            addPoint(subPath, [.5 * (basePoint[0] + data[0]), .5 * (basePoint[1] + data[1])]);
-            addPoint(subPath, [.5 * (data[0] + data[2]), .5 * (data[1] + data[3])]);
-            addPoint(subPath, [.5 * (data[2] + data[4]), .5 * (data[3] + data[5])]);
+            addPoint(subPath, [0.5 * (basePoint[0] + data[0]), 0.5 * (basePoint[1] + data[1])]);
+            addPoint(subPath, [0.5 * (data[0] + data[2]), 0.5 * (data[1] + data[3])]);
+            addPoint(subPath, [0.5 * (data[2] + data[4]), 0.5 * (data[3] + data[5])]);
             prevCtrlPoint = [data[4] - data[2], data[5] - data[3]]; // Save control point for shorthand
             break;
         case 'S':
             if (prev.instruction == 'C' && prev.instruction == 'S') {
-                addPoint(subPath, [basePoint[0] + .5 * prevCtrlPoint[0], basePoint[1] + .5 * prevCtrlPoint[1]]);
+                addPoint(subPath, [basePoint[0] + 0.5 * prevCtrlPoint[0], basePoint[1] + 0.5 * prevCtrlPoint[1]]);
                 ctrlPoint = [basePoint[0] + prevCtrlPoint[0], basePoint[1] + prevCtrlPoint[1]];
             }
-            addPoint(subPath, [.5 * (ctrlPoint[0] + data[0]), .5 * (ctrlPoint[1]+ data[1])]);
-            addPoint(subPath, [.5 * (data[0] + data[2]), .5 * (data[1] + data[3])]);
+            addPoint(subPath, [0.5 * (ctrlPoint[0] + data[0]), 0.5 * (ctrlPoint[1]+ data[1])]);
+            addPoint(subPath, [0.5 * (data[0] + data[2]), 0.5 * (data[1] + data[3])]);
             prevCtrlPoint = [data[2] - data[0], data[3] - data[1]];
             break;
         case 'A':
             // Convert the arc to bezier curves and use the same approximation
             var curves = a2c.apply(0, basePoint.concat(data));
             for (var cData; (cData = curves.splice(0,6).map(toAbsolute)).length;) {
-                addPoint(subPath, [.5 * (basePoint[0] + cData[0]), .5 * (basePoint[1] + cData[1])]);
-                addPoint(subPath, [.5 * (cData[0] + cData[2]), .5 * (cData[1] + cData[3])]);
-                addPoint(subPath, [.5 * (cData[2] + cData[4]), .5 * (cData[3] + cData[5])]);
+                addPoint(subPath, [0.5 * (basePoint[0] + cData[0]), 0.5 * (basePoint[1] + cData[1])]);
+                addPoint(subPath, [0.5 * (cData[0] + cData[2]), 0.5 * (cData[1] + cData[3])]);
+                addPoint(subPath, [0.5 * (cData[2] + cData[4]), 0.5 * (cData[3] + cData[5])]);
                 if (curves.length) addPoint(subPath, basePoint = cData.slice(-2));
             }
             break;
@@ -773,7 +775,7 @@ function gatherPoints(points, item, index, path) {
     if (data && data.length >= 2) addPoint(subPath, data.slice(-2));
     return points;
 
-    function toAbsolute(n, i) { return n + basePoint[i % 2] }
+    function toAbsolute(n, i) { return n + basePoint[i % 2]; }
 
     // Writes data about the extreme points on each axle
     function addPoint(path, point) {
@@ -825,7 +827,7 @@ function convexHull(points) {
     var upper = [],
         maxY = points.length - 1,
         top = 0;
-    for (var i = points.length; i--;) {
+    for (i = points.length; i--;) {
         while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], points[i]) <= 0) {
             upper.pop();
         }
@@ -851,21 +853,25 @@ function convexHull(points) {
 }
 
 function cross(o, a, b) {
-    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
 }
 
 /* Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
  * Thanks to Dmitry Baranovskiy for his great work!
  */
 
-function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
+function a2c(x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
     // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
     var _120 = Math.PI * 120 / 180,
         rad = Math.PI / 180 * (+angle || 0),
         res = [],
-        rotateX = function(x, y, rad) { return x * Math.cos(rad) - y * Math.sin(rad) },
-        rotateY = function(x, y, rad) { return x * Math.sin(rad) + y * Math.cos(rad) };
+        rotateX = function(x, y, rad) { return x * Math.cos(rad) - y * Math.sin(rad); },
+        rotateY = function(x, y, rad) { return x * Math.sin(rad) + y * Math.cos(rad); },
+        cx,
+        cy,
+        f1,
+        f2;
     if (!recursive) {
         x1 = rotateX(x1, y1, -rad);
         y1 = rotateY(x1, y1, -rad);
@@ -881,21 +887,23 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         }
         var rx2 = rx * rx,
             ry2 = ry * ry,
-            k = (large_arc_flag == sweep_flag ? -1 : 1) *
-                Math.sqrt(Math.abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x))),
-            cx = k * rx * y / ry + (x1 + x2) / 2,
-            cy = k * -ry * x / rx + (y1 + y2) / 2,
-            f1 = Math.asin(((y1 - cy) / ry).toFixed(9)),
-            f2 = Math.asin(((y2 - cy) / ry).toFixed(9));
+            k = (largeArcFlag == sweepFlag ? -1 : 1) *
+                Math.sqrt(Math.abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x)));
+
+        cx = k * rx * y / ry + (x1 + x2) / 2;
+        cy = k * -ry * x / rx + (y1 + y2) / 2;
+
+        f1 = Math.asin(((y1 - cy) / ry).toFixed(9));
+        f2 = Math.asin(((y2 - cy) / ry).toFixed(9));
 
         f1 = x1 < cx ? Math.PI - f1 : f1;
         f2 = x2 < cx ? Math.PI - f2 : f2;
         f1 < 0 && (f1 = Math.PI * 2 + f1);
         f2 < 0 && (f2 = Math.PI * 2 + f2);
-        if (sweep_flag && f1 > f2) {
+        if (sweepFlag && f1 > f2) {
             f1 = f1 - Math.PI * 2;
         }
-        if (!sweep_flag && f2 > f1) {
+        if (!sweepFlag && f2 > f1) {
             f2 = f2 - Math.PI * 2;
         }
     } else {
@@ -909,10 +917,10 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         var f2old = f2,
             x2old = x2,
             y2old = y2;
-        f2 = f1 + _120 * (sweep_flag && f2 > f1 ? 1 : -1);
+        f2 = f1 + _120 * (sweepFlag && f2 > f1 ? 1 : -1);
         x2 = cx + rx * Math.cos(f2);
         y2 = cy + ry * Math.sin(f2);
-        res = a2c(x2, y2, rx, ry, angle, 0, sweep_flag, x2old, y2old, [f2, f2old, cx, cy]);
+        res = a2c(x2, y2, rx, ry, angle, 0, sweepFlag, x2old, y2old, [f2, f2old, cx, cy]);
     }
     df = f2 - f1;
     var c1 = Math.cos(f1),

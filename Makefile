@@ -13,7 +13,7 @@ coveralls: lib-cov
 	@cat lcov.info | ./node_modules/.bin/coveralls
 	@rm -rf lib-cov lcov.info
 
-travis: test coveralls
+travis: jshint test coveralls
 
 jshint:
 	@jshint --show-non-errors .

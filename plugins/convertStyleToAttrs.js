@@ -10,7 +10,7 @@ var EXTEND = require('whet.extend'),
     stylingProps = require('./_collections').stylingProps,
     rEscape = '\\\\(?:[0-9a-f]{1,6}\\s?|\\r\\n|.)',                 // Like \" or \2051. Code points consume one space.
     rAttr = '\\s*(' + g('[^:;\\\\]', rEscape) + '*?)\\s*',          // attribute name like ‘fill’
-    rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)", // string in single quotes: 'smth'
+    rSingleQuotes = '\'(?:[^\'\\n\\r\\\\]|' + rEscape + ')*?(?:\'|$)', // string in single quotes: 'smth'
     rQuotes = '"(?:[^"\\n\\r\\\\]|' + rEscape + ')*?(?:"|$)',       // string in double quotes: "smth"
     rQuotedString = new RegExp('^' + g(rSingleQuotes, rQuotes) + '$'),
 
@@ -49,6 +49,7 @@ var EXTEND = require('whet.extend'),
  * @author Kir Belevich
  */
 exports.fn = function(item) {
+    /* jshint boss: true */
 
     if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']
@@ -60,7 +61,7 @@ exports.fn = function(item) {
         styleValue = styleValue.replace(regStripComments, function(match) {
             return match[0] == '/' ? '' :
                 match[0] == '\\' && /[-g-z]/i.test(match[1]) ? match[1] : match;
-        })
+        });
 
         regDeclarationBlock.lastIndex = 0;
         for (var rule; rule = regDeclarationBlock.exec(styleValue);) {
@@ -98,7 +99,7 @@ exports.fn = function(item) {
 
             if (styles.length) {
                 item.attr('style').value = styles
-                    .map(function(declaration) { return declaration.join(':') })
+                    .map(function(declaration) { return declaration.join(':'); })
                     .join(';');
             } else {
                 item.removeAttr('style');

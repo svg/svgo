@@ -61,7 +61,7 @@ exports.transformsMultiply = function(transforms) {
         data: transforms.reduce(function(a, b) {
             return multiplyTransformMatrices(a, b);
         })
-    }
+    };
 
     return transforms;
 
@@ -149,7 +149,6 @@ exports.matrixToTransform = function(transform, params) {
             transforms.push({ name: 'scale', data: [sx, sy] });
         }
         var a1 = mth.acos(data[0] / sx, floatPrecision),
-            a2 = mth.asin(data[1] / (rowsSum ? sx : sy), floatPrecision),
             rotate = [a1.toFixed(floatPrecision) * (data[1] < 0 ? -1 : 1)];
 
         if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
@@ -157,7 +156,7 @@ exports.matrixToTransform = function(transform, params) {
         if (rowsSum && colsSum) transforms.push({
             name: 'skewX',
             data: [mth.atan(colsSum / (sx * sx), floatPrecision)]
-        })
+        });
 
         // rotate(a, cx, cy) can consume translate() within optional arguments cx, cy (rotation point)
         if (rotate[0] && (data[4] || data[5])) {
@@ -226,7 +225,7 @@ function transformToMatrix(transform) {
 
     return matrix;
 
-};
+}
 
 /**
  * Applies transformation to an arc. To do so, we represent ellipse as a matrix, multiply it

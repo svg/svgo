@@ -51,7 +51,7 @@ exports.fn = function(item, params) {
     if (item.isElem(pathElems) && item.hasAttr('d')) {
 
         precision = params.floatPrecision;
-        error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
+        error = precision !== false ? +Math.pow(0.1, precision).toFixed(precision) : 1e-2;
         hasMarkerMid = item.hasAttr('marker-mid');
 
         var data = path2js(item);
@@ -263,8 +263,10 @@ function filters(path, params) {
 
         if (data) {
 
+            var sdata;
+
             if (instruction === 's') {
-                var sdata = [0, 0].concat(data);
+                sdata = [0, 0].concat(data);
 
                 if ('cs'.indexOf(prev.instruction) > -1) {
                     var pdata = prev.data,
@@ -639,9 +641,15 @@ function roundData(data) {
         return data;
     }
 
-    roundData = precision > 0 ? strongRound : round;
+    if (precision > 0) {
 
-    return roundData(data);
+        return strongRound(data);
+
+    } else {
+
+        return round(data);
+
+    }
 
 }
 

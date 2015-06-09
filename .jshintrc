@@ -11,6 +11,7 @@
     "curly": false,
     "camelcase": true,
     "eqeqeq": false,
+    "-W041": false,
     "forin": false,
     "immed": true,
     "multistr": true,

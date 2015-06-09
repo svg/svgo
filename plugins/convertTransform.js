@@ -108,6 +108,7 @@ function convertTransform(item, attrName, params) {
  * @return {Array} output array
  */
 function definePrecision(data, params) {
+    /* jshint validthis: true */
     var matrixData = data.reduce(getMatrixData, []),
         significantDigits = params.transformPrecision;
 
@@ -343,7 +344,7 @@ function round(data) {
  * @return {Array} output data array
  */
 function smartRound(precision, data) {
-    for (var i = data.length, tolerance = Math.pow(.1, precision); i--;) {
+    for (var i = data.length, tolerance = Math.pow(0.1, precision); i--;) {
         var rounded = +data[i].toFixed(precision - 1);
         data[i] = +Math.abs(rounded - data[i]).toFixed(precision) >= tolerance ?
             +data[i].toFixed(precision) :
