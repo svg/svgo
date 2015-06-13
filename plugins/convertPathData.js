@@ -51,7 +51,7 @@ exports.fn = function(item, params) {
     if (item.isElem(pathElems) && item.hasAttr('d')) {
 
         precision = params.floatPrecision;
-        error = precision !== false ? +Math.pow(0.1, precision).toFixed(precision) : 1e-2;
+        error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
         hasMarkerMid = item.hasAttr('marker-mid');
 
         var data = path2js(item);
@@ -641,15 +641,9 @@ function roundData(data) {
         return data;
     }
 
-    if (precision > 0) {
+    roundData = precision > 0 ? strongRound : round; // jshint ignore: line
 
-        return strongRound(data);
-
-    } else {
-
-        return round(data);
-
-    }
+    return roundData(data);
 
 }
 

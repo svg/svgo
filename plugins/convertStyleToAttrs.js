@@ -99,7 +99,7 @@ exports.fn = function(item) {
 
             if (styles.length) {
                 item.attr('style').value = styles
-                    .map(function(declaration) { return declaration.join(':'); })
+                    .map(function(declaration) { return declaration.join(':') })
                     .join(';');
             } else {
                 item.removeAttr('style');
