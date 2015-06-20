@@ -22,7 +22,7 @@ Today we have:
 * [ [ removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) ] remove doctype declaration
 * [ [ removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] remove XML processing instructions
 * [ [ removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] remove comments
-* [ [ removeMetaData](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove `<metadata>`
+* [ [ removeMetadata](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] remove `<metadata>`
 * [ [ removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] remove `<title>` (disabled by default)
 * [ [ removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] remove `<desc>` (only non-meaningful by default)
 * [ [ removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] remove elements of `<defs>` without `id`
