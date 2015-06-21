@@ -37,7 +37,7 @@ exports.fn = function(item) {
         item.hasAttr('transform') &&
         !item.isEmpty() &&
         !item.someAttr(function(attr) {
-            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(')
+            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
         }) &&
         item.content.every(function(inner) {
             return inner.isElem(pathElems);

@@ -108,6 +108,7 @@ function convertTransform(item, attrName, params) {
  * @return {Array} output array
  */
 function definePrecision(data, params) {
+    /* jshint validthis: true */
     var matrixData = data.reduce(getMatrixData, []),
         significantDigits = params.transformPrecision;
 

@@ -13,8 +13,8 @@ exports.description = 'Add classnames to an outer <svg> element.';
  */
 exports.fn = function(data, params) {
 
-    var classNames = params.classNames || [ params.className ]
-    var svg = data.content[0]
+    var classNames = params.classNames || [ params.className ];
+    var svg = data.content[0];
 
     if (svg.isElem('svg')) {
 

@@ -8,4 +8,7 @@ branches:
   only:
     - master
 
+before_install:
+  - npm install -g jshint
+
 script: make travis

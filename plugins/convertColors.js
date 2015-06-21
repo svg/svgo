@@ -107,5 +107,5 @@ exports.fn = function(item, params) {
  * @author Jed Schmidt
  */
 function rgb2hex(rgb) {
-    return '#' + ("00000" + (rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16)).slice(-6).toUpperCase();
+    return '#' + ('00000' + (rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16)).slice(-6).toUpperCase();
 }

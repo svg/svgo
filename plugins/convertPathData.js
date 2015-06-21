@@ -263,8 +263,10 @@ function filters(path, params) {
 
         if (data) {
 
+            var sdata;
+
             if (instruction === 's') {
-                var sdata = [0, 0].concat(data);
+                sdata = [0, 0].concat(data);
 
                 if ('cs'.indexOf(prev.instruction) > -1) {
                     var pdata = prev.data,
@@ -639,7 +641,7 @@ function roundData(data) {
         return data;
     }
 
-    roundData = precision > 0 ? strongRound : round;
+    roundData = precision > 0 ? strongRound : round; // jshint ignore: line
 
     return roundData(data);
 

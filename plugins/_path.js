@@ -1,3 +1,4 @@
+/* global a2c */
 'use strict';
 
 var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
@@ -176,7 +177,7 @@ exports.applyTransforms = function(elem, path, params) {
     // gradiends or clip-path which are also subjects to transform.
     if (!elem.hasAttr('transform') ||
         elem.someAttr(function(attr) {
-            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(')
+            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
         }))
         return path;
 
@@ -544,7 +545,7 @@ function collapseRepeated(data) {
                     data: prev.data.concat(item.data),
                     coords: item.coords,
                     base: prev.base
-                }
+                };
             } else {
                 prev.data = item.data;
                 prev.coords = item.coords;
@@ -649,6 +650,8 @@ exports.intersects = function(path1, path2) {
 };
 
 function processSimplex(simplex, direction) {
+    /* jshint -W004 */
+
     // we only need to handle to 1-simplex and 2-simplex
     if (simplex.length == 2) { // 1-simplex
         var a = simplex[1],
@@ -804,6 +807,8 @@ function gatherPoints(points, item, index, path) {
  * @param points An array of [X, Y] coordinates
  */
 function convexHull(points) {
+    /* jshint -W004 */
+
     points.sort(function(a, b) {
         return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
     });
@@ -851,13 +856,14 @@ function convexHull(points) {
 }
 
 function cross(o, a, b) {
-    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
 }
 
 /* Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
  * Thanks to Dmitry Baranovskiy for his great work!
  */
 
+// jshint ignore: start
 function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
     // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
@@ -938,3 +944,4 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         return newres;
     }
 }
+// jshint ignore: end
