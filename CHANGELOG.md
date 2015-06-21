@@ -1,3 +1,11 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.5.3) ] 0.5.3 / 21.06.2015
+* Fixed breaking related to rounding functions in “[convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js)”.
+* Fixed a bug with ID in animations not being worked on by “[cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js)”.
+* Fixed a bug with quoted reference in `url()`.
+* Now, if there are several same IDs in the document, then the first one is used and others are being removed.
+* New command-line option `--show-plugins` displaying list of plugins.
+* Two new optional plugins: “[removeDimensions](removeDimensions.js)” (removes `width` and `height` if there is `viewBox`) and “[removeAttrsPlugin](removeAttrsPlugin.js)” (by @bennyschudel).
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.2) ] 0.5.2 / 24.05.2015
 * Introduced new `transformPrecision` option for better image quality (defaults to 5) in “[convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js)” and “[convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js)” (for the purpose of applying transformations) plugins.
 * Matrix transformations now can be decomposed into a combination of few simple transforms like `translate`, `rotate`, `scale`.

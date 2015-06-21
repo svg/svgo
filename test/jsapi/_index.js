@@ -23,7 +23,7 @@ describe('svgo object', function() {
             local: 'localName'
         });
 
-        item.should.be.an.Object.and.an.instanceof(JSAPI);
+        item.should.be.instanceof(JSAPI);
         item.should.have.ownProperty('elem').equal('elementName');
         item.should.have.ownProperty('prefix').equal('prefixName');
         item.should.have.ownProperty('local').equal('localName');
@@ -33,7 +33,7 @@ describe('svgo object', function() {
         var svgo = new SVGO();
         var item = svgo.createContentItem();
 
-        item.should.be.an.Object.and.an.instanceof(JSAPI);
+        item.should.be.instanceof(JSAPI);
         item.should.be.empty;
     });
 
