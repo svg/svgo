@@ -52,7 +52,8 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) ] сортировка атрибутов элементов для удобочитаемости (выключено по умолчанию)
 * [ [ transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
 * [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] удаляет атрибуты width/height при наличии viewBox (выключено по умолчанию)
-* [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] удаляет атрибуты по указанному паттерну
+* [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] удаляет атрибуты по указанному паттерну (выключено по умолчанию)
+* [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] добавляет имена классов корневому элементу `<svg>` (выключено по умолчанию)
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 
