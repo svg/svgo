@@ -13,7 +13,7 @@ exports.params = {
 };
 
 var referencesProps = require('./_collections').referencesProps,
-    regReferencesUrl = /^url\(#(.+?)\)$/,
+    regReferencesUrl = /^url\(("|')?#(.+?)\1\)$/,
     regReferencesHref = /^#(.+?)$/,
     styleOrScript = ['style', 'script'],
     generateIDchars = [
@@ -74,10 +74,10 @@ exports.fn = function(data, params) {
                             match = attr.value.match(regReferencesUrl);
 
                             if (match) {
-                                if (referencesIDs[idPrefix + match[1]]) {
-                                    referencesIDs[idPrefix + match[1]].push(attr);
+                                if (referencesIDs[idPrefix + match[2]]) {
+                                    referencesIDs[idPrefix + match[2]].push(attr);
                                 } else {
-                                    referencesIDs[idPrefix + match[1]] = [attr];
+                                    referencesIDs[idPrefix + match[2]] = [attr];
                                 }
                             }
                         }
