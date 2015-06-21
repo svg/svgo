@@ -131,6 +131,7 @@ Arguments:
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * as a Mimosa module – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * as an OSX Folder Action – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
+* as a webpack loader – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 
 ## Donate
 
