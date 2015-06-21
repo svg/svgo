@@ -15,6 +15,7 @@ exports.params = {
 var referencesProps = require('./_collections').referencesProps,
     regReferencesUrl = /^url\(("|')?#(.+?)\1\)$/,
     regReferencesHref = /^#(.+?)$/,
+    regReferencesBegin = /^(\w+?)\./,
     styleOrScript = ['style', 'script'],
     generateIDchars = [
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -83,15 +84,14 @@ exports.fn = function(data, params) {
                         }
 
                         // save IDs href references
-                        else if (attr.name === 'xlink:href') {
-                            match = attr.value.match(regReferencesHref);
-
-                            if (match) {
-                                if (referencesIDs[idPrefix + match[1]]) {
-                                    referencesIDs[idPrefix + match[1]].push(attr);
-                                } else {
-                                    referencesIDs[idPrefix + match[1]] = [attr];
-                                }
+                        else if (
+                            attr.name === 'xlink:href' && (match = attr.value.match(regReferencesHref)) ||
+                            attr.name === 'begin' && (match = attr.value.match(regReferencesBegin))
+                        ) {
+                            if (referencesIDs[idPrefix + match[1]]) {
+                                referencesIDs[idPrefix + match[1]].push(attr);
+                            } else {
+                                referencesIDs[idPrefix + match[1]] = [attr];
                             }
                         }
                     });
@@ -126,13 +126,16 @@ exports.fn = function(data, params) {
                     IDs[k].attr('id').value = currentIDstring;
 
                     referencesIDs[k].forEach(function(attr) {
-                        attr.value = attr.value.replace('#' + k.replace(idPrefix, ''), '#' + currentIDstring);
+                        k = k.replace(idPrefix, '');
+                        attr.value = attr.value
+                            .replace('#' + k, '#' + currentIDstring)
+                            .replace(k + '.', currentIDstring + '.');
                     });
 
                 }
 
                 // don't remove referenced IDs
-                delete IDs[k];
+                delete IDs[idPrefix + k];
 
             }
         }
