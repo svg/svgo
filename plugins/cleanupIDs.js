@@ -67,7 +67,11 @@ exports.fn = function(data, params) {
                     item.eachAttr(function(attr) {
                         // save IDs
                         if (attr.name === 'id') {
-                            IDs[idPrefix + attr.value] = item;
+                            if (idPrefix + attr.value in IDs) {
+                                item.removeAttr('id');
+                            } else {
+                                IDs[idPrefix + attr.value] = item;
+                            }
                         }
 
                         // save IDs url() references

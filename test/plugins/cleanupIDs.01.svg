@@ -9,6 +9,8 @@
         </text>
         <path id="crochet" d="..."/>
         <path id="block" d="..."/>
+        <path id="two" d="..."/>
+        <path id="two" d="..."/>
     </defs>
     <g id="g001">
         <circle id="circle001" fill="url(#gradient001)" cx="60" cy="60" r="50"/>
@@ -19,6 +21,7 @@
         <tref xlink:href="#referencedText"/>
     </g>
     <animateMotion xlink:href="#crochet" dur="0.5s" begin="block.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+    <use xlink:href="#two"/>
 </svg>
 
 @@@
@@ -34,6 +37,8 @@
         </text>
         <path id="c" d="..."/>
         <path id="d" d="..."/>
+        <path id="e" d="..."/>
+        <path d="..."/>
     </defs>
     <g>
         <circle fill="url(#a)" cx="60" cy="60" r="50"/>
@@ -44,4 +49,5 @@
         <tref xlink:href="#b"/>
     </g>
     <animateMotion xlink:href="#c" dur="0.5s" begin="d.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+    <use xlink:href="#e"/>
 </svg>
