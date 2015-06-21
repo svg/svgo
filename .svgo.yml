@@ -49,4 +49,5 @@ plugins:
   - removeTitle
   - removeDesc
   - removeDimensions
+  - removeAttrs
   - addClassesToSVGElement
