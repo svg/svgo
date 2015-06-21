@@ -51,6 +51,7 @@ Today we have:
 * [ [ convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) ] convert some basic shapes to path
 * [ [ sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) ] sort element attributes for epic readability (disabled by default)
 * [ [ transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] apply transforms, crop by real width, center vertical alignment and resize SVG with one Path inside (disabled by default)
+* [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] remove width/height attributes if viewBox is present (disabled by default)
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 
