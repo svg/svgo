@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'merge multiple Paths into one';
+exports.description = 'merges multiple paths in one if possible';
 
 exports.params = {
     collapseRepeated: true,

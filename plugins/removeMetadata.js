@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'remove <metadata>';
+exports.description = 'removes <metadata>';
 
 /**
  * Remove <metadata>.

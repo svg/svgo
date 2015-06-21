@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'Round list of values to the fixed precision';
+exports.description = 'rounds list of values to the fixed precision';
 
 exports.params = {
     floatPrecision: 3,

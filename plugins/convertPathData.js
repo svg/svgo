@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'convert Path data to relative or absolute whichever is shorter, convert one segment to another, trim useless delimiters, smart rounding and much more';
+exports.description = 'optimizes path data: writes in shorter form, applies transformations';
 
 exports.params = {
     applyTransforms: true,

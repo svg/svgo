@@ -4,7 +4,7 @@ exports.type = 'full';
 
 exports.active = true;
 
-exports.description = 'remove unused and minify used IDs';
+exports.description = 'removes unused IDs and minifies used';
 
 exports.params = {
     remove: true,

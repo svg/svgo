@@ -1,16 +1,17 @@
+/* jshint quotmark: false */
 'use strict';
 
 exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'Convert style in attributes. Cleanups comments and illegal declarations (without colon) as a side effect';
+exports.description = 'converts style to attributes';
 
 var EXTEND = require('whet.extend'),
     stylingProps = require('./_collections').stylingProps,
     rEscape = '\\\\(?:[0-9a-f]{1,6}\\s?|\\r\\n|.)',                 // Like \" or \2051. Code points consume one space.
     rAttr = '\\s*(' + g('[^:;\\\\]', rEscape) + '*?)\\s*',          // attribute name like ‘fill’
-    rSingleQuotes = '\'(?:[^\'\\n\\r\\\\]|' + rEscape + ')*?(?:\'|$)', // string in single quotes: 'smth'
+    rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)", // string in single quotes: 'smth'
     rQuotes = '"(?:[^"\\n\\r\\\\]|' + rEscape + ')*?(?:"|$)',       // string in double quotes: "smth"
     rQuotedString = new RegExp('^' + g(rSingleQuotes, rQuotes) + '$'),
 

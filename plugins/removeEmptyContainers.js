@@ -4,7 +4,7 @@ exports.type = 'perItemReverse';
 
 exports.active = true;
 
-exports.description = 'remove empty Container elements';
+exports.description = 'removes empty container elements';
 
 var container = require('./_collections').elemsGroups.container;
 

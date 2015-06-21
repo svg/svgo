@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'remove unknown elements content and attributes, remove attrs with default values';
+exports.description = 'removes unknown elements content and attributes, removes attrs with default values';
 
 exports.params = {
     unknownContent: true,

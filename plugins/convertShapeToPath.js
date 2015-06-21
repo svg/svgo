@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'convert some basic shapes to path';
+exports.description = 'converts basic shapes to more compact path form';
 
 var none = { value: 0 },
     regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;

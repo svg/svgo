@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'convert colors (from rgb() to #rrggbb, from #rrggbb to #rgb)';
+exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 
 exports.params = {
     names2hex: true,

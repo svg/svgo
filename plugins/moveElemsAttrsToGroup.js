@@ -4,7 +4,7 @@ exports.type = 'perItemReverse';
 
 exports.active = true;
 
-exports.description = 'move elements attributes to the existing group wrapper';
+exports.description = 'moves elements attributes to the existing group wrapper';
 
 var inheritableAttrs = require('./_collections').inheritableAttrs,
     pathElems = require('./_collections.js').pathElems;

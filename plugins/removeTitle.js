@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'remove <title> (disabled by default)';
+exports.description = 'removes <title> (disabled by default)';
 
 /**
  * Remove <title>.

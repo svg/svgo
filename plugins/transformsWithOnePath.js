@@ -8,7 +8,7 @@ exports.type = 'full';
 
 exports.active = false;
 
-exports.description = 'apply transforms, crop by real width, center vertical alignment and resize SVG with one Path inside (disabled by default)';
+exports.description = 'performs a set of operations on SVG with one path inside (disabled by default)';
 
 exports.params = {
     // width and height to resize SVG and rescale inner Path
