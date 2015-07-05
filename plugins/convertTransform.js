@@ -93,7 +93,11 @@ function convertTransform(item, attrName, params) {
         data = removeUseless(data);
     }
 
-    item.attr(attrName).value = js2transform(data, params);
+    if (data.length) {
+        item.attr(attrName).value = js2transform(data, params);
+    } else {
+        item.removeAttr(attrName);
+    }
 }
 
 /**

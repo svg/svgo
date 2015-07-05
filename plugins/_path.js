@@ -175,7 +175,7 @@ var relative2absolute = exports.relative2absolute = function(data) {
 exports.applyTransforms = function(elem, path, params) {
     // if there are no 'stroke' attr and references to other objects such as
     // gradiends or clip-path which are also subjects to transform.
-    if (!elem.hasAttr('transform') ||
+    if (!elem.hasAttr('transform') || !elem.attr('transform').value ||
         elem.someAttr(function(attr) {
             return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
         }))
