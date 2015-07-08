@@ -56,7 +56,7 @@ exports.transformsMultiply = function(transforms) {
     });
 
     // multiply all matrices into one
-    if (transforms.length >= 2) transforms = {
+    transforms = {
         name: 'matrix',
         data: transforms.reduce(function(a, b) {
             return multiplyTransformMatrices(a, b);
