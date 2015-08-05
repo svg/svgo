@@ -296,8 +296,6 @@ exports.fn = function(data, params) {
             }
 
             if (transform) {
-                console.log(transform)
-
                 pathElem.addAttr({
                     name: 'transform',
                     prefix: '',
@@ -307,7 +305,6 @@ exports.fn = function(data, params) {
 
                 path = applyTransforms(pathElem, pathElem.pathJS, true, params.floatPrecision);
 
-                console.log(path)
                 // transformed data rounding
                 path.forEach(function(pathItem) {
                     if (pathItem.data) {
