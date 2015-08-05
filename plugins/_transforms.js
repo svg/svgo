@@ -244,8 +244,8 @@ exports.transformArc = function(arc, transform) {
         rot = arc[2] * Math.PI / 180,
         cos = Math.cos(rot),
         sin = Math.sin(rot),
-        h = Math.pow(arc[5] * cos - arc[6] * sin, 2) / (4 * a * a) +
-            Math.pow(arc[5] * sin + arc[6] * cos, 2) / (4 * b * b);
+        h = Math.pow(arc[5] * cos + arc[6] * sin, 2) / (4 * a * a) +
+            Math.pow(arc[6] * cos - arc[5] * sin, 2) / (4 * b * b);
     if (h > 1) {
         h = Math.sqrt(h);
         a *= h;
