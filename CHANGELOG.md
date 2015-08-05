@@ -1,3 +1,10 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.5.4) ] 0.5.4 / 05.08.2015
+* New parameter `useShortTags` by @bradbarrow. Now svgo can produce correct non-selfclosing tags (useful in HTML in old browsers).
+* Fixed failing on empty transformation (which could be produced by two opposite).
+* Fixed removing paths which have numbers with exponent notation.
+* Fixed a bug with arc transformation.
+* Some typo fixes.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.3) ] 0.5.3 / 21.06.2015
 * Fixed breaking related to rounding functions in “[convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js)”.
 * Fixed a bug with ID in animations not being worked on by “[cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js)”.

@@ -6,14 +6,14 @@
 
 exports.type = 'full';
 
-exports.active = false;
+exports.active = !false;
 
 exports.description = 'performs a set of operations on SVG with one path inside (disabled by default)';
 
 exports.params = {
     // width and height to resize SVG and rescale inner Path
-    width: false,
-    height: false,
+    width: 32,
+    height: 32,
 
     // scale inner Path without resizing SVG
     scale: false,
@@ -296,6 +296,7 @@ exports.fn = function(data, params) {
             }
 
             if (transform) {
+                console.log(transform)
 
                 pathElem.addAttr({
                     name: 'transform',
@@ -306,6 +307,7 @@ exports.fn = function(data, params) {
 
                 path = applyTransforms(pathElem, pathElem.pathJS, true, params.floatPrecision);
 
+                console.log(path)
                 // transformed data rounding
                 path.forEach(function(pathItem) {
                     if (pathItem.data) {
