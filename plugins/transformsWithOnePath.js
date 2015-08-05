@@ -6,14 +6,14 @@
 
 exports.type = 'full';
 
-exports.active = !false;
+exports.active = false;
 
 exports.description = 'performs a set of operations on SVG with one path inside (disabled by default)';
 
 exports.params = {
     // width and height to resize SVG and rescale inner Path
-    width: 32,
-    height: 32,
+    width: false,
+    height: false,
 
     // scale inner Path without resizing SVG
     scale: false,

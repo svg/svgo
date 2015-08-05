@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.5.5) ] 0.5.5 / 05.08.2015
+* Reverted debugging changes.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.4) ] 0.5.4 / 05.08.2015
 * New parameter `useShortTags` by @bradbarrow. Now svgo can produce correct non-selfclosing tags (useful in HTML in old browsers).
 * Fixed failing on empty transformation (which could be produced by two opposite).
