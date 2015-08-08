@@ -6,6 +6,8 @@ exports.type = 'perItem';
 
 exports.active = false;
 
+exports.description = 'removes specified attributes';
+
 exports.params = {
     attrs: []
 };
