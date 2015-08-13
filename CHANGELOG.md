@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.5.6) ] 0.5.6 / 13.08.2015
+* Fixed paths removing.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.5) ] 0.5.5 / 05.08.2015
 * Reverted debugging changes.
 
