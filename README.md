@@ -54,6 +54,7 @@ Today we have:
 * [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] remove width/height attributes if viewBox is present (disabled by default)
 * [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] remove attributes by pattern (disabled by default)
 * [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] add classnames to an outer `<svg>` element (disabled by default)
+* [ [ setDimensions](https://github.com/svg/svgo/blob/master/plugins/setDimensions.js) ] set width and height (disabled by default)
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 
