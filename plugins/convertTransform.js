@@ -22,6 +22,7 @@ exports.params = {
 };
 
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
+    EXTEND = require('whet.extend'),
     transform2js = require('./_transforms.js').transform2js,
     transformsMultiply = require('./_transforms.js').transformsMultiply,
     matrixToTransform = require('./_transforms.js').matrixToTransform,
@@ -75,7 +76,7 @@ exports.fn = function(item, params) {
  */
 function convertTransform(item, attrName, params) {
     var data = transform2js(item.attr(attrName).value);
-    definePrecision(data, params);
+    params = definePrecision(data, params);
 
     if (params.collapseIntoOne && data.length > 1) {
         data = [transformsMultiply(data)];
@@ -84,9 +85,7 @@ function convertTransform(item, attrName, params) {
     if (params.convertToShorts) {
         data = convertToShorts(data, params);
     } else {
-        data.forEach(function(transform) {
-            transform = roundTransform(transform, params);
-        });
+        data.forEach(roundTransform);
     }
 
     if (params.removeUseless) {
@@ -116,6 +115,9 @@ function definePrecision(data, params) {
     var matrixData = data.reduce(getMatrixData, []),
         significantDigits = params.transformPrecision;
 
+    // Clone params so it don't affect other elements transformations.
+    params = EXTEND({}, params);
+
     // Limit transform precision with matrix one. Calculating with larger precision doesn't add any value.
     if (matrixData.length) {
         params.transformPrecision = Math.min(params.transformPrecision,
@@ -130,9 +132,11 @@ function definePrecision(data, params) {
         params.degPrecision = Math.max(0, Math.min(params.floatPrecision, significantDigits - 2));
     }
 
-    degRound = params.degPrecision >= 1 ? smartRound.bind(this, params.degPrecision) : round;
     floatRound = params.floatPrecision >= 1 ? smartRound.bind(this, params.floatPrecision) : round;
+    degRound = params.degPrecision >= 1 ? smartRound.bind(this, params.degPrecision) : round;
     transformRound = params.transformPrecision >= 1 ? smartRound.bind(this, params.transformPrecision) : round;
+
+    return params;
 }
 
 /**
@@ -180,15 +184,9 @@ function convertToShorts(transforms, params) {
             transform = transforms[i];
         }
 
-        transform = roundTransform(transform, params);
-
         // fixed-point numbers
         // 12.754997 → 12.755
-        if (params.transformPrecision !== false) {
-            transform.data = transform.data.map(function(num) {
-                return +num.toFixed(params.transformPrecision);
-            });
-        }
+        roundTransform(transform);
 
         // convert long translate transform notation to the shorts one
         // translate(10 0) → translate(10)
@@ -298,7 +296,7 @@ function js2transform(transformJS, params) {
 
     // collect output value string
     transformJS.forEach(function(transform) {
-        transform = roundTransform(transform, params);
+        roundTransform(transform);
         transformString += (transformString && ' ') + transform.name + '(' + cleanupOutData(transform.data, params) + ')';
     });
 

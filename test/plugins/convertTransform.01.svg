@@ -6,6 +6,8 @@
     <g transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21) skewX(45)"/>
     <g transform="matrix( 0.707 -0.707 0.707 0.707 255.03 111.21 ) skewY( 45 )"/>
     <g transform="matrix(1 0 1 1 0 0)"/>
+    <g transform="matrix(1.25,0,0,-1.25,0,56.26) scale(1,-1)"/>
+    <g transform="matrix(1.25,0,0,-1.25,0,56.26) matrix(0.1325312,0,0,-0.1325312,-31.207631,89.011662)"/>
 </svg>
 
 @@@
@@ -18,4 +20,6 @@
     <g transform="rotate(-45 261.823 -252.215) skewX(45)"/>
     <g transform="matrix(1.414 0 .707 .707 255.03 111.21)"/>
     <g transform="skewX(45)"/>
+    <g transform="matrix(1.25 0 0 1.25 0 56.26)"/>
+    <g transform="matrix(.16566 0 0 .16566 -39.01 -55.005)"/>
 </svg>
