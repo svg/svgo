@@ -36,8 +36,8 @@ exports.fn = function(data, params) {
 
     var currentID,
         currentIDstring,
-        IDs = {},
-        referencesIDs = {},
+        IDs = Object.create(null),
+        referencesIDs = Object.create(null),
         idPrefix = 'id-', // prefix IDs so that values like '__proto__' don't break the work
         hasStyleOrScript = false;
 
@@ -57,58 +57,58 @@ exports.fn = function(data, params) {
             // check if <style> of <script> presents
             if (item.isElem(styleOrScript)) {
                 hasStyleOrScript = true;
+                continue;
             }
 
             // …and don't remove any ID if yes
-            if (!hasStyleOrScript) {
+            if (item.isElem()) {
 
-                if (item.isElem()) {
+                item.eachAttr(function(attr) {
+                    var key;
+                    // save IDs
+                    if (attr.name === 'id') {
+                        key = idPrefix + attr.value;
+                        if (key in IDs) {
+                            item.removeAttr('id');
+                        } else {
+                            IDs[key] = item;
+                        }
+                    }
 
-                    item.eachAttr(function(attr) {
-                        // save IDs
-                        if (attr.name === 'id') {
-                            if (idPrefix + attr.value in IDs) {
-                                item.removeAttr('id');
+                    // save IDs url() references
+                    else if (referencesProps.indexOf(attr.name) > -1) {
+                        match = attr.value.match(regReferencesUrl);
+
+                        if (match) {
+                            key = idPrefix + match[2];
+                            if (referencesIDs[key]) {
+                                referencesIDs[key].push(attr);
                             } else {
-                                IDs[idPrefix + attr.value] = item;
+                                referencesIDs[key] = [attr];
                             }
                         }
+                    }
 
-                        // save IDs url() references
-                        else if (referencesProps.indexOf(attr.name) > -1) {
-                            match = attr.value.match(regReferencesUrl);
-
-                            if (match) {
-                                if (referencesIDs[idPrefix + match[2]]) {
-                                    referencesIDs[idPrefix + match[2]].push(attr);
-                                } else {
-                                    referencesIDs[idPrefix + match[2]] = [attr];
-                                }
-                            }
+                    // save IDs href references
+                    else if (
+                        attr.name === 'xlink:href' && (match = attr.value.match(regReferencesHref)) ||
+                        attr.name === 'begin' && (match = attr.value.match(regReferencesBegin))
+                    ) {
+                        key = idPrefix + match[1];
+                        if (referencesIDs[key]) {
+                            referencesIDs[key].push(attr);
+                        } else {
+                            referencesIDs[key] = [attr];
                         }
-
-                        // save IDs href references
-                        else if (
-                            attr.name === 'xlink:href' && (match = attr.value.match(regReferencesHref)) ||
-                            attr.name === 'begin' && (match = attr.value.match(regReferencesBegin))
-                        ) {
-                            if (referencesIDs[idPrefix + match[1]]) {
-                                referencesIDs[idPrefix + match[1]].push(attr);
-                            } else {
-                                referencesIDs[idPrefix + match[1]] = [attr];
-                            }
-                        }
-                    });
-
-                }
-
-                // go deeper
-                if (item.content) {
-                    monkeys(item);
-                }
+                    }
+                });
 
             }
 
+            // go deeper
+            if (item.content) {
+                monkeys(item);
+            }
         }
 
         return items;
@@ -117,40 +117,39 @@ exports.fn = function(data, params) {
 
     data = monkeys(data);
 
-    if (!hasStyleOrScript) {
+    if (hasStyleOrScript) {
+        return data;
+    }
 
+    for (var k in referencesIDs) {
+        if (IDs[k]) {
 
-        for (var k in referencesIDs) {
-            if (IDs[k]) {
+            // replace referenced IDs with the minified ones
+            if (params.minify) {
 
-                // replace referenced IDs with the minified ones
-                if (params.minify) {
+                currentIDstring = getIDstring(currentID = generateID(currentID), params);
+                IDs[k].attr('id').value = currentIDstring;
 
-                    currentIDstring = getIDstring(currentID = generateID(currentID), params);
-                    IDs[k].attr('id').value = currentIDstring;
-
-                    referencesIDs[k].forEach(function(attr) {
-                        k = k.replace(idPrefix, '');
-                        attr.value = attr.value
-                            .replace('#' + k, '#' + currentIDstring)
-                            .replace(k + '.', currentIDstring + '.');
-                    });
-
-                }
-
-                // don't remove referenced IDs
-                delete IDs[idPrefix + k];
+                referencesIDs[k].forEach(function(attr) {
+                    k = k.replace(idPrefix, '');
+                    attr.value = attr.value
+                        .replace('#' + k, '#' + currentIDstring)
+                        .replace(k + '.', currentIDstring + '.');
+                });
 
             }
+
+            // don't remove referenced IDs
+            delete IDs[idPrefix + k];
+
         }
+    }
 
-        // remove non-referenced IDs attributes from elements
-        if (params.remove) {
+    // remove non-referenced IDs attributes from elements
+    if (params.remove) {
 
-            for(var ID in IDs) {
-                IDs[ID].removeAttr('id');
-            }
-
+        for(var ID in IDs) {
+            IDs[ID].removeAttr('id');
         }
 
     }
