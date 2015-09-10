@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <text id="test01">
+        <text id="__proto__">
             referenced text
         </text>
         <text id="test02">
@@ -160,9 +160,9 @@
             referenced text
         </text>
     </defs>
-    <tref xlink:href="#test01"/>
-    <tref xlink:href="#test01"/>
-    <tref xlink:href="#test01"/>
+    <tref xlink:href="#__proto__"/>
+    <tref xlink:href="#__proto__"/>
+    <tref xlink:href="#__proto__"/>
     <tref xlink:href="#test02"/>
     <tref xlink:href="#test03"/>
     <tref xlink:href="#test04"/>
