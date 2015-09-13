@@ -49,7 +49,7 @@ exports.fn = function(data, params) {
      */
     function monkeys(items) {
 
-        for (var i = 0; i < items.content.length; i++) {
+        for (var i = 0; i < items.content.length && !hasStyleOrScript; i++) {
 
             var item = items.content[i],
                 match;
