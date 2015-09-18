@@ -317,15 +317,9 @@ function filters(path, params) {
 
                 if (
                     instruction === 'c' &&
-                    isCurveStraightLine(
-                        [ 0, data[0], data[2], data[4] ],
-                        [ 0, data[1], data[3], data[5] ]
-                    ) ||
+                    isCurveStraightLine(data) ||
                     instruction === 's' &&
-                    isCurveStraightLine(
-                        [ 0, sdata[0], sdata[2], sdata[4] ],
-                        [ 0, sdata[1], sdata[3], sdata[5] ]
-                    )
+                    isCurveStraightLine(sdata)
                 ) {
                     if (next && next.instruction == 's')
                         makeLonghand(next, data); // fix up next curve
@@ -335,10 +329,7 @@ function filters(path, params) {
 
                 else if (
                     instruction === 'q' &&
-                    isCurveStraightLine(
-                        [ 0, data[0], data[2] ],
-                        [ 0, data[1], data[3] ]
-                    )
+                    isCurveStraightLine(data)
                 ) {
                     if (next && next.instruction == 't')
                         makeLonghand(next, data); // fix up next curve
@@ -626,20 +617,19 @@ function roundData(data) {
  * @return {Boolean}
  */
 
-function isCurveStraightLine(xs, ys) {
+function isCurveStraightLine(data) {
 
-    // Get line equation a·x + b·y + c = 0 coefficients a, b, c by start and end points.
-    var i = xs.length - 1,
-        a = ys[0] - ys[i], // y1 − y2
-        b = xs[i] - xs[0], // x2 − x1
-        c = xs[0] * ys[i] - xs[i] * ys[0], // x1·y2 − x2·y1
+    // Get line equation a·x + b·y + c = 0 coefficients a, b (c = 0) by start and end points.
+    var i = data.length - 2,
+        a = -data[i + 1], // y1 − y2 (y1 = 0)
+        b = data[i],      // x2 − x1 (x1 = 0)
         d = 1 / (a * a + b * b); // same part for all points
 
-    if (!isFinite(d)) return false; // curve that ends at start point isn't the case
+    if (i <= 1 || !isFinite(d)) return false; // curve that ends at start point isn't the case
 
     // Distance from point (x0, y0) to the line is sqrt((c − a·x0 − b·y0)² / (a² + b²))
-    while (--i) {
-        if (Math.sqrt(Math.pow(c - a * xs[i] - b * ys[i], 2) * d) > error)
+    while ((i -= 2) >= 0) {
+        if (Math.sqrt(Math.pow(a * data[i] + b * data[i + 1], 2) * d) > error)
             return false;
     }
 
