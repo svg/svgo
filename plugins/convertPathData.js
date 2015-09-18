@@ -256,10 +256,11 @@ function filters(path, params) {
         pathBase = [0, 0],
         prev = {};
 
-    path = path.filter(function(item, index) {
+    path = path.filter(function(item, index, path) {
 
         var instruction = item.instruction,
-            data = item.data;
+            data = item.data,
+            next = path[index + 1];
 
         if (data) {
 
@@ -314,31 +315,24 @@ function filters(path, params) {
             // convert straight curves into lines segments
             if (params.straightCurves) {
 
-                // c
                 if (
                     instruction === 'c' &&
                     isCurveStraightLine(
                         [ 0, data[0], data[2], data[4] ],
                         [ 0, data[1], data[3], data[5] ]
-                    )
-                ) {
-                    instruction = 'l';
-                    data = data.slice(-2);
-                }
-
-                // s
-                else if (
+                    ) ||
                     instruction === 's' &&
                     isCurveStraightLine(
                         [ 0, sdata[0], sdata[2], sdata[4] ],
                         [ 0, sdata[1], sdata[3], sdata[5] ]
                     )
                 ) {
+                    if (next && next.instruction == 's')
+                        makeLonghand(next, data); // fix up next curve
                     instruction = 'l';
                     data = data.slice(-2);
                 }
 
-                // q
                 else if (
                     instruction === 'q' &&
                     isCurveStraightLine(
@@ -346,44 +340,21 @@ function filters(path, params) {
                         [ 0, data[1], data[3] ]
                     )
                 ) {
-                    // save the original one for the future potential q + t conversion
-                    item.original = {
-                        instruction: instruction,
-                        data: data
-                    };
-
+                    if (next && next.instruction == 't')
+                        makeLonghand(next, data); // fix up next curve
                     instruction = 'l';
                     data = data.slice(-2);
                 }
 
-                else if (instruction === 't') {
-
-                    // q (original) + t
-                    if (
-                        prev.original &&
-                        prev.original.instruction === 'q'
-                    ) {
-                        if (isCurveStraightLine(
-                            [ prev.original.data[0], prev.original.data[2], data[0] ],
-                            [ prev.original.data[1], prev.original.data[3], data[1] ]
-                        )) {
-                            instruction = 'l';
-                            data = data.slice(-2);
-                        } else {
-                            prev.instruction = 'q';
-                            prev.data = prev.original.data;
-                        }
-                    }
-
-                    // [^qt] + t
-                    else if ('qt'.indexOf(prev.instruction) < 0) {
-                        instruction = 'l';
-                        data = data.slice(-2);
-                    }
-
+                else if (
+                    instruction === 't' &&
+                    prev.instruction !== 'q' &&
+                    prev.instruction !== 't'
+                ) {
+                    instruction = 'l';
+                    data = data.slice(-2);
                 }
 
-                // a
                 else if (
                     instruction === 'a' &&
                     (data[0] === 0 || data[1] === 0)
@@ -426,7 +397,6 @@ function filters(path, params) {
                     prev.data[1] += data[1];
                 }
                 prev.coords = item.coords;
-                if (prev.original) prev.original = null;
                 path[index] = prev;
                 return false;
             }
@@ -675,4 +645,19 @@ function isCurveStraightLine(xs, ys) {
 
     return true;
 
+}
+
+/**
+ * Converts next curve from shorthand to full form using the current curve data.
+ *
+ * @param {Object} item curve to convert
+ * @param {Array} data current curve data
+ */
+
+function makeLonghand(item, data) {
+    switch (item.instruction) {
+        case 's': item.instruction = 'c'; break;
+        case 't': item.instruction = 'q'; break;
+    }
+    item.data.unshift(data[data.length - 2] - data[data.length - 4], data[data.length - 1] - data[data.length - 3]);
 }
