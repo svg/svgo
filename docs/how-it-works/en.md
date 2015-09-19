@@ -38,6 +38,8 @@ It's important to note that every plugin:
   * can be turned on with `name: true` and off with `name: false`
   * can have its own `params` which will be available later inside a plugin
 
+If you don't want to use the default config (e.g. you need to control the full process and you don't want to list all plugins in your config) just add *"dontUseDefaults: true"* to your config - none of plugins will be loaded without your knowledge.
+
 - - -
 
 ### 2. svg2js
