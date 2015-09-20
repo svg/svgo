@@ -14,7 +14,7 @@
 ## Intro
 So, as [mentioned earlier](https://github.com/svg/svgo#what-it-can-do), SVGO has a plugin-based architecture and almost every optimization is a separate plugin.
 
-Plugins can delete and modify SVG elements, collapse contents, move attributes and do any other actions you want.
+Plugins can remove and modify SVG elements, collapse contents, move attributes and do any other actions you want.
 
 ## How it works
 ### 1. config
@@ -22,21 +22,33 @@ SVGO reads, parses and/or extends the [default config](https://github.com/svg/sv
 
 ```yaml
 plugins:
-
   - myTestPlugi
   - myTestPlugin2: false
   - myTestPlugin3:
       param1: 1
       param2: 2
-
     …
 ```
 
 It's important to note that every plugin:
 
-  * has its specific position in the plugins array
-  * can be turned on with `name: true` and off with `name: false`
-  * can have its own `params` which will be available later inside a plugin
+  * has its specific position in the plugins list,
+  * can be turned on with `name: true` and off with `name: false`,
+  * can have its own `params` which will be available later inside a plugin.
+
+These settings can be changed by the provided config file with `--config` command line option. You can force using only your settings with the `full: true` parameter in your config:
+
+```yaml
+full: true
+plugins:
+  - myTestPlugin
+  - myTestPlugin3:
+      param1: 1
+      param2: 2
+    …
+```
+
+In a such case only listed plugins will be runned.
 
 - - -
 
@@ -101,9 +113,9 @@ SVGO converts SVG-as-XML data into SVG-as-JS AST representation. Something like 
 
 It's important to note that:
 
-  * there are special object keys to represent various SVG nodes: `elem`, `processinginstruction`, `doctype`, `comment`, `cdata` and `text`
-  * `content` is always an array
-  * `attrs` object keys represents a full attr name with namespace if it is, and all the details are inside as the `prefix` and `local` parts
+  * there are special object keys to represent various SVG nodes: `elem`, `processinginstruction`, `doctype`, `comment`, `cdata` and `text`,
+  * `content` is always an array,
+  * `attrs` object keys represents a full attr name with namespace if it is, and all the details are inside as the `prefix` and `local` parts.
 
 - - -
 
@@ -114,13 +126,13 @@ SVGO applies all plugins from the config to AST data. See a lot of examples in t
 #### 3.1 types
 In the simplest case plugins applying process can be represented as "each plugin runs over all AST data items and perform some actions". But 90% of typical optimizations requires some actions only on one (current) item from the data, so there is no sense to copypaste a recursive per-item loop every time on every plugin. And that's why we have a three types of plugins:
 
-* `perItem` - plugin works only with one current item, inside a "from the outside into the depths" recursive loop (default)
-* `perItemReverse` - plugin works only with one current item, inside a "from the depths to the outside" recursive loop (useful when you need to collapse elements one after other)
-* `full` - plugin works with the full AST and must returns the same
+* `perItem` - plugin works only with one current item, inside a "from the outside into the depths" recursive loop (default),
+* `perItemReverse` - plugin works only with one current item, inside a "from the depths to the outside" recursive loop (useful when you need to collapse elements one after other),
+* `full` - plugin works with the full AST and must returns the same.
 
 `perItem` and `perItemReverse` plugins runs inside the recursive `Array.prototype.filter` loop, so if a plugin wants to remove current item then it should just `return false`.
 
-But that's not all ;) We got rid of a loop copypasting, but every plugin still runs over all the SVG-as-JS data, which is not very optimal. Actually, at the first step where we got a config, there was a collapsing of consecutive plugins with the same type, so ultimately one loop wraps a group of plugins:
+But that's not all ;). We got rid of a loop copypasting, but every plugin still runs over all the SVG-as-JS data, which is not very optimal. Actually, at the first step where we got a config, there was a collapsing of consecutive plugins with the same type, so ultimately one loop wraps a group of plugins:
 
 ```yaml
 plugins
@@ -148,6 +160,15 @@ And of course, writing plugins would not have been so cool without some sugar AP
 ##### isEmpty()
   * Determine if element is empty.
   * @return {Boolean}
+
+##### renameElem(name)
+  * Renames an element.
+  * @param {String} name new element name
+  * @return {Object} element
+
+##### clone()
+  * Perform a deep clone of this node.
+  * @return {Object} element
 
 ##### hasAttr([attr], [val])
   * Determine if element has an attribute (any, or by name or by name + value).

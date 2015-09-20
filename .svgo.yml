@@ -1,4 +1,6 @@
 # replace default config
+
+# multipass: true
 # full: true
 
 plugins:

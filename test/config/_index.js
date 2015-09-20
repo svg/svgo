@@ -1,8 +1,8 @@
 'use strict';
 
 var CONFIG = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/config' :
-                     '../../lib/svgo/config');
+        '../../lib-cov/svgo/config' :
+        '../../lib/svgo/config');
 
 describe('config', function() {
 
@@ -27,6 +27,7 @@ describe('config', function() {
     describe('extend config with object', function() {
 
         var config = CONFIG({
+                multipass: true,
                 plugins: [
                     { removeDoctype: false },
                     { convertColors: { shorthex: false } },
@@ -36,6 +37,10 @@ describe('config', function() {
             removeDoctype = getPlugin('removeDoctype', config.plugins),
             convertColors = getPlugin('convertColors', config.plugins),
             removeRasterImages = getPlugin('removeRasterImages', config.plugins);
+
+        it('should have "multipass"', function() {
+            return config.multipass.should.be.true;
+        });
 
         it('removeDoctype plugin should be disabled', function() {
             return removeDoctype.active.should.be.false;
@@ -87,18 +92,28 @@ describe('config', function() {
 
         var config = CONFIG({
                 full: true,
+                multipass: true,
+                floatPrecision: 2,
                 plugins: [
-                    { removeDoctype: true }
+                    { cleanupNumericValues: true }
                 ]
             }),
-            removeDoctype = getPlugin('removeDoctype', config.plugins);
+            cleanupNumericValues = getPlugin('cleanupNumericValues', config.plugins);
+
+        it('should have "multipass"', function() {
+            return config.multipass.should.be.true;
+        });
 
         it('config.plugins should have length 1', function() {
             return config.plugins.should.have.length(1);
         });
 
-        it('removeDoctype plugin should be enabled', function() {
-            return removeDoctype.active.should.be.true;
+        it('cleanupNumericValues plugin should be enabled', function() {
+            return cleanupNumericValues.active.should.be.true;
+        });
+
+        it('cleanupNumericValues plugin should have floatPrecision set from parameters', function() {
+            return cleanupNumericValues.params.floatPrecision.should.be.equal(2);
         });
 
     });
@@ -165,10 +180,11 @@ function getPlugin(name, plugins) {
 
     var found;
 
-    plugins.forEach(function(group) {
-        group.forEach(function(plugin) {
+    plugins.some(function(group) {
+        return group.some(function(plugin) {
             if (plugin.name === name) {
                 found = plugin;
+                return true;
             }
         });
     });
