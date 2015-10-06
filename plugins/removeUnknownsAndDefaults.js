@@ -66,7 +66,7 @@ for (var elem in elems) {
 exports.fn = function(item, params) {
 
     // elems w/o namespace prefix
-    if (item.isElem() && !item.prefix) {
+    if (item.isElem() && !item.prefix && elems[item.elem]) {
 
         var elem = item.elem;
 
