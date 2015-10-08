@@ -66,7 +66,7 @@ for (var elem in elems) {
 exports.fn = function(item, params) {
 
     // elems w/o namespace prefix
-    if (item.isElem() && !item.prefix && elems[item.elem]) {
+    if (item.isElem() && !item.prefix) {
 
         var elem = item.elem;
 
@@ -74,13 +74,23 @@ exports.fn = function(item, params) {
         if (
             params.unknownContent &&
             !item.isEmpty() &&
-            elems[elem].content
+            elems[elem] && //make sure we know of this element before checking its children
+            elem !== 'foreignObject'//Don't check foreignObject
         ) {
             item.content.forEach(function(content, i) {
                 if (
                     content.isElem() &&
-                    !content.prefix &&
-                    elems[elem].content.indexOf(content.elem) === -1
+                    !content.prefix && 
+                    (
+                        (
+                            elems[elem].content && // Do we have a record of its permitted content?
+                            elems[elem].content.indexOf(content.elem) === -1
+                        ) || 
+                        (
+                            !elems[elem].content && // we dont know about its permitted content
+                            !elems[content.elem] // check that we know about the element at all
+                        )
+                    )
                 ) {
                     item.content.splice(i, 1);
                 }
@@ -88,7 +98,7 @@ exports.fn = function(item, params) {
         }
 
         // remove element's unknown attrs and attrs with default values
-        if (elems[elem].attrs) {
+        if (elems[elem] && elems[elem].attrs) {
 
             item.eachAttr(function(attr) {
 
