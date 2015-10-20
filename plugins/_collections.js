@@ -2267,6 +2267,7 @@ exports.elems = {
 // http://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
 exports.editorNamespaces = [
     'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
+    'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
     'http://www.inkscape.org/namespaces/inkscape',
     'http://www.bohemiancoding.com/sketch/ns',
     'http://ns.adobe.com/AdobeIllustrator/10.0/',
