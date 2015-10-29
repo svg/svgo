@@ -7,9 +7,9 @@ exports.active = true;
 exports.description = 'copies styles from <style> to element styles';
 
 
-var cssParser = require('css')
-  , uniq      = require('uniq')
-  , lookups   = [];
+var cssParser = require('css'),
+    uniq      = require('uniq'),
+    lookups   = [];
 
 
 // property-value pairs from rule ast
@@ -23,7 +23,7 @@ var getCssDeclarations = function(cssRule) {
 
 var _trim = function(s) {
   return s.trim();
-}
+};
 // parse class attribute value
 var parseClasses = function(item) {
   return item.attr('class').value.split(' ').map(_trim);
@@ -60,8 +60,8 @@ var prepareRulesAst = function(rules) {
 
 // generates an ast declaration per property-value pair
 var prepareDeclarationsAst = function(declarations) {
-  var declarationsAst = []
-    , declarationAst  = {};
+  var declarationsAst = [],
+      declarationAst  = {};
 
   declarations.forEach(function(declaration) {
     declarationAst = { type    : 'declaration',
@@ -105,11 +105,11 @@ var extractRuleCss = function(str) {
 
 // prepares css lookups table for selectors + styles
 var generateLookup = function(item) {
-  var styleCss             = item.content[0].text
-    , styleCssParsed       = cssParser.parse(styleCss)
-    , styleCssRules        = styleCssParsed.stylesheet.rules
-    , styleCssDeclarations = []
-    , lookups               = [];
+  var styleCss            = item.content[0].text,
+     styleCssParsed       = cssParser.parse(styleCss),
+     styleCssRules        = styleCssParsed.stylesheet.rules,
+     styleCssDeclarations = [],
+     lookups              = [];
 
   styleCssRules.forEach(function(styleCssRule) {
     styleCssDeclarations = getCssDeclarations(styleCssRule);
@@ -187,8 +187,8 @@ exports.fn = function(item) {
       uniq(newDeclarations, uniqueProperty, true);
 
       // apply new styles only when necessary
-      if(   newDeclarations  && newDeclarations.length  > 0
-         && itemDeclarations && itemDeclarations.length > 0) {
+      if(newDeclarations  && newDeclarations.length  > 0 &&
+         itemDeclarations && itemDeclarations.length > 0    ) {
         var newCss = stringifyDeclarations(newDeclarations);
         item.attr('style').value = newCss;
       }
