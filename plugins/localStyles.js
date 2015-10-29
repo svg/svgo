@@ -112,6 +112,8 @@ var generateLookup = function(item) {
      lookups              = [];
 
   styleCssRules.forEach(function(styleCssRule) {
+    if(styleCssRule.type != 'rule') { return; } // skip anything nested like mediaqueries
+
     styleCssDeclarations = getCssDeclarations(styleCssRule);
     styleCssRule.selectors.forEach(function(styleSelector) {
       lookups.push({ selector: styleSelector, declarations: styleCssDeclarations });
