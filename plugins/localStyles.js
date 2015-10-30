@@ -7,18 +7,29 @@ exports.active = true;
 exports.description = 'copies styles from <style> to element styles';
 
 
-var cssParser = require('css'),
-    uniq      = require('uniq'),
-    lookups   = [];
+var cssParser   = require('css'),
+    uniq        = require('uniq'),
+    removeValue = require('remove-value'),
+    lookupRules = [],
+    svgElem     = {},
+    styleCssAst = {};
 
 
-// property-value pairs from rule ast
-var getCssDeclarations = function(cssRule) {
-  var properties = [];
+// declarations (property-value paris) from rule
+var getCssDeclarationsFromRule  = function(cssRule) {
+  var declarations = [];
   cssRule.declarations.forEach(function(declaration) {
-    properties.push({ property: declaration.property, value: declaration.value });
+    declarations.push({ property: declaration.property, value: declaration.value });
   });
-  return properties;
+  return declarations;
+};
+// declarations from multiple rules
+var getCssDeclarationsFromRules = function(cssRules) {
+  var declarations = [];
+  cssRules.forEach(function(cssRule) {
+    declarations = declarations.concat(getCssDeclarationsFromRule(cssRule));
+  });
+  return declarations;
 };
 
 var _trim = function(s) {
@@ -29,16 +40,37 @@ var parseClasses = function(item) {
   return item.attr('class').value.split(' ').map(_trim);
 };
 
-// looks up styles for selector
-var lookupsSelector = function(selector) {
-  var declarations = [];
-  lookups.forEach(function(lookup) {
-    if(lookup.selector == selector) {
-      declarations = declarations.concat(lookup.declarations);
+// looks up style rules for passed selector
+var lookupCssSelector = function(selector) {
+  var matchedRules = [];
+  lookupRules.forEach(function(lookupRule) {
+    if(lookupRule.selector == selector) {
+      matchedRules = matchedRules.concat(lookupRule);
     }
   });
-  return declarations;
+  return matchedRules;
 };
+
+var processCssSelector = function(selectorFind) {
+  var matchedRules = lookupCssSelector(selectorFind);
+  cleanupSelectorAst(selectorFind, matchedRules);
+  return getCssDeclarationsFromRules(matchedRules);
+};
+
+var cleanupSelectorAst = function(selectorFind, matchedRules) {
+  matchedRules.map(function(matchedRule) {
+    removeValue(matchedRule.astRule.selectors, selectorFind); // (global variable)
+    return matchedRule;
+  });
+  return;
+};
+
+var cleanupRulesAst = function(rulesAst) {
+  return rulesAst.filter(function(matchedRule) { // (global variable)
+    return(matchedRule.type != 'rule' || matchedRule.selectors.length > 0);
+  });
+};
+
 
 // parses css of a css rule (no selector)
 var parseRulesCss = function(str) {
@@ -48,7 +80,7 @@ var parseRulesCss = function(str) {
 };
 
 // prepares a full css ast from rules array
-var prepareRulesAst = function(rules) {
+var prepareCssRulesAst = function(rules) {
   var ast =
   { type      : 'stylesheet',
     stylesheet: {
@@ -59,7 +91,7 @@ var prepareRulesAst = function(rules) {
 };
 
 // generates an ast declaration per property-value pair
-var prepareDeclarationsAst = function(declarations) {
+var prepareCssDeclarationsAst = function(declarations) {
   var declarationsAst = [],
       declarationAst  = {};
 
@@ -75,17 +107,17 @@ var prepareDeclarationsAst = function(declarations) {
 };
 
 // ast to rules css
-var astToRulesCss = function(ast) {
+var cssAstToRulesCss = function(ast) {
   var cssDummy = cssParser.stringify(ast, { compress: true });
   return extractRuleCss(cssDummy);
 };
 // rules to rules css
-var stringifyRules = function(rules) {
-  var ast = prepareRulesAst(rules);
-  return astToRulesCss(ast);
+var stringifyCssRules = function(rules) {
+  var ast = prepareCssRulesAst(rules);
+  return cssAstToRulesCss(ast);
 };
 // declarations to rules css
-var stringifyDeclarations = function(declarations) {
+var stringifyCssDeclarations = function(declarations) {
 
   var dummyRule =
     { type     : 'rule',
@@ -93,9 +125,9 @@ var stringifyDeclarations = function(declarations) {
       declarations:
       []
     };
-  dummyRule.declarations = prepareDeclarationsAst(declarations);
+  dummyRule.declarations = prepareCssDeclarationsAst(declarations);
 
-  return stringifyRules([dummyRule]);
+  return stringifyCssRules([dummyRule]);
 };
 // helper to extract rules css from full css
 var extractRuleCss = function(str) {
@@ -103,24 +135,6 @@ var extractRuleCss = function(str) {
   return strEx;
 };
 
-// prepares css lookups table for selectors + styles
-var generateLookup = function(item) {
-  var styleCss            = item.content[0].text,
-     styleCssParsed       = cssParser.parse(styleCss),
-     styleCssRules        = styleCssParsed.stylesheet.rules,
-     styleCssDeclarations = [],
-     lookups              = [];
-
-  styleCssRules.forEach(function(styleCssRule) {
-    if(styleCssRule.type != 'rule') { return; } // skip anything nested like mediaqueries
-
-    styleCssDeclarations = getCssDeclarations(styleCssRule);
-    styleCssRule.selectors.forEach(function(styleSelector) {
-      lookups.push({ selector: styleSelector, declarations: styleCssDeclarations });
-    });
-  });
-  return lookups;
-};
 
 // returns true when two compared declarations got the same property (name)
 var uniqueProperty = function(a,b) {
@@ -151,52 +165,79 @@ var uniqueProperty = function(a,b) {
  */
 exports.fn = function(item) {
 
+    // TODO: although quite rarely used, add support for multiple <style> elements
     if(item.elem && item.isElem('style')) {
-      lookups = generateLookup(item);
+      // fetch global styles from style element
+          svgElem              = item;
+      var styleCss             = item.content[0].text;
+          styleCssAst          = cssParser.parse(styleCss);
+
+      var styleCssRules        = styleCssAst.stylesheet.rules,
+          styleCssDeclarations = [];
+
+      styleCssRules.forEach(function(styleCssRule) {
+        if(styleCssRule.type != 'rule') { return; } // skip anything nested like mediaqueries
+
+        styleCssDeclarations = getCssDeclarationsFromRule(styleCssRule);
+        styleCssRule.selectors.forEach(function(styleSelector) {
+          lookupRules.push({
+            selector:     styleSelector,
+            declarations: styleCssDeclarations,
+            astRule:      styleCssRule
+          });
+        });
+      });
       return item;
     }
 
-    if(lookups.length > 0 && item.elem) {
+
+    if(lookupRules.length > 0 && item.elem) {
 
       // primitive "selector engine"
       var itemDeclarations = [];
 
+      // #id
+      if(item.hasAttr('id')) {
+        var idName       = item.attr('id').value;
+        var selectorFind = '#' + idName;
+        itemDeclarations = itemDeclarations.concat(processCssSelector(selectorFind));
+      }
+
       // .class
       if(item.hasAttr('class')) {
-        var classes = parseClasses(item);
-        classes.forEach(function(className) {
-          itemDeclarations = itemDeclarations.concat(lookupsSelector('.' + className));
+        var classNames     = parseClasses(item);
+        classNames.forEach(function(className) {
+          var selectorFind = '.' + className;
+          itemDeclarations = itemDeclarations.concat(processCssSelector(selectorFind));
         });
       }
 
-      // #id
-      if(item.hasAttr('id')) {
-        var id = item.attr('id');
-          itemDeclarations = itemDeclarations.concat(lookupsSelector('#' + id));
-      }
+      styleCssAst.stylesheet.rules = cleanupRulesAst(styleCssAst.stylesheet.rules);
 
 
       // existing inline styles
+      // TODO: Opportunity for cleaning up global styles that converge with style attribute stlyes?
       var itemExistingDeclarations = [];
       if(item.hasAttr('style')) {
-        var itemExistingCss       = item.attr('style').value;
-        var itemExistingCssParsed = parseRulesCss(itemExistingCss);
-        itemExistingDeclarations  = getCssDeclarations(itemExistingCssParsed);
+        var itemExistingCss      = item.attr('style').value;
+        var itemExistingCssAst   = parseRulesCss(itemExistingCss);
+        itemExistingDeclarations = getCssDeclarationsFromRule(itemExistingCssAst);
       }
 
 
-      var newDeclarations     = itemExistingDeclarations.concat(itemDeclarations);
+      var newDeclarations = itemExistingDeclarations.concat(itemDeclarations);
       uniq(newDeclarations, uniqueProperty, true);
 
       // apply new styles only when necessary
       if(newDeclarations  && newDeclarations.length  > 0 &&
          itemDeclarations && itemDeclarations.length > 0    ) {
-        var newCss = stringifyDeclarations(newDeclarations);
+        var newCss = stringifyCssDeclarations(newDeclarations);
         item.attr('style').value = newCss;
       }
 
+      var newStyleCss = cssParser.stringify(styleCssAst, { compress: true });
+      svgElem.content[0].text = newStyleCss;
     }
 
     return item;
 };
-

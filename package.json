@@ -2,7 +2,12 @@
   "name": "svgo",
   "version": "0.5.6",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
-  "keywords": [ "svgo", "svg", "optimize", "minify" ],
+  "keywords": [
+    "svgo",
+    "svg",
+    "optimize",
+    "minify"
+  ],
   "homepage": "https://github.com/svg/svgo",
   "bugs": {
     "url": "https://github.com/svg/svgo/issues",
@@ -13,15 +18,18 @@
     "email": "kir@soulshine.in",
     "url": "https://github.com/deepsweet"
   },
-  "contributors": [{
-    "name": "Sergey Belov",
-    "email": "peimei@ya.ru",
-    "url": "http://github.com/arikon"
-  }, {
-    "name": "Lev Solntsev",
-    "email": "lev.sun@ya.ru",
-    "url": "http://github.com/GreLI"
-  }],
+  "contributors": [
+    {
+      "name": "Sergey Belov",
+      "email": "peimei@ya.ru",
+      "url": "http://github.com/arikon"
+    },
+    {
+      "name": "Lev Solntsev",
+      "email": "lev.sun@ya.ru",
+      "url": "http://github.com/GreLI"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/svg/svgo.git"
@@ -39,14 +47,15 @@
     "test": "make test"
   },
   "dependencies": {
-    "sax": "~1.1.1",
     "coa": "~1.0.1",
-    "js-yaml": "~3.3.1",
     "colors": "~1.1.2",
-    "whet.extend": "~0.9.9",
-    "mkdirp": "~0.5.1",
     "css": "^2.2.1",
-    "uniq": "^1.0.1"
+    "js-yaml": "~3.3.1",
+    "mkdirp": "~0.5.1",
+    "remove-value": "^1.0.0",
+    "sax": "~1.1.1",
+    "uniq": "^1.0.1",
+    "whet.extend": "~0.9.9"
   },
   "devDependencies": {
     "mocha": "~2.2.5",

@@ -9,7 +9,7 @@
 
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <style>
-        .st0{fill:red;} @media screen and (max-width: 200px) { .st1 { display: none; } }
+        @media screen and (max-width: 200px){.st1{display:none;}}
     </style>
     <rect width="100" height="100" class="st0" style="stroke-width:3;stroke:blue;fill:red;"/>
 </svg>
