@@ -26,7 +26,7 @@ var extractRuleCss = function(str) {
 
 // minifies css using csso
 var minifyCss = function(css, options) {
-  return csso.minify(css);
+  return csso.minify(css, options);
 };
 
 
