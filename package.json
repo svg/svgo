@@ -44,7 +44,8 @@
     "js-yaml": "~3.3.1",
     "colors": "~1.1.2",
     "whet.extend": "~0.9.9",
-    "mkdirp": "~0.5.1"
+    "mkdirp": "~0.5.1",
+    "csso": "~1.4.1"
   },
   "devDependencies": {
     "mocha": "~2.2.5",
