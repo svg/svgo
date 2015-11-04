@@ -7,12 +7,13 @@ exports.active = true;
 exports.description = 'copies styles from <style> to element styles';
 
 
-var cssParser   = require('css'),
-        uniq        = require('uniq'),
-        removeValue = require('remove-value'),
-        lookupRules = [],
-        svgElem     = {},
-        styleCssAst = {};
+var cssParser             = require('css'),
+        uniq              = require('uniq'),
+        removeValue       = require('remove-value'),
+	inlineStylesParse = require('inline-styles-parse'),
+        lookupRules       = [],
+        svgElem           = {},
+        styleCssAst       = {};
 
 
 // declarations (property-value paris) from rule
@@ -75,7 +76,7 @@ var cleanupRulesAst = function(rulesAst) {
 // parses css of a css rule (no selector)
 var parseRulesCss = function(str) {
     return cssParser
-                  .parse('.dummy { ' + str + ' }')
+                  .parse(inlineStylesParse.declarationsToRule(str))
                   .stylesheet.rules[0];
 };
 
@@ -109,7 +110,7 @@ var prepareCssDeclarationsAst = function(declarations) {
 // ast to rules css
 var cssAstToRulesCss = function(ast) {
     var cssDummy = cssParser.stringify(ast, { compress: true });
-    return extractRuleCss(cssDummy);
+    return inlineStylesParse.ruleToDeclarations(cssDummy);
 };
 // rules to rules css
 var stringifyCssRules = function(rules) {
@@ -128,11 +129,6 @@ var stringifyCssDeclarations = function(declarations) {
     dummyRule.declarations = prepareCssDeclarationsAst(declarations);
 
     return stringifyCssRules([dummyRule]);
-};
-// helper to extract rules css from full css
-var extractRuleCss = function(str) {
-    var strEx = str.match(/\.dummy{(.*)}/i)[1];
-    return strEx;
 };
 
 

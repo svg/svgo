@@ -50,6 +50,7 @@
     "coa": "~1.0.1",
     "colors": "~1.1.2",
     "css": "^2.2.1",
+    "inline-styles-parse": "^1.2.0",
     "js-yaml": "~3.3.1",
     "mkdirp": "~0.5.1",
     "remove-value": "^1.0.0",
