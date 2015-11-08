@@ -9,6 +9,10 @@ exports.description = 'optimizes path data: writes in shorter form, applies tran
 exports.params = {
     applyTransforms: true,
     applyTransformsStroked: true,
+    makeArcs: {
+        threshold: 2.5, // coefficient of rounding error
+        tolerance: 0.5  // percentage of radius
+    },
     straightCurves: true,
     lineShorthands: true,
     curveSmoothShorthands: true,
@@ -28,6 +32,8 @@ var pathElems = require('./_collections.js').pathElems,
     cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     precision,
     error,
+    arcThreshold,
+    arcTolerance,
     hasMarkerMid;
 
 /**
@@ -52,6 +58,10 @@ exports.fn = function(item, params) {
 
         precision = params.floatPrecision;
         error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
+        if (params.makeArcs) {
+            arcThreshold = params.makeArcs.threshold;
+            arcTolerance = params.makeArcs.tolerance;
+        }
         hasMarkerMid = item.hasAttr('marker-mid');
 
         var data = path2js(item);
@@ -252,7 +262,8 @@ function convertToRelative(path) {
  */
 function filters(path, params) {
 
-    var relSubpoint = [0, 0],
+    var stringify = data2Path.bind(null, params),
+        relSubpoint = [0, 0],
         pathBase = [0, 0],
         prev = {};
 
@@ -264,7 +275,8 @@ function filters(path, params) {
 
         if (data) {
 
-            var sdata;
+            var sdata = data,
+                circle;
 
             if (instruction === 's') {
                 sdata = [0, 0].concat(data);
@@ -278,6 +290,111 @@ function filters(path, params) {
                     sdata[1] = pdata[n - 1] - pdata[n - 3];
                 }
 
+            }
+
+            // convert curves to arcs if possible
+            if (
+                params.makeArcs &&
+                (instruction == 'c' || instruction == 's') &&
+                isConvex(sdata) &&
+                (circle = findCircle(sdata))
+            ) {
+                var r = roundData([circle.radius])[0],
+                    angle = findArcAngle(sdata),
+                    sweep = sdata[5] * sdata[0] - sdata[4] * sdata[1] > 0 ? 1 : 0,
+                    arc = {
+                        instruction: 'a',
+                        data: [r, r, 0, 0, sweep, sdata[4], sdata[5]],
+                        coords: item.coords.slice(),
+                        base: item.base
+                    },
+                    output = [arc],
+                    // relative coordinates to adjust the found circle
+                    relCenter = [circle.center[0] - sdata[4], circle.center[1] - sdata[5]],
+                    relCircle = { center: relCenter, radius: circle.radius },
+                    arcCurves = [item],
+                    hasPrev = 0,
+                    suffix = '',
+                    nextLonghand;
+
+                if (
+                    prev.instruction == 'c' && isConvex(prev.data) && isArcPrev(prev.data, circle) ||
+                    prev.instruction == 'a' && prev.sdata && isArcPrev(prev.sdata, circle)
+                ) {
+                    arcCurves.unshift(prev);
+                    arc.base = prev.base;
+                    arc.data[5] = arc.coords[0] - arc.base[0];
+                    arc.data[6] = arc.coords[1] - arc.base[1];
+                    angle += findArcAngle(prev.instruction == 'a' ? prev.sdata : prev.data);
+                    if (angle > Math.PI) arc.data[3] = 1;
+                    hasPrev = 1;
+                }
+
+                // check if next curves are fitting the arc
+                for (var j = index; (next = path[++j]) && ~'cs'.indexOf(next.instruction);) {
+                    var nextData = next.data;
+                    if (next.instruction == 's') {
+                        nextLonghand = makeLonghand({instruction: 's', data: next.data.slice() },
+                            path[j - 1].data);
+                        nextData = nextLonghand.data;
+                        nextLonghand.data = nextData.slice(0, 2);
+                        suffix = stringify([nextLonghand]);
+                    }
+                    if (isConvex(nextData) && isArc(nextData, relCircle)) {
+                        angle += findArcAngle(nextData);
+                        if (angle - 2 * Math.PI > 1e-3) break; // more than 360°
+                        if (angle > Math.PI) arc.data[3] = 1;
+                        arcCurves.push(next);
+                        if (2 * Math.PI - angle > 1e-3) { // less than 360°
+                            arc.coords = next.coords;
+                            arc.data[5] = arc.coords[0] - arc.base[0];
+                            arc.data[6] = arc.coords[1] - arc.base[1];
+                        } else {
+                            // full circle, make a half-circle arc and add a second one
+                            arc.data[5] = 2 * (relCircle.center[0] - nextData[4]);
+                            arc.data[6] = 2 * (relCircle.center[1] - nextData[5]);
+                            arc.coords = [arc.base[0] + arc.data[5], arc.base[1] + arc.data[6]];
+                            arc = {
+                                instruction: 'a',
+                                data: [r, r, 0, 0, sweep,
+                                    next.coords[0] - arc.coords[0], next.coords[1] - arc.coords[1]],
+                                coords: next.coords,
+                                base: arc.coords
+                            };
+                            output.push(arc);
+                            j++;
+                            break;
+                        }
+                        relCenter[0] -= nextData[4];
+                        relCenter[1] -= nextData[5];
+                    } else break;
+                }
+
+                if ((stringify(output) + suffix).length < stringify(arcCurves).length) {
+                    if (path[j] && path[j].instruction == 's') {
+                        makeLonghand(path[j], path[j - 1].data);
+                    }
+                    if (hasPrev) {
+                        var prevArc = output.shift();
+                        roundData(prevArc.data);
+                        relSubpoint[0] += prevArc.data[5] - prev.data[prev.data.length - 2];
+                        relSubpoint[1] += prevArc.data[6] - prev.data[prev.data.length - 1];
+                        prev.instruction = 'a';
+                        prev.data = prevArc.data;
+                        item.base = prev.coords = prevArc.coords;
+                    }
+                    arc = output.shift();
+                    if (arcCurves.length == 1) {
+                        item.sdata = sdata.slice(); // preserve curve data for future checks
+                    } else if (arcCurves.length - 1 - hasPrev > 0) {
+                        // filter out consumed next items
+                        path.splice.apply(path, [index + 1, arcCurves.length - 1 - hasPrev].concat(output));
+                    }
+                    if (!arc) return false;
+                    instruction = 'a';
+                    data = arc.data;
+                    item.coords = arc.coords;
+                }
             }
 
             // Rounding relative coordinates, taking in account accummulating error
@@ -557,7 +674,7 @@ function convertToMixed(path, params) {
                 instruction == prev.instruction &&
                 prev.instruction.charCodeAt(0) > 96 &&
                 absoluteDataStr.length == relativeDataStr.length - 1 &&
-                (data[0] < 0 || 0 < data[0] && data[0] < 1 && prev.data[prev.data.length - 1] % 1)
+                (data[0] < 0 || /^0\./.test(data[0]) && prev.data[prev.data.length - 1] % 1)
             )
         ) {
             item.instruction = instruction.toUpperCase();
@@ -571,6 +688,59 @@ function convertToMixed(path, params) {
     });
 
     return path;
+
+}
+
+/**
+ * Checks if curve is convex. Control points of such a curve must form
+ * a convex quadrilateral with diagonals crosspoint inside of it.
+ *
+ * @param {Array} data input path data
+ * @return {Boolean} output
+ */
+function isConvex(data) {
+
+    var center = getIntersection([0, 0, data[2], data[3], data[0], data[1], data[4], data[5]]);
+
+    return center &&
+        (data[2] < center[0] == center[0] < 0) &&
+        (data[3] < center[1] == center[1] < 0) &&
+        (data[4] < center[0] == center[0] < data[0]) &&
+        (data[5] < center[1] == center[1] < data[1]);
+
+}
+
+/**
+ * Computes lines equations by two points and returns their intersection point.
+ *
+ * @param {Array} coords 8 numbers for 4 pairs of coordinates (x,y)
+ * @return {Array|undefined} output coordinate of lines' crosspoint
+ */
+function getIntersection(coords) {
+
+        // Prev line equation parameters.
+    var a1 = coords[1] - coords[3], // y1 - y2
+        b1 = coords[2] - coords[0], // x2 - x1
+        c1 = coords[0] * coords[3] - coords[2] * coords[1], // x1 * y2 - x2 * y1
+
+        // Next line equation parameters
+        a2 = coords[5] - coords[7], // y1 - y2
+        b2 = coords[6] - coords[4], // x2 - x1
+        c2 = coords[4] * coords[7] - coords[5] * coords[6], // x1 * y2 - x2 * y1
+        denom = (a1 * b2 - a2 * b1);
+
+    if (!denom) return; // parallel lines havn't an intersection
+
+    var cross = [
+            (b1 * c2 - b2 * c1) / denom,
+            (a1 * c2 - a2 * c1) / -denom
+        ];
+    if (
+        !isNaN(cross[0]) && !isNaN(cross[1]) &&
+        isFinite(cross[0]) && isFinite(cross[1])
+    ) {
+        return cross;
+    }
 
 }
 
@@ -650,4 +820,129 @@ function makeLonghand(item, data) {
         case 't': item.instruction = 'q'; break;
     }
     item.data.unshift(data[data.length - 2] - data[data.length - 4], data[data.length - 1] - data[data.length - 3]);
+    return item;
+}
+
+/**
+ * Returns distance between two points
+ *
+ * @param {Array} point1 first point coordinates
+ * @param {Array} point2 second point coordinates
+ * @return {Number} distance
+ */
+
+function getDistance(point1, point2) {
+    return Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
+}
+
+/**
+ * Returns coordinates of the curve point corresponding to the certain t
+ * a·(1 - t)³·p1 + b·(1 - t)²·t·p2 + c·(1 - t)·t²·p3 + d·t³·p4,
+ * where pN are control points and p1 is zero due to relative coordinates.
+ *
+ * @param {Array} curve array of curve points coordinates
+ * @param {Number} t parametric position from 0 to 1
+ * @return {Array} Point coordinates
+ */
+
+function getCubicBezierPoint(curve, t) {
+    var sqrT = t * t,
+        cubT = sqrT * t,
+        mt = 1 - t,
+        sqrMt = mt * mt;
+
+    return [
+        3 * sqrMt * t * curve[0] + 3 * mt * sqrT * curve[2] + cubT * curve[4],
+        3 * sqrMt * t * curve[1] + 3 * mt * sqrT * curve[3] + cubT * curve[5]
+    ];
+}
+
+/**
+ * Finds circle by 3 points of the curve and checks if the curve fits the found circle.
+ *
+ * @param {Array} curve
+ * @return {Object|undefined} circle
+ */
+
+function findCircle(curve) {
+    var midPoint = getCubicBezierPoint(curve, 1/2),
+        m1 = [midPoint[0] / 2, midPoint[1] / 2],
+        m2 = [(midPoint[0] + curve[4]) / 2, (midPoint[1] + curve[5]) / 2],
+        center = getIntersection([
+            m1[0], m1[1],
+            m1[0] + m1[1], m1[1] - m1[0],
+            m2[0], m2[1],
+            m2[0] + (m2[1] - midPoint[1]), m2[1] - (m2[0] - midPoint[0])
+        ]),
+        radius = center && getDistance([0, 0], center),
+        tolerance = Math.min(arcThreshold * error, arcTolerance * radius / 100);
+
+    if (center && [1/4, 3/4].every(function(point) {
+        return Math.abs(getDistance(getCubicBezierPoint(curve, point), center) - radius) <= tolerance;
+    }))
+        return { center: center, radius: radius};
+}
+
+/**
+ * Checks if a curve fits the given circe.
+ *
+ * @param {Object} circle
+ * @param {Array} curve
+ * @return {Boolean}
+ */
+
+function isArc(curve,  circle) {
+    var tolerance = Math.min(arcThreshold * error, arcTolerance * circle.radius / 100);
+
+    return [0, 1/4, 1/2, 3/4, 1].every(function(point) {
+        return Math.abs(getDistance(getCubicBezierPoint(curve, point), circle.center) - circle.radius) <= tolerance;
+    });
+}
+
+/**
+ * Checks if a previos curve fits the given circe.
+ *
+ * @param {Object} circle
+ * @param {Array} curve
+ * @return {Boolean}
+ */
+
+function isArcPrev(curve,  circle) {
+    return isArc(curve, {
+        center: [circle.center[0] + curve[4], circle.center[1] + curve[5]],
+        radius: circle.radius
+    });
+}
+
+/**
+ * Finds angle of an arc formed by a curve.
+ *
+ * @param {Array} curve
+ * @return {Number} angle
+ */
+
+function findArcAngle(curve) {
+    var x1 = curve[0],
+        y1 = curve[1],
+        x2 = curve[2] - curve[4],
+        y2 = curve[3] - curve[5];
+
+    return Math.PI - Math.acos(
+            (x1 * x2 + y1 * y2 ) /
+            Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
+        );
+}
+
+/**
+ * Converts given path data to string.
+ *
+ * @param {Object} params
+ * @param {Array} pathData
+ * @return {String}
+ */
+
+function data2Path(params, pathData) {
+    return pathData.reduce(function(pathString, item) {
+        return pathString += item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
+    }, '');
 }
