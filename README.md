@@ -33,6 +33,7 @@ Today we have:
 * [ [ removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
 * [ [ removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove `viewBox` attribute when possible (disabled by default)
 * [ [ cleanUpEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup `enable-background` attribute when possible
+* [ [ minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) ] minify `<style>` elements content with [CSSO](https://github.com/css/csso)
 * [ [ convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
 * [ [ convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from `rgb()` to `#rrggbb`, from `#rrggbb` to `#rgb`)
 * [ [ convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] convert Path data to relative or absolute whichever is shorter, convert one segment to another, trim useless delimiters, smart rounding and much more
@@ -54,6 +55,7 @@ Today we have:
 * [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] remove width/height attributes if viewBox is present (disabled by default)
 * [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] remove attributes by pattern (disabled by default)
 * [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] add classnames to an outer `<svg>` element (disabled by default)
+* [ [ removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) ] remove `<style>` elements (disabled by default)
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).
 

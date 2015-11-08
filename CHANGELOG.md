@@ -1,3 +1,15 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.0) ] 0.6.0 / 08.11.2015
+* New optimization: circular curves now being converted to arcs. A notable improvement for circles within paths.
+* New plugin “[minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js)” which minifies `<style>` elments content with CSSO by @strarsis (svgo still doesn't understand its content)
+* New plugin “[removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js)” (disabled by default) by @betsydupuis.
+* Fixed issues wuth parsing numbers with exponent fraction (could happen with high precision >= 7).
+* Fixed rounding error due to incorrect preserving of precision in transformations.
+* Fixed shortand curve distortion due to converted previous curve to not a curve.
+* Fixed interoperability issue with `precision` cli-option and `full` config.
+* Fixed an error produced by “[removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js)” by @thiakil
+* Another Inkscape prefix namespace is being removed.
+* Fixed an issue in [moveElemsAttrsToGroup“](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup“.js)” with transforms moved around `clip-path`.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.6) ] 0.5.6 / 13.08.2015
 * Fixed paths removing.
 

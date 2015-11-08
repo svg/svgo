@@ -33,6 +33,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] удаление пустых элементов-контейнеров
 * [ [ removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] удаление атрибута `viewBox`, когда это возможно
 * [ [ cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] удаление или оптимизация атрибута `enable-background`, когда это возможно
+* [ [ minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) ] уменьшает содержимое элементов `<style>` с помощью [CSSO](https://github.com/css/csso).
 * [ [ convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] конвертирование стилей в атрибуте `style` в отдельные svg-атрибуты
 * [ [ convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] конвертирование цветовых значений: из `rgb()` в `#rrggbb`, из `#rrggbb` в `#rgb`
 * [ [ convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] конвертирование данных Path в относительные или абсолютные координаты, смотря что короче, конвертирование одних типов сегментов в другие, удаление ненужных разделителей, умное округление и тому подобное
@@ -54,6 +55,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] удаляет атрибуты width/height при наличии viewBox (выключено по умолчанию)
 * [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] удаляет атрибуты по указанному паттерну (выключено по умолчанию)
 * [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] добавляет имена классов корневому элементу `<svg>` (выключено по умолчанию)
+* [ [ removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) ] удаляет элементы `<style>` (выключено по умолчанию)
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 
