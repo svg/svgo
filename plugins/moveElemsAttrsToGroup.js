@@ -39,6 +39,7 @@ exports.fn = function(item) {
 
         var intersection = {},
             hasTransform = false,
+            hasClip = item.hasAttr('clip-path'),
             intersected = item.content.every(function(inner) {
                 if (inner.isElem() && inner.hasAttr()) {
                     if (!Object.keys(intersection).length) {
@@ -62,7 +63,7 @@ exports.fn = function(item) {
 
                 for (var name in intersection) {
 
-                    if (!allPath || name !== 'transform') {
+                    if (!allPath && !hasClip || name !== 'transform') {
 
                         g.removeAttr(name);
 

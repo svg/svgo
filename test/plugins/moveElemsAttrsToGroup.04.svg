@@ -5,6 +5,10 @@
         </g>
         <circle fill="red" transform="scale(2)"/>
     </g>
+    <g clip-path="url(#clipPath)">
+        <g transform="translate(10 10)"/>
+        <g transform="translate(10 10)"/>
+    </g>
 </svg>
 
 @@@
@@ -15,5 +19,9 @@
             <path d="..."/>
         </g>
         <circle/>
+    </g>
+    <g clip-path="url(#clipPath)">
+        <g transform="translate(10 10)"/>
+        <g transform="translate(10 10)"/>
     </g>
 </svg>
