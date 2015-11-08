@@ -1,6 +1,7 @@
 docs
 examples
 test
+lib-cov
 .editorconfig
 .jshintignore
 .jshintrc
