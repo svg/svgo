@@ -87,14 +87,11 @@ exports.fn = function(item) {
         var coords = (item.attr('points').value.match(regNumber) || []).map(Number);
         if (coords.length < 4) return false;
 
-        var closePath = item.isElem('polygon') &&
-                (item.computedAttr('id') || (item.computedAttr('stroke') || 'none') != 'none');
-
         item.addAttr({
                 name: 'd',
                 value: 'M' + coords.slice(0,2).join(' ') +
                        'L' + coords.slice(2).join(' ') +
-                       (closePath ? 'z' : ''),
+                       (item.isElem('polygon') ? 'z' : ''),
                 prefix: '',
                 local: 'd'
             });
