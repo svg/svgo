@@ -295,10 +295,6 @@ exports.fn = function(data) {
     function selectAll() {
       return true;
     }
-    // Default: Always further recurse an item
-    function alwaysRecurse() {
-      return true;
-    }
 
     /**
      * Recursively traverses the HTML AST
@@ -306,13 +302,11 @@ exports.fn = function(data) {
      * @param {Array}    items input items
      * @param {Function} fn for processing an item
      * @param {Function} fn for selecting an item
-     * @param {Function} fn for recursion check
      *
      * @return {Array} output items
      */
-    function monkeys(items, callFn, selectFn, recurseFn) {
+    function monkeys(items, callFn, selectFn) {
       if(selectFn  === undefined) { selectFn  = selectAll;     }
-      if(recurseFn === undefined) { recurseFn = alwaysRecurse; }
 
         var      i = 0,
             length = items.content.length;
@@ -326,8 +320,8 @@ exports.fn = function(data) {
             }
 
             // recurse
-            if(!item.isEmpty() && recurseFn(item)) {
-              monkeys(item, callFn, selectFn, recurseFn);
+            if(!item.isEmpty()) {
+              monkeys(item, callFn, selectFn);
             }
             i++;
         }
