@@ -326,8 +326,7 @@ exports.fn = function(data) {
             }
 
             // recurse
-            if(item.content && item.content.length > 0 &&
-               recurseFn(item)              ) {
+            if(!item.isEmpty() && recurseFn(item)) {
               monkeys(item, callFn, selectFn, recurseFn);
             }
             i++;
