@@ -217,15 +217,14 @@ exports.fn = function(data) {
       }
 
       // Merge inline CSS and looked up CSS
-      var newAstDeclarations =
-                 styleAstRule.declarations   // inline styles last for precedence
-        .concat(inlineAstRule.declarations);
+      var newAstDeclarations = styleAstRule.declarations // inline styles last for precedence
+                               .concat(inlineAstRule.declarations);
 
       // Store the new (inlined + existing inline) CSS
       // We don't stringify at match because this would be unnecessarily costly,
       // when there are more selectors that match.
       if(!matchedElement.newAstDeclarations)  matchedElement.newAstDeclarations = [];
-          matchedElement.newAstDeclarations = matchedElement.newAstDeclarations.concat(newAstDeclarations);
+      matchedElement.newAstDeclarations = matchedElement.newAstDeclarations.concat(newAstDeclarations);
 
       matchedElements.push(matchedElement);
 
