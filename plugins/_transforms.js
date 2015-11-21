@@ -2,6 +2,7 @@
 
 var regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/,
     regTransformSplit = /\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/,
+    regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
     regTransformDataSplit = /[\s,]+/;
 
 /**
@@ -20,6 +21,7 @@ exports.transform2js = function(transformString) {
 
     // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
     transformString.split(regTransformSplit).forEach(function(item) {
+        var num;
 
         if (item) {
             // if item is a translate function
@@ -29,10 +31,15 @@ exports.transform2js = function(transformString) {
             // else if item is data
             } else {
                 // then split it into [10, 50] and collect as context.data
-                current.data = item.split(regTransformDataSplit).map(Number);
+                while (num = regNumericValues.exec(item)) {
+                    num = Number(num);
+                    if (current.data)
+                        current.data.push(num);
+                    else
+                        current.data = [num];
+                }
             }
         }
-
     });
 
     return transforms;
