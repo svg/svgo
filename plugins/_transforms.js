@@ -2,8 +2,7 @@
 
 var regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/,
     regTransformSplit = /\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/,
-    regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
-    regTransformDataSplit = /[\s,]+/;
+    regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
  * Convert transform string to JS representation.
@@ -21,6 +20,7 @@ exports.transform2js = function(transformString) {
 
     // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
     transformString.split(regTransformSplit).forEach(function(item) {
+        /*jshint -W084 */
         var num;
 
         if (item) {
