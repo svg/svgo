@@ -1,3 +1,9 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.1) ] 0.6.1 / 21.11.2015
+* Added option `--quite` to suppress output (by @phihag).
+* Removed `lib-cov` folder from the package, which was erroneously included before.
+* Fixed errors with “[minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js)” when there are `<style>` elements with `CDATA` content or without content at all.
+* Amended transform functions parsing to prevent errors when there are no separators between numbers (which isn't allowed by syntax, but understood by browsers).
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.0) ] 0.6.0 / 08.11.2015
 * New optimization: circular curves now being converted to arcs. A notable improvement for circles within paths.
 * New plugin “[minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js)” which minifies `<style>` elments content with CSSO by @strarsis (svgo still doesn't understand its content)

@@ -82,6 +82,7 @@ $ [sudo] npm install -g svgo
   --disable=DISABLE : Выключение плагина по имени
   --enable=ENABLE : Включение плагина по имени
   --datauri=DATAURI : Результат в виде строки Data URI (base64, URI encoded или unencoded)
+  -q, --quiet : Подавляет вывод информации, выводятся только сообщения об ошибках
   --pretty : Удобочитаемое форматирование SVG
   --show-plugins : Доступные плагины
 
