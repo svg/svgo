@@ -307,10 +307,7 @@ exports.fn = function(data) {
     function monkeys(items, callFn, selectFn) {
       if(selectFn  === undefined) { selectFn  = selectAll;     }
 
-        var      i = 0,
-            length = items.content.length;
-
-        while(i < length) {
+        for (var i = 0; i < items.content.length; i++) {
 
             var item = items.content[i];
 
