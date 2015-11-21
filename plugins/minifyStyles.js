@@ -42,8 +42,8 @@ var minifyCss = function(css, options) {
 exports.fn = function(item, svgoOptions) {
 
     if(item.elem) {
-        if(item.isElem('style')) {
-            var styleCss = item.content[0].text;
+        if(item.isElem('style') && !item.isEmpty()) {
+            var styleCss = item.content[0].text || item.content[0].cdata || [];
             if(styleCss.length > 0) {
                 var styleCssMinified = minifyCss(styleCss, svgoOptions);
                 item.content[0].text = styleCssMinified;
