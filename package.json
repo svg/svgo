@@ -45,7 +45,11 @@
     "colors": "~1.1.2",
     "whet.extend": "~0.9.9",
     "mkdirp": "~0.5.1",
-    "csso": "~1.4.1"
+    "csso": "~1.4.1",
+    "css": "^2.2.1",
+    "inline-styles-parse": "^1.2.0",
+    "uniq": "^1.0.1",
+    "remove-value": "^1.0.0"
   },
   "devDependencies": {
     "mocha": "~2.3.3",

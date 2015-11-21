@@ -22,6 +22,7 @@ plugins:
   - removeMetadata
   - removeEditorsNSData
   - cleanupAttrs
+  - localStyles
   - minifyStyles
   - convertStyleToAttrs
   - cleanupIDs
