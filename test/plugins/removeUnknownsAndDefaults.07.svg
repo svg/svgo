@@ -1,33 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://">
-    <foreignObject>
-        <div class="test">
-            fallback test
-        </div>
-    </foreignObject>
+  <foreignObject>
+    <div class="test">
+      fallback test
+    </div>
+  </foreignObject>
 
-    <test>
-        test
-    </test>
-    <test:test>
-        test
-    </test:test>
-    <g>
-        test
-    </g>
+  <test>
+    test
+  </test>
+  <test:test>
+    test
+  </test:test>
+  <g>
+    test
+  </g>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://">
-    <foreignObject>
-        <div class="test">
-            fallback test
-        </div>
-    </foreignObject>
-    <test:test>
-        test
-    </test:test>
-    <g>
-        test
-    </g>
+  <foreignObject>
+    <div class="test">
+      fallback test
+    </div>
+  </foreignObject>
+  <test:test>
+    test
+  </test:test>
+  <g>
+    test
+  </g>
 </svg>

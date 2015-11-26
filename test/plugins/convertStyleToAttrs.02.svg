@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g style="    fill:#000; c\olor: #fff; /**/illegal-'declaration/*'; -webkit-blah: 123  ; -webkit-trolo: 'lolo'; illegal2*/"/>
+  <g style="  fill:#000; c\olor: #fff; /**/illegal-'declaration/*'; -webkit-blah: 123  ; -webkit-trolo: 'lolo'; illegal2*/"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g style="-webkit-blah:123;-webkit-trolo:'lolo'" fill="#000" color="#fff"/>
+  <g style="-webkit-blah:123;-webkit-trolo:'lolo'" fill="#000" color="#fff"/>
 </svg>
