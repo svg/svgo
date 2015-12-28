@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g style="background/*-image*/:url(data:image/png;base64,iVBORw...)"/>
-    <g style="fill:url(data:image/png;base64,iVBORw...)"/>
+  <g style="background/*-image*/:url(data:image/png;base64,iVBORw...)"/>
+  <g style="fill:url(data:image/png;base64,iVBORw...)"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g style="background:url(data:image/png;base64,iVBORw...)"/>
-    <g fill="url(data:image/png;base64,iVBORw...)"/>
+  <g style="background:url(data:image/png;base64,iVBORw...)"/>
+  <g fill="url(data:image/png;base64,iVBORw...)"/>
 </svg>

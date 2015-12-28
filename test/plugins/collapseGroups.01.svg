@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg">
+  <g>
     <g>
-        <g>
-            <path d="..."/>
-        </g>
+      <path d="..."/>
     </g>
+  </g>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path d="..."/>
+  <path d="..."/>
 </svg>

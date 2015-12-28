@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g style="fill:#000;"/>
-    <g style="font-family:'Helvetica Neue'"/>
-    <g style="    fill:#000; color: #fff  ;  "/>
+  <g style="fill:#000;"/>
+  <g style="font-family:'Helvetica Neue'"/>
+  <g style="  fill:#000; color: #fff  ;  "/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g fill="#000"/>
-    <g font-family="Helvetica Neue"/>
-    <g fill="#000" color="#fff"/>
+  <g fill="#000"/>
+  <g font-family="Helvetica Neue"/>
+  <g fill="#000" color="#fff"/>
 </svg>
