@@ -42,7 +42,7 @@ var EXTEND = require('whet.extend'),
  * @example
  * <g style="fill:#000; color: #fff; -webkit-blah: blah">
  *             ⬇
- * <g fill="#000" color="#fff" slyle="-webkit-blah: blah">
+ * <g fill="#000" color="#fff" style="-webkit-blah: blah">
  *
  * @param {Object} item current iteration item
  * @return {Boolean} if false, item will be filtered out
