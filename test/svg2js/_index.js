@@ -441,7 +441,7 @@ describe('svg2js', function() {
                     thrownErrorParts = error.toString().split(':');
 
                 return rootErrorParts.reduce(function(result, value, index) {
-                    return result && value.includes(thrownErrorParts[index]);
+                    return result && value.indexOf(thrownErrorParts[index]) === 0;
                 }, true).should.be.true();
             });
 
