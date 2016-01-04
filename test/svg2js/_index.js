@@ -449,4 +449,33 @@ describe('svg2js', function() {
 
     });
 
+    describe('entities', function() {
+        var filepath = PATH.resolve(__dirname, './test.entities.svg'),
+            root;
+
+        before(function(done) {
+            FS.readFile(filepath, 'utf8', function(err, data) {
+                if (err) throw err;
+
+                SVG2JS(data, function(result) {
+                    root = result;
+                });
+                done();
+            });
+        });
+
+        describe('root', function() {
+            it('should exist', function() {
+                return root.should.exist;
+            });
+
+            it('should have correctly parsed entities', function() {
+                var attrs = root.content[root.content.length - 1].attrs;
+
+                attrs['xmlns:x'].value.should.be.equal('http://ns.adobe.com/Extensibility/1.0/');
+                attrs['xmlns:graph'].value.should.be.equal('http://ns.adobe.com/Graphs/1.0/');
+            });
+        });
+    });
+
 });
