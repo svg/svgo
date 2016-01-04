@@ -8,7 +8,6 @@ var SHOULD = require('should'),
                      '../../lib/svgo/svg2js');
 
 describe('svg2js', function() {
-
     describe('working svg', function() {
 
         var filepath = PATH.resolve(__dirname, './test.svg'),
@@ -380,4 +379,27 @@ describe('svg2js', function() {
 
     });
 
+    describe('svg with external entities', function() {
+      var filepath = PATH.resolve(__dirname, './test.svg'),
+          root;
+
+      before(function(done) {
+          FS.readFile(filepath, 'utf8', function(err, data) {
+              if (err) {
+                  throw err;
+              }
+
+              SVG2JS(data, function(result) {
+                  root = result;
+                  done();
+              });
+          });
+      });
+
+      describe('root', function() {
+        it('should exist', function() {
+          return root.should.exist;
+        })
+      });
+    });
 });
