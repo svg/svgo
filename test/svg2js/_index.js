@@ -380,4 +380,73 @@ describe('svg2js', function() {
 
     });
 
+    describe('malformed svg', function() {
+
+        var filepath = PATH.resolve(__dirname, './test.bad.svg'),
+            root,
+            error;
+
+        before(function(done) {
+
+            FS.readFile(filepath, 'utf8', function(err, data) {
+                if (err) {
+                    throw err;
+                }
+
+                try {
+                    SVG2JS(data, function(result) {
+                        root = result;
+                    });
+                } catch (e) {
+                    error = e;
+                }
+
+                done();
+            });
+
+        });
+
+        describe('root', function() {
+
+            it('should have property "error"', function() {
+                return root.should.have.property('error');
+            });
+
+        });
+
+        describe('root.error', function() {
+
+            it('should be an instance of String', function() {
+                return root.error.should.an.instanceOf(String);
+            });
+
+            it('should be "Error in parsing: Unmatched closing tag: style"', function() {
+                return root.error.should.equal('Error in parsing: Unmatched closing tag: style');
+            });
+
+        });
+
+        describe('thrown error', function() {
+
+            it('should be an instance of Error', function() {
+                return error.should.be.an.instanceOf(Error);
+            });
+
+            it('should stringify to "Error: Unmatched closing tag: style"', function() {
+                return error.toString().should.equal('Error: Unmatched closing tag: style');
+            });
+
+            it('should roughly match root.error', function() {
+                var rootErrorParts = root.error.split(':'),
+                    thrownErrorParts = error.toString().split(':');
+
+                return rootErrorParts.reduce(function(result, value, index) {
+                    return result && value.indexOf(thrownErrorParts[index]) === 0;
+                }, true).should.be.true();
+            });
+
+        });
+
+    });
+
 });
