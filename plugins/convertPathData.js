@@ -341,7 +341,7 @@ function filters(path, params) {
                         suffix = stringify([nextLonghand]);
                     }
                     if (isConvex(nextData) && isArc(nextData, relCircle)) {
-                        angle += findArcAngle(nextData);
+                        angle += findRelArcAngle(nextData, relCircle);
                         if (angle - 2 * Math.PI > 1e-3) break; // more than 360°
                         if (angle > Math.PI) arc.data[3] = 1;
                         arcCurves.push(next);
@@ -928,7 +928,27 @@ function findArcAngle(curve) {
         y2 = curve[3] - curve[5];
 
     return Math.PI - Math.acos(
-            (x1 * x2 + y1 * y2 ) /
+            (x1 * x2 + y1 * y2) /
+            Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
+        );
+}
+
+/**
+ * Finds angle of a curve fitting the given arc.
+
+ * @param {Array} curve
+ * @param {Object} relCircle
+ * @return {Number} angle
+ */
+
+function findRelArcAngle(curve, relCircle) {
+    var x1 = relCircle.center[0],
+        y1 = relCircle.center[1],
+        x2 = curve[4] - relCircle.center[0],
+        y2 = curve[5] - relCircle.center[1];
+
+    return Math.PI - Math.acos(
+            (x1 * x2 + y1 * y2) /
             Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
         );
 }
