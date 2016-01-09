@@ -772,10 +772,7 @@ function roundData(data) {
         return data;
     }
 
-    roundData = precision > 0 ? strongRound : round; // jshint ignore: line
-
-    return roundData(data);
-
+    return (precision > 0 ? strongRound : round)(data);
 }
 
 /**
