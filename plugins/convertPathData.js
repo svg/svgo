@@ -300,7 +300,7 @@ function filters(path, params) {
                 (circle = findCircle(sdata))
             ) {
                 var r = roundData([circle.radius])[0],
-                    angle = findArcAngle(sdata),
+                    angle = findArcAngle(sdata, circle),
                     sweep = sdata[5] * sdata[0] - sdata[4] * sdata[1] > 0 ? 1 : 0,
                     arc = {
                         instruction: 'a',
@@ -325,7 +325,7 @@ function filters(path, params) {
                     arc.base = prev.base;
                     arc.data[5] = arc.coords[0] - arc.base[0];
                     arc.data[6] = arc.coords[1] - arc.base[1];
-                    angle += findArcAngle(prev.instruction == 'a' ? prev.sdata : prev.data);
+                    angle += findArcAngle(prev.instruction == 'a' ? prev.sdata : prev.data, relCircle);
                     if (angle > Math.PI) arc.data[3] = 1;
                     hasPrev = 1;
                 }
@@ -341,7 +341,7 @@ function filters(path, params) {
                         suffix = stringify([nextLonghand]);
                     }
                     if (isConvex(nextData) && isArc(nextData, relCircle)) {
-                        angle += findRelArcAngle(nextData, relCircle);
+                        angle += findArcAngle(nextData, relCircle);
                         if (angle - 2 * Math.PI > 1e-3) break; // more than 360°
                         if (angle > Math.PI) arc.data[3] = 1;
                         arcCurves.push(next);
@@ -915,25 +915,6 @@ function isArcPrev(curve,  circle) {
 }
 
 /**
- * Finds angle of an arc formed by a curve.
- *
- * @param {Array} curve
- * @return {Number} angle
- */
-
-function findArcAngle(curve) {
-    var x1 = curve[0],
-        y1 = curve[1],
-        x2 = curve[2] - curve[4],
-        y2 = curve[3] - curve[5];
-
-    return Math.PI - Math.acos(
-            (x1 * x2 + y1 * y2) /
-            Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
-        );
-}
-
-/**
  * Finds angle of a curve fitting the given arc.
 
  * @param {Array} curve
@@ -941,13 +922,13 @@ function findArcAngle(curve) {
  * @return {Number} angle
  */
 
-function findRelArcAngle(curve, relCircle) {
-    var x1 = relCircle.center[0],
-        y1 = relCircle.center[1],
+function findArcAngle(curve, relCircle) {
+    var x1 = -relCircle.center[0],
+        y1 = -relCircle.center[1],
         x2 = curve[4] - relCircle.center[0],
         y2 = curve[5] - relCircle.center[1];
 
-    return Math.PI - Math.acos(
+    return Math.acos(
             (x1 * x2 + y1 * y2) /
             Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
         );
