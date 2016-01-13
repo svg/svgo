@@ -30,6 +30,7 @@ var pathElems = require('./_collections.js').pathElems,
     js2path = require('./_path.js').js2path,
     applyTransforms = require('./_path.js').applyTransforms,
     cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
+    roundData,
     precision,
     error,
     arcThreshold,
@@ -58,6 +59,7 @@ exports.fn = function(item, params) {
 
         precision = params.floatPrecision;
         error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
+        roundData = precision > 0 ? strongRound : round;
         if (params.makeArcs) {
             arcThreshold = params.makeArcs.threshold;
             arcTolerance = params.makeArcs.tolerance;
@@ -750,32 +752,29 @@ function getIntersection(coords) {
  * Smart rounds values like 2.349 to 2.35.
  *
  * @param {Array} data input data array
- * @param {Number} fixed number of decimals
  * @return {Array} output data array
  */
-function roundData(data) {
-
-    function round(data) {
-        for (var i = data.length; i--;) {
-            data[i] = +data[i].toFixed(precision);
-        }
-        return data;
+function strongRound(data) {
+    for (var i = data.length; i-- > 0;) {
+        var rounded = +data[i].toFixed(precision - 1);
+        data[i] = +Math.abs(rounded - data[i]).toFixed(precision) > error ?
+            +data[i].toFixed(precision) :
+            rounded;
     }
+    return data;
+}
 
-    function strongRound(data) {
-        for (var i = data.length; i--;) {
-            var rounded = +data[i].toFixed(precision - 1);
-            data[i] = +Math.abs(rounded - data[i]).toFixed(precision) > error ?
-                +data[i].toFixed(precision) :
-                rounded;
-        }
-        return data;
+/**
+ * Simple rounding function if precision is 0.
+ *
+ * @param {Array} data input data array
+ * @return {Array} output data array
+ */
+function round(data) {
+    for (var i = data.length; i-- > 0;) {
+        data[i] = Math.round(data[i]);
     }
-
-    roundData = precision > 0 ? strongRound : round; // jshint ignore: line
-
-    return roundData(data);
-
+    return data;
 }
 
 /**
