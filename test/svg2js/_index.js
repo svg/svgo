@@ -420,29 +420,16 @@ describe('svg2js', function() {
                 return root.error.should.an.instanceOf(String);
             });
 
-            it('should be "Error in parsing: Unmatched closing tag: style"', function() {
-                return root.error.should.equal('Error in parsing: Unmatched closing tag: style');
+            it('should be "Error in parsing SVG: Unmatched closing tag: style"', function() {
+                return root.error.should.equal('Error in parsing SVG: Unmatched closing tag: style\nLine: 10\nColumn: 15\nChar: >');
             });
 
         });
 
-        describe('thrown error', function() {
+        describe('error', function() {
 
-            it('should be an instance of Error', function() {
-                return error.should.be.an.instanceOf(Error);
-            });
-
-            it('should stringify to "Error: Unmatched closing tag: style"', function() {
-                return error.toString().should.equal('Error: Unmatched closing tag: style');
-            });
-
-            it('should roughly match root.error', function() {
-                var rootErrorParts = root.error.split(':'),
-                    thrownErrorParts = error.toString().split(':');
-
-                return rootErrorParts.reduce(function(result, value, index) {
-                    return result && value.indexOf(thrownErrorParts[index]) === 0;
-                }, true).should.be.true();
+            it('should not be thrown', function() {
+                return typeof error === 'undefined';
             });
 
         });
