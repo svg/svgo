@@ -39,7 +39,7 @@ exports.fn = function(item) {
 
         var intersection = {},
             hasTransform = false,
-            hasClip = item.hasAttr('clip-path'),
+            hasClip = item.hasAttr('clip-path') || item.hasAttr('mask'),
             intersected = item.content.every(function(inner) {
                 if (inner.isElem() && inner.hasAttr()) {
                     if (!Object.keys(intersection).length) {
