@@ -48,7 +48,7 @@ plugins:
     …
 ```
 
-In a such case only listed plugins will be runned.
+In such a case only listed plugins will be run.
 
 - - -
 
