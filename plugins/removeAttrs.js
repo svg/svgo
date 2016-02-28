@@ -24,6 +24,11 @@ exports.params = {
  *
  *   examples:
  *
+ *     > basic: remove fill attribute
+ *     ---
+ *     removeAttrs:
+ *       attrs: 'fill'
+ *
  *     > remove fill attribute on path element
  *     ---
  *       attrs: 'path:fill'
