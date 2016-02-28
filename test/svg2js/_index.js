@@ -420,16 +420,16 @@ describe('svg2js', function() {
                 return root.error.should.an.instanceOf(String);
             });
 
-            it('should be "Error in parsing SVG: Unmatched closing tag: style"', function() {
-                return root.error.should.equal('Error in parsing SVG: Unmatched closing tag: style\nLine: 10\nColumn: 15\nChar: >');
+            it('should be "Error in parsing SVG: Unexpected close tag"', function() {
+                return root.error.should.equal('Error in parsing SVG: Unexpected close tag\nLine: 10\nColumn: 15\nChar: >');
             });
 
         });
 
-        describe('error', function() {
+        describe('thrown error', function() {
 
-            it('should not be thrown', function() {
-                return typeof error === 'undefined';
+            it('should be an instance of Error', function() {
+                return error.should.be.an.instanceOf(Error);
             });
 
         });
