@@ -426,10 +426,10 @@ describe('svg2js', function() {
 
         });
 
-        describe('thrown error', function() {
+        describe('error', function() {
 
-            it('should be an instance of Error', function() {
-                return error.should.be.an.instanceOf(Error);
+            it('should not be thrown', function() {
+                return SHOULD.not.exist(error);
             });
 
         });
