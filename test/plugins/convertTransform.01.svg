@@ -8,6 +8,14 @@
     <g transform="matrix(1 0 1 1 0 0)"/>
     <g transform="matrix(1.25,0,0,-1.25,0,56.26) scale(1,-1)"/>
     <g transform="matrix(1.25,0,0,-1.25,0,56.26) matrix(0.1325312,0,0,-0.1325312,-31.207631,89.011662)"/>
+    <g transform="matrix(1 0 0 -1 0 0)"/>
+    <g transform="matrix(-1 0 0 1 0 0)"/>
+    <g transform="matrix(0 1-1 0 0 0)"/>
+    <g transform="matrix(0-1 1 0 0 0)"/>
+    <g transform="matrix(0.707 -0.707 -0.707 -0.707 0 0)"/>
+    <g transform="matrix(-0.707 0.707 0.707 0.707 0 0)"/>
+    <g transform="matrix(-0.707 0.707 -0.707 -0.707 0 0)"/>
+    <g transform="matrix(0.707 0.707 -0.707 0.707 0 0)"/>
 </svg>
 
 @@@
@@ -22,4 +30,12 @@
     <g transform="skewX(45)"/>
     <g transform="matrix(1.25 0 0 1.25 0 56.26)"/>
     <g transform="matrix(.16566 0 0 .16566 -39.01 -55.005)"/>
+    <g transform="scale(1 -1)"/>
+    <g transform="scale(-1 1)"/>
+    <g transform="rotate(90)"/>
+    <g transform="rotate(-90)"/>
+    <g transform="scale(1 -1) rotate(45)"/>
+    <g transform="scale(-1 1) rotate(45)"/>
+    <g transform="rotate(135)"/>
+    <g transform="rotate(45)"/>
 </svg>

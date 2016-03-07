@@ -151,12 +151,11 @@ exports.matrixToTransform = function(transform, params) {
     // [sx·cos(a), sy·sin(a), sx·-sin(a), sy·cos(a), x, y] → scale(sx, sy)·rotate(a[, cx, cy]) (if !scaleBefore)
     } else if (!colsSum || (sx == 1 && sy == 1) || !scaleBefore) {
         if (!scaleBefore) {
-            sx = Math.sqrt(data[0] * data[0] + data[2] * data[2]);
-            sy = Math.sqrt(data[1] * data[1] + data[3] * data[3]);
+            sx = (data[0] < 0 ? -1 : 1) * Math.sqrt(data[0] * data[0] + data[2] * data[2]);
+            sy = (data[3] < 0 ? -1 : 1) * Math.sqrt(data[1] * data[1] + data[3] * data[3]);
             transforms.push({ name: 'scale', data: [sx, sy] });
         }
-        var a1 = mth.acos(data[0] / sx, floatPrecision),
-            rotate = [a1.toFixed(floatPrecision) * (data[1] < 0 ? -1 : 1)];
+        var rotate = [mth.acos(data[0] / sx, floatPrecision) * (data[1] * sy < 0 ? -1 : 1)];
 
         if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
 
