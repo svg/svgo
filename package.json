@@ -39,13 +39,13 @@
     "test": "make test"
   },
   "dependencies": {
-    "sax": "~1.1.5",
+    "sax": "~1.1.6",
     "coa": "~1.0.1",
     "js-yaml": "~3.5.3",
     "colors": "~1.1.2",
     "whet.extend": "~0.9.9",
     "mkdirp": "~0.5.1",
-    "csso": "~1.6.1"
+    "csso": "~1.6.4"
   },
   "devDependencies": {
     "mocha": "~2.4.5",
