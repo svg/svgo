@@ -13,6 +13,12 @@
     <g stroke="red" stroke-width="2">
         <path fill="red" transform="rotate(15) scale(.5) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
     </g>
+    <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
+    <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z" stroke="#000"/>
+    <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z" stroke="#000" stroke-width=".5"/>
+    <g stroke="#000" stroke-width="5">
+        <path transform="scale(10)" id="a" d="M0,0 V100 L 70,50 z M70,50 L140,0 V100 z"/>
+    </g>
     <path fill="url(#gradient)" transform="rotate(15) scale(0.33) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
     <path clip-path="url(#a)" transform="rotate(15) scale(0.33) translate(200,100)" d="M100,200 300,400 H100 V300 C100,100 250,100 250,200 S400,300 400,200 Q400,50 600,300 T1000,300 z"/>
     <path d="M5 0a10 10 0 1 0 20 0" transform="matrix(1 0 0 1 5 0)"/>
@@ -42,6 +48,12 @@
     </g>
     <g stroke="red" stroke-width="2">
         <path fill="red" d="M106.066 183.712l70.71 122.474-96.592-25.882 12.94-48.296c25.883-96.593 98.327-77.18 85.386-28.885s59.504 67.708 72.445 19.412q19.41-72.445 83.652 74.178t193.185 51.764z" stroke-width="1"/>
+    </g>
+    <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50l70-50v100z"/>
+    <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50l70-50v100z" stroke="#000"/>
+    <path id="a" d="M0 0v1000l700-500zm700 500L1400 0v1000z" stroke="#000" stroke-width="5"/>
+    <g stroke="#000" stroke-width="5">
+        <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50l70-50v100z"/>
     </g>
     <path fill="url(#gradient)" transform="rotate(15) scale(0.33) translate(200,100)" d="M100 200l200 200H100V300c0-200 150-200 150-100s150 100 150 0q0-150 200 100t400 0z"/>
     <path clip-path="url(#a)" transform="rotate(15) scale(0.33) translate(200,100)" d="M100 200l200 200H100V300c0-200 150-200 150-100s150 100 150 0q0-150 200 100t400 0z"/>

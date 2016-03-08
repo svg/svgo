@@ -183,14 +183,27 @@ exports.applyTransforms = function(elem, path, params) {
 
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
         stroke = elem.computedAttr('stroke'),
+        id = elem.computedAttr('id'),
         transformPrecision = params.transformPrecision,
         newPoint, scale;
 
-    if (stroke && stroke.value != 'none') {
+    if (stroke && stroke != 'none') {
         if (!params.applyTransformsStroked ||
             (matrix.data[0] != matrix.data[3] || matrix.data[1] != -matrix.data[2]) &&
             (matrix.data[0] != -matrix.data[3] || matrix.data[1] != matrix.data[2]))
             return path;
+
+        // "stroke-width" should be inside the part with ID, otherwise it can be overrided in <use>
+        if (id) {
+            var idElem = elem,
+                hasStrokeWidth = false;
+
+            do {
+                if (idElem.hasAttr('stroke-width')) hasStrokeWidth = true;
+            } while (!idElem.hasAttr('id', id) && !hasStrokeWidth && (idElem = idElem.parentNode));
+
+            if (!hasStrokeWidth) return path;
+        }
 
         scale = +Math.sqrt(matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]).toFixed(transformPrecision);
 
@@ -209,6 +222,8 @@ exports.applyTransforms = function(elem, path, params) {
                 });
             }
         }
+    } else if (id) { // Stroke and stroke-width can be redefined with <use>
+        return path;
     }
 
     path.forEach(function(pathItem) {
