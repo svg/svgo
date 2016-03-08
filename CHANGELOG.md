@@ -1,3 +1,14 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.2) ] 0.6.2 / 08.03.2016
+* Better error handling and messaging improvements.
+* SVG files with XML entities (e.g. from Adobe Illustrator) are now correctly being parsed.
+* Fixed error on converting curves to arcs.
+* Corrected rounding in subsequent passes with `--multipass` option.
+* Data URI option now handles charset (by @holymonson)
+* Tranformations are no longer moved to group if there is a mask (`plugins/moveElemsAttrsToGroup.js`).
+* Fixed matrix decomposition losing sign in case like `[1, 0, 0, -1, 0, 0]` (`scale(1 -1)`).
+* Fixed crash on uppercased color name.
+* Paths with `id` and without `stroke-width` aren't being trasformed now since `stroke-width` may be applied later.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.1) ] 0.6.1 / 21.11.2015
 * Added option `--quiet` to suppress output (by @phihag).
 * Removed `lib-cov` folder from the package, which was erroneously included before.
