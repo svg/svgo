@@ -58,7 +58,7 @@ exports.fn = function(item, params) {
 
                 // Convert color name keyword to long hex
                 if (params.names2hex && val.toLowerCase() in collections.colorsNames) {
-                    val = collections.colorsNames[val];
+                    val = collections.colorsNames[val.toLowerCase()];
                 }
 
                 // Convert rgb() to long hex
