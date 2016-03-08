@@ -43,10 +43,11 @@ exports.fn = function(item, svgoOptions) {
 
     if(item.elem) {
         if(item.isElem('style') && !item.isEmpty()) {
-            var styleCss = item.content[0].text || item.content[0].cdata || [];
+            var styleCss = item.content[0].text || item.content[0].cdata || [],
+                DATA = styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0 ? 'cdata' : 'text';
             if(styleCss.length > 0) {
                 var styleCssMinified = minifyCss(styleCss, svgoOptions);
-                item.content[0].text = styleCssMinified;
+                item.content[0][DATA] = styleCssMinified;
             }
       }
 
