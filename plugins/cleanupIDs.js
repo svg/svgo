@@ -91,7 +91,7 @@ exports.fn = function(data, params) {
 
                     // save IDs href references
                     else if (
-                        attr.name === 'xlink:href' && (match = attr.value.match(regReferencesHref)) ||
+                        attr.local === 'href' && (match = attr.value.match(regReferencesHref)) ||
                         attr.name === 'begin' && (match = attr.value.match(regReferencesBegin))
                     ) {
                         key = idPrefix + match[1];

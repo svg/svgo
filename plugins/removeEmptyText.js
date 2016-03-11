@@ -53,7 +53,7 @@ exports.fn = function(item, params) {
     if (
         params.tref &&
         item.isElem('tref') &&
-        !item.hasAttr('xlink:href')
+        !item.hasAttrLocal('href')
     ) return false;
 
 };

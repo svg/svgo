@@ -27,6 +27,6 @@ var container = require('./_collections').elemsGroups.container;
 exports.fn = function(item) {
 
     return !(item.isElem(container) && !item.isElem('svg') && item.isEmpty() &&
-        (!item.isElem('pattern') || !item.hasAttr('xlink:href')));
+        (!item.isElem('pattern') || !item.hasAttrLocal('href')));
 
 };

@@ -20,8 +20,7 @@ exports.fn = function(item) {
 
     if (
         item.isElem('image') &&
-        item.hasAttr('xlink:href') &&
-        /(\.|image\/)(jpg|png|gif)/.test(item.attr('xlink:href').value)
+        item.hasAttrLocal('href', /(\.|image\/)(jpg|png|gif)/)
     ) {
         return false;
     }
