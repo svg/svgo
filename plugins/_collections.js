@@ -2292,7 +2292,8 @@ exports.referencesProps = [
     'marker-mid',
     'marker-end',
     'mask',
-    'stroke'
+    'stroke',
+    'style'
 ];
 
 // http://www.w3.org/TR/SVG/styling.html#SVGStylingProperties

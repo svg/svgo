@@ -13,7 +13,7 @@ exports.params = {
 };
 
 var referencesProps = require('./_collections').referencesProps,
-    regReferencesUrl = /^url\(("|')?#(.+?)\1\)$/,
+    regReferencesUrl = /\burl\(("|')?#(.+?)\1\)/,
     regReferencesHref = /^#(.+?)$/,
     regReferencesBegin = /^(\w+?)\./,
     styleOrScript = ['style', 'script'],
