@@ -59,7 +59,7 @@ exports.fn = function(item, params) {
 
         precision = params.floatPrecision;
         error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
-        roundData = precision > 0 ? strongRound : round;
+        roundData = precision > 0 && precision < 20 ? strongRound : round;
         if (params.makeArcs) {
             arcThreshold = params.makeArcs.threshold;
             arcTolerance = params.makeArcs.tolerance;
@@ -755,17 +755,20 @@ function getIntersection(coords) {
 /**
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
- * Smart rounds values like 2.349 to 2.35.
+ * Smart rounds values like 2.3491 to 2.35 instead of 2.349.
+ * Doesn't apply "smartness" if the number precision fits already.
  *
  * @param {Array} data input data array
  * @return {Array} output data array
  */
 function strongRound(data) {
     for (var i = data.length; i-- > 0;) {
-        var rounded = +data[i].toFixed(precision - 1);
-        data[i] = +Math.abs(rounded - data[i]).toFixed(precision) > error ?
-            +data[i].toFixed(precision) :
-            rounded;
+        if (data[i].toFixed(precision) != data[i]) {
+            var rounded = +data[i].toFixed(precision - 1);
+            data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error ?
+                +data[i].toFixed(precision) :
+                rounded;
+        }
     }
     return data;
 }
