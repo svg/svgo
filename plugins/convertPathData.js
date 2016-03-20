@@ -327,7 +327,13 @@ function filters(path, params) {
                     arc.base = prev.base;
                     arc.data[5] = arc.coords[0] - arc.base[0];
                     arc.data[6] = arc.coords[1] - arc.base[1];
-                    angle += findArcAngle(prev.instruction == 'a' ? prev.sdata : prev.data, relCircle);
+                    var prevData = prev.instruction == 'a' ? prev.sdata : prev.data;
+                    angle += findArcAngle(prevData,
+                        {
+                            center: [prevData[4] + relCenter[0], prevData[5] + relCenter[1]],
+                            radius: circle.radius
+                        }
+                    );
                     if (angle > Math.PI) arc.data[3] = 1;
                     hasPrev = 1;
                 }
