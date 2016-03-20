@@ -1,3 +1,9 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.3) ] 0.6.3 / 20.03.2016
+* Smart rounding (introduced in 0.4.5) now applies only when rounding is needed, thus making subsequent passes more stable.
+* Fixed regression in converting curves to arcs.
+* `xlink:href` references are now being checked by local name `href`, thus correctly working with another namespace prefix.
+* Fixed `id` removing with disabled `plugins/convertStyleToAttrs.js`.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.2) ] 0.6.2 / 08.03.2016
 * Better error handling and messaging improvements.
 * SVG files with XML entities (e.g. from Adobe Illustrator) are now correctly being parsed.
