@@ -53,7 +53,7 @@
     "colors": "~1.1.2",
     "whet.extend": "~0.9.9",
     "mkdirp": "~0.5.1",
-    "csso": "~1.6.4"
+    "csso": "~1.8.0"
   },
   "devDependencies": {
     "mocha": "~2.4.5",
