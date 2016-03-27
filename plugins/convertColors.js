@@ -7,6 +7,7 @@ exports.active = true;
 exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 
 exports.params = {
+    currentColor: false,
     names2hex: true,
     rgb2hex: true,
     shorthex: true,
@@ -17,7 +18,8 @@ var collections = require('./_collections'),
     rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)',
     rComma = '\\s*,\\s*',
     regRGB = new RegExp('^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'),
-    regHEX = /^\#(([a-fA-F0-9])\2){3}$/;
+    regHEX = /^\#(([a-fA-F0-9])\2){3}$/,
+    none = /\bnone\b/i;
 
 /**
  * Convert different colors formats in element attributes to hex.
@@ -55,6 +57,11 @@ exports.fn = function(item, params) {
 
                 var val = attr.value,
                     match;
+
+                // Convert colors to currentColor
+                if (params.currentColor && (match = !val.match(none))) {
+                    val = 'currentColor';
+                }
 
                 // Convert color name keyword to long hex
                 if (params.names2hex && val.toLowerCase() in collections.colorsNames) {
