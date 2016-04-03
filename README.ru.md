@@ -44,6 +44,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ removeUnusedNS](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) ] удаление  деклараций неиспользуемых пространств имён
 * [ [ cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) ] удаление неиспользуемых и сокращение используемых ID
 * [ [ cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) ] округление дробных чисел до заданной точности, удаление `px` как единицы измерения по-умолчанию
+* [ [ cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) ] округление числовых значений в атрибутах со списком чисел, таких как `viewBox` или `enableBackground`
 * [ [ moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) ] перемещение совпадающих атрибутов у всех элементов внутри группы `<g>`
 * [ [ moveGroupAttrsToElems](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) ] перемещение некоторых атрибутов группы на элементы внутри
 * [ [ collapseGroups](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) ] схлопывание бесполезных групп `<g>`
