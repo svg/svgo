@@ -8,7 +8,7 @@ exports.active = true;
 exports.description = 'converts style to attributes';
 
 var EXTEND = require('whet.extend'),
-    stylingProps = require('./_collections').stylingProps,
+    stylingProps = require('./_collections').attrsGroups.presentation,
     rEscape = '\\\\(?:[0-9a-f]{1,6}\\s?|\\r\\n|.)',                 // Like \" or \2051. Code points consume one space.
     rAttr = '\\s*(' + g('[^:;\\\\]', rEscape) + '*?)\\s*',          // attribute name like ‘fill’
     rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)", // string in single quotes: 'smth'
