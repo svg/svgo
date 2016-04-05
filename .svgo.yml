@@ -20,6 +20,7 @@ plugins:
   - removeXMLProcInst
   - removeComments
   - removeMetadata
+  - removeXMLNS
   - removeEditorsNSData
   - cleanupAttrs
   - minifyStyles
