@@ -42,11 +42,13 @@ exports.fn = function(data, params) {
 
     if (svg.isElem('svg')) {
         if (svg.hasAttr('class')) {
-            svg.attr('class').value =
-                svg.attr('class').value
-                    .split(' ')
-                    .concat(classNames)
-                    .join(' ');
+            var classes = svg.attr('class').value.split(' ');
+            classNames.forEach(function(className){
+                if (classes.indexOf(className) < 0) {
+                    classes.push(className);
+                }
+            });
+            svg.attr('class').value = classes.join(' ');
         } else {
             svg.addAttr({
                 name: 'class',
