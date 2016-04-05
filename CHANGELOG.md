@@ -1,3 +1,9 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.4) ] 0.6.4 / 05.04.2016
+* Fixed bug in “[convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js)” plugin with converting styling properties to non-existent attributes (which are normally removed later by `removeUnknownsAndDefaults`).
+* Added `--indent` option to style pretty-printed SVG. (e.g. `--indent 2`) (by @scurker).
+* Added `currentColor` param to `convertColors` plugin for converting values like `fill` and `stroke` to `currentColor` (by @scurker).
+* Bumped CSSO to the current version and used [its new shiny API](https://github.com/css/csso#api) (thanks to @lahmatiy).
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.3) ] 0.6.3 / 20.03.2016
 * Smart rounding (introduced in 0.4.5) now applies only when rounding is needed, thus making subsequent passes more stable.
 * Fixed regression in converting curves to arcs.
