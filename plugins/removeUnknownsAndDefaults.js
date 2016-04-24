@@ -36,7 +36,7 @@ for (var elem in elems) {
             if (groupDefaults) {
                 elem.defaults = elem.defaults || {};
 
-                for(var attrName in groupDefaults) {
+                for (var attrName in groupDefaults) {
                     elem.defaults[attrName] = groupDefaults[attrName];
                 }
             }
@@ -74,18 +74,18 @@ exports.fn = function(item, params) {
         if (
             params.unknownContent &&
             !item.isEmpty() &&
-            elems[elem] && //make sure we know of this element before checking its children
-            elem !== 'foreignObject'//Don't check foreignObject
+            elems[elem] && // make sure we know of this element before checking its children
+            elem !== 'foreignObject' // Don't check foreignObject
         ) {
             item.content.forEach(function(content, i) {
                 if (
                     content.isElem() &&
-                    !content.prefix && 
+                    !content.prefix &&
                     (
                         (
                             elems[elem].content && // Do we have a record of its permitted content?
                             elems[elem].content.indexOf(content.elem) === -1
-                        ) || 
+                        ) ||
                         (
                             !elems[elem].content && // we dont know about its permitted content
                             !elems[content.elem] // check that we know about the element at all
@@ -120,7 +120,8 @@ exports.fn = function(item, params) {
                             elems[elem].defaults[attr.name] === attr.value && (
                                 attrsInheritable.indexOf(attr.name) < 0 ||
                                 !item.parentNode.computedAttr(attr.name)
-                        )) ||
+                            )
+                        ) ||
                         // useless overrides
                         (
                             params.uselessOverrides &&
