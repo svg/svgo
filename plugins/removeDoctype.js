@@ -33,6 +33,8 @@ exports.description = 'removes doctype declaration';
  */
 exports.fn = function(item) {
 
-    return false;
+    if (item.doctype) {
+        return false;
+    }
 
 };
