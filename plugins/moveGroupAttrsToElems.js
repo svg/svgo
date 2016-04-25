@@ -40,7 +40,7 @@ exports.fn = function(item) {
             return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
         }) &&
         item.content.every(function(inner) {
-            return inner.isElem(pathElems);
+            return inner.isElem(pathElems) && !inner.hasAttr('id');
         })
     ) {
         item.content.forEach(function(inner) {
