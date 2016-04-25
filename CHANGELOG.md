@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.6) ] 0.6.6 / 25.04.2016
+* Corrected CSSO API usage
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.5) ] 0.6.5 / 25.04.2016
 * Extra content inserted by editors are now being removed within `<foreignObject>` as well thus fixing bug “Namespace prefix … is not defined“ after applying SVGO.
 * Doctype with entities declartion is now also being removed since svgo correctly parses them starting from the version [0.6.2](https://github.com/svg/svgo/tree/v0.6.2).
