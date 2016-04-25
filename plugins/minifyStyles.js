@@ -28,7 +28,7 @@ exports.fn = function(item, svgoOptions) {
                 DATA = styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0 ? 'cdata' : 'text';
             if(styleCss.length > 0) {
                 var styleCssMinified = csso.minify(styleCss, svgoOptions);
-                item.content[0][DATA] = styleCssMinified;
+                item.content[0][DATA] = styleCssMinified.css;
             }
       }
 
@@ -36,7 +36,7 @@ exports.fn = function(item, svgoOptions) {
           var itemCss = item.attr('style').value;
           if(itemCss.length > 0) {
               var itemCssMinified = csso.minifyBlock(itemCss, svgoOptions);
-              item.attr('style').value = itemCssMinified;
+              item.attr('style').value = itemCssMinified.css;
           }
       }
     }
