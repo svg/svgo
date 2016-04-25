@@ -1,3 +1,9 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.6.5) ] 0.6.5 / 25.04.2016
+* Extra content inserted by editors are now being removed within `<foreignObject>` as well thus fixing bug “Namespace prefix … is not defined“ after applying SVGO.
+* Doctype with entities declartion is now also being removed since svgo correctly parses them starting from the version [0.6.2](https://github.com/svg/svgo/tree/v0.6.2).
+* Corrected `moveGroupAttrsToElems` not to move attributes to `g` content if it's referenced (has an `id`).
+* `collapseGroups` now don't collapse a group if it has an animated attribute (SMIL).
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.4) ] 0.6.4 / 05.04.2016
 * Fixed bug in “[convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js)” plugin with converting styling properties to non-existent attributes (which are normally removed later by `removeUnknownsAndDefaults`).
 * Added `--indent` option to style pretty-printed SVG. (e.g. `--indent 2`) (by @scurker).
