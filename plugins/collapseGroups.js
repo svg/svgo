@@ -8,6 +8,11 @@ exports.description = 'collapses useless groups';
 
 var animationElems = require('./_collections').elemsGroups.animation;
 
+function hasAnimatedAttr(item) {
+    return item.isElem(animationElems) && item.hasAttr('attributeName', this) ||
+        !item.isEmpty() && item.content.some(hasAnimatedAttr, this);
+}
+
 /*
  * Collapse useless groups.
  *
@@ -50,6 +55,8 @@ exports.fn = function(item) {
                         inner.isElem('g') && !g.hasAttr('transform') && !inner.hasAttr('transform')
                     )) {
                         g.eachAttr(function(attr) {
+                            if (g.content.some(hasAnimatedAttr, attr.name)) return;
+
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);
                             } else if (attr.name == 'transform' || attr.name == 'class') {
