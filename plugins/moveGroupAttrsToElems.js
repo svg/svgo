@@ -44,10 +44,16 @@ exports.fn = function(item) {
         })
     ) {
         item.content.forEach(function(inner) {
+            var attr = item.attr('transform');
             if (inner.hasAttr('transform')) {
-                inner.attr('transform').value = item.attr('transform').value + ' ' + inner.attr('transform').value;
+                inner.attr('transform').value = attr.value + ' ' + inner.attr('transform').value;
             } else {
-                inner.addAttr(item.attr('transform'));
+                inner.addAttr({
+                    'name': attr.name,
+                    'local': attr.local,
+                    'prefix': attr.prefix,
+                    'value': attr.value
+                });
             }
         });
 
