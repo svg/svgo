@@ -7,24 +7,25 @@ exports.active = false;
 exports.description = 'removes arbitrary elements by ID (disabled by default)';
 
 exports.params = {
-    ids: []
+    id: [],
+    class: []
 };
 
 /**
  * Remove SVG elements by ID.
  *
- * @param ids
+ * @param id
  *   examples:
  *
  *     > single: remove element with ID of `elementID`
  *     ---
- *     removeElements:
- *       ids: 'elementID'
+ *     removeElementsByAttr:
+ *       id: 'elementID'
  *
  *     > list: remove multiple elements by ID
  *     ---
- *     removeElements:
- *       ids:
+ *     removeElementsByAttr:
+ *       id:
  *         - 'elementID'
  *         - 'anotherID'
  *
@@ -38,8 +39,8 @@ exports.fn = function(item, params) {
     var elemId;
 
     // wrap into an array if params is not
-    if (!Array.isArray(params.ids)) {
-        params.ids = [params.ids];
+    if (!Array.isArray(params.id)) {
+        params.id = [params.id];
     }
 
     if (!item.isElem()) {
@@ -48,6 +49,6 @@ exports.fn = function(item, params) {
 
     elemId = item.attr('id');
     if (elemId) {
-        return params.ids.indexOf(elemId.value) === -1;
+        return params.id.indexOf(elemId.value) === -1;
     }
 };
