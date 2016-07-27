@@ -86,6 +86,8 @@ Options:
   -q, --quiet : Only output error messages, not regular status messages
   --pretty : Make SVG pretty printed
   --show-plugins : Show available plugins and exit
+  --multipass : Enable multipass
+  --indent=INDENT : Indent number when pretty printing SVGs
 
 Arguments:
   INPUT : Alias to --input
