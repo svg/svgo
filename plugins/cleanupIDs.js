@@ -121,15 +121,15 @@ exports.fn = function(data, params) {
         return data;
     }
 
+    var idKey;
     for (var k in referencesIDs) {
-        if (IDs[k]) {
-
+        if (IDs[k]) { 
+            idKey = k;
             // replace referenced IDs with the minified ones
-            if (params.minify) {
-
-                currentIDstring = getIDstring(currentID = generateID(currentID), params);
+            if (params.minify) {                                                             
+                currentIDstring = getIDstring(currentID = generateID(currentID), params);                                                          
                 IDs[k].attr('id').value = currentIDstring;
-
+ 
                 referencesIDs[k].forEach(function(attr) {
                     k = k.replace(idPrefix, '');
                     attr.value = attr.value
@@ -137,14 +137,14 @@ exports.fn = function(data, params) {
                         .replace(k + '.', currentIDstring + '.');
                 });
 
+                idKey = idPrefix + k;
             }
-
+                                  
             // don't remove referenced IDs
-            delete IDs[idPrefix + k];
-
+            delete IDs[idKey];
         }
     }
-
+    
     // remove non-referenced IDs attributes from elements
     if (params.remove) {
 
