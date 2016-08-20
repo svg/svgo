@@ -12,8 +12,8 @@ exports.params = {
     spaces: true
 };
 
-var regNewlinesNeedSpace = /(\S)\n(\S)/g,
-    regNewlines = /\n/g,
+var regNewlinesNeedSpace = /(\S)\r?\n(\S)/g,
+    regNewlines = /\r?\n/g,
     regSpaces = /\s{2,}/g;
 
 /**

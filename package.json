@@ -44,7 +44,8 @@
     "example": "./examples"
   },
   "scripts": {
-    "test": "make test"
+    "test": "set NODE_ENV=test && mocha",
+    "jshint": "jshint --show-non-errors ."
   },
   "dependencies": {
     "sax": "~1.2.1",
