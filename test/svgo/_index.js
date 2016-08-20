@@ -20,7 +20,7 @@ describe('indentation', function() {
                 throw err;
             }
 
-            var splitted = normalize(data).trim().split(/\s*@@@\s*/),
+            var splitted = normalize(data).split(/\s*@@@\s*/),
                 orig     = splitted[0],
                 should   = splitted[1];
 
@@ -31,7 +31,7 @@ describe('indentation', function() {
             });
 
             svgo.optimize(orig, function(result) {
-                ( normalize(result.data).trim() ).should.be.equal(should);
+                normalize(result.data).should.be.equal(should);
                 done();
             });
 
@@ -42,5 +42,5 @@ describe('indentation', function() {
 });
 
 function normalize(file) {
-    return file.replace(regEOL, '\n');
+    return file.trim().replace(regEOL, '\n');
 }

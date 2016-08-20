@@ -28,7 +28,7 @@ describe('plugins tests', function() {
 
                 FS.readFile(file, 'utf8', function(err, data) {
 
-                    var splitted = normalize(data).trim().split(/\s*@@@\s*/),
+                    var splitted = normalize(data).split(/\s*@@@\s*/),
                         orig     = splitted[0],
                         should   = splitted[1],
                         params   = splitted[2],
@@ -47,7 +47,7 @@ describe('plugins tests', function() {
                     svgo.optimize(orig, function(result) {
 
 //FIXME: results.data has a '\n' at the end while it should not
-                        ( normalize(result.data).trim() ).should.be.equal(should);
+                        normalize(result.data).should.be.equal(should);
                         done();
                     });
 
@@ -62,5 +62,5 @@ describe('plugins tests', function() {
 });
 
 function normalize(file) {
-    return file.replace(regEOL, '\n');
+    return file.trim().replace(regEOL, '\n');
 }
