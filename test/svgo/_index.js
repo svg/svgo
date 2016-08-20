@@ -2,6 +2,8 @@
 
 var FS = require('fs'),
     PATH = require('path'),
+    EOL = require('os').EOL,
+    regEOL = new RegExp(EOL, 'g'),
     SVGO = require(process.env.COVERAGE ?
                    '../../lib-cov/svgo':
                    '../../lib/svgo');
@@ -18,7 +20,7 @@ describe('indentation', function() {
                 throw err;
             }
 
-            var splitted = data.trim().split(/\s*@@@\s*/),
+            var splitted = normalize(data).trim().split(/\s*@@@\s*/),
                 orig     = splitted[0],
                 should   = splitted[1];
 
@@ -29,7 +31,7 @@ describe('indentation', function() {
             });
 
             svgo.optimize(orig, function(result) {
-                ( result.data.trim() ).should.be.equal(should);
+                ( normalize(result.data).trim() ).should.be.equal(should);
                 done();
             });
 
@@ -38,3 +40,7 @@ describe('indentation', function() {
     });
 
 });
+
+function normalize(file) {
+    return file.replace(regEOL, '\n');
+}
