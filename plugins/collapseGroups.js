@@ -52,7 +52,7 @@ exports.fn = function(item) {
                     var inner = g.content[0];
 
                     if (inner.isElem() && !inner.hasAttr('id') && (
-                        !g.hasAttr('clip-path') ||
+                        !g.hasAttr('clip-path') && !g.hasAttr('mask') ||
                         inner.isElem('g') && !g.hasAttr('transform') && !inner.hasAttr('transform')
                     )) {
                         g.eachAttr(function(attr) {
