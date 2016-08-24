@@ -51,16 +51,18 @@ exports.fn = function(item) {
                 if (g.hasAttr() && g.content.length === 1) {
                     var inner = g.content[0];
 
-                    if (inner.isElem() && !inner.hasAttr('id') && (
-                        !g.hasAttr('clip-path') && !g.hasAttr('mask') ||
-                        inner.isElem('g') && !g.hasAttr('transform') && !inner.hasAttr('transform')
-                    )) {
+                    if (inner.isElem() && !inner.hasAttr('id') &&
+                        !(g.hasAttr('class') && inner.hasAttr('class')) && (
+                            !g.hasAttr('clip-path') && !g.hasAttr('mask') ||
+                            inner.isElem('g') && !g.hasAttr('transform') && !inner.hasAttr('transform')
+                        )
+                    ) {
                         g.eachAttr(function(attr) {
                             if (g.content.some(hasAnimatedAttr, attr.name)) return;
 
                             if (!inner.hasAttr(attr.name)) {
                                 inner.addAttr(attr);
-                            } else if (attr.name == 'transform' || attr.name == 'class') {
+                            } else if (attr.name == 'transform') {
                                 inner.attr(attr.name).value = attr.value + ' ' + inner.attr(attr.name).value;
                             }
                             g.removeAttr(attr.name);
