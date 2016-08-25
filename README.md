@@ -26,6 +26,7 @@ Today we have:
 * [ [ removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] remove `<title>` (disabled by default)
 * [ [ removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] remove `<desc>` (only non-meaningful by default)
 * [ [ removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] remove elements of `<defs>` without `id`
+* [ [ removeXMLNS](https://github.com/svg/svgo/blob/master/plugins/removeXMLNS.js) ] removes xmlns attribute (for inline svg, disabled by default)
 * [ [ removeEditorsNSData](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] remove editors namespaces, elements and attributes
 * [ [ removeEmptyAttrs](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] remove empty attributes
 * [ [ removeHiddenElems](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] remove hidden elements

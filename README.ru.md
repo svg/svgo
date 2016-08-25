@@ -23,9 +23,10 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) ] удаление XML-инструкций
 * [ [ removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) ] удаление комментариев
 * [ [ removeMetadata](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) ] удаление `<metadata>`
-* [ [ removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] удаление `<title>` (отключена по умолчанию)
+* [ [ removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) ] удаление `<title>` (выключено по умолчанию)
 * [ [ removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) ] удаление `<desc>` (по умолчанию только незначимых)
 * [ [ removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) ] удаление элементов в `<defs>` без `id`
+* [ [ removeXMLNS](https://github.com/svg/svgo/blob/master/plugins/removeXMLNS.js) ] удаление атрибута xmlns (для заинлайненных svg, выключено по умолчанию)
 * [ [ removeEditorsNSData](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) ] удаление пространств имён различных редакторов, их элементов и атрибутов
 * [ [ removeEmptyAttrs](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) ] удаление пустых атрибутов
 * [ [ removeHiddenElems](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) ] удаление скрытых элементов

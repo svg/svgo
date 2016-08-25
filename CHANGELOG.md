@@ -1,3 +1,14 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.7.0) ] 0.7.0 / 25.08.2016
+* Required Node.js version has increased to 0.12.
+* New plugins: `removeElementsByAttr` (by IDs or classes) by @elidupuis,
+  `addAttributesToSVGElement` by @gjjones,
+  `removeXMLNS` (for SVG inlining) by @ricardobeat.
+* Tests now correctly pass in Windows with CRLF line endings. Pretty print now accounts system line endings.
+* Fixed bugs with collapsing groups with masks and transforms in `collapseGroups`.
+* Fixed bugs with erroneous removing IDs in `cleanupIDs`.
+* Improved attributes sorting in `sortAttrs` by @darktrojan.
+* `addClassesToSVGElement` no more repeats classes (by @ricardobeat).
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.6) ] 0.6.6 / 25.04.2016
 * Corrected CSSO API usage
 
