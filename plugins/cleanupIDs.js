@@ -132,7 +132,6 @@ exports.fn = function(data, params) {
                 IDs.get(key).attr('id').value = currentIDstring;
     
                 references.forEach(function(attr) {
-                    // console.log(key)
                     attr.value = attr.value
                         .replace('#' + key, '#' + currentIDstring)
                         .replace(key + '.', currentIDstring + '.');
