@@ -23,5 +23,6 @@
     "unused": true,
     "loopfunc": true,
     "trailing": true,
-    "lastsemic": true
+    "lastsemic": true,
+    "esversion": 6
 }

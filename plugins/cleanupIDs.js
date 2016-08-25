@@ -38,7 +38,6 @@ exports.fn = function(data, params) {
         currentIDstring,
         IDs = new Map(),
         referencesIDs = new Map(),
-        idPrefix = 'id-', // prefix IDs so that values like '__proto__' don't break the work
         hasStyleOrScript = false;
 
     /**
