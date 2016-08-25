@@ -55,7 +55,9 @@ Today we have:
 * [ [ transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] apply transforms, crop by real width, center vertical alignment and resize SVG with one Path inside (disabled by default)
 * [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] remove width/height attributes if viewBox is present (disabled by default)
 * [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] remove attributes by pattern (disabled by default)
+* [ [ removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) ] remove arbitrary elements by ID or className (disabled by default)
 * [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] add classnames to an outer `<svg>` element (disabled by default)
+* [ [ addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) ] adds attributes to an outer `<svg>` element (disabled by default)
 * [ [ removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) ] remove `<style>` elements (disabled by default)
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md).

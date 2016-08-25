@@ -54,6 +54,7 @@ plugins:
   - removeDesc
   - removeDimensions
   - removeAttrs
+  - removeElementsByAttr
   - addClassesToSVGElement
   - removeStyleElement
 

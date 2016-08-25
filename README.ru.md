@@ -36,7 +36,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) ] уменьшает содержимое элементов `<style>` с помощью [CSSO](https://github.com/css/csso).
 * [ [ convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] конвертирование стилей в атрибуте `style` в отдельные svg-атрибуты
 * [ [ convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] конвертирование цветовых значений: из `rgb()` в `#rrggbb`, из `#rrggbb` в `#rgb`
-* [ [ convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] конвертирование данных Path в относительные или абсолютные координаты, смотря что короче, конвертирование одних типов сегментов в другие, удаление ненужных разделителей, умное округление и тому подобное
+* [ [ convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) ] конвертирование данных Path в относительные или абсолютные координаты, смотря что короче; конвертирование одних типов сегментов в другие; удаление ненужных разделителей; умное округление и тому подобное
 * [ [ convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) ] схлопывание нескольких трансформаций в одну, конвертирование матриц в короткие алиасы и многое другое
 * [ [ removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) ] удаление неизвестных элементов, контента и атрибутов
 * [ [ removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) ] удаление ненаследуемых "презентационных" атрибутов групп
@@ -55,7 +55,9 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) ] применение трансформаций, обрезка по реальной ширине, вертикальное выравнивание по центру и изменение размеров SVG с одним Path внутри
 * [ [ removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) ] удаляет атрибуты width/height при наличии viewBox (выключено по умолчанию)
 * [ [ removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) ] удаляет атрибуты по указанному паттерну (выключено по умолчанию)
+* [ [ removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) ] удаляет элементы по указанным ID или классам (выключено по умолчанию)
 * [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] добавляет имена классов корневому элементу `<svg>` (выключено по умолчанию)
+* [ [ addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) ] добавляет атрибуты корневому элементу `<svg>` (выключено по умолчанию)
 * [ [ removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) ] удаляет элементы `<style>` (выключено по умолчанию)
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
@@ -86,6 +88,8 @@ $ [sudo] npm install -g svgo
   -q, --quiet : Подавляет вывод информации, выводятся только сообщения об ошибках
   --pretty : Удобочитаемое форматирование SVG
   --show-plugins : Доступные плагины
+  --multipass : Оптимизация в несколько проходов
+  --indent=INDENT : Размер отступа для удобочитаемого форматирования
 
 Аргументы:
   INPUT : Аналогично --input
