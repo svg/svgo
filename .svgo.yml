@@ -57,6 +57,7 @@ plugins:
   - removeElementsByAttr
   - addClassesToSVGElement
   - removeStyleElement
+  - addAttributesToSVGElement
 
 # configure the indent (default 4 spaces) used by `--pretty` here:
 #
