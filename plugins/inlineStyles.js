@@ -193,8 +193,6 @@ function cheerioAst2SvgoAst($) {
   *
   * @author strarsis <strarsis@gmail.com>
   */
-var fs        = require('fs'),
-    stringify = require('json-stringify');
 exports.fn = function(data, svgoOptions) {
 
   // svgo ast to cheerio ast
