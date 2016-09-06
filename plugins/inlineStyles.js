@@ -207,7 +207,7 @@ exports.fn = function(data, svgoOptions) {
   var $i = juice.juiceDocument($, svgoOptions);
 
 
-  // as last step, remove classes when they are used only by one element in document:
+  // as last step, remove classes when they are used only by one element in document
   var $styles = $('style');
   $styles.each(function(si, $style) {
     if($style.children.length == 0) {
