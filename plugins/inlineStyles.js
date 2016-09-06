@@ -242,8 +242,8 @@ exports.fn = function(data, svgoOptions) {
       return;
     }
 
-    var newCssStr = csso.translate(cssAst).trim();
-    if(newCssStr.length > 0) {
+    var newCssStr = csso.translate(cssAst);
+    if(newCssStr.trim().length > 0) {
       $style.children[0].data = newCssStr;
     } else {
       // clean up style elements with now empty content
