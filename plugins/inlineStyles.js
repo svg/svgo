@@ -225,22 +225,31 @@ exports.fn = function(data, svgoOptions) {
           var selectorStr = csso.translate(node);
 
           var $matches = $i(selectorStr);
-          if($matches.length == 1) { // if matches only once, remove it
+          if($matches.length == 1) { // if selector matches only once, remove the selector
             list.remove(item);
             anythingRemoved = true;
           }
         }
 
-        // clean up rulesets without selectors left
+        // clean up rulesets without any selectors left
         if(node.type === 'Ruleset' &&
            node.selector.selectors.head == null) {
             list.remove(item);
         }
     });
 
-    if(anythingRemoved) {
-      var newCssStr = csso.translate(cssAst);
+    if(!anythingRemoved) {
+      return;
+    }
+
+    var newCssStr = csso.translate(cssAst).trim();
+    if(newCssStr.length > 0) {
       $style.children[0].data = newCssStr;
+    } else {
+      // clean up style elements with now empty content
+      // note: style elements that already got empty content will 
+      //       intentionally not be removed by this plugin.
+      $styles.remove($style);
     }
   });
 
