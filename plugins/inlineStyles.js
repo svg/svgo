@@ -221,7 +221,7 @@ exports.fn = function(data, svgoOptions) {
 
       cssRule.selectors.forEach(function(selector, selectorIndex) {
         var $matches = $i(selector);
-        if(!$matches.length <= 1) { // matches only once
+        if($matches.length > 1) { // if matches more than once
           cssRule.selectors.splice(selectorIndex, 1);
         }
       });
