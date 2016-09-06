@@ -210,6 +210,10 @@ exports.fn = function(data, svgoOptions) {
   // as last step, remove classes when they are used only by one element in document:
   var $styles = $('style');
   $styles.each(function(si, $style) {
+    if($style.children.length == 0) {
+      return;
+    }
+
     var css      = $style.children[0].data;
     var cssAst   = cssParser.parse(css);
 
