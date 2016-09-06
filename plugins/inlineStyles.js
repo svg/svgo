@@ -11,10 +11,10 @@ exports.params = {
 exports.description = 'moves styles from <style> to element styles';
 
 
-var cssParser = require('css'),
-    cheerio   = require('cheerio'),
-    juice     = require('juice'),
-    JSAPI     = require('../lib/svgo/jsAPI.js');
+var csso    = require('csso'),
+    cheerio = require('cheerio'),
+    juice   = require('juice'),
+    JSAPI   = require('../lib/svgo/jsAPI.js');
 
 
 function monkeysSvgo(item, callFn, arg) {
@@ -214,29 +214,34 @@ exports.fn = function(data, svgoOptions) {
       return;
     }
 
-    var css      = $style.children[0].data;
-    var cssAst   = cssParser.parse(css);
+    var cssStr = $style.children[0].data,
+        cssAst = csso.parse(cssStr, {
+          context: 'stylesheet'
+        });
 
-    var cssRules = cssAst.stylesheet.rules;
-    cssRules.forEach(function(cssRule, cssRuleIndex) {
-      if(cssRule.type != 'rule') {
-        return;
-      }
+    var anythingRemoved = false;
+    csso.walk(cssAst, function(node, item, list) {
+        if(node.type === 'SimpleSelector') {
+          var selectorStr = csso.translate(node);
 
-      cssRule.selectors.forEach(function(selector, selectorIndex) {
-        var $matches = $i(selector);
-        if($matches.length <= 1) { // if matches only once or not at all
-          cssRule.selectors.splice(selectorIndex, 1);
+          var $matches = $i(selectorStr);
+          if($matches.length == 1) { // if matches only once, remove it
+            list.remove(item);
+            anythingRemoved = true;
+          }
         }
-      });
 
-      if(cssRule.selectors.length == 0) { // clean up rules without any selectors left
-        cssRules.splice(cssRuleIndex, 1);
-      }
+        // clean up rulesets without selectors left
+        if(node.type === 'Ruleset' &&
+           node.selector.selectors.head == null) {
+            list.remove(item);
+        }
     });
 
-    var newCss = cssParser.stringify(cssAst);
-    $style.children[0].data = newCss;
+    if(anythingRemoved) {
+      var newCssStr = csso.translate(cssAst);
+      $style.children[0].data = newCssStr;
+    }
   });
 
 
