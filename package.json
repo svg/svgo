@@ -48,6 +48,7 @@
     "jshint": "jshint --show-non-errors ."
   },
   "dependencies": {
+    "cheerio": "^0.22.0",
     "coa": "~1.0.1",
     "colors": "~1.1.2",
     "css": "^2.2.1",
