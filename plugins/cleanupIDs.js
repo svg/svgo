@@ -120,10 +120,7 @@ exports.fn = function(data, params) {
         return data;
     }
 
-    for (var ID of referencesIDs) {
-        var key = ID[0],
-            references = ID[1];
-        
+    referencesIDs.forEach(function(references, key) {
         if (IDs.has(key)) {
             // replace referenced IDs with the minified ones
             if (params.minify) {                                                             
@@ -140,13 +137,13 @@ exports.fn = function(data, params) {
             // don't remove referenced IDs
             IDs.delete(key);
         }
-    }
-    
+    });
+
     // remove non-referenced IDs attributes from elements
     if (params.remove) {
-        for(var keyElem of IDs) {
-            keyElem[1].removeAttr('id');
-        }
+        IDs.forEach(function(references) {
+            references.removeAttr('id');
+        });
     }
 
     return data;
