@@ -143,10 +143,6 @@ $ [sudo] npm install -g svgo
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 
-## Пожертвования
-
-BTC `1zVZYqRSzQ4aaL27rp3PLwFFSXpfs5H8r`
-
 ## Лицензия и копирайты
 
 Данное программное обеспечение выпускается под [лицензией MIT](https://github.com/svg/svgo/blob/master/LICENSE).
