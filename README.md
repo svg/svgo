@@ -144,10 +144,6 @@ Arguments:
 * as an OSX Folder Action – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 * as a webpack loader – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 
-## Donate
-
-BTC `1zVZYqRSzQ4aaL27rp3PLwFFSXpfs5H8r`
-
 ## License and copyrights
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
