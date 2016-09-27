@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.7.1) ] 0.7.1 / 27.09.2016
+* Reverted the requirement of Node.js to version 0.10.
+* Added `addAttributesToSVGElement` to the default config to allow using it with `--enable` option.
+* Added korean translation of “How it works” doc (by @primeiros).
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.7.0) ] 0.7.0 / 25.08.2016
 * Required Node.js version has increased to 0.12.
 * New plugins: `removeElementsByAttr` (by IDs or classes) by @elidupuis,
