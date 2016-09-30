@@ -1,8 +1,11 @@
-'use strict'
+'use strict';
 
-exports.type = 'full'
-exports.active = false
-exports.description = 'converts style tags to style attributes or inline style'
+exports.type = 'full';
+exports.active = false;
+exports.description = 'converts style tags to style attributes or inline style';
+exports.params = {
+    asAttribute: true
+};
 
 /**
  * Convert style tag in attributes or inline style.
@@ -20,7 +23,8 @@ exports.description = 'converts style tags to style attributes or inline style'
  *
  * params: { asAttribute: false/true } (see examples above)
  *
- *
+ * @param {doc} the whole documenttree
+ * @param {Object} params plugin params
  * @return {Object} the whole document
  *
  * @author Jonathan Stoye
@@ -30,100 +34,100 @@ exports.fn = function (doc, params) {
     // loop over all svgs
     doc.content = doc.content.map(function (svg) {
         // extract the style tags from the svg
-        var styles = extractStyleTags(svg.content)
+        var styles = extractStyleTags(svg.content);
         // remove all style tags from the svg
-        svg.content = svg.content.filter(function (element) { return element.elem !== 'style' })
+        svg.content = svg.content.filter(function (element) { return element.elem !== 'style' });
         // create the style objects from the existings style string
-        var styleArrays = styles.map(createstyleArray)
+        var styleArrays = styles.map(createstyleArray);
 
         // go through all elements and add the style according to their classes       
         svg.content.forEach(function (element) {
-            addStyle(element, styleArrays, params.asAttribute)
-        })
-        return svg
-    })
-    return doc
-}
+            addStyle(element, styleArrays, params.asAttribute);
+        });
+        return svg;
+    });
+    return doc;
+};
 
 function extractStyleTags(svgContent) {
-    var styles = []
+    var styles = [];
     // loop over all elements and only keep none style ones
     svgContent = svgContent.filter(function (element) {
         if (element.elem === 'style') {
             // push the styles to styles array to return them later
-            styles.push(element.content[0].text)
+            styles.push(element.content[0].text);
             // remove it if it is a style element
-            return false
+            return false;
         }
         // keep it if it is not a style element
-        return true
-    })
-    return styles
+        return true;
+    });
+    return styles;
 }
 
 function createstyleArray(style) {
-    var styleArray = []
+    var styleArray = [];
 
     // split up the style blocks
-    var blocks = style.split('}')
+    var blocks = style.split('}');
     // delete the empty item at the end
-    blocks.pop()
+    blocks.pop();
     // order classes and styles
     blocks.forEach(function (blockString) {
         // seperate each block into class(es) and styles
-        var blockParts = blockString.split('{')
+        var blockParts = blockString.split('{');
         // if there are several classes split them up
-        var classNames = blockParts[0].split(',')
+        var classNames = blockParts[0].split(',');
         // remove point from class name '.className' => 'className'
         classNames = classNames.map(function (className) {
-            return className.replace('.', '')
-        })
+            return className.replace('.', '');
+        });
         // check if the class names already exists and if so just add the styles to
         // the existing class otherwise add a new class with styles
         classNames.forEach(function (className) {
             if (!styleArray[className]) {
-                styleArray[className] = blockParts[1]
+                styleArray[className] = blockParts[1];
             } else {
-                styleArray[className] += ';' + blockParts[1]
+                styleArray[className] += ';' + blockParts[1];
             }
-        })
-    })
-    return styleArray
+        });
+    });
+    return styleArray;
 }
 
 function addStyle(element, styleArrays, asAttribute) {
-    var styleToApply = ''
+    var styleToApply = '';
     styleArrays.forEach(function (styleArray) {
         // loop over all classNames and check if the element has some matching classes
         Object.keys(styleArray).forEach(function (className) {
-            var classRegEx = new RegExp(className)
+            var classRegEx = new RegExp(className);
             // if the element has a class attr and it matches the current class add the style accordingly
             if (element.hasAttr('class') && classRegEx.test(element.attrs.class.value)) {
                 // if it is not the first style to apply then add a semicolon first 
                 // because the last style attr mostly does not have one
                 if (styleToApply.length == 0) {
-                    styleToApply = styleArray[className]
+                    styleToApply = styleArray[className];
                 } else {
-                    styleToApply += ";" + styleArray[className]
+                    styleToApply += ';' + styleArray[className];
                 }
             }
-        })
-    })
+        });
+    });
     // add the style to the element
     if (asAttribute) {
         // add each style as a seperate attribute
-        var styles = styleToApply.split(';')
+        var styles = styleToApply.split(';');
         styles = styles.map(function (style) {
-            return style.split(':')
-        })
+            return style.split(':');
+        });
         styles.forEach(function (style) {
             element.addAttr({
                 name: style[0],
                 value: style[1],
                 prefix: '',
                 local: style[0]
-            })
-        })
+            });
+        });
     } else {
         // add all styles as a inline style
         element.addAttr({
@@ -131,6 +135,6 @@ function addStyle(element, styleArrays, asAttribute) {
             value: styleToApply,
             prefix: '',
             local: 'style'
-        })
+        });
     }
 }
