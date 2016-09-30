@@ -33,17 +33,19 @@ exports.params = {
 exports.fn = function (doc, params) {
     // loop over all svgs
     doc.content = doc.content.map(function (svg) {
-        // extract the style tags from the svg
-        var styles = extractStyleTags(svg.content);
-        // remove all style tags from the svg
-        svg.content = svg.content.filter(function (element) { return element.elem !== 'style' });
-        // create the style objects from the existings style string
-        var styleArrays = styles.map(createstyleArray);
+        if (svg.content) {
+            // extract the style tags from the svg
+            var styles = extractStyleTags(svg.content);
+            // remove all style tags from the svg
+            svg.content = svg.content.filter(function (element) { return element.elem !== 'style' });
+            // create the style objects from the existings style string
+            var styleArrays = styles.map(createstyleArray);
 
-        // go through all elements and add the style according to their classes       
-        svg.content.forEach(function (element) {
-            addStyle(element, styleArrays, params.asAttribute);
-        });
+            // go through all elements and add the style according to their classes       
+            svg.content.forEach(function (element) {
+                addStyle(element, styleArrays, params.asAttribute);
+            });
+        }
         return svg;
     });
     return doc;
