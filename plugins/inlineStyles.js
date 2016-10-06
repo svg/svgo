@@ -233,7 +233,7 @@ function cleanupSingleMatches($i) {
       $styles.remove($style);
     }
   });
-};
+}
 
 
 
