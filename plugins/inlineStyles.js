@@ -5,7 +5,8 @@ exports.type = 'full';
 exports.active = true;
 
 exports.params = {
-    juice: {}
+    juice: {},
+    onlyOnceMatching: true
 };
 
 exports.description = 'moves styles from <style> to element styles';
@@ -186,27 +187,7 @@ function cheerioAst2SvgoAst($) {
 }
 
 
-
-
-/**
-  * Moves styles from <style> to element styles
-  *
-  * @author strarsis <strarsis@gmail.com>
-  */
-exports.fn = function(data, svgoOptions) {
-
-  // svgo ast to cheerio ast
-  var $o = svgoAst2CheerioAst(data);
-  var $  = cheerioLoadXml($o.html());
-
-
-  // juice options required for svg and css classes cleanup
-  svgoOptions.xmlMode         = true;
-  svgoOptions.removeStyleTags = false;
-
-  var $i = juice.juiceDocument($, svgoOptions);
-
-
+function cleanupSingleMatches($) {
   // as last step, remove classes when they are used only by one element in document
   var $styles = $('style');
   $styles.each(function(si, $style) {
@@ -252,9 +233,36 @@ exports.fn = function(data, svgoOptions) {
       $styles.remove($style);
     }
   });
+};
 
+
+
+
+/**
+  * Moves styles from <style> to element styles
+  *
+  * @author strarsis <strarsis@gmail.com>
+  */
+exports.fn = function(data, opts) {
+  var juiceOpts = opts.juice;
+
+  // svgo ast to cheerio ast
+  var $o = svgoAst2CheerioAst(data);
+  var $  = cheerioLoadXml($o.html());
+
+  // juice options required for svg
+  juiceOpts.xmlMode = true;
+
+  if(opts.onlyOnceMatching) {
+    juiceOpts.removeStyleTags = false;
+  }
+
+  var $i = juice.juiceDocument($, juiceOpts);
+
+  if(opts.onlyOnceMatching) {
+    cleanupSingleMatches($);
+  }
 
   var dataNew = cheerioAst2SvgoAst($i);
-
   return dataNew;
 };
