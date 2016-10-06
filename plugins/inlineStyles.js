@@ -187,9 +187,9 @@ function cheerioAst2SvgoAst($) {
 }
 
 
-function cleanupSingleMatches($) {
+function cleanupSingleMatches($i) {
   // as last step, remove classes when they are used only by one element in document
-  var $styles = $('style');
+  var $styles = $i('style');
   $styles.each(function(si, $style) {
     if($style.children.length == 0) {
       return;
@@ -260,7 +260,7 @@ exports.fn = function(data, opts) {
   var $i = juice.juiceDocument($, juiceOpts);
 
   if(opts.onlyOnceMatching) {
-    cleanupSingleMatches($);
+    cleanupSingleMatches($i);
   }
 
   var dataNew = cheerioAst2SvgoAst($i);
