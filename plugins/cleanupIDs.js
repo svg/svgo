@@ -9,7 +9,9 @@ exports.description = 'removes unused IDs and minifies used';
 exports.params = {
     remove: true,
     minify: true,
-    prefix: ''
+    prefix: '',
+    force: false,
+    except: []
 };
 
 var referencesProps = require('./_collections').referencesProps,
@@ -39,7 +41,8 @@ exports.fn = function(data, params) {
         IDs = Object.create(null),
         referencesIDs = Object.create(null),
         idPrefix = 'id-', // prefix IDs so that values like '__proto__' don't break the work
-        hasStyleOrScript = false;
+        hasStyleOrScript = false,
+        exceptIDs = Array.isArray(params.except) ? params.except : [params.except];
 
     /**
      * Bananas!
@@ -55,7 +58,7 @@ exports.fn = function(data, params) {
                 match;
 
             // check if <style> of <script> presents
-            if (item.isElem(styleOrScript)) {
+            if (!params.force && item.isElem(styleOrScript)) {
                 hasStyleOrScript = true;
                 continue;
             }
@@ -127,7 +130,7 @@ exports.fn = function(data, params) {
             idKey = k;
             k = k.replace(idPrefix, '');
             // replace referenced IDs with the minified ones
-            if (params.minify) {
+            if (params.minify && exceptIDs.indexOf(k) === -1) {
                 currentIDstring = getIDstring(currentID = generateID(currentID), params);
                 IDs[idKey].attr('id').value = currentIDstring;
 
@@ -149,7 +152,9 @@ exports.fn = function(data, params) {
     if (params.remove) {
 
         for(var ID in IDs) {
-            IDs[ID].removeAttr('id');
+            if (exceptIDs.indexOf(ID.replace(idPrefix, '')) === -1) {
+                IDs[ID].removeAttr('id');
+            }
         }
 
     }
