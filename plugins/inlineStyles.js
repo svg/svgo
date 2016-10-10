@@ -48,7 +48,7 @@ exports.fn = function(data, opts) {
       cssAst: cssAst
     });
 
-    csso.walk(cssAst, function(node, item, list) {
+    csso.walk(cssAst, function(node, item) {
       // single selector
       if(node.type === 'SimpleSelector') {
         let selectorStr  = csso.translate(node);
@@ -73,10 +73,10 @@ exports.fn = function(data, opts) {
       // skip selectors that match more than once if option onlyMatchedOnce is turned on
       continue;
     }
-    $selectedEls.each(function(i, el) {
+    $selectedEls.each(function() {
       let $el = $(this);
       let elInlineCss = $el.css();
-      csso.walk(selectorItem.rulesetNode, function(node, item, list) {
+      csso.walk(selectorItem.rulesetNode, function(node) {
         if(node.type !== 'Declaration') {
           return;
         }
