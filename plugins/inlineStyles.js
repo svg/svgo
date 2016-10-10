@@ -8,7 +8,7 @@ exports.params = {
   onlyMatchedOnce: true
 };
 
-exports.description = 'inline styles';
+exports.description = 'inline styles (optionally skip selectors that match more than once)';
 
 
 var cheerioSupport = require('../lib/svgo/cheerio-support'),
@@ -69,6 +69,10 @@ exports.fn = function(data, opts) {
 
   for(let selectorItem of selectorItemsSorted) {
     let $selectedEls = $(selectorItem.selectorStr);
+    if(opts.onlyMatchedOnce && $selectedEls.length > 1) {
+      // skip selectors that match more than once if option onlyMatchedOnce is turned on
+      continue;
+    }
     $selectedEls.each(function(i, el) {
       let $el = $(this);
       let elInlineCss = $el.css();
