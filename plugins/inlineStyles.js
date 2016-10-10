@@ -5,16 +5,13 @@ exports.type = 'full';
 exports.active = true;
 
 exports.params = {
-    juice: {
-      onlyMatchedOnce: true
-    }
+  onlyMatchedOnce: true
 };
 
-exports.description = 'inline styles using the juice module';
+exports.description = 'inline styles';
 
 
-var cheerioSupport = require('../lib/svgo/cheerio-support'),
-    juice          = require('juice');
+var cheerioSupport = require('../lib/svgo/cheerio-support');
 
 
 /**
@@ -28,11 +25,9 @@ exports.fn = function(data, opts) {
   // svgo ast to cheerio ast
   var $ = cheerioSupport.svgoAst2CheerioAst(data);
 
-  juiceOpts.xmlMode = true; // juice option required for svg
-
-  var $i = juice.juiceDocument($, juiceOpts);
+  // TODO
 
   // cheerio ast back to svgo ast
-  var dataNew = cheerioSupport.cheerioAst2SvgoAst($i);
+  var dataNew = cheerioSupport.cheerioAst2SvgoAst($);
   return dataNew;
 };
