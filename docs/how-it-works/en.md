@@ -203,20 +203,7 @@ And of course, writing plugins would not have been so cool without some sugar AP
 
 There is nothing easier than testing your plugin:
 
-1. put `myPlugin.01.svg` in `test/plugins` like:
-
-```
-[original svg]
-
-@@@
-
-[how svg should look afterwards]
-
-@@@
-
-attributes if yout plugin needs them
-```
-
+1. put `myPlugin.01.orig.svg` and `myPlugin.01.should.svg` in `test/plugins`
 2. run `npm test`
 3. PROFIT!
 
