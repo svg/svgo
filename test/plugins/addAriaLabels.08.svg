@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <title>
+        bla
+    </title>
+    <desc>
+        foo
+    </desc>
+    test
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <title>
+        bla
+    </title>
+    <desc>
+        foo
+    </desc>
+    test
+</svg>
+
+@@@
+
+{}

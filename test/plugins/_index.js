@@ -36,7 +36,9 @@ describe('plugins tests', function() {
                         plugins = {},
                         svgo;
 
-                    plugins[name] = (params) ? JSON.parse(params) : true;
+                    /* jshint evil:true */
+                    plugins[name] = (params) ? eval('var x = ' + params + '; x;') : true;
+                    /* jshint evil:false */
 
                     svgo = new SVGO({
                         full    : true,
