@@ -67,7 +67,8 @@ exports.fn = function(data, opts) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
 
-  for(var selectorItem of selectorItemsSorted) {
+  for(var selectorItemIndex in selectorItemsSorted) {
+    var selectorItem = selectorItemsSorted[selectorItemIndex];
     var $selectedEls = $(selectorItem.selectorStr);
     if(opts.onlyMatchedOnce && $selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is turned on
@@ -95,10 +96,12 @@ exports.fn = function(data, opts) {
   }
 
 
-  var styleItem = {};
+  var styleItemIndex = 0,
+      styleItem      = {};
 
   // clean up rulesets without any selectors left
-  for(styleItem of styleItems) {
+  for(styleItemIndex in styleItems) {
+    styleItem = styleItems[styleItemIndex];
     csso.walk(styleItem.cssAst, function(node, item, list) {
       if(node.type === 'Ruleset' &&
          node.selector.selectors.head == null) {
@@ -108,7 +111,8 @@ exports.fn = function(data, opts) {
   }
 
   // update the css selectors / blocks
-  for(styleItem of styleItems) {
+  for(styleItemIndex in styleItems) {
+    styleItem = styleItems[styleItemIndex];
     // clean up now emtpy style elements
     if(styleItem.cssAst.rules.isEmpty()){
       $styles.remove(styleItem.$style);
