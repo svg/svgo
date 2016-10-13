@@ -100,7 +100,6 @@ exports.fn = function(data, opts) {
   // clean up rulesets without any selectors left
   for(styleItem of styleItems) {
     csso.walk(styleItem.cssAst, function(node, item, list) {
-      // clean up rulesets without any selectors left
       if(node.type === 'Ruleset' &&
          node.selector.selectors.head == null) {
           list.remove(item);
