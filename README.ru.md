@@ -142,6 +142,7 @@ $ [sudo] npm install -g svgo
 * как таск для Gulp – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
+* как Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
 
 ## Лицензия и копирайты
 
