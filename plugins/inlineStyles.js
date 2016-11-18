@@ -16,11 +16,11 @@ var SPECIFICITY   = require('specificity'),
     stable        = require('stable'),
     csso          = require('csso'),
 
-    mock          = require('mock-require'),
     domutilsSvgo  = require('../lib/ext/domutils-svgo'),
-    addParentRefs = require('../lib/ext/add-parent-refs');
-    mock('domutils', domutilsSvgo);
-var cssSelect     = require('css-select');
+    addParentRefs = require('../lib/ext/add-parent-refs'),
+    cssSelect     = require('css-select');
+
+var cssSelectOpts = {xmlMode: true, adapter: domutilsSvgo};
 
 /**
   * Moves + merges styles from style elements to element styles
@@ -31,7 +31,7 @@ exports.fn = function(data, opts) {
   data = addParentRefs(data);
 
   // fetch <style/>s
-  var styleEls      = cssSelect('style', data, {xmlMode: true});
+  var styleEls      = cssSelect('style', data, cssSelectOpts);
 
   var styleItems    = [],
       selectorItems = [];
@@ -77,7 +77,7 @@ exports.fn = function(data, opts) {
       selectedEls;
   for(var selectorItemIndex in selectorItemsSorted) {
     selectorItem = selectorItemsSorted[selectorItemIndex];
-    selectedEls  = cssSelect(selectorItem.selectorStr, data, {xmlMode: true});
+    selectedEls  = cssSelect(selectorItem.selectorStr, data, cssSelectOpts);
     if(opts.onlyMatchedOnce && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
