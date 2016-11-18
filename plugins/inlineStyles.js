@@ -5,52 +5,57 @@ exports.type   = 'full';
 exports.active = true;
 
 exports.params = {
-  onlyMatchedOnce: true
+  onlyMatchedOnce:        true,
+  removeMatchedSelectors: true
 };
 
 exports.description = 'inline styles (optionally skip selectors that match more than once)';
 
 
-var cheerioSupport = require('../lib/svgo/cheerio-support'),
-    SPECIFICITY    = require('specificity'),
-    stable         = require('stable'),
-    csso           = require('csso');
+var SPECIFICITY   = require('specificity'),
+    stable        = require('stable'),
+    csso          = require('csso'),
 
+    mock          = require('mock-require'),
+    domutilsSvgo  = require('../lib/ext/domutils-svgo'),
+    addParentRefs = require('../lib/ext/add-parent-refs');
+    mock('domutils', domutilsSvgo);
+var cssSelect     = require('css-select');
 
 /**
-  * Moves styles from <style> to element styles
+  * Moves + merges styles from style elements to element styles
   *
   * @author strarsis <strarsis@gmail.com>
   */
 exports.fn = function(data, opts) {
+  data = addParentRefs(data);
 
-  // svgo ast to cheerio ast
-  var $ = cheerioSupport.svgoAst2CheerioAst(data);
+  // fetch <style/>s
+  var styleEls      = cssSelect('style', data, {xmlMode: true});
 
-  var $styles       = $('style');
-  var styleItems    = [];
-  var selectorItems = [];
-  $styles.each(function(si, $style) {
-    if($style.children.length == 0) {
-      return;
+  var styleItems    = [],
+      selectorItems = [];
+
+  var styleEl;
+  for(var styleElId in styleEls) {
+    styleEl = styleEls[styleElId];
+
+    if(!styleEl.content || !styleEl.content[0] || 
+       !styleEl.content[0].text || styleEl.content[0].text.length == 0) {
+      continue;
     }
+    var cssStr = styleEl.content[0].text;
 
-    var cssStr = $style.children[0].data;
-    if(cssStr.length == 0) {
-      return;
-    }
-
-    var cssAst = csso.parse(cssStr, {
-                   context: 'stylesheet'
-                 });
+    // <style/>s with CSS AST
+    var cssAst = csso.parse(cssStr, {context: 'stylesheet'});
     styleItems.push({
-      $style: $style,
-      cssAst: cssAst
+      styleEl: styleEl,
+      cssAst:  cssAst
     });
 
+    // CSS selectors with CSS rulesets
     csso.walk(cssAst, function(node, item) {
-      // single selector
-      if(node.type === 'SimpleSelector') {
+      if(node.type === 'SimpleSelector') { // single selector
         var selectorStr  = csso.translate(node);
         var selectorItem = {
           selectorStr:        selectorStr,
@@ -60,46 +65,59 @@ exports.fn = function(data, opts) {
         selectorItems.push(selectorItem);
       }
     });
-  });
+  }
 
-  // stable sort selectors by specificity
+  // stable-sort selectors by specificity
   var selectorItemsSorted = stable(selectorItems, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
 
+  // apply css to matched elements
+  var selectorItem,
+      selectedEls;
   for(var selectorItemIndex in selectorItemsSorted) {
-    var selectorItem = selectorItemsSorted[selectorItemIndex];
-    var $selectedEls = $(selectorItem.selectorStr);
-    if(opts.onlyMatchedOnce && $selectedEls.length > 1) {
-      // skip selectors that match more than once if option onlyMatchedOnce is turned on
+    selectorItem = selectorItemsSorted[selectorItemIndex];
+    selectedEls  = cssSelect(selectorItem.selectorStr, data, {xmlMode: true});
+    if(opts.onlyMatchedOnce && selectedEls.length > 1) {
+      // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
     }
-    $selectedEls.each(function() {
-      var $el = $(this);
-      var elInlineCss = $el.css();
-      csso.walk(selectorItem.rulesetNode, function(node) {
-        if(node.type !== 'Declaration') {
-          return;
-        }
-        var propertyName  = node.property.name,
-            propertyValue = csso.translate(node.value);
-        $el.css(propertyName, propertyValue);
-      });
-      // re-apply the inline css (to preserve specificity):
-      $el.css(elInlineCss);
-    });
 
-    if($selectedEls.length > 0) {
-      // clean up matching simple selectors
+    var selectedEl;
+    for(var selectedElId in selectedEls) {
+      selectedEl = selectedEls[selectedElId];
+
+      // merge element (inline) styles + selector <style/>
+      var elInlineStyleAttr = selectedEl.attr('style'),
+          elInlineStyles    = elInlineStyleAttr.value,
+          inlineCssAst      = csso.parse(elInlineStyles, {context: 'block'});      
+
+      var newInlineCssAst   = csso.parse('', {context: 'block'}); // for empty an CSS AST (Block context)
+      csso.walk(selectorItem.rulesetNode, function(node, item) {
+        if(node.type === 'Declaration') {
+          newInlineCssAst.declarations.insert(item);
+        }
+      });
+      csso.walk(inlineCssAst, function(node, item) {
+        if(node.type === 'Declaration') {
+          newInlineCssAst.declarations.insert(item);
+        }
+      });
+      var newCss = csso.translate(newInlineCssAst);
+
+      elInlineStyleAttr.value = newCss;
+      selectedEl.addAttr(elInlineStyleAttr);
+    }
+
+    if(opts.removeMatchedSelectors && selectedEls.length > 0) {
+      // clean up matching simple selectors if option removeMatchedSelectors is enabled
       selectorItem.rulesetNode.selector.selectors.remove(selectorItem.simpleSelectorItem);
     }
   }
 
-
+  // clean up <style/> rulesets without any selectors left
   var styleItemIndex = 0,
       styleItem      = {};
-
-  // clean up rulesets without any selectors left
   for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
     csso.walk(styleItem.cssAst, function(node, item, list) {
@@ -110,19 +128,20 @@ exports.fn = function(data, opts) {
     });
   }
 
-  // update the css selectors / blocks
+  // update the css selectors / blocks in and <style/>s themselves
+  var styleParent;
   for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
-    // clean up now emtpy style elements
     if(styleItem.cssAst.rules.isEmpty()){
-      $styles.remove(styleItem.$style);
+      // clean up now emtpy <style/>s
+      styleParent = styleItem.styleEl.parent;
+      styleParent.content.splice(styleParent.content.indexOf(styleItem.styleEl), 1);
       continue;
     }
-    styleItem.$style.children[0].data = csso.translate(styleItem.cssAst);
+
+    // update existing <style>s
+    styleItem.styleEl.content[0].text = csso.translate(styleItem.cssAst);
   }
 
-
-  // cheerio ast back to svgo ast
-  var dataNew = cheerioSupport.cheerioAst2SvgoAst($);
-  return dataNew;
+  return data;
 };

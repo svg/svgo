@@ -48,12 +48,13 @@
     "jshint": "jshint --show-non-errors ."
   },
   "dependencies": {
-    "cheerio": "^0.22.0",
     "coa": "~1.0.1",
     "colors": "~1.1.2",
+    "css-select": "^1.2.0",
     "csso": "^2.2.1",
     "js-yaml": "~3.6.1",
     "mkdirp": "~0.5.1",
+    "mock-require": "^2.0.0",
     "sax": "~1.2.1",
     "specificity": "^0.3.0",
     "stable": "^0.1.5",

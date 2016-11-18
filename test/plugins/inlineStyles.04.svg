@@ -1,6 +1,6 @@
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <style>
-        .st0{fill:red;}
+        .st0{fill:blue;}
     </style>
     <rect width="100" height="100" class="st0" style="stroke-width:3;fill:red;"/>
 </svg>
@@ -8,6 +8,6 @@
 @@@
 
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-    <rect width="100" height="100" class="st0" style="stroke-width: 3; fill: red;"/>
+    <rect width="100" height="100" class="st0" style="fill:blue;stroke-width:3;fill:red"/>
 </svg>
 
