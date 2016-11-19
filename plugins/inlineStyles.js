@@ -46,16 +46,18 @@ exports.fn = function(data, opts) {
     }
     var cssStr = styleEl.content[0].text;
 
-    // <style/>s with CSS AST
+    // <style/>s and their css ast
     var cssAst = csso.parse(cssStr, {context: 'stylesheet'});
     styleItems.push({
       styleEl: styleEl,
       cssAst:  cssAst
     });
 
-    // CSS selectors with CSS rulesets
+    // css selectors and their css ruleset
     csso.walk(cssAst, function(node, item) {
-      if(node.type === 'SimpleSelector') { // single selector
+      if(node.type === 'SimpleSelector') {
+		// csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module:
+	    // Selector group ('Selector' in csso) separated by comma: <'SimpleSelector'>, <'SimpleSelector'>, ...
         var selectorStr  = csso.translate(node);
         var selectorItem = {
           selectorStr:        selectorStr,
@@ -72,7 +74,7 @@ exports.fn = function(data, opts) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
 
-  // apply css to matched elements
+  // apply CSS to matched elements
   var selectorItem,
       selectedEls;
   for(var selectorItemIndex in selectorItemsSorted) {
@@ -92,7 +94,7 @@ exports.fn = function(data, opts) {
           elInlineStyles    = elInlineStyleAttr.value,
           inlineCssAst      = csso.parse(elInlineStyles, {context: 'block'});      
 
-      var newInlineCssAst   = csso.parse('', {context: 'block'}); // for empty an CSS AST (Block context)
+      var newInlineCssAst   = csso.parse('', {context: 'block'}); // for empty an css ast (Block context)
       csso.walk(selectorItem.rulesetNode, function(node, item) {
         if(node.type === 'Declaration') {
           newInlineCssAst.declarations.insert(item);
