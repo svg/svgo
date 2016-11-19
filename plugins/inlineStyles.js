@@ -56,7 +56,7 @@ exports.fn = function(data, opts) {
     // css selectors and their css ruleset
     csso.walk(cssAst, function(node, item) {
       if(node.type === 'SimpleSelector') {
-		// csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module:
+		// csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
 	    // Selector group ('Selector' in csso) separated by comma: <'SimpleSelector'>, <'SimpleSelector'>, ...
         var selectorStr  = csso.translate(node);
         var selectorItem = {
@@ -74,7 +74,7 @@ exports.fn = function(data, opts) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
 
-  // apply CSS to matched elements
+  // apply css to matched elements
   var selectorItem,
       selectedEls;
   for(var selectorItemIndex in selectorItemsSorted) {
