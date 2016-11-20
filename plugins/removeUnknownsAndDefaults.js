@@ -125,6 +125,7 @@ exports.fn = function(item, params) {
                         // useless overrides
                         (
                             params.uselessOverrides &&
+                            attr.name !== 'transform' &&
                             attrsInheritable.indexOf(attr.name) > -1 &&
                             item.parentNode.computedAttr(attr.name, attr.value)
                         )
