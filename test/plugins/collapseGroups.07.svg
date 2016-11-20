@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">
-        <g transform="rotate(45)">
-            <path transform="scale(2)" d="..."/>
+        <g data-attr="...">
+            <path data-attr="..." d="..."/>
         </g>
         <path d="..."/>
     </g>
@@ -11,7 +11,7 @@
 
 <svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">
-        <path transform="rotate(45) scale(2)" d="..."/>
+        <path data-attr="..." d="..."/>
         <path d="..."/>
     </g>
 </svg>
