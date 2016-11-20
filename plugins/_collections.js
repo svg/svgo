@@ -1915,7 +1915,7 @@ exports.elems = {
             'offset',
             'path'
         ],
-        contentGroups: [
+        content: [
             'animate',
             'animateColor',
             'set'
