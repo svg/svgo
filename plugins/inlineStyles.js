@@ -40,7 +40,7 @@ exports.fn = function(data, opts) {
     }
     var cssStr = styleEl.content[0].text;
 
-    // collect <style/>s and the css ast they contain
+    // collect <style/>s and their css ast
     var cssAst = csso.parse(cssStr, {context: 'stylesheet'});
     styleItems.push({
       styleEl: styleEl,
