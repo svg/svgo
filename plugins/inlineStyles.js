@@ -34,8 +34,7 @@ exports.fn = function(data, opts) {
   for(var styleElId in styleEls) {
     styleEl = styleEls[styleElId];
 
-    if( styleEl.isEmpty()       || !styleEl.content[0] || 
-       !styleEl.content[0].text ||  styleEl.content[0].text.length == 0) {
+    if( styleEl.isEmpty()) {
       // skip empty <style/>s
       continue;
     }
