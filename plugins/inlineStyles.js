@@ -24,7 +24,7 @@ var SPECIFICITY   = require('specificity'),
   */
 exports.fn = function(data, opts) {
 
-  // fetch <style/>s
+  // collect <style/>s
   var styleEls      = selectCss('style', data);
 
   var styleItems    = [],
@@ -36,18 +36,19 @@ exports.fn = function(data, opts) {
 
     if( styleEl.isEmpty()       || !styleEl.content[0] || 
        !styleEl.content[0].text ||  styleEl.content[0].text.length == 0) {
+      // skip empty <style/>s
       continue;
     }
     var cssStr = styleEl.content[0].text;
 
-    // <style/>s and their css ast
+    // collect <style/>s and the css ast they contain
     var cssAst = csso.parse(cssStr, {context: 'stylesheet'});
     styleItems.push({
       styleEl: styleEl,
       cssAst:  cssAst
     });
 
-    // css selectors and their css ruleset
+    // collect css selectors and their containing ruleset
     csso.walk(cssAst, function(node, item) {
       if(node.type === 'SimpleSelector') {
 		// csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
@@ -63,12 +64,12 @@ exports.fn = function(data, opts) {
     });
   }
 
-  // stable-sort selectors by specificity
+  // stable-sort css selectors by their specificity
   var selectorItemsSorted = stable(selectorItems, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
 
-  // apply css to matched elements
+  // apply <style/> styles to matched elements
   var selectorItem,
       selectedEls;
   for(var selectorItemIndex in selectorItemsSorted) {
@@ -83,12 +84,12 @@ exports.fn = function(data, opts) {
     for(var selectedElId in selectedEls) {
       selectedEl = selectedEls[selectedElId];
 
-      // merge element (inline) styles + selector <style/>
+      // merge element(inline) styles + matching <style/> styles
       var elInlineStyleAttr = selectedEl.attr('style'),
           elInlineStyles    = elInlineStyleAttr.value,
           inlineCssAst      = csso.parse(elInlineStyles, {context: 'block'});      
 
-      var newInlineCssAst   = csso.parse('', {context: 'block'}); // for empty an css ast (Block context)
+      var newInlineCssAst   = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
       csso.walk(selectorItem.rulesetNode, function(node, item) {
         if(node.type === 'Declaration') {
           newInlineCssAst.declarations.insert(item);
@@ -111,7 +112,7 @@ exports.fn = function(data, opts) {
     }
   }
 
-  // clean up <style/> rulesets without any selectors left
+  // clean up <style/> rulesets without any css selectors left
   var styleItemIndex = 0,
       styleItem      = {};
   for(styleItemIndex in styleItems) {
@@ -124,7 +125,7 @@ exports.fn = function(data, opts) {
     });
   }
 
-  // update the css selectors / blocks in and <style/>s themselves
+  // update / clean up <style/>s with their changed ast
   var styleParent;
   for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
@@ -135,7 +136,7 @@ exports.fn = function(data, opts) {
       continue;
     }
 
-    // update existing <style>s
+    // update existing, left over <style>s
     styleItem.styleEl.content[0].text = csso.translate(styleItem.cssAst);
   }
 
