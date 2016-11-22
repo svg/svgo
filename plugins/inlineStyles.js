@@ -29,12 +29,10 @@ exports.fn = function(data, opts) {
 
   var styleItems    = [],
       selectorItems = [];
+  for(var styleElIndex in styleEls) {
+    var styleEl = styleEls[styleElIndex];
 
-  var styleEl;
-  for(var styleElId in styleEls) {
-    styleEl = styleEls[styleElId];
-
-    if( styleEl.isEmpty()) {
+    if(styleEl.isEmpty()) {
       // skip empty <style/>s
       continue;
     }
@@ -69,19 +67,16 @@ exports.fn = function(data, opts) {
   });
 
   // apply <style/> styles to matched elements
-  var selectorItem,
-      selectedEls;
   for(var selectorItemIndex in selectorItemsSorted) {
-    selectorItem = selectorItemsSorted[selectorItemIndex];
-    selectedEls  = selectCss(selectorItem.selectorStr, data);
+    var selectorItem = selectorItemsSorted[selectorItemIndex],
+        selectedEls  = selectCss(selectorItem.selectorStr, data);
     if(opts.onlyMatchedOnce && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
     }
 
-    var selectedEl;
-    for(var selectedElId in selectedEls) {
-      selectedEl = selectedEls[selectedElId];
+    for(var selectedElIndex in selectedEls) {
+      var selectedEl = selectedEls[selectedElIndex];
 
       // merge element(inline) styles + matching <style/> styles
       var elInlineStyleAttr = selectedEl.attr('style'),
@@ -125,12 +120,11 @@ exports.fn = function(data, opts) {
   }
 
   // update / clean up <style/>s with their changed ast
-  var styleParent;
   for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
-      styleParent = styleItem.styleEl.parent;
+      var styleParent = styleItem.styleEl.parent;
       styleParent.content.splice(styleParent.content.indexOf(styleItem.styleEl), 1);
       continue;
     }
