@@ -33,7 +33,7 @@ Today we have:
 * [ [ removeEmptyText](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) ] remove empty Text elements
 * [ [ removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) ] remove empty Container elements
 * [ [ removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) ] remove `viewBox` attribute when possible (disabled by default)
-* [ [ cleanUpEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup `enable-background` attribute when possible
+* [ [ cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) ] remove or cleanup `enable-background` attribute when possible
 * [ [ minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) ] minify `<style>` elements content with [CSSO](https://github.com/css/csso)
 * [ [ convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) ] convert styles into attributes
 * [ [ convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) ] convert colors (from `rgb()` to `#rrggbb`, from `#rrggbb` to `#rgb`)
