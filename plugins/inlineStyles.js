@@ -12,11 +12,11 @@ exports.params = {
 exports.description = 'inline styles (optionally skip selectors that match more than once)';
 
 
-var SPECIFICITY   = require('specificity'),
-    stable        = require('stable'),
-    csso          = require('csso'),
-	selectCss     = require('../lib/ext/select-css'),
-    findParent    = require('../lib/ext/find-parent');
+var SPECIFICITY = require('specificity'),
+    stable      = require('stable'),
+    csso        = require('csso'),
+    selectCss   = require('../lib/ext/select-css'),
+    findParent  = require('../lib/ext/find-parent');
 
 /**
   * Moves + merges styles from style elements to element styles
