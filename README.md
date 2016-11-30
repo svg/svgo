@@ -144,6 +144,7 @@ Arguments:
 * as an OSX Folder Action – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 * as a webpack loader – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 * as a Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
+* as a PostCSS plugin - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 
 ## License and copyrights
 
