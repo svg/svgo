@@ -80,11 +80,20 @@ exports.fn = function(data, opts) {
       var selectedEl = selectedEls[selectedElIndex];
 
       // merge element(inline) styles + matching <style/> styles
-      var elInlineStyleAttr = selectedEl.attr('style'),
-          elInlineStyles    = elInlineStyleAttr.value,
-          inlineCssAst      = csso.parse(elInlineStyles, {context: 'block'});      
+      // empty defaults in case there is no style attribute
+      var elInlineStyleAttr = { name:   'style',
+                                value:  '',
+                                prefix: '',
+                                local:  'style'
+                              },
+          elInlineStyles    = '';
+      if(selectedEl.hasAttr('style')) {
+        elInlineStyleAttr = selectedEl.attr('style');
+        elInlineStyles    = elInlineStyleAttr.value;
+      }
+      var inlineCssAst    = csso.parse(elInlineStyles, {context: 'block'});
 
-      var newInlineCssAst   = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
+      var newInlineCssAst = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
       csso.walk(selectorItem.rulesetNode, function(node, item) {
         if(node.type === 'Declaration') {
           newInlineCssAst.declarations.insert(item);
