@@ -81,11 +81,7 @@ exports.fn = function(data, opts) {
 
       // merge element(inline) styles + matching <style/> styles
       // empty defaults in case there is no style attribute
-      var elInlineStyleAttr = { name:   'style',
-                                value:  '',
-                                prefix: '',
-                                local:  'style'
-                              },
+      var elInlineStyleAttr = { name: 'style', value: '', prefix: '', local: 'style' },
           elInlineStyles    = '';
       if(selectedEl.hasAttr('style')) {
         elInlineStyleAttr = selectedEl.attr('style');
