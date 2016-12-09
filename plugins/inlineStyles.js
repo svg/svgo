@@ -49,8 +49,9 @@ exports.fn = function(data, opts) {
     // collect css selectors and their containing ruleset
     csso.walk(cssAst, function(node, item) {
       if(node.type === 'SimpleSelector') {
-		// csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
-	    // Selector group ('Selector' in csso) separated by comma: <'SimpleSelector'>, <'SimpleSelector'>, ...
+		    // csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
+	      // Selector group ('Selector' in csso) consisting of simple selectors ('SimpleSelector' in csso), separated by comma.
+        // <Selector>: <'SimpleSelector'>, <'SimpleSelector'>, ...
         var selectorStr  = csso.translate(node);
         var selectorItem = {
           selectorStr:        selectorStr,
@@ -79,16 +80,17 @@ exports.fn = function(data, opts) {
     for(var selectedElIndex in selectedEls) {
       var selectedEl = selectedEls[selectedElIndex];
 
-      // merge element(inline) styles + matching <style/> styles
       // empty defaults in case there is no style attribute
       var elInlineStyleAttr = { name: 'style', value: '', prefix: '', local: 'style' },
           elInlineStyles    = '';
+
       if(selectedEl.hasAttr('style')) {
         elInlineStyleAttr = selectedEl.attr('style');
         elInlineStyles    = elInlineStyleAttr.value;
       }
       var inlineCssAst    = csso.parse(elInlineStyles, {context: 'block'});
 
+      // merge element(inline) styles + matching <style/> styles
       var newInlineCssAst = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
       csso.walk(selectorItem.rulesetNode, function(node, item) {
         if(node.type === 'Declaration') {
