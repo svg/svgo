@@ -6,7 +6,8 @@ exports.active = true;
 
 exports.params = {
   onlyMatchedOnce:        true,
-  removeMatchedSelectors: true
+  removeMatchedSelectors: true,
+  useMqs:                 ['screen']
 };
 
 exports.description = 'inline styles (optionally skip selectors that match more than once)';
@@ -47,24 +48,45 @@ exports.fn = function(data, opts) {
     });
 
     // collect css selectors and their containing ruleset
+    var curAtRuleExpNode = null;
     csso.walk(cssAst, function(node, item) {
+      if(node.type === 'AtruleExpression') {
+        // media query expression
+        curAtRuleExpNode = node;
+      }
+
       if(node.type === 'SimpleSelector') {
 		    // csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
 	      // Selector group ('Selector' in csso) consisting of simple selectors ('SimpleSelector' in csso), separated by comma.
         // <Selector>: <'SimpleSelector'>, <'SimpleSelector'>, ...
-        var selectorStr  = csso.translate(node);
+        var selectorStr = csso.translate(node);
+
+        // mediaquery if SimpleSelector belongs to one
+        var mqStr = '';
+        if(curAtRuleExpNode !== null) {
+          mqStr = csso.translate(curAtRuleExpNode);
+        }
+
         var selectorItem = {
           selectorStr:        selectorStr,
           simpleSelectorItem: item,
-          rulesetNode:        this.ruleset
+          rulesetNode:        this.ruleset,
+          atRuleExpNode:      curAtRuleExpNode,
+          mqStr:              mqStr
         };
         selectorItems.push(selectorItem);
       }
     });
   }
 
+  // filter for mediaqueries to be used or without any mediaquery
+  var selectorItemsMqs = selectorItems.filter(function(selectorItem) {
+    return (selectorItem.mqStr.length == 0 || 
+            opts.useMqs.indexOf(selectorItem.mqStr) > -1);
+  });
+
   // stable-sort css selectors by their specificity
-  var selectorItemsSorted = stable(selectorItems, function(item1, item2) {
+  var selectorItemsSorted = stable(selectorItemsMqs, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
 
@@ -114,12 +136,17 @@ exports.fn = function(data, opts) {
     }
   }
 
-  // clean up <style/> rulesets without any css selectors left
   var styleItemIndex = 0,
       styleItem      = {};
   for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
     csso.walk(styleItem.cssAst, function(node, item, list) {
+      // clean up <style/> atrules without any rulesets left
+      if(node.type === 'Atrule' &&
+         node.block.rules.head === null) {
+        list.remove(item);
+      }
+      // clean up <style/> rulesets without any css selectors left
       if(node.type === 'Ruleset' &&
          node.selector.selectors.head == null) {
           list.remove(item);
