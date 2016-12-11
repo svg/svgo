@@ -16,8 +16,7 @@ exports.description = 'inline styles (optionally skip selectors that match more 
 var SPECIFICITY = require('specificity'),
     stable      = require('stable'),
     csso        = require('csso'),
-    selectCss   = require('../lib/ext/select-css'),
-    findParent  = require('../lib/ext/find-parent');
+    selectCss   = require('../lib/ext/select-css');
 
 /**
   * Moves + merges styles from style elements to element styles
@@ -159,7 +158,7 @@ exports.fn = function(data, opts) {
     styleItem = styleItems[styleItemIndex];
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
-      var styleParent = findParent(data, styleItem.styleEl);
+      var styleParent = styleItem.styleEl.parentNode;
       styleParent.spliceContent(styleParent.content.indexOf(styleItem.styleEl), 1);
       continue;
     }
