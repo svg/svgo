@@ -47,13 +47,17 @@ exports.fn = function(data, opts) {
     });
 
     // collect css selectors and their containing ruleset
-    var curAtRuleExpNode = null;
+    var curSelectorItem  = null,
+        curAtRuleExpNode = null;
     csso.walk(cssAst, function(node, item) {
+
+      // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
       if(node.type === 'AtruleExpression') {
         // media query expression
         curAtRuleExpNode = node;
       }
 
+      // retains reference to the last SimpleSelector for "look-ahead"
       if(node.type === 'SimpleSelector') {
 		    // csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
 	      // Selector group ('Selector' in csso) consisting of simple selectors ('SimpleSelector' in csso), separated by comma.
@@ -66,15 +70,24 @@ exports.fn = function(data, opts) {
           mqStr = csso.translate(curAtRuleExpNode);
         }
 
-        var selectorItem = {
+        curSelectorItem = {
           selectorStr:        selectorStr,
+
           simpleSelectorItem: item,
           rulesetNode:        this.ruleset,
+
           atRuleExpNode:      curAtRuleExpNode,
           mqStr:              mqStr
         };
-        selectorItems.push(selectorItem);
+        selectorItems.push(curSelectorItem);
       }
+
+      // "look-ahead the SimpleSelector", Value node comes _after_ the affected SimpleSelector
+      if(node.type === 'Value') {
+        // !important value?
+        curSelectorItem.important = node.important;
+      }
+
     });
   }
 
@@ -88,10 +101,16 @@ exports.fn = function(data, opts) {
   var selectorItemsSorted = stable(selectorItemsMqs, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
+  //  and secondly by !important
+  var selectorItemsSortedImp = stable(selectorItemsSorted, function(item1, item2) {
+    var item1Score = ~~item1.important, // (cast boolean to number)
+        item2Score = ~~item2.important; //  "
+    return (item1Score - item2Score);
+  });
 
   // apply <style/> styles to matched elements
-  for(var selectorItemIndex in selectorItemsSorted) {
-    var selectorItem = selectorItemsSorted[selectorItemIndex],
+  for(var selectorItemIndex in selectorItemsSortedImp) {
+    var selectorItem = selectorItemsSortedImp[selectorItemIndex],
         selectedEls  = selectCss(selectorItem.selectorStr, data);
     if(opts.onlyMatchedOnce && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
@@ -113,18 +132,19 @@ exports.fn = function(data, opts) {
 
       // merge element(inline) styles + matching <style/> styles
       var newInlineCssAst = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
-      csso.walk(selectorItem.rulesetNode, function(node, item) {
-        if(node.type === 'Declaration') {
-          newInlineCssAst.declarations.insert(item);
-        }
-      });
-      csso.walk(inlineCssAst, function(node, item) {
-        if(node.type === 'Declaration') {
-          newInlineCssAst.declarations.insert(item);
-        }
-      });
-      var newCss = csso.translate(newInlineCssAst);
 
+      var _walkInline = function(node, item) {
+        if(node.type === 'Value') {
+          node.important = false; // !important irrelevant inline
+        }
+        if(node.type === 'Declaration') {
+          newInlineCssAst.declarations.insert(item);
+        }
+      };
+      csso.walk(selectorItem.rulesetNode, _walkInline);
+      csso.walk(inlineCssAst,             _walkInline);
+
+      var newCss = csso.translate(newInlineCssAst);
       elInlineStyleAttr.value = newCss;
       selectedEl.addAttr(elInlineStyleAttr);
     }
