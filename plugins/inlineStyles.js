@@ -160,7 +160,7 @@ exports.fn = function(data, opts) {
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
       var styleParent = findParent(data, styleItem.styleEl);
-      styleParent.content.splice(styleParent.content.indexOf(styleItem.styleEl), 1);
+      styleParent.spliceContent(styleParent.content.indexOf(styleItem.styleEl), 1);
       continue;
     }
 
