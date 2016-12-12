@@ -53,6 +53,7 @@ exports.fn = function(data, opts) {
       // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
       if(node.type === 'AtruleExpression') {
         // media query expression
+        // Node: this.atruleExpression is not set (null) for SimpleSelectors
         curAtRuleExpNode = node;
       }
 
@@ -120,13 +121,13 @@ exports.fn = function(data, opts) {
       var newInlineCssAst = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
 
       var mergedDeclarations = [];
-      var _walkInline = function(node, item, list) {
+      var _fetchDeclarations = function(node, item, list) {
         if(node.type === 'Declaration') {
           mergedDeclarations.push(item);
         }
       };
-      csso.walk(selectorItem.rulesetNode, _walkInline);
-      csso.walk(inlineCssAst,             _walkInline);
+      csso.walk(selectorItem.rulesetNode, _fetchDeclarations);
+      csso.walk(inlineCssAst,             _fetchDeclarations);
 
       // sort by !important(ce)
       var mergedDeclarationsSorted = stable(mergedDeclarations, function(declaration1, declaration2) {
