@@ -141,7 +141,6 @@ exports.fn = function(data, opts) {
       // to css
       for(var mergedDeclarationsSortedIndex in mergedDeclarationsSorted) {
         var declaration = mergedDeclarationsSorted[mergedDeclarationsSortedIndex];
-        declaration.data.value.important = false; // !important is irrelevant in inline styles
         newInlineCssAst.declarations.insert(declaration);
       }
       var newCss = csso.translate(newInlineCssAst);
