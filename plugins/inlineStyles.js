@@ -50,11 +50,14 @@ exports.fn = function(data, opts) {
     var curAtRuleExpNode = null;
     csso.walk(cssAst, function(node, item) {
 
+      // media query blocks
       // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
-      if(node.type === 'AtruleExpression') {
-        // media query expression
-        // Node: this.atruleExpression is not set (null) for SimpleSelectors
+      if(node.type === 'AtruleExpression') { // marks the beginning of an Atrule
         curAtRuleExpNode = node;
+      }
+      // "look-ahead the SimpleSelector", Atrule node comes _after_ the affected SimpleSelector
+      if(node.type === 'Atrule')           { // marks the end of an Atrule
+        curAtRuleExpNode = null;
       }
 
       if(node.type === 'SimpleSelector') {
@@ -93,7 +96,7 @@ exports.fn = function(data, opts) {
   // stable-sort css selectors by their specificity
   var selectorItemsSorted = stable(selectorItemsMqs, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
-  });
+  }).reverse(); // last style applies last (final)
 
   // apply <style/> styles to matched elements
   for(var selectorItemIndex in selectorItemsSorted) {
