@@ -47,8 +47,7 @@ exports.fn = function(data, opts) {
     });
 
     // collect css selectors and their containing ruleset
-    var curSelectorItem  = null,
-        curAtRuleExpNode = null;
+    var curAtRuleExpNode = null;
     csso.walk(cssAst, function(node, item) {
 
       // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
@@ -57,7 +56,6 @@ exports.fn = function(data, opts) {
         curAtRuleExpNode = node;
       }
 
-      // retains reference to the last SimpleSelector for "look-ahead"
       if(node.type === 'SimpleSelector') {
 		    // csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
 	      // Selector group ('Selector' in csso) consisting of simple selectors ('SimpleSelector' in csso), separated by comma.
@@ -70,7 +68,7 @@ exports.fn = function(data, opts) {
           mqStr = csso.translate(curAtRuleExpNode);
         }
 
-        curSelectorItem = {
+        var curSelectorItem = {
           selectorStr:        selectorStr,
 
           simpleSelectorItem: item,
@@ -80,12 +78,6 @@ exports.fn = function(data, opts) {
           mqStr:              mqStr
         };
         selectorItems.push(curSelectorItem);
-      }
-
-      // "look-ahead the SimpleSelector", Value node comes _after_ the affected SimpleSelector
-      if(node.type === 'Value') {
-        // !important value?
-        curSelectorItem.important = node.important;
       }
 
     });
@@ -101,16 +93,11 @@ exports.fn = function(data, opts) {
   var selectorItemsSorted = stable(selectorItemsMqs, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
   });
-  //  and secondly by !important
-  var selectorItemsSortedImp = stable(selectorItemsSorted, function(item1, item2) {
-    var item1Score = ~~item1.important, // (cast boolean to number)
-        item2Score = ~~item2.important; //  "
-    return (item1Score - item2Score);
-  });
 
   // apply <style/> styles to matched elements
-  for(var selectorItemIndex in selectorItemsSortedImp) {
-    var selectorItem = selectorItemsSortedImp[selectorItemIndex],
+  for(var selectorItemIndex in selectorItemsSorted) {
+    var selectorItem = selectorItemsSorted[selectorItemIndex],
+
         selectedEls  = selectCss(selectorItem.selectorStr, data);
     if(opts.onlyMatchedOnce && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
@@ -119,7 +106,6 @@ exports.fn = function(data, opts) {
 
     for(var selectedElIndex in selectedEls) {
       var selectedEl = selectedEls[selectedElIndex];
-
       // empty defaults in case there is no style attribute
       var elInlineStyleAttr = { name: 'style', value: '', prefix: '', local: 'style' },
           elInlineStyles    = '';
@@ -133,18 +119,30 @@ exports.fn = function(data, opts) {
       // merge element(inline) styles + matching <style/> styles
       var newInlineCssAst = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
 
-      var _walkInline = function(node, item) {
-        if(node.type === 'Value') {
-          node.important = false; // !important irrelevant inline
-        }
+      var mergedDeclarations = [];
+      var _walkInline = function(node, item, list) {
         if(node.type === 'Declaration') {
-          newInlineCssAst.declarations.insert(item);
+          mergedDeclarations.push(item);
         }
       };
       csso.walk(selectorItem.rulesetNode, _walkInline);
       csso.walk(inlineCssAst,             _walkInline);
 
+      // sort by !important(ce)
+      var mergedDeclarationsSorted = stable(mergedDeclarations, function(declaration1, declaration2) {
+        var declaration1Score = ~~declaration1.important, // (cast boolean to number)
+            declaration2Score = ~~declaration2.important; //  "
+        return (declaration1Score - declaration2Score);
+      });
+
+      // to css
+      for(var mergedDeclarationsSortedIndex in mergedDeclarationsSorted) {
+        var declaration = mergedDeclarationsSorted[mergedDeclarationsSortedIndex];
+        declaration.data.value.important = false; // !important is irrelevant in inline styles
+        newInlineCssAst.declarations.insert(declaration);
+      }
       var newCss = csso.translate(newInlineCssAst);
+
       elInlineStyleAttr.value = newCss;
       selectedEl.addAttr(elInlineStyleAttr);
     }
