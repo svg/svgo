@@ -121,7 +121,7 @@ exports.fn = function(data, opts) {
       var newInlineCssAst = csso.parse('', {context: 'block'}); // for an empty css ast (in block context)
 
       var mergedDeclarations = [];
-      var _fetchDeclarations = function(node, item, list) {
+      var _fetchDeclarations = function(node, item) {
         if(node.type === 'Declaration') {
           mergedDeclarations.push(item);
         }
