@@ -126,8 +126,10 @@ exports.fn = function(data, opts) {
           mergedDeclarations.push(item);
         }
       };
-      csso.walk(selectorItem.rulesetNode, _fetchDeclarations);
-      csso.walk(inlineCssAst,             _fetchDeclarations);
+      var itemRulesetNodeCloned = csso.clone(selectorItem.rulesetNode);
+        // clone to prevent leaking declaration references (csso.translate(...))
+      csso.walk(itemRulesetNodeCloned, _fetchDeclarations);
+      csso.walk(inlineCssAst,          _fetchDeclarations);
 
       // sort by !important(ce)
       var mergedDeclarationsSorted = stable(mergedDeclarations, function(declaration1, declaration2) {
