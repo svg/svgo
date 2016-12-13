@@ -37,7 +37,7 @@ exports.fn = function(data, opts) {
       // skip empty <style/>s
       continue;
     }
-    var cssStr = styleEl.content[0].text;
+    var cssStr = styleEl.content[0].text || styleEl.content[0].cdata || [];
 
     // collect <style/>s and their css ast
     var cssAst = csso.parse(cssStr, {context: 'stylesheet'});
