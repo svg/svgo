@@ -174,10 +174,6 @@ exports.fn = function(data, opts) {
           list.remove(item);
       }
     });
-  }
-
-  // update / clean up <style/>s with their changed ast
-  for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
