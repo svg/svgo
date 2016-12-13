@@ -136,8 +136,8 @@ exports.fn = function(data, opts) {
 
       // sort by !important(ce)
       var mergedDeclarationsSorted = stable(mergedDeclarations, function(declarationA, declarationB) {
-        var declarationAScore = ~~declarationA.important, // (cast boolean to number)
-            declarationBScore = ~~declarationB.important; //  "
+        var declarationAScore = ~~declarationA.data.value.important, // (cast boolean to number)
+            declarationBScore = ~~declarationB.data.value.important; //  "
         return (declarationAScore - declarationBScore);
       });
 
