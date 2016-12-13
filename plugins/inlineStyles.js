@@ -94,8 +94,8 @@ exports.fn = function(data, opts) {
   });
 
   // stable-sort css selectors by their specificity
-  var selectorItemsSorted = stable(selectorItemsMqs, function(item1, item2) {
-    return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
+  var selectorItemsSorted = stable(selectorItemsMqs, function(itemA, itemB) {
+    return SPECIFICITY.compare(itemA.selectorStr, itemB.selectorStr);
   }).reverse(); // last declaration applies last (final)
 
   // apply <style/> styles to matched elements
@@ -135,10 +135,10 @@ exports.fn = function(data, opts) {
       csso.walk(inlineCssAst,          _fetchDeclarations);
 
       // sort by !important(ce)
-      var mergedDeclarationsSorted = stable(mergedDeclarations, function(declaration1, declaration2) {
-        var declaration1Score = ~~declaration1.important, // (cast boolean to number)
-            declaration2Score = ~~declaration2.important; //  "
-        return (declaration1Score - declaration2Score);
+      var mergedDeclarationsSorted = stable(mergedDeclarations, function(declarationA, declarationB) {
+        var declarationAScore = ~~declarationA.important, // (cast boolean to number)
+            declarationBScore = ~~declarationB.important; //  "
+        return (declarationAScore - declarationBScore);
       });
 
       // to css
