@@ -96,7 +96,7 @@ exports.fn = function(data, opts) {
   // stable-sort css selectors by their specificity
   var selectorItemsSorted = stable(selectorItemsMqs, function(item1, item2) {
     return SPECIFICITY.compare(item1.selectorStr, item2.selectorStr);
-  }).reverse(); // last style applies last (final)
+  }).reverse(); // last declaration applies last (final)
 
   // apply <style/> styles to matched elements
   for(var selectorItemIndex in selectorItemsSorted) {
