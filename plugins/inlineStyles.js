@@ -110,6 +110,7 @@ exports.fn = function(data, opts) {
 
     for(var selectedElIndex in selectedEls) {
       var selectedEl = selectedEls[selectedElIndex];
+
       // empty defaults in case there is no style attribute
       var elInlineStyleAttr = { name: 'style', value: '', prefix: '', local: 'style' },
           elInlineStyles    = '';
@@ -162,18 +163,21 @@ exports.fn = function(data, opts) {
       styleItem      = {};
   for(styleItemIndex in styleItems) {
     styleItem = styleItems[styleItemIndex];
+
     csso.walk(styleItem.cssAst, function(node, item, list) {
       // clean up <style/> atrules without any rulesets left
       if(node.type === 'Atrule' &&
          node.block.rules.head === null) {
         list.remove(item);
       }
+
       // clean up <style/> rulesets without any css selectors left
       if(node.type === 'Ruleset' &&
          node.selector.selectors.head == null) {
           list.remove(item);
       }
     });
+
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
       var styleParent = styleItem.styleEl.parentNode;
