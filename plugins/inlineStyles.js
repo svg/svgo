@@ -15,8 +15,7 @@ exports.description = 'inline styles (optionally skip selectors that match more 
 
 var SPECIFICITY = require('specificity'),
     stable      = require('stable'),
-    csso        = require('csso'),
-    selectCss   = require('../lib/ext/select-css');
+    csso        = require('csso');
 
 /**
   * Moves + merges styles from style elements to element styles
@@ -26,7 +25,7 @@ var SPECIFICITY = require('specificity'),
 exports.fn = function(data, opts) {
 
   // collect <style/>s
-  var styleEls      = selectCss('style', data);
+  var styleEls      = data.querySelector('style');
 
   var styleItems    = [],
       selectorItems = [];
@@ -102,8 +101,8 @@ exports.fn = function(data, opts) {
   for(var selectorItemIndex in selectorItemsSorted) {
     var selectorItem = selectorItemsSorted[selectorItemIndex],
 
-        selectedEls  = selectCss(selectorItem.selectorStr, data);
-    if(opts.onlyMatchedOnce && selectedEls.length > 1) {
+        selectedEls  = data.querySelector(selectorItem.selectorStr);
+    if(opts.onlyMatchedOnce && selectedEls && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
     }
@@ -153,7 +152,7 @@ exports.fn = function(data, opts) {
       selectedEl.addAttr(elInlineStyleAttr);
     }
 
-    if(opts.removeMatchedSelectors && selectedEls.length > 0) {
+    if(opts.removeMatchedSelectors && selectedEls && selectedEls.length > 0) {
       // clean up matching simple selectors if option removeMatchedSelectors is enabled
       selectorItem.rulesetNode.selector.selectors.remove(selectorItem.simpleSelectorItem);
     }
