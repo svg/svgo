@@ -174,7 +174,6 @@ exports.fn = function(data, opts) {
           list.remove(item);
       }
     });
-    styleItem = styleItems[styleItemIndex];
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
       var styleParent = styleItem.styleEl.parentNode;
