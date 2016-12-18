@@ -25,7 +25,7 @@ var SPECIFICITY = require('specificity'),
 exports.fn = function(data, opts) {
 
   // collect <style/>s
-  var styleEls      = data.querySelector('style');
+  var styleEls      = data.querySelectorAll('style');
 
   var styleItems    = [],
       selectorItems = [];
@@ -101,7 +101,7 @@ exports.fn = function(data, opts) {
   for(var selectorItemIndex in selectorItemsSorted) {
     var selectorItem = selectorItemsSorted[selectorItemIndex],
 
-        selectedEls  = data.querySelector(selectorItem.selectorStr);
+        selectedEls  = data.querySelectorAll(selectorItem.selectorStr);
     if(opts.onlyMatchedOnce && selectedEls && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
