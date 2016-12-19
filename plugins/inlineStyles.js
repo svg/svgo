@@ -22,10 +22,10 @@ var SPECIFICITY = require('specificity'),
   *
   * @author strarsis <strarsis@gmail.com>
   */
-exports.fn = function(data, opts) {
+exports.fn = function(document, opts) {
 
   // collect <style/>s
-  var styleEls      = data.querySelectorAll('style');
+  var styleEls      = document.querySelectorAll('style');
 
   var styleItems    = [],
       selectorItems = [];
@@ -101,7 +101,7 @@ exports.fn = function(data, opts) {
   for(var selectorItemIndex in selectorItemsSorted) {
     var selectorItem = selectorItemsSorted[selectorItemIndex],
 
-        selectedEls  = data.querySelectorAll(selectorItem.selectorStr);
+        selectedEls  = document.querySelectorAll(selectorItem.selectorStr);
     if(opts.onlyMatchedOnce && selectedEls && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
@@ -188,5 +188,5 @@ exports.fn = function(data, opts) {
     styleItem.styleEl.content[0].text = csso.translate(styleItem.cssAst);
   }
 
-  return data;
+  return document;
 };
