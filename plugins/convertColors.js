@@ -59,8 +59,17 @@ exports.fn = function(item, params) {
                     match;
 
                 // Convert colors to currentColor
-                if (params.currentColor && (match = !val.match(none))) {
-                    val = 'currentColor';
+                if (params.currentColor) {
+                    if (typeof params.currentColor === 'string') {
+                        match = val === params.currentColor;
+                    } else if (params.currentColor.exec) {
+                        match = params.currentColor.exec(val);
+                    } else {
+                        match = !val.match(none);
+                    }
+                    if (match) {
+                        val = 'currentColor';
+                    }
                 }
 
                 // Convert color name keyword to long hex
