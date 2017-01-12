@@ -82,7 +82,7 @@ Options:
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
-  --config=CONFIG : Config file to extend or replace default
+  --config=CONFIG : Config file or JSON string to extend or replace default
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
