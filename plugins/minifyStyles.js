@@ -8,10 +8,10 @@ exports.description = 'minifies styles and removes unused styles based on usage 
 
 exports.params = {
     // ... CSSO options goes here
-    svgo: {},
 
     // additional 
     usage: {
+        force: false,  // force to use usage data even if it unsafe (document contains <script> or on* attributes)
         ids: true,
         classes: true,
         tags: true
@@ -110,6 +110,10 @@ function collectUsageData(ast, options) {
                 walk(item, usageData);
             }
 
+            if (item.isElem('script')) {
+                safe = false;
+            }
+
             if (item.isElem()) {
                 usageData.tags[item.elem] = true;
 
@@ -122,26 +126,35 @@ function collectUsageData(ast, options) {
                         usageData.classes[className] = true;
                     });
                 }
+
+                if (item.attrs && Object.keys(item.attrs).some(function(name) { return /^on/i.test(name); })) {
+                    safe = false;
+                }
             }
         }
 
         return usageData;
     }
 
+    var safe = true;
+    var usageData = {};
     var hasData = false;
-    var usageData = walk(ast, {
+    var rawData = walk(ast, {
         ids: Object.create(null),
         classes: Object.create(null),
         tags: Object.create(null)
     });
 
-    for (var key in usageData) {
-        usageData[key] = shouldFilter(options, key) && Object.keys(usageData[key]);
+    if (!safe && options.usage && options.usage.force) {
+        safe = true;
+    }
 
-        if (usageData[key]) {
+    for (var key in rawData) {
+        if (shouldFilter(options, key)) {
+            usageData[key] = Object.keys(rawData[key]);
             hasData = true;
         }
     }
 
-    return hasData ? usageData : null;
+    return safe && hasData ? usageData : null;
 }
