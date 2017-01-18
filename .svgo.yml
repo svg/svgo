@@ -25,6 +25,7 @@ plugins:
   - cleanupAttrs
   - minifyStyles
   - convertStyleToAttrs
+  - illustratorLayerIdsToClasses
   - cleanupIDs
   - removeRasterImages
   - removeUselessDefs

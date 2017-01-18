@@ -60,6 +60,7 @@ SVGO имеет расширяемую архитектуру, в которой
 * [ [ addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) ] добавляет имена классов корневому элементу `<svg>` (выключено по умолчанию)
 * [ [ addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) ] добавляет атрибуты корневому элементу `<svg>` (выключено по умолчанию)
 * [ [ removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) ] удаляет элементы `<style>` (выключено по умолчанию)
+* [ [ illustratorLayerIdsToClasses](https://github.com/svg/svgo/blob/master/plugins/illustratorLayerIdsToClasses.js) ] скопировать `data-id` или `id` атрибут `class`. Это полезно при экспорте из Adobe Illustrator и с помощью "Object IDs: Layer Name" в настройках экспорта (выключено по умолчанию)
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 

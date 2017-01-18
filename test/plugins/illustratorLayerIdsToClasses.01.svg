@@ -1,0 +1,31 @@
+<svg id="ex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 159.02 100.67">
+    <defs>
+        <style>
+            .cls-1{fill:none;stroke:#231f20;stroke-miterlimit:10;}
+        </style>
+    </defs>
+    <title>
+        Untitled-1
+    </title>
+    <line id="line2" class="cls-1" x1="4.47" y1="0.35" x2="72.18" y2="70.39"/>
+    <line id="line1" class="cls-1" x1="0.3" y1="64.93" x2="71.14" y2="10.76"/>
+    <line id="line2-2" data-name="line2" class="cls-1" x1="99.26" y1="8.68" x2="145.1" y2="97.22"/>
+    <line id="line1-2" data-name="line1" class="cls-1" x1="79.47" y1="100.35" x2="158.64" y2="8.68"/>
+</svg>
+
+@@@
+
+<svg id="ex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 159.02 100.67" class="ex">
+    <defs>
+        <style>
+            .cls-1{fill:none;stroke:#231f20;stroke-miterlimit:10;}
+        </style>
+    </defs>
+    <title>
+        Untitled-1
+    </title>
+    <line id="line2" class="cls-1 line2" x1="4.47" y1="0.35" x2="72.18" y2="70.39"/>
+    <line id="line1" class="cls-1 line1" x1="0.3" y1="64.93" x2="71.14" y2="10.76"/>
+    <line id="line2-2" data-name="line2" class="cls-1 line2" x1="99.26" y1="8.68" x2="145.1" y2="97.22"/>
+    <line id="line1-2" data-name="line1" class="cls-1 line1" x1="79.47" y1="100.35" x2="158.64" y2="8.68"/>
+</svg>
