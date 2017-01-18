@@ -1,3 +1,7 @@
 node_modules/
 lib-cov/
 html-report/
+dist/
+lib/svgo.js
+test/browser.js
+webpack.config.js
