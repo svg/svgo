@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+    <rect x="10.12" y="10.12" width="79.76" height="79.76" stroke="black" fill="transparent"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" stroke-width="100" viewBox="0 0 10000 10000">
+    <rect x="1012" y="1012" width="7976" height="7976" stroke="black" fill="transparent"/>
+</svg>
+
+@@@
+
+{"applyViewBox": true}

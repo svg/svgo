@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 103 292">
+    <defs>
+        <filter id="blur" color-interpolation-filters="sRGB">
+            <feGaussianBlur stdDeviation=".57"/>
+        </filter>
+        <filter id="dropShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation=".57"/>
+            <feOffset dx="2.56" dy="4.56"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <rect x="10.12" y="10.12" width="30.12" height="30.12" stroke="black" fill="transparent" stroke-width="5" transform="translate(1.34,1.45)"/>
+    <rect x="60.12" y="10.12" rx="10.12" ry="10.12" width="30.12" height="30.12" stroke="black" fill="transparent" stroke-width="5" transform="matrix(1,0,0,1,1.34,1.45)"/>
+    <circle cx="25.12" cy="75.12" r="20.12" stroke="red" fill="transparent" stroke-width="5"/>
+    <ellipse cx="75.12" cy="75.12" rx="20.12" ry="5.12" stroke="red" fill="transparent" stroke-width="5"/>
+    <line x1="10.12" x2="50.12" y1="110.12" y2="150.12" stroke="orange" fill="transparent" stroke-width="5"/>
+    <polyline points="60.12 110.12 65.12 120.12 70.12 115.12 75.12 130.12 80.12 125.12 85.12 140.12 90.12 135.12 95.12 150.12 100.12 145.12" stroke="orange" fill="transparent" stroke-width="5"/>
+    <polygon points="50.12 160.12 55.12 180.12 70.12 180.12 60.12 190.12 65.12 205.12 50.12 195.12 35.12 205.12 40.12 190.12 30.12 180.12 45.12 180.12" stroke="green" fill="transparent" stroke-width="5"/>
+    <path d="M20.12,230.12 Q40.12,205.12 50.12,230.12 T90.12,230.12" fill="none" stroke="blue" stroke-width="5" filter="url('#dropShadow')"/>
+    <text x="10.12" y="285" font-size="50" filter="url('#blur')">
+        Text
+    </text>
+    <line stroke-dasharray="5.25 5.25" x1="10.12" y1="290.55" x2="102.5" y2="290.55" stroke="red" stroke-width="2"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10300 29200" stroke-width="100">
+    <defs>
+        <filter id="blur" color-interpolation-filters="sRGB">
+            <feGaussianBlur stdDeviation="57"/>
+        </filter>
+        <filter id="dropShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="57"/>
+            <feOffset dx="256" dy="456"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <rect x="1012" y="1012" width="3012" height="3012" stroke="black" fill="transparent" stroke-width="500" transform="translate(134 145)"/>
+    <rect x="6012" y="1012" rx="1012" ry="1012" width="3012" height="3012" stroke="black" fill="transparent" stroke-width="500" transform="matrix(1 0 0 1 134 145)"/>
+    <circle cx="2512" cy="7512" r="2012" stroke="red" fill="transparent" stroke-width="500"/>
+    <ellipse cx="7512" cy="7512" rx="2012" ry="512" stroke="red" fill="transparent" stroke-width="500"/>
+    <line x1="1012" x2="5012" y1="11012" y2="15012" stroke="orange" fill="transparent" stroke-width="500"/>
+    <polyline points="6012 11012 6512 12012 7012 11512 7512 13012 8012 12512 8512 14012 9012 13512 9512 15012 10012 14512" stroke="orange" fill="transparent" stroke-width="500"/>
+    <polygon points="5012 16012 5512 18012 7012 18012 6012 19012 6512 20512 5012 19512 3512 20512 4012 19012 3012 18012 4512 18012" stroke="green" fill="transparent" stroke-width="500"/>
+    <path d="M2012 23012Q4012 20512 5012 23012T9012 23012" fill="none" stroke="blue" stroke-width="500" filter="url('#dropShadow')"/>
+    <text x="1012" y="28500" font-size="5000" filter="url('#blur')">
+        Text
+    </text>
+    <line stroke-dasharray="525 525" x1="1012" y1="29055" x2="10250" y2="29055" stroke="red" stroke-width="200"/>
+</svg>

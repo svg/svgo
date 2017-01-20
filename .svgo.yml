@@ -43,6 +43,7 @@ plugins:
   - moveGroupAttrsToElems
   - collapseGroups
   - convertPathData
+  - scalePrecision
   - convertTransform
   - removeEmptyAttrs
   - removeEmptyContainers
