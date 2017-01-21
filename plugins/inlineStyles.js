@@ -7,7 +7,8 @@ exports.active = true;
 exports.params = {
   onlyMatchedOnce:        true,
   removeMatchedSelectors: true,
-  useMqs:                 ['screen']
+  useMqs:                 ['screen'],
+  usePseudoclasses:       []
 };
 
 exports.description = 'inline styles (optionally skip selectors that match more than once)';
@@ -46,8 +47,9 @@ exports.fn = function(document, opts) {
     });
 
     // collect css selectors and their containing ruleset
-    var curAtRuleExpNode = null;
-    csso.walk(cssAst, function(node, item) {
+    var curAtRuleExpNode   = null,
+        curPseudoclassNode = null;
+    csso.walk(cssAst, function(node, item, list) {
 
       // media query blocks
       // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
@@ -59,10 +61,16 @@ exports.fn = function(document, opts) {
         curAtRuleExpNode = null;
       }
 
+      // Pseudo classes for a SimpleSelector
+      if(node.type == 'PseudoClass') {
+        curPseudoclassNode = node;
+      }
+
       if(node.type === 'SimpleSelector') {
 		    // csso 'SimpleSelector' to be interpreted with CSS2.1 specs, _not_ with CSS3 Selector module specs:
 	      // Selector group ('Selector' in csso) consisting of simple selectors ('SimpleSelector' in csso), separated by comma.
         // <Selector>: <'SimpleSelector'>, <'SimpleSelector'>, ...
+
         var selectorStr = csso.translate(node);
 
         // mediaquery if SimpleSelector belongs to one
@@ -78,9 +86,15 @@ exports.fn = function(document, opts) {
           rulesetNode:        this.ruleset,
 
           atRuleExpNode:      curAtRuleExpNode,
-          mqStr:              mqStr
+          mqStr:              mqStr,
+
+          pseudoclassNode:    curPseudoclassNode
         };
         selectorItems.push(curSelectorItem);
+
+
+        // pseudo class scope ends with the SimpleSelector
+        curPseudoclassNode = null;
       }
 
     });
@@ -92,8 +106,14 @@ exports.fn = function(document, opts) {
             opts.useMqs.indexOf(selectorItem.mqStr) > -1);
   });
 
+  // filter for pseudo classes to be used or not using a pseudo class
+  var selectorItemsPseudoclasses = selectorItemsMqs.filter(function(selectorItem) {
+    return (selectorItem.pseudoclassNode == null || 
+            opts.usePseudoclasses.indexOf(selectorItem.pseudoclassNode.name) > -1);
+  });
+
   // stable-sort css selectors by their specificity
-  var selectorItemsSorted = stable(selectorItemsMqs, function(itemA, itemB) {
+  var selectorItemsSorted = stable(selectorItemsPseudoclasses, function(itemA, itemB) {
     return SPECIFICITY.compare(itemA.selectorStr, itemB.selectorStr);
   }).reverse(); // last declaration applies last (final)
 
