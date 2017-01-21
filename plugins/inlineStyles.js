@@ -61,7 +61,8 @@ exports.fn = function(document, opts) {
         curAtruleExpNode = null;
       }
 
-      // Pseudo classes for a SimpleSelector
+      // Pseudo classes
+      // "look-behind the SimpleSelector", PseudoClass node comes _before_ the affected SimpleSelector
       if(node.type == 'PseudoClass') {
         curPseudoClassNode = node;
       }
