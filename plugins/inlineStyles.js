@@ -49,7 +49,7 @@ exports.fn = function(document, opts) {
     // collect css selectors and their containing ruleset
     var curAtruleExpNode   = null,
         curPseudoClassNode = null;
-    csso.walk(cssAst, function(node, item, list) {
+    csso.walk(cssAst, function(node, item) {
 
       // media query blocks
       // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
