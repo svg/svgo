@@ -71,27 +71,13 @@ exports.fn = function(document, opts) {
 	      // Selector group ('Selector' in csso) consisting of simple selectors ('SimpleSelector' in csso), separated by comma.
         // <Selector>: <'SimpleSelector'>, <'SimpleSelector'>, ...
 
-        var selectorStr = csso.translate(node);
-
-        // mediaquery if SimpleSelector belongs to one
-        var mqStr = '';
-        if(curAtruleExpNode !== null) {
-          mqStr = csso.translate(curAtruleExpNode);
-        }
-
         var curSelectorItem = {
-          selectorStr:        selectorStr,
-
           simpleSelectorItem: item,
           rulesetNode:        this.ruleset,
-
           atRuleExpNode:      curAtruleExpNode,
-          mqStr:              mqStr,
-
           pseudoClassNode:    curPseudoClassNode
         };
         selectorItems.push(curSelectorItem);
-
 
         // pseudo class scope ends with the SimpleSelector
         curPseudoClassNode = null;
@@ -100,16 +86,26 @@ exports.fn = function(document, opts) {
     });
   }
 
+
   // filter for mediaqueries to be used or without any mediaquery
   var selectorItemsMqs = selectorItems.filter(function(selectorItem) {
-    return (selectorItem.mqStr.length == 0 || 
-            opts.useMqs.indexOf(selectorItem.mqStr) > -1);
+    if(selectorItem.atRuleExpNode == null) {
+      return true;
+    }
+    var mqStr = csso.translate(selectorItem.atRuleExpNode);
+    return opts.useMqs.indexOf(mqStr) > -1;
   });
 
   // filter for pseudo classes to be used or not using a pseudo class
   var selectorItemsPseudoClasses = selectorItemsMqs.filter(function(selectorItem) {
     return (selectorItem.pseudoClassNode == null || 
             opts.usePseudoClasses.indexOf(selectorItem.pseudoClassNode.name) > -1);
+  });
+
+
+  // compile css selector strings
+  selectorItemsPseudoClasses.map(function(selectorItem) {
+    selectorItem.selectorStr = csso.translate(selectorItem.simpleSelectorItem.data);
   });
 
   // stable-sort css selectors by their specificity
