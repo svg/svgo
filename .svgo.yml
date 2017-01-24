@@ -38,6 +38,7 @@ plugins:
   - cleanupEnableBackground
   - removeHiddenElems
   - removeEmptyText
+  - convertCircleToPath
   - convertShapeToPath
   - moveElemsAttrsToGroup
   - moveGroupAttrsToElems
