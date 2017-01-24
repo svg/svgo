@@ -22,12 +22,12 @@ exports.fn = function(item) {
         item.hasAttr('cy') &&
         item.hasAttr('r')
     ) {
+
         var cx = item.attr('cx').value,
             cy = item.attr('cy').value,
             r = item.attr('r').value,
             pathData =
             'M' + cx + ' ' + cy +
-            'm' + (-r) + ' 0' +
             'a' + r + ' ' + r + ' 0 1 0 ' + (r * 2) + ' 0' +
             'a' + r + ' ' + r + ' 0 1 0 ' + (-r * 2) + ' 0z';
 
@@ -40,5 +40,32 @@ exports.fn = function(item) {
                 local: 'd'
             });
 
+    } else if (
+        item.isElem('ellipse') &&
+        item.hasAttr('cx') &&
+        item.hasAttr('cy') &&
+        item.hasAttr('rx') &&
+        item.hasAttr('ry')
+    ) {
+
+        var cx = item.attr('cx').value,
+            cy = item.attr('cy').value,
+            rx = item.attr('rx').value,
+            ry = item.attr('ry').value,
+            pathData =
+            'M' + cx + ' ' + cy +
+            'a' + rx + ' ' + ry + ' 0 1 0 ' + (rx * 2) + ' 0' +
+            'a' + rx + ' ' + ry + ' 0 1 0 ' + (-rx * 2) + ' 0z';
+
+        item.renameElem('path');
+        item.removeAttr(['cx', 'cy', 'rx', 'ry']);
+        item.addAttr({
+                name: 'd',
+                value: pathData,
+                prefix: '',
+                local: 'd'
+            });
+
     }
+
 };
