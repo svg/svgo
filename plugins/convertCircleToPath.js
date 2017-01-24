@@ -11,8 +11,6 @@ exports.description = 'converts circles to paths';
  * for icons on a webpage, so all styles can be applied to `path`.
  *
  * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
  *
  * @author Lev Solntsev, Dan Newcome, Peter Oesteritz
  */
