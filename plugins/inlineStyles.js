@@ -11,7 +11,7 @@ exports.params = {
   usePseudoClasses:       []
 };
 
-exports.description = 'inline styles (optionally skip selectors that match more than once)';
+exports.description = 'inline styles (additional options)';
 
 
 var SPECIFICITY = require('specificity'),
@@ -20,6 +20,25 @@ var SPECIFICITY = require('specificity'),
 
 /**
   * Moves + merges styles from style elements to element styles
+  *
+  * Options
+  *   onlyMatchedOnce (default: true)
+  *     inline only selectors that match once
+  *
+  *   removeMatchedSelectors (default: true)
+  *     clean up matched selectors,
+  *     leave selectors that hadn't matched
+  *
+  *   useMqs (default: ['screen'])
+  *     what mediaqueries to be used,
+  *     non-mediaquery styles are always used
+  *
+  *   usePseudoClasses (default: [])
+  *     what pseudo-classes to be used,
+  *     non-pseudo-class styles are always used
+  *
+  * @param {Object} root (document)
+  * @param {Object} params plugin params
   *
   * @author strarsis <strarsis@gmail.com>
   */
