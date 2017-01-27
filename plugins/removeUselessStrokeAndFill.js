@@ -8,7 +8,8 @@ exports.description = 'removes useless stroke and fill attributes';
 
 exports.params = {
     stroke: true,
-    fill: true
+    fill: true,
+    removeNone: false
 };
 
 var shape = require('./_collections').elemsGroups.shape,
@@ -85,6 +86,13 @@ exports.fn = function(item, params) {
                         local: 'fill'
                     });
             }
+        }
+
+        if (params.removeNone && 
+            (!stroke || item.hasAttr('stroke') && item.attr('stroke').value=='none') &&
+            (!fill || item.hasAttr('fill') && item.attr('fill').value=='none')) {
+
+            return false;
         }
 
     }
