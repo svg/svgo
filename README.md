@@ -88,11 +88,11 @@ Options:
   --disable=DISABLE : Disable plugin by name
   --enable=ENABLE : Enable plugin by name
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
-  -q, --quiet : Only output error messages, not regular status messages
-  --pretty : Make SVG pretty printed
-  --show-plugins : Show available plugins and exit
   --multipass : Enable multipass
+  --pretty : Make SVG pretty printed
   --indent=INDENT : Indent number when pretty printing SVGs
+  -q, --quiet : Only output error messages, not regular status messages
+  --show-plugins : Show available plugins and exit
 
 Arguments:
   INPUT : Alias to --input
