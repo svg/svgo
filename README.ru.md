@@ -84,7 +84,7 @@ $ [sudo] npm install -g svgo
   -f FOLDER, --folder=FOLDER : Входная папка, оптимизирует и перезаписывает все файлы *.svg
   -o OUTPUT, --output=OUTPUT : Выходной файл или папка (совпадает с входным по умолчанию), "-" для STDOUT
   -p PRECISION, --precision=PRECISION : Число цифр после запятой, переопределяет параметры плагинов
-  --config=CONFIG : Файл конфигурации для расширения и замены настроек
+  --config=CONFIG : Файл конфигурации (или строка JSON) для расширения и замены настроек
   --disable=DISABLE : Выключение плагина по имени
   --enable=ENABLE : Включение плагина по имени
   --datauri=DATAURI : Результат в виде строки Data URI (base64, URI encoded или unencoded)
@@ -144,7 +144,9 @@ $ [sudo] npm install -g svgo
 * как таск для Gulp – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
-* как Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
+* через загрузчик в webpack – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
+* с помощью бота в Telegram – [svgo_bot](https://github.com/maksugr/svgo_bot)
+* как плагин PostCSS - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 
 ## Лицензия и копирайты
 
