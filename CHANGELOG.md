@@ -1,3 +1,10 @@
+### [ [>](https://github.com/svg/svgo/tree/v0.7.2) ] 0.7.2 / 29.01.2017
+* Extended `currentColor` match conditions (string, rx, bool) (by @AlimovSV)
+* Fixed removing `<animate>` in `<stop>`.
+* Fixed removing same transform in inner element in `removeUnknownsAndDefaults`.
+* Fixed collapsing groups with same non-inheritable attribue.
+* Corrected removing of leading zero in case of exponential notation.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.7.1) ] 0.7.1 / 27.09.2016
 * Reverted the requirement of Node.js to version 0.10.
 * Added `addAttributesToSVGElement` to the default config to allow using it with `--enable` option.

@@ -1,6 +1,6 @@
 {
   "name": "svgo",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
@@ -50,15 +50,15 @@
   "dependencies": {
     "sax": "~1.2.1",
     "coa": "~1.0.1",
-    "js-yaml": "~3.6.1",
+    "js-yaml": "~3.7.0",
     "colors": "~1.1.2",
     "whet.extend": "~0.9.9",
     "mkdirp": "~0.5.1",
-    "csso": "~2.2.1"
+    "csso": "~2.3.1"
   },
   "devDependencies": {
-    "mocha": "~3.1.0",
-    "should": "11.1.0",
+    "mocha": "~3.2.0",
+    "should": "11.2.0",
     "istanbul": "~0.4.5",
     "mocha-istanbul": "~0.3.0",
     "coveralls": "~2.11.14"
