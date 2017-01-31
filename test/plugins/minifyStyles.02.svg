@@ -1,7 +1,7 @@
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <style>
         <![CDATA[
-            .st0{ fill:red; padding-top: 1em; padding-right: 1em; padding-bottom: 1em; padding-left: 1em; } @media screen and (max-width: 200px) { .st1 { display: none; } }
+            .st0{ fill:red; padding-top: 1em; padding-right: 1em; padding-bottom: 1em; padding-left: 1em; } @media screen and (max-width: 200px) { .st0 { display: none; } }
         ]]>
     </style>
     <style></style>
@@ -12,7 +12,7 @@
 
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <style>
-        .st0{fill:red;padding:1em}@media screen and (max-width:200px){.st1{display:none}}
+        .st0{fill:red;padding:1em}@media screen and (max-width:200px){.st0{display:none}}
     </style>
     <style/>
     <rect width="100" height="100" class="st0" style="stroke-width:3;margin:1em"/>
