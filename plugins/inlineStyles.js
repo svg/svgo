@@ -14,7 +14,7 @@ exports.params = {
 exports.description = 'inline styles (additional options)';
 
 
-var SPECIFICITY = require('specificity'),
+var specificity = require('specificity'),
     stable      = require('stable'),
     csso        = require('csso');
 
@@ -142,7 +142,7 @@ exports.fn = function(document, opts) {
 
   // stable-sort css selectors by their specificity
   var selectorItemsSorted = stable(selectorItemsPseudoClasses, function(itemA, itemB) {
-    return SPECIFICITY.compare(itemA.selectorStr, itemB.selectorStr);
+    return specificity.compare(itemA.selectorStr, itemB.selectorStr);
   }).reverse(); // last declaration applies last (final)
 
   // apply <style/> styles to matched elements
