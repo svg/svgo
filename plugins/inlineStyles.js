@@ -67,8 +67,9 @@ exports.fn = function(document, opts) {
 
     // collect css selectors and their containing ruleset
     var curAtruleExpNode   = null,
-        curPseudoClassNode = null;
-    csso.walk(cssAst, function(node, item) {
+        curPseudoClassItem = null,
+        curPseudoClassList = null;
+    csso.walk(cssAst, function(node, item, list) {
 
       // media query blocks
       // "look-behind the SimpleSelector", AtruleExpression node comes _before_ the affected SimpleSelector
@@ -83,7 +84,8 @@ exports.fn = function(document, opts) {
       // Pseudo classes
       // "look-behind the SimpleSelector", PseudoClass node comes _before_ the affected SimpleSelector
       if(node.type == 'PseudoClass') {
-        curPseudoClassNode = node;
+        curPseudoClassItem = item;
+        curPseudoClassList = list;
       }
 
       if(node.type === 'SimpleSelector') {
@@ -95,12 +97,15 @@ exports.fn = function(document, opts) {
           simpleSelectorItem: item,
           rulesetNode:        this.ruleset,
           atRuleExpNode:      curAtruleExpNode,
-          pseudoClassNode:    curPseudoClassNode
+
+          pseudoClassItem:    curPseudoClassItem,
+          pseudoClassList:    curPseudoClassList
         };
         selectorItems.push(curSelectorItem);
 
         // pseudo class scope ends with the SimpleSelector
-        curPseudoClassNode = null;
+        curPseudoClassItem = null;
+        curPseudoClassList = null;
       }
 
     });
@@ -118,10 +123,17 @@ exports.fn = function(document, opts) {
 
   // filter for pseudo classes to be used or not using a pseudo class
   var selectorItemsPseudoClasses = selectorItemsMqs.filter(function(selectorItem) {
-    return (selectorItem.pseudoClassNode == null || 
-            opts.usePseudoClasses.indexOf(selectorItem.pseudoClassNode.name) > -1);
+    return (selectorItem.pseudoClassItem == null || 
+            opts.usePseudoClasses.indexOf(selectorItem.pseudoClassItem.data.name) > -1);
   });
 
+  // remove PseudoClass from its SimpleSelector for proper matching
+  selectorItemsPseudoClasses.map(function(selectorItem) {
+    if(selectorItem.pseudoClassItem == null) {
+      return;
+    }
+    selectorItem.pseudoClassList.remove(selectorItem.pseudoClassItem);
+  });
 
   // compile css selector strings
   selectorItemsPseudoClasses.map(function(selectorItem) {
