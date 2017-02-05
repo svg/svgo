@@ -31,4 +31,4 @@
 
 @@@
 
-{"force": true, "except": "figure"}
+{"force": true, "preserve": "figure"}

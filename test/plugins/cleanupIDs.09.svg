@@ -19,4 +19,4 @@
 
 @@@
 
-{"force": true, "except": ["circle", "rect"]}
+{"force": true, "preserve": ["circle", "rect"]}

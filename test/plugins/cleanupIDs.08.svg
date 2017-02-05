@@ -16,4 +16,4 @@
 
 @@@
 
-{"except": ["circle", "rect"]}
+{"preserve": ["circle", "rect"]}
