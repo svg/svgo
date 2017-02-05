@@ -66,11 +66,16 @@ Today we have:
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md). ([동작방법](https://github.com/svg/svgo/blob/master/docs/how-it-works/ko.md))
 
 
-## How to use
+## Installation
 
 ```sh
 $ [sudo] npm install -g svgo
 ```
+
+
+## Usage
+
+### <abbr title="Command Line Interface">CLI</abbr>
 
 ```
 Usage:
@@ -137,6 +142,9 @@ Arguments:
 
         $ svgo test.svg -o - | gzip -cfq9 > test.svgz
 
+
+### Other Ways to Use SVGO
+
 * with GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * as a web app - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
@@ -148,7 +156,7 @@ Arguments:
 * as a Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * as a PostCSS plugin - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 
-## License and copyrights
+## License and Copyright
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
 
