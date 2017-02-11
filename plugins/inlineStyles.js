@@ -83,7 +83,7 @@ exports.fn = function(document, opts) {
 
       // Pseudo classes
       // "look-behind the SimpleSelector", PseudoClass node comes _before_ the affected SimpleSelector
-      if(node.type == 'PseudoClass') {
+      if(node.type === 'PseudoClass') {
         curPseudoClassItem = item;
         curPseudoClassList = list;
       }
@@ -114,7 +114,7 @@ exports.fn = function(document, opts) {
 
   // filter for mediaqueries to be used or without any mediaquery
   var selectorItemsMqs = selectorItems.filter(function(selectorItem) {
-    if(selectorItem.atRuleExpNode == null) {
+    if(selectorItem.atRuleExpNode === null) {
       return true;
     }
     var mqStr = csso.translate(selectorItem.atRuleExpNode);
@@ -123,13 +123,13 @@ exports.fn = function(document, opts) {
 
   // filter for pseudo classes to be used or not using a pseudo class
   var selectorItemsPseudoClasses = selectorItemsMqs.filter(function(selectorItem) {
-    return (selectorItem.pseudoClassItem == null || 
+    return (selectorItem.pseudoClassItem === null || 
             opts.usePseudoClasses.indexOf(selectorItem.pseudoClassItem.data.name) > -1);
   });
 
   // remove PseudoClass from its SimpleSelector for proper matching
   selectorItemsPseudoClasses.map(function(selectorItem) {
-    if(selectorItem.pseudoClassItem == null) {
+    if(selectorItem.pseudoClassItem === null) {
       return;
     }
     selectorItem.pseudoClassList.remove(selectorItem.pseudoClassItem);
@@ -150,7 +150,7 @@ exports.fn = function(document, opts) {
     var selectorItem = selectorItemsSorted[selectorItemIndex],
 
         selectedEls  = document.querySelectorAll(selectorItem.selectorStr);
-    if(opts.onlyMatchedOnce && selectedEls && selectedEls.length > 1) {
+    if(opts.onlyMatchedOnce && selectedEls !== null && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
     }
@@ -200,7 +200,7 @@ exports.fn = function(document, opts) {
       selectedEl.addAttr(elInlineStyleAttr);
     }
 
-    if(opts.removeMatchedSelectors && selectedEls && selectedEls.length > 0) {
+    if(opts.removeMatchedSelectors && selectedEls !== null && selectedEls.length > 0) {
       // clean up matching simple selectors if option removeMatchedSelectors is enabled
       selectorItem.rulesetNode.selector.selectors.remove(selectorItem.simpleSelectorItem);
     }
@@ -214,14 +214,14 @@ exports.fn = function(document, opts) {
     csso.walk(styleItem.cssAst, function(node, item, list) {
       // clean up <style/> atrules without any rulesets left
       if(node.type === 'Atrule' &&
-         node.block && node.block.rules && // Atrules containing rulesets
+         node.block !== null && node.block.rules !== null && // Atrules containing rulesets
          node.block.rules.head === null) {
         list.remove(item);
       }
 
       // clean up <style/> rulesets without any css selectors left
       if(node.type === 'Ruleset' &&
-         node.selector.selectors.head == null) {
+         node.selector.selectors.head === null) {
           list.remove(item);
       }
     });
