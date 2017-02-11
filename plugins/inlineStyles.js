@@ -230,8 +230,16 @@ exports.fn = function(document, opts) {
 
     if(styleItem.cssAst.rules.isEmpty()){
       // clean up now emtpy <style/>s
-      var styleParent = styleItem.styleEl.parentNode;
-      styleParent.spliceContent(styleParent.content.indexOf(styleItem.styleEl), 1);
+      var styleParentEl = styleItem.styleEl.parentNode;
+      styleParentEl.spliceContent(styleParentEl.content.indexOf(styleItem.styleEl), 1);
+
+      if(styleParentEl.elem === 'defs' &&
+         styleParentEl.content.length === 0) {
+        // also clean up now empty <def/>s
+        var defsParentEl = styleParentEl.parentNode;
+        defsParentEl.spliceContent(defsParentEl.content.indexOf(styleParentEl), 1);
+      }
+
       continue;
     }
 
