@@ -1,7 +1,33 @@
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.285 81.285">
   <defs>
     <style>
+      @charset 'UTF-8';
+
+      @namespace svg url(http://www.w3.org/2000/svg);
+
       @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+      @font-face {
+        font-family: SomeFont;
+        src: local("Some Font"),
+        local("SomeFont"),
+        url(SomeFont.ttf);
+        font-weight: bold;
+      }
+
+      @viewport {
+        zoom: 0.8;
+        min-zoom: 0.4;
+        max-zoom: 0.9;
+      }
+
+      @keyframes identifier {
+          0% { top:  0; }
+         50% { top: 30px; left: 20px; }
+         50% { top: 10px; }
+        100% { top:  0; }
+      }
+
 
       .blue {
         fill: blue;
@@ -16,7 +42,7 @@
 <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.285 81.285">
     <defs>
         <style>
-            @import url(&apos;https://fonts.googleapis.com/css?family=Roboto&apos;);
+            @charset &apos;UTF-8&apos;;@namespace svg url(http://www.w3.org/2000/svg);@import url(&apos;https://fonts.googleapis.com/css?family=Roboto&apos;);@font-face{font-family:SomeFont;src:local(&quot;Some Font&quot;), local(&quot;SomeFont&quot;), url(SomeFont.ttf);font-weight:bold}@viewport{zoom:0.8;min-zoom:0.4;max-zoom:0.9}@keyframes identifier{0%{top:0}50%{top:30px;left:20px}50%{top:10px}100%{top:0}}
         </style>
     </defs>
     <rect width="100" height="100" class="blue" style="fill:blue"/>
