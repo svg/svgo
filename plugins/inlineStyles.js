@@ -214,6 +214,7 @@ exports.fn = function(document, opts) {
     csso.walk(styleItem.cssAst, function(node, item, list) {
       // clean up <style/> atrules without any rulesets left
       if(node.type === 'Atrule' &&
+         node.block && node.block.rules && // Atrules containing rulesets
          node.block.rules.head === null) {
         list.remove(item);
       }
