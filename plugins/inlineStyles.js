@@ -215,7 +215,8 @@ exports.fn = function(document, opts) {
       // clean up <style/> atrules without any rulesets left
       if(node.type === 'Atrule' &&
          // only Atrules containing rulesets
-         node.block !== null && node.block.rules !== null &&
+         node.block !== null &&
+         typeof node.block.rules !== 'undefined' &&
          node.block.rules.isEmpty()) {
         list.remove(item);
       }
