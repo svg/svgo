@@ -214,14 +214,15 @@ exports.fn = function(document, opts) {
     csso.walk(styleItem.cssAst, function(node, item, list) {
       // clean up <style/> atrules without any rulesets left
       if(node.type === 'Atrule' &&
-         node.block !== null && node.block.rules !== null && // Atrules containing rulesets
-         node.block.rules.head === null) {
+         // only Atrules containing rulesets
+         node.block !== null && node.block.rules !== null &&
+         node.block.rules.isEmpty()) {
         list.remove(item);
       }
 
       // clean up <style/> rulesets without any css selectors left
       if(node.type === 'Ruleset' &&
-         node.selector.selectors.head === null) {
+         node.selector.selectors.isEmpty()) {
           list.remove(item);
       }
     });
