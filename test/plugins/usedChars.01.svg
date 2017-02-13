@@ -1,11 +1,24 @@
 <svg height="30" width="200">
-  <text x="0" y="15" fill="red">I love SVG!</text>
+    <text x="0" y="15" fill="red">
+        I love SVG!
+    </text>
+    <text x="0" y="15" fill="red">
+        Test.
+    </text>
 </svg>
 
 @@@
 
-<svg height="30" width="200" used-chars="I loveSVG!">
+<svg height="30" width="200">
+    <style>
+        /* Text:
+I love SVG!Test.
+*/
+    </style>
     <text x="0" y="15" fill="red">
         I love SVG!
+    </text>
+    <text x="0" y="15" fill="red">
+        Test.
     </text>
 </svg>

@@ -1,5 +1,8 @@
 'use strict';
 
+var jsAPI = require('../lib/svgo/jsAPI');
+
+
 exports.type = 'full';
 
 exports.active = false;
@@ -41,18 +44,22 @@ exports.fn = function(data, params) {
     }
     monkeys(data);
 
-    var text  = texts.join('');
-    var chars = text.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-    var charsStr = chars.join('');
- 
-    var charsStrEsc = charsStr.replace(/'/g, "&#39;");
-    var svgElem = data.content[0];
-    svgElem.addAttr({
-      name:   'used-chars',
-      value:  charsStrEsc,
-      prefix: '',
-      local:  'used-chars'
-    });
+
+    var text = texts.join('');
+
+    // Escape CSS multiline comment termination characters ('*/' -> '/*')
+    var textEsc = text.replace('*\/', '\/*');
+
+    var svgElem  = data.content[0];
+    var stylesEl = new jsAPI({
+      elem:    'style',
+      prefix:  '',
+      local:   'style',
+      content: [{
+        text: '/* Text:' + "\n" + textEsc + "\n" + '*/'
+      }]
+    }, svgElem);
+    svgElem.content.unshift(stylesEl);
 
     return data;
 };
