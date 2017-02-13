@@ -4,12 +4,16 @@ exports.type = 'full';
 
 exports.active = false;
 
-exports.description = 'add list of used characters as style comment for further use.';
+exports.description = 'add list of used characters as style comment for further use';
 
 var styleOrScript = ['style', 'script'];
 
 var JsAPI = require('../lib/svgo/jsAPI');
 
+/**
+ * Add list of used characters as style comment for further use.
+ * @author strarsis <strarsis@gmail.com>
+ */
 exports.fn = function(data) {
 
 
