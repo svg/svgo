@@ -50,7 +50,7 @@ exports.fn = function(data) {
     var charsStr = chars.join('');
 
     // Escape CSS multiline comment termination characters ('*/' -> '/*')
-    var charsEsc = charsStr.replace('*\/', '\/*');
+    var charsStrEsc = charsStr.replace('*\/', '\/*');
 
     var svgElem  = data.content[0];
     var stylesEl = new JsAPI({
@@ -58,7 +58,7 @@ exports.fn = function(data) {
       prefix:  '',
       local:   'style',
       content: [{
-        text: '/* Characters used:' + '\n' + charsEsc + '\n        ' + '*/'
+        text: '/* Characters used:' + '\n' + charsStrEsc + '\n        ' + '*/'
       }]
     }, svgElem);
     svgElem.content.unshift(stylesEl);
