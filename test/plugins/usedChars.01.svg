@@ -11,8 +11,8 @@
 
 <svg height="30" width="200">
     <style>
-        /* Text:
-I love SVG!Test.
+        /* Characters used:
+I loveSVG!Tst.
 */
     </style>
     <text x="0" y="15" fill="red">

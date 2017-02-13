@@ -47,8 +47,11 @@ exports.fn = function(data, params) {
 
     var text = texts.join('');
 
+    var chars = text.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+    var charsStr = chars.join('');
+
     // Escape CSS multiline comment termination characters ('*/' -> '/*')
-    var textEsc = text.replace('*\/', '\/*');
+    var charsEsc = charsStr.replace('*\/', '\/*');
 
     var svgElem  = data.content[0];
     var stylesEl = new jsAPI({
@@ -56,7 +59,7 @@ exports.fn = function(data, params) {
       prefix:  '',
       local:   'style',
       content: [{
-        text: '/* Text:' + "\n" + textEsc + "\n" + '*/'
+        text: '/* Characters used:' + "\n" + charsEsc + "\n" + '*/'
       }]
     }, svgElem);
     svgElem.content.unshift(stylesEl);
