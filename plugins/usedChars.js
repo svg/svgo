@@ -58,7 +58,7 @@ exports.fn = function(data) {
       prefix:  '',
       local:   'style',
       content: [{
-        text: '/* Characters used:' + '\n' + charsEsc + '\n' + '*/'
+        text: '/* Characters used:' + '\n' + charsEsc + '\n        ' + '*/'
       }]
     }, svgElem);
     svgElem.content.unshift(stylesEl);
