@@ -1,15 +1,14 @@
 'use strict';
 
-var jsAPI = require('../lib/svgo/jsAPI');
-
-
 exports.type = 'full';
 
 exports.active = false;
 
-exports.description = 'used text';
+exports.description = 'add list of used characters as style comment for further use.';
 
 var styleOrScript = ['style', 'script'];
+
+var jsAPI = require('../lib/svgo/jsAPI');
 
 exports.fn = function(data, params) {
 
