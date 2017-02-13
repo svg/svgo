@@ -8,9 +8,9 @@ exports.description = 'add list of used characters as style comment for further 
 
 var styleOrScript = ['style', 'script'];
 
-var jsAPI = require('../lib/svgo/jsAPI');
+var JsAPI = require('../lib/svgo/jsAPI');
 
-exports.fn = function(data, params) {
+exports.fn = function(data) {
 
 
     var texts = [];
@@ -53,12 +53,12 @@ exports.fn = function(data, params) {
     var charsEsc = charsStr.replace('*\/', '\/*');
 
     var svgElem  = data.content[0];
-    var stylesEl = new jsAPI({
+    var stylesEl = new JsAPI({
       elem:    'style',
       prefix:  '',
       local:   'style',
       content: [{
-        text: '/* Characters used:' + "\n" + charsEsc + "\n" + '*/'
+        text: '/* Characters used:' + '\n' + charsEsc + '\n' + '*/'
       }]
     }, svgElem);
     svgElem.content.unshift(stylesEl);
