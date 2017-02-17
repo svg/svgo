@@ -1,12 +1,12 @@
-var path = require('path');
-var webpack = require('webpack');
+const {resolve} = require('path');
+const webpack = require('webpack');
 
 module.exports = {
 	entry: [
 		'./lib/svgo.js'
 	],
 	output: {
-		path: path.join(__dirname, 'dist'),
+		path: resolve(__dirname, 'dist'),
 		filename: 'svgo.js',
 		libraryTarget: "var",
 		library: "SVGO"
@@ -20,6 +20,13 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin()
+		new webpack.optimize.UglifyJsPlugin({
+			compress: {
+					warnings: true
+			},
+			output: {
+				comments: false
+			}
+		})
 	],
 };

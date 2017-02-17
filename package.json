@@ -46,7 +46,7 @@
   "scripts": {
     "test": "set NODE_ENV=test && mocha",
     "jshint": "jshint --show-non-errors .",
-    "browser": "webpack"
+    "webpack": "webpack"
   },
   "dependencies": {
     "coa": "~1.0.1",
@@ -63,7 +63,7 @@
     "mocha": "~3.1.0",
     "mocha-istanbul": "~0.3.0",
     "should": "11.1.0",
-    "webpack": "^1.14.0"
+    "webpack": "^2.2.1"
   },
   "engines": {
     "node": ">=0.10.0"

@@ -106,9 +106,10 @@ exports.fn = function(item, params) {
                 if (params.convertToPx && units && (units in absoluteLengths)) {
                     var pxNum = +(absoluteLengths[units] * match[1]).toFixed(params.floatPrecision);
 
-                    if (String(pxNum).length < match[0].length)
-                        num = pxNum,
+                    if (String(pxNum).length < match[0].length) {
+                        num = pxNum;
                         units = 'px';
+                    }  
                 }
 
                  // and remove leading zero
