@@ -9,7 +9,7 @@ var FS = require('fs'),
                    '../../lib-cov/svgo':
                    '../../lib/svgo');
 
-describe.only('plugins tests', function() {
+describe('plugins tests', function() {
 
     FS.readdirSync(__dirname).forEach(function(file) {
 
