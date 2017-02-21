@@ -4,7 +4,7 @@ var FS = require('fs'),
     PATH = require('path'),
     EOL = require('os').EOL,
     regEOL = new RegExp(EOL, 'g'),
-    regFilename = /^(clip.*)\.(\d+)\.svg$/,
+    regFilename = /^(.*)\.(\d+)\.svg$/,
     SVGO = require(process.env.COVERAGE ?
                    '../../lib-cov/svgo':
                    '../../lib/svgo');
