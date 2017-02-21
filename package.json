@@ -54,7 +54,8 @@
     "colors": "~1.1.2",
     "whet.extend": "~0.9.9",
     "mkdirp": "~0.5.1",
-    "csso": "~2.3.1"
+    "csso": "~2.3.1",
+    "martinez-polygon-clipping": "^0.1.5"
   },
   "devDependencies": {
     "mocha": "~3.2.0",

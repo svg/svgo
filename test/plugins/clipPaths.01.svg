@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M 10,10 L 110,10 L 110,110 L 10,110 z"/>
+    <path d="M 10,10 110,10 110,110 10,110 z"/>
+    <path d="M 10,10 h 90 v 90 H 10 z"/>
+    <path d="M -50,0 50,150 150,0 z"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10L100 10L100 100L10 100z"/>
+    <path d="M10 10L100 10L100 100L10 100z"/>
+    <path d="M10 10L100 10L100 100L10 100z"/>
+    <path d="M0 0L100 0L100 75L83.333 100L16.667 100L0 75z"/>
+</svg>

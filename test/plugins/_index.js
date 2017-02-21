@@ -4,12 +4,12 @@ var FS = require('fs'),
     PATH = require('path'),
     EOL = require('os').EOL,
     regEOL = new RegExp(EOL, 'g'),
-    regFilename = /^(.*)\.(\d+)\.svg$/,
+    regFilename = /^(clip.*)\.(\d+)\.svg$/,
     SVGO = require(process.env.COVERAGE ?
                    '../../lib-cov/svgo':
                    '../../lib/svgo');
 
-describe('plugins tests', function() {
+describe.only('plugins tests', function() {
 
     FS.readdirSync(__dirname).forEach(function(file) {
 
