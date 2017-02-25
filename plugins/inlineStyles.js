@@ -14,9 +14,9 @@ exports.params = {
 exports.description = 'inline styles (additional options)';
 
 
-var specificity = require('specificity'),
-    stable      = require('stable'),
-    csso        = require('csso');
+var stable   = require('stable'),
+    csso     = require('csso'),
+    cssTools = require('../lib/css-tools');
 
 /**
   * Moves + merges styles from style elements to element styles
@@ -135,15 +135,15 @@ exports.fn = function(document, opts) {
     selectorItem.pseudoClassList.remove(selectorItem.pseudoClassItem);
   });
 
+  // stable-sort css selectors by their specificity
+  var selectorItemsSorted = stable(selectorItemsPseudoClasses, function(itemA, itemB) {
+    return cssTools.compareSimpleSelectorNode(itemA.simpleSelectorItem.data, itemB.simpleSelectorItem.data);
+  }).reverse(); // last declaration applies last (final)
+
   // compile css selector strings
   selectorItemsPseudoClasses.map(function(selectorItem) {
     selectorItem.selectorStr = csso.translate(selectorItem.simpleSelectorItem.data);
   });
-
-  // stable-sort css selectors by their specificity
-  var selectorItemsSorted = stable(selectorItemsPseudoClasses, function(itemA, itemB) {
-    return specificity.compare(itemA.selectorStr, itemB.selectorStr);
-  }).reverse(); // last declaration applies last (final)
 
   // apply <style/> styles to matched elements
   for(var selectorItemIndex in selectorItemsSorted) {
