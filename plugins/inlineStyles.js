@@ -37,8 +37,8 @@ var stable   = require('stable'),
   *     what pseudo-classes to be used,
   *     non-pseudo-class styles are always used
   *
-  * @param {Object} root (document)
-  * @param {Object} params plugin params
+  * @param {Object} document document element
+  * @param {Object} opts plugin params
   *
   * @author strarsis <strarsis@gmail.com>
   */
