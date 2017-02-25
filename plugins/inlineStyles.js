@@ -148,8 +148,17 @@ exports.fn = function(document, opts) {
   // apply <style/> styles to matched elements
   for(var selectorItemIndex in selectorItemsSorted) {
     var selectorItem = selectorItemsSorted[selectorItemIndex],
-
+        selectedEls  = null;
+    try {
         selectedEls  = document.querySelectorAll(selectorItem.selectorStr);
+    } catch(e) {
+      if(e.constructor == SyntaxError) {
+        console.warn('Syntax error when trying to select \n\n' + selectorItem.selectorStr + '\n\n, skipped.');
+        continue;
+      }
+      throw e;
+    }
+
     if(opts.onlyMatchedOnce && selectedEls !== null && selectedEls.length > 1) {
       // skip selectors that match more than once if option onlyMatchedOnce is enabled
       continue;
