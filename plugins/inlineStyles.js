@@ -140,20 +140,16 @@ exports.fn = function(document, opts) {
     return cssTools.compareSimpleSelectorNode(itemA.simpleSelectorItem.data, itemB.simpleSelectorItem.data);
   }).reverse(); // last declaration applies last (final)
 
-  // compile css selector strings
-  selectorItemsPseudoClasses.map(function(selectorItem) {
-    selectorItem.selectorStr = csso.translate(selectorItem.simpleSelectorItem.data);
-  });
-
   // apply <style/> styles to matched elements
   for(var selectorItemIndex in selectorItemsSorted) {
     var selectorItem = selectorItemsSorted[selectorItemIndex],
+        selectorStr  = csso.translate(selectorItem.simpleSelectorItem.data),
         selectedEls  = null;
     try {
-        selectedEls  = document.querySelectorAll(selectorItem.selectorStr);
+        selectedEls  = document.querySelectorAll(selectorStr);
     } catch(e) {
       if(e.constructor == SyntaxError) {
-        console.warn('Syntax error when trying to select \n\n' + selectorItem.selectorStr + '\n\n, skipped.');
+        console.warn('Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped.');
         continue;
       }
       throw e;
