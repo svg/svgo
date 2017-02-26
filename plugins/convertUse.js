@@ -8,7 +8,7 @@ exports.description = 'Converts <use> links with their <defs> counterparts';
 
 exports.params = {
     convertAll: false
-}
+};
 
 /**
  * Converts <use> tags with the elements they link to.
@@ -20,12 +20,13 @@ exports.params = {
  */
 exports.fn = function(data, params) {
     
+    var defsElement;
     /**
      * Find definitions among items
      *
      * @param {Object} items current iteration item
      * @param {Boolean} isDef
-     * @return {Object} output definitions by id
+     * @return {Object} output definitions by id ( {id: item} )
      */
     function findDefs(items, isDef) {
         isDef = (isDef==true);
@@ -37,6 +38,7 @@ exports.fn = function(data, params) {
             
             if (item.isElem('defs')) {
                 isDef = true;
+                defsElement = item;
             }
             
             // Id's are presumed to be unique. Add to defs.
@@ -76,6 +78,15 @@ exports.fn = function(data, params) {
         return useItems;
     }
     
+    function removeFromDefs(defs, item) {
+        for (var i=0; i < defs.content.length; i++) {
+            var defItem = defs.content[i];
+            if (item === defItem) {
+                defs.content.splice(i,1);
+            }
+        }
+    }
+    
     /**
      * Replace <use> items with their definitions
      *
@@ -88,7 +99,7 @@ exports.fn = function(data, params) {
         for (var i=0; i < itemAry.length; i++) {
             var item = itemAry[i];
             
-            if (item.isElem('use')) {
+            if (item.isElem('use') && item.hasAttr('xlink:href')) {
                 
                 var id = item.attr('xlink:href').value;
                 // Make sure that we know the id before proceeding
@@ -99,6 +110,8 @@ exports.fn = function(data, params) {
                     var defItem = defs[id].clone();
                     defItem.parentNode = item;
                     item.content = [ defItem ];
+                    
+                    removeFromDefs(defsElement, defs[id]);
                 }
             }
         }
@@ -125,12 +138,13 @@ exports.fn = function(data, params) {
         var uniqueItems = [];
         for (var i = 0; i < itemAry.length; i++) {
             
-            var itemId = itemAry[i].attr('xlink:href').value
+            var itemId = itemAry[i].attr('xlink:href').value;
             // Make sure we don't call properties of undefined
-            try { var prevId = itemAry[i-1].attr('xlink:href').value; }
-            catch (e) { var prevID; }
-            try { var nextId = itemAry[i+1].attr('xlink:href').value; }
-            catch (e) { var nextID; }
+            var prevId, nextId;
+            try { prevId = itemAry[i-1].attr('xlink:href').value; }
+            catch (e) { prevId = null; }
+            try { nextId = itemAry[i+1].attr('xlink:href').value; }
+            catch (e) { nextId = null; }
             
             if ( prevId != itemId && itemId != nextId ) {
                 uniqueItems.push(itemAry[i]);
