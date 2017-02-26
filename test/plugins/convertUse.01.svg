@@ -1,0 +1,35 @@
+<svg width="200" height="200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="Gradient">
+      <stop offset="0" stop-color="black" stop-opacity="1" />
+      <stop offset="1" stop-color="white" stop-opacity="1" />
+    </linearGradient>
+    <mask id="Mask">
+      <use xlink:href="#rect" fill="url(#Gradient)"/>
+    </mask>
+    <rect id="rect" x="0" y="0" width="200" height="200"/>
+    <rect id="rect2" x="40" y="40" width="140" height="120" rx="3" fill="green"/>
+  </defs>
+
+  <use mask="url(#Mask)" opacity="0.9" xlink:href="#rect2"/>
+  <use stroke="blue" fill="none" stroke-width="2" xlink:href="#rect"/>
+</svg>
+
+@@@
+
+<svg width="200" height="200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="Gradient">
+      <stop offset="0" stop-color="black" stop-opacity="1"/>
+      <stop offset="1" stop-color="white" stop-opacity="1"/>
+    </linearGradient>
+    <mask id="Mask">
+      <use xlink:href="#rect" fill="url(#Gradient)"/>
+    </mask>
+    <rect id="rect" x="0" y="0" width="200" height="200"/>
+  </defs>
+  <g mask="url(#Mask)" opacity="0.9">
+    <rect id="rect2" x="40" y="40" width="140" height="120" rx="3" fill="green"/>
+  </g>
+  <use stroke="blue" fill="none" stroke-width="2" xlink:href="#rect"/>
+</svg>
