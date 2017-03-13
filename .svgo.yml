@@ -24,6 +24,7 @@ plugins:
   - removeEditorsNSData
   - cleanupAttrs
   - minifyStyles
+  - convertClassToStyle
   - convertStyleToAttrs
   - cleanupIDs
   - removeRasterImages
