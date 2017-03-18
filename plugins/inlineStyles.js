@@ -123,10 +123,10 @@ exports.fn = function(document, opts) {
       csstree.walkDeclarations(selector.rule, function(styleCssoDeclaration) {
         var styleDeclaration = cssTools.cssoToStyleDeclaration(styleCssoDeclaration);
         if(selectedEl.style.getPropertyValue(styleDeclaration.name)    !== null &&
-           selectedEl.style.getPropertyPriority(styleDeclaration.name) >=  styleDeclaration.property.priority) {
+           selectedEl.style.getPropertyPriority(styleDeclaration.name) >=  styleDeclaration.priority) {
           return;
         }
-        selectedEl.style.setProperty(styleDeclaration.name, styleDeclaration.property.value, styleDeclaration.property.priority);
+        selectedEl.style.setProperty(styleDeclaration.name, styleDeclaration.value, styleDeclaration.priority);
       });
 
     }
