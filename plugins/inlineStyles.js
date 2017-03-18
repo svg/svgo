@@ -62,7 +62,7 @@ exports.fn = function(document, opts) {
     var cssStr = styleEl.content[0].text || styleEl.content[0].cdata || [];
 
     // collect <style/>s and their css ast
-    var cssAst = csstree.parse(cssStr, {context: 'stylesheet'});
+    var cssAst = csstree.parse(cssStr, {context: 'stylesheet', parseValue: false, parseCustomProperty: false});
     styles.push({
       styleEl: styleEl,
       cssAst:  cssAst
