@@ -146,6 +146,7 @@ exports.fn = function(document, opts) {
          node.block !== null &&
          node.block.children.isEmpty()) {
         list.remove(item);
+        continue;
       }
 
       // clean up <style/> rulesets without any css selectors left
