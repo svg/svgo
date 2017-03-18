@@ -13,4 +13,4 @@
 
 @@@
 
-{"usePseudoClasses":["hover"]}
+{"usePseudos":[":hover"]}
