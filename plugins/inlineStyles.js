@@ -96,7 +96,7 @@ exports.fn = function(document, opts) {
         selectedEls = document.querySelectorAll(selectorStr);
     } catch(e) {
         if(e.constructor === SyntaxError) {
-            console.warn('Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped.');
+            console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped.');
             continue;
         }
         throw e;
