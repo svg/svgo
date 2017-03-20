@@ -62,7 +62,14 @@ exports.fn = function(document, opts) {
     var cssStr = styleEl.content[0].text || styleEl.content[0].cdata || [];
 
     // collect <style/>s and their css ast
-    var cssAst = csstree.parse(cssStr, {parseValue: false, parseCustomProperty: false});
+    var cssAst = {};
+    try {
+        cssAst = csstree.parse(cssStr, {parseValue: false, parseCustomProperty: false});
+    } catch(parseError) {
+        console.warn('Warning: Parse error of styles of <style/> element, skipped. Error details: ' + parseError);
+        continue;
+    }
+
     styles.push({
       styleEl: styleEl,
       cssAst:  cssAst
@@ -94,12 +101,12 @@ exports.fn = function(document, opts) {
 
     try {
         selectedEls = document.querySelectorAll(selectorStr);
-    } catch(e) {
-        if(e.constructor === SyntaxError) {
-            console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped.');
+    } catch(selectError) {
+        if(selectError.constructor === SyntaxError) {
+            console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped. Error details: ' + selectError);
             continue;
         }
-        throw e;
+        throw selectError;
     }
 
     if(selectedEls === null) {
