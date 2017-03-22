@@ -57,6 +57,7 @@ Today we have:
 | [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | sort element attributes for epic readability (disabled by default) |
 | [transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) | apply transforms, crop by real width, center vertical alignment, and resize SVG with one Path inside (disabled by default) |
 | [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | remove `width`/`height` attributes if `viewBox` is present (disabled by default) |
+| [addDimensions](https://github.com/svg/svgo/blob/master/plugins/addDimensions.js) | add `width`/`height` attributes if `viewBox` is present (disabled by default) |
 | [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | remove attributes by pattern (disabled by default) |
 | [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | remove arbitrary elements by ID or className (disabled by default) |
 | [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | add classnames to an outer `<svg>` element (disabled by default) |
