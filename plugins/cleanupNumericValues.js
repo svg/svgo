@@ -35,22 +35,34 @@ var regNumericValues = /^([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)(px|pt|pc|mm|cm|m|in|f
  */
 exports.fn = function(item, params) {
 
-    if (item.isElem()) {
 
-        var match;
+    if (item.isElem()) {
+        var floatPrecision = params.floatPrecision;
+
+        // handle svg viewBox
+        if (item.hasAttr('viewBox')) {
+            var nums = item.attr('viewBox').value.split(/[ ,]/g);
+            // I find it bad to do .toFixed then remove trailing 0's
+
+            var factor = Math.pow(10, floatPrecision); // should be in config if we use Math.round everywhere
+            item.attr('viewBox').value = nums.map(function(num) {
+                return Math.round(num*factor) / factor;
+            }).join(' ');
+        }
+
 
         item.eachAttr(function(attr) {
-            match = attr.value.match(regNumericValues);
+            var match = attr.value.match(regNumericValues);
 
             // if attribute value matches regNumericValues
             if (match) {
                 // round it to the fixed precision
-                var num = +(+match[1]).toFixed(params.floatPrecision),
+                var num = +(+match[1]).toFixed(floatPrecision),
                     units = match[3] || '';
 
                 // convert absolute values to pixels
                 if (params.convertToPx && units && (units in absoluteLengths)) {
-                    var pxNum = +(absoluteLengths[units] * match[1]).toFixed(params.floatPrecision);
+                    var pxNum = +(absoluteLengths[units] * match[1]).toFixed(floatPrecision);
 
                     if (String(pxNum).length < match[0].length) {
                         num = pxNum;

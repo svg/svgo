@@ -546,7 +546,7 @@ function collapseRepeated(data) {
         prevIndex;
 
     // copy an array and modifieds item to keep original data untouched
-    data = data.reduce(function(newPath, item) {
+    return data.reduce(function(newPath, item) {
         if (
             prev && item.data &&
             item.instruction == prev.instruction
@@ -571,8 +571,6 @@ function collapseRepeated(data) {
 
         return newPath;
     }, []);
-
-    return data;
 
 }
 
