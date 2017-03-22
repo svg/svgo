@@ -22,7 +22,6 @@ exports.params = {
 };
 
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
-    EXTEND = require('whet.extend'),
     transform2js = require('./_transforms.js').transform2js,
     transformsMultiply = require('./_transforms.js').transformsMultiply,
     matrixToTransform = require('./_transforms.js').matrixToTransform,
@@ -116,7 +115,7 @@ function definePrecision(data, params) {
         significantDigits = params.transformPrecision;
 
     // Clone params so it don't affect other elements transformations.
-    params = EXTEND({}, params);
+    params = Object.assign({}, params);
 
     // Limit transform precision with matrix one. Calculating with larger precision doesn't add any value.
     if (matrixData.length) {

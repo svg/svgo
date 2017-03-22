@@ -35,13 +35,12 @@ exports.params = {
 };
 
 var _path = require('./_path.js'),
-    relative2absolute = _path.relative2absolute,
+    relative2absolute = _path.eelative2absolute,
     computeCubicBoundingBox = _path.computeCubicBoundingBox,
     computeQuadraticBoundingBox = _path.computeQuadraticBoundingBox,
     applyTransforms = _path.applyTransforms,
     js2path = _path.js2path,
-    path2js = _path.path2js,
-    EXTEND = require('whet.extend');
+    path2js = _path.path2js;
 
 exports.fn = function(data, params) {
 
@@ -56,7 +55,7 @@ exports.fn = function(data, params) {
             var svgElem = item,
                 pathElem = svgElem.content[0],
                 // get absoluted Path data
-                path = relative2absolute(EXTEND(true, [], path2js(pathElem))),
+                path = relative2absolute(path2js(pathElem)),
                 xs = [],
                 ys = [],
                 cubicСontrolPoint = [0, 0],
