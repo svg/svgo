@@ -97,7 +97,7 @@ var relative2absolute = exports.relative2absolute = function(data) {
         subpathPoint = [0, 0],
         i;
 
-    data = data.map(function(item) {
+    return data.map(function(item) {
 
         var instruction = item.instruction,
             itemData = item.data && item.data.slice();
@@ -160,8 +160,6 @@ var relative2absolute = exports.relative2absolute = function(data) {
             };
 
     });
-
-    return data;
 };
 
 /**
