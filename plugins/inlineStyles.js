@@ -28,13 +28,13 @@ var csstree  = require('css-tree'),
   *     clean up matched selectors,
   *     leave selectors that hadn't matched
   *
-  *   useMqs (default: ['screen'])
-  *     what mediaqueries to be used,
-  *     non-mediaquery styles are always used
+  *   useMqs (default: ['', 'screen'])
+  *     what media queries to be used
+  *     empty string element for styles outside media queries
   *
-  *   usePseudos (default: [])
-  *     what pseudo-classes/-elements to be used,
-  *     non-pseudo-class/-element styles are always used
+  *   usePseudos (default: [''])
+  *     what pseudo-classes/-elements to be used
+  *     empty string element for all non-pseudo-classes and/or -elements
   *
   * @param {Object} document document element
   * @param {Object} opts plugin params
