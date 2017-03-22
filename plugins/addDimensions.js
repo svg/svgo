@@ -31,15 +31,15 @@ exports.fn = function(item) {
         
         if (dimensions != null) {
             item.addAttr({
-                    name: "width",
+                    name: 'width',
                     prefix: '',
-                    local: "width",
+                    local: 'width',
                     value: dimensions[0]
                 });
             item.addAttr({
-                    name: "height",
+                    name: 'height',
                     prefix: '',
-                    local: "height",
+                    local: 'height',
                     value: dimensions[1]
                 });
         }
