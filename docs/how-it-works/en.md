@@ -199,6 +199,59 @@ And of course, writing plugins would not have been so cool without some sugar AP
   * @param {Object} [context] callback context
   * @return {Boolean} false if there are no any attributes
 
+
+##### querySelectorAll(selectors)
+  * Evaluates a string of css selectors against the element and returns matched elements
+  * @param {String} selectors css selector(s) string
+  * @return {Array} null if no elements matched
+
+##### querySelector(selectors)
+  * Evaluates a string of css selectors against the element and returns only the first matched element
+  * @param {String} selectors css selector(s) string
+  * @return {Array} null if no element matched
+
+##### matches(selector)
+  * Tests if a selector matches a given element
+  * @param {String} selector css selector string
+  * @return {Boolean} true if element would be selected by selector string, false if it does not
+
+
+##### style.getCssText()
+  * Gets the textual representation of the declaration block (equivalent to .cssText attribute).
+  * @return {String} Textual representation of the declaration block (empty string for no properties)
+
+##### style.getPropertyPriority(propertyName)
+  * Returns the optional priority, "important".
+  * @param {String} propertyName representing the property name to be checked.
+  * @return {String} priority that represents the priority (e.g. "important") if one exists. If none exists, returns the empty string.
+
+##### style.getPropertyValue(propertyName)
+  * Returns the property value given a property name.
+  * @param {String} propertyName representing the property name to be checked.
+  * @return {String} value containing the value of the property. If not set, returns the empty string.
+
+##### style.item(index)
+  * Returns a property name.
+  * @param {Number} index of the node to be fetched. The index is zero-based.
+  * @return {String} propertyName that is the name of the CSS property at the specified index.
+
+##### style.getProperties()
+  * Returns all properties of the node.
+  * @return {Map} properties that is a Map with propertyName as key and property (propertyValue + propertyPriority) as value.
+
+##### style.removeProperty(propertyName)
+  * Removes a property from the CSS declaration block.
+  * @param {String} propertyName representing the property name to be removed.
+  * @return {String} oldValue equal to the value of the CSS property before it was removed.
+
+##### style.setProperty(propertyName, value, priority)
+  * Modifies an existing CSS property or creates a new CSS property in the declaration block.
+  * @param {String} propertyName representing the CSS property name to be modified.
+  * @param {String} [value] containing the new property value. If not specified, treated as the empty string. value must not contain "!important" -- that should be set using the priority parameter.
+  * @param {String} [priority] allowing the "important" CSS priority to be set. If not specified, treated as the empty string.
+  * @return {undefined}
+
+
 #### 3.3 tests
 
 There is nothing easier than testing your plugin:
