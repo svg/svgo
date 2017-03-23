@@ -35,7 +35,7 @@ exports.params = {
 };
 
 var _path = require('./_path.js'),
-    relative2absolute = _path.eelative2absolute,
+    relative2absolute = _path.relative2absolute,
     computeCubicBoundingBox = _path.computeCubicBoundingBox,
     computeQuadraticBoundingBox = _path.computeQuadraticBoundingBox,
     applyTransforms = _path.applyTransforms,
