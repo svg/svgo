@@ -1,0 +1,28 @@
+<style>svg { max-width: 200px; display: inline-block; }</style>
+<div id="svgs">
+<svg viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><g><path d="M4.635,4.039c0.515,0.447 0.911,1.019 1.189,1.638c0.087,0.192 0.162,0.389 0.226,0.59c0.024,0.079 0.047,0.157 0.068,0.237c0.01,0.041 0.02,0.083 0.029,0.125c0.004,0.011 0.004,0.011 0.008,0.023c0.008,0.173 0.009,0.346 0.007,0.52c-0.021,0.33 -0.053,0.66 -0.097,0.987c-0.044,0.331 -0.1,0.66 -0.17,0.987c-0.062,0.29 -0.135,0.577 -0.223,0.86c-0.013,0.042 -0.027,0.085 -0.041,0.127c0.064,0.163 0.115,0.33 0.15,0.502c0.043,0.209 0.063,0.423 0.055,0.636c-0.008,0.21 -0.042,0.419 -0.102,0.621Z" style="fill:#433231;"/></g></svg>
+
+</div>
+
+
+<script src="../dist/svgo.js"></script>
+
+<script>
+var svgStr = svgs.querySelector('svg').outerHTML;
+
+var svgoConfig = {multipass:true, floatPrecision:2, /*js2svg:{pretty:true},*/ plugins: [
+	{mergePaths: false},
+	{convertShapeToPath: false}
+]};
+var svgo = new SVGO(svgoConfig);
+
+svgo.optim(svgStr)
+.then(svgjs => {
+	var svgStr2 = svgjs.data;
+
+	svgs.innerHTML += svgStr2;
+	console.log(svgStr2.length, svgStr.length);
+})
+.catch(console.error);
+
+</script>
