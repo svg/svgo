@@ -31,34 +31,41 @@ var svgoConfig = {multipass:true, floatPrecision:2, /*js2svg:{pretty:true},*/ pl
 	{convertShapeToPath: false}
 ]};
 
-
-new SVGO(svgoConfig).optim(svgStr, 1)
+var svgo = new SVGO(svgoConfig)
+svgo.optim(svgStr, 1)
 .then(svgjs => {
 	assert(svgjs.data.length < svgStr.length);
-	console.log('result:', svgjs.data)
+	console.log('result:', svgjs.data);
+	const svgRoot = svgjs.tree.content[0];
+	if (svgRoot.hasAttr('viewBox')){
+		svgRoot.removeAttr('width');
+		svgRoot.removeAttr('height');
+		svgjs = svgo.js2svg(svgjs.tree);
+	}
+	console.log('result2:', svgjs.data);
 	console.log('with node:', svgjs.data.length, svgStr.length)
 })
 .catch(console.error);
 
 
-new SVGO(svgoConfig).optim(svgStr, 1)
-.then(svgjs => {
-	assert(svgjs.data.length < svgStr.length);
-	// console.log('result:', svgjs.data)
-	console.log('with node:', svgjs.data.length, svgStr.length)
-})
-.catch(console.error);
+// new SVGO(svgoConfig).optim(svgStr, 1)
+// .then(svgjs => {
+// 	assert(svgjs.data.length < svgStr.length);
+// 	// console.log('result:', svgjs.data)
+// 	console.log('with node:', svgjs.data.length, svgStr.length)
+// })
+// .catch(console.error);
 
 
 
 // ---- browser build:
-var SVGO_BROWSER = Function(require('fs').readFileSync('../dist/svgo.js').toString()+'\nreturn SVGO;')();
+// var SVGO_BROWSER = Function(require('fs').readFileSync('../dist/svgo.js').toString()+'\nreturn SVGO;')();
 
 
-new SVGO_BROWSER(svgoConfig).optim(svgStr)
-.then(svgjs => {
-	assert(svgjs.data.length < svgStr.length);
-	console.log('with bundle:', svgjs.data.length, svgStr.length)
-})
-.catch(console.error);
+// new SVGO_BROWSER(svgoConfig).optim(svgStr)
+// .then(svgjs => {
+// 	assert(svgjs.data.length < svgStr.length);
+// 	console.log('with bundle:', svgjs.data.length, svgStr.length)
+// })
+// .catch(console.error);
 
