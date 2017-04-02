@@ -101,9 +101,9 @@ function convertTransform(item, attrName, params) {
         floatPrecision = Math.pow(10, params.floatPrecision),
         transformPrecision = Math.pow(10, params.transformPrecision);
 
-    params.floatRound = floatPrecision == 1 ? round : smartRound.bind(this, floatPrecision);
-    params.degRound = degPrecision == 1 ? round : smartRound.bind(this, degPrecision);
-    params.transformRound = transformPrecision == 1 ? round : smartRound.bind(this, transformPrecision);
+    params.floatRound = floatPrecision == 1 ? round : smartRound.bind(null, floatPrecision);
+    params.degRound = degPrecision == 1 ? round : smartRound.bind(null, degPrecision);
+    params.transformRound = transformPrecision == 1 ? round : smartRound.bind(null, transformPrecision);
 
 
     if (params.collapseIntoOne && data.length > 1) {

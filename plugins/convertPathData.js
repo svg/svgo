@@ -51,9 +51,9 @@ exports.fn = function(item, params) {
 
     if (item.isElem(pathElems) && item.hasAttr('d')) {
 
-        var precision = params.floatPrecision;
-        params.error = Math.pow(10, -precision);
-        var roundData = precision > 0 && precision < 20 ? strongRound.bind(this, precision) : round;
+        var precision = Math.pow(10, params.floatPrecision);
+        params.error = 1 / precision;
+        var roundData = precision == 1 ? round : strongRound.bind(this, precision);
 
         var data = path2js(item);
 
@@ -751,13 +751,15 @@ function getIntersection(coords) {
  * @return {Array} output data array
  */
 function strongRound(precision, data) {
-    var tolerance = Math.pow(10, -precision);
+    var tolerance = 1 / precision;
     for (var i = data.length; i-- > 0;) {
-        if (data[i].toFixed(precision) != data[i]) {
-            var rounded = +data[i].toFixed(precision - 1);
-            data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance ?
-                +data[i].toFixed(precision) :
-                rounded;
+        var rounded = Math.round(data[i] * precision) / precision;
+        if (rounded != data[i]) {
+            var p = precision/10,
+                roundedMore = Math.round(data[i]*p) / p;
+            data[i] = Math.abs(roundedMore - data[i]) >= tolerance ?
+                rounded :
+                roundedMore;
         }
     }
     return data;
