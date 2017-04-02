@@ -93,24 +93,24 @@ var mth = exports.mth = {
         return Math.cos(this.rad(deg));
     },
 
-    acos: function(val, floatPrecision) {
-        return +(this.deg(Math.acos(val)).toFixed(floatPrecision));
+    acos: function(val, precision) {
+        return Math.round(this.deg(Math.acos(val))*precision)/precision;
     },
 
     sin: function(deg) {
         return Math.sin(this.rad(deg));
     },
 
-    asin: function(val, floatPrecision) {
-        return +(this.deg(Math.asin(val)).toFixed(floatPrecision));
+    asin: function(val, precision) {
+        return Math.round(this.deg(Math.asin(val))*precision)/precision;
     },
 
     tan: function(deg) {
         return Math.tan(this.rad(deg));
     },
 
-    atan: function(val, floatPrecision) {
-        return +(this.deg(Math.atan(val)).toFixed(floatPrecision));
+    atan: function(val, precision) {
+        return Math.round(this.deg(Math.atan(val))*precision)/precision;
     }
 
 };
@@ -123,11 +123,11 @@ var mth = exports.mth = {
  * @return {Object|Array} transforms array or original transform object
  */
 exports.matrixToTransform = function(transform, params) {
-    var floatPrecision = params.floatPrecision,
+    var precision = Math.pow(10, params.floatPrecision),
         data = transform.data,
         transforms = [],
-        sx = +Math.sqrt(data[0] * data[0] + data[1] * data[1]).toFixed(params.transformPrecision),
-        sy = +((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(params.transformPrecision),
+        sx = Math.round(Math.sqrt(data[0] * data[0] + data[1] * data[1])*precision)/precision,
+        sy = Math.round((data[0] * data[3] - data[1] * data[2]) / sx * precision) / precision,
         colsSum = data[0] * data[2] + data[1] * data[3],
         rowsSum = data[0] * data[1] + data[2] * data[3],
         scaleBefore = rowsSum || +(sx == sy);
@@ -139,11 +139,11 @@ exports.matrixToTransform = function(transform, params) {
 
     // [sx, 0, tan(a)·sy, sy, 0, 0] → skewX(a)·scale(sx, sy)
     if (!data[1] && data[2]) {
-        transforms.push({ name: 'skewX', data: [mth.atan(data[2] / sy, floatPrecision)] });
+        transforms.push({ name: 'skewX', data: [mth.atan(data[2] / sy, precision)] });
 
     // [sx, sx·tan(a), 0, sy, 0, 0] → skewY(a)·scale(sx, sy)
     } else if (data[1] && !data[2]) {
-        transforms.push({ name: 'skewY', data: [mth.atan(data[1] / data[0], floatPrecision)] });
+        transforms.push({ name: 'skewY', data: [mth.atan(data[1] / data[0], precision)] });
         sx = data[0];
         sy = data[3];
 
@@ -155,13 +155,13 @@ exports.matrixToTransform = function(transform, params) {
             sy = (data[3] < 0 ? -1 : 1) * Math.sqrt(data[1] * data[1] + data[3] * data[3]);
             transforms.push({ name: 'scale', data: [sx, sy] });
         }
-        var rotate = [mth.acos(data[0] / sx, floatPrecision) * (data[1] * sy < 0 ? -1 : 1)];
+        var rotate = [mth.acos(data[0] / sx, precision) * (data[1] * sy < 0 ? -1 : 1)];
 
         if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
 
         if (rowsSum && colsSum) transforms.push({
             name: 'skewX',
-            data: [mth.atan(colsSum / (sx * sx), floatPrecision)]
+            data: [mth.atan(colsSum / (sx * sx), precision)]
         });
 
         // rotate(a, cx, cy) can consume translate() within optional arguments cx, cy (rotation point)

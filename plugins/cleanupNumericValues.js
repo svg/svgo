@@ -37,7 +37,7 @@ exports.fn = function(item, params) {
 
     if (item.isElem()) {
 
-        var match;
+        var match, precision = Math.pow(10, params.floatPrecision);
 
         item.eachAttr(function(attr) {
             match = attr.value.match(regNumericValues);
@@ -45,12 +45,12 @@ exports.fn = function(item, params) {
             // if attribute value matches regNumericValues
             if (match) {
                 // round it to the fixed precision
-                var num = +(+match[1]).toFixed(params.floatPrecision),
+                var num = Math.round(match[1] * precision) / precision,
                     units = match[3] || '';
 
                 // convert absolute values to pixels
                 if (params.convertToPx && units && (units in absoluteLengths)) {
-                    var pxNum = +(absoluteLengths[units] * match[1]).toFixed(params.floatPrecision);
+                    var pxNum = Math.round(absoluteLengths[units] * match[1] * precision) / precision;
 
                     if (String(pxNum).length < match[0].length)
                         num = pxNum,
