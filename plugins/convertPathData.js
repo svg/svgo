@@ -29,10 +29,7 @@ var pathElems = require('./_collections.js').pathElems,
     path2js = require('./_path.js').path2js,
     js2path = require('./_path.js').js2path,
     applyTransforms = require('./_path.js').applyTransforms,
-    cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
-    roundData,
-    precision,
-    error;
+    cleanupOutData = require('../lib/svgo/tools').cleanupOutData;
 
 /**
  * Convert absolute Path to relative,
@@ -54,9 +51,9 @@ exports.fn = function(item, params) {
 
     if (item.isElem(pathElems) && item.hasAttr('d')) {
 
-        precision = params.floatPrecision;
-        error = precision !== false ? +Math.pow(.1, precision).toFixed(precision) : 1e-2;
-        roundData = precision > 0 && precision < 20 ? strongRound : round;
+        var precision = params.floatPrecision;
+        params.error = Math.pow(10, -precision);
+        var roundData = precision > 0 && precision < 20 ? strongRound.bind(this, precision) : round;
 
         var data = path2js(item);
 
@@ -68,10 +65,10 @@ exports.fn = function(item, params) {
                 data = applyTransforms(item, data, params);
             }
 
-            data = filters(data, params, item.hasAttr('marker-mid'));
+            data = filters(data, params, roundData, item.hasAttr('marker-mid'));
 
             if (params.utilizeAbsolute) {
-                data = convertToMixed(data, params);
+                data = convertToMixed(data, params, roundData);
             }
 
             js2path(item, data, params);
@@ -254,9 +251,9 @@ function convertToRelative(path) {
  * @param {Object} params plugin params
  * @return {Array} output path data
  */
-function filters(path, params, hasMarkerMid) {
+function filters(path, params, roundData, hasMarkerMid) {
 
-    var stringify = data2Path.bind(null, params),
+    var stringify = data2Path.bind(null, params, roundData),
         relSubpoint = [0, 0],
         pathBase = [0, 0],
         prev = {};
@@ -434,9 +431,9 @@ function filters(path, params, hasMarkerMid) {
 
                 if (
                     instruction === 'c' &&
-                    isCurveStraightLine(data) ||
+                    isCurveStraightLine(data, params) ||
                     instruction === 's' &&
-                    isCurveStraightLine(sdata)
+                    isCurveStraightLine(sdata, params)
                 ) {
                     if (next && next.instruction == 's')
                         makeLonghand(next, data); // fix up next curve
@@ -446,7 +443,7 @@ function filters(path, params, hasMarkerMid) {
 
                 else if (
                     instruction === 'q' &&
-                    isCurveStraightLine(data)
+                    isCurveStraightLine(data, params)
                 ) {
                     if (next && next.instruction == 't')
                         makeLonghand(next, data); // fix up next curve
@@ -629,7 +626,7 @@ function filters(path, params, hasMarkerMid) {
  * @param {Array} data input path data
  * @return {Boolean} output
  */
-function convertToMixed(path, params) {
+function convertToMixed(path, params, roundData) {
 
     var prev = path[0];
 
@@ -753,40 +750,19 @@ function getIntersection(coords) {
  * @param {Array} data input data array
  * @return {Array} output data array
  */
-function strongRound(data) {
+function strongRound(precision, data) {
+    var tolerance = Math.pow(10, -precision);
     for (var i = data.length; i-- > 0;) {
         if (data[i].toFixed(precision) != data[i]) {
             var rounded = +data[i].toFixed(precision - 1);
-            data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error ?
+            data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance ?
                 +data[i].toFixed(precision) :
                 rounded;
         }
     }
     return data;
 }
-/**
- * Decrease accuracy of floating-point numbers
- * in transforms keeping a specified number of decimals.
- * Smart rounds values like 2.349 to 2.35.
- *
- * @param {Number} 10 ** fixed number of decimals
- * @param {Array} data input data array
- * @return {Array} output data array
- */
-// function smartRound(precision, data) {
-//     var tolerance = 1 / precision;
-//     for (var i = data.length; i--;) {
-//         var rounded = Math.round(data[i] * precision) / precision;
-//         if (rounded != data[i]) {
-//             var p = precision/10,
-//                 roundedMore = Math.round(rounded*p) / p;
-//             data[i] = Math.abs(roundedMore - data[i]) >= tolerance ?
-//                 rounded :
-//                 roundedMore;
-//         }
-//     }
-//     return data;
-// }
+
 
 /**
  * Simple rounding function if precision is 0.
@@ -810,7 +786,7 @@ function round(data) {
  * @return {Boolean}
  */
 
-function isCurveStraightLine(data) {
+function isCurveStraightLine(data, params) {
 
     // Get line equation a·x + b·y + c = 0 coefficients a, b (c = 0) by start and end points.
     var i = data.length - 2,
@@ -822,7 +798,7 @@ function isCurveStraightLine(data) {
 
     // Distance from point (x0, y0) to the line is sqrt((c − a·x0 − b·y0)² / (a² + b²))
     while ((i -= 2) >= 0) {
-        if (Math.sqrt(Math.pow(a * data[i] + b * data[i + 1], 2) * d) > error)
+        if (Math.sqrt(Math.pow(a * data[i] + b * data[i + 1], 2) * d) > params.error)
             return false;
     }
 
@@ -898,7 +874,7 @@ function findCircle(curve, params) {
             m2[0] + (m2[1] - midPoint[1]), m2[1] - (m2[0] - midPoint[0])
         ]),
         radius = center && getDistance([0, 0], center),
-        tolerance = Math.min(params.makeArcs.threshold * error, params.makeArcs.tolerance * radius / 100);
+        tolerance = Math.min(params.makeArcs.threshold * params.error, params.makeArcs.tolerance * radius / 100);
 
     if (center && [1/4, 3/4].every(function(point) {
         return Math.abs(getDistance(getCubicBezierPoint(curve, point), center) - radius) <= tolerance;
@@ -915,7 +891,7 @@ function findCircle(curve, params) {
  */
 
 function isArc(curve,  circle, params) {
-    var tolerance = Math.min(params.makeArcs.threshold * error, params.makeArcs.tolerance * circle.radius / 100);
+    var tolerance = Math.min(params.makeArcs.threshold * params.error, params.makeArcs.tolerance * circle.radius / 100);
 
     return [0, 1/4, 1/2, 3/4, 1].every(function(point) {
         return Math.abs(getDistance(getCubicBezierPoint(curve, point), circle.center) - circle.radius) <= tolerance;
@@ -965,7 +941,7 @@ function findArcAngle(curve, relCircle) {
  * @return {String}
  */
 
-function data2Path(params, pathData) {
+function data2Path(params, roundData, pathData) {
     return pathData.reduce(function(pathString, item) {
         return pathString += item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
     }, '');
