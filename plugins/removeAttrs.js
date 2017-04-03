@@ -1,7 +1,5 @@
 'use strict';
 
-var ELEM_SEP = ':';
-
 exports.type = 'perItem';
 
 exports.active = false;
@@ -9,11 +7,15 @@ exports.active = false;
 exports.description = 'removes specified attributes';
 
 exports.params = {
+    elem_sep: ':',
     attrs: []
 };
 
 /**
  * Remove attributes
+ *
+ * @param elem_sep
+ *   format: string
  *
  * @param attrs:
  *
@@ -77,12 +79,12 @@ exports.fn = function(item, params) {
         var patterns = params.attrs.map(function(pattern) {
 
                 // apply to all elements if specifc element is omitted
-            if (pattern.indexOf(ELEM_SEP) === -1) {
-                pattern = ['.*', ELEM_SEP, pattern].join('');
+            if (pattern.indexOf(params.elem_sep) === -1) {
+                pattern = ['.*', params.elem_sep, pattern].join('');
             }
 
                 // create regexps for element and attribute name
-            return pattern.split(ELEM_SEP)
+            return pattern.split(params.elem_sep)
                 .map(function(value) {
 
                         // adjust single * to match anything
