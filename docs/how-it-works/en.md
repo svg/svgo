@@ -291,9 +291,9 @@ And of course, writing plugins would not have been so cool without some sugar AP
   * @param {Array} Selectors to be sorted
   * @return {Array} Stable sorted selectors
 
-##### css-tools.cssoToStyleDeclaration(cssoDeclaration)
-  * Convert a CSSO AST style declaration to CSSStyleDeclaration property.
-  * @param {Object} CSSO style declaration
+##### css-tools.csstreeToStyleDeclaration(declaration)
+  * Convert a css-tree AST style declaration to CSSStyleDeclaration property.
+  * @param {Object} css-tree style declaration
   * @return {Object} CSSStyleDeclaration property
 
 

@@ -130,8 +130,8 @@ exports.fn = function(document, opts) {
             }
 
             // merge declarations
-            csstree.walkDeclarations(selector.rule, function(styleCssoDeclaration) {
-                var styleDeclaration = cssTools.cssoToStyleDeclaration(styleCssoDeclaration);
+            csstree.walkDeclarations(selector.rule, function(styleCsstreeDeclaration) {
+                var styleDeclaration = cssTools.csstreeToStyleDeclaration(styleCsstreeDeclaration);
                 if (selectedEl.style.getPropertyValue(styleDeclaration.name) !== null &&
                     selectedEl.style.getPropertyPriority(styleDeclaration.name) >= styleDeclaration.priority) {
                     return;
