@@ -52,7 +52,7 @@
     "colors": "~1.1.2",
     "css-select": "^1.3.0-rc0",
     "css-select-base-adapter": "^0.1.0",
-    "css-tree": "github:csstree/csstree#e9c024b02a38d98c9eb886526709e54655eee2e1",
+    "css-tree": "^1.0.0-alpha18",
     "csso": "^3.0.1",
     "js-yaml": "~3.7.0",
     "mkdirp": "~0.5.1",
