@@ -344,7 +344,7 @@ function smartRound(precision, data) {
         if (rounded != data[i]) {
             var p = precision/10,
                 roundedMore = Math.round(rounded*p) / p;
-            data[i] = Math.abs(roundedMore - data[i]) >= tolerance ?
+            data[i] = Math.abs(roundedMore - data[i]) >= .999*tolerance ?
                 rounded :
                 roundedMore;
         }

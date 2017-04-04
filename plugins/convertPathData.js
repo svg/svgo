@@ -757,7 +757,7 @@ function strongRound(precision, data) {
         if (rounded != data[i]) {
             var p = precision/10,
                 roundedMore = Math.round(data[i]*p) / p;
-            data[i] = Math.abs(roundedMore - data[i]) >= tolerance ?
+            data[i] = Math.abs(roundedMore - data[i]) >= .999*tolerance ?
                 rounded :
                 roundedMore;
         }
