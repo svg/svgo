@@ -62,6 +62,7 @@ SVGO имеет расширяемую архитектуру, в которой
 | [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | добавляет имена классов корневому элементу `<svg>` (выключено по умолчанию) |
 | [addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) | добавляет атрибуты корневому элементу `<svg>` (выключено  |по умолчанию)
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` (выключено по умолчанию) |
+| [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` (выключено по умолчанию) |
 
 Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 

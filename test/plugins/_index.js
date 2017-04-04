@@ -24,10 +24,10 @@ describe('plugins tests', function() {
 
             file = PATH.resolve(__dirname, file);
 
-            it(name + '.' + index, function(done) {
+            it(name + '.' + index, function() {
 
-                FS.readFile(file, 'utf8', function(err, data) {
-
+                return readFile(file)
+                .then(function(data) {
                     var splitted = normalize(data).split(/\s*@@@\s*/),
                         orig     = splitted[0],
                         should   = splitted[1],
@@ -44,13 +44,10 @@ describe('plugins tests', function() {
                         js2svg  : { pretty: true }
                     });
 
-                    svgo.optimize(orig, function(result) {
-
-//FIXME: results.data has a '\n' at the end while it should not
+                    return svgo.optimize(orig).then(function(result) {
+                        //FIXME: results.data has a '\n' at the end while it should not
                         normalize(result.data).should.be.equal(should);
-                        done();
                     });
-
                 });
 
             });
@@ -63,4 +60,13 @@ describe('plugins tests', function() {
 
 function normalize(file) {
     return file.trim().replace(regEOL, '\n');
+}
+
+function readFile(file) {
+    return new Promise(function(resolve, reject) {
+        FS.readFile(file, 'utf8', function(err, data) {
+            if (err) return reject(err);
+            resolve(data);
+        });
+    });
 }

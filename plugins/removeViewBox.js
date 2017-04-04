@@ -6,7 +6,7 @@ exports.active = false;
 
 exports.description = 'removes viewBox attribute when possible (disabled by default)';
 
-var regViewBox = /^0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
+var regViewBox = /^0\s*[,\s]\s*0\s*[,\s]\s*([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s*[,\s]\s*([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
     viewBoxElems = ['svg', 'pattern'];
 
 /**
