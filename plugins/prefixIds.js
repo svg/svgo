@@ -82,19 +82,26 @@ exports.fn = function(document, opts) {
           }
 
 
+          var urlVal         = '',
+              idUrlMatches   = [],
+              idName         = '',
+              idNamePrefixed = '',
+              idUrlPrefixed  = '';
+
           // (xlink:)href (deprecated, must be still supported),
           // href
-          if(attr.name === 'xlink:href') {
-            var urlVal = attr.value;
+          if(attr.name === 'xlink:href' ||
+             attr.name === 'href') {
+            urlVal = attr.value;
 
-            var idUrlMatches = urlVal.match(rxId);
+            idUrlMatches = urlVal.match(rxId);
             if(idUrlMatches === null) {
               continue;
             }
-            var idName = idUrlMatches[1];
+            idName = idUrlMatches[1];
 
-            var idNamePrefixed = prefix(idName);
-            var idUrlPrefixed  = '#' + idNamePrefixed;
+            idNamePrefixed = prefix(idName);
+            idUrlPrefixed  = '#' + idNamePrefixed;
 
             attr.value = idUrlPrefixed;
           }
@@ -105,16 +112,16 @@ exports.fn = function(document, opts) {
           if(urlMatches === null) {
             continue;
           }
-          var urlVal = urlMatches[1];
+          urlVal = urlMatches[1];
 
-          var idUrlMatches = urlVal.match(rxId);
+          idUrlMatches = urlVal.match(rxId);
           if(idUrlMatches === null) {
             continue;
           }
-          var idName = idUrlMatches[1];
+          idName = idUrlMatches[1];
 
-          var idNamePrefixed = prefix(idName);
-          var idUrlPrefixed  = '#' + idNamePrefixed;
+          idNamePrefixed = prefix(idName);
+          idUrlPrefixed  = '#' + idNamePrefixed;
 
           attr.value = 'url(' + idUrlPrefixed + ')';
 
