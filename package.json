@@ -53,7 +53,10 @@
     "js-yaml": "~3.7.0",
     "colors": "~1.1.2",
     "mkdirp": "~0.5.1",
-    "csso": "~2.3.1"
+    "csso": "~2.3.1",
+    "tree-walk": "^0.4.0",
+    "css-url-regex": "^1.1.0",
+    "css-tree": "1.0.0-alpha18"
   },
   "devDependencies": {
     "mocha": "~3.2.0",
