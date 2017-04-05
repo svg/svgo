@@ -15,6 +15,8 @@ var csstree   = require('css-tree'),
     cssRx     = require('css-url-regex')(),
     domWalker = require('../lib/dom-walker');
 
+var rxId      = /^#(.*)$/;
+
 /**
  * Prefixes identifiers
  *
@@ -76,18 +78,38 @@ exports.fn = function(document, opts) {
           // id/class
           if(attrName === 'id' || attrName === 'class') {
             attr.value = prefix(attr.value);
+            continue;
           }
+
+
+          // (xlink:)href (deprecated, must be still supported),
+          // href
+          if(attr.name === 'xlink:href') {
+            var urlVal = attr.value;
+
+            var idUrlMatches = urlVal.match(rxId);
+            if(idUrlMatches === null) {
+              continue;
+            }
+            var idName = idUrlMatches[1];
+
+            var idNamePrefixed = prefix(idName);
+            var idUrlPrefixed  = '#' + idNamePrefixed;
+
+            attr.value = idUrlPrefixed;
+          }
+
 
           // url(...)
           var urlMatches = cssRx.exec(attr.value);
           if(urlMatches === null) {
-            return;
+            continue;
           }
           var urlVal = urlMatches[1];
 
-          var idUrlMatches = urlVal.match(/^#(.*)$/);
+          var idUrlMatches = urlVal.match(rxId);
           if(idUrlMatches === null) {
-            return;
+            continue;
           }
           var idName = idUrlMatches[1];
 
@@ -95,6 +117,7 @@ exports.fn = function(document, opts) {
           var idUrlPrefixed  = '#' + idNamePrefixed;
 
           attr.value = 'url(' + idUrlPrefixed + ')';
+
         }
 
     });
