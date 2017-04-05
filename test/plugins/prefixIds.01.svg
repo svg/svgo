@@ -7,6 +7,7 @@
         color: red;
       }
     </style>
+    <rect class="test" x="10" y="10" width="100" height="100"/>
     <rect id="test" x="10" y="10" width="100" height="100"/>
 </svg>
 
@@ -16,5 +17,6 @@
     <style>
         .prefixIds_02__test2{color: blue}#prefixIds_02__test{color: red}
     </style>
+    <rect class="prefixIds_02__test" x="10" y="10" width="100" height="100"/>
     <rect id="prefixIds_02__test" x="10" y="10" width="100" height="100"/>
 </svg>
