@@ -29,7 +29,7 @@ var escapeIdentifierName = function(str) {
  *
  * @param {Object} document document element
  * @param {Object} opts plugin params
- * @param {Object} info plugin extra information
+ * @param {Object} info extra information
  *
  * @author strarsis <strarsis@gmail.com>
  */
