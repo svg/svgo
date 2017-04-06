@@ -11,11 +11,17 @@ exports.params = {
 exports.description = 'prefix IDs';
 
 
-var csstree   = require('css-tree'),
+var path      = require('path'),
+    csstree   = require('css-tree'),
     cssRx     = require('css-url-regex')(),
     domWalker = require('../lib/dom-walker');
 
 var rxId      = /^#(.*)$/;
+
+var escapeIdentifierName = function(str) {
+  return str.replace(/[\. ]/g, '_');
+};
+
 
 /**
  * Prefixes identifiers
@@ -25,10 +31,11 @@ var rxId      = /^#(.*)$/;
  *
  * @author strarsis <strarsis@gmail.com>
  */
-exports.fn = function(document, opts) {
+exports.fn = function(document, opts, info) {
 
+    var filename = path.basename(info.path);
     var prefix = function(name) {
-        return 'prefixIds_02' + opts.delim + name;
+        return escapeIdentifierName(filename + opts.delim + name);
     };
 
     domWalker.preorder(document, function(node) {
