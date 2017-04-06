@@ -16,6 +16,7 @@ var path      = require('path'),
     cssRx     = require('css-url-regex')(),
     domWalker = require('../lib/dom-walker');
 
+// regular expression for matching an ID + extracing its name
 var rxId      = /^#(.*)$/;
 
 var escapeIdentifierName = function(str) {
@@ -28,13 +29,23 @@ var escapeIdentifierName = function(str) {
  *
  * @param {Object} document document element
  * @param {Object} opts plugin params
+ * @param {Object} info plugin extra information
  *
  * @author strarsis <strarsis@gmail.com>
  */
 exports.fn = function(document, opts, info) {
 
-    var filename = path.basename(info.path);
-    var prefix = function(name) {
+    var prefix = '';
+    if(info.path && info.path.length > 0) {
+      var filename = path.basename(info.path);
+      prefix = filename;
+    } else {
+      // use differing string as prefix
+      // when no file path is defined (input from string)
+      prefix = Date.now().toString();
+    }
+
+    var addPrefix = function(name) {
         return escapeIdentifierName(filename + opts.delim + name);
     };
 
@@ -66,7 +77,7 @@ exports.fn = function(document, opts, info) {
                      return;
                 }
 
-                node.name = prefix(node.name);
+                node.name = addPrefix(node.name);
             });
 
             // update <style>s
@@ -84,7 +95,7 @@ exports.fn = function(document, opts, info) {
 
           // id/class
           if(attrName === 'id' || attrName === 'class') {
-            attr.value = prefix(attr.value);
+            attr.value = addPrefix(attr.value);
             continue;
           }
 
@@ -107,7 +118,7 @@ exports.fn = function(document, opts, info) {
             }
             idName = idUrlMatches[1];
 
-            idNamePrefixed = prefix(idName);
+            idNamePrefixed = addPrefix(idName);
             idUrlPrefixed  = '#' + idNamePrefixed;
 
             attr.value = idUrlPrefixed;
@@ -127,7 +138,7 @@ exports.fn = function(document, opts, info) {
           }
           idName = idUrlMatches[1];
 
-          idNamePrefixed = prefix(idName);
+          idNamePrefixed = addPrefix(idName);
           idUrlPrefixed  = '#' + idNamePrefixed;
 
           attr.value = 'url(' + idUrlPrefixed + ')';
