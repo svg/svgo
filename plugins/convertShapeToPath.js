@@ -98,6 +98,47 @@ exports.fn = function(item) {
 
         item.renameElem('path')
             .removeAttr('points');
+    } else if (item.isElem('circle')) {
+
+	var cx = +(item.attr('cx') || NONE).value;
+	var cy = +(item.attr('cy') || NONE).value;
+	var r = +(item.attr('r') || NONE).value;
+	if (isNaN(cx - cy + r)) {
+	    return;
+	}
+        var pathData =
+	    'M' + ' ' + cx  + ' ' + (cy - r) 
+	        + 'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy + r) 
+                + 'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy - r) + 'Z';
+	item.addAttr({
+		name: 'd',
+		    value: pathData,
+		    prefix: '',
+		    local: 'd',
+		    });
+	item.renameElem('path').removeAttr(['cx', 'cy', 'r']);
+
+    } else if (item.isElem('ellipse')) {
+
+	var cx = +(item.attr('cx') || NONE).value;
+        var cy = +(item.attr('cy') || NONE).value;
+	var rx = +(item.attr('rx') || NONE).value;
+	var ry = +(item.attr('ry') || NONE).value;
+	if (isNaN(cx - cy + rx - ry)) {
+	    return;
+	}
+        var pathData =
+	    'M' +  cx + ' ' + (cy - ry} 
+                + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy + ry} 
+                + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy - ry)
+                + 'Z';
+	item.addAttr({
+	    name: 'd',
+            value: pathData,
+            prefix: '',
+	    local: 'd',
+	});
+	item.renameElem('path').removeAttr(['cx', 'cy', 'rx', 'ry']);
     }
 
 };
