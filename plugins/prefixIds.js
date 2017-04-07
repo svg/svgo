@@ -21,6 +21,22 @@ var escapeIdentifierName = function(str) {
 };
 
 
+var matchId = function(urlVal) {
+    var idUrlMatches = urlVal.match(rxId);
+    if(idUrlMatches === null) {
+      return false;
+    }
+    return idUrlMatches[1];
+};
+
+var matchUrl = function(val) {
+    var urlMatches = cssRx.exec(val);
+    if(urlMatches === null) {
+        return false;
+    }
+    return urlMatches[1];
+};
+
 /**
  * Prefixes identifiers
  *
@@ -40,8 +56,16 @@ exports.fn = function(node, opts, extra) {
         var filename = path.basename(extra.path);
         prefix = filename;
     }
+
     var addPrefix = function(name) {
         return escapeIdentifierName(prefix + opts.delim + name);
+    };
+    var prefixId = function(val) {
+        var idName = matchId(val);
+        if(!idName) {
+            return false;
+        }
+        return '#' + addPrefix(idName);
     };
 
 
@@ -49,7 +73,7 @@ exports.fn = function(node, opts, extra) {
     if(node.elem === 'style') {
         if (node.isEmpty()) {
             // skip empty <style/>s
-            return;
+            return node;
         }
 
         var cssStr = node.content[0].text || node.content[0].cdata || [];
@@ -57,21 +81,38 @@ exports.fn = function(node, opts, extra) {
         var cssAst = {};
         try {
             cssAst = csstree.parse(cssStr, {
-                parseValue: false,
+                parseValue: true,
                 parseCustomProperty: false
             });
         } catch (parseError) {
             console.warn('Warning: Parse error of styles of <style/> element, skipped. Error details: ' + parseError);
-            return;
+            return node;
         }
 
+        var idName         = '',
+            idNamePrefixed = '';
+
         csstree.walk(cssAst, function(node) {
-            if(node.type !== 'IdSelector' && 
-               node.type !== 'ClassSelector') {
-                 return;
+
+            // #ID, .class
+            console.log(node.type);
+            if((node.type === 'IdSelector' || 
+                node.type === 'ClassSelector') &&
+               node.name) {
+                 node.name = addPrefix(node.name);
+                 return; // skip further
             }
 
-            node.name = addPrefix(node.name);
+            // url(...) in value
+            if(node.type === 'Url' &&
+               node.value.value && node.value.value.length > 0) {
+                 var idPrefixed = prefixId(node.value.value);
+                 if(!idPrefixed) {
+                   return; // skip further
+                 }
+                 node.value.value = idPrefixed;
+            }
+
         });
 
         // update <style>s
@@ -82,62 +123,50 @@ exports.fn = function(node, opts, extra) {
 
     // element attributes
     if(!node.attrs) {
-      return;
+      return node;
     }
 
     for(var attrName in node.attrs) {
       var attr = node.attrs[attrName];
 
-      // id/class
-      if(attrName === 'id' || 
-         attrName === 'class') {
-        attr.value = addPrefix(attr.value);
-        continue;
+      if(!attr.value || attr.value.length === 0) {
+          continue;
       }
 
 
-      var urlVal         = '',
-          idUrlMatches   = [],
-          idName         = '',
-          idNamePrefixed = '',
-          idUrlPrefixed  = '';
+      // id/class
+      if(attrName === 'id' || 
+         attrName === 'class') {
+          attr.value = addPrefix(attr.value);
+          continue;
+      }
+
 
       // (xlink:)href (deprecated, must be still supported),
       // href
       if(attr.name === 'xlink:href' ||
          attr.name === 'href') {
-        urlVal = attr.value;
-
-        idUrlMatches = urlVal.match(rxId);
-        if(idUrlMatches === null) {
+        var idPrefixed = prefixId(attr.value);
+        if(!idPrefixed) {
           continue;
         }
-        idName = idUrlMatches[1];
-
-        idNamePrefixed = addPrefix(idName);
-        idUrlPrefixed  = '#' + idNamePrefixed;
-
-        attr.value = idUrlPrefixed;
-      }
-
-
-      // url(...)
-      var urlMatches = cssRx.exec(attr.value);
-      if(urlMatches === null) {
+        attr.value = idPrefixed;
         continue;
       }
-      urlVal = urlMatches[1];
 
-      idUrlMatches = urlVal.match(rxId);
-      if(idUrlMatches === null) {
-        continue;
+
+      // url(...) in value
+      var urlVal = matchUrl(attr.value);
+      if(!urlVal) {
+          return node;
       }
-      idName = idUrlMatches[1];
 
-      idNamePrefixed = addPrefix(idName);
-      idUrlPrefixed  = '#' + idNamePrefixed;
+      idPrefixed = prefixId(urlVal);
+      if(!idPrefixed) {
+          return node;
+      }
 
-      attr.value = 'url(' + idUrlPrefixed + ')';
+      attr.value = 'url(' + idPrefixed + ')';
     }
 
 
