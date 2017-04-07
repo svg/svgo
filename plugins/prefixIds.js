@@ -68,6 +68,7 @@ exports.fn = function(node, opts, extra) {
         return '#' + addPrefix(idName);
     };
 
+    var idPrefixed = '';
 
     // <style/>
     if(node.elem === 'style') {
@@ -89,13 +90,9 @@ exports.fn = function(node, opts, extra) {
             return node;
         }
 
-        var idName         = '',
-            idNamePrefixed = '';
-
         csstree.walk(cssAst, function(node) {
 
             // #ID, .class
-            console.log(node.type);
             if((node.type === 'IdSelector' || 
                 node.type === 'ClassSelector') &&
                node.name) {
@@ -106,7 +103,7 @@ exports.fn = function(node, opts, extra) {
             // url(...) in value
             if(node.type === 'Url' &&
                node.value.value && node.value.value.length > 0) {
-                 var idPrefixed = prefixId(node.value.value);
+                 idPrefixed = prefixId(node.value.value);
                  if(!idPrefixed) {
                    return; // skip further
                  }
@@ -146,7 +143,7 @@ exports.fn = function(node, opts, extra) {
       // href
       if(attr.name === 'xlink:href' ||
          attr.name === 'href') {
-        var idPrefixed = prefixId(attr.value);
+        idPrefixed = prefixId(attr.value);
         if(!idPrefixed) {
           continue;
         }
