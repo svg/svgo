@@ -128,8 +128,8 @@ exports.fn = function(item) {
 	    return;
 	}
         var pathData =
-	    'M' +  cx + ' ' + (cy - ry} 
-                + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy + ry} 
+	'M' +  cx + ' ' + (cy - ry)
+                + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy + ry)
                 + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy - ry)
                 + 'Z';
 	item.addAttr({
