@@ -9,20 +9,18 @@ var FS = require('fs'),
                    '../../lib-cov/svgo':
                    '../../lib/svgo');
 
+
 describe('plugins tests', function() {
 
-    FS.readdirSync(__dirname).forEach(function(file) {
+    FS.readdirSync(__dirname).forEach(function(filename) {
 
-        var match = file.match(regFilename),
-            index,
-            name;
+        var match = filename.match(regFilename) || [],
+            name = match[1],
+            index = +match[2] || 1;
 
-        if (match) {
+        if (name) {
 
-            name  = match[1];
-            index = match[2];
-
-            file = PATH.resolve(__dirname, file);
+            var file = PATH.resolve(__dirname, filename);
 
             it(name + '.' + index, function() {
 
@@ -70,3 +68,4 @@ function readFile(file) {
         });
     });
 }
+
