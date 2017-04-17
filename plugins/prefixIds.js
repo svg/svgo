@@ -11,10 +11,12 @@ exports.params = {
 exports.description = 'prefix IDs';
 
 
-var path      = require('path'),
-    csstree   = require('css-tree'),
-    cssRx     = require('css-url-regex')(),
-    rxId      = /^#(.*)$/; // regular expression for matching an ID + extracing its name
+var path            = require('path'),
+    csstree         = require('css-tree'),
+    cssRx           = require('css-url-regex')(),
+    collections     = require('./_collections.js'),
+    referencesProps = collections.referencesProps,
+    rxId            = /^#(.*)$/; // regular expression for matching an ID + extracing its name
 
 var escapeIdentifierName = function(str) {
     return str.replace(/[\. ]/g, '_');
@@ -97,7 +99,7 @@ exports.fn = function(node, opts, extra) {
                 node.type === 'ClassSelector') &&
                node.name) {
                  node.name = addPrefix(node.name);
-                 return; // skip further
+                 return; // skip
             }
 
             // url(...) in value
@@ -105,7 +107,7 @@ exports.fn = function(node, opts, extra) {
                node.value.value && node.value.value.length > 0) {
                  idPrefixed = prefixId(node.value.value);
                  if(!idPrefixed) {
-                   return; // skip further
+                   return; // skip
                  }
                  node.value.value = idPrefixed;
             }
@@ -132,8 +134,8 @@ exports.fn = function(node, opts, extra) {
 
 
       // id/class
-      if(attrName === 'id' || 
-         attrName === 'class') {
+      if(attr.name === 'id' || 
+         attr.name === 'class') {
           attr.value = addPrefix(attr.value);
           continue;
       }
@@ -152,15 +154,20 @@ exports.fn = function(node, opts, extra) {
       }
 
 
+      // referenceable attributes
+      if(!~referencesProps.indexOf(attr.name)) {
+        continue;
+      }
+
       // url(...) in value
       var urlVal = matchUrl(attr.value);
       if(!urlVal) {
-          return node;
+          continue;
       }
 
       idPrefixed = prefixId(urlVal);
       if(!idPrefixed) {
-          return node;
+          continue;
       }
 
       attr.value = 'url(' + idPrefixed + ')';
