@@ -296,6 +296,16 @@ And of course, writing plugins would not have been so cool without some sugar AP
   * @param {Object} css-tree style declaration
   * @return {Object} CSSStyleDeclaration property
 
+##### css-tools.getCssStr(elem)
+  * Gets the CSS string of a style element
+  * @param {Object} element style element
+  * @return {String|Array} CSS string or empty array if no styles are set
+
+##### css-tools.csstreeToStyleDeclaration(elem, css)
+  * @param {Object} element style element
+  * @param {String} CSS string to be set
+  * @return {Object} reference to field with CSS
+
 
 #### 3.3 tests
 

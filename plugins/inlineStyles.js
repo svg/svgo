@@ -59,7 +59,7 @@ exports.fn = function(document, opts) {
             // skip empty <style/>s
             continue;
         }
-        var cssStr = styleEl.content[0].text || styleEl.content[0].cdata || [];
+        var cssStr = cssTools.getCssStr(styleEl);
 
         // collect <style/>s and their css ast
         var cssAst = {};
@@ -184,7 +184,7 @@ exports.fn = function(document, opts) {
 
 
         // update existing, left over <style>s
-        style.styleEl.content[0].text = csstree.translate(style.cssAst);
+        cssTools.setCssStr(style.styleEl, csstree.translate(style.cssAst));
     }
 
 
