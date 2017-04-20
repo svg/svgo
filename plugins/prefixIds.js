@@ -16,13 +16,16 @@ var path            = require('path'),
     cssRx           = require('css-url-regex')(),
     collections     = require('./_collections.js'),
     referencesProps = collections.referencesProps,
-    rxId            = /^#(.*)$/; // regular expression for matching an ID + extracing its name
+    rxId            = /^#(.*)$/, // regular expression for matching an ID + extracing its name
+    addPrefix       = null;
 
+
+// Escapes a string for being used as ID
 var escapeIdentifierName = function(str) {
     return str.replace(/[\. ]/g, '_');
 };
 
-
+// Matches an #ID value, captures the ID name
 var matchId = function(urlVal) {
     var idUrlMatches = urlVal.match(rxId);
     if(idUrlMatches === null) {
@@ -31,6 +34,7 @@ var matchId = function(urlVal) {
     return idUrlMatches[1];
 };
 
+// Matches an url(...) value, captures the URL
 var matchUrl = function(val) {
     var urlMatches = cssRx.exec(val);
     if(urlMatches === null) {
@@ -38,6 +42,66 @@ var matchUrl = function(val) {
     }
     return urlMatches[1];
 };
+
+// Checks if attribute is empty
+var attrNotEmpty = function(attr) {
+  return (attr && attr.value && attr.value.length > 0);
+};
+
+// prefixes an #ID
+var prefixId = function(val) {
+    var idName = matchId(val);
+    if(!idName) {
+        return false;
+    }
+    return '#' + addPrefix(idName);
+};
+
+
+// attr.value helper methods
+
+// prefixes a normal attribute value
+var addPrefixToAttr = function(attr) {
+  if(!attrNotEmpty(attr)) {
+    return;
+  }
+
+  attr.value = addPrefix(attr.value);
+};
+
+// prefixes an ID attribute value
+var addPrefixToIdAttr = function(attr) {
+  if(!attrNotEmpty(attr)) {
+    return;
+  }
+
+  var idPrefixed = prefixId(attr.value);
+  if(!idPrefixed) {
+    return;
+  }
+  attr.value = idPrefixed;
+};
+
+// prefixes an URL attribute value
+var addPrefixToUrlAttr = function(attr) {
+  if(!attrNotEmpty(attr)) {
+    return;
+  }
+
+  // url(...) in value
+  var urlVal = matchUrl(attr.value);
+  if(!urlVal) {
+      return;
+  }
+
+  var idPrefixed = prefixId(urlVal);
+  if(!idPrefixed) {
+      return;
+  }
+
+  attr.value = 'url(' + idPrefixed + ')';
+};
+
 
 /**
  * Prefixes identifiers
@@ -50,7 +114,7 @@ var matchUrl = function(val) {
  */
 exports.fn = function(node, opts, extra) {
 
-    // prefix
+    // prefix, from file name or option
     var prefix = 'prefix';
     if(extra && extra.prefix && extra.path.length > 0) {
         prefix = opts.extra.prefix;
@@ -59,20 +123,15 @@ exports.fn = function(node, opts, extra) {
         prefix = filename;
     }
 
-    var addPrefix = function(name) {
+
+    // prefixes a normal value
+    addPrefix = function(name) {
         return escapeIdentifierName(prefix + opts.delim + name);
     };
-    var prefixId = function(val) {
-        var idName = matchId(val);
-        if(!idName) {
-            return false;
-        }
-        return '#' + addPrefix(idName);
-    };
 
-    var idPrefixed = '';
 
-    // <style/>
+    // <style/> property values
+
     if(node.elem === 'style') {
         if (node.isEmpty()) {
             // skip empty <style/>s
@@ -92,6 +151,7 @@ exports.fn = function(node, opts, extra) {
             return node;
         }
 
+        var idPrefixed = '';
         csstree.walk(cssAst, function(node) {
 
             // #ID, .class
@@ -99,7 +159,7 @@ exports.fn = function(node, opts, extra) {
                 node.type === 'ClassSelector') &&
                node.name) {
                  node.name = addPrefix(node.name);
-                 return; // skip
+                 return;
             }
 
             // url(...) in value
@@ -107,7 +167,7 @@ exports.fn = function(node, opts, extra) {
                node.value.value && node.value.value.length > 0) {
                  idPrefixed = prefixId(node.value.value);
                  if(!idPrefixed) {
-                   return; // skip
+                   return;
                  }
                  node.value.value = idPrefixed;
             }
@@ -121,56 +181,24 @@ exports.fn = function(node, opts, extra) {
 
 
     // element attributes
+
     if(!node.attrs) {
       return node;
     }
 
-    for(var attrName in node.attrs) {
-      var attr = node.attrs[attrName];
+    // ID
+    addPrefixToAttr(node.attrs.id);
+    // Class
+    addPrefixToAttr(node.attrs.class);
 
-      if(!attr.value || attr.value.length === 0) {
-          continue;
-      }
+    // href
+    addPrefixToIdAttr(node.attrs.href);
+    // (xlink:)href (deprecated, must be still supported)
+    addPrefixToIdAttr(node.attrs['xlink:href']);
 
-
-      // id/class
-      if(attr.name === 'id' || 
-         attr.name === 'class') {
-          attr.value = addPrefix(attr.value);
-          continue;
-      }
-
-
-      // (xlink:)href (deprecated, must be still supported),
-      // href
-      if(attr.name === 'xlink:href' ||
-         attr.name === 'href') {
-        idPrefixed = prefixId(attr.value);
-        if(!idPrefixed) {
-          continue;
-        }
-        attr.value = idPrefixed;
-        continue;
-      }
-
-
-      // referenceable attributes
-      if(!~referencesProps.indexOf(attr.name)) {
-        continue;
-      }
-
-      // url(...) in value
-      var urlVal = matchUrl(attr.value);
-      if(!urlVal) {
-          continue;
-      }
-
-      idPrefixed = prefixId(urlVal);
-      if(!idPrefixed) {
-          continue;
-      }
-
-      attr.value = 'url(' + idPrefixed + ')';
+    // referenceable properties
+    for(var referencesProp of referencesProps) {
+      addPrefixToUrlAttr(node.attrs[referencesProp]);
     }
 
 
