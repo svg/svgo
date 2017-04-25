@@ -11,13 +11,14 @@ exports.params = {
 exports.description = 'prefix IDs';
 
 
-var path            = require('path'),
-    csstree         = require('css-tree'),
-    cssRx           = require('css-url-regex')(),
-    collections     = require('./_collections.js'),
+var path = require('path'),
+    csstree = require('css-tree'),
+    cssRx = require('css-url-regex')(),
+    unquote = require('unquote'),
+    collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
-    rxId            = /^#(.*)$/, // regular expression for matching an ID + extracing its name
-    addPrefix       = null;
+    rxId = /^#(.*)$/, // regular expression for matching an ID + extracing its name
+    addPrefix = null;
 
 
 // Escapes a string for being used as ID
@@ -28,8 +29,8 @@ var escapeIdentifierName = function(str) {
 // Matches an #ID value, captures the ID name
 var matchId = function(urlVal) {
     var idUrlMatches = urlVal.match(rxId);
-    if(idUrlMatches === null) {
-      return false;
+    if (idUrlMatches === null) {
+        return false;
     }
     return idUrlMatches[1];
 };
@@ -37,7 +38,7 @@ var matchId = function(urlVal) {
 // Matches an url(...) value, captures the URL
 var matchUrl = function(val) {
     var urlMatches = cssRx.exec(val);
-    if(urlMatches === null) {
+    if (urlMatches === null) {
         return false;
     }
     return urlMatches[1];
@@ -45,13 +46,13 @@ var matchUrl = function(val) {
 
 // Checks if attribute is empty
 var attrNotEmpty = function(attr) {
-  return (attr && attr.value && attr.value.length > 0);
+    return (attr && attr.value && attr.value.length > 0);
 };
 
 // prefixes an #ID
 var prefixId = function(val) {
     var idName = matchId(val);
-    if(!idName) {
+    if (!idName) {
         return false;
     }
     return '#' + addPrefix(idName);
@@ -62,44 +63,44 @@ var prefixId = function(val) {
 
 // prefixes a normal attribute value
 var addPrefixToAttr = function(attr) {
-  if(!attrNotEmpty(attr)) {
-    return;
-  }
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
 
-  attr.value = addPrefix(attr.value);
+    attr.value = addPrefix(attr.value);
 };
 
 // prefixes an ID attribute value
 var addPrefixToIdAttr = function(attr) {
-  if(!attrNotEmpty(attr)) {
-    return;
-  }
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
 
-  var idPrefixed = prefixId(attr.value);
-  if(!idPrefixed) {
-    return;
-  }
-  attr.value = idPrefixed;
+    var idPrefixed = prefixId(attr.value);
+    if (!idPrefixed) {
+        return;
+    }
+    attr.value = idPrefixed;
 };
 
 // prefixes an URL attribute value
 var addPrefixToUrlAttr = function(attr) {
-  if(!attrNotEmpty(attr)) {
-    return;
-  }
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
 
-  // url(...) in value
-  var urlVal = matchUrl(attr.value);
-  if(!urlVal) {
-      return;
-  }
+    // url(...) in value
+    var urlVal = matchUrl(attr.value);
+    if (!urlVal) {
+        return;
+    }
 
-  var idPrefixed = prefixId(urlVal);
-  if(!idPrefixed) {
-      return;
-  }
+    var idPrefixed = prefixId(urlVal);
+    if (!idPrefixed) {
+        return;
+    }
 
-  attr.value = 'url(' + idPrefixed + ')';
+    attr.value = 'url(' + idPrefixed + ')';
 };
 
 
@@ -116,9 +117,9 @@ exports.fn = function(node, opts, extra) {
 
     // prefix, from file name or option
     var prefix = 'prefix';
-    if(extra && extra.prefix && extra.path.length > 0) {
+    if (extra && extra.prefix && extra.path.length > 0) {
         prefix = opts.extra.prefix;
-    } else if(extra && extra.path && extra.path.length > 0) {
+    } else if (extra && extra.path && extra.path.length > 0) {
         var filename = path.basename(extra.path);
         prefix = filename;
     }
@@ -132,7 +133,7 @@ exports.fn = function(node, opts, extra) {
 
     // <style/> property values
 
-    if(node.elem === 'style') {
+    if (node.elem === 'style') {
         if (node.isEmpty()) {
             // skip empty <style/>s
             return node;
@@ -155,21 +156,21 @@ exports.fn = function(node, opts, extra) {
         csstree.walk(cssAst, function(node) {
 
             // #ID, .class
-            if((node.type === 'IdSelector' || 
-                node.type === 'ClassSelector') &&
-               node.name) {
-                 node.name = addPrefix(node.name);
-                 return;
+            if ((node.type === 'IdSelector' ||
+                 node.type === 'ClassSelector') &&
+                 node.name) {
+                node.name = addPrefix(node.name);
+                return;
             }
 
             // url(...) in value
-            if(node.type === 'Url' &&
-               node.value.value && node.value.value.length > 0) {
-                 idPrefixed = prefixId(node.value.value);
-                 if(!idPrefixed) {
-                   return;
-                 }
-                 node.value.value = idPrefixed;
+            if (node.type === 'Url' &&
+                node.value.value && node.value.value.length > 0) {
+                idPrefixed = prefixId(unquote(node.value.value));
+                if (!idPrefixed) {
+                    return;
+                }
+                node.value.value = idPrefixed;
             }
 
         });
@@ -182,8 +183,8 @@ exports.fn = function(node, opts, extra) {
 
     // element attributes
 
-    if(!node.attrs) {
-      return node;
+    if (!node.attrs) {
+        return node;
     }
 
     // ID
@@ -197,8 +198,8 @@ exports.fn = function(node, opts, extra) {
     addPrefixToIdAttr(node.attrs['xlink:href']);
 
     // referenceable properties
-    for(var referencesProp of referencesProps) {
-      addPrefixToUrlAttr(node.attrs[referencesProp]);
+    for (var referencesProp of referencesProps) {
+        addPrefixToUrlAttr(node.attrs[referencesProp]);
     }
 
 
