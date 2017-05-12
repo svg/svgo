@@ -46,6 +46,7 @@ var regNumericValues = /^([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)(px|pt|pc|mm|cm|m|in|f
  */
 exports.fn = function(item, params) {
 
+    var precision = Math.pow(10, params.floatPrecision);
 
     if ( item.hasAttr('points') ) {
         roundValues(item.attrs.points);
@@ -99,12 +100,13 @@ exports.fn = function(item, params) {
             if(match){
 
                 // round it to the fixed precision
-                num = +(+match[1]).toFixed(params.floatPrecision),
+
+                num = Math.round(match[1] * precision) / precision,
                 units = match[3] || '';
 
                 // convert absolute values to pixels
                 if (params.convertToPx && units && (units in absoluteLengths)) {
-                    var pxNum = +(absoluteLengths[units] * match[1]).toFixed(params.floatPrecision);
+                    var pxNum = Math.round(absoluteLengths[units] * match[1] * precision) / precision;
 
                     if (String(pxNum).length < match[0].length)
                         num = pxNum,

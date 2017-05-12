@@ -24,10 +24,7 @@ exports.params = {
 var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     transform2js = require('./_transforms.js').transform2js,
     transformsMultiply = require('./_transforms.js').transformsMultiply,
-    matrixToTransform = require('./_transforms.js').matrixToTransform,
-    degRound,
-    floatRound,
-    transformRound;
+    matrixToTransform = require('./_transforms.js').matrixToTransform;
 
 /**
  * Convert matrices to the short aliases,
@@ -75,42 +72,15 @@ exports.fn = function(item, params) {
  */
 function convertTransform(item, attrName, params) {
     var data = transform2js(item.attr(attrName).value);
-    params = definePrecision(data, params);
+    
+    /**
+     * Defines precision to work with certain parts.
+     * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
+     * floatPrecision - for translate including two last matrix and rotate parameters,
+     * degPrecision - for rotate and skew. By default it's equal to (rougly)
+     * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
+     */
 
-    if (params.collapseIntoOne && data.length > 1) {
-        data = [transformsMultiply(data)];
-    }
-
-    if (params.convertToShorts) {
-        data = convertToShorts(data, params);
-    } else {
-        data.forEach(roundTransform);
-    }
-
-    if (params.removeUseless) {
-        data = removeUseless(data);
-    }
-
-    if (data.length) {
-        item.attr(attrName).value = js2transform(data, params);
-    } else {
-        item.removeAttr(attrName);
-    }
-}
-
-/**
- * Defines precision to work with certain parts.
- * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
- * floatPrecision - for translate including two last matrix and rotate parameters,
- * degPrecision - for rotate and skew. By default it's equal to (rougly)
- * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
- *
- * @param {Array} transforms input array
- * @param {Object} params plugin params
- * @return {Array} output array
- */
-function definePrecision(data, params) {
-    /* jshint validthis: true */
     var matrixData = data.reduce(getMatrixData, []),
         significantDigits = params.transformPrecision;
 
@@ -127,22 +97,39 @@ function definePrecision(data, params) {
         }));
     }
     // No sense in angle precision more then number of significant digits in matrix.
-    if (!('degPrecision' in params)) {
-        params.degPrecision = Math.max(0, Math.min(params.floatPrecision, significantDigits - 2));
+    var degPrecision = Math.pow(10, params.degPrecision || Math.max(0, Math.min(params.floatPrecision, significantDigits - 2))),
+        floatPrecision = Math.pow(10, params.floatPrecision),
+        transformPrecision = Math.pow(10, params.transformPrecision);
+
+    params.floatRound = floatPrecision == 1 ? round : smartRound.bind(null, floatPrecision);
+    params.degRound = degPrecision == 1 ? round : smartRound.bind(null, degPrecision);
+    params.transformRound = transformPrecision == 1 ? round : smartRound.bind(null, transformPrecision);
+
+
+    if (params.collapseIntoOne && data.length > 1) {
+        data = [transformsMultiply(data)];
     }
 
-    floatRound = params.floatPrecision >= 1 && params.floatPrecision < 20 ?
-        smartRound.bind(this, params.floatPrecision) :
-        round;
-    degRound = params.degPrecision >= 1 && params.floatPrecision < 20 ?
-        smartRound.bind(this, params.degPrecision) :
-        round;
-    transformRound = params.transformPrecision >= 1 && params.floatPrecision < 20 ?
-        smartRound.bind(this, params.transformPrecision) :
-        round;
+    if (params.convertToShorts) {
+        data = convertToShorts(data, params);
+    } else {
+        data.forEach(function(d) {
+            roundTransform(d, params);
+        });
+    }
 
-    return params;
+    if (params.removeUseless) {
+        data = removeUseless(data);
+    }
+
+    if (data.length) {
+        item.attr(attrName).value = js2transform(data, params);
+    } else {
+        item.removeAttr(attrName);
+    }
 }
+
+
 
 /**
  * Gathers four first matrix parameters.
@@ -191,7 +178,7 @@ function convertToShorts(transforms, params) {
 
         // fixed-point numbers
         // 12.754997 → 12.755
-        roundTransform(transform);
+        roundTransform(transform, params);
 
         // convert long translate transform notation to the shorts one
         // translate(10 0) → translate(10)
@@ -301,7 +288,7 @@ function js2transform(transformJS, params) {
 
     // collect output value string
     transformJS.forEach(function(transform) {
-        roundTransform(transform);
+        roundTransform(transform, params);
         transformString += (transformString && ' ') + transform.name + '(' + cleanupOutData(transform.data, params) + ')';
     });
 
@@ -309,23 +296,23 @@ function js2transform(transformJS, params) {
 
 }
 
-function roundTransform(transform) {
+function roundTransform(transform, params) {
     switch (transform.name) {
         case 'translate':
-            transform.data = floatRound(transform.data);
+            transform.data = params.floatRound(transform.data);
             break;
         case 'rotate':
-            transform.data = degRound(transform.data.slice(0, 1)).concat(floatRound(transform.data.slice(1)));
+            transform.data = params.degRound(transform.data.slice(0, 1)).concat(params.floatRound(transform.data.slice(1)));
             break;
         case 'skewX':
         case 'skewY':
-            transform.data = degRound(transform.data);
+            transform.data = params.degRound(transform.data);
             break;
         case 'scale':
-            transform.data = transformRound(transform.data);
+            transform.data = params.transformRound(transform.data);
             break;
         case 'matrix':
-            transform.data = transformRound(transform.data.slice(0, 4)).concat(floatRound(transform.data.slice(4)));
+            transform.data = params.transformRound(transform.data.slice(0, 4)).concat(params.floatRound(transform.data.slice(4)));
             break;
     }
     return transform;
@@ -346,17 +333,20 @@ function round(data) {
  * in transforms keeping a specified number of decimals.
  * Smart rounds values like 2.349 to 2.35.
  *
- * @param {Number} fixed number of decimals
+ * @param {Number} 10 ** fixed number of decimals
  * @param {Array} data input data array
  * @return {Array} output data array
  */
 function smartRound(precision, data) {
-    for (var i = data.length, tolerance = +Math.pow(.1, precision).toFixed(precision); i--;) {
-        if (data[i].toFixed(precision) != data[i]) {
-            var rounded = +data[i].toFixed(precision - 1);
-            data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance ?
-                +data[i].toFixed(precision) :
-                rounded;
+    var tolerance = 1 / precision;
+    for (var i = data.length; i--;) {
+        var rounded = Math.round(data[i] * precision) / precision;
+        if (rounded != data[i]) {
+            var p = precision/10,
+                roundedMore = Math.round(rounded*p) / p;
+            data[i] = Math.abs(roundedMore - data[i]) >= .999*tolerance ?
+                rounded :
+                roundedMore;
         }
     }
     return data;

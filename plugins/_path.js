@@ -182,8 +182,9 @@ exports.applyTransforms = function(elem, path, params) {
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
         stroke = elem.computedAttr('stroke'),
         id = elem.computedAttr('id'),
-        transformPrecision = params.transformPrecision,
+        transformPrecision = Math.pow(10, params.transformPrecision),
         newPoint, scale;
+
 
     if (stroke && stroke != 'none') {
         if (!params.applyTransformsStroked ||
@@ -203,7 +204,7 @@ exports.applyTransforms = function(elem, path, params) {
             if (!hasStrokeWidth) return path;
         }
 
-        scale = +Math.sqrt(matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]).toFixed(transformPrecision);
+        scale = Math.round(Math.sqrt(matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1])*transformPrecision)/transformPrecision;
 
         if (scale !== 1) {
             var strokeWidth = elem.computedAttr('stroke-width') || defaultStrokeWidth;
@@ -904,8 +905,8 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
                 Math.sqrt(Math.abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x))),
             cx = k * rx * y / ry + (x1 + x2) / 2,
             cy = k * -ry * x / rx + (y1 + y2) / 2,
-            f1 = Math.asin(((y1 - cy) / ry).toFixed(9)),
-            f2 = Math.asin(((y2 - cy) / ry).toFixed(9));
+            f1 = Math.asin(Math.round(((y1 - cy) / ry)*1e9)/1e9),
+            f2 = Math.asin(Math.round(((y2 - cy) / ry)*1e9)/1e9);
 
         f1 = x1 < cx ? Math.PI - f1 : f1;
         f2 = x2 < cx ? Math.PI - f2 : f2;

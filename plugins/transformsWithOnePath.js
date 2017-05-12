@@ -203,10 +203,11 @@ exports.fn = function(data, params) {
 
             });
 
-            var xmin = Math.min.apply(this, xs).toFixed(params.floatPrecision),
-                xmax = Math.max.apply(this, xs).toFixed(params.floatPrecision),
-                ymin = Math.min.apply(this, ys).toFixed(params.floatPrecision),
-                ymax = Math.max.apply(this, ys).toFixed(params.floatPrecision),
+            var precision = Math.pow(10, params.floatPrecision);
+            var xmin = Math.round(Math.min.apply(null, xs)*precision)/precision,
+                xmax = Math.round(Math.max.apply(null, xs)*precision)/precision,
+                ymin = Math.round(Math.min.apply(null, ys)*precision)/precision,
+                ymax = Math.round(Math.max.apply(null, ys)*precision)/precision,
                 svgWidth = +svgElem.attr('width').value,
                 svgHeight = +svgElem.attr('height').value,
                 realWidth = Math.round(xmax - xmin),
@@ -302,13 +303,14 @@ exports.fn = function(data, params) {
                     value: transform
                 });
 
+                // applyTransforms takes only 3 args, why is it 4 below?
                 path = applyTransforms(pathElem, pathElem.pathJS, true, params.floatPrecision);
 
                 // transformed data rounding
                 path.forEach(function(pathItem) {
                     if (pathItem.data) {
                         pathItem.data = pathItem.data.map(function(num) {
-                            return +num.toFixed(params.floatPrecision);
+                            return Math.round(num*precision)/precision;
                         });
                     }
                 });
