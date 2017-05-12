@@ -104,8 +104,7 @@ exports.fn = function(data, params) {
         return data;
     }
 
-    for (var ref of referencesIDs) {
-        var key = ref[0];
+    referencesIDs.forEach(function(value, key) {
 
         if (IDs.has(key)) {
             // replace referenced IDs with the minified ones
@@ -113,23 +112,23 @@ exports.fn = function(data, params) {
                 currentIDstring = getIDstring(currentID = generateID(currentID), params);
                 IDs.get(key).attr('id').value = currentIDstring;
 
-                for (var attr of ref[1]) {
+                value.forEach(function(attr) {
                     attr.value = attr.value.includes(idValuePrefix) ?
                         attr.value.replace(idValuePrefix + key, idValuePrefix + currentIDstring) :
                         attr.value.replace(key + idValuePostfix, currentIDstring + idValuePostfix);
-                }
+                });
             }
             // don't remove referenced IDs
             IDs.delete(key);
         }
-    }
+    });
     // remove non-referenced IDs attributes from elements
     if (params.remove) {
-        for(var keyElem of IDs) {
-            if (!preserveIDs.has(keyElem[0])) {
-                keyElem[1].removeAttr('id');
+        IDs.forEach(function(value, key) {
+            if (!preserveIDs.has(key)) {
+                value.removeAttr('id');
             }
-        }
+        });
     }
     return data;
 };
@@ -169,5 +168,5 @@ function generateID(currentID) {
  */
 function getIDstring(arr, params) {
     var str = params.prefix;
-    return str + arr.map(i => generateIDchars[i]).join('');
+    return str + arr.map(function(i) { return generateIDchars[i]}).join('');
 }
