@@ -1,0 +1,14 @@
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.8 24.8">
+    <style>.st0,.st1{fill:none;stroke:#000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10}.st1{stroke:#f1656d}</style>
+    <circle class="st0" cx="12.4" cy="12.4" r="11.4"/>
+</svg>
+
+@@@
+
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.8 24.8">
+    <circle class="st0" cx="12.4" cy="12.4" r="11.4" style="fill:none;stroke:#000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"/>
+</svg>
+
+@@@
+
+{ "asAttribute": false }

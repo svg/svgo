@@ -25,6 +25,7 @@ plugins:
   - cleanupAttrs
   - minifyStyles
   - convertStyleToAttrs
+  - convertStyleTags
   - cleanupIDs
   - removeRasterImages
   - removeUselessDefs
