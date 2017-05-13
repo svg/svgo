@@ -25,6 +25,7 @@ plugins:
   - cleanupAttrs
   - minifyStyles
   - convertStyleToAttrs
+  - cleanupAiLayerIDs
   - cleanupIDs
   - removeRasterImages
   - removeUselessDefs
