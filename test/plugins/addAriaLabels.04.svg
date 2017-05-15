@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    test
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="fixture-id-desc fixture-id-title">
+    <title id="fixture-id-title">
+        my-title
+    </title>
+    <desc id="fixture-id-desc">
+        my-description
+    </desc>
+    test
+</svg>
+
+@@@
+
+{"desc": "my-description", "title": "my-title", "idFn": function(elem) { return 'fixture-id-' + elem; }}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="xyz">
+    test
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="fixture-id">
+    <title id="fixture-id">
+        my-title
+    </title>
+    test
+</svg>
+
+@@@
+
+{"title": "my-title", "idFn": function() { return 'fixture-id'; }}
