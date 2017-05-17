@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <g id="a" sketch:type="MSPage">
+        <path id="Shape1" sketch:type="MSShapeGroup"></path>
+    </g>
+    <g id="b" sketch:type="MSLayerGroup">
+        <path id="Shape2" sketch:type="MSShapeGroup"></path>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g id="a">
+        <path id="Shape1"/>
+    </g>
+    <g id="b">
+        <path id="Shape2"/>
+    </g>
+</svg>
