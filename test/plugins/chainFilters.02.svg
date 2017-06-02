@@ -1,0 +1,22 @@
+<svg>
+    <defs>
+        <filter id="a" color-interpolation-filters="sRGB">
+            <feBlend in2="BackgroundImage" mode="lighten"/>
+        </filter>
+    </defs>
+    <path transform="matrix(123456789)" class="some-other-class" filter="url(#a)"/>
+</svg>
+
+@@@
+
+<svg>
+    <style>
+        .filterA{filter:&quot;url(#a)&quot;}
+    </style>
+    <defs>
+        <filter id="a" color-interpolation-filters="sRGB">
+            <feBlend in2="BackgroundImage" mode="lighten"/>
+        </filter>
+    </defs>
+    <path transform="matrix(123456789)" class="some-other-class filterA"/>
+</svg>
