@@ -89,18 +89,17 @@ exports.fn = function(document) {
     });
 
 
-    // Generate CSS class list from filters
+    // Generate CSS class list from filters +
+    // Generate CSS from class list
     var filterClasses = new Map(),
-        filterClassName = '';
+        filterClassName = '',
+        filterClassesStyles = csstree.fromPlainObject({type:'StyleSheet', children: []}),
+        filterClassRuleObj = {};
+    
     for (var filterId of filterElementsWithId.keys()) {
         filterClassName = camelCase('filter ' + filterId);
         filterClasses.set(filterId, filterClassName);
-    }
 
-    // Generate CSS from class list
-    var filterClassesStyles = csstree.fromPlainObject({type:'StyleSheet', children: []}),
-        filterClassRuleObj = {};
-    filterClasses.forEach(function(filterClassName, filterId) {
         filterClassRuleObj = {
             type: 'Rule', 
             selector: {
@@ -138,7 +137,7 @@ exports.fn = function(document) {
             }
         };
         filterClassesStyles.children.appendData(csstree.fromPlainObject(filterClassRuleObj));
-    });
+    }
 
 
     // Add new style element with these filter classes styles
