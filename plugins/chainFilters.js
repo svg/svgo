@@ -89,13 +89,10 @@ exports.fn = function(document) {
     });
 
 
-    var className = '',
-        filterId = '';
-
     // Generate CSS class list from filters
     var filterClasses = new Map(),
         filterClassName = '';
-    for (filterId of filterElementsWithId.keys()) {
+    for (var filterId of filterElementsWithId.keys()) {
         filterClassName = camelCase('filter ' + filterId);
         filterClasses.set(filterId, filterClassName);
     }
@@ -103,7 +100,7 @@ exports.fn = function(document) {
     // Generate CSS from class list
     var filterClassesStyles = csstree.fromPlainObject({type:'StyleSheet', children: []}),
         filterClassRuleObj = {};
-    for ([filterId, className] of filterClasses.entries()) {
+    filterClasses.forEach(function(filterClassName, filterId) {
         filterClassRuleObj = {
             type: 'Rule', 
             selector: {
@@ -114,7 +111,7 @@ exports.fn = function(document) {
                         children: [
                             {
                                 type: 'ClassSelector',
-                                name: className
+                                name: filterClassName
                             }
                         ]
                     }
@@ -141,7 +138,7 @@ exports.fn = function(document) {
             }
         };
         filterClassesStyles.children.appendData(csstree.fromPlainObject(filterClassRuleObj));
-    }
+    });
 
 
     // Add new style element with these filter classes styles
