@@ -143,15 +143,23 @@ exports.fn = function(document) {
     // Add new style element with these filter classes styles
     var svgElem = document.content[0];
 
-    var styleFilterClassesElem = new document.constructor({
+    // New <style>
+    var styleFilterClasses = new document.constructor({
         elem: 'style',
         prefix: '',
         local: 'style',
-        content: [ {
-            text: csstree.translate(filterClassesStyles)
-        } ]
-    });
-    svgElem.content.unshift(styleFilterClassesElem);
+        content: [] // has to be added in extra step
+    }, svgElem);
+
+    // New text content for <style>
+    var styleFilterClassesText = new document.constructor({
+        text: csstree.translate(filterClassesStyles)
+    }, styleFilterClasses);
+    // Add text content to <style>
+    styleFilterClasses.spliceContent(0, 0, styleFilterClassesText);
+
+    // Add new <style> to <svg>
+    svgElem.spliceContent(0, 0, styleFilterClasses);
 
 
     // Assign filter-using classes to corresponding filter-using elements
