@@ -54,32 +54,32 @@ exports.fn = function(document) {
         // <filter> elements
         if(node.elem === 'filter') {
           if(!node.hasAttr('id')) {
-            return;
+            return; // skip if no ID attribute
           }
 
           filterElementsWithId.set(node.attr('id').value, node);
-          return;
+          return; // done with <filter> element
         }
 
 
         // elements that use a filter (filter attribute)
         if(!node.hasAttr('filter')) {
-          return;
+          return; // skip if no filter attribute
         }
 
         useFilterVal  = node.attr('filter').value;
         if(useFilterVal.length === 0) {
-          return; // skip
+          return; // skip if empty filter attribute
         }
 
         useFilterUrl = matchUrl(useFilterVal);
         if(!useFilterUrl) {
-          return; // skip
+          return; // skip if no url(...) used
         }
 
         useFilterId = matchId(useFilterUrl);
         if(!useFilterId) {
-          return; // skip
+          return; // skip if no #id in url(...) used
         }
 
         elementsUsingFilterElementsWithId.push({
@@ -87,6 +87,22 @@ exports.fn = function(document) {
           node: node
         });
     });
+
+    if(filterElementsWithId.size === 0 || elementsUsingFilterElementsWithId.size === 0) {
+      return document; // No elements that use filter and/or no filter elements, skip this SVG.
+    }
+
+
+    // Filter elements that are actually used by an element (by ID)
+    var usedFilterElementsWithId = new Map(),
+        element;
+    for(element of elementsUsingFilterElementsWithId) {
+      usedFilterElementsWithId.set(element.filterId, element.node);
+    }
+
+    if(usedFilterElementsWithId.size === 0) {
+      return document; // No filter elements used at all, skip this SVG.
+    }
 
 
     // Generate CSS class list from filters +
@@ -96,7 +112,7 @@ exports.fn = function(document) {
         filterClassesStyles = csstree.fromPlainObject({type:'StyleSheet', children: []}),
         filterClassRuleObj = {};
     
-    for (var filterId of filterElementsWithId.keys()) {
+    for (var filterId of usedFilterElementsWithId.keys()) {
         filterClassName = camelCase('filter ' + filterId);
         filterClasses.set(filterId, filterClassName);
 
@@ -164,7 +180,7 @@ exports.fn = function(document) {
 
     // Assign filter-using classes to corresponding filter-using elements
     // Remove then redundant filter attribute.
-    for (var element of elementsUsingFilterElementsWithId) {
+    for (element of elementsUsingFilterElementsWithId) {
         element.node.removeAttr('filter');
         element.node.class.add(filterClasses.get(element.filterId));
     }
