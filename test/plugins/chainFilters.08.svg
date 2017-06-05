@@ -1,0 +1,9 @@
+<svg>
+    <path transform="matrix(123456789)" filter="url(#a)"/>
+</svg>
+
+@@@
+
+<svg>
+    <path transform="matrix(123456789)" filter="url(#a)"/>
+</svg>
