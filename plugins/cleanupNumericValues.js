@@ -41,8 +41,9 @@ exports.fn = function(item, params) {
 
         if (item.hasAttr('viewBox')) {
             var nums = item.attr('viewBox').value.split(/[ ,]/g);
-            item.attr('viewBox').value = nums.map(function(num) {
-                return +num.toFixed(floatPrecision);
+            item.attr('viewBox').value = nums.map(function(value) {
+                var num = +value;
+                return isNaN(num) ? value : +num.toFixed(floatPrecision);
             }).join(' ');
         }
 
