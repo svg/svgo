@@ -119,9 +119,9 @@ exports.fn = function(node, opts, extra) {
     var prefix = 'prefix';
     if (opts.prefix) {
         if (typeof opts.prefix === 'function') {
-            prefix = opts.prefix(node, extra)
+            prefix = opts.prefix(node, extra);
         } else{
-            prefix = opts.prefix
+            prefix = opts.prefix;
         }
     } else if (extra && extra.path && extra.path.length > 0) {
         var filename = path.basename(extra.path);
