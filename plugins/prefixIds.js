@@ -117,7 +117,7 @@ exports.fn = function(node, opts, extra) {
 
     // prefix, from file name or option
     var prefix = 'prefix';
-    if (typeof opts.prefix) {
+    if (opts.prefix) {
         if (typeof opts.prefix === 'function') {
             prefix = opts.prefix(node, extra)
         } else{
