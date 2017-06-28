@@ -117,11 +117,10 @@ exports.fn = function(node, opts, extra) {
 
     // prefix, from file name or option
     var prefix = 'prefix';
-    if(typeof opts.prefix){
-        if(typeof opts.prefix === 'function'){
+    if (typeof opts.prefix) {
+        if (typeof opts.prefix === 'function') {
             prefix = opts.prefix(node, extra)
-        }
-        else{
+        } else{
             prefix = opts.prefix
         }
     } else if (extra && extra.path && extra.path.length > 0) {
