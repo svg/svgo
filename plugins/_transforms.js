@@ -283,6 +283,12 @@ exports.transformArc = function(arc, transform) {
         arc[2] = ((major ? term2 < 0 : term1 > 0) ? -1 : 1) *
             Math.acos((major ? term1 : term2) / Math.sqrt(term1 * term1 + term2 * term2)) * 180 / Math.PI;
     }
+
+    if ((transform[0] < 0) !== (transform[3] < 0)) {
+        // Flip the sweep flag if coordinates are being flipped horizontally XOR vertically
+        arc[4] = 1 - arc[4];
+    }
+
     return arc;
 
 };
