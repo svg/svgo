@@ -2501,18 +2501,14 @@ exports.colorsShortNames = {
   '#f0ffff': 'azure',
   '#f5f5dc': 'beige',
   '#ffe4c4': 'bisque',
-  '#000': 'black',
-  '#00f': 'blue',
   '#a52a2a': 'brown',
   '#ff7f50': 'coral',
-  '#0ff': 'cyan',
   '#ffd700': 'gold',
   '#808080': 'gray',
   '#008000': 'green',
   '#4b0082': 'indigo',
   '#fffff0': 'ivory',
   '#f0e68c': 'khaki',
-  '#00ff00': 'lime',
   '#faf0e6': 'linen',
   '#800000': 'maroon',
   '#000080': 'navy',
@@ -2532,9 +2528,7 @@ exports.colorsShortNames = {
   '#008080': 'teal',
   '#ff6347': 'tomato',
   '#ee82ee': 'violet',
-  '#f5deb3': 'wheat',
-  '#fff': 'white',
-  '#ff0': 'yellow'
+  '#f5deb3': 'wheat'
 };
 
 // http://www.w3.org/TR/SVG/single-page.html#types-DataTypeColor
