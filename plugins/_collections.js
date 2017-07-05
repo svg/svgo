@@ -2356,7 +2356,7 @@ exports.colorsNames = {
     'bisque': '#ffe4c4',
     'black': '#000',
     'blanchedalmond': '#ffebcd',
-    'blue': '#0000ff',
+    'blue': '#00f',
     'blueviolet': '#8a2be2',
     'brown': '#a52a2a',
     'burlywood': '#deb887',
