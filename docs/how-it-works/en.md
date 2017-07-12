@@ -214,7 +214,7 @@ There is nothing easier than testing your plugin:
 
 @@@
 
-attributes if yout plugin needs them
+attributes if your plugin needs them
 ```
 
 2. run `npm test`
