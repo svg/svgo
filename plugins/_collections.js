@@ -2512,6 +2512,7 @@ exports.colorsShortNames = {
   '#dda0dd': 'plum',
   '#800080': 'purple',
   '#f00': 'red',
+  '#ff0000': 'red',
   '#fa8072': 'salmon',
   '#a0522d': 'sienna',
   '#c0c0c0': 'silver',
