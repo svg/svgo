@@ -17,7 +17,7 @@ exports.params = {
 var referencesProps = new Set(require('./_collections').referencesProps),
     regReferencesUrl = /\burl\(("|')?#(.+?)\1\)/,
     regReferencesHref = /^#(.+?)$/,
-    regReferencesBegin = /^(\w+?)\./,
+    regReferencesBegin = /(\w+)\./,
     styleOrScript = ['style', 'script'],
     generateIDchars = [
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
