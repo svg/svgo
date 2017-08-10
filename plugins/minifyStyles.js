@@ -28,8 +28,8 @@ var csso = require('csso');
 exports.fn = function(ast, options) {
     options = options || {};
 
-    var minifyOptionsForStylesheet = cloneObject(options);
-    var minifyOptionsForAttribute = cloneObject(options);
+    var minifyOptionsForStylesheet = Object.assign({}, options);
+    var minifyOptionsForAttribute = Object.assign({}, options);
     var elems = findStyleElems(ast);
 
     minifyOptionsForStylesheet.usage = collectUsageData(ast, options);
@@ -53,15 +53,6 @@ exports.fn = function(ast, options) {
     return ast;
 };
 
-function cloneObject(obj) {
-    var result = {};
-
-    for (var key in obj) {
-        result[key] = obj[key];
-    }
-
-    return result;
-}
 
 function findStyleElems(ast) {
 
