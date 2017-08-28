@@ -1,0 +1,13 @@
+<svg version="1.1" viewBox="0 0 10 20">
+    test
+</svg>
+
+@@@
+
+<svg version="1.1" viewBox="0 0 10 20" width="10" height="20">
+    test
+</svg>
+
+@@@
+
+{ "addPixelUnits": false }
