@@ -48,12 +48,14 @@
     "jshint": "jshint --show-non-errors ."
   },
   "dependencies": {
-    "sax": "~1.2.1",
     "coa": "~1.0.1",
-    "js-yaml": "~3.7.0",
     "colors": "~1.1.2",
+    "csso": "~2.3.1",
+    "fs-extra": "^4.0.1",
+    "js-yaml": "~3.7.0",
     "mkdirp": "~0.5.1",
-    "csso": "~2.3.1"
+    "mock-stdin": "^0.3.1",
+    "sax": "~1.2.1"
   },
   "devDependencies": {
     "mocha": "~3.2.0",
