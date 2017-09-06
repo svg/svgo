@@ -1,5 +1,6 @@
 --reporter spec
 --require should
+test/cli
 test/config
 test/svg2js
 test/plugins
