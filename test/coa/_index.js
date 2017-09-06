@@ -89,6 +89,32 @@ describe('coa', function() {
         });
     });
 
+    it('should optimize many files', function(done) {
+        const inputFiles = [1, 2, 3, 4, 5].map(function (i) {
+            const dest = path.resolve('temp', `files${i}.svg`);
+            fse.copySync(svgPath, dest);
+            // Give it something to optimize
+            fs.appendFileSync(dest, '\n\n\n\n');
+            return dest;
+        });
+        const initialFileLength = fs.readFileSync(inputFiles[0]).length;
+
+        svgo({
+            'in-place': true,
+            // With `--in-place`, the cli will receive the arguments and
+            // re-arrange them.
+        }, {
+            input: inputFiles[0],
+            output: inputFiles[1],
+            rest: inputFiles.slice(2)
+        }).then(function () {
+            const notOptimized = inputFiles.filter(function (filename) {
+                return fs.readFileSync(filename).length >= initialFileLength;
+            });
+            done(notOptimized.length === 0 ? null : `Files were not optimized: ${notOptimized.join(', ')}`);
+        });
+    });
+
     it('should optimize file from process.stdin', function(done) {
         const initialFile = fs.readFileSync(path.resolve(__dirname, 'test.svg'));
 
