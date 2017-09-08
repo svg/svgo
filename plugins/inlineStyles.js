@@ -97,8 +97,11 @@ exports.fn = function(document, opts) {
     var sortedSelectors = cssTools.sortSelectors(selectorsPseudo).reverse();
 
 
-    // apply <style/> styles to matched elements
-    for (var selector of sortedSelectors) {
+    var selector,
+        selectedEl;
+
+    // match selectors
+    for (selector of sortedSelectors) {
         var selectorStr = csstree.translate(selector.item.data),
             selectedEls = null;
 
@@ -117,20 +120,34 @@ exports.fn = function(document, opts) {
             continue;
         }
 
-        if (opts.onlyMatchedOnce && selectedEls !== null && selectedEls.length > 1) {
+        selector.selectedEls = selectedEls;
+    }
+
+
+    // apply <style/> styles to matched elements
+    for (selector of sortedSelectors) {
+        if(!selector.selectedEls) {
+            continue;
+        }
+
+        if (opts.onlyMatchedOnce && selector.selectedEls !== null && selector.selectedEls.length > 1) {
             // skip selectors that match more than once if option onlyMatchedOnce is enabled
             continue;
         }
 
         // apply <style/> to matched elements
-        for (var selectedEl of selectedEls) {
-
+        for (selectedEl of selector.selectedEls) {
             if (selector.rule === null) {
                 continue;
             }
 
             // merge declarations
             csstree.walkDeclarations(selector.rule, function(styleCsstreeDeclaration) {
+
+                // existing inline styles have higher priority
+                // no inline styles, external styles,                                    external styles used
+                // inline styles,    external styles same   priority as inline styles,   inline   styles used
+                // inline styles,    external styles higher priority than inline styles, external styles used
                 var styleDeclaration = cssTools.csstreeToStyleDeclaration(styleCsstreeDeclaration);
                 if (selectedEl.style.getPropertyValue(styleDeclaration.name) !== null &&
                     selectedEl.style.getPropertyPriority(styleDeclaration.name) >= styleDeclaration.priority) {
@@ -138,16 +155,43 @@ exports.fn = function(document, opts) {
                 }
                 selectedEl.style.setProperty(styleDeclaration.name, styleDeclaration.value, styleDeclaration.priority);
             });
-
         }
 
-        if (opts.removeMatchedSelectors && selectedEls !== null && selectedEls.length > 0) {
+        if (opts.removeMatchedSelectors && selector.selectedEls !== null && selector.selectedEls.length > 0) {
             // clean up matching simple selectors if option removeMatchedSelectors is enabled
             selector.rule.selector.children.remove(selector.item);
         }
     }
 
 
+    if (opts.removeMatchedSelectors) {
+        // clean up matched class + ID attribute values
+        for (selector of sortedSelectors) {
+            if(!selector.selectedEls) {
+                continue;
+            }
+
+            for (selectedEl of selector.selectedEls) {
+                // class
+                var firstSubSelector = selector.item.data.children.first();
+                if(firstSubSelector.type === 'ClassSelector') {
+                    selectedEl.class.remove(firstSubSelector.name);
+                }
+                // clean up now empty class attributes
+                if(typeof selectedEl.class.item(0) === 'undefined') {
+                    selectedEl.removeAttr('class');
+                }
+
+                // ID
+                if(firstSubSelector.type === 'IdSelector') {
+                    selectedEl.removeAttr('id', firstSubSelector.name);
+                }
+            }
+        }
+    }
+
+
+    // clean up elements
     for (var style of styles) {
         csstree.walkRules(style.cssAst, function(node, item, list) {
             // clean up <style/> atrules without any rulesets left
