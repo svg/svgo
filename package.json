@@ -53,7 +53,8 @@
     "csso": "~2.3.1",
     "js-yaml": "~3.7.0",
     "mkdirp": "~0.5.1",
-    "sax": "~1.2.1"
+    "sax": "~1.2.1",
+    "util.promisify": "~1.0.0"
   },
   "devDependencies": {
     "fs-extra": "~4.0.1",
