@@ -99,7 +99,7 @@ describe('coa', function() {
         svgo({ input: svgFiles, output: tempFolder, quiet: true }).then(function() {
             const optimizedWeight = calcFolderSvgWeight(tempFolder);
 
-            done(optimizedWeight > 0 && initWeight <= optimizedWeight ? null : 'Files were not optimized');
+            done(optimizedWeight > 0 && optimizedWeight <= initWeight ? null : 'Files were not optimized');
             fse.removeSync('temp.svg');
         }, error => done(error));
     });
@@ -128,7 +128,7 @@ describe('coa', function() {
         svgo({ input: svgFolderPath, output: tempFolder, quiet: true }).then(function() {
             let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
 
-            done(initWeight <= optimizedWeight ? null : 'Files were not optimized');
+            done(optimizedWeight <= initWeight ? null : 'Files were not optimized');
         }, error => done(error));
     });
 
