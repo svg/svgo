@@ -95,8 +95,11 @@ exports.fn = function(item, params) {
                 }
 
                 // Convert hex to short name
-                if (params.shortname && val in collections.colorsShortNames) {
-                    val = collections.colorsShortNames[val];
+                if (params.shortname) {
+                    var lowerVal = val.toLowerCase();
+                    if (lowerVal in collections.colorsShortNames) {
+                        val = collections.colorsShortNames[lowerVal];
+                    }
                 }
 
                 attr.value = val;
