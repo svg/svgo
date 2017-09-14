@@ -146,7 +146,6 @@ Arguments:
 
 ### Other Ways to Use SVGO
 
-* with GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * as a web app - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)

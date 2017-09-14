@@ -138,7 +138,6 @@ $ [sudo] npm install -g svgo
 
         $ svgo test.svg -o - | gzip -cfq9 > test.svgz
 
-* с помощью GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * в виде веб-приложения - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * как модуль Node.js – [examples](https://github.com/svg/svgo/tree/master/examples)
 * как таск для Grunt – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
