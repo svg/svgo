@@ -1,9 +1,11 @@
 {
     "globals": {
         "phantom": false,
+        "after": false,
         "describe": false,
         "before": false,
-        "it": false
+        "it": false,
+        "beforeEach": false
     },
     "node": true,
     "strict": "global",

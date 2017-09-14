@@ -5,3 +5,4 @@ test/svg2js
 test/plugins
 test/jsapi
 test/svgo
+test/coa
