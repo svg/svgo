@@ -892,14 +892,14 @@ function findCircle(curve) {
 }
 
 /**
- * Checks if a curve fits the given circe.
+ * Checks if a curve fits the given circle.
  *
  * @param {Object} circle
  * @param {Array} curve
  * @return {Boolean}
  */
 
-function isArc(curve,  circle) {
+function isArc(curve, circle) {
     var tolerance = Math.min(arcThreshold * error, arcTolerance * circle.radius / 100);
 
     return [0, 1/4, 1/2, 3/4, 1].every(function(point) {
@@ -908,14 +908,14 @@ function isArc(curve,  circle) {
 }
 
 /**
- * Checks if a previos curve fits the given circe.
+ * Checks if a previous curve fits the given circle.
  *
  * @param {Object} circle
  * @param {Array} curve
  * @return {Boolean}
  */
 
-function isArcPrev(curve,  circle) {
+function isArcPrev(curve, circle) {
     return isArc(curve, {
         center: [circle.center[0] + curve[4], circle.center[1] + curve[5]],
         radius: circle.radius
@@ -952,6 +952,6 @@ function findArcAngle(curve, relCircle) {
 
 function data2Path(params, pathData) {
     return pathData.reduce(function(pathString, item) {
-        return pathString += item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
+        return pathString + item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
     }, '');
 }
