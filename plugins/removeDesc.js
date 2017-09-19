@@ -10,7 +10,7 @@ exports.params = {
 
 exports.description = 'removes <desc> (only non-meaningful by default)';
 
-var standardDescs = /^Created with/;
+var standardDescs = /^(Created with|Created using)/;
 
 /**
  * Removes <desc>.
