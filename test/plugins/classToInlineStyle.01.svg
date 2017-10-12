@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 120 120">
+    <style>
+        .hidden { display: none; }
+        .red { color: red; }
+        .brown { color: brown; }
+        #rect { color: red; }
+        oval { width: 5px;}
+    </style>
+    <circle id="circle" class="hidden" fill="red" cx="60" cy="60" r="50" style="color:white"/>
+    <rect id="rect" class="hidden" fill="blue" x="10" y="10" width="100" height="100"/>
+    <rect id="rect" fill="blue" x="10" y="10" width="100" height="100"/>
+    <rect class="red hidden brown"/>
+    <oval class="red" />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 120 120">
+    <style>
+    </style>
+    <circle id="circle" class="hidden" fill="red" cx="60" cy="60" r="50" style="color:white;display:none"/>
+    <rect id="rect" class="hidden" fill="blue" x="10" y="10" width="100" height="100" style="display:none;color:red"/>
+    <rect id="rect" fill="blue" x="10" y="10" width="100" height="100" style="color:red"/>
+    <rect class="red hidden brown" style="display:none;color:red;color:brown"/>
+    <oval class="red" style="color:red;width:5px"/>
+</svg>
