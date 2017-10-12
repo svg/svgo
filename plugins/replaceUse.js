@@ -14,13 +14,12 @@ exports.description = 'replace all <use> elements with the node they clone';
  * @author Tim Shedor
  */
 exports.fn = function(data) {
-    var svg = data.content[0];
     var defs = {};
 
     function addToDefs(item) {
         if (item.hasAttr('id')) {
             defs['#' + item.attr('id').value] = item;
-            item.removeAttr('id')
+            item.removeAttr('id');
         }
     }
 
@@ -39,7 +38,7 @@ exports.fn = function(data) {
         }
 
         if (item.isElem('use') && (item.hasAttr('href') || item.hasAttr('xlink:href'))) {
-            var id = item.hasAttr('href') ? item.attr('href').value : item.attr('xlink:href').value
+            var id = item.hasAttr('href') ? item.attr('href').value : item.attr('xlink:href').value;
             var def = defs[id];
 
             item.removeAttr('xlink:href');
