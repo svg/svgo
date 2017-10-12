@@ -20,6 +20,7 @@ Today we have:
 
 | Plugin | Description |
 | ------ | ----------- | 
+| [classToInlineStyle](https://github.com/svg/svgo/blob/master/plugins/classToInlineStyle.js) | moves styles off style declaration to the element's inline style |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | cleanup attributes from newlines, trailing, and repeating spaces |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | remove doctype declaration |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | remove XML processing instructions |
