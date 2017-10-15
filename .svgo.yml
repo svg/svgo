@@ -27,6 +27,7 @@ plugins:
   - convertStyleToAttrs
   - cleanupIDs
   - removeRasterImages
+  - replaceUse
   - removeUselessDefs
   - cleanupNumericValues
   - cleanupListOfValues
@@ -59,7 +60,6 @@ plugins:
   - removeStyleElement
   - removeScriptElement
   - addAttributesToSVGElement
-  - replaceUse
 
 # configure the indent (default 4 spaces) used by `--pretty` here:
 #
