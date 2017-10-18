@@ -951,7 +951,19 @@ function findArcAngle(curve, relCircle) {
  */
 
 function data2Path(params, pathData) {
+    var previousInstruction = null;
     return pathData.reduce(function(pathString, item) {
-        return pathString + item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
+        const data = item.data ? cleanupOutData(roundData(item.data.slice())) : '';
+        
+        // For repeated instructions, if the first number of the next command is negative,
+        // the instruction can be omitted.
+        if (!(previousInstruction === item.instruction && data && data.startsWith('-')))
+          pathString += item.instruction;
+
+        if (data)
+          pathString += data;
+
+        previousInstruction = item.instruction;
+        return pathString;
     }, '');
 }
