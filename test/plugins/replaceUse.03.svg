@@ -1,15 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <use x="50" y="50" xlink:href="#a"/>
     <defs>
-        <path id="a" d="M0 0h100v10H0V0z"/>
+        <path id="a" d="..." fill="#ff0000"/>
     </defs>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path x="50" y="50" d="M0 0h100v10H0V0z"/>
-    <defs>
-        <path d="M0 0h100v10H0V0z"/>
-    </defs>
+    <g x="50" y="50">
+        <path d="..." fill="#ff0000"/>
+    </g>
 </svg>

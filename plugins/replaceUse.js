@@ -7,7 +7,7 @@ exports.active = false;
 exports.description = 'replace all <use> elements with the node they clone';
 
 /**
- * Replace <use> elements with the nodes they clone and remove the top-level xlink attribute. While this doesn't "optimize" the SVG, it allows the contents to be used in SVG sprites within <symbol> elements. Goes great with removeUselessDefs.
+ * Replace <use> elements with the nodes they clone and remove the top-level xlink attribute and remove their referenced element if it's within <defs>. While this doesn't "optimize" the SVG, it allows the contents to be used in SVG sprites within <symbol> elements.
  *
  * @param {Object} SVG-as-JS
  *
@@ -15,21 +15,15 @@ exports.description = 'replace all <use> elements with the node they clone';
  */
 exports.fn = function(data) {
     var defs = {};
+    var used_defs = {};
 
     function addToDefs(item) {
         if (item.hasAttr('id')) {
             defs['#' + item.attr('id').value] = item;
-            item.removeAttr('id');
         }
     }
 
-    function generateDefs(item) {
-        if (item.isElem('defs')) {
-            findItems(item, addToDefs);
-        }
-    }
-
-    findItems(data, generateDefs);
+    findItems(data, addToDefs);
 
     findItems(data, function(item) {
         // xlink is no longer necessary
@@ -40,20 +34,40 @@ exports.fn = function(data) {
         if (item.isElem('use') && (item.hasAttr('href') || item.hasAttr('xlink:href'))) {
             var id = item.hasAttr('href') ? item.attr('href').value : item.attr('xlink:href').value;
             var def = defs[id];
+            var replacement = def.clone();
+            replacement.removeAttr('id');
 
             item.removeAttr('xlink:href');
             item.removeAttr('href');
-            item.renameElem(def.elem);
-            def.eachAttr(function(attr) {
-                item.addAttr(attr);
-            });
-            item.removeAttr('id');
-            if (def.content) item.content = def.content;
+            item.renameElem('g');
+
+            used_defs[id] = def;
+
+            item.content = [replacement];
         }
     });
 
+    Object.values(used_defs).forEach(removeItem);
+
     return data;
 };
+
+/**
+ * Remove the referenced node if it's within <defs> and <defs> if it's ultimately empty
+ * @param  {Node} item
+ */
+function removeItem(item) {
+    var parent = item.parentNode;
+
+    if (parent && (parent.isElem('defs') || item.isElem('defs'))) {
+        var idx = parent.content.indexOf(item);
+        parent.content.splice(idx, 1);
+
+        if (parent.isEmpty() && parent.isElem('defs')) {
+            removeItem(parent);
+        }
+    }
+}
 
 function findItems(items, fn) {
     items.content.forEach(function(item) {

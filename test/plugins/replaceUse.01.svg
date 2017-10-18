@@ -1,15 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <use xlink:href="#a"/>
     <defs>
-        <path id="a" d="M0 0h100v10H0V0z"/>
+        <path id="a" d="..."/>
+        <path id="b" d="...."/>
     </defs>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 0h100v10H0V0z"/>
+    <g>
+        <path d="..."/>
+    </g>
     <defs>
-        <path d="M0 0h100v10H0V0z"/>
+        <path id="b" d="...."/>
     </defs>
 </svg>
