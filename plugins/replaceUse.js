@@ -15,7 +15,7 @@ exports.description = 'replace all <use> elements with the node they clone';
  */
 exports.fn = function(data) {
     var defs = {};
-    var usedDefs = {};
+    var usedDefs = [];
 
     function addToDefs(item) {
         if (item.hasAttr('id')) {
@@ -41,13 +41,15 @@ exports.fn = function(data) {
             item.removeAttr('href');
             item.renameElem('g');
 
-            usedDefs[id] = def;
+            if (usedDefs.indexOf(def) === -1) {
+                usedDefs.push(def);
+            }
 
             item.content = [replacement];
         }
     });
 
-    Object.values(usedDefs).forEach(removeItem);
+    usedDefs.forEach(removeItem);
 
     return data;
 };
