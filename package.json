@@ -59,7 +59,8 @@
     "object.values": "^1.0.4",
     "sax": "~1.2.1",
     "stable": "^0.1.5",
-    "whet.extend": "~0.9.9"
+    "whet.extend": "~0.9.9",
+    "util.promisify": "~1.0.0"
   },
   "devDependencies": {
     "coveralls": "~2.11.14",

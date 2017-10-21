@@ -107,46 +107,62 @@ Arguments:
 
 * with files:
 
-        $ svgo test.svg
+    ```sh
+    $ svgo test.svg
+    ```
 
     or:
 
-        $ svgo test.svg test.min.svg
+    ```sh
+    $ svgo test.svg test.min.svg
+    ```
 
 * with STDIN / STDOUT:
 
-        $ cat test.svg | svgo -i - -o - > test.min.svg
+    ```sh
+    $ cat test.svg | svgo -i - -o - > test.min.svg
+    ```
 
 * with folder
 
-        $ svgo -f ../path/to/folder/with/svg/files
+    ```sh
+    $ svgo -f ../path/to/folder/with/svg/files
+    ```
 
     or:
 
-        $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```sh
+    $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```
 
 * with strings:
 
-        $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
+    ```sh
+    $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
+    ```
 
     or even with Data URI base64:
 
-        $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
+    ```sh
+    $ svgo -s 'data:image/svg+xml;base64,...' -o test.min.svg
+    ```
 
 * with SVGZ:
 
     from `.svgz` to `.svg`:
 
-        $ gunzip -c test.svgz | svgo -i - -o test.min.svg
-
+    ```sh
+    $ gunzip -c test.svgz | svgo -i - -o test.min.svg
+    ```
+    
     from `.svg` to `.svgz`:
 
-        $ svgo test.svg -o - | gzip -cfq9 > test.svgz
-
+    ```sh
+    $ svgo test.svg -o - | gzip -cfq9 > test.svgz
+    ```
 
 ### Other Ways to Use SVGO
 
-* with GUI – [svgo-gui](https://github.com/svg/svgo-gui)
 * as a web app - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
