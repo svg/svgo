@@ -9,7 +9,7 @@
     </defs>
     <g id="figure" class="hidden">
         <use xlink:href="#circle"/>
-        <use xlink:href="#rect"/>
+        <use href="#rect"/>
     </g>
 </svg>
 
