@@ -2,9 +2,9 @@
 
 exports.type = 'perItem';
 
-exports.active = false;
+exports.active = true;
 
-exports.description = 'removes viewBox attribute when possible (disabled by default)';
+exports.description = 'removes viewBox attribute when possible';
 
 var viewBoxElems = ['svg', 'pattern', 'symbol'];
 

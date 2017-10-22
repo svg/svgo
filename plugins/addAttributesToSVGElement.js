@@ -6,17 +6,17 @@ exports.active = false;
 
 exports.description = 'adds attributes to an outer <svg> element';
 
-var ENOCLS = 'Error in plugin "addAttributesToSVGElement": absent parameters.\n\
-It should have a list of classes in "attributes" or one "attribute".\n\
-Config example:\n\n\
-\
-plugins:\n\
-- addAttributesToSVGElement:\n\
-    attribute: "mySvg"\n\n\
-\
-plugins:\n\
-- addAttributesToSVGElement:\n\
-    attributes: ["mySvg", "size-big"]\n';
+var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
+It should have a list of classes in "attributes" or one "attribute".
+Config example:
+
+plugins:
+- addAttributesToSVGElement:
+    attribute: "mySvg"
+
+plugins:
+- addAttributesToSVGElement:
+    attributes: ["mySvg", "size-big"]`;
 
 /**
  * Add attributes to an outer <svg> element. Example config:

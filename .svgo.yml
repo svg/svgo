@@ -48,7 +48,6 @@ plugins:
   - removeEmptyContainers
   - mergePaths
   - removeUnusedNS
-  - transformsWithOnePath
   - sortAttrs
   - removeTitle
   - removeDesc

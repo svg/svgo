@@ -5,7 +5,7 @@ exports.type = 'perItem';
 exports.active = true;
 
 exports.params = {
-    removeAny: false
+    removeAny: true
 };
 
 exports.description = 'removes <desc> (only non-meaningful by default)';
