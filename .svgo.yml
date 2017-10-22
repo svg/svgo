@@ -58,6 +58,7 @@ plugins:
   - removeStyleElement
   - removeScriptElement
   - addAttributesToSVGElement
+  - addFocusableFalseAttribute
 
 # configure the indent (default 4 spaces) used by `--pretty` here:
 #
