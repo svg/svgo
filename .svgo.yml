@@ -23,6 +23,7 @@ plugins:
   - removeXMLNS
   - removeEditorsNSData
   - cleanupAttrs
+  - inlineStyles
   - minifyStyles
   - convertStyleToAttrs
   - cleanupIDs

@@ -50,20 +50,26 @@
   "dependencies": {
     "coa": "~1.0.1",
     "colors": "~1.1.2",
-    "csso": "~2.3.1",
+    "css-select": "^1.3.0-rc0",
+    "css-select-base-adapter": "^0.1.0",
+    "css-tree": "1.0.0-alpha22",
+    "csso": "^3.0.1",
     "js-yaml": "~3.7.0",
     "mkdirp": "~0.5.1",
+    "object.values": "^1.0.4",
     "sax": "~1.2.1",
+    "stable": "^0.1.5",
+    "whet.extend": "~0.9.9",
     "util.promisify": "~1.0.0"
   },
   "devDependencies": {
+    "coveralls": "~2.11.14",
     "fs-extra": "~4.0.1",
-    "mocha": "~3.2.0",
-    "should": "11.2.0",
     "istanbul": "~0.4.5",
+    "mocha": "~3.2.0",
     "mocha-istanbul": "~0.3.0",
     "mock-stdin": "~0.3.1",
-    "coveralls": "~2.11.14"
+    "should": "11.2.0"
   },
   "engines": {
     "node": ">=4.0.0"

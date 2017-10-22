@@ -199,6 +199,114 @@ And of course, writing plugins would not have been so cool without some sugar AP
   * @param {Object} [context] callback context
   * @return {Boolean} false if there are no any attributes
 
+
+##### querySelectorAll(selectors)
+  * Evaluate a string of CSS selectors against the element and returns matched elements
+  * @param {String} selectors CSS selector(s) string
+  * @return {Array} null if no elements matched
+
+##### querySelector(selectors)
+  * Evaluate a string of CSS selectors against the element and returns only the first matched element
+  * @param {String} selectors CSS selector(s) string
+  * @return {Array} null if no element matched
+
+##### matches(selector)
+  * Test if a selector matches a given element
+  * @param {String} selector CSS selector string
+  * @return {Boolean} true if element would be selected by selector string, false if it does not
+
+
+##### style.getCssText()
+  * Get the textual representation of the declaration block (equivalent to .cssText attribute).
+  * @return {String} Textual representation of the declaration block (empty string for no properties)
+
+##### style.getPropertyPriority(propertyName)
+  * Return the optional priority, "important".
+  * @param {String} propertyName representing the property name to be checked.
+  * @return {String} priority that represents the priority (e.g. "important") if one exists. If none exists, returns the empty string.
+
+##### style.getPropertyValue(propertyName)
+  * Return the property value given a property name.
+  * @param {String} propertyName representing the property name to be checked.
+  * @return {String} value containing the value of the property. If not set, returns the empty string.
+
+##### style.item(index)
+  * Return a property name.
+  * @param {Number} index of the node to be fetched. The index is zero-based.
+  * @return {String} propertyName that is the name of the CSS property at the specified index.
+
+##### style.getProperties()
+  * Return all properties of the node.
+  * @return {Map} properties that is a Map with propertyName as key and property (propertyValue + propertyPriority) as value.
+
+##### style.removeProperty(propertyName)
+  * Remove a property from the CSS declaration block.
+  * @param {String} propertyName representing the property name to be removed.
+  * @return {String} oldValue equal to the value of the CSS property before it was removed.
+
+##### style.setProperty(propertyName, value, priority)
+  * Modify an existing CSS property or creates a new CSS property in the declaration block.
+  * @param {String} propertyName representing the CSS property name to be modified.
+  * @param {String} [value] containing the new property value. If not specified, treated as the empty string. value must not contain "!important" -- that should be set using the priority parameter.
+  * @param {String} [priority] allowing the "important" CSS priority to be set. If not specified, treated as the empty string.
+  * @return {undefined}
+
+
+##### css-tools.flattenToSelectors(cssAst)
+  * Flatten a CSS AST to a selectors list.
+  * @param {Object} CSS AST to flatten
+  * @return {Array} selectors
+
+##### css-tools.filterByMqs(selectors, useMqs)
+  * Filter selectors by Media Query.
+  * @param {Array} Selectors to filter
+  * @param {Array} Strings of media queries that should pass (<name> <expression>)
+  * @return {Array} Filtered selectors that match the passed media queries
+
+##### css-tools.filterByPseudos(selectors, useMqs)
+  * Filter selectors by the pseudo-elements and/or -classes they contain.
+  * @param {Array} Selectors to filter
+  * @param {Array} Strings of single or sequence of pseudo-elements and/or -classes that should pass
+  * @return {Array} Filtered selectors that match the passed pseudo-elements and/or -classes
+
+##### css-tools.cleanPseudos(selectors)
+  * Remove pseudo-elements and/or -classes from the selectors for proper matching.
+  * @param {Array} Selectors to clean
+  * @return {Array} Selectors without pseudo-elements and/or -classes
+
+##### css-tools.compareSpecificity(aSpecificity, bSpecificity)
+  * Compare two selector specificities.
+  * @param {Array} Specificity of selector A
+  * @param {Array} Specificity of selector B
+  * @return {Number} Score of selector specificity A compared to selector specificity B
+
+##### css-tools.compareSimpleSelectorNode(aSimpleSelectorNode, bSimpleSelectorNode)
+  * Compare two simple selectors.
+  * @param {Object} Simple selector A
+  * @param {Object} Simple selector B
+  * @return {Number} Score of selector A compared to selector B
+
+##### css-tools.sortSelectors(selectors)
+  * Sort selectors stably by their specificity.
+  * @param {Array} Selectors to be sorted
+  * @return {Array} Stable sorted selectors
+
+##### css-tools.csstreeToStyleDeclaration(declaration)
+  * Convert a css-tree AST style declaration to CSSStyleDeclaration property.
+  * @param {Object} css-tree style declaration
+  * @return {Object} CSSStyleDeclaration property
+
+##### css-tools.getCssStr(elem)
+  * Gets the CSS string of a style element
+  * @param {Object} element style element
+  * @return {String|Array} CSS string or empty array if no styles are set
+
+##### css-tools.csstreeToStyleDeclaration(elem, css)
+  * @param {Object} element style element
+  * @param {String} CSS string to be set
+  * @return {Object} reference to field with CSS
+
+
 #### 3.3 tests
 
 There is nothing easier than testing your plugin:
