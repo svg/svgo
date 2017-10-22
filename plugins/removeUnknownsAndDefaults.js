@@ -11,7 +11,8 @@ exports.params = {
     unknownAttrs: true,
     defaultAttrs: true,
     uselessOverrides: true,
-    keepDataAttrs: true
+    keepDataAttrs: true,
+    keepAriaAttrs: true
 };
 
 var collections = require('./_collections'),
@@ -105,7 +106,8 @@ exports.fn = function(item, params) {
                 if (
                     attr.name !== 'xmlns' &&
                     (attr.prefix === 'xml' || !attr.prefix) &&
-                    (!params.keepDataAttrs || attr.name.indexOf('data-') != 0)
+                    (!params.keepDataAttrs || attr.name.indexOf('data-') != 0) &&
+                    (!params.keepAriaAttrs || attr.name.indexOf('aria-') != 0)
                 ) {
                     if (
                         // unknown attrs

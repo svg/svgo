@@ -23,6 +23,7 @@ plugins:
   - removeXMLNS
   - removeEditorsNSData
   - cleanupAttrs
+  - inlineStyles
   - minifyStyles
   - convertStyleToAttrs
   - cleanupIDs
@@ -49,7 +50,6 @@ plugins:
   - removeEmptyContainers
   - mergePaths
   - removeUnusedNS
-  - transformsWithOnePath
   - sortAttrs
   - removeTitle
   - removeDesc

@@ -788,6 +788,7 @@ exports.elems = {
             'style',
             'externalResourcesRequired',
             'preserveAspectRatio',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1002,6 +1003,7 @@ exports.elems = {
             'filterRes',
             'filterUnits',
             'primitiveUnits',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1140,6 +1142,7 @@ exports.elems = {
             'xlink'
         ],
         attrs: [
+            'href',
             'xlink:href'
         ],
         content: [
@@ -1384,6 +1387,7 @@ exports.elems = {
             'y',
             'width',
             'height',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1441,6 +1445,7 @@ exports.elems = {
             'gradientUnits',
             'gradientTransform',
             'spreadMethod',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1620,6 +1625,7 @@ exports.elems = {
         ],
         attrs: [
             'externalResourcesRequired',
+            'href',
             'xlink:href'
         ],
         contentGroups: [
@@ -1666,6 +1672,7 @@ exports.elems = {
             'patternUnits',
             'patternContentUnits',
             'patternTransform',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1762,6 +1769,7 @@ exports.elems = {
             'gradientUnits',
             'gradientTransform',
             'spreadMethod',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1871,6 +1879,7 @@ exports.elems = {
         attrs: [
             'externalResourcesRequired',
             'type',
+            'href',
             'xlink:href'
         ]
     },
@@ -2119,6 +2128,7 @@ exports.elems = {
             'class',
             'style',
             'externalResourcesRequired',
+            'href',
             'xlink:href',
             'startOffset',
             'method',
@@ -2164,6 +2174,7 @@ exports.elems = {
             'class',
             'style',
             'externalResourcesRequired',
+            'href',
             'xlink:href'
         ],
         contentGroups: [
@@ -2224,6 +2235,7 @@ exports.elems = {
             'y',
             'width',
             'height',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -2373,6 +2385,7 @@ exports.colorsNames = {
     'darkgoldenrod': '#b8860b',
     'darkgray': '#a9a9a9',
     'darkgreen': '#006400',
+    'darkgrey': '#a9a9a9',
     'darkkhaki': '#bdb76b',
     'darkmagenta': '#8b008b',
     'darkolivegreen': '#556b2f',
@@ -2383,11 +2396,13 @@ exports.colorsNames = {
     'darkseagreen': '#8fbc8f',
     'darkslateblue': '#483d8b',
     'darkslategray': '#2f4f4f',
+    'darkslategrey': '#2f4f4f',
     'darkturquoise': '#00ced1',
     'darkviolet': '#9400d3',
     'deeppink': '#ff1493',
     'deepskyblue': '#00bfff',
     'dimgray': '#696969',
+    'dimgrey': '#696969',
     'dodgerblue': '#1e90ff',
     'firebrick': '#b22222',
     'floralwhite': '#fffaf0',
@@ -2400,6 +2415,7 @@ exports.colorsNames = {
     'gray': '#808080',
     'green': '#008000',
     'greenyellow': '#adff2f',
+    'grey': '#808080',
     'honeydew': '#f0fff0',
     'hotpink': '#ff69b4',
     'indianred': '#cd5c5c',
@@ -2414,6 +2430,7 @@ exports.colorsNames = {
     'lightcoral': '#f08080',
     'lightcyan': '#e0ffff',
     'lightgoldenrodyellow': '#fafad2',
+    'lightgray': '#d3d3d3',
     'lightgreen': '#90ee90',
     'lightgrey': '#d3d3d3',
     'lightpink': '#ffb6c1',
@@ -2421,6 +2438,7 @@ exports.colorsNames = {
     'lightseagreen': '#20b2aa',
     'lightskyblue': '#87cefa',
     'lightslategray': '#789',
+    'lightslategrey': '#789',
     'lightsteelblue': '#b0c4de',
     'lightyellow': '#ffffe0',
     'lime': '#0f0',
@@ -2460,6 +2478,7 @@ exports.colorsNames = {
     'plum': '#dda0dd',
     'powderblue': '#b0e0e6',
     'purple': '#800080',
+    'rebeccapurple': '#639',
     'red': '#f00',
     'rosybrown': '#bc8f8f',
     'royalblue': '#4169e1',
@@ -2473,6 +2492,7 @@ exports.colorsNames = {
     'skyblue': '#87ceeb',
     'slateblue': '#6a5acd',
     'slategray': '#708090',
+    'slategrey': '#708090',
     'snow': '#fffafa',
     'springgreen': '#00ff7f',
     'steelblue': '#4682b4',
@@ -2512,6 +2532,7 @@ exports.colorsShortNames = {
   '#dda0dd': 'plum',
   '#800080': 'purple',
   '#f00': 'red',
+  '#ff0000': 'red',
   '#fa8072': 'salmon',
   '#a0522d': 'sienna',
   '#c0c0c0': 'silver',

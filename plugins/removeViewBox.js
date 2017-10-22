@@ -2,12 +2,11 @@
 
 exports.type = 'perItem';
 
-exports.active = false;
+exports.active = true;
 
-exports.description = 'removes viewBox attribute when possible (disabled by default)';
+exports.description = 'removes viewBox attribute when possible';
 
-var regViewBox = /^0\s*[,\s]\s*0\s*[,\s]\s*([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s*[,\s]\s*([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
-    viewBoxElems = ['svg', 'pattern'];
+var viewBoxElems = ['svg', 'pattern', 'symbol'];
 
 /**
  * Remove viewBox attr which coincides with a width/height box.
@@ -33,15 +32,13 @@ exports.fn = function(item) {
         item.hasAttr('height')
     ) {
 
-        var match = item.attr('viewBox').value.match(regViewBox);
+        var nums = item.attr('viewBox').value.split(/[ ,]+/g);
 
-        if (match) {
-            if (
-                item.attr('width').value === match[1] &&
-                item.attr('height').value === match[3]
-            ) {
-                item.removeAttr('viewBox');
-            }
+        if (
+            item.attr('width').value.replace(/px$/, '') === nums[2] && // could use parseFloat too
+            item.attr('height').value.replace(/px$/, '') === nums[3]
+        ) {
+            item.removeAttr('viewBox');
         }
 
     }

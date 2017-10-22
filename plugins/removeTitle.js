@@ -2,13 +2,12 @@
 
 exports.type = 'perItem';
 
-exports.active = false;
+exports.active = true;
 
-exports.description = 'removes <title> (disabled by default)';
+exports.description = 'removes <title>';
 
 /**
  * Remove <title>.
- * Disabled by default cause it may be used for accessibility.
  *
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title
  *
