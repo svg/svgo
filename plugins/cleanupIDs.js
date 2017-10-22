@@ -55,9 +55,24 @@ exports.fn = function(data, params) {
             var item = items.content[i];
 
             // quit if <style> of <script> presents ('force' param prevents quitting)
-            if (!params.force && item.isElem(styleOrScript)) {
-                hasStyleOrScript = true;
-                continue;
+            if (!params.force) {
+                if (item.isElem(styleOrScript)) {
+                    hasStyleOrScript = true;
+                    continue;
+                }
+                // Don't remove IDs if the whole SVG consists only of defs.
+                if (item.isElem('defs') && item.parentNode.isElem('svg')) {
+                    var hasDefsOnly = true;
+                    for (var j = i + 1; j < items.content.length; j++) {
+                        if (items.content[j].isElem()) {
+                            hasDefsOnly = false;
+                            break;
+                        }
+                    }
+                    if (hasDefsOnly) {
+                        break;
+                    }
+                }
             }
             // …and don't remove any ID if yes
             if (item.isElem()) {
