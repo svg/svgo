@@ -69,7 +69,7 @@ exports.fn = function(document, opts) {
                 parseCustomProperty: false
             });
         } catch (parseError) {
-            console.warn('Warning: Parse error of styles of <style/> element, skipped. Error details: ' + parseError);
+            // console.warn('Warning: Parse error of styles of <style/> element, skipped. Error details: ' + parseError);
             continue;
         }
 
@@ -109,7 +109,7 @@ exports.fn = function(document, opts) {
             selectedEls = document.querySelectorAll(selectorStr);
         } catch (selectError) {
             if (selectError.constructor === SyntaxError) {
-                console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped. Error details: ' + selectError);
+                // console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped. Error details: ' + selectError);
                 continue;
             }
             throw selectError;
@@ -159,7 +159,7 @@ exports.fn = function(document, opts) {
 
         if (opts.removeMatchedSelectors && selector.selectedEls !== null && selector.selectedEls.length > 0) {
             // clean up matching simple selectors if option removeMatchedSelectors is enabled
-            selector.rule.selector.children.remove(selector.item);
+            selector.rule.prelude.children.remove(selector.item);
         }
     }
 
@@ -205,7 +205,7 @@ exports.fn = function(document, opts) {
 
             // clean up <style/> rulesets without any css selectors left
             if (node.type === 'Rule' &&
-                node.selector.children.isEmpty()) {
+                node.prelude.children.isEmpty()) {
                 list.remove(item);
             }
         });
