@@ -163,7 +163,8 @@ exports.attrsGroupsDefaults = {
         'unicode-bidi': 'normal',
         'dominant-baseline': 'auto',
         'alignment-baseline': 'baseline',
-        'baseline-shift': 'baseline'
+        'baseline-shift': 'baseline',
+        overflow: 'visible'
     },
     transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
 };
