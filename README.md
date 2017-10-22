@@ -19,7 +19,7 @@ SVGO has a plugin-based architecture, so almost every optimization is a separate
 Today we have:
 
 | Plugin | Description |
-| ------ | ----------- | 
+| ------ | ----------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | cleanup attributes from newlines, trailing, and repeating spaces |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | remove doctype declaration |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | remove XML processing instructions |
@@ -72,7 +72,6 @@ Want to know how it works and how to write your own plugin? [Of course you want 
 ```sh
 $ [sudo] npm install -g svgo
 ```
-
 
 ## Usage
 
@@ -154,7 +153,7 @@ Arguments:
     ```sh
     $ gunzip -c test.svgz | svgo -i - -o test.min.svg
     ```
-    
+
     from `.svg` to `.svgz`:
 
     ```sh
