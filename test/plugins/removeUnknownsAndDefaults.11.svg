@@ -5,6 +5,8 @@
     <g aria-label="foo">
         test
     </g>
+    <path id="t" d="M10 10h10L10 20"/>
+    <use href="#t"/>
 </svg>
 
 @@@
@@ -16,4 +18,6 @@
     <g aria-label="foo">
         test
     </g>
+    <path id="t" d="M10 10h10L10 20"/>
+    <use href="#t"/>
 </svg>

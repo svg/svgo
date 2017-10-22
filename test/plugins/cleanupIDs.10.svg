@@ -25,7 +25,7 @@
     </defs>
     <g id="figure" class="hidden">
         <use xlink:href="#a"/>
-        <use xlink:href="#b"/>
+        <use href="#b"/>
     </g>
 </svg>
 

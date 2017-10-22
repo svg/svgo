@@ -788,6 +788,7 @@ exports.elems = {
             'style',
             'externalResourcesRequired',
             'preserveAspectRatio',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1002,6 +1003,7 @@ exports.elems = {
             'filterRes',
             'filterUnits',
             'primitiveUnits',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1140,6 +1142,7 @@ exports.elems = {
             'xlink'
         ],
         attrs: [
+            'href',
             'xlink:href'
         ],
         content: [
@@ -1384,6 +1387,7 @@ exports.elems = {
             'y',
             'width',
             'height',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1441,6 +1445,7 @@ exports.elems = {
             'gradientUnits',
             'gradientTransform',
             'spreadMethod',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1620,6 +1625,7 @@ exports.elems = {
         ],
         attrs: [
             'externalResourcesRequired',
+            'href',
             'xlink:href'
         ],
         contentGroups: [
@@ -1666,6 +1672,7 @@ exports.elems = {
             'patternUnits',
             'patternContentUnits',
             'patternTransform',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1762,6 +1769,7 @@ exports.elems = {
             'gradientUnits',
             'gradientTransform',
             'spreadMethod',
+            'href',
             'xlink:href'
         ],
         defaults: {
@@ -1871,6 +1879,7 @@ exports.elems = {
         attrs: [
             'externalResourcesRequired',
             'type',
+            'href',
             'xlink:href'
         ]
     },
@@ -2119,6 +2128,7 @@ exports.elems = {
             'class',
             'style',
             'externalResourcesRequired',
+            'href',
             'xlink:href',
             'startOffset',
             'method',
@@ -2164,6 +2174,7 @@ exports.elems = {
             'class',
             'style',
             'externalResourcesRequired',
+            'href',
             'xlink:href'
         ],
         contentGroups: [
@@ -2224,6 +2235,7 @@ exports.elems = {
             'y',
             'width',
             'height',
+            'href',
             'xlink:href'
         ],
         defaults: {
