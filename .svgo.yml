@@ -27,6 +27,7 @@ plugins:
   - minifyStyles
   - convertStyleToAttrs
   - cleanupIDs
+  - prefixIds
   - removeRasterImages
   - removeUselessDefs
   - cleanupNumericValues

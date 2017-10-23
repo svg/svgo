@@ -50,6 +50,9 @@
   "dependencies": {
     "coa": "~2.0.0",
     "colors": "~1.1.2",
+    "css-url-regex": "^1.1.0",
+    "unquote": "^1.1.0",
+    "mkdirp": "~0.5.1",
     "css-select": "~1.3.0-rc0",
     "css-select-base-adapter": "~0.1.0",
     "css-tree": "~1.0.0-alpha25",

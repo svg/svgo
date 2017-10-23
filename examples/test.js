@@ -12,7 +12,7 @@ FS.readFile(filepath, 'utf8', function(err, data) {
         throw err;
     }
 
-    svgo.optimize(data).then(function(result) {
+    svgo.optimize(data, {path: filepath}).then(function(result) {
 
         console.log(result);
 

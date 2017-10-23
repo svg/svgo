@@ -30,7 +30,7 @@ describe('indentation', function() {
                 js2svg  : { pretty: true, indent: 2 }
             });
 
-            svgo.optimize(orig).then(function(result) {
+            svgo.optimize(orig, {path: filepath}).then(function(result) {
                 normalize(result.data).should.be.equal(should);
                 done();
             });
