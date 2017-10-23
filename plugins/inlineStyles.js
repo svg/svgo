@@ -159,7 +159,7 @@ exports.fn = function(document, opts) {
 
         if (opts.removeMatchedSelectors && selector.selectedEls !== null && selector.selectedEls.length > 0) {
             // clean up matching simple selectors if option removeMatchedSelectors is enabled
-            selector.rule.selector.children.remove(selector.item);
+            selector.rule.prelude.children.remove(selector.item);
         }
     }
 
@@ -205,7 +205,7 @@ exports.fn = function(document, opts) {
 
             // clean up <style/> rulesets without any css selectors left
             if (node.type === 'Rule' &&
-                node.selector.children.isEmpty()) {
+                node.prelude.children.isEmpty()) {
                 list.remove(item);
             }
         });
