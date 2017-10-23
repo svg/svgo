@@ -44,7 +44,7 @@ describe('plugins tests', function() {
                         js2svg  : { pretty: true }
                     });
 
-                    return svgo.optimize(orig).then(function(result) {
+                    return svgo.optimize(orig, {path: file}).then(function(result) {
                         //FIXME: results.data has a '\n' at the end while it should not
                         normalize(result.data).should.be.equal(should);
                     });
