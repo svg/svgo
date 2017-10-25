@@ -10,7 +10,6 @@ exports.description = 'chain filter elements using CSS filter(...)';
 
 
 var csstree = require('css-tree'),
-    cssRx = require('css-url-regex'),
     camelCase = require('camelcase'),
     domWalker = require('../lib/dom-walker'),
     domTools = require('../lib/dom-tools');
