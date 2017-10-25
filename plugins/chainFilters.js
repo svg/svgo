@@ -13,23 +13,8 @@ var csstree = require('css-tree'),
     cssRx = require('css-url-regex'),
     camelCase = require('camelcase'),
     domWalker = require('../lib/dom-walker'),
-    rxId = /^#(.*)$/; // regular expression for matching + extracting the ID
+    domTools = require('../lib/dom-tools');
 
-var matchUrl = function(val) {
-    var urlMatches = cssRx().exec(val);
-    if (urlMatches === null) {
-        return false;
-    }
-    return urlMatches[1];
-};
-
-var matchId = function(urlVal) {
-    var idUrlMatches = urlVal.match(rxId);
-    if (idUrlMatches === null) {
-        return false;
-    }
-    return idUrlMatches[1];
-};
 
 /**
  * Chain filter elements using CSS filter(...) (Workaround for some browsers like Firefox).
@@ -63,22 +48,33 @@ exports.fn = function(document) {
         }
 
 
-        // elements that use a filter (filter attribute)
-        if (!node.hasAttr('filter')) {
+        // elements that use a filter (filter attribute) or 
+        //                   a filter style
+        if (!node.hasAttr('filter') &&
+            !(node.style && node.style.getPropertyValue('filter') !== null)) {
             return; // skip if no filter attribute
         }
 
-        var useFilterVal  = node.attr('filter').value;
+        var useFilterVal;
+        if(node.style.getPropertyValue('filter') !== null) {
+          // style filter
+          useFilterVal = node.style.getPropertyValue('filter');
+        } else {
+          // attribute filter
+          useFilterVal = node.attr('filter').value;
+        }
+
+
         if (useFilterVal.length === 0) {
             return; // skip if empty filter attribute
         }
 
-        var useFilterUrl = matchUrl(useFilterVal);
+        var useFilterUrl = domTools.matchUrl(useFilterVal);
         if (!useFilterUrl) {
           return; // skip if no url(...) used
         }
 
-        var useFilterId = matchId(useFilterUrl);
+        var useFilterId = domTools.matchId(useFilterUrl);
         if (!useFilterId) {
             return; // skip if no #id in url(...) used
         }
@@ -122,7 +118,7 @@ exports.fn = function(document) {
 
         var filterClassRuleObj = {
             type: 'Rule', 
-            selector: {
+            prelude: {
                 type: 'SelectorList',
                 children: [
                     {
@@ -162,7 +158,7 @@ exports.fn = function(document) {
 
     if(!filterClassesStyles.children.isEmpty()) {
         // Add new style element with these filter classes styles
-        var svgElem = document.content[0];
+        var svgElem = document.querySelector('svg');
 
         // New <style>
         var styleFilterClasses = new document.constructor({
@@ -184,11 +180,17 @@ exports.fn = function(document) {
     }
 
 
-    // Assign filter-using classes to corresponding filter-using elements
-    // Remove then redundant filter attribute.
     for (var element of elementsUsingExistingFilterById) {
-        element.node.removeAttr('filter');
+        // Assign filter-using classes to corresponding filter-using elements
         element.node.class.add(filterClasses.get(element.filterId));
+
+        // Remove the then redundant filter attribute + styles
+        element.node.removeAttr('filter');
+        element.node.style.removeProperty('filter');
+        if(element.node.style.item(0) === '') {
+          // clean up now empty style attributes
+          element.node.removeAttr('style');
+        }
     }
 
 

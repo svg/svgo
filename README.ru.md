@@ -19,7 +19,7 @@ SVGO имеет расширяемую архитектуру, в которой
 Сегодня у нас есть:
 
 | Plugin | Description |
-| ------ | ----------- | 
+| ------ | ----------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | удаление переносов строк и лишних пробелов |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | удаление doctype |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | удаление XML-инструкций |
@@ -73,8 +73,12 @@ SVGO имеет расширяемую архитектуру, в которой
 $ [sudo] npm install -g svgo
 ```
 
+## Выполнение:
+
+### Командная строка
+
 ```
-Выполнение:
+Запуск:
   svgo [OPTIONS] [ARGS]
 
 Параметры:
@@ -102,50 +106,69 @@ $ [sudo] npm install -g svgo
 
 * с файлами:
 
-        $ svgo test.svg
+    ```sh
+    $ svgo test.svg
+    ```
 
     или:
 
-        $ svgo test.svg test.min.svg
+    ```sh
+    $ svgo test.svg test.min.svg
+    ```
 
 * со STDIN / STDOUT:
 
-        $ cat test.svg | svgo -i - -o - > test.min.svg
+    ```sh
+    $ cat test.svg | svgo -i - -o - > test.min.svg
+    ```
 
 * с папками
 
-        $ svgo -f ../path/to/folder/with/svg/files
+    ```sh
+    $ svgo -f ../path/to/folder/with/svg/files
+    ```
 
     или:
 
-        $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```sh
+    $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```
 
 * со строками:
 
-        $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
+    ```sh
+    $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
+    ```
 
     или даже с Data URI base64:
 
-        $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
+    ```sh
+    $ svgo -s 'data:image/svg+xml;base64,…' -o test.min.svg
+    ```
 
 * с SVGZ:
 
     из `.svgz` в `.svg`:
 
-        $ gunzip -c test.svgz | svgo -i - -o test.min.svg
+    ```sh
+    $ gunzip -c test.svgz | svgo -i - -o test.min.svg
+    ```
 
     из `.svg` в `.svgz`:
 
-        $ svgo test.svg -o - | gzip -cfq9 > test.svgz
+    ```sh
+    $ svgo test.svg -o - | gzip -cfq9 > test.svgz
+    ```
 
-* с помощью GUI – [svgo-gui](https://github.com/svg/svgo-gui)
+### Другие способы использования SVGO
+
 * в виде веб-приложения - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * как модуль Node.js – [examples](https://github.com/svg/svgo/tree/master/examples)
 * как таск для Grunt – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * как таск для Gulp – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
-* через загрузчик в webpack – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
+* через загрузчик webpack – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 * с помощью бота в Telegram – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * как плагин PostCSS - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 
@@ -153,4 +176,4 @@ $ [sudo] npm install -g svgo
 
 Данное программное обеспечение выпускается под [лицензией MIT](https://github.com/svg/svgo/blob/master/LICENSE).
 
-Логотип – [Егор Большаков](http://xizzzy.ru/).
+Логотип – [Егор Большаков](1/).

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+    <title id="title">
+        Title
+    </title>
+    <g aria-label="foo">
+        test
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <title id="title">
+        Title
+    </title>
+    <g>
+        test
+    </g>
+</svg>
+
+@@@
+
+{ "keepAriaAttrs": false }
