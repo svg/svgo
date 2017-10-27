@@ -100,20 +100,20 @@ exports.fn = function(item) {
             .removeAttr('points');
     } else if (item.isElem('circle')) {
 
-        var cx = +(item.attr('cx') || NONE).value;
-        var cy = +(item.attr('cy') || NONE).value;
-        var r = +(item.attr('r') || NONE).value;
+        var cx = +(item.attr('cx') || none).value;
+        var cy = +(item.attr('cy') || none).value;
+        var r = +(item.attr('r') || none).value;
         if (isNaN(cx - cy + r)) {
             return;
         }
-        var pathData =
-            'M' + ' ' + cx  + ' ' + (cy - r) 
-                + 'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy + r) 
-                + 'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy - r)
-                + 'Z';
+        var cPathData =
+            'M' + ' ' + cx  + ' ' + (cy - r) +
+                'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy + r) +
+                'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy - r) +
+                'Z';
         item.addAttr({
                 name: 'd',
-                value: pathData,
+                value: cPathData,
                 prefix: '',
                 local: 'd',
         });
@@ -121,21 +121,21 @@ exports.fn = function(item) {
 
     } else if (item.isElem('ellipse')) {
 
-        var cx = +(item.attr('cx') || NONE).value;
-        var cy = +(item.attr('cy') || NONE).value;
-        var rx = +(item.attr('rx') || NONE).value;
-        var ry = +(item.attr('ry') || NONE).value;
-        if (isNaN(cx - cy + rx - ry)) {
+        var ecx = +(item.attr('cx') || none).value;
+        var ecy = +(item.attr('cy') || none).value;
+        var rx = +(item.attr('rx') || none).value;
+        var ry = +(item.attr('ry') || none).value;
+        if (isNaN(ecx - ecy + rx - ry)) {
             return;
         }
-        var pathData =
-            'M' +  cx + ' ' + (cy - ry)
-                + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy + ry)
-                + 'A' + rx + ' ' + ry + ' 0 1 0 ' + cx + ' ' + (cy - ry)
-                + 'Z';
+        var ePathData =
+            'M' +  ecx + ' ' + (ecy - ry) +
+                'A' + rx + ' ' + ry + ' 0 1 0 ' + ecx + ' ' + (ecy + ry) +
+                'A' + rx + ' ' + ry + ' 0 1 0 ' + ecx + ' ' + (ecy - ry) +
+                'Z';
         item.addAttr({
                 name: 'd',
-                value: pathData,
+                value: ePathData,
                 prefix: '',
                 local: 'd',
         });
