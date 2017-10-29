@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="5"/>
+    <ellipse cx="10" cy="10" rx="5" ry="5"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 5A5 5 0 1 0 10 15A5 5 0 1 0 10 5Z"/>
+    <path d="M10 5A5 5 0 1 0 10 15A5 5 0 1 0 10 5Z"/>
+</svg>
+
+@@@
+
+{ "convertArcs": true }

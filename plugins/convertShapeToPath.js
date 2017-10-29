@@ -112,7 +112,7 @@ exports.fn = function(item, params) {
             return;
         }
         var cPathData =
-            'M' + ' ' + cx  + ' ' + (cy - r) +
+            'M' + cx  + ' ' + (cy - r) +
                 'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy + r) +
                 'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy - r) +
                 'Z';
@@ -134,7 +134,7 @@ exports.fn = function(item, params) {
             return;
         }
         var ePathData =
-            'M' +  ecx + ' ' + (ecy - ry) +
+            'M' + ecx + ' ' + (ecy - ry) +
                 'A' + rx + ' ' + ry + ' 0 1 0 ' + ecx + ' ' + (ecy + ry) +
                 'A' + rx + ' ' + ry + ' 0 1 0 ' + ecx + ' ' + (ecy - ry) +
                 'Z';
