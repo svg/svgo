@@ -101,7 +101,6 @@ $ [sudo] npm install -g svgo
 
 Аргументы:
   INPUT : Аналогично --input
-  OUTPUT : Аналогично --output
 ```
 
 * с файлами:
@@ -113,7 +112,11 @@ $ [sudo] npm install -g svgo
     или:
 
     ```sh
-    $ svgo test.svg test.min.svg
+    $ svgo test.svg other.svg third.svg
+    ```
+
+    ```sh
+    $ svgo *.svg
     ```
 
 * со STDIN / STDOUT:
@@ -132,6 +135,10 @@ $ [sudo] npm install -g svgo
 
     ```sh
     $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```
+
+    ```sh
+    $ svgo *.svg -o ../path/to/folder/with/svg/output
     ```
 
 * со строками:
@@ -176,4 +183,4 @@ $ [sudo] npm install -g svgo
 
 Данное программное обеспечение выпускается под [лицензией MIT](https://github.com/svg/svgo/blob/master/LICENSE).
 
-Логотип – [Егор Большаков](1/).
+Логотип – [Егор Большаков](http://xizzzy.ru/).

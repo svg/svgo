@@ -13,9 +13,9 @@ coveralls: lib-cov
 	@cat lcov.info | ./node_modules/.bin/coveralls
 	@rm -rf lib-cov lcov.info
 
-travis: jshint test coveralls
+travis: lint test coveralls
 
-jshint:
-	@npm run jshint
+lint:
+	@npm run lint
 
 .PHONY: test

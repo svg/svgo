@@ -1,3 +1,26 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.0.0) ] 1.0.0 / 30.10.2017
+* SVGO now requires Node 4 or higher.
+* Changed CLI syntax to treat filenames as input, thus allowing `svgo *.svg` syntax.
+* `SVGO.optimize()` now returns `Promise`.
+* Added `datauri` option to JS API.
+* Added support for SVG 2 `href` attribute.
+* `cleanupIDs` now don't removes IDs if an image consists only of `defs`.
+* New plugin `inlineStyles` for converting styles from `<style>` element to attributes if possible (by @strarsis).
+* `cleanupNumericValues` now rounds values in `viewBox` (by @caub).
+* New plugin: `removeScriptElement` (disabled by default) to align with `removeStyleElement` (by @pklingem).
+* `minifyStyles` now removes styles based on usage with controlling options (by @lahmatiy).
+* New option `except` in `cleanupIDs` to keep IDs (by @Velenir).
+* New option `force` in `cleanupIDs` to work even if SVG contains `style` or `script` elements (by @Velenir).
+* Fixed arcs transforming with different signed `scale` parameters (by @JoshyPHP).
+* Fixed `removeUselessStrokeAndFill` to check for `style` or `script` elements per file (by @caub).
+* New option `keepAriaAttrs` in `removeUnknownsAndDefaults` (by @davidtheclark).
+* Corrected parsing in `cleanupIDs` to account animation syntax (by @caub).
+* `#ff0000` now converts to `red` as well as `#f00` (by @davidleston).
+* Added “gray” variation to colors list per CSS Color Module Level 4 (by @JoshyPHP).
+* Fixed error on empty files.
+* A separator character in `removeAttrs` now can be changed per `elemSeparator` option (by @mikestreety).
+* `addAttributesToSVGElement` now can add values to attributes.
+
 ### [ [>](https://github.com/svg/svgo/tree/v0.7.2) ] 0.7.2 / 29.01.2017
 * Extended `currentColor` match conditions (string, rx, bool) (by @AlimovSV)
 * Fixed removing `<animate>` in `<stop>`.

@@ -1,6 +1,6 @@
 {
   "name": "svgo",
-  "version": "0.7.2",
+  "version": "1.0.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
@@ -45,7 +45,8 @@
   },
   "scripts": {
     "test": "set NODE_ENV=test && mocha",
-    "jshint": "jshint --show-non-errors ."
+    "lint": "jshint --show-non-errors .",
+    "jshint": "npm run lint"
   },
   "dependencies": {
     "coa": "~2.0.0",

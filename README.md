@@ -101,7 +101,6 @@ Options:
 
 Arguments:
   INPUT : Alias to --input
-  OUTPUT : Alias to --output
 ```
 
 * with files:
@@ -113,7 +112,11 @@ Arguments:
     or:
 
     ```sh
-    $ svgo test.svg test.min.svg
+    $ svgo test.svg other.svg third.svg
+    ```
+
+    ```sh
+    $ svgo *.svg
     ```
 
 * with STDIN / STDOUT:
@@ -132,6 +135,10 @@ Arguments:
 
     ```sh
     $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```
+
+    ```sh
+    $ svgo *.svg -o ../path/to/folder/with/svg/output
     ```
 
 * with strings:
