@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.0.1) ] 1.0.1 / 31.10.2017
+* Fixed error “Object.defineProperty called on non-object” in images with `<foreignObject/>`.
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.0.0) ] 1.0.0 / 30.10.2017
 * SVGO now requires Node 4 or higher.
 * Changed CLI syntax to treat filenames as input, thus allowing `svgo *.svg` syntax.
