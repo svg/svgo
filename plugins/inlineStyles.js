@@ -164,34 +164,42 @@ exports.fn = function(document, opts) {
     }
 
 
-    if (opts.removeMatchedSelectors) {
-        // clean up matched class + ID attribute values
-        for (selector of sortedSelectors) {
-            if(!selector.selectedEls) {
-                continue;
+    if (!opts.removeMatchedSelectors) {
+        return document; // no further processing required
+    }
+
+
+    // clean up matched class + ID attribute values
+    for (selector of sortedSelectors) {
+        if(!selector.selectedEls) {
+            continue;
+        }
+
+        if (opts.onlyMatchedOnce && selector.selectedEls !== null && selector.selectedEls.length > 1) {
+            // skip selectors that match more than once if option onlyMatchedOnce is enabled
+            continue;
+        }
+
+        for (selectedEl of selector.selectedEls) {
+            // class
+            var firstSubSelector = selector.item.data.children.first();
+            if(firstSubSelector.type === 'ClassSelector') {
+                selectedEl.class.remove(firstSubSelector.name);
+            }
+            // clean up now empty class attributes
+            if(typeof selectedEl.class.item(0) === 'undefined') {
+                selectedEl.removeAttr('class');
             }
 
-            for (selectedEl of selector.selectedEls) {
-                // class
-                var firstSubSelector = selector.item.data.children.first();
-                if(firstSubSelector.type === 'ClassSelector') {
-                    selectedEl.class.remove(firstSubSelector.name);
-                }
-                // clean up now empty class attributes
-                if(typeof selectedEl.class.item(0) === 'undefined') {
-                    selectedEl.removeAttr('class');
-                }
-
-                // ID
-                if(firstSubSelector.type === 'IdSelector') {
-                    selectedEl.removeAttr('id', firstSubSelector.name);
-                }
+            // ID
+            if(firstSubSelector.type === 'IdSelector') {
+                selectedEl.removeAttr('id', firstSubSelector.name);
             }
         }
     }
 
 
-    // clean up elements
+    // clean up now empty elements
     for (var style of styles) {
         csstree.walkRules(style.cssAst, function(node, item, list) {
             // clean up <style/> atrules without any rulesets left
