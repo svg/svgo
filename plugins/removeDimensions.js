@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'removes width and height in presence of viewBox';
+exports.description = 'removes width and height in presence of viewBox (opposite to removeViewBox, disable it first)';
 
 /**
  * Remove width/height attributes when a viewBox attribute is present.

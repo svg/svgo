@@ -8,7 +8,7 @@ exports.params = {
     removeAny: true
 };
 
-exports.description = 'removes <desc> (only non-meaningful by default)';
+exports.description = 'removes <desc>';
 
 var standardDescs = /^(Created with|Created using)/;
 
