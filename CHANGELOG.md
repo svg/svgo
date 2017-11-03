@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.0.2) ] 1.0.2 / 03.11.2017
+* Fixed a couple of errors related to `inlineStyles` plugin.
+* Updated some lost details in documentation to reflect v1.0 changes.
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.0.1) ] 1.0.1 / 31.10.2017
 * Fixed error “Object.defineProperty called on non-object” in images with `<foreignObject/>`.
 

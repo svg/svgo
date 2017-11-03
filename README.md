@@ -111,11 +111,19 @@ Arguments:
     or:
 
     ```sh
+    $ svgo *.svg
+    ```
+
+    ```sh
+    $ svgo test.svg -o test.min.svg
+    ```
+
+    ```sh
     $ svgo test.svg other.svg third.svg
     ```
 
     ```sh
-    $ svgo *.svg
+    $ svgo test.svg other.svg third.svg -o test.min.svg -o other.min.svg -o third.min.svg
     ```
 
 * with STDIN / STDOUT:
