@@ -55,10 +55,11 @@ exports.fn = function(document, opts) {
         selectors = [];
 
     for (var styleEl of styleEls) {
-        if (styleEl.isEmpty()) {
-            // skip empty <style/>s
+        if (styleEl.isEmpty() || styleEl.closestElem('foreignObject')) {
+            // skip empty <style/>s or <foreignObject> content.
             continue;
         }
+
         var cssStr = cssTools.getCssStr(styleEl);
 
         // collect <style/>s and their css ast
