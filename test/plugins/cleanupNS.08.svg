@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://trololololololololololo.com/">
+    <g xmlns:test="http://trololololololololololo.com/" test:attr="val">
+        test
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://trololololololololololo.com/">
+    <g test:attr="val">
+        test
+    </g>
+</svg>
+
+@@@
+
+{"minify": false}

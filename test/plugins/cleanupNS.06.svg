@@ -15,3 +15,7 @@
         </test2:elem>
     </test:elem>
 </svg>
+
+@@@
+
+{"minify": false}

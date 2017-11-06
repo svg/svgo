@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:a="http://www.example.org/wine" xmlns:test="http://trololololololololololo.com/">
+    <test:elem test:attr="val">
+        test
+    </test:elem>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:a="http://www.example.org/wine" xmlns:b="http://trololololololololololo.com/">
+    <b:elem b:attr="val">
+        test
+    </b:elem>
+</svg>
+
+@@@
+
+{"preserve": "a"}

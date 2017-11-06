@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="a">
+        test
+    </g>
+    <g id="test">
+        test
+    </g>
+    <use xlink:href="#test"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="a">
+        test
+    </g>
+    <g id="b">
+        test
+    </g>
+    <use xlink:href="#b"/>
+</svg>
+
+@@@
+
+{"preserve": "a"}

@@ -49,7 +49,7 @@ plugins:
   - removeEmptyAttrs
   - removeEmptyContainers
   - mergePaths
-  - removeUnusedNS
+  - cleanupNS
   - sortAttrs
   - removeTitle
   - removeDesc

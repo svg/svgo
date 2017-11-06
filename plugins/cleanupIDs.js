@@ -29,14 +29,16 @@ var referencesProps = new Set(require('./_collections').referencesProps),
  * Remove unused and minify used IDs
  * (only if there are no any <style> or <script>).
  *
- * @param {Object} item current iteration item
+ * @param {Object} data full AST
  * @param {Object} params plugin params
+ * @return {Object} full AST
  *
  * @author Kir Belevich
  */
 exports.fn = function(data, params) {
     var currentID,
         currentIDstring,
+        currentIDmap,
         IDs = new Map(),
         referencesIDs = new Map(),
         hasStyleOrScript = false,
@@ -125,7 +127,10 @@ exports.fn = function(data, params) {
         if (IDs.has(key)) {
             // replace referenced IDs with the minified ones
             if (params.minify && !preserveIDs.has(key)) {
-                currentIDstring = getIDstring(currentID = generateID(currentID), params);
+                currentIDmap = generateID(currentID, preserveIDs, params);
+                currentID = currentIDmap.get('arr');
+                currentIDstring = currentIDmap.get('str');
+
                 IDs.get(key).attr('id').value = currentIDstring;
 
                 for (var attr of ref[1]) {
@@ -153,10 +158,12 @@ exports.fn = function(data, params) {
  * Generate unique minimal ID.
  *
  * @param {Array} [currentID] current ID
- * @return {Array} generated ID array
+ * @param {Set} preserveIDs IDs to be preserved
+ * @param {Object} params plugin params
+ * @return {Map} generated ID array and string
  */
-function generateID(currentID) {
-    if (!currentID) return [0];
+function generateID(currentID, preserveIDs, params) {
+    if (!currentID) currentID = [-1];
 
     currentID[currentID.length - 1]++;
 
@@ -173,13 +180,24 @@ function generateID(currentID) {
         currentID[0] = 0;
         currentID.unshift(0);
     }
-    return currentID;
+
+    var currentIDstring = getIDstring(currentID, params),
+        currentIDmap = new Map();
+
+    currentIDmap.set('arr', currentID);
+    currentIDmap.set('str', currentIDstring);
+
+    if (preserveIDs.size && preserveIDs.has(currentIDstring)) {
+        currentIDmap = generateID(currentID, preserveIDs, params);
+    }
+    return currentIDmap;
 }
 
 /**
  * Get string from generated ID array.
  *
  * @param {Array} arr input ID array
+ * @param {Object} params plugin params
  * @return {String} output ID string
  */
 function getIDstring(arr, params) {

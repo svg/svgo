@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://trololololololololololo.com/" xmlns:test2="http://trololololololololololo.com/">
     <g test:attr="val">
-        <g>
+        <g test2:attr="val">
             test
         </g>
     </g>
@@ -8,10 +8,14 @@
 
 @@@
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://trololololololololololo.com/">
-    <g test:attr="val">
-        <g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:a="http://trololololololololololo.com/" xmlns:test2="http://trololololololololololo.com/">
+    <g a:attr="val">
+        <g test2:attr="val">
             test
         </g>
     </g>
 </svg>
+
+@@@
+
+{"preserve": "test2"}

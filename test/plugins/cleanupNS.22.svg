@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:test="http://trololololololololololo.com/">
+    <g test:attr="val">
+        test
+    </g>
+    <g xmlns="http://trololololololololololo.com/" xmlns:test="http://www.example.org/wine">
+        <g test:attr="val" xmlns:test="http://trololololololololololo.com/" xmlns="http://www.w3.org/2000/svg">
+            test
+        </g>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:b="http://trololololololololololo.com/">
+    <g b:attr="val">
+        test
+    </g>
+    <g xmlns="http://trololololololololololo.com/">
+        <g a:attr="val" xmlns:a="http://trololololololololololo.com/" xmlns="http://www.w3.org/2000/svg">
+            test
+        </g>
+    </g>
+</svg>
