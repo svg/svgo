@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.0.3) ] 1.0.3 / 08.11.2017
+* Fixed `removeViewBox` plugin to check for zero start coordinates.
+* Removed extra info from STDOUT when it set to output.
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.0.2) ] 1.0.2 / 03.11.2017
 * Fixed a couple of errors related to `inlineStyles` plugin.
 * Updated some lost details in documentation to reflect v1.0 changes.
