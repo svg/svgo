@@ -52,9 +52,9 @@ describe('coa', function() {
 
     function calcFolderSvgWeight(folderPath) {
         return fs.readdirSync(folderPath).reduce((initWeight, name) => (
-            initWeight
-                + (/.svg/.test(name) ? fs.statSync(path.join(folderPath, name)).size : 0)
-                + (checkIsDir(path.join(folderPath, name)) ? calcFolderSvgWeight(path.join(folderPath, name)) : 0)
+            initWeight +
+                (/.svg/.test(name) ? fs.statSync(path.join(folderPath, name)).size : 0) +
+                (checkIsDir(path.join(folderPath, name)) ? calcFolderSvgWeight(path.join(folderPath, name)) : 0)
         ), 0);
     }
 
