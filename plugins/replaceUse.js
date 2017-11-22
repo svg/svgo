@@ -72,6 +72,9 @@ function removeItem(item) {
 }
 
 function findItems(items, fn) {
+    if (items.content) {
+        return undefined
+    }
     items.content.forEach(function(item) {
         fn(item);
 
