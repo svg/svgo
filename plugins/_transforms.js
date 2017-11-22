@@ -42,8 +42,8 @@ exports.transform2js = function(transformString) {
         }
     });
 
-    return transforms;
-
+    // return empty array if broken transform (no data)
+    return current && current.data ? transforms : [];
 };
 
 /**
@@ -65,9 +65,7 @@ exports.transformsMultiply = function(transforms) {
     // multiply all matrices into one
     transforms = {
         name: 'matrix',
-        data: transforms.reduce(function(a, b) {
-            return multiplyTransformMatrices(a, b);
-        })
+        data: transforms.length > 0 ? transforms.reduce(multiplyTransformMatrices) : []
     };
 
     return transforms;
