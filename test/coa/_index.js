@@ -7,6 +7,7 @@ const fs = require('fs'),
     path = require('path'),
     svgPath = path.resolve(__dirname, 'test.svg'),
     svgFolderPath = path.resolve(__dirname, 'testSvg'),
+    svgRecursiveFolderPath = path.resolve(__dirname, 'testSvgRecursive'),
     svgFiles = [path.resolve(__dirname, 'testSvg/test.svg'), path.resolve(__dirname, 'testSvg/test.1.svg')],
     tempFolder = 'temp',
     fse = require('fs-extra'),
@@ -54,6 +55,21 @@ describe('coa', function() {
         ), 0);
     }
 
+    function countFilesRecursively(folderPath) {
+        var files = fs.readdirSync(folderPath);
+        var totalFiles = 0;
+
+        files.forEach(function(file) {
+            if (fs.statSync(path.join(folderPath, file)).isDirectory()) {
+                totalFiles += countFilesRecursively(path.join(folderPath, file));
+            } else {
+                totalFiles += 1;
+            }
+        });
+
+        return totalFiles;
+    }
+
     it('should throw an error if "config" can not be parsed', function(done) {
         replaceConsoleError();
 
@@ -77,8 +93,14 @@ describe('coa', function() {
 
         svgo({ folder: svgFolderPath, output: tempFolder, quiet: true }).then(function() {
             const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
-
             done(optimizedWeight > 0 && initWeight <= optimizedWeight ? null : 'Folder was not optimized');
+        }, error => done(error));
+    });
+
+    it('should optimize folder recursively', function(done) {
+        svgo({ folder: svgRecursiveFolderPath, output: tempFolder, quiet: true, recursive: true }).then(function() {
+            done(countFilesRecursively(svgRecursiveFolderPath) === countFilesRecursively(tempFolder) ?
+                null : 'Folder was not recursed');
         }, error => done(error));
     });
 
