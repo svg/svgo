@@ -185,6 +185,7 @@ Arguments:
 * as a webpack loader – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 * as a Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * as a PostCSS plugin - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
+* as an Inkscape plugin - [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 
 ## License and Copyright
 
