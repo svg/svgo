@@ -752,7 +752,7 @@ function gatherPoints(points, item, index, path) {
             prevCtrlPoint = [data[2] - data[0], data[3] - data[1]]; // Save control point for shorthand
             break;
         case 'T':
-            if (prev.instruction == 'Q' && prev.instruction == 'T') {
+            if (prev.instruction == 'Q' || prev.instruction == 'T') {
                 ctrlPoint = [basePoint[0] + prevCtrlPoint[0], basePoint[1] + prevCtrlPoint[1]];
                 addPoint(subPath, ctrlPoint);
                 prevCtrlPoint = [data[0] - ctrlPoint[0], data[1] - ctrlPoint[1]];
@@ -766,7 +766,7 @@ function gatherPoints(points, item, index, path) {
             prevCtrlPoint = [data[4] - data[2], data[5] - data[3]]; // Save control point for shorthand
             break;
         case 'S':
-            if (prev.instruction == 'C' && prev.instruction == 'S') {
+            if (prev.instruction == 'C' || prev.instruction == 'S') {
                 addPoint(subPath, [basePoint[0] + .5 * prevCtrlPoint[0], basePoint[1] + .5 * prevCtrlPoint[1]]);
                 ctrlPoint = [basePoint[0] + prevCtrlPoint[0], basePoint[1] + prevCtrlPoint[1]];
             }

@@ -25,8 +25,8 @@ Today we have:
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | remove XML processing instructions |
 | [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | remove comments |
 | [removeMetadata](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) | remove `<metadata>` |
-| [removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) | remove `<title>` (disabled by default) |
-| [removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) | remove `<desc>` (only non-meaningful by default) |
+| [removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) | remove `<title>` |
+| [removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) | remove `<desc>` |
 | [removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) | remove elements of `<defs>` without `id` |
 | [removeXMLNS](https://github.com/svg/svgo/blob/master/plugins/removeXMLNS.js) | removes `xmlns` attribute (for inline svg, disabled by default) |
 | [removeEditorsNSData](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) | remove editors namespaces, elements, and attributes |
@@ -34,7 +34,7 @@ Today we have:
 | [removeHiddenElems](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) | remove hidden elements |
 | [removeEmptyText](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) | remove empty Text elements |
 | [removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) | remove empty Container elements |
-| [removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) | remove `viewBox` attribute when possible (disabled by default) |
+| [removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) | remove `viewBox` attribute when possible |
 | [cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) | remove or cleanup `enable-background` attribute when possible |
 | [minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) | minify `<style>` elements content with [CSSO](https://github.com/css/csso) |
 | [convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) | convert styles into attributes |
@@ -55,8 +55,7 @@ Today we have:
 | [mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) | merge multiple Paths into one |
 | [convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) | convert some basic shapes to `<path>` |
 | [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | sort element attributes for epic readability (disabled by default) |
-| [transformsWithOnePath](https://github.com/svg/svgo/blob/master/plugins/transformsWithOnePath.js) | apply transforms, crop by real width, center vertical alignment, and resize SVG with one Path inside (disabled by default) |
-| [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | remove `width`/`height` attributes if `viewBox` is present (disabled by default) |
+| [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | remove `width`/`height` attributes if `viewBox` is present (opposite to removeViewBox, disable it first) (disabled by default) |
 | [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | remove attributes by pattern (disabled by default) |
 | [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | remove arbitrary elements by ID or className (disabled by default) |
 | [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | add classnames to an outer `<svg>` element (disabled by default) |
@@ -101,7 +100,6 @@ Options:
 
 Arguments:
   INPUT : Alias to --input
-  OUTPUT : Alias to --output
 ```
 
 * with files:
@@ -113,7 +111,19 @@ Arguments:
     or:
 
     ```sh
-    $ svgo test.svg test.min.svg
+    $ svgo *.svg
+    ```
+
+    ```sh
+    $ svgo test.svg -o test.min.svg
+    ```
+
+    ```sh
+    $ svgo test.svg other.svg third.svg
+    ```
+
+    ```sh
+    $ svgo test.svg other.svg third.svg -o test.min.svg -o other.min.svg -o third.min.svg
     ```
 
 * with STDIN / STDOUT:
@@ -132,6 +142,10 @@ Arguments:
 
     ```sh
     $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
+    ```
+
+    ```sh
+    $ svgo *.svg -o ../path/to/folder/with/svg/output
     ```
 
 * with strings:

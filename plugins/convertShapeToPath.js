@@ -6,6 +6,10 @@ exports.active = true;
 
 exports.description = 'converts basic shapes to more compact path form';
 
+exports.params = {
+    convertArcs: false
+};
+
 var none = { value: 0 },
     regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
@@ -22,7 +26,8 @@ var none = { value: 0 },
  *
  * @author Lev Solntsev
  */
-exports.fn = function(item) {
+exports.fn = function(item, params) {
+    var convertArcs = params && params.convertArcs;
 
     if (
         item.isElem('rect') &&
@@ -98,6 +103,47 @@ exports.fn = function(item) {
 
         item.renameElem('path')
             .removeAttr('points');
-    }
+    } else if (item.isElem('circle') && convertArcs) {
 
+        var cx = +(item.attr('cx') || none).value;
+        var cy = +(item.attr('cy') || none).value;
+        var r = +(item.attr('r') || none).value;
+        if (isNaN(cx - cy + r)) {
+            return;
+        }
+        var cPathData =
+            'M' + cx  + ' ' + (cy - r) +
+                'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy + r) +
+                'A' + r + ' ' + r + ' 0 1 0 ' + cx + ' ' + (cy - r) +
+                'Z';
+        item.addAttr({
+                name: 'd',
+                value: cPathData,
+                prefix: '',
+                local: 'd',
+        });
+        item.renameElem('path').removeAttr(['cx', 'cy', 'r']);
+
+    } else if (item.isElem('ellipse') && convertArcs) {
+
+        var ecx = +(item.attr('cx') || none).value;
+        var ecy = +(item.attr('cy') || none).value;
+        var rx = +(item.attr('rx') || none).value;
+        var ry = +(item.attr('ry') || none).value;
+        if (isNaN(ecx - ecy + rx - ry)) {
+            return;
+        }
+        var ePathData =
+            'M' + ecx + ' ' + (ecy - ry) +
+                'A' + rx + ' ' + ry + ' 0 1 0 ' + ecx + ' ' + (ecy + ry) +
+                'A' + rx + ' ' + ry + ' 0 1 0 ' + ecx + ' ' + (ecy - ry) +
+                'Z';
+        item.addAttr({
+                name: 'd',
+                value: ePathData,
+                prefix: '',
+                local: 'd',
+        });
+        item.renameElem('path').removeAttr(['cx', 'cy', 'rx', 'ry']);
+    }
 };

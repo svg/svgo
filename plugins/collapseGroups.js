@@ -42,13 +42,10 @@ function hasAnimatedAttr(item) {
 exports.fn = function(item) {
 
     // non-empty elements
-    if (item.isElem() && !item.isEmpty()) {
-
+    if (item.isElem() && (!item.isElem('switch') || isFeaturedSwitch(item)) && !item.isEmpty()) {
         item.content.forEach(function(g, i) {
-
             // non-empty groups
             if (g.isElem('g') && !g.isEmpty()) {
-
                 // move group attibutes to the single content element
                 if (g.hasAttr() && g.content.length === 1) {
                     var inner = g.content[0];
@@ -82,21 +79,15 @@ exports.fn = function(item) {
                 if (!g.hasAttr() && !g.content.some(function(item) { return item.isElem(animationElems) })) {
                     item.spliceContent(i, 1, g.content);
                 }
-                
-
-            } else if (g.isElem('switch') && !g.isEmpty()) {
-                // check if one of the direct children has requiredFeatures, requiredExtensions or systemLanguage attributes else remove
-
-                if (!g.content || !g.content.some(function(child) {
-                    return child.hasAttr('systemLanguage') || child.hasAttr('requiredFeatures') || child.hasAttr('requiredExtensions');
-                    })
-                ) {
-                    item.spliceContent(i, 1, g.content);
-                }
+            } else if (isFeaturedSwitch(g)) {
+                item.spliceContent(i, 1, g.content);
             }
-
         });
-
     }
-
 };
+
+function isFeaturedSwitch(elem) {
+    return elem.isElem('switch') && !elem.isEmpty() && !elem.content.some(child =>
+        child.hasAttr('systemLanguage') || child.hasAttr('requiredFeatures') || child.hasAttr('requiredExtensions')
+    );
+}

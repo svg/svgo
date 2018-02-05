@@ -42,22 +42,7 @@ exports.fn = function(data, params) {
         svg = data.content[0];
 
     if (svg.isElem('svg')) {
-        if (svg.hasAttr('class')) {
-            var classes = svg.attr('class').value.split(' ');
-            classNames.forEach(function(className){
-                if (classes.indexOf(className) < 0) {
-                    classes.push(className);
-                }
-            });
-            svg.attr('class').value = classes.join(' ');
-        } else {
-            svg.addAttr({
-                name: 'class',
-                value: classNames.join(' '),
-                prefix: '',
-                local: 'class'
-            });
-        }
+        svg.class.add.apply(svg.class, classNames);
     }
 
     return data;
