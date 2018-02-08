@@ -1,3 +1,8 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.0.4) ] 1.0.4 / 30.01.2018
+* Fixed bug with removing groups that are direct child of "<switch>".
+* Fixed bug with shorthand path points counting (thanks @alexjlockwood for noticing).
+* Fixed crash on parsing invalid transform, e.g. without close parenthesis.
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.0.3) ] 1.0.3 / 08.11.2017
 * Fixed `removeViewBox` plugin to check for zero start coordinates.
 * Removed extra info from STDOUT when it set to output.
@@ -36,7 +41,7 @@
 * Extended `currentColor` match conditions (string, rx, bool) (by @AlimovSV)
 * Fixed removing `<animate>` in `<stop>`.
 * Fixed removing same transform in inner element in `removeUnknownsAndDefaults`.
-* Fixed collapsing groups with same non-inheritable attribue.
+* Fixed collapsing groups with same non-inheritable attribute.
 * Corrected removing of leading zero in case of exponential notation.
 
 ### [ [>](https://github.com/svg/svgo/tree/v0.7.1) ] 0.7.1 / 27.09.2016
@@ -60,7 +65,7 @@
 
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.5) ] 0.6.5 / 25.04.2016
 * Extra content inserted by editors are now being removed within `<foreignObject>` as well thus fixing bug “Namespace prefix … is not defined“ after applying SVGO.
-* Doctype with entities declartion is now also being removed since svgo correctly parses them starting from the version [0.6.2](https://github.com/svg/svgo/tree/v0.6.2).
+* Doctype with entities declaration is now also being removed since svgo correctly parses them starting from the version [0.6.2](https://github.com/svg/svgo/tree/v0.6.2).
 * Corrected `moveGroupAttrsToElems` not to move attributes to `g` content if it's referenced (has an `id`).
 * `collapseGroups` now don't collapse a group if it has an animated attribute (SMIL).
 
@@ -82,10 +87,10 @@
 * Fixed error on converting curves to arcs.
 * Corrected rounding in subsequent passes with `--multipass` option.
 * Data URI option now handles charset (by @holymonson)
-* Tranformations are no longer moved to group if there is a mask (`plugins/moveElemsAttrsToGroup.js`).
+* Transformations are no longer moved to group if there is a mask (`plugins/moveElemsAttrsToGroup.js`).
 * Fixed matrix decomposition losing sign in case like `[1, 0, 0, -1, 0, 0]` (`scale(1 -1)`).
 * Fixed crash on uppercased color name.
-* Paths with `id` and without `stroke-width` aren't being trasformed now since `stroke-width` may be applied later.
+* Paths with `id` and without `stroke-width` aren't being transformed now since `stroke-width` may be applied later.
 
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.1) ] 0.6.1 / 21.11.2015
 * Added option `--quiet` to suppress output (by @phihag).
@@ -97,9 +102,9 @@
 * New optimization: circular curves now being converted to arcs. A notable improvement for circles within paths.
 * New plugin “[minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js)” which minifies `<style>` elments content with CSSO by @strarsis (svgo still doesn't understand its content)
 * New plugin “[removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js)” (disabled by default) by @betsydupuis.
-* Fixed issues wuth parsing numbers with exponent fraction (could happen with high precision >= 7).
+* Fixed issues with parsing numbers with exponent fraction (could happen with high precision >= 7).
 * Fixed rounding error due to incorrect preserving of precision in transformations.
-* Fixed shortand curve distortion due to converted previous curve to not a curve.
+* Fixed shorthand curve distortion due to converted previous curve to not a curve.
 * Fixed interoperability issue with `precision` cli-option and `full` config.
 * Fixed an error produced by “[removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js)” by @thiakil
 * Another Inkscape prefix namespace is being removed.
