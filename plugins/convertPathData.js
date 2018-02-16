@@ -22,7 +22,8 @@ exports.params = {
     collapseRepeated: true,
     utilizeAbsolute: true,
     leadingZero: true,
-    negativeExtraSpace: true
+    negativeExtraSpace: true,
+    forceAbsolutePath: false
 };
 
 var pathElems = require('./_collections.js').pathElems,
@@ -671,11 +672,12 @@ function convertToMixed(path, params) {
         var absoluteDataStr = cleanupOutData(adata, params),
             relativeDataStr = cleanupOutData(data, params);
 
-        // Convert to absolute coordinates if it's shorter.
+        // Convert to absolute coordinates if it's shorter or forceAbsolutePath is true.
         // v-20 -> V0
         // Don't convert if it fits following previous instruction.
         // l20 30-10-50 instead of l20 30L20 30
         if (
+            params.forceAbsolutePath || (
             absoluteDataStr.length < relativeDataStr.length &&
             !(
                 params.negativeExtraSpace &&
@@ -683,7 +685,7 @@ function convertToMixed(path, params) {
                 prev.instruction.charCodeAt(0) > 96 &&
                 absoluteDataStr.length == relativeDataStr.length - 1 &&
                 (data[0] < 0 || /^0\./.test(data[0]) && prev.data[prev.data.length - 1] % 1)
-            )
+            ))
         ) {
             item.instruction = instruction.toUpperCase();
             item.data = adata;
