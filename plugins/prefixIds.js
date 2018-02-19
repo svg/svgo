@@ -13,7 +13,7 @@ exports.description = 'prefix IDs';
 
 var path = require('path'),
     csstree = require('css-tree'),
-    cssRx = require('css-url-regex')(),
+    cssRx = require('css-url-regex'),
     unquote = require('unquote'),
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
@@ -37,7 +37,7 @@ var matchId = function(urlVal) {
 
 // Matches an url(...) value, captures the URL
 var matchUrl = function(val) {
-    var urlMatches = cssRx.exec(val);
+    var urlMatches = cssRx().exec(val);
     if (urlMatches === null) {
         return false;
     }
