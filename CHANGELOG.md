@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.0.5) ] 1.0.5 / 26.02.2018
+* Fixed issue with prefixIDs plugin not replacing url() values correctly (by @harrisjose).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.0.4) ] 1.0.4 / 30.01.2018
 * Fixed bug with removing groups that are direct child of "<switch>".
 * Fixed bug with shorthand path points counting (thanks @alexjlockwood for noticing).
