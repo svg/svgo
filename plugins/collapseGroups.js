@@ -64,8 +64,13 @@ exports.fn = function(item) {
                             } else if (attr.name == 'transform') {
                                 inner.attr(attr.name).value = attr.value + ' ' + inner.attr(attr.name).value;
                             } else if (
-                                attrsInheritable.indexOf(attr.name) < 0 &&
-                                !inner.hasAttr(attr.name, attr.value)
+                                (
+                                    attrsInheritable.indexOf(attr.name) < 0 &&
+                                    !inner.hasAttr(attr.name, attr.value)
+                                ) || (
+                                    attrsInheritable.indexOf(attr.name) >= 0 &&
+                                    inner.hasAttr(attr.name, 'inherit')
+                                )
                             ) {
                                 return;
                             }
