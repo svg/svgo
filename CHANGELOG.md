@@ -35,7 +35,7 @@
 * New option `keepAriaAttrs` in `removeUnknownsAndDefaults` (by @davidtheclark).
 * Corrected parsing in `cleanupIDs` to account animation syntax (by @caub).
 * `#ff0000` now converts to `red` as well as `#f00` (by @davidleston).
-* Added “gray” variation to colors list per CSS Color Module Level 4 (by @JoshyPHP).
+* Added “gray” variation to colors list per CSS Color Module Level 4 (by @ydaniv).
 * Fixed error on empty files.
 * A separator character in `removeAttrs` now can be changed per `elemSeparator` option (by @mikestreety).
 * `addAttributesToSVGElement` now can add values to attributes.
