@@ -22,7 +22,7 @@ SVGO reads, parses and/or extends the [default config](https://github.com/svg/sv
 
 ```yaml
 plugins:
-  - myTestPlugi
+  - myTestPlugin
   - myTestPlugin2: false
   - myTestPlugin3:
       param1: 1
