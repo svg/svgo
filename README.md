@@ -176,7 +176,7 @@ Arguments:
 
 ### Other Ways to Use SVGO
 
-* as a web app - [SVGOMG](https://jakearchibald.github.io/svgomg/)
+* as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
@@ -184,8 +184,8 @@ Arguments:
 * as an OSX Folder Action – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 * as a webpack loader – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 * as a Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
-* as a PostCSS plugin - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
-* as an Inkscape plugin - [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
+* as a PostCSS plugin – [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
+* as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 
 ## License and Copyright
 
