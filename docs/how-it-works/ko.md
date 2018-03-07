@@ -201,11 +201,130 @@ plugins
   * @param {Object} [context] callback context
   * @return {Boolean} false if there are no any attributes
 
+##### querySelectorAll(selectors)
+  * 요소에 대해 CSS selector들의 문자열을 평가하고 일치하는 요소를 리턴한다.
+  * @param {String} selectors CSS selector(s) string
+  * @return {Array} null if no elements matched
+
+##### querySelector(selectors)
+  * 요소에 대해 CSS selector들의 문자열을 평가하고 첫 번째로 일치하는 element만 리턴한다.
+  * @param {String} selectors CSS selector(s) string
+  * @return {Array} null if no element matched
+
+##### matches(selector)
+  * selector가 주어진 요소와 일치하는지 테스트한다.
+  * @param {String} selector CSS selector string
+  * @return {Boolean} true if element would be selected by selector string, false if it does not
+
+
+##### style.getCssText()
+  * 선언 블록의 텍스트 표현을 가져온다. (cssText 특성과 동일)
+  * @return {String} Textual representation of the declaration block (empty string for no properties)
+
+##### style.getPropertyPriority(propertyName)
+  * "중요한"으로 속성값이 부여된 선택적 요소를 리턴한다.
+  * @param {String} propertyName representing the property name to be checked.
+  * @return {String} priority that represents the priority (e.g. "important") if one exists. If none exists, returns the empty string.
+
+##### style.getPropertyValue(propertyName)
+  * 프로퍼티 이름으로 주어진 프로퍼티 값을 리턴한다.
+  * @param {String} propertyName representing the property name to be checked.
+  * @return {String} value containing the value of the property. If not set, returns the empty string.
+
+##### style.item(index)
+  * 프로퍼티 이름을 리턴한다.
+  * @param {Number} index of the node to be fetched. The index is zero-based.
+  * @return {String} propertyName that is the name of the CSS property at the specified index.
+
+##### style.getProperties()
+  * 노드의 모든 프로퍼티를 리턴한다.
+  * @return {Map} properties that is a Map with propertyName as key and property (propertyValue + propertyPriority) as value.
+
+##### style.removeProperty(propertyName)
+  * CSS 선언 블록에서 속성을 제거한다.
+  * @param {String} propertyName representing the property name to be removed.
+  * @return {String} oldValue equal to the value of the CSS property before it was removed.
+
+##### style.setProperty(propertyName, value, priority)
+  * 기존 CSS 속성을 수정하거나 선언 블록에 새 CSS 속성을 만든다.
+  * @param {String} propertyName representing the CSS property name to be modified.
+  * @param {String} [value] containing the new property value. If not specified, treated as the empty string. value must not contain "!important" -- that should be set using the priority parameter.
+  * @param {String} [priority] allowing the "important" CSS priority to be set. If not specified, treated as the empty string.
+  * @return {undefined}
+
+##### css-tools.flattenToSelectors(cssAst)
+  * CSS AST를 Select List로 만든다.
+  * @param {Object} CSS AST to flatten
+  * @return {Array} selectors
+
+##### css-tools.filterByMqs(selectors, useMqs)
+  * Filter selectors by Media Query.
+  * @param {Array} Selectors to filter
+  * @param {Array} Strings of media queries that should pass (<name> <expression>)
+  * @return {Array} Filtered selectors that match the passed media queries
+
+##### css-tools.filterByPseudos(selectors, useMqs)
+  * Filter selectors by the pseudo-elements and/or -classes they contain.
+  * @param {Array} Selectors to filter
+  * @param {Array} Strings of single or sequence of pseudo-elements and/or -classes that should pass
+  * @return {Array} Filtered selectors that match the passed pseudo-elements and/or -classes
+
+##### css-tools.cleanPseudos(selectors)
+  * 정당히 매칭된 selector로 부터 pseudo element와 class들을 제거한다.
+  * @param {Array} Selectors to clean
+  * @return {Array} Selectors without pseudo-elements and/or -classes
+
+##### css-tools.compareSpecificity(aSpecificity, bSpecificity)
+  * 두 개의 Selector 특성을 비교한다.
+  * @param {Array} Specificity of selector A
+  * @param {Array} Specificity of selector B
+  * @return {Number} Score of selector specificity A compared to selector specificity B
+
+##### css-tools.compareSimpleSelectorNode(aSimpleSelectorNode, bSimpleSelectorNode)
+  * 두 개의 간단한 Selector를 비교한다.
+  * @param {Object} Simple selector A
+  * @param {Object} Simple selector B
+  * @return {Number} Score of selector A compared to selector B
+
+##### css-tools.sortSelectors(selectors)
+  * Selector들을 안정적으로 정렬한다.
+  * @param {Array} Selectors to be sorted
+  * @return {Array} Stable sorted selectors
+
+##### css-tools.csstreeToStyleDeclaration(declaration)
+  * AST style의 css-tree 선언을 CSSStyleDeclaration property로 바꾼다.
+  * @param {Object} css-tree style declaration
+  * @return {Object} CSSStyleDeclaration property
+
+##### css-tools.getCssStr(elem)
+  * style element로 부터 CSS string을 가져온다.
+  * @param {Object} element style element
+  * @return {String|Array} CSS string or empty array if no styles are set
+
+##### css-tools.csstreeToStyleDeclaration(elem, css)
+  * @param {Object} element style element
+  * @param {String} CSS string to be set
+  * @return {Object} reference to field with CSS
+
+
 #### 3.3 tests
 
 당신의 플러그인을 테스팅 하는 것보다 쉬운 일은 없다.
 
 1. `test/plugins` 안에 `myPlugin.01.orig.svg` 와 `myPlugin.01.should.svg` 를 넣는다
+
+```
+[original svg]
+
+@@@
+
+[how svg should look afterwards]
+
+@@@
+
+attributes if your plugin needs them
+```
+
 2. `npm test` 를 실행한다
 3. PROFIT!
 
