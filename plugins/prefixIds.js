@@ -123,6 +123,8 @@ exports.fn = function(node, opts, extra) {
         } else {
             prefix = opts.prefix;
         }
+    } else if (opts.prefix === false) {
+        prefix = false;
     } else if (extra && extra.path && extra.path.length > 0) {
         var filename = path.basename(extra.path);
         prefix = filename;
@@ -131,6 +133,9 @@ exports.fn = function(node, opts, extra) {
 
     // prefixes a normal value
     addPrefix = function(name) {
+        if(prefix === false){
+            return escapeIdentifierName(name);
+        }
         return escapeIdentifierName(prefix + opts.delim + name);
     };
 
