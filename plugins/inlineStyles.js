@@ -103,7 +103,7 @@ exports.fn = function(document, opts) {
 
     // match selectors
     for (selector of sortedSelectors) {
-        var selectorStr = csstree.translate(selector.item.data),
+        var selectorStr = csstree.generate(selector.item.data),
             selectedEls = null;
 
         try {
@@ -143,7 +143,7 @@ exports.fn = function(document, opts) {
             }
 
             // merge declarations
-            csstree.walkDeclarations(selector.rule, function(styleCsstreeDeclaration) {
+            csstree.walk(selector.rule, {visit: 'Declaration', enter: function(styleCsstreeDeclaration) {
 
                 // existing inline styles have higher priority
                 // no inline styles, external styles,                                    external styles used
@@ -155,7 +155,7 @@ exports.fn = function(document, opts) {
                     return;
                 }
                 selectedEl.style.setProperty(styleDeclaration.name, styleDeclaration.value, styleDeclaration.priority);
-            });
+            }});
         }
 
         if (opts.removeMatchedSelectors && selector.selectedEls !== null && selector.selectedEls.length > 0) {
@@ -202,7 +202,7 @@ exports.fn = function(document, opts) {
 
     // clean up now empty elements
     for (var style of styles) {
-        csstree.walkRules(style.cssAst, function(node, item, list) {
+        csstree.walk(style.cssAst, {visit: 'Rule', enter: function(node, item, list) {
             // clean up <style/> atrules without any rulesets left
             if (node.type === 'Atrule' &&
                 // only Atrules containing rulesets
@@ -217,7 +217,7 @@ exports.fn = function(document, opts) {
                 node.prelude.children.isEmpty()) {
                 list.remove(item);
             }
-        });
+        }});
 
 
         if (style.cssAst.children.isEmpty()) {
@@ -237,7 +237,7 @@ exports.fn = function(document, opts) {
 
 
         // update existing, left over <style>s
-        cssTools.setCssStr(style.styleEl, csstree.translate(style.cssAst));
+        cssTools.setCssStr(style.styleEl, csstree.generate(style.cssAst));
     }
 
 
