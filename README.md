@@ -186,6 +186,7 @@ Arguments:
 * as a Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * as a PostCSS plugin – [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 * as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
+* as macOS app - [Image Shrinker](https://image-shrinker.com)
 
 ## License and Copyright
 
