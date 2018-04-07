@@ -1,0 +1,157 @@
+"use strict";
+
+exports.type = "full";
+
+exports.active = true;
+
+exports.description =
+    "Converts single <use> links with their <defs> counterparts";
+
+/**
+ * Converts single <use> tags with the elements they link to.
+ *
+ * @param {Object} item current iteration item
+ * @param {Object} params plugin params
+ *
+ * @author Nik Paro, Aaron Reisman
+ */
+exports.fn = function(data, params) {
+    var defsElement;
+    /**
+     * Find definitions among items
+     *
+     * @param {Object} items current iteration item
+     * @param {Boolean} isDef
+     * @return {Object} output definitions by id ( {id: item} )
+     */
+    function findDefs(items, isDef) {
+        isDef = isDef == true;
+
+        var defs = {};
+
+        for (var i = 0; i < items.content.length; i++) {
+            var item = items.content[i];
+
+            if (item.isElem("defs")) {
+                isDef = true;
+                defsElement = item;
+            }
+
+            // Id's are presumed to be unique. Add to defs.
+            if (isDef && item.hasAttr("id")) {
+                var id = "#" + item.attrs.id.value;
+                defs[id] = item;
+            }
+
+            // Go deeper. Added elements may still contain id's.
+            if (item.content) {
+                defs = Object.assign(defs, findDefs(item, isDef));
+            }
+        }
+        return defs;
+    }
+
+    /**
+     * Find <use> tags
+     *
+     * @param {Object} items current iteration item
+     * @return {Array} output <use> items
+     */
+    function findUseItems(items) {
+        var useItems = [];
+
+        for (var i = 0; i < items.content.length; i++) {
+            var item = items.content[i];
+
+            if (item.isElem("use")) {
+                useItems.push(item);
+            } else if (item.content) {
+                useItems = useItems.concat(findUseItems(item));
+            }
+        }
+
+        return useItems;
+    }
+
+    function removeFromDefs(defs, item) {
+        for (var i = 0; i < defs.content.length; i++) {
+            var defItem = defs.content[i];
+            if (item === defItem) {
+                defs.content.splice(i, 1);
+            }
+        }
+    }
+
+    /**
+     * Replace <use> items with their definitions
+     *
+     * @param {Array} itemAry Array of use items we are replacing
+     * @param {Object} defs definitions by id
+     * @return {Array} Returns itemAry for convenience
+     */
+    function replaceUseItems(itemAry, defs) {
+        for (var i = 0; i < itemAry.length; i++) {
+            var item = itemAry[i];
+
+            if (
+                item.isElem("use") &&
+                (item.hasAttr("xlink:href") || item.hasAttr("href"))
+            ) {
+                var id = (item.attr("href") || item.attr("xlink:href")).value;
+                // Make sure that we know the id before proceeding
+                if (defs[id] != null) {
+                    item.removeAttr("xlink:href");
+                    item.renameElem("g");
+
+                    var defItem = defs[id];
+                    defItem.parentNode = item;
+                    item.content = [defItem];
+                    removeFromDefs(defsElement, defs[id]);
+                }
+            }
+        }
+
+        return itemAry;
+    }
+
+    /**
+     * Find items by id that are in the array once and once only.
+     *
+     * @param {Array} itemAry Array of use items we are checking
+     * @return {Array} filtered items
+     */
+    function uniqueOnly(itemAry) {
+        itemAry.sort(function(a, b) {
+            var aID = a.attr("xlink:href").value;
+            var bID = b.attr("xlink:href").value;
+            if (aID < bID) return -1;
+            if (aID > bID) return 1;
+            return 0;
+        });
+
+        var uniqueItems = [];
+        var nullItem = {
+            attr: function() {
+                return { value: null };
+            }
+        };
+        for (var i = 0; i < itemAry.length; i++) {
+            var itemId = itemAry[i].attr("xlink:href").value;
+            // Make sure we don't call properties of undefined
+            var prevId = (itemAry[i - 1] || nullItem).attr("xlink:href").value;
+            var nextId = (itemAry[i + 1] || nullItem).attr("xlink:href").value;
+
+            if (prevId != itemId && itemId != nextId) {
+                uniqueItems.push(itemAry[i]);
+            }
+        }
+        return uniqueItems;
+    }
+
+    var defs = findDefs(data);
+    var useItems = uniqueOnly(findUseItems(data));
+
+    replaceUseItems(useItems, defs);
+
+    return data;
+};
