@@ -61,8 +61,17 @@ var prefixId = function(val) {
 
 // attr.value helper methods
 
-// prefixes a normal attribute value
-var addPrefixToAttr = function(attr) {
+// prefixes a class attribute value
+var addPrefixToClassAttr = function(attr) {
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
+
+    attr.value = attr.value.split(/\s+/).map(addPrefix).join(' ');
+};
+
+// prefixes an ID attribute value
+var addPrefixToIdAttr = function(attr) {
     if (!attrNotEmpty(attr)) {
         return;
     }
@@ -70,8 +79,8 @@ var addPrefixToAttr = function(attr) {
     attr.value = addPrefix(attr.value);
 };
 
-// prefixes an ID attribute value
-var addPrefixToIdAttr = function(attr) {
+// prefixes a href attribute value
+var addPrefixToHrefAttr = function(attr) {
     if (!attrNotEmpty(attr)) {
         return;
     }
@@ -197,14 +206,16 @@ exports.fn = function(node, opts, extra) {
     }
 
     // ID
-    addPrefixToAttr(node.attrs.id);
+    addPrefixToIdAttr(node.attrs.id);
+
     // Class
-    addPrefixToAttr(node.attrs.class);
+    addPrefixToClassAttr(node.attrs.class);
 
     // href
-    addPrefixToIdAttr(node.attrs.href);
+    addPrefixToHrefAttr(node.attrs.href);
+
     // (xlink:)href (deprecated, must be still supported)
-    addPrefixToIdAttr(node.attrs['xlink:href']);
+    addPrefixToHrefAttr(node.attrs['xlink:href']);
 
     // referenceable properties
     for (var referencesProp of referencesProps) {
