@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="40">
+    <svg>
+        <defs>
+            <path id="existing-id" d="M10.414 10l5.293-5.293a1 1 0 0 0-1.414-1.414L9 8.586 3.707 3.293a1 1 0 0 0-1.414 1.414L7.586 10l-5.293 5.293a1 1 0 1 0 1.414 1.414L9 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414z"/>
+        </defs>
+        <use href="#existing-id" stroke="red"/>
+        <path d="M0 0H16z" stroke="purple"/>
+    </svg>
+    <svg x="16">
+        <path id="another-id" d="M10.414 10l5.293-5.293a1 1 0 0 0-1.414-1.414L9 8.586 3.707 3.293a1 1 0 0 0-1.414 1.414L7.586 10l-5.293 5.293a1 1 0 1 0 1.414 1.414L9 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414z" stroke="blue"/>
+        <path d="M0 0H16z" stroke="purple"/>
+    </svg>
+    <svg x="32">
+        <path d="M10.414 10l5.293-5.293a1 1 0 0 0-1.414-1.414L9 8.586 3.707 3.293a1 1 0 0 0-1.414 1.414L7.586 10l-5.293 5.293a1 1 0 1 0 1.414 1.414L9 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414z" stroke="green"/>
+        <path d="M0 0H16z" stroke="purple"/>
+    </svg>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="40">
+    <svg>
+        <defs>
+            <path id="existing-id" d="M10.414 10l5.293-5.293a1 1 0 0 0-1.414-1.414L9 8.586 3.707 3.293a1 1 0 0 0-1.414 1.414L7.586 10l-5.293 5.293a1 1 0 1 0 1.414 1.414L9 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414z"/>
+        </defs>
+        <use href="#existing-id" stroke="red"/>
+        <path d="M0 0H16z" stroke="purple"/>
+    </svg>
+    <svg x="16">
+        <path id="another-id" d="M10.414 10l5.293-5.293a1 1 0 0 0-1.414-1.414L9 8.586 3.707 3.293a1 1 0 0 0-1.414 1.414L7.586 10l-5.293 5.293a1 1 0 1 0 1.414 1.414L9 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414z" stroke="blue"/>
+        <path d="M0 0H16z" stroke="purple"/>
+    </svg>
+    <svg x="32">
+        <path d="M10.414 10l5.293-5.293a1 1 0 0 0-1.414-1.414L9 8.586 3.707 3.293a1 1 0 0 0-1.414 1.414L7.586 10l-5.293 5.293a1 1 0 1 0 1.414 1.414L9 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414z" stroke="green"/>
+        <path d="M0 0H16z" stroke="purple"/>
+    </svg>
+</svg>
