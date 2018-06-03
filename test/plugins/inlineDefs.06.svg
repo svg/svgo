@@ -1,0 +1,22 @@
+<svg id="test05" width="315" height="92" viewBox="0 0 315 92" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="a" x="7" y="5" width="301" height="31" rx="3"/>
+        <g id="c">
+            <use xlink:href="#b"/>
+        </g>
+        <g id="b">
+            <use xlink:href="#a"/>
+        </g>
+    </defs>
+    <use  xlink:href="#c"/>
+</svg>
+
+    @@@
+
+<svg id="test05" width="315" height="92" viewBox="0 0 315 92" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="c">
+        <g id="b">
+            <rect id="a" x="7" y="5" width="301" height="31" rx="3"/>
+        </g>
+    </g>
+</svg>

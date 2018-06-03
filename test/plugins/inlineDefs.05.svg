@@ -1,0 +1,17 @@
+<svg id="test05" width="315" height="92" viewBox="0 0 315 92" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="a" x="7" y="5" width="301" height="31" rx="3"/>
+        <mask id="m" x="0" y="0" width="301" height="31" fill="#fff">
+            <use xlink:href="#a" stroke-width="4" opacity=".4"/>
+        </mask>
+    </defs>
+    <use  xlink:href="#m"/>
+</svg>
+
+    @@@
+
+<svg id="test05" width="315" height="92" viewBox="0 0 315 92" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <mask id="m" x="0" y="0" width="301" height="31" fill="#fff">
+        <rect id="a" x="7" y="5" width="301" height="31" rx="3" stroke-width="4" opacity=".4"/>
+    </mask>
+</svg>
