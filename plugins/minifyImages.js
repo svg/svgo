@@ -53,11 +53,11 @@ function minifyPng(opts, input){
     const isBuffer = Buffer.isBuffer(input);
 
     if (!isBuffer && !isStream(input)) {
-        return Promise.reject(new TypeError(`Expected a Buffer or Stream, got ${typeof input}`));
+        throw new TypeError(`Expected a Buffer or Stream, got ${typeof input}`);
     }
 
     if (isBuffer && !isPng(input)) {
-        return Promise.resolve(input);
+        return input;
     }
 
     const args = ['-'];
