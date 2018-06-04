@@ -10,11 +10,12 @@ exports.params = {
 
 };
 
-const execa = require('execa');
-const isPng = require('is-png');
-const isStream = require('is-stream');
-const pngquant = require('pngquant-bin');
-
+var execa = require('execa');
+var isPng = require('is-png');
+var isJpg = require('is-jpg');
+var isStream = require('is-stream');
+var pngquant = require('pngquant-bin');
+var jpegtran = require('jpegtran-bin');
 
 var base64Regexp = new RegExp(/data:image\/([a-zA-Z]*);base64,([^\"]*)/);
 
@@ -34,15 +35,26 @@ exports.fn = function(item) {
         var imageType = match[1];
         var base64data = match[2];
         
-        if (imageType === 'png'){
-            var bufferedImage = new Buffer(base64data, 'base64');
+        var bufferedImage = new Buffer(base64data, 'base64');
+        var bufferedImagemin;
 
-            var bufferedImagemin = minifyPng({quality: '70-90', speed: 1, floyd: 1}, bufferedImage)
-            var minifiedImage = bufferedImagemin.toString('base64');
-            
-            item.attrs['xlink:href'].value = 'data:image/png;base64,' + minifiedImage;
-            
+        if (imageType === 'png'){
+
+            bufferedImagemin = minifyPng({quality: '70-90', speed: 1, floyd: 1}, bufferedImage);
         }
+        console.log('Image type', imageType)
+        if (imageType === 'jpg' || imageType === 'jpeg'){
+            console.log('JPEG Optimisation')
+            bufferedImagemin = minifyJpeg({}, bufferedImage);
+        }
+
+        if (bufferedImagemin){
+            var minifiedImage = bufferedImagemin.toString('base64');
+            var minifiedBase64Image = `data:image/${imageType};base64,${minifiedImage}`;
+    
+            item.attrs['xlink:href'].value = minifiedBase64Image;
+        }
+        
     }
 
 };
@@ -98,4 +110,36 @@ function minifyPng(opts, input){
     return cp.stdout;
 }
 
+function minifyJpeg(opts, input){
+    opts = Object.assign({}, opts);
+
+	if (!Buffer.isBuffer(input)) {
+		throw new TypeError('Expected a buffer');
+	}
+
+	if (!isJpg(input)) {
+        return input;
+	}
+
+	const args = ['-copy', 'none'];
+
+	if (opts.progressive) {
+		args.push('-progressive');
+	}
+
+	if (opts.arithmetic) {
+		args.push('-arithmetic');
+	} else {
+		args.push('-optimize');
+	}
+
+	// args.push('-outfile', execBuffer.output, execBuffer.input);
+
+    const cp = execa.sync(jpegtran, args, {
+        encoding: null,
+        input
+    });
+
+    return cp.stdout;
+}
 
