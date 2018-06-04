@@ -24,6 +24,7 @@ plugins:
   - removeEditorsNSData
   - cleanupAttrs
   - inlineStyles
+  - minifyImages
   - minifyStyles
   - convertStyleToAttrs
   - cleanupIDs
