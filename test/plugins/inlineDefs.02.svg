@@ -18,7 +18,3 @@
     <use xlink:href="#rect1"/>
     <rect width="200" height="200" id="rect2"/>
 </svg>
-
-    @@@
-
-{ "onlyUnique": true }

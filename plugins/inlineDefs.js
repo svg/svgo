@@ -11,7 +11,7 @@ exports.description = 'inlines svg definitions';
  * @typedef {{onlyUnique: boolean}} Params
  */
 exports.params = {
-    onlyUnique: false
+    onlyUnique: true
 };
 
 
@@ -31,10 +31,7 @@ exports.fn = function(document, params) {
         return document;
     }
 
-    var useCount = null;
-    if (params.onlyUnique === true) {
-        useCount = _countUses(uses);
-    }
+    var useCount = _countUses(uses);
 
     for (var i = 0; i < uses.length; i++) {
         var href = uses[i].attr('xlink:href').value;
@@ -52,12 +49,12 @@ exports.fn = function(document, params) {
             attr_value = 'translate(' + x + ')';
         }
 
-        var def = defs.querySelector(href);
-        if (params.onlyUnique === true && useCount[href] === 1) {
-            def = _replaceElement(def);
-        }
+        var def = _findById(defs, href.match(id_regex)[1]);
         if (!def) {
             continue;
+        }
+        if (params.onlyUnique === true && useCount[href] === 1) {
+            def = _replaceElement(def);
         }
 
         for (var key in uses[i].attrs) {
@@ -86,6 +83,18 @@ exports.fn = function(document, params) {
         }
 
     }
+
+    if (params.onlyUnique === false) {
+        for (var element in useCount) {
+            if (useCount.hasOwnProperty(element) && useCount[element] > 1) {
+                var tags = document.querySelectorAll(element);
+                for (var j = 0; j < tags.length; j++) {
+                    tags[j].removeAttr('id');
+                }
+            }
+        }
+    }
+
 
     _removeDefs(document, params);
 
@@ -178,4 +187,32 @@ function _getElementIndex(element) {
 
     return index;
 
+}
+
+var id_regex = /^#?(\S+)/;
+
+/**
+ * finds the first appearance of element with id = "id"
+ * (querySelector does not seam to handle multiple id ta
+ * @param {Object} element
+ * @param {string} id
+ * @returns {Object|null}
+ * @private
+ */
+function _findById(element, id) {
+
+    if (element.hasAttr('id', id)) {
+        return element;
+    }
+
+    if (element.content) {
+        for (var i = 0; i < element.content.length; i++) {
+            var result = _findById(element.content[i], id);
+            if (result !== null) {
+                return result;
+            }
+        }
+    }
+
+    return null;
 }
