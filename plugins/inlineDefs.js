@@ -42,14 +42,14 @@ exports.fn = function(document, params) {
         var x = uses[i].hasAttr('x') ? uses[i].attr('x').value : null;
         var y = uses[i].hasAttr('y') ? uses[i].attr('y').value : null;
 
-        var attr_value = null;
+        var attrValue = null;
         if (x && y) {
-            attr_value = 'translate(' + x + ', ' + y + ')';
+            attrValue = 'translate(' + x + ', ' + y + ')';
         } else if (x) {
-            attr_value = 'translate(' + x + ')';
+            attrValue = 'translate(' + x + ')';
         }
 
-        var def = _findById(defs, href.match(id_regex)[1]);
+        var def = _findById(defs, href.match(idRegex)[1]);
         if (!def) {
             continue;
         }
@@ -63,13 +63,13 @@ exports.fn = function(document, params) {
             }
         }
 
-        if (attr_value) {
+        if (attrValue) {
             var g = new JSAPI({
                 elem: 'g',
                 attrs: {
                     transform: {
                         name: 'transform',
-                        value: attr_value,
+                        value: attrValue,
                         prefix: null,
                         local: 'transform'
                     }
@@ -141,23 +141,23 @@ function _countUses(elements) {
 
 /**
  * replace element with another
- * if new_element is omitted, old_element will be removed without replacement
- * @param {Object} old_element
- * @param {Object} [new_element]
+ * if newElement is omitted, oldElement will be removed without replacement
+ * @param {Object} oldElement
+ * @param {Object} [newElement]
  * @returns {Object}
  * @private
  */
-function _replaceElement(old_element, new_element) {
+function _replaceElement(oldElement, newElement) {
 
-    var element_index = _getElementIndex(old_element);
+    var elementIndex = _getElementIndex(oldElement);
 
-    if (new_element) {
-        old_element.parentNode.spliceContent(element_index, 1, new_element);
+    if (newElement) {
+        oldElement.parentNode.spliceContent(elementIndex, 1, newElement);
     } else {
-        old_element.parentNode.spliceContent(element_index, 1);
+        oldElement.parentNode.spliceContent(elementIndex, 1);
     }
 
-    return old_element;
+    return oldElement;
 
 }
 
@@ -177,9 +177,9 @@ function _getElementIndex(element) {
         local: 'data-defs-index'
     });
 
-    var index = element.parentNode.content.findIndex(function(content_element) {
+    var index = element.parentNode.content.findIndex(function(contentElement) {
 
-        return content_element.hasAttr('data-defs-index', 'true');
+        return contentElement.hasAttr('data-defs-index', 'true');
 
     });
 
@@ -189,7 +189,7 @@ function _getElementIndex(element) {
 
 }
 
-var id_regex = /^#?(\S+)/;
+var idRegex = /^#?(\S+)/;
 
 /**
  * finds the first appearance of element with id = "id"
