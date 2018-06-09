@@ -50,7 +50,7 @@ exports.fn = function(item) {
                 if (g.hasAttr() && g.content.length === 1) {
                     var inner = g.content[0];
 
-                    if (inner.isElem() && !inner.hasAttr('id') &&
+                    if (inner.isElem() && !inner.hasAttr('id') && !g.hasAttr('filter') &&
                         !(g.hasAttr('class') && inner.hasAttr('class')) && (
                             !g.hasAttr('clip-path') && !g.hasAttr('mask') ||
                             inner.isElem('g') && !g.hasAttr('transform') && !inner.hasAttr('transform')
