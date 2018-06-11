@@ -70,8 +70,6 @@ var FS = require('fs'),
         },{
           sortAttrs: true,
         },{
-          transformsWithOnePath: false,
-        },{
           removeDimensions: true,
         },{
           removeAttrs: {attrs: '(stroke|fill)'},
