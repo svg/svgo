@@ -183,6 +183,7 @@ $ [sudo] npm install -g svgo
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 * через загрузчик webpack – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
+* плагин для Sketch - [svgo-compressor] (https://github.com/BohemianCoding/svgo-compressor)
 * с помощью бота в Telegram – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * как плагин PostCSS - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 
