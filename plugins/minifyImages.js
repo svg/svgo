@@ -4,7 +4,7 @@ exports.type = 'perItem';
 
 exports.active = true;
 
-exports.description = 'minifies PNG images';
+exports.description = 'minifies PNG and JPEG images';
 
 exports.params = {
     png: {
