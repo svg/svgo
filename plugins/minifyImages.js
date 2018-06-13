@@ -42,9 +42,7 @@ exports.fn = function(item) {
 
             bufferedImagemin = minifyPng({quality: '70-90', speed: 1, floyd: 1}, bufferedImage);
         }
-        console.log('Image type', imageType)
         if (imageType === 'jpg' || imageType === 'jpeg'){
-            console.log('JPEG Optimisation')
             bufferedImagemin = minifyJpeg({}, bufferedImage);
         }
 
