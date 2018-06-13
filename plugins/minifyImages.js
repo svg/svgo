@@ -7,7 +7,17 @@ exports.active = true;
 exports.description = 'minifies PNG images';
 
 exports.params = {
-
+    png: {
+        floyd: 1,
+        nofs: false,
+        posterize: 0,
+        quality: '70-90',
+        speed: 1
+    },
+    jpeg:{
+        progressive: false,
+        arithmetic: false,
+    }
 };
 
 var execa = require('execa');
@@ -24,7 +34,7 @@ var base64Regexp = new RegExp(/data:image\/([a-zA-Z]*);base64,([^\"]*)/);
  *
  * @author jboulay <jboulay@ekito.fr>
  */
-exports.fn = function(item) {
+exports.fn = function(item, options) {
     if (
         item.isElem('image') &&
         item.hasAttrLocal('href', base64Regexp)
@@ -40,10 +50,10 @@ exports.fn = function(item) {
 
         if (imageType === 'png'){
 
-            bufferedImagemin = minifyPng({quality: '70-90', speed: 1, floyd: 1}, bufferedImage);
+            bufferedImagemin = minifyPng(options.png, bufferedImage);
         }
         if (imageType === 'jpg' || imageType === 'jpeg'){
-            bufferedImagemin = minifyJpeg({}, bufferedImage);
+            bufferedImagemin = minifyJpeg(options.jpeg, bufferedImage);
         }
 
         if (bufferedImagemin){
@@ -96,10 +106,6 @@ function minifyPng(opts, input){
         args.push('--speed', opts.speed);
     }
 
-    if (opts.verbose) {
-        args.push('--verbose');
-    }
-
     const cp = execa.sync(pngquant, args, {
         encoding: null,
         input
@@ -130,8 +136,6 @@ function minifyJpeg(opts, input){
 	} else {
 		args.push('-optimize');
 	}
-
-	// args.push('-outfile', execBuffer.output, execBuffer.input);
 
     const cp = execa.sync(jpegtran, args, {
         encoding: null,
