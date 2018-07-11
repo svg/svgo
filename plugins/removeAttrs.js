@@ -112,7 +112,6 @@ exports.fn = function(item, params) {
                 item.eachAttr(function(attr) {
                     var name = attr.name;
                     var value = attr.value;
-
                     var isFillCurrentColor = preserveCurrentColor && name == 'fill' && value == 'currentColor';
                     var isStrokeCurrentColor = preserveCurrentColor && name == 'stroke' && value == 'currentColor';
 
