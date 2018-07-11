@@ -113,7 +113,10 @@ exports.fn = function(item, params) {
                     var name = attr.name;
                     var value = attr.value;
 
-                    if(!(preserveCurrentColor && value === 'currentColor')) {
+                    var isFillCurrentColor = preserveCurrentColor && name == 'fill' && value == 'currentColor';
+                    var isStrokeCurrentColor = preserveCurrentColor && name == 'stroke' && value == 'currentColor';
+
+                    if (!(isFillCurrentColor || isStrokeCurrentColor)) {
                         // matches attribute name
                         if (pattern[1].test(name)) {
                             item.removeAttr(name);
