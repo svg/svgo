@@ -13,7 +13,7 @@ exports.params = {
     uselessOverrides: true,
     keepDataAttrs: true,
     keepAriaAttrs: true,
-    keepRoleAttr: true
+    keepRoleAttr: false
 };
 
 var collections = require('./_collections'),
