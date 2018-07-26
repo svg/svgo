@@ -68,6 +68,7 @@
     "coveralls": "~3.0.0",
     "fs-extra": "~4.0.2",
     "istanbul": "~0.4.5",
+    "jshint": "~2.9.5",
     "mocha": "~4.0.1",
     "mocha-istanbul": "~0.3.0",
     "mock-stdin": "~0.3.1",
