@@ -10,17 +10,18 @@
 
 ## Зачем?
 
-SVG-файлы, особенно – экспортированные из различных редакторов, содержат много избыточной и бесполезной информации, комментариев, скрытых элементов, неоптимальные или стандартные значения и другой мусор, удаление которого безопасно и не влияет на конечный результат отрисовки.
+SVG-файлы, особенно экспортированные из различных редакторов, содержат много избыточной и бесполезной информации, комментариев, скрытых элементов, неоптимальные или стандартные значения и другой мусор, удаление которого безопасно и не влияет на конечный вид изображения.
 
 ## Возможности
 
 SVGO имеет расширяемую архитектуру, в которой почти каждая оптимизация является отдельным расширением.
 
-Сегодня у нас есть:
+Что у нас есть:
 
 | Plugin | Description |
 | ------ | ----------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | удаление переносов строк и лишних пробелов |
+| [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | перенос стилей из элементов `<style>` в атрибуты `style` |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | удаление doctype |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | удаление XML-инструкций |
 | [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | удаление комментариев |
@@ -63,7 +64,7 @@ SVGO имеет расширяемую архитектуру, в которой
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` (выключено по умолчанию) |
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` (выключено по умолчанию) |
 
-Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
+Хотите узнать принципы работы и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
 
 
 ## Как использовать
@@ -183,9 +184,11 @@ $ [sudo] npm install -g svgo
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
 * как действие папки в OSX – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 * через загрузчик webpack – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
-* плагин для Sketch - [svgo-compressor] (https://github.com/BohemianCoding/svgo-compressor)
 * с помощью бота в Telegram – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * как плагин PostCSS - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
+* как плагин для Inkscape – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
+* как плагин для Sketch - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
+* в виде приложения macOS - [Image Shrinker](https://image-shrinker.com)
 
 ## Лицензия и копирайты
 
