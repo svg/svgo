@@ -189,6 +189,7 @@ Arguments:
 * as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
+* as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
 ## License and Copyright
 
