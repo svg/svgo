@@ -90,8 +90,8 @@ Options:
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
   --config=CONFIG : Config file or JSON string to extend or replace default
-  --disable=PLUGIN : Disable plugin by name, "--disable={PLUGIN1,PLUGIN2}" for multiple plugins
-  --enable=PLUGIN : Enable plugin by name, "--enable={PLUGIN3,PLUGIN4}" for multiple plugins
+  --disable=PLUGIN : Disable plugin by name. For multiple plugins, set the option multiple times, use bash brace expansion (--disable={PLUGIN1,PLUGIN2}), or specify a comma list of plugins (--disable=PLUGIN1,PLUGIN2).
+  --enable=PLUGIN : Enable plugin by name. For multiple plugins, set the option multiple times, use bash brace expansion (--enable={PLUGIN3,PLUGIN4}), or specify a comma list of plugins (--enable=PLUGIN3,PLUGIN4).
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --multipass : Enable multipass
   --pretty : Make SVG pretty printed
