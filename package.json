@@ -51,7 +51,7 @@
   "dependencies": {
     "coa": "~2.0.1",
     "colors": "~1.1.2",
-    "css-select": "~1.3.0-rc0",
+    "css-select": "^2.0.0",
     "css-select-base-adapter": "~0.1.0",
     "css-tree": "1.0.0-alpha25",
     "css-url-regex": "^1.1.0",
