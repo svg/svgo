@@ -56,7 +56,7 @@
     "css-tree": "1.0.0-alpha25",
     "css-url-regex": "^1.1.0",
     "csso": "^3.5.0",
-    "js-yaml": "~3.10.0",
+    "js-yaml": "^3.12.0",
     "mkdirp": "~0.5.1",
     "object.values": "^1.0.4",
     "sax": "~1.2.4",
