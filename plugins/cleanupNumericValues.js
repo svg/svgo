@@ -48,6 +48,9 @@ exports.fn = function(item, params) {
         }
 
         item.eachAttr(function(attr) {
+            // The `version` attribute is a text string and cannot be rounded
+            if (attr.name === 'version') { return }
+            
             var match = attr.value.match(regNumericValues);
 
             // if attribute value matches regNumericValues
