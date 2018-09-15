@@ -1,8 +1,16 @@
 /* global a2c */
 'use strict';
 
+var rNumber = String.raw`[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?\s*`,
+    rCommaWsp = String.raw`(?:\s,?\s*|,\s*)`,
+    rNumberCommaWsp = `(${rNumber})` + rCommaWsp,
+    rFlagCommaWsp = `([01])${rCommaWsp}?`,
+    rCoordinatePair = String.raw`(${rNumber})${rCommaWsp}?(${rNumber})`,
+    rArcSeq = (rNumberCommaWsp + '?').repeat(2) + rNumberCommaWsp + rFlagCommaWsp.repeat(2) + rCoordinatePair;
+
 var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
-    regPathData = /[-+]?(?:\d*\.\d+|\d+\.?)([eE][-+]?\d+)?/g,
+    regCoordinateSequence = new RegExp(rNumber, 'g'),
+    regArcArgumentSequence = new RegExp(rArcSeq, 'g'),
     regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
@@ -53,11 +61,21 @@ exports.path2js = function(path) {
             }
         // data item
         } else {
-            data = data.match(regPathData);
+            /* jshint boss: true */
+            if (instruction == 'A' || instruction == 'a') {
+                var newData = [];
+                for (var args; (args = regArcArgumentSequence.exec(data));) {
+                    for (var i = 1; i < args.length; i++) {
+                        newData.push(args[i]);
+                    }
+                }
+                data = newData;
+            } else {
+                data = data.match(regCoordinateSequence);
+            }
             if (!data) return;
 
             data = data.map(Number);
-
             // Subsequent moveto pairs of coordinates are threated as implicit lineto commands
             // http://www.w3.org/TR/SVG/paths.html#PathDataMovetoCommands
             if (instruction == 'M' || instruction == 'm') {
