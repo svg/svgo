@@ -2339,6 +2339,7 @@ exports.inheritableAttrs = [
     'marker-end',
     'marker-mid',
     'marker-start',
+    'paint-order',
     'pointer-events',
     'shape-rendering',
     'stroke',

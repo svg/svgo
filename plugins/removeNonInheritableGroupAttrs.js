@@ -8,7 +8,7 @@ exports.description = 'removes non-inheritable group’s presentational attribut
 
 var inheritableAttrs = require('./_collections').inheritableAttrs,
     attrsGroups = require('./_collections').attrsGroups,
-    excludedAttrs = ['display', 'opacity'];
+    excludedAttrs = ['display', 'clip', 'clip-path', 'mask', 'opacity', 'overflow', 'visibility'];
 
 /**
  * Remove non-inheritable group's "presentation" attributes.
@@ -25,9 +25,9 @@ exports.fn = function(item) {
         item.eachAttr(function(attr) {
             if (
                 ~attrsGroups.presentation.indexOf(attr.name) &&
-                ~attrsGroups.graphicalEvent.indexOf(attr.name) &&
-                ~attrsGroups.core.indexOf(attr.name) &&
-                ~attrsGroups.conditionalProcessing.indexOf(attr.name) &&
+                !~attrsGroups.graphicalEvent.indexOf(attr.name) &&
+                !~attrsGroups.core.indexOf(attr.name) &&
+                !~attrsGroups.conditionalProcessing.indexOf(attr.name) &&
                 !~excludedAttrs.indexOf(attr.name) &&
                 !~inheritableAttrs.indexOf(attr.name)
             ) {
