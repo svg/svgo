@@ -208,16 +208,22 @@ exports.applyTransforms = function(elem, path, params) {
         if (scale !== 1) {
             var strokeWidth = elem.computedAttr('stroke-width') || defaultStrokeWidth;
 
-            if (elem.hasAttr('stroke-width')) {
-                elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
-                    .replace(regNumericValues, function(num) { return removeLeadingZero(num * scale) });
-            } else {
-                elem.addAttr({
-                    name: 'stroke-width',
-                    prefix: '',
-                    local: 'stroke-width',
-                    value: strokeWidth.replace(regNumericValues, function(num) { return removeLeadingZero(num * scale) })
-                });
+            if (!elem.hasAttr('vector-effect') || elem.attr('vector-effect').value !== 'non-scaling-stroke') {
+                if (elem.hasAttr('stroke-width')) {
+                    elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
+                        .replace(regNumericValues, function(num) {
+                            return removeLeadingZero(num * scale);
+                        });
+                } else {
+                    elem.addAttr({
+                        name: 'stroke-width',
+                        prefix: '',
+                        local: 'stroke-width',
+                        value: strokeWidth.replace(regNumericValues, function(num) {
+                            return removeLeadingZero(num * scale);
+                        })
+                    });
+                }
             }
         }
     } else if (id) { // Stroke and stroke-width can be redefined with <use>
