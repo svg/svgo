@@ -3,6 +3,15 @@
 var SHOULD = require('should'),
     FS = require('fs'),
     PATH = require('path'),
+    JSAPI = require(process.env.COVERAGE ?
+                     '../../lib-cov/svgo/jsAPI' :
+                     '../../lib/svgo/jsAPI'),
+    CSSClassList = require(process.env.COVERAGE ?
+                     '../../lib-cov/svgo/css-class-list' :
+                     '../../lib/svgo/css-class-list'),
+    CSSStyleDeclaration = require(process.env.COVERAGE ?
+                     '../../lib-cov/svgo/css-style-declaration' :
+                     '../../lib/svgo/css-style-declaration'),
     SVG2JS = require(process.env.COVERAGE ?
                      '../../lib-cov/svgo/svg2js' :
                      '../../lib/svgo/svg2js');
@@ -178,6 +187,26 @@ describe('svg2js', function() {
         });
 
         describe('API', function() {
+
+            describe('clone()', function() {
+
+                it('svg should have property "clone"', function() {
+                    return root.content[3].should.have.property('clone');
+                });
+
+                it('svg.clone() should be an instance of JSAPI', function() {
+                    return root.content[3].clone().should.be.instanceOf(JSAPI);
+                });
+
+                it('root.content[3].content[0].clone() has a valid style property', function() {
+                    return root.content[3].content[0].clone().style.should.be.instanceof(CSSStyleDeclaration);
+                });
+
+                it('root.content[3].content[2].clone() has a valid class property', function() {
+                    return root.content[3].content[2].clone().class.should.be.instanceof(CSSClassList);
+                });
+
+            });
 
             describe('isElem()', function() {
 
