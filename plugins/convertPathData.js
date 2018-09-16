@@ -36,7 +36,8 @@ var pathElems = require('./_collections.js').pathElems,
     error,
     arcThreshold,
     arcTolerance,
-    hasMarkerMid;
+    hasMarkerMid,
+    hasStrokeLinecap;
 
 /**
  * Convert absolute Path to relative,
@@ -66,6 +67,10 @@ exports.fn = function(item, params) {
             arcTolerance = params.makeArcs.tolerance;
         }
         hasMarkerMid = item.hasAttr('marker-mid');
+
+        var stroke = item.computedAttr('stroke'),
+            strokeLinecap = item.computedAttr('stroke');
+        hasStrokeLinecap = stroke && stroke != 'none' && strokeLinecap && strokeLinecap != 'butt';
 
         var data = path2js(item);
 
@@ -584,7 +589,7 @@ function filters(path, params) {
             }
 
             // remove useless non-first path segments
-            if (params.removeUseless) {
+            if (params.removeUseless && !hasStrokeLinecap) {
 
                 // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
                 if (
