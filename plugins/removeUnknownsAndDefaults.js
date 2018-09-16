@@ -21,7 +21,8 @@ var collections = require('./_collections'),
     attrsGroups = collections.attrsGroups,
     elemsGroups = collections.elemsGroups,
     attrsGroupsDefaults = collections.attrsGroupsDefaults,
-    attrsInheritable = collections.inheritableAttrs;
+    attrsInheritable = collections.inheritableAttrs,
+    applyGroups = collections.presentationNonInheritableGroupAttrs;
 
 // collect and extend all references
 for (var elem in elems) {
@@ -120,6 +121,7 @@ exports.fn = function(item, params) {
                         // attrs with default values
                         (
                             params.defaultAttrs &&
+                            !item.hasAttr('id') &&
                             elems[elem].defaults &&
                             elems[elem].defaults[attr.name] === attr.value && (
                                 attrsInheritable.indexOf(attr.name) < 0 ||
@@ -129,7 +131,8 @@ exports.fn = function(item, params) {
                         // useless overrides
                         (
                             params.uselessOverrides &&
-                            attr.name !== 'transform' &&
+                            !item.hasAttr('id') &&
+                            applyGroups.indexOf(attr.name) < 0 &&
                             attrsInheritable.indexOf(attr.name) > -1 &&
                             item.parentNode.computedAttr(attr.name, attr.value)
                         )

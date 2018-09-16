@@ -3,10 +3,11 @@
         <g fill="red">
             <g fill="green">
                 <g fill="green">
-                    <path fill="red" d="M18.8 86.9l39.2"/>        
+                    <path fill="red" d="M18.8 86.9l39.2"/>
                 </g>
             </g>
             <path fill="red" d="M118.8 186.9l79.2"/>
+            <path id="red" fill="red" d="M118.8 186.9l79.2"/>
         </g>
     </g>
 </svg>
@@ -22,6 +23,7 @@
                 </g>
             </g>
             <path d="M118.8 186.9l79.2"/>
+            <path id="red" fill="red" d="M118.8 186.9l79.2"/>
         </g>
     </g>
 </svg>
