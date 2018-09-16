@@ -847,7 +847,7 @@ function makeLonghand(item, data) {
  */
 
 function getDistance(point1, point2) {
-    return Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
+    return Math.hypot(point1[0] - point2[0], point1[1] - point2[1]);
 }
 
 /**
@@ -892,7 +892,8 @@ function findCircle(curve) {
         radius = center && getDistance([0, 0], center),
         tolerance = Math.min(arcThreshold * error, arcTolerance * radius / 100);
 
-    if (center && [1/4, 3/4].every(function(point) {
+    if (center && radius < 1e15 &&
+        [1/4, 3/4].every(function(point) {
         return Math.abs(getDistance(getCubicBezierPoint(curve, point), center) - radius) <= tolerance;
     }))
         return { center: center, radius: radius};
