@@ -125,7 +125,7 @@ exports.fn = function(item, params) {
             // if attribute value is "new"(only enable-background).
             else if (matchNew) {
                 roundedListArr.push('new');
-            } else {
+            } else if (elem) {
                 roundedListArr.push(elem);
             }
 
