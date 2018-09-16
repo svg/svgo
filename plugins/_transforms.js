@@ -115,7 +115,7 @@ var mth = exports.mth = {
 
 /**
  * Decompose matrix into simple transforms. See
- * http://www.maths-informatique-jeux.com/blog/frederic/?post/2013/12/01/Decomposition-of-2D-transform-matrices
+ * http://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  *
  * @param {Object} data matrix transform object
  * @return {Object|Array} transforms array or original transform object
@@ -124,11 +124,11 @@ exports.matrixToTransform = function(transform, params) {
     var floatPrecision = params.floatPrecision,
         data = transform.data,
         transforms = [],
-        sx = +Math.sqrt(data[0] * data[0] + data[1] * data[1]).toFixed(params.transformPrecision),
+        sx = +Math.hypot(data[0], data[1]).toFixed(params.transformPrecision),
         sy = +((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(params.transformPrecision),
         colsSum = data[0] * data[2] + data[1] * data[3],
         rowsSum = data[0] * data[1] + data[2] * data[3],
-        scaleBefore = rowsSum || +(sx == sy);
+        scaleBefore = rowsSum != 0 || sx == sy;
 
     // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
     if (data[4] || data[5]) {
@@ -149,11 +149,11 @@ exports.matrixToTransform = function(transform, params) {
     // [sx·cos(a), sy·sin(a), sx·-sin(a), sy·cos(a), x, y] → scale(sx, sy)·rotate(a[, cx, cy]) (if !scaleBefore)
     } else if (!colsSum || (sx == 1 && sy == 1) || !scaleBefore) {
         if (!scaleBefore) {
-            sx = (data[0] < 0 ? -1 : 1) * Math.sqrt(data[0] * data[0] + data[2] * data[2]);
-            sy = (data[3] < 0 ? -1 : 1) * Math.sqrt(data[1] * data[1] + data[3] * data[3]);
+            sx = (data[0] < 0 ? -1 : 1) * Math.hypot(data[0], data[2]);
+            sy = (data[3] < 0 ? -1 : 1) * Math.hypot(data[1], data[3]);
             transforms.push({ name: 'scale', data: [sx, sy] });
         }
-        var rotate = [mth.acos(data[0] / sx, floatPrecision) * (data[1] * sy < 0 ? -1 : 1)];
+        var rotate = [mth.acos(data[0] / sx, floatPrecision) * ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1)];
 
         if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
 
@@ -260,10 +260,7 @@ exports.transformArc = function(arc, transform) {
         // Decompose the new ellipse matrix
         lastCol = m[2] * m[2] + m[3] * m[3],
         squareSum = m[0] * m[0] + m[1] * m[1] + lastCol,
-        root = Math.sqrt(
-            (Math.pow(m[0] - m[3], 2) + Math.pow(m[1] + m[2], 2)) *
-            (Math.pow(m[0] + m[3], 2) + Math.pow(m[1] - m[2], 2))
-        );
+        root = Math.hypot(m[0] - m[3], m[1] + m[2]) * Math.hypot(m[0] + m[3], m[1] - m[2]);
 
     if (!root) { // circle
         arc[0] = arc[1] = Math.sqrt(squareSum / 2);
@@ -279,7 +276,7 @@ exports.transformArc = function(arc, transform) {
         arc[0] = Math.sqrt(majorAxisSqr);
         arc[1] = Math.sqrt(minorAxisSqr);
         arc[2] = ((major ? term2 < 0 : term1 > 0) ? -1 : 1) *
-            Math.acos((major ? term1 : term2) / Math.sqrt(term1 * term1 + term2 * term2)) * 180 / Math.PI;
+            Math.acos((major ? term1 : term2) / Math.hypot(term1, term2)) * 180 / Math.PI;
     }
 
     if ((transform[0] < 0) !== (transform[3] < 0)) {
