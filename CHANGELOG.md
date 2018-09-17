@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.1.1) ] 1.1.1 / 17.09.2018
+* Fixed crash in `SVGO.optimize()` when ‘info’ is absent.
+* Removed extra space after `cleanupListOfValues` plugin.
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.1.0) ] 1.1.0 / 16.09.2018
 * Fixed `collapseGroups` plugin removing property with a child having `inherit` value.
 * `version` attribute value is not more being rounded.
