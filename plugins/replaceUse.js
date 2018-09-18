@@ -41,14 +41,16 @@ exports.fn = function(data) {
             var id = item.hasAttr('href') ? item.attr('href').value : item.attr('xlink:href').value;
             var def = defs[id];
 
-            item.removeAttr('xlink:href');
-            item.removeAttr('href');
-            item.renameElem(def.elem);
-            def.eachAttr(function(attr) {
-                item.addAttr(attr);
-            });
-            item.removeAttr('id');
-            if (def.content) item.content = def.content;
+            if (def) {
+                item.removeAttr('xlink:href');
+                item.removeAttr('href');
+                item.renameElem(def.elem);
+                def.eachAttr(function(attr) {
+                    item.addAttr(attr);
+                });
+                item.removeAttr('id');
+                if (def.content) item.content = def.content;
+            }
         }
     });
 
