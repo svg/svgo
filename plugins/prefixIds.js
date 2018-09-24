@@ -112,6 +112,32 @@ var addPrefixToUrlAttr = function(attr) {
     attr.value = 'url(' + idPrefixed + ')';
 };
 
+// prefixes begin/end attribute value
+var addPrefixToBeginEndAttr = function(attr) {
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
+
+    var parts = attr.value.split('; ').map(function(val) {
+        val = val.trim();
+
+        if (val.endsWith('.end') || val.endsWith('.start')) {
+            var [id, postfix] = val.split('.');
+            var idPrefixed = prefixId(`#${id}`);
+
+            if (!idPrefixed) {
+                return val;
+            }
+
+            idPrefixed = idPrefixed.slice(1);
+            return `${idPrefixed}.${postfix}`;
+        } else {
+            return val;
+        }
+    });
+
+    attr.value = parts.join('; ');
+};
 
 /**
  * Prefixes identifiers
@@ -222,6 +248,8 @@ exports.fn = function(node, opts, extra) {
         addPrefixToUrlAttr(node.attrs[referencesProp]);
     }
 
+    addPrefixToBeginEndAttr(node.attrs['begin']);
+    addPrefixToBeginEndAttr(node.attrs['end']);
 
     return node;
 };
