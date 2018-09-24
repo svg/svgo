@@ -248,8 +248,8 @@ exports.fn = function(node, opts, extra) {
         addPrefixToUrlAttr(node.attrs[referencesProp]);
     }
 
-    addPrefixToBeginEndAttr(node.attrs['begin']);
-    addPrefixToBeginEndAttr(node.attrs['end']);
+    addPrefixToBeginEndAttr(node.attrs.begin);
+    addPrefixToBeginEndAttr(node.attrs.end);
 
     return node;
 };
