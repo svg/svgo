@@ -122,7 +122,10 @@ var addPrefixToBeginEndAttr = function(attr) {
         val = val.trim();
 
         if (val.endsWith('.end') || val.endsWith('.start')) {
-            var [id, postfix] = val.split('.');
+            var idPostfix = val.split('.'),
+                id = idPostfix[0],
+                postfix = idPostfix[1];
+
             var idPrefixed = prefixId(`#${id}`);
 
             if (!idPrefixed) {
