@@ -1,4 +1,5 @@
 node_modules/
+package-lock.json
 lib-cov/
 html-report/
 lcov.info

@@ -29,6 +29,7 @@ plugins:
   - cleanupIDs
   - prefixIds
   - removeRasterImages
+  - embedLinkedImages
   - removeUselessDefs
   - cleanupNumericValues
   - cleanupListOfValues
