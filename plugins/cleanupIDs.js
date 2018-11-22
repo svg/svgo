@@ -42,9 +42,7 @@ exports.fn = function(data, params) {
         referencesIDs = new Map(),
         hasStyleOrScript = false,
         preserveIDs = new Set(Array.isArray(params.preserve) ? params.preserve : params.preserve ? [params.preserve] : []),
-        preserveIDPrefixes = new Set(Array.isArray(params.preservePrefixes)
-            ? params.preservePrefixes
-            : (params.preservePrefixes ? [params.preservePrefixes] : [])),
+        preserveIDPrefixes = new Set(Array.isArray(params.preservePrefixes) ? params.preservePrefixes : (params.preservePrefixes ? [params.preservePrefixes] : [])),
         idValuePrefix = '#',
         idValuePostfix = '.';
 
@@ -128,7 +126,7 @@ exports.fn = function(data, params) {
 
         if (IDs.has(key)) {
             // replace referenced IDs with the minified ones
-            if (params.minify && !preserveIDs.has(key) && !IDmatchesPrefix(preserveIDPrefixes, key)) {
+            if (params.minify && !preserveIDs.has(key) && !idMatchesPrefix(preserveIDPrefixes, key)) {
                 currentIDstring = getIDstring(currentID = generateID(currentID), params);
                 IDs.get(key).attr('id').value = currentIDstring;
 
@@ -145,7 +143,7 @@ exports.fn = function(data, params) {
     // remove non-referenced IDs attributes from elements
     if (params.remove) {
         for(var keyElem of IDs) {
-            if (!preserveIDs.has(keyElem[0]) && !IDmatchesPrefix(preserveIDPrefixes, keyElem[0])) {
+            if (!preserveIDs.has(keyElem[0]) && !idMatchesPrefix(preserveIDPrefixes, keyElem[0])) {
                 keyElem[1].removeAttr('id');
             }
         }
@@ -160,10 +158,11 @@ exports.fn = function(data, params) {
  * @param {String} current ID
  * @return {Boolean} if currentID starts with one of the strings in prefixArray
  */
-function IDmatchesPrefix(prefixArray, currentID) {
+function idMatchesPrefix(prefixArray, currentID) {
     if (!currentID) return false;
 
-    return prefixArray.some(prefix => currentID.startsWith(prefix));
+    for (var prefix of prefixArray) if (currentID.startsWith(prefix)) return true;
+    return false;
 }
 
 /**
