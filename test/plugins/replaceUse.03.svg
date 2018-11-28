@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <use x="50" y="50" xlink:href="#a"/>
+    <defs>
+        <path id="a" d="..." fill="#ff0000"/>
+    </defs>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g x="50" y="50">
+        <path d="..." fill="#ff0000"/>
+    </g>
+</svg>
