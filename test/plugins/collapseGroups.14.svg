@@ -10,22 +10,16 @@
             <g/>
         </g>
     </switch>
-
+    
 </svg>
 
 @@@
 
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <switch>
-        <g id="a">
-            <g class="i"/>
-        </g>
-        <g id="b" class="n">
-            <g class="i"/>
-        </g>
-        <g>
-            <g/>
-        </g>
-    </switch>
+    <g class="i" id="a"/>
+    <g id="b" class="n">
+        <g class="i"/>
+    </g>
+    <g/>
 </svg>
