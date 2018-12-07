@@ -2280,7 +2280,14 @@ exports.editorNamespaces = [
     'http://ns.adobe.com/ImageReplacement/1.0/',
     'http://ns.adobe.com/GenericCustomNamespace/1.0/',
     'http://ns.adobe.com/XPath/1.0/',
-    'http://schemas.microsoft.com/visio/2003/SVGExtensions/'
+    'http://schemas.microsoft.com/visio/2003/SVGExtensions/',
+    'http://taptrix.com/vectorillustrator/svg_extensions',
+    'http://www.figma.com/figma/ns',
+    'http://purl.org/dc/elements/1.1/',
+    'http://creativecommons.org/ns#',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'http://www.serif.com/',
+    'http://www.vector.evaxdesign.sk'
 ];
 
 // http://www.w3.org/TR/SVG11/linking.html#processingIRI
