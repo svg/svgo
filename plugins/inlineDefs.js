@@ -34,7 +34,12 @@ exports.fn = function(document, params) {
     var useCount = _countUses(uses);
 
     for (var i = 0; i < uses.length; i++) {
-        var href = uses[i].attr('xlink:href').value;
+        var hrefItem = uses[i].attr('xlink:href');
+        if (!hrefItem) {
+            hrefItem = uses[i].attr('href');
+        }
+        var href = hrefItem.value;
+
         if (params.onlyUnique === true && useCount[href] > 1) {
             continue;
         }
@@ -58,7 +63,7 @@ exports.fn = function(document, params) {
         }
 
         for (var key in uses[i].attrs) {
-            if (uses[i].attrs.hasOwnProperty(key) && key !== 'x' && key !== 'y' && key !== 'xlink:href') {
+            if (uses[i].attrs.hasOwnProperty(key) && key !== 'x' && key !== 'y' && key !== 'xlink:href' && key !== 'href') {
                 def.addAttr(uses[i].attrs[key]);
             }
         }
@@ -125,7 +130,12 @@ function _countUses(elements) {
 
     return elements.reduce(function(result, item) {
 
-        var href = item.attr('xlink:href').value;
+        var hrefItem = item.attr('xlink:href');
+        if (!hrefItem) {
+            hrefItem = item.attr('href');
+        }
+        var href = hrefItem.value;
+
         if (result.hasOwnProperty(href)) {
             result[href]++;
         }

@@ -5,7 +5,7 @@
             <use xlink:href="#a" stroke-width="4" opacity=".4"/>
         </mask>
     </defs>
-    <use  xlink:href="#m"/>
+    <use xlink:href="#m"/>
 </svg>
 
     @@@
