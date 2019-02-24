@@ -25,10 +25,11 @@ exports.params = {
  *
  * @param attrs:
  *
- *   format: [ element* : attribute* ]
+ *   format: [ element* : attribute* : value* ]
  *
- *   element   : regexp (wrapped into ^...$), single * or omitted > all elements
+ *   element   : regexp (wrapped into ^...$), single * or omitted > all elements (must be present when value is used)
  *   attribute : regexp (wrapped into ^...$)
+ *   value     : regexp (wrapped into ^...$), single * or omitted > all values
  *
  *   examples:
  *
@@ -40,6 +41,10 @@ exports.params = {
  *     > remove fill attribute on path element
  *     ---
  *       attrs: 'path:fill'
+ *
+ *     > remove fill attribute on path element where value is none
+ *     ---
+ *       attrs: 'path:fill:none'
  *
  *
  *     > remove all fill and stroke attribute
@@ -59,6 +64,10 @@ exports.params = {
  *     [is same as]
  *
  *       attrs: '.*:(fill|stroke)'
+ *
+ *     [is same as]
+ *
+ *       attrs: '.*:(fill|stroke):.*'
  *
  *
  *     > remove all stroke related attributes
@@ -85,12 +94,16 @@ exports.fn = function(item, params) {
             // prepare patterns
         var patterns = params.attrs.map(function(pattern) {
 
-                // apply to all elements if specifc element is omitted
+                // if no element separators (:), assume it's attribute name, and apply to all elements *regardless of value*
             if (pattern.indexOf(elemSeparator) === -1) {
-                pattern = ['.*', elemSeparator, pattern].join('');
+                pattern = ['.*', elemSeparator, pattern, elemSeparator, '.*'].join('');
+
+                // if only 1 separator, assume it's element and attribute name, and apply regardless of attribute value
+            } else if (pattern.split(elemSeparator).length < 3) {
+                pattern = [pattern, elemSeparator, '.*'].join('');
             }
 
-                // create regexps for element and attribute name
+                // create regexps for element, attribute name, and attribute value
             return pattern.split(elemSeparator)
                 .map(function(value) {
 
@@ -118,7 +131,11 @@ exports.fn = function(item, params) {
                     if (!(isFillCurrentColor || isStrokeCurrentColor)) {
                         // matches attribute name
                         if (pattern[1].test(name)) {
-                            item.removeAttr(name);
+
+                            // matches attribute value
+                            if (pattern[2].test(attr.value)) {
+                                item.removeAttr(name);
+                            }
                         }
                     }
 
