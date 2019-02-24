@@ -13,7 +13,7 @@ exports.description = 'prefix IDs';
 
 var path = require('path'),
     csstree = require('css-tree'),
-    cssRx = require('css-url-regex')(),
+    cssRx = require('css-url-regex'),
     unquote = require('unquote'),
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
@@ -37,7 +37,7 @@ var matchId = function(urlVal) {
 
 // Matches an url(...) value, captures the URL
 var matchUrl = function(val) {
-    var urlMatches = cssRx.exec(val);
+    var urlMatches = cssRx().exec(val);
     if (urlMatches === null) {
         return false;
     }
@@ -61,8 +61,17 @@ var prefixId = function(val) {
 
 // attr.value helper methods
 
-// prefixes a normal attribute value
-var addPrefixToAttr = function(attr) {
+// prefixes a class attribute value
+var addPrefixToClassAttr = function(attr) {
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
+
+    attr.value = attr.value.split(/\s+/).map(addPrefix).join(' ');
+};
+
+// prefixes an ID attribute value
+var addPrefixToIdAttr = function(attr) {
     if (!attrNotEmpty(attr)) {
         return;
     }
@@ -70,8 +79,8 @@ var addPrefixToAttr = function(attr) {
     attr.value = addPrefix(attr.value);
 };
 
-// prefixes an ID attribute value
-var addPrefixToIdAttr = function(attr) {
+// prefixes a href attribute value
+var addPrefixToHrefAttr = function(attr) {
     if (!attrNotEmpty(attr)) {
         return;
     }
@@ -123,6 +132,8 @@ exports.fn = function(node, opts, extra) {
         } else {
             prefix = opts.prefix;
         }
+    } else if (opts.prefix === false) {
+        prefix = false;
     } else if (extra && extra.path && extra.path.length > 0) {
         var filename = path.basename(extra.path);
         prefix = filename;
@@ -131,6 +142,9 @@ exports.fn = function(node, opts, extra) {
 
     // prefixes a normal value
     addPrefix = function(name) {
+        if(prefix === false){
+            return escapeIdentifierName(name);
+        }
         return escapeIdentifierName(prefix + opts.delim + name);
     };
 
@@ -180,7 +194,7 @@ exports.fn = function(node, opts, extra) {
         });
 
         // update <style>s
-        node.content[0].text = csstree.translate(cssAst);
+        node.content[0].text = csstree.generate(cssAst);
         return node;
     }
 
@@ -192,14 +206,16 @@ exports.fn = function(node, opts, extra) {
     }
 
     // ID
-    addPrefixToAttr(node.attrs.id);
+    addPrefixToIdAttr(node.attrs.id);
+
     // Class
-    addPrefixToAttr(node.attrs.class);
+    addPrefixToClassAttr(node.attrs.class);
 
     // href
-    addPrefixToIdAttr(node.attrs.href);
+    addPrefixToHrefAttr(node.attrs.href);
+
     // (xlink:)href (deprecated, must be still supported)
-    addPrefixToIdAttr(node.attrs['xlink:href']);
+    addPrefixToHrefAttr(node.attrs['xlink:href']);
 
     // referenceable properties
     for (var referencesProp of referencesProps) {

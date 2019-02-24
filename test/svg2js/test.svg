@@ -15,5 +15,5 @@
             <text>test</text>
         </g>
     </g>
-    <g style="color: black"></g>
+    <g style="color: black" class="unknown-class"></g>
 </svg>

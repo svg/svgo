@@ -3,14 +3,14 @@
 
 <img src="https://svg.github.io/svgo-logo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Dependency Status](https://gemnasium.com/svg/svgo.svg)](https://gemnasium.com/svg/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
+## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
 
 **SVG O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 ![](https://mc.yandex.ru/watch/18431326)
 
 ## Why?
 
-SVG files, especially exported from various editors, usually contain a lot of redundant and useless information such as editor metadata, comments, hidden elements, default or non-optimal values and other stuff that can be safely removed or converted without affecting SVG rendering result.
+SVG files, especially those exported from various editors, usually contain a lot of redundant and useless information. This can include editor metadata, comments, hidden elements, default or non-optimal values and other stuff that can be safely removed or converted without affecting the SVG rendering result.
 
 ## What it can do
 
@@ -21,6 +21,7 @@ Today we have:
 | Plugin | Description |
 | ------ | ----------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | cleanup attributes from newlines, trailing, and repeating spaces |
+| [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | move and merge styles from `<style>` elements to element `style` attributes |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | remove doctype declaration |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | remove XML processing instructions |
 | [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | remove comments |
@@ -47,7 +48,7 @@ Today we have:
 | [removeUnusedNS](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) | remove unused namespaces declaration |
 | [cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) | remove unused and minify used IDs |
 | [cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) | round numeric values to the fixed precision, remove default `px` units |
-| [cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) | round numeric values in attributes that take a list of numbers (like `viewBox` or `enableBackground`) |
+| [cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) | round numeric values in attributes that take a list of numbers (like `viewBox` or `enable-background`) |
 | [moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) | move elements' attributes to their enclosing group |
 | [moveGroupAttrsToElems](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) | move some group attributes to the contained elements |
 | [collapseGroups](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) | collapse useless groups |
@@ -89,8 +90,8 @@ Options:
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
   --config=CONFIG : Config file or JSON string to extend or replace default
-  --disable=DISABLE : Disable plugin by name
-  --enable=ENABLE : Enable plugin by name
+  --disable=PLUGIN : Disable plugin by name, "--disable={PLUGIN1,PLUGIN2}" for multiple plugins (*nix)
+  --enable=PLUGIN : Enable plugin by name, "--enable={PLUGIN3,PLUGIN4}" for multiple plugins (*nix)
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --multipass : Enable multipass
   --pretty : Make SVG pretty printed
@@ -176,7 +177,7 @@ Arguments:
 
 ### Other Ways to Use SVGO
 
-* as a web app - [SVGOMG](https://jakearchibald.github.io/svgomg/)
+* as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
@@ -184,7 +185,11 @@ Arguments:
 * as an OSX Folder Action – [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)
 * as a webpack loader – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 * as a Telegram Bot – [svgo_bot](https://github.com/maksugr/svgo_bot)
-* as a PostCSS plugin - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
+* as a PostCSS plugin – [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
+* as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
+* as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
+* as macOS app - [Image Shrinker](https://image-shrinker.com)
+* as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
 ## License and Copyright
 

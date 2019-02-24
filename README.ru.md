@@ -3,24 +3,25 @@
 
 <img src="https://svg.github.io/svgo-logo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Dependency Status](https://gemnasium.com/svg/svgo.svg)](https://gemnasium.com/svg/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
+## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
 
 **SVG** **O**ptimizer – это инструмент для оптимизации векторной графики в формате SVG, написанный на Node.js.
 ![](https://mc.yandex.ru/watch/18431326)
 
 ## Зачем?
 
-SVG-файлы, особенно – экспортированные из различных редакторов, содержат много избыточной и бесполезной информации, комментариев, скрытых элементов, неоптимальные или стандартные значения и другой мусор, удаление которого безопасно и не влияет на конечный результат отрисовки.
+SVG-файлы, особенно экспортированные из редакторов, содержат много избыточной и бесполезной информации, комментариев, скрытых элементов, неоптимальные или стандартные значения и другой мусор, удаление которого безопасно и не влияет на конечный вид изображения.
 
 ## Возможности
 
 SVGO имеет расширяемую архитектуру, в которой почти каждая оптимизация является отдельным расширением.
 
-Сегодня у нас есть:
+Что у нас есть:
 
 | Plugin | Description |
 | ------ | ----------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | удаление переносов строк и лишних пробелов |
+| [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | перенос стилей из элементов `<style>` в атрибуты `style` |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | удаление doctype |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | удаление XML-инструкций |
 | [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | удаление комментариев |
@@ -63,7 +64,7 @@ SVGO имеет расширяемую архитектуру, в которой
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` (выключено по умолчанию) |
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` (выключено по умолчанию) |
 
-Хотите узнать, как это работает и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md).
+Хотите узнать принципы работы и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md)
 
 
 ## Как использовать
@@ -185,6 +186,10 @@ $ [sudo] npm install -g svgo
 * через загрузчик webpack – [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)
 * с помощью бота в Telegram – [svgo_bot](https://github.com/maksugr/svgo_bot)
 * как плагин PostCSS - [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
+* как плагин для Inkscape – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
+* как плагин для Sketch - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
+* в виде приложения macOS - [Image Shrinker](https://image-shrinker.com)
+* как плагин для Rollup - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
 ## Лицензия и копирайты
 

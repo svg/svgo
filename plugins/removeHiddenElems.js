@@ -7,6 +7,7 @@ exports.active = true;
 exports.description = 'removes hidden elements (zero sized, with absent attributes)';
 
 exports.params = {
+    isHidden: true,
     displayNone: true,
     opacity0: true,
     circleR0: true,
@@ -44,9 +45,15 @@ var regValidPath = /M\s*(?:[-+]?(?:\d*\.\d+|\d+(?:\.|(?!\.)))([eE][-+]?\d+)?(?!\
  *
  * @author Kir Belevich
  */
-exports.fn = function(item, params) {
+exports.fn = function (item, params) {
 
     if (item.elem) {
+        // Removes hidden elements
+        // https://www.w3schools.com/cssref/pr_class_visibility.asp
+        if (
+            params.isHidden &&
+            item.hasAttr('visibility', 'hidden')
+        ) return false;
 
         // display="none"
         //
