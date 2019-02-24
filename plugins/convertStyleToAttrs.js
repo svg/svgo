@@ -7,6 +7,10 @@ exports.active = true;
 
 exports.description = 'converts style to attributes';
 
+exports.params = {
+    keepImportant: false
+};
+
 var stylingProps = require('./_collections').attrsGroups.presentation,
     rEscape = '\\\\(?:[0-9a-f]{1,6}\\s?|\\r\\n|.)',                 // Like \" or \2051. Code points consume one space.
     rAttr = '\\s*(' + g('[^:;\\\\]', rEscape) + '*?)\\s*',          // attribute name like ‘fill’
@@ -19,13 +23,16 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
     rParenthesis = '\\(' + g('[^\'"()\\\\]+', rEscape, rSingleQuotes, rQuotes) + '*?' + '\\)',
 
     // The value. It can have strings and parentheses (see above). Fallbacks to anything in case of unexpected input.
-    rValue = '\\s*(' + g('[^\'"();\\\\]+?', rEscape, rSingleQuotes, rQuotes, rParenthesis, '[^;]*?') + '*?' + ')',
+    rValue = '\\s*(' + g('[^!\'"();\\\\]+?', rEscape, rSingleQuotes, rQuotes, rParenthesis, '[^;]*?') + '*?' + ')',
 
     // End of declaration. Spaces outside of capturing groups help to do natural trimming.
     rDeclEnd = '\\s*(?:;\\s*|$)',
 
+    // Important rule
+    rImportant = '(\\s*!important(?![-(\w]))?',
+
     // Final RegExp to parse CSS declarations.
-    regDeclarationBlock = new RegExp(rAttr + ':' + rValue + rDeclEnd, 'ig'),
+    regDeclarationBlock = new RegExp(rAttr + ':' + rValue + rImportant + rDeclEnd, 'ig'),
 
     // Comments expression. Honors escape sequences and strings.
     regStripComments = new RegExp(g(rEscape, rSingleQuotes, rQuotes, '/\\*[^]*?\\*/'), 'ig');
@@ -48,7 +55,7 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
+exports.fn = function(item, params) {
     /* jshint boss: true */
 
     if (item.elem && item.hasAttr('style')) {
@@ -65,7 +72,9 @@ exports.fn = function(item) {
 
         regDeclarationBlock.lastIndex = 0;
         for (var rule; rule = regDeclarationBlock.exec(styleValue);) {
-            styles.push([rule[1], rule[2]]);
+            if (!params.keepImportant || !rule[3]) {
+                styles.push([rule[1], rule[2]]);
+            }
         }
 
         if (styles.length) {

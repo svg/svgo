@@ -96,8 +96,7 @@ exports.fn = function(item, params) {
             matchNew = elem.match(/new/);
 
              // if attribute value matches regNumericValues
-            if(match){
-
+            if (match) {
                 // round it to the fixed precision
                 num = +(+match[1]).toFixed(params.floatPrecision),
                 units = match[3] || '';
@@ -122,13 +121,12 @@ exports.fn = function(item, params) {
                 }
 
                 roundedListArr.push(num+units);
-
             }
             // if attribute value is "new"(only enable-background).
-            else if(matchNew){
-
+            else if (matchNew) {
                 roundedListArr.push('new');
-
+            } else if (elem) {
+                roundedListArr.push(elem);
             }
 
         });

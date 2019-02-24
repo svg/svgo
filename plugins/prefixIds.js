@@ -194,7 +194,7 @@ exports.fn = function(node, opts, extra) {
         });
 
         // update <style>s
-        node.content[0].text = csstree.translate(cssAst);
+        node.content[0].text = csstree.generate(cssAst);
         return node;
     }
 

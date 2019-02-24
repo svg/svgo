@@ -1,3 +1,32 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.1.1) ] 1.1.1 / 17.09.2018
+* Fixed crash in `SVGO.optimize()` when ‘info’ is absent.
+* Removed extra space after `cleanupListOfValues` plugin.
+
+### [ [>](https://github.com/svg/svgo/tree/v1.1.0) ] 1.1.0 / 16.09.2018
+* Fixed `collapseGroups` plugin removing property with a child having `inherit` value.
+* `version` attribute value is not more being rounded.
+* Fixed jsAPI `clone` method with respect to the introduced CSS classes.
+* Fixed scaling strokes with `vector-effect="non-scaling-stroke"` (by @alexjlockwood).
+* Fixed passing properties from groups in `collapseGroups` plugin if child have a filter (by @stristr).
+* Fixed arc path commands parsing without separators after flags, effectively producing a JS error.
+* Fixed `viewBox` separators parsing.
+* Fixed `removeNonInheritableGroupAttrs` plugin to work as intended.
+* Fixed removing path segments without length in presence of `stroke-linecap`.
+* Fixed `removeUnknownsAndDefaults` plugin removing attributes from elements with `id`.
+* Fixed converting to large arcs from nearly straight lines curves.
+* Fixed `collapseGroups` plugin affecting `<switch>` and its subgroups.
+* Fixed `convertTransform` plugin converting to `rotate()` with wrong sign in some case.
+* Fixed `cleanupListOfValues` plugin not preserving non-numeric values.
+* Fixed `!important` being passed to attributes in `convertStyleToAttrs` plugin.
+* Added option `keepImportant` to `convertStyleToAttrs` plugin to preserve styles with `!important`.
+* `removeHiddenElems` plugin now also removes elements with `visibility="hidden"` attribute (by @mikolaj92).
+* Added `forceAbsolutePath` option to `convertPathData` plugin to always use absolute coordinates (by @cool).
+* Added `keepRoleAttr` for `removeUnknownsAndDefaults` plugin to preserve `role-` attributes (by @himedlooff).
+* Added `xmlns` order option in `sortAttrs` plugin (by @hellatan).
+* Added an option to `prefixIds` plugin to pass prefix as false or as a function that returns false (by @vzaidman).
+* `prefixIds` plugin now adds prefix to every class (by @vzaidman).
+* Updated and improved docs a bit (multiple authors).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.0.5) ] 1.0.5 / 26.02.2018
 * Fixed issue with prefixIDs plugin not replacing url() values correctly (by @harrisjose).
 

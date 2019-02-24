@@ -3,7 +3,7 @@
 
 <img src="https://svg.github.io/svgo-logo.svg" width="200" height="200" alt="logo"/>
 
-## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Dependency Status](https://gemnasium.com/svg/svgo.svg)](https://gemnasium.com/svg/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
+## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
 
 **SVG O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
 ![](https://mc.yandex.ru/watch/18431326)
@@ -21,6 +21,7 @@ Today we have:
 | Plugin | Description |
 | ------ | ----------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | cleanup attributes from newlines, trailing, and repeating spaces |
+| [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | move and merge styles from `<style>` elements to element `style` attributes |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | remove doctype declaration |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | remove XML processing instructions |
 | [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | remove comments |
@@ -57,6 +58,7 @@ Today we have:
 | [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | sort element attributes for epic readability (disabled by default) |
 | [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | remove `width`/`height` attributes if `viewBox` is present (opposite to removeViewBox, disable it first) (disabled by default) |
 | [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | remove attributes by pattern (disabled by default) |
+| [removeAttributesBySelector](https://github.com/svg/svgo/blob/master/plugins/removeAttributesBySelector.js) | removes attributes of elements that match a css selector (disabled by default) |
 | [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | remove arbitrary elements by ID or className (disabled by default) |
 | [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | add classnames to an outer `<svg>` element (disabled by default) |
 | [addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) | adds attributes to an outer `<svg>` element (disabled by default) |
@@ -90,8 +92,8 @@ Options:
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
   --config=CONFIG : Config file or JSON string to extend or replace default
-  --disable=PLUGIN : Disable plugin by name, "--disable={PLUGIN1,PLUGIN2}" for multiple plugins
-  --enable=PLUGIN : Enable plugin by name, "--enable={PLUGIN3,PLUGIN4}" for multiple plugins
+  --disable=PLUGIN : Disable plugin by name, "--disable={PLUGIN1,PLUGIN2}" for multiple plugins (*nix)
+  --enable=PLUGIN : Enable plugin by name, "--enable={PLUGIN3,PLUGIN4}" for multiple plugins (*nix)
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --multipass : Enable multipass
   --pretty : Make SVG pretty printed
@@ -189,6 +191,7 @@ Arguments:
 * as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
+* as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
 ## License and Copyright
 
