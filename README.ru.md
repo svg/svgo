@@ -189,6 +189,7 @@ $ [sudo] npm install -g svgo
 * как плагин для Inkscape – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 * как плагин для Sketch - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * в виде приложения macOS - [Image Shrinker](https://image-shrinker.com)
+* как плагин для Rollup - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
 ## Лицензия и копирайты
 

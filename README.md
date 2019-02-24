@@ -58,11 +58,13 @@ Today we have:
 | [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | sort element attributes for epic readability (disabled by default) |
 | [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | remove `width`/`height` attributes if `viewBox` is present (opposite to removeViewBox, disable it first) (disabled by default) |
 | [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | remove attributes by pattern (disabled by default) |
+| [removeAttributesBySelector](https://github.com/svg/svgo/blob/master/plugins/removeAttributesBySelector.js) | removes attributes of elements that match a css selector (disabled by default) |
 | [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | remove arbitrary elements by ID or className (disabled by default) |
 | [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | add classnames to an outer `<svg>` element (disabled by default) |
 | [addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) | adds attributes to an outer `<svg>` element (disabled by default) |
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | remove `<style>` elements (disabled by default) |
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | remove `<script>` elements (disabled by default) |
+| [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Find duplicated <path> elements and replace them with <use> links. (disabled by default) |
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md). ([동작방법](https://github.com/svg/svgo/blob/master/docs/how-it-works/ko.md))
 
@@ -90,8 +92,8 @@ Options:
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
   --config=CONFIG : Config file or JSON string to extend or replace default
-  --disable=PLUGIN : Disable plugin by name. For multiple plugins, set the option multiple times, use bash brace expansion (--disable={PLUGIN1,PLUGIN2}), or specify a comma list of plugins (--disable=PLUGIN1,PLUGIN2).
-  --enable=PLUGIN : Enable plugin by name. For multiple plugins, set the option multiple times, use bash brace expansion (--enable={PLUGIN3,PLUGIN4}), or specify a comma list of plugins (--enable=PLUGIN3,PLUGIN4).
+  --disable=PLUGIN : Disable plugin by name, "--disable=PLUGIN1,PLUGIN2" for multiple plugins
+  --enable=PLUGIN : Enable plugin by name, "--enable=PLUGIN3,PLUGIN4" for multiple plugins
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --multipass : Enable multipass
   --pretty : Make SVG pretty printed
@@ -189,6 +191,7 @@ Arguments:
 * as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
+* as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
 ## License and Copyright
 

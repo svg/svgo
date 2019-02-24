@@ -40,7 +40,7 @@ exports.fn = function(item, params) {
         var floatPrecision = params.floatPrecision;
 
         if (item.hasAttr('viewBox')) {
-            var nums = item.attr('viewBox').value.split(/[ ,]/g);
+            var nums = item.attr('viewBox').value.split(/\s,?\s*|,\s*/g);
             item.attr('viewBox').value = nums.map(function(value) {
                 var num = +value;
                 return isNaN(num) ? value : +num.toFixed(floatPrecision);
@@ -48,6 +48,9 @@ exports.fn = function(item, params) {
         }
 
         item.eachAttr(function(attr) {
+            // The `version` attribute is a text string and cannot be rounded
+            if (attr.name === 'version') { return }
+
             var match = attr.value.match(regNumericValues);
 
             // if attribute value matches regNumericValues
