@@ -11,6 +11,7 @@ exports.params = {
     minify: true,
     prefix: '',
     preserve: [],
+    preservePrefixes: [],
     force: false
 };
 
@@ -41,6 +42,7 @@ exports.fn = function(data, params) {
         referencesIDs = new Map(),
         hasStyleOrScript = false,
         preserveIDs = new Set(Array.isArray(params.preserve) ? params.preserve : params.preserve ? [params.preserve] : []),
+        preserveIDPrefixes = new Set(Array.isArray(params.preservePrefixes) ? params.preservePrefixes : (params.preservePrefixes ? [params.preservePrefixes] : [])),
         idValuePrefix = '#',
         idValuePostfix = '.';
 
@@ -54,7 +56,7 @@ exports.fn = function(data, params) {
         for (var i = 0; i < items.content.length && !hasStyleOrScript; i++) {
             var item = items.content[i];
 
-            // quit if <style> of <script> presents ('force' param prevents quitting)
+            // quit if <style> or <script> present ('force' param prevents quitting)
             if (!params.force) {
                 if (item.isElem(styleOrScript)) {
                     hasStyleOrScript = true;
@@ -124,7 +126,7 @@ exports.fn = function(data, params) {
 
         if (IDs.has(key)) {
             // replace referenced IDs with the minified ones
-            if (params.minify && !preserveIDs.has(key)) {
+            if (params.minify && !preserveIDs.has(key) && !idMatchesPrefix(preserveIDPrefixes, key)) {
                 currentIDstring = getIDstring(currentID = generateID(currentID), params);
                 IDs.get(key).attr('id').value = currentIDstring;
 
@@ -141,13 +143,27 @@ exports.fn = function(data, params) {
     // remove non-referenced IDs attributes from elements
     if (params.remove) {
         for(var keyElem of IDs) {
-            if (!preserveIDs.has(keyElem[0])) {
+            if (!preserveIDs.has(keyElem[0]) && !idMatchesPrefix(preserveIDPrefixes, keyElem[0])) {
                 keyElem[1].removeAttr('id');
             }
         }
     }
     return data;
 };
+
+/**
+ * Check if an ID starts with any one of a list of strings.
+ *
+ * @param {Array} of prefix strings
+ * @param {String} current ID
+ * @return {Boolean} if currentID starts with one of the strings in prefixArray
+ */
+function idMatchesPrefix(prefixArray, currentID) {
+    if (!currentID) return false;
+
+    for (var prefix of prefixArray) if (currentID.startsWith(prefix)) return true;
+    return false;
+}
 
 /**
  * Generate unique minimal ID.

@@ -7,9 +7,11 @@ const fs = require('fs'),
     path = require('path'),
     svgPath = path.resolve(__dirname, 'test.svg'),
     svgFolderPath = path.resolve(__dirname, 'testSvg'),
+    svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively'),
     svgFiles = [path.resolve(__dirname, 'testSvg/test.svg'), path.resolve(__dirname, 'testSvg/test.1.svg')],
     tempFolder = 'temp',
     fse = require('fs-extra'),
+    checkIsDir = require('../../lib/svgo/tools.js').checkIsDir,
     noop = () => {};
 
 describe('coa', function() {
@@ -49,8 +51,10 @@ describe('coa', function() {
     }
 
     function calcFolderSvgWeight(folderPath) {
-        return fs.readdirSync(folderPath).reduce((initWeight, fileName) => (
-            initWeight + (/.svg/.test(fileName) ? fs.statSync(path.join(folderPath, fileName)).size : 0)
+        return fs.readdirSync(folderPath).reduce((initWeight, name) => (
+            initWeight +
+                (/.svg/.test(name) ? fs.statSync(path.join(folderPath, name)).size : 0) +
+                (checkIsDir(path.join(folderPath, name)) ? calcFolderSvgWeight(path.join(folderPath, name)) : 0)
         ), 0);
     }
 
@@ -77,6 +81,16 @@ describe('coa', function() {
 
         svgo({ folder: svgFolderPath, output: tempFolder, quiet: true }).then(function() {
             const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
+
+            done(optimizedWeight > 0 && initWeight <= optimizedWeight ? null : 'Folder was not optimized');
+        }, error => done(error));
+    });
+
+    it('should optimize folder recursively', function(done) {
+        const initWeight = calcFolderSvgWeight(svgFolderPathRecursively);
+
+        svgo({ folder: svgFolderPathRecursively, output: tempFolder, quiet: true, recursive: true }).then(function() {
+            const optimizedWeight = calcFolderSvgWeight(svgFolderPathRecursively);
 
             done(optimizedWeight > 0 && initWeight <= optimizedWeight ? null : 'Folder was not optimized');
         }, error => done(error));

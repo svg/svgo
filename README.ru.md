@@ -46,6 +46,7 @@ SVGO имеет расширяемую архитектуру, в которой
 | [removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) | удаление ненаследуемых "презентационных" атрибутов групп |
 | [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) | удаление неиспользуемых атрибутов stroke-* и fill-* |
 | [removeUnusedNS](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) | удаление  деклараций неиспользуемых пространств имён |
+| [prefixIds](https://github.com/svg/svgo/blob/master/plugins/prefixIds.js) | добавляет префикс в ID или классы в виде имени файла или произвольной строки |
 | [cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) | удаление неиспользуемых и сокращение используемых ID |
 | [cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) | округление дробных чисел до заданной точности, удаление `px` как единицы  |измерения по-умолчанию
 | [cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) | округление числовых значений в атрибутах со списком чисел, таких как `viewBox`  |или `enableBackground`
