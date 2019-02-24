@@ -7,3 +7,4 @@ bin/svgo-profiling
 *.log
 .DS_Store
 .idea
+.vscode
