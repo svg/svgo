@@ -53,17 +53,20 @@ SVGO имеет расширяемую архитектуру, в которой
 | [moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) | перемещение совпадающих атрибутов у всех элементов внутри группы `<g>` |
 | [moveGroupAttrsToElems](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) | перемещение некоторых атрибутов группы на элементы внутри |
 | [collapseGroups](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) | схлопывание бесполезных групп `<g>` |
-| [removeRasterImage](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) | удаление растровых изображений (выключено по умолчанию) |
+| [removeRasterImages](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) | удаление растровых изображений (выключено по умолчанию) |
 | [mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) | склеивание нескольких Path в одну кривую |
 | [convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) | конвертирование простых форм в Path |
 | [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | сортировка атрибутов элементов для удобочитаемости (выключено по умолчанию) |
 | [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | удаляет атрибуты width/height при наличии viewBox (противоречит removeViewBox — плагин должен быть выключен) (выключено по умолчанию) |
 | [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | удаляет атрибуты по указанному паттерну (выключено по умолчанию) |
+| [removeAttributesBySelector](https://github.com/svg/svgo/blob/master/plugins/removeAttributesBySelector.js) | удаляет атрибуты по CSS-селектору (выключено по умолчанию) |
 | [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | удаляет элементы по указанным ID или классам (выключено по умолчанию) |
 | [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | добавляет имена классов корневому элементу `<svg>` (выключено по умолчанию) |
 | [addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) | добавляет атрибуты корневому элементу `<svg>` (выключено  |по умолчанию)
+| [removeOffCanvasPaths](https://github.com/svg/svgo/blob/master/plugins/removeOffCanvasPaths.js) | удаляет элементы вне отрисовываемой области (выключено по умолчанию) |
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` (выключено по умолчанию) |
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` (выключено по умолчанию) |
+| [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Заменяет дублирующиеся элементы <path> ссылками <use> (выключено по умолчанию) |
 
 Хотите узнать принципы работы и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md)
 
@@ -91,12 +94,13 @@ $ [sudo] npm install -g svgo
   -o OUTPUT, --output=OUTPUT : Выходной файл или папка (совпадает с входным по умолчанию), "-" для STDOUT
   -p PRECISION, --precision=PRECISION : Число цифр после запятой, переопределяет параметры плагинов
   --config=CONFIG : Файл конфигурации (или строка JSON) для расширения и замены настроек
-  --disable=DISABLE : Выключение плагина по имени
-  --enable=ENABLE : Включение плагина по имени
+  --disable=PLUGIN : Выключение плагина по имени, "--disable=PLUGIN1,PLUGIN2" для отключения нескольких плагинов
+  --enable=PLUGIN : Включение плагина по имени, "--enable=PLUGIN3,PLUGIN4" для отключения нескольких плагинов
   --datauri=DATAURI : Результат в виде строки Data URI (base64, URI encoded или unencoded)
   --multipass : Оптимизация в несколько проходов
   --pretty : Удобочитаемое форматирование SVG
   --indent=INDENT : Размер отступа для удобочитаемого форматирования
+  -r, --recursive : Совместно с '-f'. Рекурсивно обрабатывать *.svg файлы в папках.
   -q, --quiet : Подавляет вывод информации, выводятся только сообщения об ошибках
   --show-plugins : Доступные плагины
 
