@@ -1,3 +1,15 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.2.0) ] 1.2.0 / 24.02.2019
+Some goodness from pull-requests.
+* Fixed extra blank lines when processing many files (by @panczarny).
+* Added `--recursive` option to process folders recursevely with option `-f` (by @dartess).
+* Added `removeAttributesBySelector` plugin to remove elements matching a css selector (by @bmease).
+* Added `removeOffCanvasPaths` plugin to remove elements outside of the viewbox (by @JoshyPHP).
+* `removeAttrs` plugin: added `preserveCurrentColor` color (by @roblevintennis) and 3rd optional filter for a value (by @Herman-Freund).
+* Added `reusePaths` plugin to replace duplicated elements with link (by @jhowcrof).
+* Added support of comma-separated plugins list in `--disable` and `--enable` options (by @jmwebservices).
+* Added option to preserve IDs based on prefix in `cleanupIDs` plugin (by @bkotzz).
+* Replaced `colors` dependency with `chalk` (by @xPaw).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.1.1) ] 1.1.1 / 17.09.2018
 * Fixed crash in `SVGO.optimize()` when ‘info’ is absent.
 * Removed extra space after `cleanupListOfValues` plugin.
