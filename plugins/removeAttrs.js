@@ -10,6 +10,7 @@ exports.description = 'removes specified attributes';
 
 exports.params = {
     elemSeparator: DEFAULT_SEPARATOR,
+    preserveCurrentColor: false,
     attrs: []
 };
 
@@ -18,6 +19,9 @@ exports.params = {
  *
  * @param elemSeparator
  *   format: string
+ *
+ * @param preserveCurrentColor
+ *   format: boolean
  *
  * @param attrs:
  *
@@ -69,7 +73,6 @@ exports.params = {
  * @author Benny Schudel
  */
 exports.fn = function(item, params) {
-
         // wrap into an array if params is not
     if (!Array.isArray(params.attrs)) {
         params.attrs = [params.attrs];
@@ -77,6 +80,7 @@ exports.fn = function(item, params) {
 
     if (item.isElem()) {
         var elemSeparator = typeof params.elemSeparator == 'string' ? params.elemSeparator : DEFAULT_SEPARATOR;
+        var preserveCurrentColor = typeof params.preserveCurrentColor == 'boolean' ? params.preserveCurrentColor : false;
 
             // prepare patterns
         var patterns = params.attrs.map(function(pattern) {
@@ -107,10 +111,15 @@ exports.fn = function(item, params) {
                     // loop attributes
                 item.eachAttr(function(attr) {
                     var name = attr.name;
+                    var value = attr.value;
+                    var isFillCurrentColor = preserveCurrentColor && name == 'fill' && value == 'currentColor';
+                    var isStrokeCurrentColor = preserveCurrentColor && name == 'stroke' && value == 'currentColor';
 
+                    if (!(isFillCurrentColor || isStrokeCurrentColor)) {
                         // matches attribute name
-                    if (pattern[1].test(name)) {
-                        item.removeAttr(name);
+                        if (pattern[1].test(name)) {
+                            item.removeAttr(name);
+                        }
                     }
 
                 });
