@@ -38,9 +38,11 @@ describe('plugins tests', function() {
 
                     var getParams = function() {
                         var t = {};
+                        /* jshint ignore:start */
                         eval('t = ' + params);
+                        /* jshint ignore:end */
                         return t;
-                    }
+                    };
 
                     plugins[name] = (params) ? getParams() : true;
 

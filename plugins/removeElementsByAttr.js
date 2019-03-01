@@ -116,7 +116,6 @@ exports.fn = function(item, params) {
 
     for (let paramName in $params) {
         let value = $params[paramName];
-        let fn = attrFunctions[paramName];
 
         // Call pre-defined value processor or default
         let isMatched = defaultFunction(paramName, value);
