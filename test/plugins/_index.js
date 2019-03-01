@@ -36,7 +36,13 @@ describe('plugins tests', function() {
                         plugins = {},
                         svgo;
 
-                    plugins[name] = (params) ? JSON.parse(params) : true;
+                    var getParams = function() {
+                        var t = {};
+                        eval('t = ' + params);
+                        return t;
+                    }
+
+                    plugins[name] = (params) ? getParams() : true;
 
                     svgo = new SVGO({
                         full    : true,
