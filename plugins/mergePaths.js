@@ -8,6 +8,7 @@ exports.description = 'merges multiple paths in one if possible';
 
 exports.params = {
     collapseRepeated: true,
+    force: false,
     leadingZero: true,
     negativeExtraSpace: true
 };
@@ -56,7 +57,7 @@ exports.fn = function(item, params) {
                 prevPathJS = path2js(prevContentItem),
                 curPathJS = path2js(contentItem);
 
-            if (equalData && !intersects(prevPathJS, curPathJS)) {
+            if ((equalData && !intersects(prevPathJS, curPathJS)) || params.force) {
                 js2path(prevContentItem, prevPathJS.concat(curPathJS), params);
                 return false;
             }
