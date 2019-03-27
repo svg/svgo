@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <ellipse rx="5" ry="5"/>
+    <ellipse rx="auto" ry="5"/>
+    <ellipse rx="5" ry="auto"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle r="5"/>
+    <circle r="5"/>
+    <circle r="5"/>
+</svg>
