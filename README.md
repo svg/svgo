@@ -97,7 +97,7 @@ Options:
   --disable=PLUGIN : Disable plugin by name, "--disable=PLUGIN1,PLUGIN2" for multiple plugins
   --enable=PLUGIN : Enable plugin by name, "--enable=PLUGIN3,PLUGIN4" for multiple plugins
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
-  --multipass : Enable multipass
+  --multipass : Pass over SVGs multiple times to ensure all optimizations are applied 
   --pretty : Make SVG pretty printed
   --indent=INDENT : Indent number when pretty printing SVGs
   -r, --recursive : Use with '-f'. Optimizes *.svg files in folders recursively.
