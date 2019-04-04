@@ -1,3 +1,7 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.2.1) ] 1.2.1 / 04.05.2019
+Some goodness from pull-requests.
+* Bump up js-yaml version to fix DoS vulnerability (by @eugestarr).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.2.0) ] 1.2.0 / 24.02.2019
 Some goodness from pull-requests.
 * Fixed extra blank lines when processing many files (by @panczarny).

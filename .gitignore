@@ -8,3 +8,4 @@ bin/svgo-profiling
 .DS_Store
 .idea
 .vscode
+.npmrc
