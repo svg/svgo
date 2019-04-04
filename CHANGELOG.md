@@ -1,4 +1,4 @@
-### [ [>](https://github.com/svg/svgo/tree/v1.2.1) ] 1.2.1 / 04.05.2019
+### [ [>](https://github.com/svg/svgo/tree/v1.2.1) ] 1.2.1 / 04.04.2019
 Some goodness from pull-requests.
 * Bump up js-yaml version to fix DoS vulnerability (by @eugestarr).
 
