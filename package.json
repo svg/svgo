@@ -56,6 +56,8 @@
     "css-tree": "1.0.0-alpha.28",
     "css-url-regex": "^1.1.0",
     "csso": "^3.5.1",
+    "ect-bin": "^1.1.0",
+    "execa": "^1.0.0",
     "js-yaml": "^3.13.0",
     "mkdirp": "~0.5.1",
     "object.values": "^1.1.0",
