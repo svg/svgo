@@ -18,7 +18,7 @@ exports.description = 'lossless compress raster images (disabled by default)';
  */
 exports.params = {
     optimizationLevel: '3'
-}
+};
 
 /**
  * compress raster images references in <image>.
@@ -105,7 +105,7 @@ function getImgData(data) {
         jpeg: 'jpg'
     };
 
-    baseType['svg+xml'] = 'svg'
+    baseType['svg+xml'] = 'svg';
 
     const extname = baseType[match[1]] ? baseType[match[1]] : match[1];
 
