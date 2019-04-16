@@ -1,6 +1,6 @@
 {
   "name": "svgo",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
@@ -56,7 +56,7 @@
     "css-tree": "1.0.0-alpha.28",
     "css-url-regex": "^1.1.0",
     "csso": "^3.5.1",
-    "js-yaml": "^3.13.0",
+    "js-yaml": "^3.13.1",
     "mkdirp": "~0.5.1",
     "object.values": "^1.1.0",
     "sax": "~1.2.4",
