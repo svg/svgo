@@ -1,3 +1,6 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.2.2) ] 1.2.2 / 16.04.2019
+* Update js-yaml for Code Injection warning (by @kaungst).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.2.1) ] 1.2.1 / 04.04.2019
 Some goodness from pull-requests.
 * Bump up js-yaml version to fix DoS vulnerability (by @eugestarr).
