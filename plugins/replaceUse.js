@@ -15,6 +15,7 @@ exports.description = 'replace all <use> elements with the node they clone';
  */
 exports.fn = function(data) {
     var defs = {};
+    var symbols = {};
 
     function addToDefs(item) {
         if (item.hasAttr('id')) {
@@ -29,7 +30,17 @@ exports.fn = function(data) {
         }
     }
 
+    function generateSymbols(item) {
+        if (item.isElem('symbol')) {
+            if (item.hasAttr('id')) {
+                symbols['#' + item.attr('id').value] = item;
+                item.removeAttr('id');
+            }
+        }
+    }
+
     findItems(data, generateDefs);
+    findItems(data, generateSymbols);
 
     findItems(data, function(item) {
         // xlink is no longer necessary
@@ -37,9 +48,11 @@ exports.fn = function(data) {
             item.removeAttr('xmlns:xlink');
         }
 
-        if (item.isElem('use') && (item.hasAttr('href') || item.hasAttr('xlink:href'))) {
+        if (item.isElem('use') 
+            && (item.hasAttr('href') || item.hasAttr('xlink:href'))) {
             var id = item.hasAttr('href') ? item.attr('href').value : item.attr('xlink:href').value;
             var def = defs[id];
+            var symbol = symbols[id];
 
             if (def) {
                 item.removeAttr('xlink:href');
@@ -51,17 +64,31 @@ exports.fn = function(data) {
                 item.removeAttr('id');
                 if (def.content) item.content = def.content;
             }
+
+            if (symbol) {
+                item.removeAttr('xlink:href');
+                item.removeAttr('href');
+                item.renameElem('g');
+                symbol.eachAttr(function(attr) {
+                    symbol.addAttr(attr);
+                });
+                item.removeAttr('id');
+                if (symbol.content) item.content = symbol.content;
+            }
         }
     });
 
     return data;
 };
 
-function findItems(items, fn) {
+function findItems(items, fn, id) {
     if (!items.content) {
         return undefined
     }
     items.content.forEach(function(item) {
+        if (id) {
+            item.addAttr(id)
+        }
         fn(item);
 
         if (item.content) {
