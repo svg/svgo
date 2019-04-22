@@ -196,6 +196,16 @@ Arguments:
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
 * as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 
+## Backers
+
+| [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://rawgithub.com/fontello/fontello/master/fontello-image.svg" width="80">](http://fontello.com/) |
+|:-:|:-:|
+| [SheetJS LLC](https://sheetjs.com/) | [Fontello](http://fontello.com/) |
+
+## Donations
+
+- PayPal: https://www.paypal.me/deepsweet
+
 ## License and Copyright
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
