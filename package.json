@@ -10,12 +10,11 @@
   ],
   "homepage": "https://github.com/svg/svgo",
   "bugs": {
-    "url": "https://github.com/svg/svgo/issues",
-    "email": "kir@soulshine.in"
+    "url": "https://github.com/svg/svgo/issues"
   },
   "author": {
     "name": "Kir Belevich",
-    "email": "kir@soulshine.in",
+    "email": "kir@belevi.ch",
     "url": "https://github.com/deepsweet"
   },
   "contributors": [
