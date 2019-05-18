@@ -5,7 +5,9 @@ exports.type = 'perItem';
 exports.active = false;
 
 exports.params = {
-    delim: '__'
+    delim: '__',
+    prefixIds: true,
+    prefixClassNames: true,
 };
 
 exports.description = 'prefix IDs';
@@ -174,8 +176,8 @@ exports.fn = function(node, opts, extra) {
         csstree.walk(cssAst, function(node) {
 
             // #ID, .class
-            if ((node.type === 'IdSelector' ||
-                 node.type === 'ClassSelector') &&
+            if (((opts.prefixIds        && node.type === 'IdSelector') ||
+                 (opts.prefixClassNames && node.type === 'ClassSelector')) &&
                  node.name) {
                 node.name = addPrefix(node.name);
                 return;
@@ -205,11 +207,21 @@ exports.fn = function(node, opts, extra) {
         return node;
     }
 
-    // ID
-    addPrefixToIdAttr(node.attrs.id);
 
-    // Class
-    addPrefixToClassAttr(node.attrs.class);
+    // Nodes
+
+    if(opts.prefixIds) {
+        // ID
+        addPrefixToIdAttr(node.attrs.id);
+    }
+
+    if(opts.prefixClassNames) {
+        // Class
+        addPrefixToClassAttr(node.attrs.class);
+    }
+
+
+    // References
 
     // href
     addPrefixToHrefAttr(node.attrs.href);
@@ -217,7 +229,7 @@ exports.fn = function(node, opts, extra) {
     // (xlink:)href (deprecated, must be still supported)
     addPrefixToHrefAttr(node.attrs['xlink:href']);
 
-    // referenceable properties
+    // (referenceable) properties
     for (var referencesProp of referencesProps) {
         addPrefixToUrlAttr(node.attrs[referencesProp]);
     }
