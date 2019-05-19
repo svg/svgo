@@ -66,7 +66,9 @@ exports.fn = function(data) {
                     svgElem = item;
                 }
 
-            } else if (xmlnsCollection.length) {
+            }
+
+            if (xmlnsCollection.length) {
 
                 // check item for the ns-attrs
                 if (item.prefix) {
