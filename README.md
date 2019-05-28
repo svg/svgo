@@ -97,7 +97,7 @@ Options:
   --disable=PLUGIN : Disable plugin by name, "--disable=PLUGIN1,PLUGIN2" for multiple plugins
   --enable=PLUGIN : Enable plugin by name, "--enable=PLUGIN3,PLUGIN4" for multiple plugins
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
-  --multipass : Pass over SVGs multiple times to ensure all optimizations are applied 
+  --multipass : Pass over SVGs multiple times to ensure all optimizations are applied
   --pretty : Make SVG pretty printed
   --indent=INDENT : Indent number when pretty printing SVGs
   -r, --recursive : Use with '-f'. Optimizes *.svg files in folders recursively.
@@ -195,6 +195,9 @@ Arguments:
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
 * as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
+* as a VS Code plugin - [vscode-svgo](https://github.com/1000ch/vscode-svgo)
+* as a Atom plugin - [atom-svgo](https://github.com/1000ch/atom-svgo)
+* as a Sublime plugin - [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)
 
 ## Backers
 
