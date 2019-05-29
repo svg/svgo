@@ -1,0 +1,12 @@
+<svg id="test01" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <defs>
+        <rect width="100" height="100" id="rect1"/>
+    </defs>
+    <use xlink:href="#rect1"></use>
+</svg>
+
+    @@@
+
+<svg id="test01" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <rect width="100" height="100" id="rect1"/>
+</svg>

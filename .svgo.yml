@@ -16,6 +16,7 @@ plugins:
   #     param1: 1
   #     param2: 2
 
+  - inlineDefs: true
   - removeDoctype
   - removeXMLProcInst
   - removeComments
