@@ -43,7 +43,7 @@ plugins:
  *
  * @author April Arcus
  */
-exports.fn = function(data, params) {
+exports.fn = function(data, params, info) {
     if (!params || !(Array.isArray(params.attributes) || params.attribute)) {
         console.error(ENOCLS);
         return data;
@@ -64,10 +64,14 @@ exports.fn = function(data, params) {
                 }
             } else if (typeof attribute === 'object') {
                 Object.keys(attribute).forEach(function (key) {
+                    var value = attribute[key];
+                    if (typeof value === 'function') {
+                        value = value(svg, data, params, info);
+                    }
                     if (!svg.hasAttr(key)) {
                         svg.addAttr({
                             name: key,
-                            value: attribute[key],
+                            value: value,
                             prefix: '',
                             local: key
                         });

@@ -28,15 +28,15 @@ describe('plugins tests', function() {
 
                 return readFile(file)
                 .then(function(data) {
-                    var splitted = normalize(data).split(/\s*@@@\s*/),
-                        orig     = splitted[0],
-                        should   = splitted[1],
-                        params   = splitted[2],
+                    var splitted  = normalize(data).split(/\s*@@@\s*/),
+                        orig      = splitted[0],
+                        should    = splitted[1],
+                        paramsStr = splitted[2],
 
                         plugins = {},
                         svgo;
 
-                    plugins[name] = (params) ? JSON.parse(params) : true;
+                    eval('plugins[name] = ' + (paramsStr || true));
 
                     svgo = new SVGO({
                         full    : true,
