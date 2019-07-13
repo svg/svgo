@@ -9,7 +9,8 @@ exports.description = 'merges multiple paths in one if possible';
 exports.params = {
     collapseRepeated: true,
     leadingZero: true,
-    negativeExtraSpace: true
+    negativeExtraSpace: true,
+    noSpaceAfterFlags: true
 };
 
 var path2js = require('./_path.js').path2js,

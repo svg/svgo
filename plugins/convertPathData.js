@@ -23,6 +23,7 @@ exports.params = {
     utilizeAbsolute: true,
     leadingZero: true,
     negativeExtraSpace: true,
+    noSpaceAfterFlags: true,
     forceAbsolutePath: false
 };
 
@@ -960,6 +961,10 @@ function findArcAngle(curve, relCircle) {
 
 function data2Path(params, pathData) {
     return pathData.reduce(function(pathString, item) {
-        return pathString + item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
+        var strData = '';
+        if (item.data) {
+            strData = cleanupOutData(roundData(item.data.slice()), params);
+        }
+        return pathString + item.instruction + strData;
     }, '');
 }
