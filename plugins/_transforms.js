@@ -153,7 +153,8 @@ exports.matrixToTransform = function(transform, params) {
             sy = (data[3] < 0 ? -1 : 1) * Math.hypot(data[1], data[3]);
             transforms.push({ name: 'scale', data: [sx, sy] });
         }
-        var rotate = [mth.acos(data[0] / sx, floatPrecision) * ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1)];
+        var angle = Math.min(Math.max(-1, data[0] / sx), 1),
+            rotate = [mth.acos(angle, floatPrecision) * ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1)];
 
         if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
 
