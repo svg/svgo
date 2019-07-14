@@ -52,6 +52,7 @@ plugins:
   - mergePaths
   - removeUnusedNS
   - sortAttrs
+  - sortDefsChildren
   - removeTitle
   - removeDesc
   - removeDimensions
