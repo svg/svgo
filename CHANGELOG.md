@@ -1,3 +1,17 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.3.0) ] 1.3.0 / 14.07.2019
+* Custom plugins now can be loaded from external js through `path` plugin param.
+* New plugin `convertEllipseToCircle` to convert ellipse with equal radius measures to circle (by @tigt).
+* New plugin `sortDefsChildren` for improved compression (by @davidleston).
+* SVGO now removes unnecessary spaces after `arcto` path command flags.
+* `removeDimensions` plugin now adds `viewBox` if it's missing (by @adipascu).
+* Fixed `removeUnusedNS` not counting attributes in `<svg>` tag itself.
+* Fixed an issue with incorrect processing multiple images (by @cyberalien).
+* Fixed an error with incorrect converting multiple segmented curve to an arc.
+* Fixed an error with matrix decomposition in `convertTransform` due to rounding error leading to illegal value.
+* Added `force` option for `mergePaths` plugin (by @goyney).
+* Added options to `prefixIds` plugin for selectively prefixing IDs and/or classes (by @strarsis).
+* Exported config function (by @1000ch).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.2.2) ] 1.2.2 / 16.04.2019
 * Update js-yaml for Code Injection warning (by @kaungst).
 
