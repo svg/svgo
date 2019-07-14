@@ -58,7 +58,7 @@ exports.fn = function(item, params) {
                 prevPathJS = path2js(prevContentItem),
                 curPathJS = path2js(contentItem);
 
-            if (params.force || equalData && !intersects(prevPathJS, curPathJS)) {
+            if (equalData && (params.force || !intersects(prevPathJS, curPathJS))) {
                 js2path(prevContentItem, prevPathJS.concat(curPathJS), params);
                 return false;
             }
