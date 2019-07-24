@@ -146,6 +146,10 @@ exports.fn = function(node, opts, extra) {
         if(prefix === false){
             return escapeIdentifierName(name);
         }
+        if (name.startsWith(escapeIdentifierName(prefix) + opts.delim)) {
+            // Already prefixed!
+            return escapeIdentifierName(name);
+        }
         return escapeIdentifierName(prefix + opts.delim + name);
     };
 
