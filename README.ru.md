@@ -18,57 +18,57 @@ SVGO имеет расширяемую архитектуру, в которой
 
 Что у нас есть:
 
-| Plugin | Description | Active |
-| ------ | ----------- | ------ |
-| [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | удаление переносов строк и лишних пробелов | `true` |
-| [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | перенос стилей из элементов `<style>` в атрибуты `style` | `true` |
-| [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | удаление doctype | `true` |
-| [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | удаление XML-инструкций | `true` |
-| [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | удаление комментариев | `true` |
-| [removeMetadata](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) | удаление `<metadata>` | `true` |
-| [removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) | удаление `<title>` | `true` |
-| [removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) | удаление `<desc>` | `true` |
-| [removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) | удаление элементов в `<defs>` без `id` | `true` |
-| [removeXMLNS](https://github.com/svg/svgo/blob/master/plugins/removeXMLNS.js) | удаление атрибута xmlns (для заинлайненных svg) | `false` |
-| [removeEditorsNSData](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) | удаление пространств имён различных редакторов, их элементов и атрибутов | `true` |
-| [removeEmptyAttrs](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) | удаление пустых атрибутов | `true` |
-| [removeHiddenElems](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) | удаление скрытых элементов | `true` |
-| [removeEmptyText](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) | удаление пустых текстовых элементов | `true` |
-| [removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) | удаление пустых элементов-контейнеров | `true` |
-| [removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) | удаление атрибута `viewBox`, когда это возможно | `true` |
-| [cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) | удаление или оптимизация атрибута `enable-background`, когда это возможно | `true` |
-| [minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) | уменьшает содержимое элементов `<style>` с помощью [CSSO](https://github.com/css/csso). | `true` |
-| [convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) | конвертирование стилей в атрибуте `style` в отдельные svg-атрибуты | `true` |
-| [convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) | конвертирование цветовых значений: из `rgb()` в `#rrggbb`, из `#rrggbb` в `#rgb` | `true` |
-| [convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) | конвертирование данных Path в относительные или абсолютные координаты, смотря что  \|короче; конвертирование одних типов сегментов в другие; удаление ненужных разделителей; умное округление и тому подобное | `true` |
-| [convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) | схлопывание нескольких трансформаций в одну, конвертирование матриц в короткие алиасы  \|и многое другое | `true` |
-| [removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) | удаление неизвестных элементов, контента и атрибутов | `true` |
-| [removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) | удаление ненаследуемых "презентационных" атрибутов групп | `true` |
-| [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) | удаление неиспользуемых атрибутов stroke-* и fill-* | `true` |
-| [removeUnusedNS](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) | удаление  деклараций неиспользуемых пространств имён | `true` |
-| [prefixIds](https://github.com/svg/svgo/blob/master/plugins/prefixIds.js) | добавляет префикс в ID или классы в виде имени файла или произвольной строки | `false` |
-| [cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) | удаление неиспользуемых и сокращение используемых ID | `true` |
-| [cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) | округление дробных чисел до заданной точности, удаление `px` как единицы  \|измерения по-умолчанию | `true` |
-| [cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) | округление числовых значений в атрибутах со списком чисел, таких как `viewBox` \|или `enableBackground` | `false` |
-| [moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) | перемещение совпадающих атрибутов у всех элементов внутри группы `<g>` | `true` |
-| [moveGroupAttrsToElems](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) | перемещение некоторых атрибутов группы на элементы внутри | `true` |
-| [collapseGroups](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) | схлопывание бесполезных групп `<g>` | `true` |
-| [removeRasterImages](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) | удаление растровых изображений | `false` |
-| [mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) | склеивание нескольких Path в одну кривую | `true` |
-| [convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) | конвертирование простых форм в Path | `true` |
-| [convertEllipseToCircle](https://github.com/svg/svgo/blob/master/plugins/convertEllipseToCircle.js) | конвертирование вырожденного эллипса `<ellipse>` в круг `<circle>` | `true` |
-| [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | сортировка атрибутов элементов для удобочитаемости | `false` |
-| [sortDefsChildren](https://github.com/svg/svgo/blob/master/plugins/sortDefsChildren.js) | сортировка детей `<defs>` для лучшей компрессии | `true` |
-| [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | удаляет атрибуты width/height при наличии viewBox (противоречит removeViewBox — плагин должен быть выключен) | `false` |
-| [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | удаляет атрибуты по указанному паттерну | `false` |
-| [removeAttributesBySelector](https://github.com/svg/svgo/blob/master/plugins/removeAttributesBySelector.js) | удаляет атрибуты по CSS-селектору | `false` |
-| [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | удаляет элементы по указанным ID или классам | `false` |
-| [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | добавляет имена классов корневому элементу `<svg>` | `false` |
-| [addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) | добавляет атрибуты корневому элементу `<svg>` | `false` |
-| [removeOffCanvasPaths](https://github.com/svg/svgo/blob/master/plugins/removeOffCanvasPaths.js) | удаляет элементы вне отрисовываемой области | `false` |
-| [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` | `false` |
-| [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` | `false` |
-| [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Заменяет дублирующиеся элементы <path> ссылками <use> | `false` |
+| Plugin | Description | Default |
+| ------ | ----------- | ------- |
+| [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | удаление переносов строк и лишних пробелов | `включен` |
+| [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | перенос стилей из элементов `<style>` в атрибуты `style` | `включен` |
+| [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | удаление doctype | `включен` |
+| [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | удаление XML-инструкций | `включен` |
+| [removeComments](https://github.com/svg/svgo/blob/master/plugins/removeComments.js) | удаление комментариев | `включен` |
+| [removeMetadata](https://github.com/svg/svgo/blob/master/plugins/removeMetadata.js) | удаление `<metadata>` | `включен` |
+| [removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) | удаление `<title>` | `включен` |
+| [removeDesc](https://github.com/svg/svgo/blob/master/plugins/removeDesc.js) | удаление `<desc>` | `включен` |
+| [removeUselessDefs](https://github.com/svg/svgo/blob/master/plugins/removeUselessDefs.js) | удаление элементов в `<defs>` без `id` | `включен` |
+| [removeXMLNS](https://github.com/svg/svgo/blob/master/plugins/removeXMLNS.js) | удаление атрибута xmlns (для заинлайненных svg) | `выключено` |
+| [removeEditorsNSData](https://github.com/svg/svgo/blob/master/plugins/removeEditorsNSData.js) | удаление пространств имён различных редакторов, их элементов и атрибутов | `включен` |
+| [removeEmptyAttrs](https://github.com/svg/svgo/blob/master/plugins/removeEmptyAttrs.js) | удаление пустых атрибутов | `включен` |
+| [removeHiddenElems](https://github.com/svg/svgo/blob/master/plugins/removeHiddenElems.js) | удаление скрытых элементов | `включен` |
+| [removeEmptyText](https://github.com/svg/svgo/blob/master/plugins/removeEmptyText.js) | удаление пустых текстовых элементов | `включен` |
+| [removeEmptyContainers](https://github.com/svg/svgo/blob/master/plugins/removeEmptyContainers.js) | удаление пустых элементов-контейнеров | `включен` |
+| [removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) | удаление атрибута `viewBox`, когда это возможно | `включен` |
+| [cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) | удаление или оптимизация атрибута `enable-background`, когда это возможно | `включен` |
+| [minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) | уменьшает содержимое элементов `<style>` с помощью [CSSO](https://github.com/css/csso). | `включен` |
+| [convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) | конвертирование стилей в атрибуте `style` в отдельные svg-атрибуты | `включен` |
+| [convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) | конвертирование цветовых значений: из `rgb()` в `#rrggbb`, из `#rrggbb` в `#rgb` | `включен` |
+| [convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) | конвертирование данных Path в относительные или абсолютные координаты, смотря что  \|короче; конвертирование одних типов сегментов в другие; удаление ненужных разделителей; умное округление и тому подобное | `включен` |
+| [convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) | схлопывание нескольких трансформаций в одну, конвертирование матриц в короткие алиасы  \|и многое другое | `включен` |
+| [removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js) | удаление неизвестных элементов, контента и атрибутов | `включен` |
+| [removeNonInheritableGroupAttrs](https://github.com/svg/svgo/blob/master/plugins/removeNonInheritableGroupAttrs.js) | удаление ненаследуемых "презентационных" атрибутов групп | `включен` |
+| [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/master/plugins/removeUselessStrokeAndFill.js) | удаление неиспользуемых атрибутов stroke-* и fill-* | `включен` |
+| [removeUnusedNS](https://github.com/svg/svgo/blob/master/plugins/removeUnusedNS.js) | удаление  деклараций неиспользуемых пространств имён | `включен` |
+| [prefixIds](https://github.com/svg/svgo/blob/master/plugins/prefixIds.js) | добавляет префикс в ID или классы в виде имени файла или произвольной строки | `выключено` |
+| [cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) | удаление неиспользуемых и сокращение используемых ID | `включен` |
+| [cleanupNumericValues](https://github.com/svg/svgo/blob/master/plugins/cleanupNumericValues.js) | округление дробных чисел до заданной точности, удаление `px` как единицы  \|измерения по-умолчанию | `включен` |
+| [cleanupListOfValues](https://github.com/svg/svgo/blob/master/plugins/cleanupListOfValues.js) | округление числовых значений в атрибутах со списком чисел, таких как `viewBox` \|или `enableBackground` | `выключено` |
+| [moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/master/plugins/moveElemsAttrsToGroup.js) | перемещение совпадающих атрибутов у всех элементов внутри группы `<g>` | `включен` |
+| [moveGroupAttrsToElems](https://github.com/svg/svgo/blob/master/plugins/moveGroupAttrsToElems.js) | перемещение некоторых атрибутов группы на элементы внутри | `включен` |
+| [collapseGroups](https://github.com/svg/svgo/blob/master/plugins/collapseGroups.js) | схлопывание бесполезных групп `<g>` | `включен` |
+| [removeRasterImages](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js) | удаление растровых изображений | `выключено` |
+| [mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js) | склеивание нескольких Path в одну кривую | `включен` |
+| [convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js) | конвертирование простых форм в Path | `включен` |
+| [convertEllipseToCircle](https://github.com/svg/svgo/blob/master/plugins/convertEllipseToCircle.js) | конвертирование вырожденного эллипса `<ellipse>` в круг `<circle>` | `включен` |
+| [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js) | сортировка атрибутов элементов для удобочитаемости | `выключено` |
+| [sortDefsChildren](https://github.com/svg/svgo/blob/master/plugins/sortDefsChildren.js) | сортировка детей `<defs>` для лучшей компрессии | `включен` |
+| [removeDimensions](https://github.com/svg/svgo/blob/master/plugins/removeDimensions.js) | удаляет атрибуты width/height при наличии viewBox (противоречит removeViewBox — плагин должен быть выключен) | `выключено` |
+| [removeAttrs](https://github.com/svg/svgo/blob/master/plugins/removeAttrs.js) | удаляет атрибуты по указанному паттерну | `выключено` |
+| [removeAttributesBySelector](https://github.com/svg/svgo/blob/master/plugins/removeAttributesBySelector.js) | удаляет атрибуты по CSS-селектору | `выключено` |
+| [removeElementsByAttr](https://github.com/svg/svgo/blob/master/plugins/removeElementsByAttr.js) | удаляет элементы по указанным ID или классам | `выключено` |
+| [addClassesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addClassesToSVGElement.js) | добавляет имена классов корневому элементу `<svg>` | `выключено` |
+| [addAttributesToSVGElement](https://github.com/svg/svgo/blob/master/plugins/addAttributesToSVGElement.js) | добавляет атрибуты корневому элементу `<svg>` | `выключено` |
+| [removeOffCanvasPaths](https://github.com/svg/svgo/blob/master/plugins/removeOffCanvasPaths.js) | удаляет элементы вне отрисовываемой области | `выключено` |
+| [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` | `выключено` |
+| [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` | `выключено` |
+| [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Заменяет дублирующиеся элементы <path> ссылками <use> | `выключено` |
 
 Хотите узнать принципы работы и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md)
 
