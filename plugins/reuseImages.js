@@ -8,7 +8,7 @@ exports.active = false;
 
 exports.description = 'Finds <image> elements with the same xlink:href, ' +
                       ', width, and height, and converts them to <use> ' +
-                      'elements referencing a  single <image> def.'
+                      'elements referencing a  single <image> def.';
 
 /**
  * Finds <image> elements with the same xlink:href, width, and height, and converts them to
