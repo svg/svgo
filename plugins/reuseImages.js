@@ -7,11 +7,11 @@ exports.type = 'full';
 exports.active = false;
 
 exports.description = 'Finds <image> elements with the same xlink:href, ' +
-                      'and converts them to <use> elements referencing a' +
-                      ' single <image> def.'
+                      ', width, and height, and converts them to <use> ' +
+                      'elements referencing a  single <image> def.'
 
 /**
- * Finds <image> elements with the same xlink:href, and converts them to
+ * Finds <image> elements with the same xlink:href, width, and height, and converts them to
  * <use> elements referencing a single <image> def.
  *
  * @author Jack Burridge
