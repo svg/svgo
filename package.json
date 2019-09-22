@@ -21,17 +21,17 @@
     {
       "name": "Sergey Belov",
       "email": "peimei@ya.ru",
-      "url": "http://github.com/arikon"
+      "url": "https://github.com/arikon"
     },
     {
       "name": "Lev Solntsev",
       "email": "lev.sun@ya.ru",
-      "url": "http://github.com/GreLI"
+      "url": "https://github.com/GreLI"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/svg/svgo.git"
+    "url": "https://github.com/svg/svgo.git"
   },
   "main": "./lib/svgo.js",
   "bin": {
