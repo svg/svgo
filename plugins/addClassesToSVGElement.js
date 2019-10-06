@@ -1,3 +1,5 @@
+var path = require('path');
+
 'use strict';
 
 exports.type = 'full';
@@ -16,7 +18,7 @@ plugins:
 
 plugins:
 - addClassesToSVGElement:
-    classNames: ["mySvg", "size-big"]
+    classNames: ["mySvg", "size-big", "svg-[name]"]
 `;
 
 /**
@@ -28,20 +30,32 @@ plugins:
  *
  * plugins:
  * - addClassesToSVGElement:
- *     classNames: ['mySvg', 'size-big']
+ *     classNames: ['mySvg', 'size-big', 'svg-[name]']
  *
  * @author April Arcus
  */
-exports.fn = function(data, params) {
+exports.fn = function(data, params, source) {
+
     if (!params || !(Array.isArray(params.classNames) && params.classNames.some(String) || params.className)) {
         console.error(ENOCLS);
         return data;
     }
 
-    var classNames = params.classNames || [ params.className ],
-        svg = data.content[0];
+    var filename = path.basename(source.path, '.svg'),
+	    classNames = params.classNames || [ params.className ],
+        svg = data.content[0],
+		el;
 
     if (svg.isElem('svg')) {
+
+        classNames.forEach(function(className) {
+            if( className.includes('[name]') ) {
+                el = className.replace('[name]', filename);
+                classNames.pop(className);
+                classNames.push(el);
+            }
+        });
+
         svg.class.add.apply(svg.class, classNames);
     }
 
