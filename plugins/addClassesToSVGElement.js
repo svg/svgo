@@ -1,6 +1,6 @@
-var path = require('path');
-
 'use strict';
+
+var path = require('path');
 
 exports.type = 'full';
 
