@@ -6,7 +6,10 @@ exports.active = true;
 
 exports.params = {
     onlyMatchedOnce: true,
-    removeMatchedSelectors: true,
+    removeMatchedSelectors: {
+        style: true,
+        attr:  true,
+    },
     useMqs: ['', 'screen'],
     usePseudos: ['']
 };
@@ -158,7 +161,7 @@ exports.fn = function(document, opts) {
             }});
         }
 
-        if (opts.removeMatchedSelectors && selector.selectedEls !== null && selector.selectedEls.length > 0) {
+        if ((opts.removeMatchedSelectors === true || opts.removeMatchedSelectors.style) && selector.selectedEls !== null && selector.selectedEls.length > 0) {
             // clean up matching simple selectors if option removeMatchedSelectors is enabled
             selector.rule.prelude.children.remove(selector.item);
         }
@@ -171,30 +174,32 @@ exports.fn = function(document, opts) {
 
 
     // clean up matched class + ID attribute values
-    for (selector of sortedSelectors) {
-        if(!selector.selectedEls) {
-            continue;
-        }
-
-        if (opts.onlyMatchedOnce && selector.selectedEls !== null && selector.selectedEls.length > 1) {
-            // skip selectors that match more than once if option onlyMatchedOnce is enabled
-            continue;
-        }
-
-        for (selectedEl of selector.selectedEls) {
-            // class
-            var firstSubSelector = selector.item.data.children.first();
-            if(firstSubSelector.type === 'ClassSelector') {
-                selectedEl.class.remove(firstSubSelector.name);
-            }
-            // clean up now empty class attributes
-            if(typeof selectedEl.class.item(0) === 'undefined') {
-                selectedEl.removeAttr('class');
+    if((opts.removeMatchedSelectors === true || opts.removeMatchedSelectors.attr)) {
+        for (selector of sortedSelectors) {
+            if(!selector.selectedEls) {
+                continue;
             }
 
-            // ID
-            if(firstSubSelector.type === 'IdSelector') {
-                selectedEl.removeAttr('id', firstSubSelector.name);
+            if (opts.onlyMatchedOnce && selector.selectedEls !== null && selector.selectedEls.length > 1) {
+                // skip selectors that match more than once if option onlyMatchedOnce is enabled
+                continue;
+            }
+
+            for (selectedEl of selector.selectedEls) {
+                // class
+                var firstSubSelector = selector.item.data.children.first();
+                if(firstSubSelector.type === 'ClassSelector') {
+                    selectedEl.class.remove(firstSubSelector.name);
+                }
+                // clean up now empty class attributes
+                if(typeof selectedEl.class.item(0) === 'undefined') {
+                    selectedEl.removeAttr('class');
+                }
+
+                // ID
+                if(firstSubSelector.type === 'IdSelector') {
+                    selectedEl.removeAttr('id', firstSubSelector.name);
+                }
             }
         }
     }

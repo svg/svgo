@@ -1,0 +1,22 @@
+<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <style>
+        .st0{fill:blue;}
+        .st1{fill:red;}
+    </style>
+    <rect width="100" height="100" class="st0"/>
+    <rect width="100" height="100" class="st1"/>
+</svg>
+
+@@@
+
+<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" class="st0" style="fill:blue"/>
+    <rect width="100" height="100" class="st1" style="fill:red"/>
+</svg>
+
+@@@
+
+{"removeMatchedSelectors":{
+    "style":true,
+    "attr": false
+}}
