@@ -125,6 +125,13 @@ var addPrefixToUrlAttr = function(attr) {
  */
 exports.fn = function(node, opts, extra) {
 
+    // prevent multiple prefixing in multipass
+    if(node.processedByPrefixIdsPlugin) {
+        return node;
+    }
+    node.processedByPrefixIdsPlugin = true;
+
+
     // prefix, from file name or option
     var prefix = 'prefix';
     if (opts.prefix) {
