@@ -18,4 +18,7 @@ travis: lint test coveralls
 lint:
 	@npm run lint
 
+bundle:
+	@npm run bundle
+
 .PHONY: test
