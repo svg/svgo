@@ -125,6 +125,11 @@ var addPrefixToUrlAttr = function(attr) {
  */
 exports.fn = function(node, opts, extra) {
 
+    // skip subsequent passes when multipass is used
+    if(extra.multipassCount && extra.multipassCount > 0) {
+        return node;
+    }
+
     // prefix, from file name or option
     var prefix = 'prefix';
     if (opts.prefix) {
