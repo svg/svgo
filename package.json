@@ -52,7 +52,7 @@
     "coa": "^2.0.2",
     "css-select": "^2.0.0",
     "css-select-base-adapter": "^0.1.1",
-    "css-tree": "1.0.0-alpha.33",
+    "css-tree": "^1.0.0-alpha.37",
     "csso": "^4.0.2",
     "js-yaml": "^3.13.1",
     "mkdirp": "~0.5.1",
