@@ -53,7 +53,7 @@
     "css-select": "^2.0.0",
     "css-select-base-adapter": "^0.1.1",
     "css-tree": "1.0.0-alpha.33",
-    "csso": "^3.5.1",
+    "csso": "^4.0.2",
     "js-yaml": "^3.13.1",
     "mkdirp": "~0.5.1",
     "object.values": "^1.1.0",
