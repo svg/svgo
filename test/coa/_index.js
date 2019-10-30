@@ -1,12 +1,18 @@
 'use strict';
 
 const fs = require('fs'),
+    yaml = require('js-yaml'),
     svgo = require(process.env.COVERAGE ?
         '../../lib-cov/svgo/coa.js' :
         '../../lib/svgo/coa.js').api,
+    defaults = Object.assign({}, yaml.safeLoad(fs.readFileSync(__dirname + '/../../.svgo.yml', 'utf8'))),
     path = require('path'),
     svgPath = path.resolve(__dirname, 'test.svg'),
     svgFolderPath = path.resolve(__dirname, 'testSvg'),
+    mpDirPath     = path.resolve(__dirname, 'testMultipass'),
+    mpSvgInPath   = path.resolve(mpDirPath, 'in.svg'),
+    mpSvgExpPath  = path.resolve(mpDirPath, 'out.svg'),
+    mpSvgExp      = fs.readFileSync(mpSvgExpPath, 'utf8'),
     svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively'),
     svgFiles = [path.resolve(__dirname, 'testSvg/test.svg'), path.resolve(__dirname, 'testSvg/test.1.svg')],
     tempFolder = 'temp',
@@ -157,6 +163,42 @@ describe('coa', function() {
         }
     });
 
+    describe('multipass', function() {
+        it('should do multiple passes with multipass enabled', function(done) {
+
+            svgo({
+                input:     mpSvgInPath,
+                output:    'temp.svg',
+                quiet:     true,
+                multipass: true
+            }).then(function() {
+                const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
+
+                done(mpSvgOut === mpSvgExp ? null : "Multipass wasn't properly used.");
+                fse.removeSync('temp.svg');
+            }, error => done(error));
+        });
+
+        it('multipass-aware plugins (prefixIds) should detect subsequent passes with multipass enabled', function(done) {
+
+            let pluginsExceptPrefixIds = defaults.plugins;
+
+            svgo({
+                input:     mpSvgInPath,
+                output:    'temp.svg',
+                quiet:     true,
+                multipass: true,
+                disable:   defaults.plugins, // disable all plugins
+                enable:    [ 'prefixIds' ]   // except multipass-aware plugins (prefixIds)
+            }).then(function() {
+                const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
+
+                done(!/in_svg__in_svg__/.test(mpSvgOut) ? null : "Plugins (prefixIds) don't handle multipass correctly.");
+                fse.removeSync('temp.svg');
+            }, error => done(error));
+        });
+    });
+
     describe('stdout', function() {
         it('should show file content when no output set', function(done) {
             replaceConsoleLog();
@@ -195,17 +237,6 @@ describe('coa', function() {
                 done(/No SVG files have been found/.test(output) ?
                     null :
                     'Error "No SVG files have been found" was not shown');
-            }
-        });
-
-        it('should show plugins', function(done) {
-            replaceConsoleLog();
-
-            svgo({ 'show-plugins': true }).then(onComplete, onComplete);
-
-            function onComplete() {
-                restoreConsoleLog();
-                done(/Currently available plugins:/.test(output) ? null : 'List of plugins was not shown');
             }
         });
     });
