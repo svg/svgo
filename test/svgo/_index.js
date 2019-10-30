@@ -41,6 +41,39 @@ describe('indentation', function() {
 
 });
 
+describe('invocation', function() {
+
+    it('should optimize without an info object', function(done) {
+
+        var filepath = PATH.resolve(__dirname, './test.svg'),
+            svgo;
+
+        FS.readFile(filepath, 'utf8', function(err, data) {
+            if (err) {
+                throw err;
+            }
+
+            var splitted = normalize(data).split(/\s*@@@\s*/),
+                orig     = splitted[0],
+                should   = splitted[1];
+
+            svgo = new SVGO({
+                full    : true,
+                plugins : [],
+                js2svg  : { pretty: true, indent: 2 }
+            });
+
+            svgo.optimize(orig, null).then(function(result) {
+                normalize(result.data).should.be.equal(should);
+                done();
+            });
+
+        });
+
+    });
+
+});
+
 function normalize(file) {
     return file.trim().replace(regEOL, '\n');
 }
