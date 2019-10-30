@@ -179,7 +179,7 @@ describe('coa', function() {
         }).then(function() {
             const svgOut = fs.readFileSync('temp.svg', 'utf8');
 
-            done(/in_svg__/.test(svgOut) ? null : "filename isn't passed to prefixIds plugin.");
+            done(/in_svg__/.test(svgOut) ? null : 'filename isn\'t passed to prefixIds plugin.');
             fse.removeSync('temp.svg');
         }, error => done(error));
     });
@@ -195,7 +195,7 @@ describe('coa', function() {
             }).then(function() {
                 const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
 
-                done(mpSvgOut === mpSvgExp ? null : "Multipass wasn't properly used.");
+                done(mpSvgOut === mpSvgExp ? null : 'Multipass wasn\'t properly used.');
                 fse.removeSync('temp.svg');
             }, error => done(error));
         });
@@ -211,7 +211,7 @@ describe('coa', function() {
             }).then(function() {
                 const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
 
-                done(!/in_svg__in_svg__/.test(mpSvgOut) ? null : "prefixIds plugin doesn't detect subsequent passes with multipass enabled.");
+                done(!/in_svg__in_svg__/.test(mpSvgOut) ? null : 'prefixIds plugin doesn\'t detect subsequent passes with multipass enabled.');
 
                 // https://github.com/svg/svgo/issues/659
                 // https://github.com/svg/svgo/issues/1133
@@ -233,7 +233,7 @@ describe('coa', function() {
             }).then(function() {
                 const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
 
-                done(!/aria-hidden="true" aria-hidden='true'/.test(mpSvgOut) ? null : "addAttributesToSVGElement plugin doesn't correctly handle subsequent passes with multipass enabled.");
+                done(!/aria-hidden="true" aria-hidden='true'/.test(mpSvgOut) ? null : 'addAttributesToSVGElement plugin doesn\'t correctly handle subsequent passes with multipass enabled.');
 
                 // https://github.com/svg/svgo/issues/659
                 // https://github.com/svg/svgo/issues/1133
