@@ -227,7 +227,7 @@ describe('coa', function() {
                 multipass: true,
                 config: `{
                     "plugins": [{ "addAttributesToSVGElement": {
-                        "attribute": "aria-hidden='true'"
+                        "attribute": "aria-hidden=\\"true\\""
                     } }]
                 }`
             }).then(function() {
