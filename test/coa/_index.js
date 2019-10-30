@@ -9,10 +9,15 @@ const fs = require('fs'),
     path = require('path'),
     svgPath = path.resolve(__dirname, 'test.svg'),
     svgFolderPath = path.resolve(__dirname, 'testSvg'),
+
+    prefixIdsFolderPath = path.resolve(__dirname, 'testPrefixIds'),
+    prefixIdsSvgInPath  = path.resolve(prefixIdsFolderPath, 'in.svg'),
+
     mpDirPath     = path.resolve(__dirname, 'testMultipass'),
     mpSvgInPath   = path.resolve(mpDirPath, 'in.svg'),
     mpSvgExpPath  = path.resolve(mpDirPath, 'out.svg'),
     mpSvgExp      = fs.readFileSync(mpSvgExpPath, 'utf8'),
+
     svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively'),
     svgFiles = [path.resolve(__dirname, 'testSvg/test.svg'), path.resolve(__dirname, 'testSvg/test.1.svg')],
     tempFolder = 'temp',
@@ -163,8 +168,24 @@ describe('coa', function() {
         }
     });
 
+    it('should pass the filename to the prefixIds plugin', function(done) {
+        svgo({
+            input:     prefixIdsSvgInPath,
+            output:    'temp.svg',
+            quiet:     true,
+            multipass: false,
+            disable: defaults.plugins, // disable all plugins except ...
+            enable: [ 'prefixIds' ]    // ... prefixIds
+        }).then(function() {
+            const svgOut = fs.readFileSync('temp.svg', 'utf8');
+
+            done(/in_svg__/.test(svgOut) ? null : "filename isn't passed to prefixIds plugin.");
+            fse.removeSync('temp.svg');
+        }, error => done(error));
+    });
+
     describe('multipass', function() {
-        it('should do multiple passes with multipass enabled', function(done) {
+        it('should optimize using multiple passes with multipass enabled', function(done) {
 
             svgo({
                 input:     mpSvgInPath,
@@ -179,21 +200,43 @@ describe('coa', function() {
             }, error => done(error));
         });
 
-        it('multipass-aware plugins (prefixIds) should detect subsequent passes with multipass enabled', function(done) {
-
-            let pluginsExceptPrefixIds = defaults.plugins;
-
+        it('should allow prefixId plugin to detect subsequent passes with multipass enabled', function(done) {
             svgo({
                 input:     mpSvgInPath,
                 output:    'temp.svg',
                 quiet:     true,
                 multipass: true,
-                disable:   defaults.plugins, // disable all plugins
-                enable:    [ 'prefixIds' ]   // except multipass-aware plugins (prefixIds)
+                disable: defaults.plugins, // disable all plugins except ...
+                enable: [ 'prefixIds' ]    // ... prefixIds
             }).then(function() {
                 const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
 
-                done(!/in_svg__in_svg__/.test(mpSvgOut) ? null : "Plugins (prefixIds) don't handle multipass correctly.");
+                done(!/in_svg__in_svg__/.test(mpSvgOut) ? null : "prefixIds plugin doesn't detect subsequent passes with multipass enabled.");
+
+                // https://github.com/svg/svgo/issues/659
+                // https://github.com/svg/svgo/issues/1133
+                fse.removeSync('temp.svg');
+            }, error => done(error));
+        });
+
+        it('should allow addAttributesToSVGElement plugin to correctly handle subsequent passes with multipass enabled', function(done) {
+            svgo({
+                input:     mpSvgInPath,
+                output:    'temp.svg',
+                quiet:     true,
+                multipass: true,
+                config: `{
+                    "plugins": [{ "addAttributesToSVGElement": {
+                        "attribute": "aria-hidden='true'"
+                    } }]
+                }`
+            }).then(function() {
+                const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
+
+                done(!/aria-hidden="true" aria-hidden='true'/.test(mpSvgOut) ? null : "addAttributesToSVGElement plugin doesn't correctly handle subsequent passes with multipass enabled.");
+
+                // https://github.com/svg/svgo/issues/659
+                // https://github.com/svg/svgo/issues/1133
                 fse.removeSync('temp.svg');
             }, error => done(error));
         });
