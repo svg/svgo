@@ -63,7 +63,7 @@ describe('invocation', function() {
                 js2svg  : { pretty: true, indent: 2 }
             });
 
-            svgo.optimize(orig, null).then(function(result) {
+            svgo.optimize(orig, undefined).then(function(result) {
                 normalize(result.data).should.be.equal(should);
                 done();
             });
