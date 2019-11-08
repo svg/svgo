@@ -58,7 +58,8 @@ exports.fn = function(data, params) {
 
             // quit if <style> or <script> present ('force' param prevents quitting)
             if (!params.force) {
-                if (item.isElem(styleOrScript)) {
+                var isNotEmpty = Boolean(item.content);
+                if (item.isElem(styleOrScript) && isNotEmpty) {
                     hasStyleOrScript = true;
                     continue;
                 }
