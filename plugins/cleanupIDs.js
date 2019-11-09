@@ -63,11 +63,13 @@ exports.fn = function(data, params) {
                     hasStyleOrScript = true;
                     continue;
                 }
+
                 // Don't remove IDs if the whole SVG consists only of defs.
-                if (item.isElem('defs') && item.parentNode.isElem('svg')) {
+                if (item.isElem('svg')) {
                     var hasDefsOnly = true;
-                    for (var j = i + 1; j < items.content.length; j++) {
-                        if (items.content[j].isElem()) {
+
+                    for (var j = 0; j < item.content.length; j++) {
+                        if (!item.content[j].isElem('defs')) {
                             hasDefsOnly = false;
                             break;
                         }
