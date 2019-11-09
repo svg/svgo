@@ -1,3 +1,11 @@
+### [ [>](https://github.com/svg/svgo/tree/v1.3.2) ] 1.3.2 / 30.10.2019
+* Fixed TypeError: Cannot set property 'multipassCount' of undefined
+
+### [ [>](https://github.com/svg/svgo/tree/v1.3.1) ] 1.3.1 / 29.10.2019
+* Updated CSSO version to 4.0.2 fixing the issue with empty semicolons ";;" in styles (thanks to @strarsis and @lahmatiy).
+* `prefixIds` plugin now runs only once with `--multipass` option (by @strarsis).
+* `cleanupIDs` plugin is prevented from producing a preserved ID, including one which matches a preserved prefix, when minifying (by @thomsj).
+
 ### [ [>](https://github.com/svg/svgo/tree/v1.3.0) ] 1.3.0 / 14.07.2019
 * Custom plugins now can be loaded from external js through `path` plugin param.
 * New plugin `convertEllipseToCircle` to convert ellipse with equal radius measures to circle (by @tigt).

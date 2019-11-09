@@ -514,7 +514,7 @@ function filters(path, params) {
                 instruction == prev.instruction.toLowerCase() &&
                 (
                     (instruction != 'h' && instruction != 'v') ||
-                    (prev.data[0] >= 0) == (item.data[0] >= 0)
+                    (prev.data[0] >= 0) == (data[0] >= 0)
             )) {
                 prev.data[0] += data[0];
                 if (instruction != 'h' && instruction != 'v') {
