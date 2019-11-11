@@ -24,7 +24,7 @@ var path = require('path'),
 
 // Escapes a string for being used as ID
 var escapeIdentifierName = function(str) {
-    return str.replace(/[\. ]/g, '_');
+    return 'a' + str.replace(/[\. ]/g, '_').replace(/\=/g, '').replace(/\@/g, '').replace(/\“/g, '').replace(/\”/g, '');
 };
 
 // Matches an #ID value, captures the ID name
