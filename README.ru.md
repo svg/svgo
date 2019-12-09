@@ -197,6 +197,7 @@ $ [sudo] npm install -g svgo
 * как плагин для Sketch - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * в виде приложения macOS - [Image Shrinker](https://image-shrinker.com)
 * как плагин для Rollup - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
+* как плагин для Figma - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
 
 ## Лицензия и копирайты
 
