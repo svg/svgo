@@ -770,16 +770,18 @@ function getIntersection(coords) {
  * @param {Array} data input data array
  * @return {Array} output data array
  */
-function strongRound(data) {
-    for (var i = data.length; i-- > 0;) {
-        if (data[i].toFixed(precision) != data[i]) {
-            var rounded = +data[i].toFixed(precision - 1);
-            data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error ?
-                +data[i].toFixed(precision) :
-                rounded;
-        }
+function strongRound (data) {
+  for (var i = data.length; i-- > 0;) {
+    var item = parseFloat(data[i])
+
+    if (item.toFixed(precision) != item) {
+      var rounded = +item.toFixed(precision - 1);
+      item = +Math.abs(rounded - item).toFixed(precision + 1) >= error ?
+        +item.toFixed(precision) :
+        rounded;
     }
-    return data;
+  }
+  return data;
 }
 
 /**
