@@ -109,7 +109,8 @@ exports.fn = function(document, opts) {
         try {
             selectedEls = document.querySelectorAll(selectorStr);
         } catch (selectError) {
-            if (selectError.constructor === SyntaxError) {
+            if (selectError.message.match(/^Unmatched selector/) || // node v6.x selectError.constructor is `Error` instead of `SyntaxError`!
+                selectError.constructor === SyntaxError) {
                 // console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped. Error details: ' + selectError);
                 continue;
             }
