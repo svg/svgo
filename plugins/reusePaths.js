@@ -123,7 +123,8 @@ exports.fn = function(data) {
   });
   const defsTag = new JSAPI({
     elem: 'defs', prefix: '', local: 'defs', content: [], attrs: []}, data);
-  data.content[0].spliceContent(0, 0, defsTag);
+  var rootSvg = data.content.find(x => x.elem === 'svg');
+  rootSvg.spliceContent(0, 0, defsTag);
   for (let def of defs) {
     // Remove class and style before copying to avoid circular refs in
     // JSON.stringify. This is fine because we don't actually want class or
