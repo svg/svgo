@@ -632,59 +632,59 @@ function filters(path, params) {
         }
 
         return true;
-
     });
 
-    var output = [];
+    return tryReplaceQuadraticBezierWithArcs(path);
+}
+
+function tryReplaceQuadraticBezierWithArcs(path) {
+    const pathWithArcs = [];
     for (let i = 0; i < path.length; i++) {
-        var circle;
-        if (path[i].instruction === 'q' && (circle = findCircle2(path[i].data))) {
-            var replacement = [];
-            var finishOffset = path[i].data.slice(-2);
-            var controlPointOffset = [
+        let circle;
+        if (path[i].instruction === 'q' && (circle = findCircleForQuadraticBezierCurve(path[i].data))) {
+            const replacement = [];
+            let curveEnd = path[i].data.slice(-2);
+            let controlPoint = [
                 path[i].data[0] - path[i].data[2],
                 path[i].data[1] - path[i].data[3],
             ];
-            var sweepAngle = findArcAngleByPoint(finishOffset, circle);
-            var finishArc = i;
-            for (finishArc = i + 1; finishArc < path.length; finishArc++) {
-                if ('qt'.indexOf(path[finishArc].instruction) === -1) {
+            let sweepAngle = findArcAngleByPoint(curveEnd, circle);
+            let archEndId;
+            for (archEndId = i + 1; archEndId < path.length; archEndId++) {
+                if ('qt'.indexOf(path[archEndId].instruction) === -1) {
                     break;
                 }
-                let curve = path[finishArc].data;
-                if (path[finishArc].instruction === 't') {
-                    curve = [-controlPointOffset[0], -controlPointOffset[1], ...curve];
+                let curve = path[archEndId].data;
+                if (path[archEndId].instruction === 't') {
+                    curve = [-controlPoint[0], -controlPoint[1], ...curve];
                 }
 
                 const relativeCircle = {
                     center: [
-                        circle.center[0] - finishOffset[0],
-                        circle.center[1] - finishOffset[1],
+                        circle.center[0] - curveEnd[0],
+                        circle.center[1] - curveEnd[1],
                     ],
                     radius: circle.radius
                 };
-                const currentAngle = findArcAngleByPoint(curve.slice(-2), relativeCircle);
-
-                if (Math.abs(sweepAngle + currentAngle) > 2 * Math.PI - 1e-2) {
-                    replacement.push(createArc(circle.radius, finishOffset, sweepAngle, controlPointOffset, path[i].base));
-                    sweepAngle = 0;
-                }
-                if (!isArc2(curve, relativeCircle)) {
+                if (!isQuadraticBezierCurveFitsCircle(curve, relativeCircle)) {
                     break;
                 }
-
+                const currentAngle = findArcAngleByPoint(curve.slice(-2), relativeCircle);
+                if (Math.abs(sweepAngle + currentAngle) > 2 * Math.PI - 1e-2) {
+                    replacement.push(createArc(circle.radius, curveEnd, sweepAngle, controlPoint, path[i].base));
+                    sweepAngle = 0;
+                }
                 sweepAngle += currentAngle;
-                controlPointOffset = [curve[0] - curve[2], curve[1] - curve[3]];
-                finishOffset[0] += curve[curve.length - 2];
-                finishOffset[1] += curve[curve.length - 1];
+                controlPoint = [curve[0] - curve[2], curve[1] - curve[3]];
+                curveEnd = [curveEnd[0] + curve[curve.length - 2], curveEnd[1] + curve[curve.length - 1]];
             }
-            output.push(...replacement, createArc(circle.radius, finishOffset, sweepAngle, controlPointOffset, path[i].base));
-            i = finishArc - 1;
+            pathWithArcs.push(...replacement, createArc(circle.radius, curveEnd, sweepAngle, controlPoint, path[i].base));
+            i = archEndId - 1;
         } else {
-            output.push(path[i]);
+            pathWithArcs.push(path[i]);
         }
     }
-    return output;
+    return pathWithArcs;
 }
 
 function createArc(radius, finishPoint, sweepAngle, directionPoint, base) {
@@ -918,7 +918,13 @@ function getQuadraticBezierPoint(curve, t) {
     ];
 }
 
-function findCircle2(curve) {
+/**
+ * Tries to find circle that fit quadratic bezier curve the best
+ *
+ * @param {Array} curve
+ * @return {Object|undefined} circle
+ */
+function findCircleForQuadraticBezierCurve(curve) {
     // note (sivukhin, 02.02.2020): calculate such circle center, that slopes at both ends of the curve matches slopes of bezier curve
     const center = getIntersection([
         0, 0,
@@ -927,7 +933,7 @@ function findCircle2(curve) {
         curve[2] - (curve[1] - curve[3]), curve[3] + (curve[0] - curve[2])
     ]);
     const minRadius = center && Math.min(getDistance(center, [0, 0]), getDistance(center, curve.slice(-2)));
-    // todo (sivukhin, 02.02.2020): More precise max radius calculation
+    // todo (sivukhin, 02.02.2020): We can do more precise max radius calculation
     const maxRadius = center && getDistance(center, getQuadraticBezierPoint(curve, 1 / 2));
     const radius = center && (minRadius + maxRadius) / 2;
     const tolerance = Math.min(arcThreshold * error, arcTolerance * radius / 100);
@@ -1001,7 +1007,7 @@ function isArc(curve, circle) {
     });
 }
 
-function isArc2(curve, circle) {
+function isQuadraticBezierCurveFitsCircle(curve, circle) {
     var tolerance = Math.min(arcThreshold * error, arcTolerance * circle.radius / 100);
     return [0, 1/4, 1/2, 3/4, 1].every(function(point) {
         return Math.abs(getDistance(getQuadraticBezierPoint(curve, point), circle.center) - circle.radius) <= tolerance;
@@ -1023,6 +1029,13 @@ function isArcPrev(curve, circle) {
     });
 }
 
+/**
+ * Finds angle of an arc that goes from (0, 0) to point
+
+ * @param {Array} point - [x, y] coordinates of a point
+ * @param {Object} relCircle - {center: [x, y], radius: Number}
+ * @return {Number} angle
+ */
 function findArcAngleByPoint(point, relCircle) {
     var x1 = -relCircle.center[0],
         y1 = -relCircle.center[1],
@@ -1043,15 +1056,7 @@ function findArcAngleByPoint(point, relCircle) {
  * @return {Number} angle
  */
 function findArcAngle(curve, relCircle) {
-    var x1 = -relCircle.center[0],
-        y1 = -relCircle.center[1],
-        x2 = curve[4] - relCircle.center[0],
-        y2 = curve[5] - relCircle.center[1];
-
-    return Math.acos(
-            (x1 * x2 + y1 * y2) /
-            Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
-        );
+    return findArcAngleByPoint([curve[4], curve[5]], relCircle);
 }
 
 /**
