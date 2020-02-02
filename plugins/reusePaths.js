@@ -121,6 +121,9 @@ exports.fn = function(data) {
     }
     item = convertToUse(item, hasSeen.elem.attr('id').value);
   });
+  if (defs.length === 0) {
+      return data;
+  }
   const defsTag = new JSAPI({
     elem: 'defs', prefix: '', local: 'defs', content: [], attrs: []}, data);
   var rootSvg = data.content.find(x => x.elem === 'svg');
