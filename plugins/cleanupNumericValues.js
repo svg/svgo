@@ -61,12 +61,8 @@ exports.fn = function(item, params) {
 
                 // convert absolute values to pixels
                 if (params.convertToPx && units && (units in absoluteLengths)) {
-                    var pxNum = +(absoluteLengths[units] * match[1]).toFixed(floatPrecision);
-
-                    if (String(pxNum).length < match[0].length) {
-                        num = pxNum;
-                        units = 'px';
-                    }
+                    num = +(absoluteLengths[units] * match[1]).toFixed(floatPrecision);
+                    units = 'px';
                 }
 
                 // and remove leading zero
