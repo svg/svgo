@@ -15,6 +15,8 @@ exports.elemsGroups = {
     filterPrimitive: ['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feFlood', 'feGaussianBlur', 'feImage', 'feMerge', 'feMorphology', 'feOffset', 'feSpecularLighting', 'feTile', 'feTurbulence']
 };
 
+exports.textElems = exports.elemsGroups.textContent.concat('title');
+
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
 // http://www.w3.org/TR/SVG11/intro.html#Definitions

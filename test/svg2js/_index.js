@@ -177,6 +177,15 @@ describe('svg2js', function() {
 
         });
 
+        describe('text nodes', function() {
+
+            it('should contain preserved whitespace', function() {
+                const textNode = root.content[3].content[1].content[0].content[1];
+                return expect(textNode.content[0].text).to.equal('  test  ');
+            });
+
+        });
+
         describe('API', function() {
 
             describe('clone()', function() {
