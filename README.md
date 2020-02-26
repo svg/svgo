@@ -182,7 +182,7 @@ Arguments:
 
 ### Other Ways to Use SVGO
 
-* as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
+* as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/), [Shrink Me](https://shrinkme.app/)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
