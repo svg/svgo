@@ -84,6 +84,9 @@ describe('config', function() {
                 return convertColors.params.should.have.property('rgb2hex', true);
             });
 
+            it('"params" should have property "skip" with value of []', function() {
+                return convertColors.params.should.have.property('skip', []);
+            });
         });
 
     });

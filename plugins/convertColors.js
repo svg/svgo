@@ -11,7 +11,8 @@ exports.params = {
     names2hex: true,
     rgb2hex: true,
     shorthex: true,
-    shortname: true
+    shortname: true,
+    skip: []
 };
 
 var collections = require('./_collections'),
@@ -54,6 +55,10 @@ exports.fn = function(item, params) {
         item.eachAttr(function(attr) {
 
             if (collections.colorsProps.indexOf(attr.name) > -1) {
+
+                if (params.skip && params.skip.includes(attr.value)) {
+                    return;
+                }
 
                 var val = attr.value,
                     match;
