@@ -177,9 +177,14 @@ exports.fn = function(node, opts, extra) {
 
     // prefixes a normal value
     addPrefix = function(name) {
-        if(prefix === false){
+        var isAlreadyPrefixed = name.startsWith(
+            escapeIdentifierName(prefix) + opts.delim
+        );
+
+        if (prefix === false || isAlreadyPrefixed) {
             return escapeIdentifierName(name);
         }
+
         return escapeIdentifierName(prefix + opts.delim + name);
     };
 
