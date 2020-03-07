@@ -1,12 +1,6 @@
-**english** | [русский](https://github.com/svg/svgo/blob/master/README.ru.md)
-- - -
+# SVGO
 
-<img src="https://svg.github.io/svgo-logo.svg" width="200" height="200" alt="logo"/>
-
-## SVGO [![NPM version](https://badge.fury.io/js/svgo.svg)](https://npmjs.org/package/svgo) [![Build Status](https://secure.travis-ci.org/svg/svgo.svg)](https://travis-ci.org/svg/svgo) [![Coverage Status](https://img.shields.io/coveralls/svg/svgo.svg)](https://coveralls.io/r/svg/svgo?branch=master)
-
-**SVG O**ptimizer is a Nodejs-based tool for optimizing SVG vector graphics files.
-![](https://mc.yandex.ru/watch/18431326)
+**SVGO** (SVG Optimizer) is a Nodejs-based tool for optimizing SVG vector graphics files.
 
 ## Why?
 
@@ -199,18 +193,10 @@ Arguments:
 * as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 * as a Figma plugin - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
 
-## Backers
-
-| [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://rawgithub.com/fontello/fontello/master/fontello-image.svg" width="80">](http://fontello.com/) |
-|:-:|:-:|
-| [SheetJS LLC](https://sheetjs.com/) | [Fontello](http://fontello.com/) |
-
-## Donations
+## Donations To Original Author
 
 - PayPal: https://www.paypal.me/deepsweet
 
 ## License and Copyright
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
-
-Logo by [Yegor Bolshakov](http://xizzzy.ru/).
