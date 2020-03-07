@@ -1,6 +1,6 @@
 {
-  "name": "svgo",
-  "version": "1.3.2",
+  "name": "@innocuous/svgo",
+  "version": "1.0.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
@@ -8,14 +8,14 @@
     "optimize",
     "minify"
   ],
-  "homepage": "https://github.com/svg/svgo",
-  "bugs": {
-    "url": "https://github.com/svg/svgo/issues"
-  },
   "author": {
     "name": "Kir Belevich",
     "email": "kir@belevi.ch",
     "url": "https://github.com/deepsweet"
+  },
+  "homepage": "https://github.com/innocuous-tech/svgo",
+  "bugs": {
+    "url": "https://github.com/innocuous-tech/svgo/issues"
   },
   "repository": {
     "type": "git",
@@ -50,7 +50,6 @@
     "util.promisify": "~1.0.0"
   },
   "devDependencies": {
-    "coveralls": "^3.0.7",
     "fs-extra": "~8.1.0",
     "istanbul": "~0.4.5",
     "jshint": "~2.10.2",
