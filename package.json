@@ -1,6 +1,6 @@
 {
   "name": "@innocuous/svgo",
-  "version": "1.0.0",
+  "version": "1.3.2",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
