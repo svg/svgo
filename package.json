@@ -21,6 +21,10 @@
     "type": "git",
     "url": "git://github.com/innocuous-tech/svgo.git"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "./lib/svgo.js",
   "bin": {
     "svgo": "./bin/svgo"
