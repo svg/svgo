@@ -17,7 +17,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
-      run: yarn install
+      run: yarn install --ignore-engines --frozen-lockfile
     - name: Lint
       run: yarn lint
     - name: Test
