@@ -1,6 +1,6 @@
-node_modules/
-lib-cov/
-html-report/
+node_modules
+lib-cov
+html-report
 lcov.info
 bin/svgo-profiling
 *.sublime-*
@@ -9,3 +9,9 @@ bin/svgo-profiling
 .idea
 .vscode
 .npmrc
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

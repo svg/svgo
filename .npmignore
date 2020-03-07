@@ -1,4 +1,4 @@
-docs
+.github
 examples
 test
 lib-cov
@@ -8,5 +8,4 @@ lib-cov
 .jshintrc
 .travis.yml
 lcov.info
-logo.svg
-CHANGELOG.MD
+
