@@ -17,21 +17,9 @@
     "email": "kir@belevi.ch",
     "url": "https://github.com/deepsweet"
   },
-  "contributors": [
-    {
-      "name": "Sergey Belov",
-      "email": "peimei@ya.ru",
-      "url": "http://github.com/arikon"
-    },
-    {
-      "name": "Lev Solntsev",
-      "email": "lev.sun@ya.ru",
-      "url": "http://github.com/GreLI"
-    }
-  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/svg/svgo.git"
+    "url": "git://github.com/innocuous-tech/svgo.git"
   },
   "main": "./lib/svgo.js",
   "bin": {
@@ -43,9 +31,8 @@
     "example": "./examples"
   },
   "scripts": {
-    "test": "set NODE_ENV=test && mocha",
-    "lint": "jshint --show-non-errors .",
-    "jshint": "npm run lint"
+    "test": "set NODE_ENV=test && yarn mocha",
+    "lint": "yarn jshint --show-non-errors ."
   },
   "dependencies": {
     "chalk": "^2.4.1",
@@ -73,7 +60,7 @@
     "should": "~13.2.3"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8.0.0"
   },
   "license": "MIT"
 }
