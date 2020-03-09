@@ -217,6 +217,22 @@ describe('coa', function() {
             }, error => done(error));
         });
 
+        it('should work correctly with some specific options', function(done) {
+            svgo({
+                input:     mpSvgInPath,
+                output:    'temp.svg',
+                quiet:     true,
+                multipass: true,
+                config: '{ "plugins": [ { "prefixIds": { "delim": "_" } }, { "cleanupIDs": { "minify": true } } ] }',
+            }).then(function() {
+                const mpSvgOut = fs.readFileSync('temp.svg', 'utf8');
+
+                done(/in_svg_/.test(mpSvgOut) ? null : 'prefixIds plugin doesn\'t work correctly with some specific options.');
+
+                fse.removeSync('temp.svg');
+            }, error => done(error));
+        });
+
         it('should allow addAttributesToSVGElement plugin to correctly handle subsequent passes with multipass enabled', function(done) {
             svgo({
                 input:     mpSvgInPath,
