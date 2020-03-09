@@ -213,8 +213,6 @@ describe('coa', function() {
 
                 done(!/in_svg__in_svg__/.test(mpSvgOut) ? null : 'prefixIds plugin doesn\'t detect subsequent passes with multipass enabled.');
 
-                // https://github.com/svg/svgo/issues/659
-                // https://github.com/svg/svgo/issues/1133
                 fse.removeSync('temp.svg');
             }, error => done(error));
         });
