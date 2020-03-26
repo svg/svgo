@@ -109,7 +109,7 @@ exports.fn = function(document, opts) {
         try {
             selectedEls = document.querySelectorAll(selectorStr);
         } catch (selectError) {
-            if (selectError.constructor === SyntaxError) {
+            if (selectError.message.includes('Unmatched selector:')) {
                 // console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped. Error details: ' + selectError);
                 continue;
             }
