@@ -39,29 +39,29 @@ describe('config', function() {
             removeRasterImages = getPlugin('removeRasterImages', config.plugins);
 
         it('should have "multipass"', function() {
-            return config.multipass.should.be.true;
+            config.multipass.should.be.true();
         });
 
         it('removeDoctype plugin should be disabled', function() {
-            return removeDoctype.active.should.be.false;
+            removeDoctype.active.should.be.false();
         });
 
         describe('enable plugin with params object', function() {
 
             it('removeRasterImages plugin should be enabled', function() {
-                return removeRasterImages.active.should.be.true;
+                removeRasterImages.active.should.be.true();
             });
 
             it('removeRasterImages plugin should have property "params"', function() {
-                return removeRasterImages.should.have.property('params');
+                removeRasterImages.should.have.property('params');
             });
 
             it('"params" should be an instance of Object', function() {
-                return removeRasterImages.params.should.be.an.instanceOf(Object);
+                removeRasterImages.params.should.be.an.instanceOf(Object);
             });
 
             it('"params" should have property "param" with value of true', function() {
-                return removeRasterImages.params.should.have.property('param', true);
+                removeRasterImages.params.should.have.property('param', true);
             });
 
         });
@@ -69,19 +69,19 @@ describe('config', function() {
         describe('extend plugin params with object', function() {
 
             it('convertColors plugin should have property "params"', function() {
-                return convertColors.should.have.property('params');
+                convertColors.should.have.property('params');
             });
 
             it('"params" should be an instance of Object', function() {
-                return convertColors.params.should.be.an.instanceOf(Object);
+                convertColors.params.should.be.an.instanceOf(Object);
             });
 
             it('"params" should have property "shorthex" with value of false', function() {
-                return convertColors.params.should.have.property('shorthex', false);
+                convertColors.params.should.have.property('shorthex', false);
             });
 
             it('"params" should have property "rgb2hex" with value of true', function() {
-                return convertColors.params.should.have.property('rgb2hex', true);
+                convertColors.params.should.have.property('rgb2hex', true);
             });
 
         });
@@ -101,19 +101,19 @@ describe('config', function() {
             cleanupNumericValues = getPlugin('cleanupNumericValues', config.plugins);
 
         it('should have "multipass"', function() {
-            return config.multipass.should.be.true;
+            config.multipass.should.be.true();
         });
 
         it('config.plugins should have length 1', function() {
-            return config.plugins.should.have.length(1);
+            config.plugins.should.have.length(1);
         });
 
         it('cleanupNumericValues plugin should be enabled', function() {
-            return cleanupNumericValues.active.should.be.true;
+            cleanupNumericValues.active.should.be.true();
         });
 
         it('cleanupNumericValues plugin should have floatPrecision set from parameters', function() {
-            return cleanupNumericValues.params.floatPrecision.should.be.equal(2);
+            cleanupNumericValues.params.floatPrecision.should.be.equal(2);
         });
 
     });
@@ -135,11 +135,11 @@ describe('config', function() {
                 customPlugin = getPlugin('aCustomPlugin', config.plugins);
 
             it('custom plugin should be enabled', function() {
-                return customPlugin.active.should.be.true;
+                customPlugin.active.should.be.true();
             });
 
             it('custom plugin should have been given a name', function() {
-                return customPlugin.name.should.equal('aCustomPlugin');
+                customPlugin.name.should.equal('aCustomPlugin');
             });
         });
 
@@ -159,15 +159,15 @@ describe('config', function() {
                 customPlugin = getPlugin('aCustomPlugin', config.plugins);
 
             it('config.plugins should have length 1', function() {
-                return config.plugins.should.have.length(1);
+                config.plugins.should.have.length(1);
             });
 
             it('custom plugin should be enabled', function() {
-                return customPlugin.active.should.be.true;
+                customPlugin.active.should.be.true();
             });
 
             it('custom plugin should have been given a name', function() {
-                return customPlugin.name.should.equal('aCustomPlugin');
+                customPlugin.name.should.equal('aCustomPlugin');
             });
 
         });
