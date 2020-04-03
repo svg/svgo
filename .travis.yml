@@ -6,10 +6,6 @@ node_js:
   - 10
   - 12
 
-branches:
-  only:
-    - master
-
 before_install:
   - npm install -g jshint
 
