@@ -772,7 +772,7 @@ function getIntersection(coords) {
  */
 function strongRound(data) {
     for (var i = data.length; i-- > 0;) {
-        if (data[i].toFixed(precision) != data[i]) {
+        if (data[i] && data[i].toFixed(precision) != data[i]) {
             var rounded = +data[i].toFixed(precision - 1);
             data[i] = +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error ?
                 +data[i].toFixed(precision) :
