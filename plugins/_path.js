@@ -553,7 +553,11 @@ exports.js2path = function(path, data, params) {
     }
 
     path.attr('d').value = data.reduce(function(pathString, item) {
-        return pathString += item.instruction + (item.data ? cleanupOutData(item.data, params) : '');
+        var strData = '';
+        if (item.data) {
+            strData = cleanupOutData(item.data, params, item.instruction);
+        }
+        return pathString += item.instruction + strData;
     }, '');
 
 };

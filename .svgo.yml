@@ -41,6 +41,7 @@ plugins:
   - removeHiddenElems
   - removeEmptyText
   - convertShapeToPath
+  - convertEllipseToCircle
   - moveElemsAttrsToGroup
   - moveGroupAttrsToElems
   - collapseGroups
@@ -51,6 +52,7 @@ plugins:
   - mergePaths
   - removeUnusedNS
   - sortAttrs
+  - sortDefsChildren
   - removeTitle
   - removeDesc
   - removeDimensions

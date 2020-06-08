@@ -5,6 +5,7 @@
     <g transform="matrix(1 0 0.466 1 0 0)"/>
     <g transform="matrix(1 0.466 0 1 0 0)"/>
     <g transform="matrix(1 0 0 1 50 90) matrix(1 0 0 1 60 20) matrix(1 0 0 1 20 40)"/>
+    <g transform="matrix(-0.10443115234375 0 0 -0.10443115234375 182.15 61.15)"/>
 </svg>
 
 @@@
@@ -16,4 +17,5 @@
     <g transform="skewX(24.99)"/>
     <g transform="skewY(24.99)"/>
     <g transform="translate(130 150)"/>
+    <g transform="rotate(180 91.074 30.575) scale(.10443)"/>
 </svg>

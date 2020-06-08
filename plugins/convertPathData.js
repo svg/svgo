@@ -23,6 +23,7 @@ exports.params = {
     utilizeAbsolute: true,
     leadingZero: true,
     negativeExtraSpace: true,
+    noSpaceAfterFlags: true,
     forceAbsolutePath: false
 };
 
@@ -334,12 +335,13 @@ function filters(path, params) {
                     arc.data[5] = arc.coords[0] - arc.base[0];
                     arc.data[6] = arc.coords[1] - arc.base[1];
                     var prevData = prev.instruction == 'a' ? prev.sdata : prev.data;
-                    angle += findArcAngle(prevData,
+                    var prevAngle = findArcAngle(prevData,
                         {
-                            center: [prevData[4] + relCenter[0], prevData[5] + relCenter[1]],
+                            center: [prevData[4] + circle.center[0], prevData[5] + circle.center[1]],
                             radius: circle.radius
                         }
                     );
+                    angle += prevAngle;
                     if (angle > Math.PI) arc.data[3] = 1;
                     hasPrev = 1;
                 }
@@ -512,7 +514,7 @@ function filters(path, params) {
                 instruction == prev.instruction.toLowerCase() &&
                 (
                     (instruction != 'h' && instruction != 'v') ||
-                    (prev.data[0] >= 0) == (item.data[0] >= 0)
+                    (prev.data[0] >= 0) == (data[0] >= 0)
             )) {
                 prev.data[0] += data[0];
                 if (instruction != 'h' && instruction != 'v') {
@@ -960,6 +962,10 @@ function findArcAngle(curve, relCircle) {
 
 function data2Path(params, pathData) {
     return pathData.reduce(function(pathString, item) {
-        return pathString + item.instruction + (item.data ? cleanupOutData(roundData(item.data.slice()), params) : '');
+        var strData = '';
+        if (item.data) {
+            strData = cleanupOutData(roundData(item.data.slice()), params);
+        }
+        return pathString + item.instruction + strData;
     }, '');
 }

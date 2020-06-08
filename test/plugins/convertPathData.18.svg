@@ -5,5 +5,5 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-    <path d="M32 32a4 4 0 0 1-4 4H8a4 4 0 0 0-4-4V4a4 4 0 0 0 4-4h20a4 4 0 0 1 4 4v28z" fill="#888"/>
+    <path d="M32 32a4 4 0 01-4 4H8a4 4 0 00-4-4V4a4 4 0 004-4h20a4 4 0 014 4v28z" fill="#888"/>
 </svg>

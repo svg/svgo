@@ -37,7 +37,7 @@ exports.fn = function(item) {
                 if (lengthComparison !== 0) {
                     return lengthComparison;
                 }
-                return a.elem > b.elem;
+                return a.elem != b.elem ? a.elem > b.elem ? -1 : 1 : 0;
             });
         }
 

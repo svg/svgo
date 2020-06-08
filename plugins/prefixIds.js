@@ -5,7 +5,9 @@ exports.type = 'perItem';
 exports.active = false;
 
 exports.params = {
-    delim: '__'
+    delim: '__',
+    prefixIds: true,
+    prefixClassNames: true,
 };
 
 exports.description = 'prefix IDs';
@@ -13,7 +15,6 @@ exports.description = 'prefix IDs';
 
 var path = require('path'),
     csstree = require('css-tree'),
-    cssRx = require('css-url-regex'),
     unquote = require('unquote'),
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
@@ -37,7 +38,7 @@ var matchId = function(urlVal) {
 
 // Matches an url(...) value, captures the URL
 var matchUrl = function(val) {
-    var urlMatches = cssRx().exec(val);
+    var urlMatches = /url\((.*?)\)/gi.exec(val);
     if (urlMatches === null) {
         return false;
     }
@@ -112,6 +113,35 @@ var addPrefixToUrlAttr = function(attr) {
     attr.value = 'url(' + idPrefixed + ')';
 };
 
+// prefixes begin/end attribute value
+var addPrefixToBeginEndAttr = function(attr) {
+    if (!attrNotEmpty(attr)) {
+        return;
+    }
+
+    var parts = attr.value.split('; ').map(function(val) {
+        val = val.trim();
+
+        if (val.endsWith('.end') || val.endsWith('.start')) {
+            var idPostfix = val.split('.'),
+                id = idPostfix[0],
+                postfix = idPostfix[1];
+
+            var idPrefixed = prefixId(`#${id}`);
+
+            if (!idPrefixed) {
+                return val;
+            }
+
+            idPrefixed = idPrefixed.slice(1);
+            return `${idPrefixed}.${postfix}`;
+        } else {
+            return val;
+        }
+    });
+
+    attr.value = parts.join('; ');
+};
 
 /**
  * Prefixes identifiers
@@ -123,6 +153,11 @@ var addPrefixToUrlAttr = function(attr) {
  * @author strarsis <strarsis@gmail.com>
  */
 exports.fn = function(node, opts, extra) {
+
+    // skip subsequent passes when multipass is used
+    if(extra.multipassCount && extra.multipassCount > 0) {
+        return node;
+    }
 
     // prefix, from file name or option
     var prefix = 'prefix';
@@ -174,8 +209,8 @@ exports.fn = function(node, opts, extra) {
         csstree.walk(cssAst, function(node) {
 
             // #ID, .class
-            if ((node.type === 'IdSelector' ||
-                 node.type === 'ClassSelector') &&
+            if (((opts.prefixIds        && node.type === 'IdSelector') ||
+                 (opts.prefixClassNames && node.type === 'ClassSelector')) &&
                  node.name) {
                 node.name = addPrefix(node.name);
                 return;
@@ -205,11 +240,21 @@ exports.fn = function(node, opts, extra) {
         return node;
     }
 
-    // ID
-    addPrefixToIdAttr(node.attrs.id);
 
-    // Class
-    addPrefixToClassAttr(node.attrs.class);
+    // Nodes
+
+    if(opts.prefixIds) {
+        // ID
+        addPrefixToIdAttr(node.attrs.id);
+    }
+
+    if(opts.prefixClassNames) {
+        // Class
+        addPrefixToClassAttr(node.attrs.class);
+    }
+
+
+    // References
 
     // href
     addPrefixToHrefAttr(node.attrs.href);
@@ -217,11 +262,13 @@ exports.fn = function(node, opts, extra) {
     // (xlink:)href (deprecated, must be still supported)
     addPrefixToHrefAttr(node.attrs['xlink:href']);
 
-    // referenceable properties
+    // (referenceable) properties
     for (var referencesProp of referencesProps) {
         addPrefixToUrlAttr(node.attrs[referencesProp]);
     }
 
+    addPrefixToBeginEndAttr(node.attrs.begin);
+    addPrefixToBeginEndAttr(node.attrs.end);
 
     return node;
 };

@@ -58,15 +58,18 @@ exports.fn = function(data, params) {
 
             // quit if <style> or <script> present ('force' param prevents quitting)
             if (!params.force) {
-                if (item.isElem(styleOrScript)) {
+                var isNotEmpty = Boolean(item.content);
+                if (item.isElem(styleOrScript) && isNotEmpty) {
                     hasStyleOrScript = true;
                     continue;
                 }
+
                 // Don't remove IDs if the whole SVG consists only of defs.
-                if (item.isElem('defs') && item.parentNode.isElem('svg')) {
+                if (item.isElem('svg')) {
                     var hasDefsOnly = true;
-                    for (var j = i + 1; j < items.content.length; j++) {
-                        if (items.content[j].isElem()) {
+
+                    for (var j = 0; j < item.content.length; j++) {
+                        if (!item.content[j].isElem('defs')) {
                             hasDefsOnly = false;
                             break;
                         }
@@ -121,13 +124,18 @@ exports.fn = function(data, params) {
         return data;
     }
 
+    const idPreserved = id => preserveIDs.has(id) || idMatchesPrefix(preserveIDPrefixes, id);
+
     for (var ref of referencesIDs) {
         var key = ref[0];
 
         if (IDs.has(key)) {
             // replace referenced IDs with the minified ones
-            if (params.minify && !preserveIDs.has(key) && !idMatchesPrefix(preserveIDPrefixes, key)) {
-                currentIDstring = getIDstring(currentID = generateID(currentID), params);
+            if (params.minify && !idPreserved(key)) {
+                do {
+                    currentIDstring = getIDstring(currentID = generateID(currentID), params);
+                } while (idPreserved(currentIDstring));
+
                 IDs.get(key).attr('id').value = currentIDstring;
 
                 for (var attr of ref[1]) {
@@ -143,7 +151,7 @@ exports.fn = function(data, params) {
     // remove non-referenced IDs attributes from elements
     if (params.remove) {
         for(var keyElem of IDs) {
-            if (!preserveIDs.has(keyElem[0]) && !idMatchesPrefix(preserveIDPrefixes, keyElem[0])) {
+            if (!idPreserved(keyElem[0])) {
                 keyElem[1].removeAttr('id');
             }
         }
