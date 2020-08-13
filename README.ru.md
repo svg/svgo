@@ -186,6 +186,7 @@ $ [sudo] npm install -g svgo
 
 * в виде веб-приложения - [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * как модуль Node.js – [examples](https://github.com/svg/svgo/tree/master/examples)
+* как библиотеку (с поддержкой Nodejs и браузера) – [svgo-browser](https://github.com/rtivital/svgo-browser)
 * как таск для Grunt – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * как таск для Gulp – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * как таск для Mimosa – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
