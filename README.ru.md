@@ -203,4 +203,4 @@ $ [sudo] npm install -g svgo
 
 Данное программное обеспечение выпускается под [лицензией MIT](https://github.com/svg/svgo/blob/master/LICENSE).
 
-Логотип – [Егор Большаков](http://xizzzy.ru/).
+Логотип – [Егор Большаков](http://xizzzy.ru/)..
