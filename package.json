@@ -55,7 +55,6 @@
     "css-tree": "1.0.0-alpha.37",
     "csso": "^4.0.2",
     "js-yaml": "^3.13.1",
-    "mkdirp": "~0.5.1",
     "sax": "~1.2.4",
     "stable": "^0.1.8",
     "unquote": "~1.1.1",
@@ -72,7 +71,7 @@
     "should": "~13.2.3"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=10.0.0"
   },
   "license": "MIT"
 }
