@@ -1,9 +1,10 @@
 'use strict';
 
 const fs = require('fs'),
+    { Command } = require('commander'),
     svgo = require(process.env.COVERAGE ?
         '../../lib-cov/svgo/coa.js' :
-        '../../lib/svgo/coa.js').api,
+        '../../lib/svgo/coa.js'),
     path = require('path'),
     svgPath = path.resolve(__dirname, 'test.svg'),
     svgFolderPath = path.resolve(__dirname, 'testSvg'),
@@ -13,6 +14,15 @@ const fs = require('fs'),
     fse = require('fs-extra'),
     checkIsDir = require('../../lib/svgo/tools.js').checkIsDir,
     noop = () => {};
+
+function runProgram(args) {
+  const program = new Command();
+  svgo(program);
+  // prevent running process.exit
+  program.exitOverride(() => {});
+  // parser skips first two arguments
+  return program.parseAsync([0, 1, ...args]);
+}
 
 describe('coa', function() {
     let output;
@@ -61,7 +71,7 @@ describe('coa', function() {
     it('should throw an error if "config" can not be parsed', function(done) {
         replaceConsoleError();
 
-        svgo({ input: svgPath, config: '{' }).then(onComplete, onComplete);
+        runProgram(['--input', svgPath, '--config', '{']).then(onComplete, onComplete);
 
         function onComplete() {
             restoreConsoleError();
@@ -70,7 +80,7 @@ describe('coa', function() {
     });
 
     it('should work properly with string input', function(done) {
-        svgo({ string: fs.readFileSync(svgPath, 'utf8'), output: 'temp.svg', quiet: true }).then(function() {
+        runProgram(['--string', fs.readFileSync(svgPath, 'utf8'), '--output', 'temp.svg', '--quiet']).then(function() {
             done();
             fse.removeSync('temp.svg');
         }, error => done(error));
@@ -79,7 +89,7 @@ describe('coa', function() {
     it('should optimize folder', function(done) {
         const initWeight = calcFolderSvgWeight(svgFolderPath);
 
-        svgo({ folder: svgFolderPath, output: tempFolder, quiet: true }).then(function() {
+        runProgram(['--folder', svgFolderPath, '--output', tempFolder, '--quiet']).then(function() {
             const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
 
             done(optimizedWeight > 0 && initWeight <= optimizedWeight ? null : 'Folder was not optimized');
@@ -89,7 +99,7 @@ describe('coa', function() {
     it('should optimize folder recursively', function(done) {
         const initWeight = calcFolderSvgWeight(svgFolderPathRecursively);
 
-        svgo({ folder: svgFolderPathRecursively, output: tempFolder, quiet: true, recursive: true }).then(function() {
+        runProgram(['--folder', svgFolderPathRecursively, '--output', tempFolder, '--quiet', '--recursive']).then(function() {
             const optimizedWeight = calcFolderSvgWeight(svgFolderPathRecursively);
 
             done(optimizedWeight > 0 && initWeight <= optimizedWeight ? null : 'Folder was not optimized');
@@ -99,7 +109,7 @@ describe('coa', function() {
     it('should optimize file', function(done) {
         const initialFileLength = fs.readFileSync(path.resolve(__dirname, 'test.svg')).length;
 
-        svgo({ input: svgPath, output: 'temp.svg', quiet: true }).then(function() {
+        runProgram(['--input', svgPath, '--output', 'temp.svg', '--quiet']).then(function() {
             const optimizedFileLength = fs.readFileSync('temp.svg').length;
 
             done(optimizedFileLength <= initialFileLength ? null : 'File was not optimized');
@@ -110,7 +120,7 @@ describe('coa', function() {
     it('should optimize several files', function(done) {
         const initWeight = calcFolderSvgWeight(svgFolderPath);
 
-        svgo({ input: svgFiles, output: tempFolder, quiet: true }).then(function() {
+        runProgram(['--input', ...svgFiles, '--output', tempFolder, '--quiet']).then(function() {
             const optimizedWeight = calcFolderSvgWeight(tempFolder);
 
             done(optimizedWeight > 0 && optimizedWeight <= initWeight ? null : 'Files were not optimized');
@@ -125,7 +135,7 @@ describe('coa', function() {
 
         setTimeout(() => { stdin.send(initialFile, 'ascii').end(); }, 0);
 
-        svgo({ input: '-', output: 'temp.svg', string: fs.readFileSync(svgPath, 'utf8'), quiet: true })
+        runProgram(['--input', '-', '--output', 'temp.svg', '--string', fs.readFileSync(svgPath, 'utf8'), '--quiet'])
             .then(onComplete, onComplete);
 
         function onComplete() {
@@ -139,7 +149,7 @@ describe('coa', function() {
     it('should optimize folder, when it stated in input', function(done) {
         const initWeight = calcFolderSvgWeight(svgFolderPath);
 
-        svgo({ input: svgFolderPath, output: tempFolder, quiet: true }).then(function() {
+        runProgram(['--input', svgFolderPath, '--output', tempFolder, '--quiet']).then(function() {
             let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
 
             done(optimizedWeight <= initWeight ? null : 'Files were not optimized');
@@ -149,7 +159,7 @@ describe('coa', function() {
     it('should throw error when stated in input folder does not exist', function(done) {
         replaceConsoleError();
 
-        svgo({ input: svgFolderPath + 'temp', output: tempFolder }).then(onComplete, onComplete);
+        runProgram(['--input', svgFolderPath + 'temp', '--output', tempFolder]).then(onComplete, onComplete);
 
         function onComplete(err) {
             restoreConsoleError();
@@ -161,7 +171,7 @@ describe('coa', function() {
         it('should show file content when no output set', function(done) {
             replaceConsoleLog();
 
-            svgo({ string: fs.readFileSync(svgPath, 'utf8'), output: '-', datauri: 'unenc' }).then(onComplete, onComplete);
+            runProgram(['--string', fs.readFileSync(svgPath, 'utf8'), '--output', '-', '--datauri', 'unenc']).then(onComplete, onComplete);
 
             function onComplete() {
                 restoreConsoleLog();
@@ -177,7 +187,7 @@ describe('coa', function() {
 
             replaceConsoleError();
 
-            svgo({ folder: emptyFolderPath, quiet: true }).then(onComplete, onComplete);
+            runProgram(['--folder', emptyFolderPath, '--quiet']).then(onComplete, onComplete);
 
             function onComplete() {
                 restoreConsoleError();
@@ -188,7 +198,7 @@ describe('coa', function() {
         it('should show message when folder does not consists any svg files', function(done) {
             replaceConsoleError();
 
-            svgo({ folder: path.resolve(__dirname, 'testFolderWithNoSvg'), quiet: true }).then(onComplete, onComplete);
+            runProgram(['--folder', path.resolve(__dirname, 'testFolderWithNoSvg'), '--quiet']).then(onComplete, onComplete);
 
             function onComplete() {
                 restoreConsoleError();
@@ -201,7 +211,7 @@ describe('coa', function() {
         it('should show plugins', function(done) {
             replaceConsoleLog();
 
-            svgo({ 'show-plugins': true }).then(onComplete, onComplete);
+            runProgram(['--show-plugins']).then(onComplete, onComplete);
 
             function onComplete() {
                 restoreConsoleLog();
