@@ -14,11 +14,7 @@ exports.params = {
   hsl: 'lower',
 };
 
-const toCheck = [
-  'fill',
-  'stroke',
-  'color',
-];
+const toCheck = [ 'fill', 'stroke', 'color' ];
 
 exports.fn = function (
   item, params
@@ -33,13 +29,8 @@ exports.fn = function (
           params
         );
 
-        if ( normalizedAttr && normalizedAttr !== attrObj.value ) {
-          item.addAttr( {
-            name: attrName,
-            value: normalizedAttr,
-            local: attrObj.local,
-            prefix: attrObj.prefix,
-          } );
+        if ( normalizedAttr !== false ) {
+          attrObj.value = normalizedAttr;
         }
       }
     }
