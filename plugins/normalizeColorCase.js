@@ -25,20 +25,20 @@ exports.fn = function (
 ) {
   if ( typeof params === 'object' && item.isElem() ) {
     for ( let i = 0; i < toCheck.length; i++ ) {
-      const attr = toCheck[ i ];
-      if ( item.hasAttr( attr ) ) {
-        const origAttr = item.attr( attr );
+      const attrName = toCheck[ i ];
+      if ( item.hasAttr( attrName ) ) {
+        const attrObj = item.attr( attrName );
         const normalizedAttr = normalizeColor(
-          origAttr,
+          attrObj,
           params
         );
 
-        if ( normalizedAttr && normalizedAttr !== origAttr.value ) {
+        if ( normalizedAttr && normalizedAttr !== attrObj.value ) {
           item.addAttr( {
-            name: attr,
-            local: attr,
+            name: attrName,
             value: normalizedAttr,
-            prefix: '',
+            local: attrObj.local,
+            prefix: attrObj.prefix,
           } );
         }
       }
