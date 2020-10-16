@@ -53,9 +53,8 @@ const colorTypes = [
 ];
 
 /**
- * Takes any color value and returns the color in the correct case based on the config.
- * Returns false if config says to ignore color type
- * If config is not 'upper' or 'false' it defaults to lower
+ * Takes any color value and returns the color with the correct case based on the config.
+ * If config is not 'upper' or 'lower' it defaults to false and as such changes nothing
  *
  * @param {object} attrObj The attr to normalize
  * @param {object} params The config for this plugin
