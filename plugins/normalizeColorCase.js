@@ -4,8 +4,7 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description
-  = "Normalizes all colors to have the required case.\nThis plugin doesn't validate values.";
+exports.description = 'Makes colors consistent and more readable by making case consistent';
 
 /* Each can be {lower|upper|false} */
 exports.params = {
