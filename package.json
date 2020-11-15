@@ -57,8 +57,8 @@
     "js-yaml": "^3.13.1",
     "mkdirp": "~0.5.1",
     "object.values": "^1.1.0",
-    "sax": "~1.2.4",
     "stable": "^0.1.8",
+    "txml": "^4.0.0",
     "unquote": "~1.1.1",
     "util.promisify": "~1.0.0"
   },
