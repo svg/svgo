@@ -13,26 +13,19 @@ exports.params = {
   hsl: 'lower',
 };
 
-const toCheck = [ 'fill', 'stroke', 'color' ];
-
 exports.fn = function (
   item, params
 ) {
   if ( typeof params === 'object' && item.isElem() ) {
-    for ( let i = 0; i < toCheck.length; i++ ) {
-      const attrName = toCheck[ i ];
-      if ( item.hasAttr( attrName ) ) {
-        const attrObj = item.attr( attrName );
-        const normalizedAttr = normalizeColor(
-          attrObj,
-          params
-        );
-
-        if ( normalizedAttr !== false ) {
-          attrObj.value = normalizedAttr;
-        }
+    item.eachAttr( attrObj => {
+      const normalizedAttr = normalizeColor(
+        attrObj,
+        params
+      );
+      if ( normalizedAttr !== false ) {
+        attrObj.value = normalizedAttr;
       }
-    }
+    } );
   }
 };
 
