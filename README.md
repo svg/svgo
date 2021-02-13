@@ -121,6 +121,7 @@ Arguments:
     ```sh
     $ svgo *.svg
     ```
+    Windows does not support glob expansion. The command above will not work on Windows. 
 
     ```sh
     $ svgo test.svg -o test.min.svg
