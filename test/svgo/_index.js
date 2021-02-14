@@ -1,5 +1,7 @@
 'use strict';
 
+const { expect } = require('chai');
+
 var FS = require('fs'),
     PATH = require('path'),
     EOL = require('os').EOL,
@@ -30,10 +32,9 @@ describe('indentation', function() {
                 js2svg  : { pretty: true, indent: 2 }
             });
 
-            svgo.optimize(orig, {path: filepath}).then(function(result) {
-                normalize(result.data).should.be.equal(should);
-                done();
-            });
+            const result = svgo.optimize(orig, {path: filepath});
+            expect(normalize(result.data)).to.equal(should);
+            done();
 
         });
 
