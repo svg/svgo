@@ -25,4 +25,3 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm test
-      - run: npx nyc report --reporter=text-lcov | npx coveralls
