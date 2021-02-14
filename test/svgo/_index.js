@@ -1,5 +1,7 @@
 'use strict';
 
+const { expect } = require('chai');
+
 var FS = require('fs'),
     PATH = require('path'),
     EOL = require('os').EOL,
@@ -31,7 +33,7 @@ describe('indentation', function() {
             });
 
             const result = svgo.optimize(orig, {path: filepath});
-            normalize(result.data).should.be.equal(should);
+            expect(normalize(result.data)).to.equal(should);
             done();
 
         });
