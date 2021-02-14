@@ -69,6 +69,7 @@ SVGO имеет расширяемую архитектуру, в которой
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js) | удаляет элементы `<style>` | `выключено` |
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | удаляет элементы `<script>` | `выключено` |
 | [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Заменяет дублирующиеся элементы <path> ссылками <use> | `выключено` |
+| [replaceUse](https://github.com/svg/svgo/blob/master/plugins/replaceUse.js) | заменить все элементы <use> на узел, который они клонируют (по умолчанию отключено) | `disabled` |
 
 Хотите узнать принципы работы и как написать свой плагин? [Конечно же, да!](https://github.com/svg/svgo/blob/master/docs/how-it-works/ru.md)
 
