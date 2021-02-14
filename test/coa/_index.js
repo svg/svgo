@@ -68,17 +68,6 @@ describe('coa', function() {
         ), 0);
     }
 
-    it('should throw an error if "config" can not be parsed', function(done) {
-        replaceConsoleError();
-
-        runProgram(['--input', svgPath, '--config', '{']).then(onComplete, onComplete);
-
-        function onComplete() {
-            restoreConsoleError();
-            done(/Error: Couldn't parse config JSON/.test(output) ? null : 'Error was not thrown');
-        }
-    });
-
     it('should work properly with string input', function(done) {
         runProgram(['--string', fs.readFileSync(svgPath, 'utf8'), '--output', 'temp.svg', '--quiet']).then(function() {
             done();
