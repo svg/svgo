@@ -82,20 +82,18 @@ FS.readFile(filepath, 'utf8', function(err, data) {
         throw err;
     }
 
-    svgo.optimize(data, {path: filepath}).then(function(result) {
+    const result = svgo.optimize(data, {path: filepath});
 
-        console.log(result);
+    console.log(result);
 
-        // {
-        //     // optimized SVG data string
-        //     data: '<svg width="10" height="20">test</svg>'
-        //     // additional info such as width/height
-        //     info: {
-        //         width: '10',
-        //         height: '20'
-        //     }
-        // }
-
-    });
+    // {
+    //     // optimized SVG data string
+    //     data: '<svg width="10" height="20">test</svg>'
+    //     // additional info such as width/height
+    //     info: {
+    //         width: '10',
+    //         height: '20'
+    //     }
+    // }
 
 });

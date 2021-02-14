@@ -30,10 +30,8 @@ describe('svg2js', function() {
                     throw err;
                 }
 
-                SVG2JS(data, function(result) {
-                    root = result;
-                    done();
-                });
+                root = SVG2JS(data)
+                done();
             });
 
         });
@@ -423,9 +421,7 @@ describe('svg2js', function() {
                 }
 
                 try {
-                    SVG2JS(data, function(result) {
-                        root = result;
-                    });
+                    root = SVG2JS(data)
                 } catch (e) {
                     error = e;
                 }
@@ -473,9 +469,7 @@ describe('svg2js', function() {
             FS.readFile(filepath, 'utf8', function(err, data) {
                 if (err) throw err;
 
-                SVG2JS(data, function(result) {
-                    root = result;
-                });
+                root = SVG2JS(data);
                 done();
             });
         });
