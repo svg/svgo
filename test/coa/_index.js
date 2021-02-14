@@ -2,9 +2,7 @@
 
 const fs = require('fs'),
     { Command } = require('commander'),
-    svgo = require(process.env.COVERAGE ?
-        '../../lib-cov/svgo/coa.js' :
-        '../../lib/svgo/coa.js'),
+    svgo = require('../../lib/svgo/coa.js'),
     path = require('path'),
     svgPath = path.resolve(__dirname, 'test.svg'),
     svgFolderPath = path.resolve(__dirname, 'testSvg'),

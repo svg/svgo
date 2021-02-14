@@ -2,9 +2,7 @@
 
 const { expect } = require('chai');
 
-var CONFIG = require(process.env.COVERAGE ?
-        '../../lib-cov/svgo/config' :
-        '../../lib/svgo/config');
+var CONFIG = require('../../lib/svgo/config');
 
 describe('config', function() {
 

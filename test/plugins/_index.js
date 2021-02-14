@@ -7,9 +7,7 @@ var FS = require('fs'),
     EOL = require('os').EOL,
     regEOL = new RegExp(EOL, 'g'),
     regFilename = /^(.*)\.(\d+)\.svg$/,
-    SVGO = require(process.env.COVERAGE ?
-                   '../../lib-cov/svgo':
-                   '../../lib/svgo');
+    SVGO = require('../../lib/svgo');
 
 describe('plugins tests', function() {
 

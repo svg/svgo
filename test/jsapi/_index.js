@@ -2,13 +2,9 @@
 
 const { expect } = require('chai');
 
-var SVGO = require(process.env.COVERAGE ?
-    '../../lib-cov/svgo.js' :
-    '../../lib/svgo.js');
+var SVGO = require('../../lib/svgo.js');
 
-var JSAPI = require(process.env.COVERAGE ?
-    '../../lib-cov/svgo/jsAPI.js' :
-    '../../lib/svgo/jsAPI.js');
+var JSAPI = require('../../lib/svgo/jsAPI.js');
 
 describe('svgo object', function() {
 

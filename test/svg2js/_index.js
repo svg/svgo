@@ -4,18 +4,10 @@ const { expect } = require('chai');
 
 var FS = require('fs'),
     PATH = require('path'),
-    JSAPI = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/jsAPI' :
-                     '../../lib/svgo/jsAPI'),
-    CSSClassList = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/css-class-list' :
-                     '../../lib/svgo/css-class-list'),
-    CSSStyleDeclaration = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/css-style-declaration' :
-                     '../../lib/svgo/css-style-declaration'),
-    SVG2JS = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/svg2js' :
-                     '../../lib/svgo/svg2js');
+    JSAPI = require('../../lib/svgo/jsAPI'),
+    CSSClassList = require('../../lib/svgo/css-class-list'),
+    CSSStyleDeclaration = require('../../lib/svgo/css-style-declaration'),
+    SVG2JS = require('../../lib/svgo/svg2js');
 
 describe('svg2js', function() {
 
