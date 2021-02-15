@@ -48,7 +48,9 @@
     "example": "./examples"
   },
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha \"test/*/_index.js\""
+    "test": "nyc --reporter=html --reporter=text mocha \"test/*/_index.js\"",
+    "test-browser": "rollup -c && node ./test/browser.js",
+    "prepublishOnly": "rollup -c"
   },
   "dependencies": {
     "chalk": "^4.1.0",
@@ -62,11 +64,16 @@
     "stable": "^0.1.8"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "chai": "^4.3.0",
     "fs-extra": "~8.1.0",
     "mocha": "^6.2.3",
     "mock-stdin": "^1.0.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "playwright": "^1.8.1",
+    "rollup": "^2.39.0"
   },
   "engines": {
     "node": ">=10.12.0"

@@ -1,4 +1,5 @@
-node_modules/
+node_modules
+dist
 .nyc_output
 coverage
 bin/svgo-profiling
