@@ -1,7 +1,10 @@
 'use strict';
 
 const { expect } = require('chai');
-const { resolvePluginConfig } = require('../../lib/svgo/config.js');
+const {
+  resolvePluginConfig,
+  extendDefaultPlugins
+} = require('../../lib/svgo/config.js');
 
 describe('config', function() {
 
@@ -141,6 +144,44 @@ describe('config', function() {
 
     });
 
+  describe('allows to extend default plugins list', () => {
+    const extendedPlugins = extendDefaultPlugins([
+      {
+        name: 'customPlugin',
+        fn: () => {},
+      },
+      {
+        name: 'removeAttrs',
+        params: { atts: ['aria-label'] },
+      },
+      {
+        name: 'cleanupIDs',
+        params: { remove: false },
+      },
+    ]);
+    const removeAttrsIndex = extendedPlugins.findIndex(item => item.name === 'removeAttrs');
+    const cleanupIDsIndex = extendedPlugins.findIndex(item => item.name === 'cleanupIDs');
+    it('should preserve internal plugins order', () => {
+      expect(removeAttrsIndex).to.equal(40);
+      expect(cleanupIDsIndex).to.equal(10);
+    });
+    it('should activate inactive by default plugins', () => {
+      const removeAttrsPlugin = resolvePluginConfig(extendedPlugins[removeAttrsIndex], {});
+      const cleanupIDsPlugin = resolvePluginConfig(extendedPlugins[cleanupIDsIndex], {});
+      expect(removeAttrsPlugin.active).to.equal(true);
+      expect(cleanupIDsPlugin.active).to.equal(true);
+    });
+    it('should leave not extended inactive plugins to be inactive', () => {
+      const inactivePlugin = resolvePluginConfig(
+        extendedPlugins.find(item => item.name === 'addClassesToSVGElement'),
+        {},
+      );
+      expect(inactivePlugin.active).to.equal(false);
+    });
+    it('should put custom plugins in the end', () => {
+      expect(extendedPlugins[extendedPlugins.length - 1].name).to.equal('customPlugin');
+    });
+  });
 });
 
 function getPlugin(name, plugins) {
