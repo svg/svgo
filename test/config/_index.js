@@ -29,9 +29,9 @@ describe('config', function() {
         var config = CONFIG({
                 multipass: true,
                 plugins: [
-                    { removeDoctype: false },
-                    { convertColors: { shorthex: false } },
-                    { removeRasterImages: { param: true } }
+                    { name: 'removeDoctype', active: false },
+                    { name: 'convertColors', params: { shorthex: false } },
+                    { name: 'removeRasterImages', params: { param: true } }
                 ]
             }),
             removeDoctype = getPlugin('removeDoctype', config.plugins),
@@ -94,7 +94,7 @@ describe('config', function() {
                 multipass: true,
                 floatPrecision: 2,
                 plugins: [
-                    { cleanupNumericValues: true }
+                    { name: 'cleanupNumericValues' }
                 ]
             }),
             cleanupNumericValues = getPlugin('cleanupNumericValues', config.plugins);
@@ -124,10 +124,9 @@ describe('config', function() {
             var config = CONFIG({
                     plugins: [
                         {
-                            aCustomPlugin: {
-                                type: 'perItem',
-                                fn: function() { }
-                            }
+                            name: 'aCustomPlugin',
+                            type: 'perItem',
+                            fn: function() { }
                         }
                     ]
                 }),
@@ -147,10 +146,9 @@ describe('config', function() {
             var config = CONFIG({
                     plugins: [
                         {
-                            aCustomPlugin: {
-                                type: 'perItem',
-                                fn: function() { }
-                            }
+                            name: 'aCustomPlugin',
+                            type: 'perItem',
+                            fn: function() { }
                         }
                     ]
                 }),
