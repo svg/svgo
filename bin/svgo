@@ -1,3 +1,6 @@
 #!/usr/bin/env node
 
-require('../lib/svgo/coa').run();
+const { program } = require('commander');
+const makeProgram = require('../lib/svgo/coa');
+makeProgram(program);
+program.parseAsync(process.argv);

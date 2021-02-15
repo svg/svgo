@@ -1,12 +1,12 @@
 'use strict';
 
+const { expect } = require('chai');
+
 var FS = require('fs'),
     PATH = require('path'),
     EOL = require('os').EOL,
     regEOL = new RegExp(EOL, 'g'),
-    SVGO = require(process.env.COVERAGE ?
-                   '../../lib-cov/svgo':
-                   '../../lib/svgo');
+    SVGO = require('../../lib/svgo');
 
 describe('indentation', function() {
 
@@ -25,15 +25,13 @@ describe('indentation', function() {
                 should   = splitted[1];
 
             svgo = new SVGO({
-                full    : true,
                 plugins : [],
                 js2svg  : { pretty: true, indent: 2 }
             });
 
-            svgo.optimize(orig, {path: filepath}).then(function(result) {
-                normalize(result.data).should.be.equal(should);
-                done();
-            });
+            const result = svgo.optimize(orig, {path: filepath});
+            expect(normalize(result.data)).to.equal(should);
+            done();
 
         });
 

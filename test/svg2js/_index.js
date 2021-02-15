@@ -1,20 +1,13 @@
 'use strict';
 
-var SHOULD = require('should'),
-    FS = require('fs'),
+const { expect } = require('chai');
+
+var FS = require('fs'),
     PATH = require('path'),
-    JSAPI = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/jsAPI' :
-                     '../../lib/svgo/jsAPI'),
-    CSSClassList = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/css-class-list' :
-                     '../../lib/svgo/css-class-list'),
-    CSSStyleDeclaration = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/css-style-declaration' :
-                     '../../lib/svgo/css-style-declaration'),
-    SVG2JS = require(process.env.COVERAGE ?
-                     '../../lib-cov/svgo/svg2js' :
-                     '../../lib/svgo/svg2js');
+    JSAPI = require('../../lib/svgo/jsAPI'),
+    CSSClassList = require('../../lib/svgo/css-class-list'),
+    CSSStyleDeclaration = require('../../lib/svgo/css-style-declaration'),
+    SVG2JS = require('../../lib/svgo/svg2js');
 
 describe('svg2js', function() {
 
@@ -30,10 +23,8 @@ describe('svg2js', function() {
                     throw err;
                 }
 
-                SVG2JS(data, function(result) {
-                    root = result;
-                    done();
-                });
+                root = SVG2JS(data)
+                done();
             });
 
         });
@@ -41,15 +32,15 @@ describe('svg2js', function() {
         describe('root', function() {
 
             it('should exist', function() {
-                return root.should.exist;
+                expect(root).to.exist;
             });
 
             it('should be an instance of Object', function() {
-                return root.should.be.an.instanceOf(Object);
+                expect(root).to.be.an.instanceOf(Object);
             });
 
             it('should have property "content"', function() {
-                return root.should.have.property('content');
+                expect(root).to.have.property('content');
             });
 
         });
@@ -57,11 +48,11 @@ describe('svg2js', function() {
         describe('root.content', function() {
 
             it('should be an instance of Array', function() {
-                return root.content.should.be.an.instanceOf(Array);
+                expect(root.content).to.be.an.instanceOf(Array);
             });
 
             it('should have length 4', function() {
-                return root.content.should.have.lengthOf(4);
+                expect(root.content).to.have.lengthOf(4);
             });
 
         });
@@ -69,19 +60,19 @@ describe('svg2js', function() {
         describe('root.content[0].processinginstruction', function() {
 
             it('should exist', function() {
-                return root.content[0].processinginstruction.should.exist;
+                expect(root.content[0].processinginstruction).to.exist;
             });
 
             it('should be an instance of Object', function() {
-                return root.content[0].processinginstruction.should.be.an.instanceOf(Object);
+                expect(root.content[0].processinginstruction).to.be.an.instanceOf(Object);
             });
 
             it('should have property "name" with value "xml"', function() {
-                return root.content[0].processinginstruction.should.have.property('name', 'xml');
+                expect(root.content[0].processinginstruction).to.have.property('name', 'xml');
             });
 
             it('should have property "body" with value "version=\"1.0\" encoding=\"utf-8\""', function() {
-                return root.content[0].processinginstruction.should.have.property('body', 'version=\"1.0\" encoding=\"utf-8\"');
+                expect(root.content[0].processinginstruction).to.have.property('body', 'version=\"1.0\" encoding=\"utf-8\"');
             });
 
         });
@@ -89,11 +80,11 @@ describe('svg2js', function() {
         describe('root.content[1].comment', function() {
 
             it('should exist', function() {
-                return root.content[1].comment.should.exist;
+                expect(root.content[1].comment).to.exist;
             });
 
             it('should equal "Generator: Adobe Illustrator…"', function() {
-                return root.content[1].comment.should.equal('Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)');
+                expect(root.content[1].comment).to.equal('Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)');
             });
 
         });
@@ -101,11 +92,11 @@ describe('svg2js', function() {
         describe('root.content[2].doctype', function() {
 
             it('should exist', function() {
-                return root.content[2].doctype.should.exist;
+                expect(root.content[2].doctype).to.exist;
             });
 
             it('should eventually equal " svg PUBLIC…"', function() {
-                return root.content[2].doctype.should.equal(' svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"');
+                expect(root.content[2].doctype).to.equal(' svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"');
             });
 
         });
@@ -113,15 +104,15 @@ describe('svg2js', function() {
         describe('elem', function() {
 
             it('should have property elem: "svg"', function() {
-                return root.content[3].should.have.property('elem', 'svg');
+                expect(root.content[3]).to.have.property('elem', 'svg');
             });
 
             it('should have property prefix: ""', function() {
-                return root.content[3].should.have.property('prefix', '');
+                expect(root.content[3]).to.have.property('prefix', '');
             });
 
             it('should have property local: "svg"', function() {
-                return root.content[3].should.have.property('local', 'svg');
+                expect(root.content[3]).to.have.property('local', 'svg');
             });
 
         });
@@ -131,11 +122,11 @@ describe('svg2js', function() {
             describe('root.content[3].attrs', function() {
 
                 it('should exist', function() {
-                    return root.content[3].attrs.should.exist;
+                    expect(root.content[3].attrs).to.exist;
                 });
 
                 it('should be an instance of Object', function() {
-                    return root.content[3].attrs.should.be.an.instanceOf(Object);
+                    expect(root.content[3].attrs).to.be.an.instanceOf(Object);
                 });
 
             });
@@ -143,27 +134,27 @@ describe('svg2js', function() {
             describe('root.content[3].attrs.version', function() {
 
                 it('should exist', function() {
-                    return root.content[3].attrs.version.should.exist;
+                    expect(root.content[3].attrs.version).to.exist;
                 });
 
                 it('should be an instance of Object', function() {
-                    return root.content[3].attrs.version.should.be.an.instanceOf(Object);
+                    expect(root.content[3].attrs.version).to.be.an.instanceOf(Object);
                 });
 
                 it('should have property name: "version"', function() {
-                    return root.content[3].attrs.version.should.have.property('name', 'version');
+                    expect(root.content[3].attrs.version).to.have.property('name', 'version');
                 });
 
                 it('should have property value: "1.1"', function() {
-                    return root.content[3].attrs.version.should.have.property('value', '1.1');
+                    expect(root.content[3].attrs.version).to.have.property('value', '1.1');
                 });
 
                 it('should have property prefix: ""', function() {
-                    return root.content[3].attrs.version.should.have.property('prefix', '');
+                    expect(root.content[3].attrs.version).to.have.property('prefix', '');
                 });
 
                 it('should have property local: "version"', function() {
-                    return root.content[3].attrs.version.should.have.property('local', 'version');
+                    expect(root.content[3].attrs.version).to.have.property('local', 'version');
                 });
 
             });
@@ -173,15 +164,15 @@ describe('svg2js', function() {
         describe('content', function() {
 
             it('should exist', function() {
-                return root.content[3].content.should.exist;
+                expect(root.content[3].content).to.exist;
             });
 
             it('should be an instance of Array', function() {
-                return root.content[3].content.should.be.an.instanceOf(Array);
+                expect(root.content[3].content).to.be.an.instanceOf(Array);
             });
 
             it('should eventually have length 3', function() {
-                return root.content[3].content.should.have.lengthOf(3);
+                expect(root.content[3].content).to.have.lengthOf(3);
             });
 
         });
@@ -191,19 +182,19 @@ describe('svg2js', function() {
             describe('clone()', function() {
 
                 it('svg should have property "clone"', function() {
-                    return root.content[3].should.have.property('clone');
+                    expect(root.content[3]).to.have.property('clone');
                 });
 
                 it('svg.clone() should be an instance of JSAPI', function() {
-                    return root.content[3].clone().should.be.instanceOf(JSAPI);
+                    expect(root.content[3].clone()).to.be.instanceOf(JSAPI);
                 });
 
                 it('root.content[3].content[0].clone() has a valid style property', function() {
-                    return root.content[3].content[0].clone().style.should.be.instanceof(CSSStyleDeclaration);
+                    expect(root.content[3].content[0].clone().style).to.be.instanceof(CSSStyleDeclaration);
                 });
 
                 it('root.content[3].content[2].clone() has a valid class property', function() {
-                    return root.content[3].content[2].clone().class.should.be.instanceof(CSSClassList);
+                    expect(root.content[3].content[2].clone().class).to.be.instanceof(CSSClassList);
                 });
 
             });
@@ -211,23 +202,23 @@ describe('svg2js', function() {
             describe('isElem()', function() {
 
                 it('svg should have property "isElem"', function() {
-                    return root.content[3].should.have.property('isElem');
+                    expect(root.content[3]).to.have.property('isElem');
                 });
 
                 it('svg.isElem() should be true', function() {
-                    return root.content[3].isElem().should.be.true;
+                    expect(root.content[3].isElem()).to.be.true;
                 });
 
                 it('svg.isElem("svg") should be true', function() {
-                    return root.content[3].isElem('svg').should.be.true;
+                    expect(root.content[3].isElem('svg')).to.be.true;
                 });
 
                 it('svg.isElem("trololo") should be false', function() {
-                    return root.content[3].isElem('trololo').should.be.false;
+                    expect(root.content[3].isElem('trololo')).to.be.false;
                 });
 
                 it('svg.isElem(["svg", "trololo"]) should be true', function() {
-                    return root.content[3].isElem(['svg', 'trololo']).should.be.true;
+                    expect(root.content[3].isElem(['svg', 'trololo'])).to.be.true;
                 });
 
             });
@@ -235,15 +226,15 @@ describe('svg2js', function() {
             describe('isEmpty()', function() {
 
                 it('svg should have property "isEmpty"', function() {
-                    return root.content[3].should.have.property('isEmpty');
+                    expect(root.content[3]).to.have.property('isEmpty');
                 });
 
                 it('svg.isEmpty() should be false', function() {
-                    return root.content[3].isEmpty().should.be.false;
+                    expect(root.content[3].isEmpty()).to.be.false;
                 });
 
                 it('svg.content[0].content[0].isEmpty() should be true', function() {
-                    return root.content[3].content[0].content[0].isEmpty().should.be.true;
+                    expect(root.content[3].content[0].content[0].isEmpty()).to.be.true;
                 });
 
             });
@@ -251,31 +242,31 @@ describe('svg2js', function() {
             describe('hasAttr()', function() {
 
                 it('svg should have property "hasAttr"', function() {
-                    return root.content[3].should.have.property('hasAttr');
+                    expect(root.content[3]).to.have.property('hasAttr');
                 });
 
                 it('svg.hasAttr() should be true', function() {
-                    return root.content[3].hasAttr().should.be.true;
+                    expect(root.content[3].hasAttr()).to.be.true;
                 });
 
                 it('svg.hasAttr("xmlns") should be true', function() {
-                    return root.content[3].hasAttr('xmlns').should.be.true;
+                    expect(root.content[3].hasAttr('xmlns')).to.be.true;
                 });
 
                 it('svg.hasAttr("xmlns", "http://www.w3.org/2000/svg") should be true', function() {
-                    return root.content[3].hasAttr('xmlns', 'http://www.w3.org/2000/svg').should.be.true;
+                    expect(root.content[3].hasAttr('xmlns', 'http://www.w3.org/2000/svg')).to.be.true;
                 });
 
                 it('svg.hasAttr("xmlns", "trololo") should be false', function() {
-                    return root.content[3].hasAttr('xmlns', 'trololo').should.be.false;
+                    expect(root.content[3].hasAttr('xmlns', 'trololo')).to.be.false;
                 });
 
                 it('svg.hasAttr("trololo") should be false', function() {
-                    return root.content[3].hasAttr('trololo').should.be.false;
+                    expect(root.content[3].hasAttr('trololo')).to.be.false;
                 });
 
                 it('svg.content[1].hasAttr() should be false', function() {
-                    return root.content[3].content[1].hasAttr().should.be.false;
+                    expect(root.content[3].content[1].hasAttr()).to.be.false;
                 });
 
             });
@@ -283,27 +274,27 @@ describe('svg2js', function() {
             describe('attr()', function() {
 
                 it('svg should have property "attr"', function() {
-                    return root.content[3].should.have.property('attr');
+                    expect(root.content[3]).to.have.property('attr');
                 });
 
                 it('svg.attr("xmlns") should be an instance of Object', function() {
-                    return root.content[3].attr('xmlns').should.be.an.instanceOf(Object);
+                    expect(root.content[3].attr('xmlns')).to.be.an.instanceOf(Object);
                 });
 
                 it('svg.attr("xmlns", "http://www.w3.org/2000/svg") should be an instance of Object', function() {
-                    return root.content[3].attr('xmlns', 'http://www.w3.org/2000/svg').should.be.an.instanceOf(Object);
+                    expect(root.content[3].attr('xmlns', 'http://www.w3.org/2000/svg')).to.be.an.instanceOf(Object);
                 });
 
                 it('svg.attr("xmlns", "trololo") should be an undefined', function() {
-                    return SHOULD.not.exist(root.content[3].attr('xmlns', 'trololo'));
+                    expect(root.content[3].attr('xmlns', 'trololo')).to.not.exist;
                 });
 
                 it('svg.attr("trololo") should be an undefined', function() {
-                    return SHOULD.not.exist(root.content[3].attr('trololo'));
+                    expect(root.content[3].attr('trololo')).to.not.exist;
                 });
 
                 it('svg.attr() should be undefined', function() {
-                    return SHOULD.not.exist(root.content[3].attr());
+                    expect(root.content[3].attr()).to.not.exist;
                 });
 
             });
@@ -311,33 +302,33 @@ describe('svg2js', function() {
             describe('removeAttr()', function() {
 
                 it('svg should have property "removeAttr"', function() {
-                    return root.content[3].should.have.property('removeAttr');
+                    expect(root.content[3]).to.have.property('removeAttr');
                 });
 
                 it('svg.removeAttr("width") should be true', function() {
-                    root.content[3].removeAttr('width').should.be.true;
+                    expect(root.content[3].removeAttr('width')).to.be.true;
 
-                    return root.content[3].hasAttr('width').should.be.false;
+                    expect(root.content[3].hasAttr('width')).to.be.false;
                 });
 
                 it('svg.removeAttr("height", "120px") should be true', function() {
-                    root.content[3].removeAttr('height', '120px').should.be.true;
+                    expect(root.content[3].removeAttr('height', '120px')).to.be.true;
 
-                    return root.content[3].hasAttr('height').should.be.false;
+                    expect(root.content[3].hasAttr('height')).to.be.false;
                 });
 
                 it('svg.removeAttr("x", "1px") should be false', function() {
-                    root.content[3].removeAttr('x', '1px').should.be.false;
+                    expect(root.content[3].removeAttr('x', '1px')).to.be.false;
 
-                    return root.content[3].hasAttr('x').should.be.true;
+                    expect(root.content[3].hasAttr('x')).to.be.true;
                 });
 
                 it('svg.removeAttr("z") should be false', function() {
-                    return root.content[3].removeAttr('z').should.be.false;
+                    expect(root.content[3].removeAttr('z')).to.be.false;
                 });
 
                 it('svg.removeAttr() should be false', function() {
-                    return root.content[3].removeAttr().should.be.false;
+                    expect(root.content[3].removeAttr()).to.be.false;
                 });
 
             });
@@ -352,35 +343,35 @@ describe('svg2js', function() {
                 };
 
                 it('svg should have property "addAttr"', function() {
-                    return root.content[3].should.have.property('addAttr');
+                    expect(root.content[3]).to.have.property('addAttr');
                 });
 
                 it('svg.addAttr(attr) should be an instance of Object', function() {
-                    return root.content[3].addAttr(attr).should.be.an.instanceOf(Object);
+                    expect(root.content[3].addAttr(attr)).to.be.an.instanceOf(Object);
                 });
 
                 it('svg.content[1].content[0].addAttr(attr) should be an instance of Object', function() {
-                    return root.content[3].content[1].content[0].addAttr(attr).should.be.an.instanceOf(Object);
+                    expect(root.content[3].content[1].content[0].addAttr(attr)).to.be.an.instanceOf(Object);
                 });
 
                 it('svg.addAttr({ name: "trololo" }) should be false', function() {
-                    return root.content[3].addAttr({ name: 'trololo' }).should.be.false;
+                    expect(root.content[3].addAttr({ name: 'trololo' })).to.be.false;
                 });
 
                 it('svg.addAttr({ name: "trololo", value: 3 }) should be false', function() {
-                    return root.content[3].addAttr({ name: 'trololo', value: 3 }).should.be.false;
+                    expect(root.content[3].addAttr({ name: 'trololo', value: 3 })).to.be.false;
                 });
 
                 it('svg.addAttr({ name: "trololo", value: 3, prefix: "" }) should be false', function() {
-                    return root.content[3].addAttr({ name: 'trololo', value: 3, prefix: '' }).should.be.false;
+                    expect(root.content[3].addAttr({ name: 'trololo', value: 3, prefix: '' })).to.be.false;
                 });
 
                 it('svg.addAttr({ name: "trololo", value: 3, local: "trololo" }) should be false', function() {
-                    return root.content[3].addAttr({ name: 'trololo', value: 3, local: 'trololo' }).should.be.false;
+                    expect(root.content[3].addAttr({ name: 'trololo', value: 3, local: 'trololo' })).to.be.false;
                 });
 
                 it('svg.addAttr() should be false', function() {
-                    return root.content[3].addAttr().should.be.false;
+                    expect(root.content[3].addAttr()).to.be.false;
                 });
 
             });
@@ -388,19 +379,19 @@ describe('svg2js', function() {
             describe('eachAttr()', function() {
 
                 it('svg should have property "eachAttr"', function() {
-                    return root.content[3].should.have.property('eachAttr');
+                    expect(root.content[3]).to.have.property('eachAttr');
                 });
 
                 it('svg.content[0].eachAttr(function() {}) should be true', function() {
-                    root.content[3].content[0].eachAttr(function(attr) {
+                    expect(root.content[3].content[0].eachAttr(function(attr) {
                         attr.test = 1;
-                    }).should.be.true;
+                    })).to.be.true;
 
-                    return root.content[3].content[0].attr('type').test.should.equal(1);
+                    expect(root.content[3].content[0].attr('type').test).to.equal(1);
                 });
 
                 it('svg.content[1].eachAttr(function() {}) should be false', function() {
-                    return root.content[3].content[1].eachAttr().should.be.false;
+                    expect(root.content[3].content[1].eachAttr()).to.be.false;
                 });
 
             });
@@ -423,9 +414,7 @@ describe('svg2js', function() {
                 }
 
                 try {
-                    SVG2JS(data, function(result) {
-                        root = result;
-                    });
+                    root = SVG2JS(data)
                 } catch (e) {
                     error = e;
                 }
@@ -438,19 +427,14 @@ describe('svg2js', function() {
         describe('root', function() {
 
             it('should have property "error"', function() {
-                return root.should.have.property('error');
+                expect(root).to.have.property('error');
             });
 
         });
 
         describe('root.error', function() {
-
-            it('should be an instance of String', function() {
-                return root.error.should.an.instanceOf(String);
-            });
-
             it('should be "Error in parsing SVG: Unexpected close tag"', function() {
-                return root.error.should.equal('Error in parsing SVG: Unexpected close tag\nLine: 10\nColumn: 15\nChar: >');
+                expect(root.error).to.equal('Error in parsing SVG: Unexpected close tag\nLine: 10\nColumn: 15\nChar: >');
             });
 
         });
@@ -458,7 +442,7 @@ describe('svg2js', function() {
         describe('error', function() {
 
             it('should not be thrown', function() {
-                return SHOULD.not.exist(error);
+                expect(error).to.not.exist;
             });
 
         });
@@ -473,23 +457,21 @@ describe('svg2js', function() {
             FS.readFile(filepath, 'utf8', function(err, data) {
                 if (err) throw err;
 
-                SVG2JS(data, function(result) {
-                    root = result;
-                });
+                root = SVG2JS(data);
                 done();
             });
         });
 
         describe('root', function() {
             it('should exist', function() {
-                return root.should.exist;
+                expect(root).to.exist;
             });
 
             it('should have correctly parsed entities', function() {
                 var attrs = root.content[root.content.length - 1].attrs;
 
-                attrs['xmlns:x'].value.should.be.equal('http://ns.adobe.com/Extensibility/1.0/');
-                attrs['xmlns:graph'].value.should.be.equal('http://ns.adobe.com/Graphs/1.0/');
+                expect(attrs['xmlns:x'].value).to.be.equal('http://ns.adobe.com/Extensibility/1.0/');
+                expect(attrs['xmlns:graph'].value).to.be.equal('http://ns.adobe.com/Graphs/1.0/');
             });
         });
     });
