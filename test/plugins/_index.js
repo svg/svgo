@@ -24,7 +24,7 @@ describe('plugins tests', function() {
 
             file = PATH.resolve(__dirname, file);
 
-            it.only(name + '.' + index, function() {
+            it(name + '.' + index, function() {
 
                 return readFile(file)
                 .then(function(data) {
@@ -39,7 +39,6 @@ describe('plugins tests', function() {
                     plugins[name] = (params) ? JSON.parse(params) : true;
 
                     svgo = new SVGO({
-                        full    : true,
                         plugins : [ plugins ],
                         js2svg  : { pretty: true }
                     });

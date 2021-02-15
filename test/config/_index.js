@@ -91,7 +91,6 @@ describe('config', function() {
     describe('replace default config with custom', function() {
 
         var config = CONFIG({
-                full: true,
                 multipass: true,
                 floatPrecision: 2,
                 plugins: [
@@ -146,7 +145,6 @@ describe('config', function() {
         describe('replace default config with custom plugin', function() {
 
             var config = CONFIG({
-                    full: true,
                     plugins: [
                         {
                             aCustomPlugin: {

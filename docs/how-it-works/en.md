@@ -36,19 +36,7 @@ It's important to note that every plugin:
   * can be turned on with `name: true` and off with `name: false`,
   * can have its own `params` which will be available later inside a plugin.
 
-These settings can be changed by the provided config file with `--config` command line option. You can force using only your settings with the `full: true` parameter in your config:
-
-```yaml
-full: true
-plugins:
-  - myTestPlugin
-  - myTestPlugin3:
-      param1: 1
-      param2: 2
-    …
-```
-
-In such a case only listed plugins will be run.
+These settings can be changed by the provided config file with `--config` command line option.
 
 - - -
 

@@ -25,7 +25,6 @@ describe('indentation', function() {
                 should   = splitted[1];
 
             svgo = new SVGO({
-                full    : true,
                 plugins : [],
                 js2svg  : { pretty: true, indent: 2 }
             });
