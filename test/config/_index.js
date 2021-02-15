@@ -1,46 +1,20 @@
 'use strict';
 
 const { expect } = require('chai');
-
-var CONFIG = require('../../lib/svgo/config');
+const { resolvePluginConfig } = require('../../lib/svgo/config.js');
 
 describe('config', function() {
 
-    describe('default config', function() {
-
-        var config = CONFIG();
-
-        it('should be an instance of Object', function() {
-            expect(config).to.be.an.instanceOf(Object);
-        });
-
-        it('should have property "plugins"', function() {
-            expect(config).to.have.property('plugins');
-        });
-
-        it('"plugins" should be an instance of Array', function() {
-            expect(config.plugins).to.be.an.instanceOf(Array);
-        });
-
-    });
-
     describe('extend config with object', function() {
 
-        var config = CONFIG({
-                multipass: true,
-                plugins: [
-                    { name: 'removeDoctype', active: false },
-                    { name: 'convertColors', params: { shorthex: false } },
-                    { name: 'removeRasterImages', params: { param: true } }
-                ]
-            }),
-            removeDoctype = getPlugin('removeDoctype', config.plugins),
-            convertColors = getPlugin('convertColors', config.plugins),
-            removeRasterImages = getPlugin('removeRasterImages', config.plugins);
-
-        it('should have "multipass"', function() {
-            expect(config.multipass).to.be.true;
-        });
+        var plugins = [
+            { name: 'removeDoctype', active: false },
+            { name: 'convertColors', params: { shorthex: false } },
+            { name: 'removeRasterImages', params: { param: true } }
+        ].map(plugin => resolvePluginConfig(plugin, {}));
+        const removeDoctype = getPlugin('removeDoctype', plugins);
+        const convertColors = getPlugin('convertColors', plugins);
+        const removeRasterImages = getPlugin('removeRasterImages', plugins);
 
         it('removeDoctype plugin should be disabled', function() {
             expect(removeDoctype.active).to.be.false;
@@ -90,21 +64,22 @@ describe('config', function() {
 
     describe('replace default config with custom', function() {
 
-        var config = CONFIG({
-                multipass: true,
-                floatPrecision: 2,
-                plugins: [
-                    { name: 'cleanupNumericValues' }
-                ]
-            }),
-            cleanupNumericValues = getPlugin('cleanupNumericValues', config.plugins);
+        const config = {
+            multipass: true,
+            floatPrecision: 2,
+            plugins: [
+                { name: 'cleanupNumericValues' }
+            ]
+        }
+        const plugins = config.plugins.map(plugin => resolvePluginConfig(plugin, config));
+        const cleanupNumericValues = getPlugin('cleanupNumericValues', plugins);
 
         it('should have "multipass"', function() {
             expect(config.multipass).to.be.true;
         });
 
         it('config.plugins should have length 1', function() {
-            expect(config.plugins).to.have.length(1);
+            expect(plugins).to.have.length(1);
         });
 
         it('cleanupNumericValues plugin should be enabled', function() {
@@ -121,16 +96,14 @@ describe('config', function() {
     describe('custom plugins', function() {
 
         describe('extend config with custom plugin', function() {
-            var config = CONFIG({
-                    plugins: [
-                        {
-                            name: 'aCustomPlugin',
-                            type: 'perItem',
-                            fn: function() { }
-                        }
-                    ]
-                }),
-                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+            const plugins = [
+                {
+                    name: 'aCustomPlugin',
+                    type: 'perItem',
+                    fn: function() { }
+                }
+            ].map(plugin => resolvePluginConfig(plugin, {}));
+            const customPlugin = getPlugin('aCustomPlugin', plugins);
 
             it('custom plugin should be enabled', function() {
                 expect(customPlugin.active).to.be.true;
@@ -143,19 +116,17 @@ describe('config', function() {
 
         describe('replace default config with custom plugin', function() {
 
-            var config = CONFIG({
-                    plugins: [
-                        {
-                            name: 'aCustomPlugin',
-                            type: 'perItem',
-                            fn: function() { }
-                        }
-                    ]
-                }),
-                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+            const plugins = [
+                {
+                    name: 'aCustomPlugin',
+                    type: 'perItem',
+                    fn: function() { }
+                }
+            ].map(plugin => resolvePluginConfig(plugin, {}));
+            const customPlugin = getPlugin('aCustomPlugin', plugins);
 
             it('config.plugins should have length 1', function() {
-                expect(config.plugins).to.have.length(1);
+                expect(plugins).to.have.length(1);
             });
 
             it('custom plugin should be enabled', function() {
@@ -173,18 +144,10 @@ describe('config', function() {
 });
 
 function getPlugin(name, plugins) {
-
-    var found;
-
-    plugins.some(function(group) {
-        return group.some(function(plugin) {
-            if (plugin.name === name) {
-                found = plugin;
-                return true;
-            }
-        });
+    return plugins.find(function(plugin) {
+        if (plugin.name === name) {
+            return plugin;
+        }
     });
-
-    return found;
 
 }

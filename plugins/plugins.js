@@ -1,3 +1,5 @@
+'use strict';
+
 exports.addAttributesToSVGElement = require('./addAttributesToSVGElement.js');
 exports.addClassesToSVGElement = require('./addClassesToSVGElement.js');
 exports.cleanupAttrs = require('./cleanupAttrs.js');
