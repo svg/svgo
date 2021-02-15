@@ -24,7 +24,7 @@ describe('plugins tests', function() {
 
             file = PATH.resolve(__dirname, file);
 
-            it(name + '.' + index, function() {
+          it(name + '.' + index, function() {
 
                 return readFile(file)
                 .then(function(data) {
@@ -32,14 +32,15 @@ describe('plugins tests', function() {
                         orig     = splitted[0],
                         should   = splitted[1],
                         params   = splitted[2],
-
-                        plugins = {},
                         svgo;
-
-                    plugins[name] = (params) ? JSON.parse(params) : true;
+                  
+                    const plugin = {
+                      name,
+                      params: (params ? JSON.parse(params) : {}),
+                    };
 
                     svgo = new SVGO({
-                        plugins : [ plugins ],
+                        plugins : [ plugin ],
                         js2svg  : { pretty: true }
                     });
 
