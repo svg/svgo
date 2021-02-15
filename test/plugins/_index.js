@@ -24,7 +24,7 @@ describe('plugins tests', function() {
 
             file = PATH.resolve(__dirname, file);
 
-            it(name + '.' + index, function() {
+            it.only(name + '.' + index, function() {
 
                 return readFile(file)
                 .then(function(data) {
