@@ -15,12 +15,20 @@ exports.description = 'prefix IDs';
 
 var path = require('path'),
     csstree = require('css-tree'),
-    unquote = require('unquote'),
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
     rxId = /^#(.*)$/, // regular expression for matching an ID + extracing its name
     addPrefix = null;
 
+const unquote = (string) => {
+  const first = string.charAt(0)
+  if (first === "'" || first === '"') {
+    if (first === string.charAt(string.length - 1)) {
+      return string.slice(1, -1);
+    }
+  }
+  return string;
+}
 
 // Escapes a string for being used as ID
 var escapeIdentifierName = function(str) {

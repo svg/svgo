@@ -55,12 +55,11 @@
     "commander": "^7.0.0",
     "css-select": "^2.0.0",
     "css-select-base-adapter": "^0.1.1",
-    "css-tree": "1.0.0-alpha.37",
-    "csso": "^4.0.2",
+    "css-tree": "^1.1.2",
+    "csso": "^4.2.0",
     "js-yaml": "^3.13.1",
     "sax": "~1.2.4",
-    "stable": "^0.1.8",
-    "unquote": "~1.1.1"
+    "stable": "^0.1.8"
   },
   "devDependencies": {
     "chai": "^4.3.0",
