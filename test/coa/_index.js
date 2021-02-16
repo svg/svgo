@@ -2,9 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const del = require('del');
 const { expect } = require('chai');
 const { Command } = require('commander');
-const fse = require('fs-extra');
 const svgo = require('../../lib/svgo/coa.js');
 
 const svgPath = path.resolve(__dirname, 'test.svg');
@@ -26,52 +26,52 @@ function runProgram(args) {
 }
 
 describe('coa', function() {
-    let output;
+  let output;
 
-    beforeEach(function() {
-        output = '';
+  beforeEach(async () => {
+    output = '';
+    await del(tempFolder);
+    await fs.promises.mkdir(tempFolder);
+  });
 
-        fse.emptyDirSync(tempFolder);
-    });
+  after(async () => {
+    await del(tempFolder);
+  });
 
-    after(function() {
-        fse.removeSync(tempFolder);
-    });
+  const initialConsoleLog = global.console.log;
 
-    const initialConsoleLog = global.console.log;
+  function replaceConsoleLog() {
+    global.console.log = message => { output += message };
+  }
 
-    function replaceConsoleLog() {
-        global.console.log = message => { output += message };
-    }
+  function restoreConsoleLog() {
+    global.console.log = initialConsoleLog;
+  }
 
-    function restoreConsoleLog() {
-        global.console.log = initialConsoleLog;
-    }
+  const initialConsoleError = global.console.error;
+  const initialProcessExit = global.process.exit;
 
-    const initialConsoleError = global.console.error;
-    const initialProcessExit = global.process.exit;
+  function replaceConsoleError() {
+    global.console.error = message => { output += message };
+    global.process.exit = noop;
+  }
 
-    function replaceConsoleError() {
-        global.console.error = message => { output += message };
-        global.process.exit = noop;
-    }
+  function restoreConsoleError() {
+    global.console.error = initialConsoleError;
+    global.process.exit = initialProcessExit;
+  }
 
-    function restoreConsoleError() {
-        global.console.error = initialConsoleError;
-        global.process.exit = initialProcessExit;
-    }
-
-    function calcFolderSvgWeight(folderPath) {
-        return fs.readdirSync(folderPath).reduce((initWeight, name) => (
-            initWeight +
-                (/.svg/.test(name) ? fs.statSync(path.join(folderPath, name)).size : 0) +
-                (checkIsDir(path.join(folderPath, name)) ? calcFolderSvgWeight(path.join(folderPath, name)) : 0)
-        ), 0);
-    }
+  function calcFolderSvgWeight(folderPath) {
+    return fs.readdirSync(folderPath).reduce((initWeight, name) => (
+      initWeight +
+        (/.svg/.test(name) ? fs.statSync(path.join(folderPath, name)).size : 0) +
+        (checkIsDir(path.join(folderPath, name)) ? calcFolderSvgWeight(path.join(folderPath, name)) : 0)
+    ), 0);
+  }
 
   it('should work properly with string input', async () => {
     await runProgram(['--string', fs.readFileSync(svgPath, 'utf8'), '--output', 'temp.svg', '--quiet']);
-    fse.removeSync('temp.svg');
+    await del('temp.svg');
   });
 
   it('should optimize folder', async () => {
@@ -102,7 +102,7 @@ describe('coa', function() {
     await runProgram(['--input', svgPath, '--output', 'temp.svg', '--quiet']);
     const optimizedFileLength = fs.readFileSync('temp.svg').length;
     expect(optimizedFileLength).lte(initialFileLength);
-    fse.removeSync('temp.svg');
+    await del('temp.svg');
   });
 
   it('should optimize several files', async () => {
@@ -111,7 +111,7 @@ describe('coa', function() {
     const optimizedWeight = calcFolderSvgWeight(tempFolder);
     expect(optimizedWeight).gt(0);
     expect(optimizedWeight).lte(initWeight);
-    fse.removeSync('temp.svg');
+    await del('temp.svg');
   });
 
   it('should optimize file from process.stdin', async () => {
@@ -131,7 +131,7 @@ describe('coa', function() {
     } finally {
       const optimizedFileLength = fs.readFileSync('temp.svg').length;
       expect(optimizedFileLength).lte(initialFile.length);
-      fse.removeSync('temp.svg');
+      await del('temp.svg');
     }
   });
 
