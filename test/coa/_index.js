@@ -10,8 +10,9 @@ const fs = require('fs'),
     svgFiles = [path.resolve(__dirname, 'testSvg/test.svg'), path.resolve(__dirname, 'testSvg/test.1.svg')],
     tempFolder = 'temp',
     fse = require('fs-extra'),
-    checkIsDir = require('../../lib/svgo/tools.js').checkIsDir,
     noop = () => {};
+
+const { checkIsDir } = svgo;
 
 function runProgram(args) {
   const program = new Command();
