@@ -121,7 +121,7 @@ describe('coa', function() {
 
         const stdin = require('mock-stdin').stdin();
 
-        setTimeout(() => { stdin.send(initialFile, 'ascii').end(); }, 0);
+        setTimeout(() => { stdin.send(initialFile, 'ascii').end(); }, 1000);
 
         runProgram(['--input', '-', '--output', 'temp.svg', '--string', fs.readFileSync(svgPath, 'utf8'), '--quiet'])
             .then(onComplete, onComplete);

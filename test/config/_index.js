@@ -1,6 +1,8 @@
 'use strict';
 
+const path = require('path');
 const { expect } = require('chai');
+const { loadConfig } = require('../../lib/svgo-node.js');
 const {
   resolvePluginConfig,
   extendDefaultPlugins
@@ -180,6 +182,66 @@ describe('config', function() {
     });
     it('should put custom plugins in the end', () => {
       expect(extendedPlugins[extendedPlugins.length - 1].name).to.equal('customPlugin');
+    });
+  });
+
+  describe('config', () => {
+    it('is loaded by absolute path', async () => {
+      const config = await loadConfig(
+        path.join(process.cwd(), './test/config/fixtures/one/two/config.js'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('is loaded by relative path to cwd', async () => {
+      const config = await loadConfig(
+        'one/two/config.js',
+        path.join(process.cwd(), './test/config/fixtures'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('is searched in cwd and up', async () => {
+      const config = await loadConfig(
+        null,
+        path.join(process.cwd(), './test/config/fixtures/one/two'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('gives null module does not exist', async () => {
+      const absoluteConfig = await loadConfig(
+        path.join(process.cwd(), './test/config/fixtures/config.js'),
+      );
+      expect(absoluteConfig).to.equal(null);
+      const searchedConfig = await loadConfig(
+        null,
+        path.join(process.cwd(), './test/config'),
+      );
+      expect(searchedConfig).to.equal(null);
+    });
+    it('is failed to load when module exports not an object', async () => {
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-null.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-array.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-string.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
     });
   });
 });
