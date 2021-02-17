@@ -184,6 +184,7 @@ Arguments:
 ### Other Ways to Use SVGO
 
 * as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
+* as a GitHub Action – [SVGO Action](https://github.com/marketplace/actions/svgo-action)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
