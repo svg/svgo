@@ -95,9 +95,7 @@ Options:
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
-  --config=CONFIG : Config file or JSON string to extend or replace default
-  --disable=PLUGIN : Disable plugin by name, "--disable=PLUGIN1,PLUGIN2" for multiple plugins
-  --enable=PLUGIN : Enable plugin by name, "--enable=PLUGIN3,PLUGIN4" for multiple plugins
+  --config=CONFIG : Config file to customize default behavior
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --multipass : Pass over SVGs multiple times to ensure all optimizations are applied
   --pretty : Make SVG pretty printed
@@ -121,6 +119,7 @@ Arguments:
     ```sh
     $ svgo *.svg
     ```
+    Windows does not support glob expansion. The command above will not work on Windows. 
 
     ```sh
     $ svgo test.svg -o test.min.svg

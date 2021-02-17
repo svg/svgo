@@ -1,44 +1,30 @@
 'use strict';
 
-var SVGO = require(process.env.COVERAGE ?
-    '../../lib-cov/svgo.js' :
-    '../../lib/svgo.js');
+const { expect } = require('chai');
+const { createContentItem } = require('../../lib/svgo.js');
+const JSAPI = require('../../lib/svgo/jsAPI.js');
 
-var JSAPI = require(process.env.COVERAGE ?
-    '../../lib-cov/svgo/jsAPI.js' :
-    '../../lib/svgo/jsAPI.js');
-
-describe('svgo object', function() {
+describe('svgo api', function() {
 
     it('should has createContentItem method', function() {
-        var svgo = new SVGO();
-        svgo.createContentItem.should.be.a.Function;
+        expect(createContentItem).to.be.instanceOf(Function);
     });
 
     it('should be able to create content item', function() {
-        var svgo = new SVGO();
-        var item = svgo.createContentItem({
+        var item = createContentItem({
             elem: 'elementName',
             prefix: 'prefixName',
             local: 'localName'
         });
-
-        item.should.be.instanceof(JSAPI);
-        item.should.have.ownProperty('elem').equal('elementName');
-        item.should.have.ownProperty('prefix').equal('prefixName');
-        item.should.have.ownProperty('local').equal('localName');
+        expect(item).to.be.instanceOf(JSAPI);
+        expect(item).to.have.ownProperty('elem').equal('elementName');
+        expect(item).to.have.ownProperty('prefix').equal('prefixName');
+        expect(item).to.have.ownProperty('local').equal('localName');
     });
 
     it('should be able create content item without argument', function() {
-        var svgo = new SVGO();
-        var item = svgo.createContentItem();
-
-        item.should.be.instanceof(JSAPI);
-        item.should.be.empty;
+        var item = createContentItem();
+        expect(item).to.be.instanceOf(JSAPI);
+        expect(item).to.be.empty;
     });
-
-    it('should have ES module interop default property', function() {
-        SVGO.should.equal(SVGO.default);
-    });
-
 });
