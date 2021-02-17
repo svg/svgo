@@ -42,6 +42,13 @@
   "bin": {
     "svgo": "./bin/svgo"
   },
+  "files": [
+    "bin",
+    "lib",
+    "plugins",
+    "dist",
+    "examples"
+  ],
   "directories": {
     "bin": "./bin",
     "lib": "./lib",
