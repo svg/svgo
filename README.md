@@ -197,6 +197,9 @@ Arguments:
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
 * as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
+* as a VS Code plugin - [vscode-svgo](https://github.com/1000ch/vscode-svgo)
+* as a Atom plugin - [atom-svgo](https://github.com/1000ch/atom-svgo)
+* as a Sublime plugin - [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)
 * as a Figma plugin - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
 
 ## Backers
