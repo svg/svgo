@@ -38,11 +38,170 @@ See help for advanced usage
 svgo --help
 ```
 
-## What it can do
+## Configuration
+
+Some options can be configured with CLI though it may be easier to have configuration in separate file.
+SVGO automatically loads configuration from `svgo.config.js` or module specified with `--config` flag.
+
+```js
+module.exports = {
+  multipass: true, // boolean. false by default
+  datauri: 'enc', // 'base64', 'enc' or 'unenc'. 'base64' by default
+  js2svg: {
+    indent: 2, // string with spaces or number of spaces. 4 by default
+    pretty: true, // boolean, false by default
+  }
+}
+```
 
 SVGO has a plugin-based architecture, so almost every optimization is a separate plugin.
+There is a set of [builtin plugins](#builtin-plugins). See how to configure them:
 
-Today we have:
+```js
+module.exports = {
+  plugins: [
+    // enable builtin plugin by name
+    'builtinPluginName',
+    // or by expanded version
+    {
+      name: 'builtinPluginName'
+    },
+    // some plugins allow/require to pass options
+    {
+      name: 'builtinPluginName',
+      params: {
+        optionName: 'optionValue'
+      }
+    }
+  ]
+}
+```
+
+If `plugins` field is specified default list is fully overrided. To extend default
+list use `extendDefaultPlugins` utility:
+
+```js
+const { extendDefaultPlugins } = require('svgo');
+module.exports = {
+  plugins: extendDefaultPlugins([
+    {
+      name: 'builtinPluginName',
+      params: {
+        optionName: 'optionValue'
+      }
+    }
+  ])
+}
+```
+
+To disable one of default plugins use `active` field:
+
+```js
+const { extendDefaultPlugins } = require('svgo');
+module.exports = {
+  plugins: extendDefaultPlugins([
+    {
+      name: 'builtinPluginName',
+      active: false
+    }
+  ])
+}
+```
+
+See the list of default plugins:
+
+```
+module.exports = {
+  plugins: [
+    'removeDoctype',
+    'removeXMLProcInst',
+    'removeComments',
+    'removeMetadata',
+    'removeEditorsNSData',
+    'cleanupAttrs',
+    'inlineStyles',
+    'minifyStyles',
+    'convertStyleToAttrs',
+    'cleanupIDs',
+    'removeUselessDefs',
+    'cleanupNumericValues',
+    'convertColors',
+    'removeUnknownsAndDefaults',
+    'removeNonInheritableGroupAttrs',
+    'removeUselessStrokeAndFill',
+    'removeViewBox',
+    'cleanupEnableBackground',
+    'removeHiddenElems',
+    'removeEmptyText',
+    'convertShapeToPath',
+    'convertEllipseToCircle',
+    'moveElemsAttrsToGroup',
+    'moveGroupAttrsToElems',
+    'collapseGroups',
+    'convertPathData',
+    'convertTransform',
+    'removeEmptyAttrs',
+    'removeEmptyContainers',
+    'mergePaths',
+    'removeUnusedNS',
+    'sortDefsChildren',
+    'removeTitle',
+    'removeDesc'
+  ]
+}
+```
+
+It's also possible to specify custom plugin:
+
+```js
+const anotherCustomPlugin = require('./another-custom-plugin.js')
+module.exports = {
+  plugins: [
+    {
+      name: 'customPluginName',
+      type: 'perItem', // 'perItem', 'perItemReverse' or 'full'
+      params: {
+        optionName: 'optionValue',
+      },
+      fn: (ast, params, info) => {}
+    },
+    anotherCustomPlugin
+  ]
+}
+```
+
+## API usage
+
+SVGO provides a few low level utilities. `extendDefaultPlugins` is described above.
+
+### optimize
+
+The core of SVGO is `optimize` function.
+
+```js
+const { optimize } = require('svgo');
+const result = optimize(svgString, {
+  // optional but recommended field
+  path: 'path-to.svg',
+  // other config fields are also available here
+  multipass: true
+})
+const optimizedSvgString = result.data
+```
+
+### loadConfig
+
+If you write a tool on top of svgo you might need a way to load svgo config.
+
+```js
+const { loadConfig } = require('svgo');
+const config = await loadConfig()
+
+// you can also specify relative or absolute path and customize current working directory
+const config = await loadConfig(configFile, cwd)
+```
+
+## Builtin plugins
 
 | Plugin | Description | Default |
 | ------ | ----------- | ------- |
@@ -96,9 +255,7 @@ Today we have:
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js) | remove `<script>` elements | `disabled` |
 | [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Find duplicated <path> elements and replace them with <use> links | `disabled` |
 
-Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md). ([동작방법](https://github.com/svg/svgo/blob/master/docs/how-it-works/ko.md))
-
-### Other Ways to Use SVGO
+## Other Ways to Use SVGO
 
 * as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a GitHub Action – [SVGO Action](https://github.com/marketplace/actions/svgo-action)
