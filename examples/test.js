@@ -3,8 +3,8 @@
 const FS = require('fs');
 const PATH = require('path');
 const { optimize } = require('../lib/svgo');
-const filepath = PATH.resolve(__dirname, 'test.svg'),
-const config {
+const filepath = PATH.resolve(__dirname, 'test.svg');
+const config = {
   plugins: [
     'cleanupAttrs',
     'removeDoctype',
