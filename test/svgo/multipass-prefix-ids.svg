@@ -1,0 +1,7 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+  <rect class="test" x="10" y="10" width="100" height="100"/>
+</svg>
+
+@@@
+
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg"><path class="prefix__test" d="M10 10h100v100H10z"/></svg>
