@@ -107,7 +107,7 @@ module.exports = {
 
 See the list of default plugins:
 
-```
+```js
 module.exports = {
   plugins: [
     'removeDoctype',
