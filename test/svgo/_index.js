@@ -46,4 +46,9 @@ describe('svgo', () => {
       });
       expect(normalize(result.data)).to.equal(expected);
   });
+  it('should handle plugins order properly', async () => {
+    const [original, expected] = await parseFixture('plugins-order.svg');
+      const result = optimize(original, { input: 'file', path: 'input.svg' });
+      expect(normalize(result.data)).to.equal(expected);
+  });
 });
