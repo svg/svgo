@@ -1,7 +1,7 @@
 <!-- https://github.com/svg/svgo/pull/258#issue-23706813 -->
 <svg xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(-39, -239)">
-    <g id="test" class="test" transform="translate(39, 37)">
+    <g id="test" transform="translate(39, 37)">
       <g>
         <rect id="Rectangle-1183" fill="#D4D4D4" x="8" y="223" width="7" height="19"></rect>
         <rect id="Rectangle-1183" fill="#D4D4D4" x="4" y="227" width="42" height="3"></rect>
