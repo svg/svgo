@@ -46,14 +46,8 @@
     "bin",
     "lib",
     "plugins",
-    "dist",
-    "examples"
+    "dist"
   ],
-  "directories": {
-    "bin": "./bin",
-    "lib": "./lib",
-    "example": "./examples"
-  },
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha \"test/*/_index.js\"",
     "test-browser": "rollup -c && node ./test/browser.js",
