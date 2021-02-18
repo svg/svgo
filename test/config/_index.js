@@ -1,67 +1,46 @@
 'use strict';
 
-var CONFIG = require(process.env.COVERAGE ?
-        '../../lib-cov/svgo/config' :
-        '../../lib/svgo/config');
+const path = require('path');
+const { expect } = require('chai');
+const { loadConfig } = require('../../lib/svgo-node.js');
+const {
+  resolvePluginConfig,
+  extendDefaultPlugins
+} = require('../../lib/svgo/config.js');
 
 describe('config', function() {
 
-    describe('default config', function() {
-
-        var config = CONFIG();
-
-        it('should be an instance of Object', function() {
-            config.should.be.an.instanceOf(Object);
-        });
-
-        it('should have property "plugins"', function() {
-            config.should.have.property('plugins');
-        });
-
-        it('"plugins" should be an instance of Array', function() {
-            config.plugins.should.be.an.instanceOf(Array);
-        });
-
-    });
-
     describe('extend config with object', function() {
 
-        var config = CONFIG({
-                multipass: true,
-                plugins: [
-                    { removeDoctype: false },
-                    { convertColors: { shorthex: false } },
-                    { removeRasterImages: { param: true } }
-                ]
-            }),
-            removeDoctype = getPlugin('removeDoctype', config.plugins),
-            convertColors = getPlugin('convertColors', config.plugins),
-            removeRasterImages = getPlugin('removeRasterImages', config.plugins);
-
-        it('should have "multipass"', function() {
-            return config.multipass.should.be.true;
-        });
+        var plugins = [
+            { name: 'removeDoctype', active: false },
+            { name: 'convertColors', params: { shorthex: false } },
+            { name: 'removeRasterImages', params: { param: true } }
+        ].map(plugin => resolvePluginConfig(plugin, {}));
+        const removeDoctype = getPlugin('removeDoctype', plugins);
+        const convertColors = getPlugin('convertColors', plugins);
+        const removeRasterImages = getPlugin('removeRasterImages', plugins);
 
         it('removeDoctype plugin should be disabled', function() {
-            return removeDoctype.active.should.be.false;
+            expect(removeDoctype.active).to.be.false;
         });
 
         describe('enable plugin with params object', function() {
 
             it('removeRasterImages plugin should be enabled', function() {
-                return removeRasterImages.active.should.be.true;
+                expect(removeRasterImages.active).to.be.true;
             });
 
             it('removeRasterImages plugin should have property "params"', function() {
-                return removeRasterImages.should.have.property('params');
+                expect(removeRasterImages).to.have.property('params');
             });
 
             it('"params" should be an instance of Object', function() {
-                return removeRasterImages.params.should.be.an.instanceOf(Object);
+                expect(removeRasterImages.params).to.be.an.instanceOf(Object);
             });
 
             it('"params" should have property "param" with value of true', function() {
-                return removeRasterImages.params.should.have.property('param', true);
+                expect(removeRasterImages.params).to.have.property('param', true);
             });
 
         });
@@ -69,19 +48,19 @@ describe('config', function() {
         describe('extend plugin params with object', function() {
 
             it('convertColors plugin should have property "params"', function() {
-                return convertColors.should.have.property('params');
+                expect(convertColors).to.have.property('params');
             });
 
             it('"params" should be an instance of Object', function() {
-                return convertColors.params.should.be.an.instanceOf(Object);
+                expect(convertColors.params).to.be.an.instanceOf(Object);
             });
 
             it('"params" should have property "shorthex" with value of false', function() {
-                return convertColors.params.should.have.property('shorthex', false);
+                expect(convertColors.params).to.have.property('shorthex', false);
             });
 
             it('"params" should have property "rgb2hex" with value of true', function() {
-                return convertColors.params.should.have.property('rgb2hex', true);
+                expect(convertColors.params).to.have.property('rgb2hex', true);
             });
 
         });
@@ -90,30 +69,30 @@ describe('config', function() {
 
     describe('replace default config with custom', function() {
 
-        var config = CONFIG({
-                full: true,
-                multipass: true,
-                floatPrecision: 2,
-                plugins: [
-                    { cleanupNumericValues: true }
-                ]
-            }),
-            cleanupNumericValues = getPlugin('cleanupNumericValues', config.plugins);
+        const config = {
+            multipass: true,
+            floatPrecision: 2,
+            plugins: [
+                { name: 'cleanupNumericValues' }
+            ]
+        }
+        const plugins = config.plugins.map(plugin => resolvePluginConfig(plugin, config));
+        const cleanupNumericValues = getPlugin('cleanupNumericValues', plugins);
 
         it('should have "multipass"', function() {
-            return config.multipass.should.be.true;
+            expect(config.multipass).to.be.true;
         });
 
         it('config.plugins should have length 1', function() {
-            return config.plugins.should.have.length(1);
+            expect(plugins).to.have.length(1);
         });
 
         it('cleanupNumericValues plugin should be enabled', function() {
-            return cleanupNumericValues.active.should.be.true;
+            expect(cleanupNumericValues.active).to.be.true;
         });
 
         it('cleanupNumericValues plugin should have floatPrecision set from parameters', function() {
-            return cleanupNumericValues.params.floatPrecision.should.be.equal(2);
+            expect(cleanupNumericValues.params.floatPrecision).to.be.equal(2);
         });
 
     });
@@ -122,73 +101,156 @@ describe('config', function() {
     describe('custom plugins', function() {
 
         describe('extend config with custom plugin', function() {
-            var config = CONFIG({
-                    plugins: [
-                        {
-                            aCustomPlugin: {
-                                type: 'perItem',
-                                fn: function() { }
-                            }
-                        }
-                    ]
-                }),
-                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+            const plugins = [
+                {
+                    name: 'aCustomPlugin',
+                    type: 'perItem',
+                    fn: function() { }
+                }
+            ].map(plugin => resolvePluginConfig(plugin, {}));
+            const customPlugin = getPlugin('aCustomPlugin', plugins);
 
             it('custom plugin should be enabled', function() {
-                return customPlugin.active.should.be.true;
+                expect(customPlugin.active).to.be.true;
             });
 
             it('custom plugin should have been given a name', function() {
-                return customPlugin.name.should.equal('aCustomPlugin');
+                expect(customPlugin.name).to.equal('aCustomPlugin');
             });
         });
 
         describe('replace default config with custom plugin', function() {
 
-            var config = CONFIG({
-                    full: true,
-                    plugins: [
-                        {
-                            aCustomPlugin: {
-                                type: 'perItem',
-                                fn: function() { }
-                            }
-                        }
-                    ]
-                }),
-                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+            const plugins = [
+                {
+                    name: 'aCustomPlugin',
+                    type: 'perItem',
+                    fn: function() { }
+                }
+            ].map(plugin => resolvePluginConfig(plugin, {}));
+            const customPlugin = getPlugin('aCustomPlugin', plugins);
 
             it('config.plugins should have length 1', function() {
-                return config.plugins.should.have.length(1);
+                expect(plugins).to.have.length(1);
             });
 
             it('custom plugin should be enabled', function() {
-                return customPlugin.active.should.be.true;
+                expect(customPlugin.active).to.be.true;
             });
 
             it('custom plugin should have been given a name', function() {
-                return customPlugin.name.should.equal('aCustomPlugin');
+                expect(customPlugin.name).to.equal('aCustomPlugin');
             });
 
         });
 
     });
 
+  describe('allows to extend default plugins list', () => {
+    const extendedPlugins = extendDefaultPlugins([
+      {
+        name: 'customPlugin',
+        fn: () => {},
+      },
+      {
+        name: 'removeAttrs',
+        params: { atts: ['aria-label'] },
+      },
+      {
+        name: 'cleanupIDs',
+        params: { remove: false },
+      },
+    ]);
+    const removeAttrsIndex = extendedPlugins.findIndex(item => item.name === 'removeAttrs');
+    const cleanupIDsIndex = extendedPlugins.findIndex(item => item.name === 'cleanupIDs');
+    it('should preserve internal plugins order', () => {
+      expect(removeAttrsIndex).to.equal(40);
+      expect(cleanupIDsIndex).to.equal(10);
+    });
+    it('should activate inactive by default plugins', () => {
+      const removeAttrsPlugin = resolvePluginConfig(extendedPlugins[removeAttrsIndex], {});
+      const cleanupIDsPlugin = resolvePluginConfig(extendedPlugins[cleanupIDsIndex], {});
+      expect(removeAttrsPlugin.active).to.equal(true);
+      expect(cleanupIDsPlugin.active).to.equal(true);
+    });
+    it('should leave not extended inactive plugins to be inactive', () => {
+      const inactivePlugin = resolvePluginConfig(
+        extendedPlugins.find(item => item.name === 'addClassesToSVGElement'),
+        {},
+      );
+      expect(inactivePlugin.active).to.equal(false);
+    });
+    it('should put custom plugins in the end', () => {
+      expect(extendedPlugins[extendedPlugins.length - 1].name).to.equal('customPlugin');
+    });
+  });
+
+  describe('config', () => {
+    it('is loaded by absolute path', async () => {
+      const config = await loadConfig(
+        path.join(process.cwd(), './test/config/fixtures/one/two/config.js'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('is loaded by relative path to cwd', async () => {
+      const config = await loadConfig(
+        'one/two/config.js',
+        path.join(process.cwd(), './test/config/fixtures'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('is searched in cwd and up', async () => {
+      const config = await loadConfig(
+        null,
+        path.join(process.cwd(), './test/config/fixtures/one/two'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('gives null module does not exist', async () => {
+      const absoluteConfig = await loadConfig(
+        path.join(process.cwd(), './test/config/fixtures/config.js'),
+      );
+      expect(absoluteConfig).to.equal(null);
+      const searchedConfig = await loadConfig(
+        null,
+        path.join(process.cwd(), './test/config'),
+      );
+      expect(searchedConfig).to.equal(null);
+    });
+    it('is failed to load when module exports not an object', async () => {
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-null.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-array.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-string.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+    });
+  });
 });
 
 function getPlugin(name, plugins) {
-
-    var found;
-
-    plugins.some(function(group) {
-        return group.some(function(plugin) {
-            if (plugin.name === name) {
-                found = plugin;
-                return true;
-            }
-        });
+    return plugins.find(function(plugin) {
+        if (plugin.name === name) {
+            return plugin;
+        }
     });
-
-    return found;
 
 }

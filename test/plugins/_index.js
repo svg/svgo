@@ -1,13 +1,12 @@
 'use strict';
 
-var FS = require('fs'),
-    PATH = require('path'),
-    EOL = require('os').EOL,
-    regEOL = new RegExp(EOL, 'g'),
-    regFilename = /^(.*)\.(\d+)\.svg$/,
-    SVGO = require(process.env.COVERAGE ?
-                   '../../lib-cov/svgo':
-                   '../../lib/svgo');
+const { expect } = require('chai');
+const FS = require('fs');
+const PATH = require('path');
+const EOL = require('os').EOL;
+const regEOL = new RegExp(EOL, 'g');
+const regFilename = /^(.*)\.(\d+)\.svg$/;
+const { optimize } = require('../../lib/svgo.js');
 
 describe('plugins tests', function() {
 
@@ -24,7 +23,7 @@ describe('plugins tests', function() {
 
             file = PATH.resolve(__dirname, file);
 
-            it(name + '.' + index, function() {
+          it(name + '.' + index, function() {
 
                 return readFile(file)
                 .then(function(data) {
@@ -32,22 +31,18 @@ describe('plugins tests', function() {
                         orig     = splitted[0],
                         should   = splitted[1],
                         params   = splitted[2],
-
-                        plugins = {},
                         svgo;
-
-                    plugins[name] = (params) ? JSON.parse(params) : true;
-
-                    svgo = new SVGO({
-                        full    : true,
-                        plugins : [ plugins ],
-                        js2svg  : { pretty: true }
+                    const plugin = {
+                      name,
+                      params: (params ? JSON.parse(params) : {}),
+                    };
+                    const result = optimize(orig, {
+                      path: file,
+                      plugins : [ plugin ],
+                      js2svg  : { pretty: true }
                     });
-
-                    return svgo.optimize(orig, {path: file}).then(function(result) {
-                        //FIXME: results.data has a '\n' at the end while it should not
-                        normalize(result.data).should.be.equal(should);
-                    });
+                    //FIXME: results.data has a '\n' at the end while it should not
+                    expect(normalize(result.data)).to.equal(should);
                 });
 
             });

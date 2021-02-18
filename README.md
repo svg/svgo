@@ -95,9 +95,7 @@ Options:
   -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
   -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
   -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
-  --config=CONFIG : Config file or JSON string to extend or replace default
-  --disable=PLUGIN : Disable plugin by name, "--disable=PLUGIN1,PLUGIN2" for multiple plugins
-  --enable=PLUGIN : Enable plugin by name, "--enable=PLUGIN3,PLUGIN4" for multiple plugins
+  --config=CONFIG : Config file to customize default behavior
   --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
   --multipass : Pass over SVGs multiple times to ensure all optimizations are applied
   --pretty : Make SVG pretty printed
@@ -121,6 +119,7 @@ Arguments:
     ```sh
     $ svgo *.svg
     ```
+    Windows does not support glob expansion. The command above will not work on Windows. 
 
     ```sh
     $ svgo test.svg -o test.min.svg
@@ -185,6 +184,7 @@ Arguments:
 ### Other Ways to Use SVGO
 
 * as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
+* as a GitHub Action – [SVGO Action](https://github.com/marketplace/actions/svgo-action)
 * as a Nodejs module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
@@ -197,6 +197,9 @@ Arguments:
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
 * as macOS app - [Image Shrinker](https://image-shrinker.com)
 * as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
+* as a VS Code plugin - [vscode-svgo](https://github.com/1000ch/vscode-svgo)
+* as a Atom plugin - [atom-svgo](https://github.com/1000ch/atom-svgo)
+* as a Sublime plugin - [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)
 * as a Figma plugin - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
 
 ## Backers

@@ -620,8 +620,6 @@ function set(dest, source) {
  * @return {Boolean}
  */
 exports.intersects = function(path1, path2) {
-    if (path1.length < 3 || path2.length < 3) return false; // nothing to fill
-
     // Collect points of every subpath.
     var points1 = relative2absolute(path1).reduce(gatherPoints, []),
         points2 = relative2absolute(path2).reduce(gatherPoints, []);
