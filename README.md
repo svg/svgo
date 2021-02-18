@@ -180,7 +180,7 @@ const { optimize } = require('svgo');
 const result = optimize(svgString, {
   // optional but recommended field
   path: 'path-to.svg',
-  // other config fields are also available here
+  // all config fields are also available here
   multipass: true
 })
 const optimizedSvgString = result.data
