@@ -29,7 +29,7 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
     rDeclEnd = '\\s*(?:;\\s*|$)',
 
     // Important rule
-    rImportant = '(\\s*!important(?![-(\w]))?',
+    rImportant = '(\\s*!important(?![-(\\w]))?',
 
     // Final RegExp to parse CSS declarations.
     regDeclarationBlock = new RegExp(rAttr + ':' + rValue + rImportant + rDeclEnd, 'ig'),
