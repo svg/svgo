@@ -175,22 +175,18 @@ describe('coa', function() {
       if (!fs.existsSync(emptyFolderPath)) {
         fs.mkdirSync(emptyFolderPath);
       }
-      replaceConsoleError();
       try {
         await runProgram(['--folder', emptyFolderPath, '--quiet']);
-      } catch {} finally {
-        restoreConsoleError();
-        expect(output).to.match(/No SVG files/);
+      } catch (error) {
+        expect(error.message).to.match(/No SVG files/);
       }
     });
 
     it('should show message when folder does not consists any svg files', async () => {
-      replaceConsoleError();
       try {
         await runProgram(['--folder', path.resolve(__dirname, 'testFolderWithNoSvg'), '--quiet'])
-      } catch {} finally {
-        restoreConsoleError();
-        expect(output).to.match(/No SVG files have been found/);
+      } catch (error) {
+        expect(error.message).to.match(/No SVG files have been found/);
       }
     });
 

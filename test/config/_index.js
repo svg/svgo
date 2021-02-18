@@ -243,6 +243,17 @@ describe('config', function() {
         expect(error.message).to.match(/Invalid config file/);
       }
     });
+    it('handles config errors properly', async () => {
+      try {
+        await loadConfig(
+          null,
+          path.join(process.cwd(), './test/config/fixtures/invalid/config'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/plugins is not defined/);
+      }
+    });
   });
 });
 
