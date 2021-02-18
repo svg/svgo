@@ -12,6 +12,32 @@
 
 SVG files, especially those exported from various editors, usually contain a lot of redundant and useless information. This can include editor metadata, comments, hidden elements, default or non-optimal values and other stuff that can be safely removed or converted without affecting the SVG rendering result.
 
+## Installation
+
+```sh
+npm -g svgo
+```
+or
+```sh
+yarn global add svgo
+```
+
+## CLI usage
+
+```sh
+svgo one.svg two.svg -p one.min.svg two.min.svg
+```
+
+Or use --folder, -f flag to optimize whole folder of svg icons
+```sh
+svgo -f ./path/to/folder/with/svg/files -o ./path/to/folder/with/svg/output
+```
+
+See help for advanced usage
+```sh
+svgo --help
+```
+
 ## What it can do
 
 SVGO has a plugin-based architecture, so almost every optimization is a separate plugin.
@@ -71,115 +97,6 @@ Today we have:
 | [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js) | Find duplicated <path> elements and replace them with <use> links | `disabled` |
 
 Want to know how it works and how to write your own plugin? [Of course you want to](https://github.com/svg/svgo/blob/master/docs/how-it-works/en.md). ([동작방법](https://github.com/svg/svgo/blob/master/docs/how-it-works/ko.md))
-
-
-## Installation
-
-```sh
-$ [sudo] npm install -g svgo
-```
-
-## Usage
-
-### <abbr title="Command Line Interface">CLI</abbr>
-
-```
-Usage:
-  svgo [OPTIONS] [ARGS]
-
-Options:
-  -h, --help : Help
-  -v, --version : Version
-  -i INPUT, --input=INPUT : Input file, "-" for STDIN
-  -s STRING, --string=STRING : Input SVG data string
-  -f FOLDER, --folder=FOLDER : Input folder, optimize and rewrite all *.svg files
-  -o OUTPUT, --output=OUTPUT : Output file or folder (by default the same as the input), "-" for STDOUT
-  -p PRECISION, --precision=PRECISION : Set number of digits in the fractional part, overrides plugins params
-  --config=CONFIG : Config file to customize default behavior
-  --datauri=DATAURI : Output as Data URI string (base64, URI encoded or unencoded)
-  --multipass : Pass over SVGs multiple times to ensure all optimizations are applied
-  --pretty : Make SVG pretty printed
-  --indent=INDENT : Indent number when pretty printing SVGs
-  -r, --recursive : Use with '-f'. Optimizes *.svg files in folders recursively.
-  -q, --quiet : Only output error messages, not regular status messages
-  --show-plugins : Show available plugins and exit
-
-Arguments:
-  INPUT : Alias to --input
-```
-
-* with files:
-
-    ```sh
-    $ svgo test.svg
-    ```
-
-    or:
-
-    ```sh
-    $ svgo *.svg
-    ```
-    Windows does not support glob expansion. The command above will not work on Windows. 
-
-    ```sh
-    $ svgo test.svg -o test.min.svg
-    ```
-
-    ```sh
-    $ svgo test.svg other.svg third.svg
-    ```
-
-    ```sh
-    $ svgo test.svg other.svg third.svg -o test.min.svg -o other.min.svg -o third.min.svg
-    ```
-
-* with STDIN / STDOUT:
-
-    ```sh
-    $ cat test.svg | svgo -i - -o - > test.min.svg
-    ```
-
-* with folder
-
-    ```sh
-    $ svgo -f ../path/to/folder/with/svg/files
-    ```
-
-    or:
-
-    ```sh
-    $ svgo -f ../path/to/folder/with/svg/files -o ../path/to/folder/with/svg/output
-    ```
-
-    ```sh
-    $ svgo *.svg -o ../path/to/folder/with/svg/output
-    ```
-
-* with strings:
-
-    ```sh
-    $ svgo -s '<svg version="1.1">test</svg>' -o test.min.svg
-    ```
-
-    or even with Data URI base64:
-
-    ```sh
-    $ svgo -s 'data:image/svg+xml;base64,...' -o test.min.svg
-    ```
-
-* with SVGZ:
-
-    from `.svgz` to `.svg`:
-
-    ```sh
-    $ gunzip -c test.svgz | svgo -i - -o test.min.svg
-    ```
-
-    from `.svg` to `.svgz`:
-
-    ```sh
-    $ svgo test.svg -o - | gzip -cfq9 > test.svgz
-    ```
 
 ### Other Ways to Use SVGO
 
