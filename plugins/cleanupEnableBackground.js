@@ -23,7 +23,7 @@ exports.description = 'remove or cleanup enable-background attribute when possib
  */
 exports.fn = function(data) {
 
-    var regEnableBackground = /^new\s0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
+    var regEnableBackground = /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/,
         hasFilter = false,
         elems = ['svg', 'mask', 'pattern'];
 

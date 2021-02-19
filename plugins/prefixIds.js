@@ -30,7 +30,7 @@ const unquote = (string) => {
 
 // Escapes a string for being used as ID
 var escapeIdentifierName = function(str) {
-    return str.replace(/[\. ]/g, '_');
+    return str.replace(/[. ]/g, '_');
 };
 
 // Matches an #ID value, captures the ID name
@@ -151,7 +151,7 @@ var addPrefixToBeginEndAttr = function(attr) {
 
 const getBasename = (path) => {
   // extract everything after latest slash or backslash
-  const matched = path.match(/[\/\\]([^\/\\]+)$/);
+  const matched = path.match(/[/\\]([^/\\]+)$/);
   if (matched) {
     return matched[1];
   }

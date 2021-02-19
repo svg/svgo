@@ -50,8 +50,43 @@
   ],
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha \"test/*/_index.js\"",
+    "lint": "eslint .",
     "test-browser": "rollup -c && node ./test/browser.js",
     "prepublishOnly": "rollup -c"
+  },
+  "eslintConfig": {
+    "ignorePatterns": [
+      "dist",
+      "fixtures"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "2021"
+    },
+    "env": {
+      "node": true,
+      "es2021": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "rollup.config.js"
+        ],
+        "parserOptions": {
+          "sourceType": "module"
+        }
+      },
+      {
+        "files": [
+          "test/**/*.js"
+        ],
+        "env": {
+          "mocha": true
+        }
+      }
+    ]
   },
   "dependencies": {
     "chalk": "^4.1.0",
@@ -69,6 +104,7 @@
     "@rollup/plugin-node-resolve": "^11.2.0",
     "chai": "^4.3.0",
     "del": "^6.0.0",
+    "eslint": "^7.20.0",
     "mocha": "^8.3.0",
     "mock-stdin": "^1.0.0",
     "nyc": "^15.1.0",

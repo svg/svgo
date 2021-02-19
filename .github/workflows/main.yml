@@ -26,3 +26,4 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test-browser
+      - run: npm run lint
