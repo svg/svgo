@@ -21,34 +21,40 @@ const parseFixture = async file => {
 describe('svgo', () => {
   it('should create indent with 2 spaces', async () => {
     const [original, expected] = await parseFixture('test.svg');
-      const result = optimize(original, {
-        plugins: [],
-        js2svg: { pretty: true, indent: 2 },
-      });
-      expect(normalize(result.data)).to.equal(expected);
+    const result = optimize(original, {
+      plugins: [],
+      js2svg: { pretty: true, indent: 2 },
+    });
+    expect(normalize(result.data)).to.equal(expected);
   });
   it('should run multiple times', async () => {
     const [original, expected] = await parseFixture('multipass.svg');
-      const result = optimize(original, {
-        multipass: true,
-      });
-      expect(normalize(result.data)).to.equal(expected);
+    const result = optimize(original, {
+      multipass: true,
+    });
+    expect(normalize(result.data)).to.equal(expected);
   });
   it('should pass multipass count to plugins', async () => {
     const [original, expected] = await parseFixture('multipass-prefix-ids.svg');
-      const result = optimize(original, {
-        multipass: true,
-        plugins: extendDefaultPlugins([
-          {
-            name: 'prefixIds',
-          },
-        ]),
-      });
-      expect(normalize(result.data)).to.equal(expected);
+    const result = optimize(original, {
+      multipass: true,
+      plugins: extendDefaultPlugins([
+        {
+          name: 'prefixIds',
+        },
+      ]),
+    });
+    expect(normalize(result.data)).to.equal(expected);
   });
   it('should handle plugins order properly', async () => {
     const [original, expected] = await parseFixture('plugins-order.svg');
-      const result = optimize(original, { input: 'file', path: 'input.svg' });
-      expect(normalize(result.data)).to.equal(expected);
+    const result = optimize(original, { input: 'file', path: 'input.svg' });
+    expect(normalize(result.data)).to.equal(expected);
+  });
+  it('should handle parse error', async () => {
+    const fixture = await fs.promises.readFile(path.resolve(__dirname, 'invalid.svg'));
+    const result = optimize(fixture, { input: 'file', path: 'input.svg' });
+    expect(result.error).to.match(/Error in parsing SVG/);
+    expect(result.path).to.equal('input.svg');
   });
 });
