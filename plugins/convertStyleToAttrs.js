@@ -1,4 +1,3 @@
-/* jshint quotmark: false */
 'use strict';
 
 exports.type = 'perItem';
@@ -56,7 +55,6 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
  * @author Kir Belevich
  */
 exports.fn = function(item, params) {
-    /* jshint boss: true */
 
     if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']
@@ -71,6 +69,7 @@ exports.fn = function(item, params) {
         });
 
         regDeclarationBlock.lastIndex = 0;
+        // eslint-disable-next-line no-cond-assign
         for (var rule; rule = regDeclarationBlock.exec(styleValue);) {
             if (!params.keepImportant || !rule[3]) {
                 styles.push([rule[1], rule[2]]);

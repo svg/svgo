@@ -18,7 +18,7 @@ var collections = require('./_collections'),
     rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)',
     rComma = '\\s*,\\s*',
     regRGB = new RegExp('^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'),
-    regHEX = /^\#(([a-fA-F0-9])\2){3}$/,
+    regHEX = /^#(([a-fA-F0-9])\2){3}$/,
     none = /\bnone\b/i;
 
 /**

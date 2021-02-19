@@ -1,4 +1,3 @@
-/* global a2c */
 'use strict';
 
 var rNumber = String.raw`[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?\s*`,
@@ -61,7 +60,6 @@ exports.path2js = function(path) {
             }
         // data item
         } else {
-            /* jshint boss: true */
             if (instruction == 'A' || instruction == 'a') {
                 var newData = [];
                 for (var args; (args = regArcArgumentSequence.exec(data));) {
@@ -652,7 +650,9 @@ exports.intersects = function(path1, path2) {
                 direction = minus(simplex[0]); // set the direction to point towards the origin
 
             var iterations = 1e4; // infinite loop protection, 10 000 iterations is more than enough
+            // eslint-disable-next-line no-constant-condition
             while (true) {
+                // eslint-disable-next-line no-constant-condition
                 if (iterations-- == 0) {
                     console.error('Error: infinite loop while processing mergePaths plugin.');
                     return true; // true is the safe value that means “do nothing with paths”
@@ -689,11 +689,10 @@ exports.intersects = function(path1, path2) {
 };
 
 function processSimplex(simplex, direction) {
-    /* jshint -W004 */
 
     // we only need to handle to 1-simplex and 2-simplex
     if (simplex.length == 2) { // 1-simplex
-        var a = simplex[1],
+        let a = simplex[1],
             b = simplex[0],
             AO = minus(simplex[1]),
             AB = sub(b, a);
@@ -707,7 +706,7 @@ function processSimplex(simplex, direction) {
             simplex.shift();
         }
     } else { // 2-simplex
-        var a = simplex[2], // [a, b, c] = simplex
+        let a = simplex[2], // [a, b, c] = simplex
             b = simplex[1],
             c = simplex[0],
             AB = sub(b, a),
@@ -846,7 +845,6 @@ function gatherPoints(points, item, index, path) {
  * @param points An array of [X, Y] coordinates
  */
 function convexHull(points) {
-    /* jshint -W004 */
 
     points.sort(function(a, b) {
         return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
@@ -855,7 +853,7 @@ function convexHull(points) {
     var lower = [],
         minY = 0,
         bottom = 0;
-    for (var i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i++) {
         while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], points[i]) <= 0) {
             lower.pop();
         }
@@ -869,7 +867,7 @@ function convexHull(points) {
     var upper = [],
         maxY = points.length - 1,
         top = 0;
-    for (var i = points.length; i--;) {
+    for (let i = points.length; i--;) {
         while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], points[i]) <= 0) {
             upper.pop();
         }
@@ -902,7 +900,6 @@ function cross(o, a, b) {
  * Thanks to Dmitry Baranovskiy for his great work!
  */
 
-// jshint ignore: start
 function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
     // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
@@ -983,4 +980,3 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         return newres;
     }
 }
-// jshint ignore: end

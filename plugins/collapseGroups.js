@@ -11,7 +11,6 @@ var collections = require('./_collections'),
     animationElems = collections.elemsGroups.animation;
 
 function hasAnimatedAttr(item) {
-    /* jshint validthis:true */
     return item.isElem(animationElems) && item.hasAttr('attributeName', this) ||
         !item.isEmpty() && item.content.some(hasAnimatedAttr, this);
 }
