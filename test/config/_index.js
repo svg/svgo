@@ -254,6 +254,16 @@ describe('config', function() {
         expect(error.message).to.match(/plugins is not defined/);
       }
     });
+    it('handles MODULE_NOT_FOUND properly', async () => {
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/module-not-found.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Cannot find module 'unknown-module'/);
+      }
+    });
   });
 });
 
