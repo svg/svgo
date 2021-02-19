@@ -52,7 +52,7 @@
     "test": "nyc --reporter=html --reporter=text mocha \"test/*/_index.js\"",
     "lint": "eslint .",
     "test-browser": "rollup -c && node ./test/browser.js",
-    "prepublishOnly": "rollup -c"
+    "prepublishOnly": "rm -rf dist && rollup -c"
   },
   "eslintConfig": {
     "ignorePatterns": [

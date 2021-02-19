@@ -58,6 +58,7 @@ const runTest = async () => {
 server.listen(5000, async () => {
   try {
     await runTest();
+    console.info('Tested successfully');
     server.close()
   } catch (error) {
     server.close();
