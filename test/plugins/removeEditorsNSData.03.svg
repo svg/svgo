@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd">
+    <sodipodi:namedview/>
+    <sodipodi:namedview>
+        ...
+    </sodipodi:namedview>
+    <sodipodi:fakeelem/>
+    <sodipodi:fakeelem>
+        ...
+    </sodipodi:fakeelem>
+    <path d="..." sodipodi:nodetypes="cccc"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd">
+    <sodipodi:namedview/>
+    <sodipodi:namedview>
+        ...
+    </sodipodi:namedview>
+    <path d="..."/>
+</svg>
+
+@@@
+
+{"preserve":["xmlns:sodipodi","sodipodi:namedview"]}

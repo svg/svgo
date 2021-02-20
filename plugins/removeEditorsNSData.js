@@ -7,10 +7,12 @@ exports.active = true;
 exports.description = 'removes editors namespaces, elements and attributes';
 
 var editorNamespaces = require('./_collections').editorNamespaces,
-    prefixes = [];
+    prefixes = [],
+    preserve = [];
 
 exports.params = {
-    additionalNamespaces: []
+    additionalNamespaces: [],
+    preserve: [],  // preserves elements and attributes
 };
 
 /**
@@ -32,6 +34,9 @@ exports.fn = function(item, params) {
     if (Array.isArray(params.additionalNamespaces)) {
         editorNamespaces = editorNamespaces.concat(params.additionalNamespaces);
     }
+    if (Array.isArray(params.preserve)) {
+        preserve = preserve.concat(params.preserve);
+    }
 
     if (item.elem) {
 
@@ -42,7 +47,9 @@ exports.fn = function(item, params) {
                     prefixes.push(attr.local);
 
                     // <svg xmlns:sodipodi="">
-                    item.removeAttr(attr.name);
+                    if (preserve.indexOf(attr.name) === -1) {
+                      item.removeAttr(attr.name);
+                    }
                 }
             });
 
@@ -50,13 +57,13 @@ exports.fn = function(item, params) {
 
         // <* sodipodi:*="">
         item.eachAttr(function(attr) {
-            if (prefixes.indexOf(attr.prefix) > -1) {
+            if (prefixes.indexOf(attr.prefix) > -1 && preserve.indexOf(attr.name) === -1) {
                 item.removeAttr(attr.name);
             }
         });
 
         // <sodipodi:*>
-        if (prefixes.indexOf(item.prefix) > -1) {
+        if (prefixes.indexOf(item.prefix) > -1 && preserve.indexOf(item.elem) === -1) {
             return false;
         }
 
