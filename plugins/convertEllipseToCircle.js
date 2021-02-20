@@ -18,8 +18,8 @@ exports.description = 'converts non-eccentric <ellipse>s to <circle>s';
  */
 exports.fn = function(item) {
     if (item.isElem('ellipse')) {
-      var rx = item.attr('rx').value || 0;
-      var ry = item.attr('ry').value || 0;
+      var rx = item.hasAttr('rx') && item.attr('rx').value || 0;
+      var ry = item.hasAttr('ry') && item.attr('ry').value || 0;
 
       if (rx === ry ||
           rx === 'auto' || ry === 'auto' // SVG2
