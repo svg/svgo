@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="rGb(46, 175, 79)"/>
+    <path fill="#2eAf4F"/>
+    <path fill="hsL(135, 58%, 43%)"/>
+    <path fill="bluE"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="rGb(46, 175, 79)"/>
+    <path fill="#2eAf4F"/>
+    <path fill="hsL(135, 58%, 43%)"/>
+    <path fill="bluE"/>
+</svg>
+
+@@@
+
+{ 
+    "hex": false, 
+    "rgb": false,
+    "hsl": false,
+    "colorName": false
+}

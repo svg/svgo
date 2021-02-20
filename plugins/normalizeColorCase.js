@@ -4,13 +4,15 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'Makes colors consistent and more readable by making case consistent';
+exports.description
+  = 'Makes colors consistent and more readable by making the letter case consistent';
 
 /* Each can be {lower|upper|false} */
 exports.params = {
   hex: 'lower',
   rgb: 'lower',
   hsl: 'lower',
+  colorName: 'lower',
 };
 
 exports.fn = function (
@@ -18,13 +20,10 @@ exports.fn = function (
 ) {
   if ( typeof params === 'object' && item.isElem() ) {
     item.eachAttr( attrObj => {
-      const normalizedAttr = normalizeColor(
+      normalizeColor(
         attrObj,
         params
       );
-      if ( normalizedAttr !== false ) {
-        attrObj.value = normalizedAttr;
-      }
     } );
   }
 };
@@ -34,39 +33,60 @@ const colorTypes = [
   { name: 'rgb' },
   { name: 'hsl' },
 ];
+const {
+  colorsNames: colorsLongNames,
+  colorsShortNames,
+  colorsProps,
+} = require( './_collections.js' );
+const colorsNames = Object.keys( colorsLongNames ).concat( Object.values( colorsShortNames ) );
 
 /**
- * Takes any color value and returns the color with the correct case based on the config.
- * If config is not 'upper' or 'lower' it defaults to false and as such changes nothing
+ * Takes any attribute and modifies it if it is a color
+ * If config is not 'upper' or 'lower' it changes nothing
  *
- * @param {object} attrObj The attr to normalize
+ * @param {object} attrObj The attribute to normalize
  * @param {object} params The config for this plugin
  *
  * @example `#2eAf4F` => `#2EAF4F` | `#2eaf4f`
  * @example `rGb(...)` => `RGB(...)` | `rgb(...)`
  * @example `hsL(...)` => `HSL(...)` | `hsl(...)`
  *
- * @returns {string|boolean} String like in examples or false if config says to ignore color type
+ * @returns {void}
  */
 function normalizeColor(
   attrObj, params
 ) {
-  const trimmedColor = attrObj.value.trim().toLowerCase();
+  if ( colorsProps.includes( attrObj.name ) ) {
+    const lowerAttr = attrObj.value.toLowerCase();
 
-  for ( let i = 0; i < colorTypes.length; i++ ) {
-    const name = colorTypes[ i ].name;
-    const startsWith = colorTypes[ i ].startsWith || name;
+    if ( colorsNames.includes( lowerAttr.trim() ) ) {
+      const wantedCase = params.colorName && params.colorName.toLowerCase();
 
-    if ( trimmedColor.startsWith( startsWith ) ) {
-      if ( params[ name ].toLowerCase() === 'upper' ) {
-        return trimmedColor.toUpperCase();
+      if ( wantedCase === 'upper' ) {
+        attrObj.value = lowerAttr.toUpperCase();
       }
-      if ( params[ name ].toLowerCase() === 'lower' ) {
-        return trimmedColor;
+      else if ( wantedCase === 'lower' ) {
+        attrObj.value = lowerAttr;
       }
-      return false;
+    }
+    else {
+      for ( const colorType of colorTypes ) {
+        const colorTypeName = colorType.name;
+        const shouldStartWith = colorType.startsWith || colorTypeName;
+        const wantedCase
+          = params[ colorTypeName ] && params[ colorTypeName ].toLowerCase();
+
+        if ( lowerAttr.trim().startsWith( shouldStartWith ) ) {
+          if ( wantedCase === 'upper' ) {
+            attrObj.value = lowerAttr.toUpperCase();
+          }
+          else if ( wantedCase === 'lower' ) {
+            attrObj.value = lowerAttr;
+          }
+
+          break;
+        }
+      }
     }
   }
-
-  return false;
 }

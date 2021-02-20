@@ -1,13 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path stroke="rgb(46, 175, 79)" fill="#2eaf4f"/>
+    <path fill="rgb(46, 175, 79)"/>
+    <path fill="#2eaf4f"/>
     <path fill="hsl(135, 58%, 43%)"/>
+    <path fill="blue"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path stroke="RGB(46, 175, 79)" fill="#2EAF4F"/>
+    <path fill="RGB(46, 175, 79)"/>
+    <path fill="#2EAF4F"/>
     <path fill="HSL(135, 58%, 43%)"/>
+    <path fill="BLUE"/>
 </svg>
 
 @@@
@@ -15,5 +19,6 @@
 { 
     "hex": "upper", 
     "rgb": "upper",
-    "hsl": "upper"
+    "hsl": "upper",
+    "colorName": "upper"
 }
