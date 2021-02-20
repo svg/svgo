@@ -23,8 +23,8 @@ exports.params = {
     utilizeAbsolute: true,
     leadingZero: true,
     negativeExtraSpace: true,
-    noSpaceAfterFlags: true,
-    forceAbsolutePath: false
+    noSpaceAfterFlags: false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
+    forceAbsolutePath: false,
 };
 
 var pathElems = require('./_collections.js').pathElems,
