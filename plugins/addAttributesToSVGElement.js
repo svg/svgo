@@ -10,36 +10,43 @@ var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
 It should have a list of "attributes" or one "attribute".
 Config example:
 
-plugins:
-- addAttributesToSVGElement:
-    attribute: "mySvg"
+plugins: [
+  {
+    name: 'addAttributesToSVGElement',
+    params: {
+      attribute: "mySvg"
+    }
+  }
+]
 
-plugins:
-- addAttributesToSVGElement:
-    attributes: ["mySvg", "size-big"]
+plugins: [
+  {
+    name: 'addAttributesToSVGElement',
+    params: {
+      attributes: ["mySvg", "size-big"]
+    }
+  }
+]
 
-plugins:
-- addAttributesToSVGElement:
-    attributes:
-        - focusable: false
-        - data-image: icon`;
+plugins: [
+  {
+    name: 'addAttributesToSVGElement',
+    params: {
+      attributes: [
+        {
+          focusable: false
+        },
+        {
+          'data-image': icon
+        }
+      ]
+    }
+  }
+]
+`
 
 /**
  * Add attributes to an outer <svg> element. Example config:
- *
- * plugins:
- * - addAttributesToSVGElement:
- *     attribute: 'data-icon'
- *
- * plugins:
- * - addAttributesToSVGElement:
- *     attributes: ['data-icon', 'data-disabled']
- *
- * plugins:
- * - addAttributesToSVGElement:
- *     attributes:
- *         - focusable: false
- *         - data-image: icon
  *
  * @author April Arcus
  */
