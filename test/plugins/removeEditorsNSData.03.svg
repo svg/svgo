@@ -8,6 +8,7 @@
         ...
     </sodipodi:fakeelem>
     <path d="..." sodipodi:nodetypes="cccc"/>
+    <path d="..." sodipodi:fakeattr="fakevalue"/>
 </svg>
 
 @@@
@@ -18,8 +19,9 @@
         ...
     </sodipodi:namedview>
     <path d="..."/>
+    <path d="..." sodipodi:fakeattr="fakevalue"/>
 </svg>
 
 @@@
 
-{"preserve":["xmlns:sodipodi","sodipodi:namedview"]}
+{"preserve":["xmlns:sodipodi","sodipodi:fakeattr","sodipodi:namedview"]}
