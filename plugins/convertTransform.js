@@ -236,8 +236,6 @@ function convertToShorts(transforms, params) {
 
             // splice compensation
             i -= 2;
-
-            transform = transforms[i];
         }
 
     }
