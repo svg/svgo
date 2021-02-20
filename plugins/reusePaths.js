@@ -119,7 +119,7 @@ exports.fn = function(data) {
       }
       defs.push(hasSeen.elem);
     }
-    item = convertToUse(item, hasSeen.elem.attr('id').value);
+    convertToUse(item, hasSeen.elem.attr('id').value);
   });
   if (defs.length > 0) {
     const defsTag = new JSAPI({
