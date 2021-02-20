@@ -3,8 +3,8 @@
 const FS = require('fs');
 const PATH = require('path');
 const { optimize } = require('../lib/svgo');
-const filepath = PATH.resolve(__dirname, 'test.svg'),
-const config {
+const filepath = PATH.resolve(__dirname, 'test.svg');
+const config = {
   plugins: [
     'cleanupAttrs',
     'removeDoctype',
@@ -49,7 +49,7 @@ FS.readFile(filepath, 'utf8', function(err, data) {
         throw err;
     }
 
-    const result = svgo.optimize(data, {path: filepath, ...config});
+    const result = optimize(data, {path: filepath, ...config});
 
     console.log(result);
 

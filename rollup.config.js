@@ -13,9 +13,13 @@ export default {
   },
   plugins: [
     {
-      resolveId(importee) {
+      resolveId(importee, importer) {
         if (['os', 'stream', 'string_decoder'].includes(importee)) {
           return importee;
+        }
+        // see https://github.com/csstree/csstree/pull/152
+        if (importee === 'css-tree') {
+          return this.resolve('css-tree/dist/csstree.min.js', importer);
         }
       },
       load(id) {

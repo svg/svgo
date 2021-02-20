@@ -30,8 +30,7 @@ describe('plugins tests', function() {
                     var splitted = normalize(data).split(/\s*@@@\s*/),
                         orig     = splitted[0],
                         should   = splitted[1],
-                        params   = splitted[2],
-                        svgo;
+                        params   = splitted[2];
                     const plugin = {
                       name,
                       params: (params ? JSON.parse(params) : {}),
