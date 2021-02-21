@@ -57,4 +57,8 @@ describe('svgo', () => {
     expect(result.error).to.match(/Error in parsing SVG/);
     expect(result.path).to.equal('input.svg');
   });
+  it('should handle empty svg tag', async () => {
+    const result = optimize('<svg />', { input: 'file', path: 'input.svg' });
+    expect(result.data).to.equal('<svg/>');
+  });
 });
