@@ -2,7 +2,7 @@
 name: Plugin request
 about: Suggest a plugin for this project
 title: ''
-labels: enhancement
+labels: 'New plugin'
 assignees: ''
 
 ---
