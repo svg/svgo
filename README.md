@@ -12,7 +12,7 @@ SVG files, especially those exported from various editors, usually contain a lot
 ## Installation
 
 ```sh
-npm -g svgo
+npm -g install svgo
 ```
 or
 ```sh
