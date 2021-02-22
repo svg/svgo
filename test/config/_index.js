@@ -206,16 +206,20 @@ describe('config', function() {
       );
       expect(config).to.deep.equal({ plugins: [] });
     });
-    it('gives null module does not exist', async () => {
-      const absoluteConfig = await loadConfig(
-        path.join(process.cwd(), './test/config/fixtures/config.js'),
-      );
-      expect(absoluteConfig).to.equal(null);
-      const searchedConfig = await loadConfig(
+    it('gives null when config is not found', async () => {
+      const config = await loadConfig(
         null,
         path.join(process.cwd(), './test/config'),
       );
-      expect(searchedConfig).to.equal(null);
+      expect(config).to.equal(null);
+    });
+    it('is failed when specified config does not exist', async () => {
+      try {
+        await loadConfig("{}");
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Cannot find module/);
+      }
     });
     it('is failed to load when module exports not an object', async () => {
       try {

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions
+    url: https://stackoverflow.com/questions/tagged/svgo
+    about: Please ask and answer questions on StackOverflow with the svgo tag.
