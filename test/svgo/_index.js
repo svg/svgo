@@ -61,4 +61,9 @@ describe('svgo', () => {
     const result = optimize('<svg />', { input: 'file', path: 'input.svg' });
     expect(result.data).to.equal('<svg/>');
   });
+  it('should preserve style specifity over attributes', async () => {
+    const [original, expected] = await parseFixture('style-specifity.svg');
+    const result = optimize(original, { input: 'file', path: 'input.svg', js2svg: { pretty: true } });
+    expect(normalize(result.data)).to.equal(expected);
+  });
 });
