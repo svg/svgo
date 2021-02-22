@@ -1,46 +1,25 @@
 'use strict';
 
+const path = require('path');
 const { expect } = require('chai');
-
-var CONFIG = require('../../lib/svgo/config');
+const { loadConfig } = require('../../lib/svgo-node.js');
+const {
+  resolvePluginConfig,
+  extendDefaultPlugins
+} = require('../../lib/svgo/config.js');
 
 describe('config', function() {
 
-    describe('default config', function() {
-
-        var config = CONFIG();
-
-        it('should be an instance of Object', function() {
-            expect(config).to.be.an.instanceOf(Object);
-        });
-
-        it('should have property "plugins"', function() {
-            expect(config).to.have.property('plugins');
-        });
-
-        it('"plugins" should be an instance of Array', function() {
-            expect(config.plugins).to.be.an.instanceOf(Array);
-        });
-
-    });
-
     describe('extend config with object', function() {
 
-        var config = CONFIG({
-                multipass: true,
-                plugins: [
-                    { name: 'removeDoctype', active: false },
-                    { name: 'convertColors', params: { shorthex: false } },
-                    { name: 'removeRasterImages', params: { param: true } }
-                ]
-            }),
-            removeDoctype = getPlugin('removeDoctype', config.plugins),
-            convertColors = getPlugin('convertColors', config.plugins),
-            removeRasterImages = getPlugin('removeRasterImages', config.plugins);
-
-        it('should have "multipass"', function() {
-            expect(config.multipass).to.be.true;
-        });
+        var plugins = [
+            { name: 'removeDoctype', active: false },
+            { name: 'convertColors', params: { shorthex: false } },
+            { name: 'removeRasterImages', params: { param: true } }
+        ].map(plugin => resolvePluginConfig(plugin, {}));
+        const removeDoctype = getPlugin('removeDoctype', plugins);
+        const convertColors = getPlugin('convertColors', plugins);
+        const removeRasterImages = getPlugin('removeRasterImages', plugins);
 
         it('removeDoctype plugin should be disabled', function() {
             expect(removeDoctype.active).to.be.false;
@@ -90,21 +69,22 @@ describe('config', function() {
 
     describe('replace default config with custom', function() {
 
-        var config = CONFIG({
-                multipass: true,
-                floatPrecision: 2,
-                plugins: [
-                    { name: 'cleanupNumericValues' }
-                ]
-            }),
-            cleanupNumericValues = getPlugin('cleanupNumericValues', config.plugins);
+        const config = {
+            multipass: true,
+            floatPrecision: 2,
+            plugins: [
+                { name: 'cleanupNumericValues' }
+            ]
+        }
+        const plugins = config.plugins.map(plugin => resolvePluginConfig(plugin, config));
+        const cleanupNumericValues = getPlugin('cleanupNumericValues', plugins);
 
         it('should have "multipass"', function() {
             expect(config.multipass).to.be.true;
         });
 
         it('config.plugins should have length 1', function() {
-            expect(config.plugins).to.have.length(1);
+            expect(plugins).to.have.length(1);
         });
 
         it('cleanupNumericValues plugin should be enabled', function() {
@@ -121,16 +101,14 @@ describe('config', function() {
     describe('custom plugins', function() {
 
         describe('extend config with custom plugin', function() {
-            var config = CONFIG({
-                    plugins: [
-                        {
-                            name: 'aCustomPlugin',
-                            type: 'perItem',
-                            fn: function() { }
-                        }
-                    ]
-                }),
-                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+            const plugins = [
+                {
+                    name: 'aCustomPlugin',
+                    type: 'perItem',
+                    fn: function() { }
+                }
+            ].map(plugin => resolvePluginConfig(plugin, {}));
+            const customPlugin = getPlugin('aCustomPlugin', plugins);
 
             it('custom plugin should be enabled', function() {
                 expect(customPlugin.active).to.be.true;
@@ -143,19 +121,17 @@ describe('config', function() {
 
         describe('replace default config with custom plugin', function() {
 
-            var config = CONFIG({
-                    plugins: [
-                        {
-                            name: 'aCustomPlugin',
-                            type: 'perItem',
-                            fn: function() { }
-                        }
-                    ]
-                }),
-                customPlugin = getPlugin('aCustomPlugin', config.plugins);
+            const plugins = [
+                {
+                    name: 'aCustomPlugin',
+                    type: 'perItem',
+                    fn: function() { }
+                }
+            ].map(plugin => resolvePluginConfig(plugin, {}));
+            const customPlugin = getPlugin('aCustomPlugin', plugins);
 
             it('config.plugins should have length 1', function() {
-                expect(config.plugins).to.have.length(1);
+                expect(plugins).to.have.length(1);
             });
 
             it('custom plugin should be enabled', function() {
@@ -170,21 +146,132 @@ describe('config', function() {
 
     });
 
+  describe('allows to extend default plugins list', () => {
+    const extendedPlugins = extendDefaultPlugins([
+      {
+        name: 'customPlugin',
+        fn: () => {},
+      },
+      {
+        name: 'removeAttrs',
+        params: { atts: ['aria-label'] },
+      },
+      {
+        name: 'cleanupIDs',
+        params: { remove: false },
+      },
+    ]);
+    const removeAttrsIndex = extendedPlugins.findIndex(item => item.name === 'removeAttrs');
+    const cleanupIDsIndex = extendedPlugins.findIndex(item => item.name === 'cleanupIDs');
+    it('should preserve internal plugins order', () => {
+      expect(removeAttrsIndex).to.equal(40);
+      expect(cleanupIDsIndex).to.equal(10);
+    });
+    it('should activate inactive by default plugins', () => {
+      const removeAttrsPlugin = resolvePluginConfig(extendedPlugins[removeAttrsIndex], {});
+      const cleanupIDsPlugin = resolvePluginConfig(extendedPlugins[cleanupIDsIndex], {});
+      expect(removeAttrsPlugin.active).to.equal(true);
+      expect(cleanupIDsPlugin.active).to.equal(true);
+    });
+    it('should leave not extended inactive plugins to be inactive', () => {
+      const inactivePlugin = resolvePluginConfig(
+        extendedPlugins.find(item => item.name === 'addClassesToSVGElement'),
+        {},
+      );
+      expect(inactivePlugin.active).to.equal(false);
+    });
+    it('should put custom plugins in the end', () => {
+      expect(extendedPlugins[extendedPlugins.length - 1].name).to.equal('customPlugin');
+    });
+  });
+
+  describe('config', () => {
+    it('is loaded by absolute path', async () => {
+      const config = await loadConfig(
+        path.join(process.cwd(), './test/config/fixtures/one/two/config.js'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('is loaded by relative path to cwd', async () => {
+      const config = await loadConfig(
+        'one/two/config.js',
+        path.join(process.cwd(), './test/config/fixtures'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('is searched in cwd and up', async () => {
+      const config = await loadConfig(
+        null,
+        path.join(process.cwd(), './test/config/fixtures/one/two'),
+      );
+      expect(config).to.deep.equal({ plugins: [] });
+    });
+    it('gives null module does not exist', async () => {
+      const absoluteConfig = await loadConfig(
+        path.join(process.cwd(), './test/config/fixtures/config.js'),
+      );
+      expect(absoluteConfig).to.equal(null);
+      const searchedConfig = await loadConfig(
+        null,
+        path.join(process.cwd(), './test/config'),
+      );
+      expect(searchedConfig).to.equal(null);
+    });
+    it('is failed to load when module exports not an object', async () => {
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-null.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-array.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/invalid-string.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Invalid config file/);
+      }
+    });
+    it('handles config errors properly', async () => {
+      try {
+        await loadConfig(
+          null,
+          path.join(process.cwd(), './test/config/fixtures/invalid/config'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/plugins is not defined/);
+      }
+    });
+    it('handles MODULE_NOT_FOUND properly', async () => {
+      try {
+        await loadConfig(
+          path.join(process.cwd(), './test/config/fixtures/module-not-found.js'),
+        );
+        expect.fail('Config is loaded successfully');
+      } catch (error) {
+        expect(error.message).to.match(/Cannot find module 'unknown-module'/);
+      }
+    });
+  });
 });
 
 function getPlugin(name, plugins) {
-
-    var found;
-
-    plugins.some(function(group) {
-        return group.some(function(plugin) {
-            if (plugin.name === name) {
-                found = plugin;
-                return true;
-            }
-        });
+    return plugins.find(function(plugin) {
+        if (plugin.name === name) {
+            return plugin;
+        }
     });
-
-    return found;
 
 }

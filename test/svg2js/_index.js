@@ -71,8 +71,8 @@ describe('svg2js', function() {
                 expect(root.content[0].processinginstruction).to.have.property('name', 'xml');
             });
 
-            it('should have property "body" with value "version=\"1.0\" encoding=\"utf-8\""', function() {
-                expect(root.content[0].processinginstruction).to.have.property('body', 'version=\"1.0\" encoding=\"utf-8\"');
+            it('should have property "body" with value `version="1.0" encoding="utf-8"`', function() {
+                expect(root.content[0].processinginstruction).to.have.property('body', 'version="1.0" encoding="utf-8"');
             });
 
         });
@@ -96,7 +96,7 @@ describe('svg2js', function() {
             });
 
             it('should eventually equal " svg PUBLIC…"', function() {
-                expect(root.content[2].doctype).to.equal(' svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"');
+                expect(root.content[2].doctype).to.equal(' svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"');
             });
 
         });

@@ -13,7 +13,7 @@ exports.params = {
     convertToPx: true
 };
 
-var regNumericValues = /^([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
+var regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero,
     absoluteLengths = { // relative to px
         cm: 96/2.54,

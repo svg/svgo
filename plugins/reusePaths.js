@@ -119,27 +119,29 @@ exports.fn = function(data) {
       }
       defs.push(hasSeen.elem);
     }
-    item = convertToUse(item, hasSeen.elem.attr('id').value);
+    convertToUse(item, hasSeen.elem.attr('id').value);
   });
-  const defsTag = new JSAPI({
-    elem: 'defs', prefix: '', local: 'defs', content: [], attrs: []}, data);
-  data.content[0].spliceContent(0, 0, defsTag);
-  for (let def of defs) {
-    // Remove class and style before copying to avoid circular refs in
-    // JSON.stringify. This is fine because we don't actually want class or
-    // style information to be copied.
-    const style = def.style;
-    const defClass = def.class;
-    delete def.style;
-    delete def.class;
-    const defClone = def.clone();
-    def.style = style;
-    def.class = defClass;
-    defClone.removeAttr('transform');
-    defsTag.spliceContent(0, 0, defClone);
-    // Convert the original def to a use so the first usage isn't duplicated.
-    def = convertToUse(def, defClone.attr('id').value);
-    def.removeAttr('id');
+  if (defs.length > 0) {
+    const defsTag = new JSAPI({
+      elem: 'defs', prefix: '', local: 'defs', content: [], attrs: []}, data);
+    data.content[0].spliceContent(0, 0, defsTag);
+    for (let def of defs) {
+      // Remove class and style before copying to avoid circular refs in
+      // JSON.stringify. This is fine because we don't actually want class or
+      // style information to be copied.
+      const style = def.style;
+      const defClass = def.class;
+      delete def.style;
+      delete def.class;
+      const defClone = def.clone();
+      def.style = style;
+      def.class = defClass;
+      defClone.removeAttr('transform');
+      defsTag.spliceContent(0, 0, defClone);
+      // Convert the original def to a use so the first usage isn't duplicated.
+      def = convertToUse(def, defClone.attr('id').value);
+      def.removeAttr('id');
+    }
   }
   return data;
 };

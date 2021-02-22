@@ -1,13 +1,12 @@
 'use strict';
 
 const { expect } = require('chai');
-
-var FS = require('fs'),
-    PATH = require('path'),
-    EOL = require('os').EOL,
-    regEOL = new RegExp(EOL, 'g'),
-    regFilename = /^(.*)\.(\d+)\.svg$/,
-    SVGO = require('../../lib/svgo');
+const FS = require('fs');
+const PATH = require('path');
+const EOL = require('os').EOL;
+const regEOL = new RegExp(EOL, 'g');
+const regFilename = /^(.*)\.(\d+)\.svg$/;
+const { optimize } = require('../../lib/svgo.js');
 
 describe('plugins tests', function() {
 
@@ -31,20 +30,16 @@ describe('plugins tests', function() {
                     var splitted = normalize(data).split(/\s*@@@\s*/),
                         orig     = splitted[0],
                         should   = splitted[1],
-                        params   = splitted[2],
-                        svgo;
-                  
+                        params   = splitted[2];
                     const plugin = {
                       name,
                       params: (params ? JSON.parse(params) : {}),
                     };
-
-                    svgo = new SVGO({
-                        plugins : [ plugin ],
-                        js2svg  : { pretty: true }
+                    const result = optimize(orig, {
+                      path: file,
+                      plugins : [ plugin ],
+                      js2svg  : { pretty: true }
                     });
-
-                    const result = svgo.optimize(orig, {path: file});
                     //FIXME: results.data has a '\n' at the end while it should not
                     expect(normalize(result.data)).to.equal(should);
                 });

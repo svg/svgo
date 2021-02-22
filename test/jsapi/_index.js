@@ -1,26 +1,21 @@
 'use strict';
 
 const { expect } = require('chai');
+const { createContentItem } = require('../../lib/svgo.js');
+const JSAPI = require('../../lib/svgo/jsAPI.js');
 
-var SVGO = require('../../lib/svgo.js');
-
-var JSAPI = require('../../lib/svgo/jsAPI.js');
-
-describe('svgo object', function() {
+describe('svgo api', function() {
 
     it('should has createContentItem method', function() {
-        var svgo = new SVGO();
-        expect(svgo.createContentItem).to.be.instanceOf(Function);
+        expect(createContentItem).to.be.instanceOf(Function);
     });
 
     it('should be able to create content item', function() {
-        var svgo = new SVGO();
-        var item = svgo.createContentItem({
+        var item = createContentItem({
             elem: 'elementName',
             prefix: 'prefixName',
             local: 'localName'
         });
-
         expect(item).to.be.instanceOf(JSAPI);
         expect(item).to.have.ownProperty('elem').equal('elementName');
         expect(item).to.have.ownProperty('prefix').equal('prefixName');
@@ -28,15 +23,8 @@ describe('svgo object', function() {
     });
 
     it('should be able create content item without argument', function() {
-        var svgo = new SVGO();
-        var item = svgo.createContentItem();
-
+        var item = createContentItem();
         expect(item).to.be.instanceOf(JSAPI);
         expect(item).to.be.empty;
     });
-
-    it('should have ES module interop default property', function() {
-        expect(SVGO).to.equal(SVGO.default);
-    });
-
 });

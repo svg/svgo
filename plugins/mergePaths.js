@@ -11,7 +11,7 @@ exports.params = {
     force: false,
     leadingZero: true,
     negativeExtraSpace: true,
-    noSpaceAfterFlags: true
+    noSpaceAfterFlags: false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
 };
 
 var path2js = require('./_path.js').path2js,

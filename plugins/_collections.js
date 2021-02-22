@@ -1520,6 +1520,7 @@ exports.elems = {
             'y',
             'width',
             'height',
+            'mask-type',
             'maskUnits',
             'maskContentUnits'
         ],

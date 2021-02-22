@@ -1,5 +1,5 @@
-node_modules/
-.nyc_output
+node_modules
+dist
 coverage
 bin/svgo-profiling
 .DS_Store

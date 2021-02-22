@@ -1,80 +1,47 @@
 'use strict';
 
-var FS = require('fs'),
-    PATH = require('path'),
-    SVGO = require('../lib/svgo'),
-    filepath = PATH.resolve(__dirname, 'test.svg'),
-    svgo = new SVGO({
-        plugins: [{
-          cleanupAttrs: true,
-        }, {
-          removeDoctype: true,
-        },{
-          removeXMLProcInst: true,
-        },{
-          removeComments: true,
-        },{
-          removeMetadata: true,
-        },{
-          removeTitle: true,
-        },{
-          removeDesc: true,
-        },{
-          removeUselessDefs: true,
-        },{
-          removeEditorsNSData: true,
-        },{
-          removeEmptyAttrs: true,
-        },{
-          removeHiddenElems: true,
-        },{
-          removeEmptyText: true,
-        },{
-          removeEmptyContainers: true,
-        },{
-          removeViewBox: false,
-        },{
-          cleanupEnableBackground: true,
-        },{
-          convertStyleToAttrs: true,
-        },{
-          convertColors: true,
-        },{
-          convertPathData: true,
-        },{
-          convertTransform: true,
-        },{
-          removeUnknownsAndDefaults: true,
-        },{
-          removeNonInheritableGroupAttrs: true,
-        },{
-          removeUselessStrokeAndFill: true,
-        },{
-          removeUnusedNS: true,
-        },{
-          cleanupIDs: true,
-        },{
-          cleanupNumericValues: true,
-        },{
-          moveElemsAttrsToGroup: true,
-        },{
-          moveGroupAttrsToElems: true,
-        },{
-          collapseGroups: true,
-        },{
-          removeRasterImages: false,
-        },{
-          mergePaths: true,
-        },{
-          convertShapeToPath: true,
-        },{
-          sortAttrs: true,
-        },{
-          removeDimensions: true,
-        },{
-          removeAttrs: {attrs: '(stroke|fill)'},
-        }]
-      });
+const FS = require('fs');
+const PATH = require('path');
+const { optimize } = require('../lib/svgo');
+const filepath = PATH.resolve(__dirname, 'test.svg');
+const config = {
+  plugins: [
+    'cleanupAttrs',
+    'removeDoctype',
+    'removeXMLProcInst',
+    'removeComments',
+    'removeMetadata',
+    'removeTitle',
+    'removeDesc',
+    'removeUselessDefs',
+    'removeEditorsNSData',
+    'removeEmptyAttrs',
+    'removeHiddenElems',
+    'removeEmptyText',
+    'removeEmptyContainers',
+    // 'removeViewBox',
+    'cleanupEnableBackground',
+    'convertStyleToAttrs',
+    'convertColors',
+    'convertPathData',
+    'convertTransform',
+    'removeUnknownsAndDefaults',
+    'removeNonInheritableGroupAttrs',
+    'removeUselessStrokeAndFill',
+    'removeUnusedNS',
+    'cleanupIDs',
+    'cleanupNumericValues',
+    'moveElemsAttrsToGroup',
+    'moveGroupAttrsToElems',
+    'collapseGroups',
+    // 'removeRasterImages',
+    'mergePaths',
+    'convertShapeToPath',
+    'sortAttrs',
+    'removeDimensions',
+    { name: 'removeAttrs', attrs: '(stroke|fill)'},
+  ]
+};
 
 FS.readFile(filepath, 'utf8', function(err, data) {
 
@@ -82,7 +49,7 @@ FS.readFile(filepath, 'utf8', function(err, data) {
         throw err;
     }
 
-    const result = svgo.optimize(data, {path: filepath});
+    const result = optimize(data, {path: filepath, ...config});
 
     console.log(result);
 
