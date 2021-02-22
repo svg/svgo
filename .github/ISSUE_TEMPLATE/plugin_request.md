@@ -19,4 +19,4 @@ A clear and concise description of what you want to happen.
 Include any links pointing to relevant specs or general knowledge that may validate your plugin idea.
 
 **Implementation**
-[ ] Are you volunteering to work on this plugin?
+- [ ] Are you volunteering to work on this plugin?
