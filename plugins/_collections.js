@@ -100,7 +100,7 @@ exports.attrsGroups = {
 };
 
 exports.attrsGroupsDefaults = {
-    core: {'xml:space': 'preserve'},
+    core: {'xml:space': 'default'},
     filterPrimitive: {x: '0', y: '0', width: '100%', height: '100%'},
     presentation: {
         clip: 'auto',
