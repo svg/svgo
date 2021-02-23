@@ -89,7 +89,7 @@
     ]
   },
   "dependencies": {
-    "@trysound/sax": "0.1.0",
+    "@trysound/sax": "0.1.1",
     "chalk": "^4.1.0",
     "commander": "^7.1.0",
     "css-select": "^3.1.2",
