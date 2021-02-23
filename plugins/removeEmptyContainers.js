@@ -25,8 +25,13 @@ var container = require('./_collections').elemsGroups.container;
  * @author Kir Belevich
  */
 exports.fn = function(item) {
-
-    return !(item.isElem(container) && !item.isElem('svg') && item.isEmpty() &&
-        (!item.isElem('pattern') || !item.hasAttrLocal('href')));
-
+  return (
+    item.isElem(container) === false ||
+    item.isEmpty() === false ||
+    item.isElem('svg') ||
+    (item.isElem('pattern') && item.hasAttrLocal('href')) ||
+    // The 'g' may not have content, but the filter may cause a rectangle
+    // to be created and filled with pattern.
+    (item.isElem('g') && item.hasAttr('filter'))
+  );
 };
