@@ -12,9 +12,7 @@
             /* Atrules with block */
             @font-face {
                 font-family: SomeFont;
-                src: local("Some Font"),
-                local("SomeFont"),
-                url(SomeFont.ttf);
+                src: local("Some Font"), local("SomeFont"), url(SomeFont.ttf);
                 font-weight: bold;
             }
 
