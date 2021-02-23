@@ -71,4 +71,9 @@ describe('svgo', () => {
     const result = optimize(original, { path: 'input.svg', plugins: [], js2svg: { pretty: true } });
     expect(normalize(result.data)).to.equal(expected);
   });
+  it('should preserve whitespaces between tspan tags', async () => {
+    const [original, expected] = await parseFixture('whitespaces.svg');
+    const result = optimize(original, { path: 'input.svg', js2svg: { pretty: true } });
+    expect(normalize(result.data)).to.equal(expected);
+  });
 });
