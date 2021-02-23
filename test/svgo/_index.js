@@ -66,4 +66,9 @@ describe('svgo', () => {
     const result = optimize(original, { input: 'file', path: 'input.svg', js2svg: { pretty: true } });
     expect(normalize(result.data)).to.equal(expected);
   });
+  it('should inline entities', async () => {
+    const [original, expected] = await parseFixture('entities.svg');
+    const result = optimize(original, { path: 'input.svg', plugins: [], js2svg: { pretty: true } });
+    expect(normalize(result.data)).to.equal(expected);
+  });
 });
