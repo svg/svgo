@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "commonjs",
+    "target": "es2018",
+    "lib": ["es2018"],
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false
+  },
+  "include": [
+    "lib/css-tools.js",
+    "lib/svgo/css-class-list.js",
+    "lib/svgo/css-select-adapter.js",
+    "lib/svgo/css-style-declaration.js",
+    "lib/svgo/plugins.js",
+    "lib/svgo/tools.js"
+  ]
+}
