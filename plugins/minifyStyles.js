@@ -37,13 +37,22 @@ exports.fn = function(ast, options) {
 
     elems.forEach(function(elem) {
         if (elem.isElem('style')) {
-            // <style> element
-            var styleCss = elem.content[0].text || elem.content[0].cdata || [];
-            var DATA = styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0 ? 'cdata' : 'text';
+            // has <style> element
+            if (elem.isEmpty()) {
+                // removed empty <style> elements
+                var styleParentEl = elem.parentNode; // svg element
+                var styleIndex = styleParentEl.content.indexOf(elem)
 
-            elem.content[0][DATA] = csso.minify(styleCss, minifyOptionsForStylesheet).css;
+                console.log('style index', styleIndex);
+                styleParentEl.spliceContent(styleIndex, 1);
+            } else {
+                var styleCss = elem.content[0].text || elem.content[0].cdata || [];
+                var DATA = styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0 ? 'cdata' : 'text';
+
+                elem.content[0][DATA] = csso.minify(styleCss, minifyOptionsForStylesheet).css;
+            }
         } else {
-            // style attribute
+            // has style attribute
             var elemStyle = elem.attr('style').value;
 
             elem.attr('style').value = csso.minifyBlock(elemStyle, minifyOptionsForAttribute).css;
@@ -73,8 +82,7 @@ function findStyleElems(ast) {
             if (item.content) {
                 walk(item, styles);
             }
-
-            if (item.isElem('style') && !item.isEmpty()) {
+            if (item.isElem('style')) {
                 styles.push(item);
             } else if (item.isElem() && item.hasAttr('style')) {
                 styles.push(item);
