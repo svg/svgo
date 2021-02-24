@@ -52,7 +52,9 @@ exports.fn = function (item, params) {
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
         if (
             params.isHidden &&
-            item.hasAttr('visibility', 'hidden')
+            item.hasAttr('visibility', 'hidden') &&
+            // keep if any descendant enables visibility
+            item.querySelector('[visibility=visible]') == null
         ) return false;
 
         // display="none"
