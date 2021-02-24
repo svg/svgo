@@ -118,7 +118,6 @@ module.exports = {
     'cleanupAttrs',
     'inlineStyles',
     'minifyStyles',
-    'convertStyleToAttrs',
     'cleanupIDs',
     'removeUselessDefs',
     'cleanupNumericValues',
