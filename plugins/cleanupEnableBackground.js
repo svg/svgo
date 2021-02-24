@@ -9,7 +9,7 @@ exports.description = 'remove or cleanup enable-background attribute when possib
 /**
  * Remove or cleanup enable-background attr which coincides with a width/height box.
  *
- * @see http://www.w3.org/TR/SVG/filters.html#EnableBackgroundProperty
+ * @see http://www.w3.org/TR/SVG11/filters.html#EnableBackgroundProperty
  *
  * @example
  * <svg width="100" height="50" enable-background="new 0 0 100 50">

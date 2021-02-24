@@ -75,7 +75,7 @@ exports.path2js = function(path) {
 
             data = data.map(Number);
             // Subsequent moveto pairs of coordinates are threated as implicit lineto commands
-            // http://www.w3.org/TR/SVG/paths.html#PathDataMovetoCommands
+            // http://www.w3.org/TR/SVG11/paths.html#PathDataMovetoCommands
             if (instruction == 'M' || instruction == 'm') {
                 pathData.push({
                     instruction: pathData.length == 0 ? 'M' : instruction,

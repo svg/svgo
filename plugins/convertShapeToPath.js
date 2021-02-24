@@ -18,7 +18,7 @@ var none = { value: 0 },
  * It also allows further optimizations like
  * combining paths with similar attributes.
  *
- * @see http://www.w3.org/TR/SVG/shapes.html
+ * @see http://www.w3.org/TR/SVG11/shapes.html
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params

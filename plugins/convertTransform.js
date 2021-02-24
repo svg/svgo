@@ -35,7 +35,7 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
  * convert transforms to the matrices and multiply them all into one,
  * remove useless transforms.
  *
- * @see http://www.w3.org/TR/SVG/coords.html#TransformMatrixDefined
+ * @see http://www.w3.org/TR/SVG11/coords.html#TransformMatrixDefined
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params

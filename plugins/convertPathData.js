@@ -48,7 +48,7 @@ var pathElems = require('./_collections.js').pathElems,
  * trim useless delimiters and leading zeros,
  * decrease accuracy of floating-point numbers.
  *
- * @see http://www.w3.org/TR/SVG/paths.html#PathData
+ * @see http://www.w3.org/TR/SVG11/paths.html#PathData
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params

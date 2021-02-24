@@ -24,8 +24,8 @@ var collections = require('./_collections'),
 /**
  * Convert different colors formats in element attributes to hex.
  *
- * @see http://www.w3.org/TR/SVG/types.html#DataTypeColor
- * @see http://www.w3.org/TR/SVG/single-page.html#types-ColorKeywords
+ * @see http://www.w3.org/TR/SVG11/types.html#DataTypeColor
+ * @see http://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
  *
  * @example
  * Convert color name keyword to long hex:
