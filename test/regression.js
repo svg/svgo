@@ -31,7 +31,9 @@ const readSvgFiles = async () => {
         header.name !== 'svg/coords-dom-03-f.svg' &&
         header.name !== 'svg/coords-dom-04-f.svg' &&
         // fails because <defs><font-face> is removed
-        header.name !== 'coords-viewattr-01-b.svg'
+        header.name !== 'svg/coords-viewattr-01-b.svg' &&
+        // fails because script is not run in base64
+        header.name !== 'svg/masking-path-12-f.svg'
       ) {
         if (header.name.endsWith('.svg')) {
           // strip folder and extension
