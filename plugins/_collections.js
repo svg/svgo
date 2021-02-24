@@ -203,7 +203,9 @@ exports.elems = {
             'style',
             'switch',
             'text',
-            'view'
+            'view',
+            // not spec compliant
+            'tspan',
         ]
     },
     altGlyph: {
