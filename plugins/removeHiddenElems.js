@@ -70,7 +70,9 @@ exports.fn = function (item, params) {
         // http://www.w3.org/TR/SVG11/masking.html#ObjectAndGroupOpacityProperties
         if (
             params.opacity0 &&
-            item.hasAttr('opacity', '0')
+            item.hasAttr('opacity', '0') &&
+            // transparent element inside clipPath still affect clipped elements
+            item.closestElem('clipPath') == null
         ) return false;
 
         // Circles with zero radius
