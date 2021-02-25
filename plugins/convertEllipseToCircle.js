@@ -9,7 +9,7 @@ exports.description = 'converts non-eccentric <ellipse>s to <circle>s';
 /**
  * Converts non-eccentric <ellipse>s to <circle>s.
  *
- * @see http://www.w3.org/TR/SVG11/shapes.html
+ * @see https://www.w3.org/TR/SVG11/shapes.html
  *
  * @param {Object} item current iteration item
  * @return {Boolean} if false, item will be filtered out

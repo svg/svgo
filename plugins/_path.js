@@ -75,7 +75,7 @@ exports.path2js = function(path) {
 
             data = data.map(Number);
             // Subsequent moveto pairs of coordinates are threated as implicit lineto commands
-            // http://www.w3.org/TR/SVG11/paths.html#PathDataMovetoCommands
+            // https://www.w3.org/TR/SVG11/paths.html#PathDataMovetoCommands
             if (instruction == 'M' || instruction == 'm') {
                 pathData.push({
                     instruction: pathData.length == 0 ? 'M' : instruction,
@@ -354,7 +354,7 @@ function transformPoint(matrix, x, y) {
 /**
  * Compute Cubic Bézie bounding box.
  *
- * @see http://processingjs.nihongoresources.com/bezierinfo/
+ * @see https://pomax.github.io/bezierinfo/
  *
  * @param {Float} xa
  * @param {Float} ya
@@ -461,7 +461,7 @@ function computeCubicFirstDerivativeRoots(a, b, c, d) {
 /**
  * Compute Quadratic Bézier bounding box.
  *
- * @see http://processingjs.nihongoresources.com/bezierinfo/
+ * @see https://pomax.github.io/bezierinfo/
  *
  * @param {Float} xa
  * @param {Float} ya
@@ -623,7 +623,7 @@ function set(dest, source) {
 /**
  * Checks if two paths have an intersection by checking convex hulls
  * collision using Gilbert-Johnson-Keerthi distance algorithm
- * http://entropyinteractive.com/2011/04/gjk-algorithm/
+ * https://web.archive.org/web/20180822200027/http://entropyinteractive.com/2011/04/gjk-algorithm/
  *
  * @param {Array} path1 JS path representation
  * @param {Array} path2 JS path representation
@@ -852,7 +852,7 @@ function gatherPoints(points, item, index, path) {
 
 /**
  * Forms a convex hull from set of points of every subpath using monotone chain convex hull algorithm.
- * http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+ * https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
  *
  * @param points An array of [X, Y] coordinates
  */
@@ -914,7 +914,7 @@ function cross(o, a, b) {
 
 function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
-    // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
+    // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
     var _120 = Math.PI * 120 / 180,
         rad = Math.PI / 180 * (+angle || 0),
         res = [],

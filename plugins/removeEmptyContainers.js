@@ -11,7 +11,7 @@ var container = require('./_collections').elemsGroups.container;
 /**
  * Remove empty containers.
  *
- * @see http://www.w3.org/TR/SVG11/intro.html#TermContainerElement
+ * @see https://www.w3.org/TR/SVG11/intro.html#TermContainerElement
  *
  * @example
  * <defs/>
