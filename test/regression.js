@@ -146,18 +146,21 @@ const runTests = async () => {
   console.info(`Skipped: ${skipped}`);
   console.info(`Mismatched: ${mismatched}`);
   console.info(`Passed: ${passed}`);
-  if (mismatched !== 0) {
-    throw Error('Regression tests failed');
-  }
+  return mismatched === 0;
 };
 
 (async () => {
   try {
     const start = process.hrtime.bigint();
-    await runTests();
+    const passed = await runTests();
     const end = process.hrtime.bigint();
     const diff = (end - start) / BigInt(1e+6);
-    console.info(`Regression tests successfully completed in ${diff}ms`);
+    if (passed) {
+      console.info(`Regression tests successfully completed in ${diff}ms`);
+    } else {
+      console.error(`Regression tests failed in ${diff}ms`);
+      process.exit(1);
+    }
   } catch (error) {
     console.error(error);
     process.exit(1);
