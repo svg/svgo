@@ -281,10 +281,6 @@ const config = await loadConfig(configFile, cwd)
 |:-:|:-:|
 | [SheetJS LLC](https://sheetjs.com/) | [Fontello](https://fontello.com/) |
 
-## Donations
-
-* PayPal: <https://www.paypal.me/deepsweet>
-
 ## License and Copyright
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
