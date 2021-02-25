@@ -10,7 +10,7 @@ var rNumber = String.raw`[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?\s*`,
 var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regCoordinateSequence = new RegExp(rNumber, 'g'),
     regArcArgumentSequence = new RegExp(rArcSeq, 'g'),
-    regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/,
+    regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
     transformArc = require('./_transforms').transformArc,
@@ -239,6 +239,18 @@ exports.applyTransforms = function(elem, path, params) {
                             return removeLeadingZero(num * scale);
                         })
                     });
+                }
+
+                if (elem.hasAttr('stroke-dashoffset')) {
+                  elem.attrs['stroke-dashoffset'].value = elem.attrs['stroke-dashoffset'].value
+                    .trim()
+                    .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
+                }
+
+                if (elem.hasAttr('stroke-dasharray')) {
+                  elem.attrs['stroke-dasharray'].value = elem.attrs['stroke-dasharray'].value
+                    .trim()
+                    .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
                 }
             }
         }
