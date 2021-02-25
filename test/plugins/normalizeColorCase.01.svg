@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="RGB(46, 175, 79)"/>
+    <path fill="#2EAF4F"/>
+    <path fill="HSL(135, 58%, 43%)"/>
+    <path fill="BLUE"/>
+    <path fill="NOT_A_COLOR"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="rgb(46, 175, 79)"/>
+    <path fill="#2eaf4f"/>
+    <path fill="hsl(135, 58%, 43%)"/>
+    <path fill="blue"/>
+    <path fill="NOT_A_COLOR"/>
+</svg>
