@@ -15,7 +15,7 @@ const { optimize } = require('../lib/svgo.js');
 const pipeline = util.promisify(stream.pipeline);
 
 const readSvgFiles = async () => {
-  const svgFiles = new Map();
+  const svgFiles = [];
   const response = await fetch(
     'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz'
   );
@@ -39,13 +39,13 @@ const readSvgFiles = async () => {
           // strip folder and extension
           const name = header.name.slice('svg/'.length, -'.svg'.length);
           const string = await getStream(stream);
-          svgFiles.set(name, string);
+          svgFiles.push([name, string]);
         }
         if (header.name.endsWith('.svgz')) {
           // strip folder and extension
           const name = header.name.slice('svg/'.length, -'.svgz'.length);
           const string = await getStream(stream.pipe(zlib.createGunzip()));
-          svgFiles.set(name, string);
+          svgFiles.push([name, string]);
         }
       }
     } catch (error) {
@@ -89,18 +89,24 @@ const optimizeSvgFiles = (svgFiles) => {
   return optimizedFiles;
 };
 
-const runTests = async () => {
-  console.info('Download W3C SVG 1.1 Test Suite and extract svg files');
-  const svgFiles = await readSvgFiles();
+const chunkInto = (array, chunksCount) => {
+  // take upper bound to include tail
+  const chunkSize = Math.ceil(array.length / chunksCount);
+  const result = [];
+  for (let i = 0; i < chunksCount; i += 1) {
+    const offset = i * chunkSize;
+    result.push(array.slice(offset, offset + chunkSize));
+  }
+  return result;
+};
+
+const runTests = async ({ svgFiles }) => {
   const optimizedFiles = optimizeSvgFiles(svgFiles);
   let skipped = 0;
   let mismatched = 0;
   let passed = 0;
   console.info('Start browser...');
-  const browser = await chromium.launch();
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  for (const [name, string] of svgFiles) {
+  const processFile = async (page, name, string) => {
     const optimized = optimizedFiles.get(name);
     const width = 960;
     const height = 720;
@@ -110,7 +116,7 @@ const runTests = async () => {
     if (draft != null) {
       console.info(`${name} is skipped`);
       skipped += 1;
-      continue;
+      return;
     }
     const originalBuffer = await page.screenshot({
       omitBackground: true,
@@ -142,6 +148,18 @@ const runTests = async () => {
       await fs.promises.writeFile(`diffs/${name}.diff.png`, PNG.sync.write(diff));
     }
   }
+  const browser = await chromium.launch();
+  const context = await browser.newContext();
+  const chunks = chunkInto(svgFiles, 8);
+  await Promise.all(
+    chunks.map(async (chunk) => {
+      const page = await context.newPage();
+      for (const [name, string] of chunk) {
+        await processFile(page, name, string);
+      }
+      await page.close()
+    })
+  );
   await browser.close()
   console.info(`Skipped: ${skipped}`);
   console.info(`Mismatched: ${mismatched}`);
@@ -152,7 +170,9 @@ const runTests = async () => {
 (async () => {
   try {
     const start = process.hrtime.bigint();
-    const passed = await runTests();
+    console.info('Download W3C SVG 1.1 Test Suite and extract svg files');
+    const svgFiles = await readSvgFiles();
+    const passed = await runTests({ svgFiles });
     const end = process.hrtime.bigint();
     const diff = (end - start) / BigInt(1e+6);
     if (passed) {
