@@ -1,6 +1,6 @@
 'use strict';
 
-// http://www.w3.org/TR/SVG11/intro.html#Definitions
+// https://www.w3.org/TR/SVG11/intro.html#Definitions
 exports.elemsGroups = {
     animation: ['animate', 'animateColor', 'animateMotion', 'animateTransform', 'set'],
     descriptive: ['desc', 'metadata', 'title'],
@@ -19,7 +19,7 @@ exports.textElems = exports.elemsGroups.textContent.concat('title');
 
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
-// http://www.w3.org/TR/SVG11/intro.html#Definitions
+// https://www.w3.org/TR/SVG11/intro.html#Definitions
 exports.attrsGroups = {
     animationAddition: ['additive', 'accumulate'],
     animationAttributeTarget: ['attributeType', 'attributeName'],
@@ -158,7 +158,7 @@ exports.attrsGroupsDefaults = {
     transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
 };
 
-// http://www.w3.org/TR/SVG11/eltindex.html
+// https://www.w3.org/TR/SVG11/eltindex.html
 exports.elems = {
     a: {
         attrsGroups: [
@@ -2269,7 +2269,7 @@ exports.elems = {
     }
 };
 
-// http://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+// https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
 exports.editorNamespaces = [
     'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
     'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
@@ -2295,7 +2295,7 @@ exports.editorNamespaces = [
     'http://www.vector.evaxdesign.sk'
 ];
 
-// http://www.w3.org/TR/SVG11/linking.html#processingIRI
+// https://www.w3.org/TR/SVG11/linking.html#processingIRI
 exports.referencesProps = [
     'clip-path',
     'color-profile',
@@ -2309,7 +2309,7 @@ exports.referencesProps = [
     'style'
 ];
 
-// http://www.w3.org/TR/SVG11/propidx.html
+// https://www.w3.org/TR/SVG11/propidx.html
 exports.inheritableAttrs = [
     'clip-rule',
     'color',
@@ -2370,7 +2370,7 @@ exports.presentationNonInheritableGroupAttrs = [
     'visibility'
 ];
 
-// http://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+// https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
 exports.colorsNames = {
     'aliceblue': '#f0f8ff',
     'antiquewhite': '#faebd7',
@@ -2557,7 +2557,7 @@ exports.colorsShortNames = {
   '#f5deb3': 'wheat'
 };
 
-// http://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
+// https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
 exports.colorsProps = [
     'color', 'fill', 'stroke', 'stop-color', 'flood-color', 'lighting-color'
 ];

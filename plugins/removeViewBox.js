@@ -11,7 +11,7 @@ var viewBoxElems = ['svg', 'pattern', 'symbol'];
 /**
  * Remove viewBox attr which coincides with a width/height box.
  *
- * @see http://www.w3.org/TR/SVG11/coords.html#ViewBoxAttribute
+ * @see https://www.w3.org/TR/SVG11/coords.html#ViewBoxAttribute
  *
  * @example
  * <svg width="100" height="50" viewBox="0 0 100 50">

@@ -115,7 +115,7 @@ var mth = exports.mth = {
 
 /**
  * Decompose matrix into simple transforms. See
- * http://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ * https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  *
  * @param {Object} data matrix transform object
  * @return {Object|Array} transforms array or original transform object
