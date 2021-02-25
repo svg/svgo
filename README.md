@@ -275,7 +275,7 @@ const config = await loadConfig(configFile, cwd)
 * as a Sublime plugin - [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)
 * as a Figma plugin - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
 
-## Backers
+## Donators
 
 | [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/master/fontello-image.svg" width="80">](https://fontello.com/) |
 |:-:|:-:|
