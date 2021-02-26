@@ -23,12 +23,12 @@ var regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
 exports.path2js = function(path) {
   if (path.pathJS) return path.pathJS;
   const pathData = [];   // JS representation of the path data
-  const commands = parsePathData(path.attr('d').value);
-  for (const { name, args } of commands) {
-    if (name === 'Z' || name === 'z') {
+  const newPathData = parsePathData(path.attr('d').value);
+  for (const { command, args } of newPathData) {
+    if (command === 'Z' || command === 'z') {
       pathData.push({ instruction: 'z' });
     } else {
-      pathData.push({ instruction: name, data: args });
+      pathData.push({ instruction: command, data: args });
     }
   }
   // First moveto is actually absolute. Subsequent coordinates were separated above.
