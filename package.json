@@ -83,7 +83,8 @@
       },
       {
         "files": [
-          "test/**/*.js"
+          "test/**/*.js",
+          "**/*.test.js"
         ],
         "env": {
           "mocha": true
