@@ -6,8 +6,9 @@ exports.active = false;
 
 exports.description = 'removes elements that are drawn outside of the viewbox (disabled by default)';
 
-var SVGO       = require('../lib/svgo.js'),
-	_path      = require('./_path.js'),
+const JSAPI = require('../lib/svgo/jsAPI.js');
+
+var _path      = require('./_path.js'),
 	intersects = _path.intersects,
 	path2js    = _path.path2js,
 	viewBox,
@@ -97,7 +98,7 @@ function parseViewBox(svg)
 		bottom: parseFloat(m[2]) + parseFloat(m[4])
 	};
 
-	var path = new SVGO().createContentItem({
+	var path = new JSAPI({
 		elem:   'path',
 		prefix: '',
 		local:  'path'

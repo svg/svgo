@@ -1,9 +1,8 @@
-/* jshint quotmark: false */
 'use strict';
 
 exports.type = 'perItem';
 
-exports.active = true;
+exports.active = false;
 
 exports.description = 'converts style to attributes';
 
@@ -29,7 +28,7 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
     rDeclEnd = '\\s*(?:;\\s*|$)',
 
     // Important rule
-    rImportant = '(\\s*!important(?![-(\w]))?',
+    rImportant = '(\\s*!important(?![-(\\w]))?',
 
     // Final RegExp to parse CSS declarations.
     regDeclarationBlock = new RegExp(rAttr + ':' + rValue + rImportant + rDeclEnd, 'ig'),
@@ -56,7 +55,6 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
  * @author Kir Belevich
  */
 exports.fn = function(item, params) {
-    /* jshint boss: true */
 
     if (item.elem && item.hasAttr('style')) {
             // ['opacity: 1', 'color: #000']
@@ -71,6 +69,7 @@ exports.fn = function(item, params) {
         });
 
         regDeclarationBlock.lastIndex = 0;
+        // eslint-disable-next-line no-cond-assign
         for (var rule; rule = regDeclarationBlock.exec(styleValue);) {
             if (!params.keepImportant || !rule[3]) {
                 styles.push([rule[1], rule[2]]);

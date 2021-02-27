@@ -65,7 +65,7 @@ exports.fn = function(data, params) {
                 }
 
                 // Don't remove IDs if the whole SVG consists only of defs.
-                if (item.isElem('svg')) {
+                if (item.isElem('svg') && item.content) {
                     var hasDefsOnly = true;
 
                     for (var j = 0; j < item.content.length; j++) {

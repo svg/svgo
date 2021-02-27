@@ -9,7 +9,7 @@ exports.description = 'remove or cleanup enable-background attribute when possib
 /**
  * Remove or cleanup enable-background attr which coincides with a width/height box.
  *
- * @see http://www.w3.org/TR/SVG/filters.html#EnableBackgroundProperty
+ * @see https://www.w3.org/TR/SVG11/filters.html#EnableBackgroundProperty
  *
  * @example
  * <svg width="100" height="50" enable-background="new 0 0 100 50">
@@ -23,7 +23,7 @@ exports.description = 'remove or cleanup enable-background attribute when possib
  */
 exports.fn = function(data) {
 
-    var regEnableBackground = /^new\s0\s0\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)\s([\-+]?\d*\.?\d+([eE][\-+]?\d+)?)$/,
+    var regEnableBackground = /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/,
         hasFilter = false,
         elems = ['svg', 'mask', 'pattern'];
 

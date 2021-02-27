@@ -1,0 +1,18 @@
+<!-- https://github.com/svg/svgo/pull/258#issue-23706813 -->
+<svg xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(-39, -239)">
+    <g id="test" transform="translate(39, 37)">
+      <g>
+        <rect id="Rectangle-1183" fill="#D4D4D4" x="8" y="223" width="7" height="19"></rect>
+        <rect id="Rectangle-1183" fill="#D4D4D4" x="4" y="227" width="42" height="3"></rect>
+        <rect id="Rectangle-1183" fill="#D0011B" x="23" y="227" width="6" height="3"></rect>
+        <rect id="Rectangle-1183" fill="#D0011B" x="35" y="227" width="6" height="3"></rect>
+        <rect id="Rectangle-1183" fill="#D0011B" x="11" y="227" width="6" height="3"></rect>
+      </g>
+    </g>
+  </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg"><path fill="#D4D4D4" d="M8 21h7v19H8z"/><path fill="#D4D4D4" d="M4 25h42v3H4z"/><path fill="#D0011B" d="M23 25h6v3h-6zm12 0h6v3h-6zm-24 0h6v3h-6z"/></svg>

@@ -18,14 +18,14 @@ var collections = require('./_collections'),
     rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)',
     rComma = '\\s*,\\s*',
     regRGB = new RegExp('^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'),
-    regHEX = /^\#(([a-fA-F0-9])\2){3}$/,
+    regHEX = /^#(([a-fA-F0-9])\2){3}$/,
     none = /\bnone\b/i;
 
 /**
  * Convert different colors formats in element attributes to hex.
  *
- * @see http://www.w3.org/TR/SVG/types.html#DataTypeColor
- * @see http://www.w3.org/TR/SVG/single-page.html#types-ColorKeywords
+ * @see https://www.w3.org/TR/SVG11/types.html#DataTypeColor
+ * @see https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
  *
  * @example
  * Convert color name keyword to long hex:

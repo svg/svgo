@@ -15,7 +15,7 @@ exports.params = {
 /**
  * Remove empty Text elements.
  *
- * @see http://www.w3.org/TR/SVG/text.html
+ * @see https://www.w3.org/TR/SVG11/text.html
  *
  * @example
  * Remove empty text element:

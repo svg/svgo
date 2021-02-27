@@ -20,7 +20,6 @@ exports.transform2js = function(transformString) {
 
     // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
     transformString.split(regTransformSplit).forEach(function(item) {
-        /*jshint -W084 */
         var num;
 
         if (item) {
@@ -31,6 +30,7 @@ exports.transform2js = function(transformString) {
             // else if item is data
             } else {
                 // then split it into [10, 50] and collect as context.data
+                // eslint-disable-next-line no-cond-assign
                 while (num = regNumericValues.exec(item)) {
                     num = Number(num);
                     if (current.data)
@@ -115,7 +115,7 @@ var mth = exports.mth = {
 
 /**
  * Decompose matrix into simple transforms. See
- * http://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ * https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  *
  * @param {Object} data matrix transform object
  * @return {Object|Array} transforms array or original transform object

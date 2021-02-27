@@ -108,6 +108,7 @@ function intersectInheritableAttrs(a, b) {
 
     for (var n in a) {
         if (
+            // eslint-disable-next-line no-prototype-builtins
             b.hasOwnProperty(n) &&
             inheritableAttrs.indexOf(n) > -1 &&
             a[n].name === b[n].name &&

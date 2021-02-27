@@ -52,12 +52,14 @@ exports.fn = function (item, params) {
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
         if (
             params.isHidden &&
-            item.hasAttr('visibility', 'hidden')
+            item.hasAttr('visibility', 'hidden') &&
+            // keep if any descendant enables visibility
+            item.querySelector('[visibility=visible]') == null
         ) return false;
 
         // display="none"
         //
-        // http://www.w3.org/TR/SVG/painting.html#DisplayProperty
+        // https://www.w3.org/TR/SVG11/painting.html#DisplayProperty
         // "A value of display: none indicates that the given element
         // and its children shall not be rendered directly"
         if (
@@ -67,15 +69,17 @@ exports.fn = function (item, params) {
 
         // opacity="0"
         //
-        // http://www.w3.org/TR/SVG/masking.html#ObjectAndGroupOpacityProperties
+        // https://www.w3.org/TR/SVG11/masking.html#ObjectAndGroupOpacityProperties
         if (
             params.opacity0 &&
-            item.hasAttr('opacity', '0')
+            item.hasAttr('opacity', '0') &&
+            // transparent element inside clipPath still affect clipped elements
+            item.closestElem('clipPath') == null
         ) return false;
 
         // Circles with zero radius
         //
-        // http://www.w3.org/TR/SVG/shapes.html#CircleElementRAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#CircleElementRAttribute
         // "A value of zero disables rendering of the element"
         //
         // <circle r="0">
@@ -88,7 +92,7 @@ exports.fn = function (item, params) {
 
         // Ellipse with zero x-axis radius
         //
-        // http://www.w3.org/TR/SVG/shapes.html#EllipseElementRXAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#EllipseElementRXAttribute
         // "A value of zero disables rendering of the element"
         //
         // <ellipse rx="0">
@@ -101,7 +105,7 @@ exports.fn = function (item, params) {
 
         // Ellipse with zero y-axis radius
         //
-        // http://www.w3.org/TR/SVG/shapes.html#EllipseElementRYAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#EllipseElementRYAttribute
         // "A value of zero disables rendering of the element"
         //
         // <ellipse ry="0">
@@ -114,7 +118,7 @@ exports.fn = function (item, params) {
 
         // Rectangle with zero width
         //
-        // http://www.w3.org/TR/SVG/shapes.html#RectElementWidthAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#RectElementWidthAttribute
         // "A value of zero disables rendering of the element"
         //
         // <rect width="0">
@@ -127,7 +131,7 @@ exports.fn = function (item, params) {
 
         // Rectangle with zero height
         //
-        // http://www.w3.org/TR/SVG/shapes.html#RectElementHeightAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#RectElementHeightAttribute
         // "A value of zero disables rendering of the element"
         //
         // <rect height="0">
@@ -141,7 +145,7 @@ exports.fn = function (item, params) {
 
         // Pattern with zero width
         //
-        // http://www.w3.org/TR/SVG/pservers.html#PatternElementWidthAttribute
+        // https://www.w3.org/TR/SVG11/pservers.html#PatternElementWidthAttribute
         // "A value of zero disables rendering of the element (i.e., no paint is applied)"
         //
         // <pattern width="0">
@@ -153,7 +157,7 @@ exports.fn = function (item, params) {
 
         // Pattern with zero height
         //
-        // http://www.w3.org/TR/SVG/pservers.html#PatternElementHeightAttribute
+        // https://www.w3.org/TR/SVG11/pservers.html#PatternElementHeightAttribute
         // "A value of zero disables rendering of the element (i.e., no paint is applied)"
         //
         // <pattern height="0">
@@ -165,7 +169,7 @@ exports.fn = function (item, params) {
 
         // Image with zero width
         //
-        // http://www.w3.org/TR/SVG/struct.html#ImageElementWidthAttribute
+        // https://www.w3.org/TR/SVG11/struct.html#ImageElementWidthAttribute
         // "A value of zero disables rendering of the element"
         //
         // <image width="0">
@@ -177,7 +181,7 @@ exports.fn = function (item, params) {
 
         // Image with zero height
         //
-        // http://www.w3.org/TR/SVG/struct.html#ImageElementHeightAttribute
+        // https://www.w3.org/TR/SVG11/struct.html#ImageElementHeightAttribute
         // "A value of zero disables rendering of the element"
         //
         // <image height="0">
@@ -189,7 +193,7 @@ exports.fn = function (item, params) {
 
         // Path with empty data
         //
-        // http://www.w3.org/TR/SVG/paths.html#DAttribute
+        // https://www.w3.org/TR/SVG11/paths.html#DAttribute
         //
         // <path d=""/>
         if (
@@ -200,7 +204,7 @@ exports.fn = function (item, params) {
 
         // Polyline with empty points
         //
-        // http://www.w3.org/TR/SVG/shapes.html#PolylineElementPointsAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#PolylineElementPointsAttribute
         //
         // <polyline points="">
         if (
@@ -211,7 +215,7 @@ exports.fn = function (item, params) {
 
         // Polygon with empty points
         //
-        // http://www.w3.org/TR/SVG/shapes.html#PolygonElementPointsAttribute
+        // https://www.w3.org/TR/SVG11/shapes.html#PolygonElementPointsAttribute
         //
         // <polygon points="">
         if (

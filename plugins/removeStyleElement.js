@@ -9,7 +9,7 @@ exports.description = 'removes <style> element (disabled by default)';
 /**
  * Remove <style>.
  *
- * http://www.w3.org/TR/SVG/styling.html#StyleElement
+ * https://www.w3.org/TR/SVG11/styling.html#StyleElement
  *
  * @param {Object} item current iteration item
  * @return {Boolean} if false, item will be filtered out

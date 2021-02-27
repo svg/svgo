@@ -12,19 +12,25 @@ exports.params = {
 
 exports.description = 'prefix IDs';
 
-
-var path = require('path'),
-    csstree = require('css-tree'),
-    unquote = require('unquote'),
+var csstree = require('css-tree'),
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
     rxId = /^#(.*)$/, // regular expression for matching an ID + extracing its name
     addPrefix = null;
 
+const unquote = (string) => {
+  const first = string.charAt(0)
+  if (first === "'" || first === '"') {
+    if (first === string.charAt(string.length - 1)) {
+      return string.slice(1, -1);
+    }
+  }
+  return string;
+}
 
 // Escapes a string for being used as ID
 var escapeIdentifierName = function(str) {
-    return str.replace(/[\. ]/g, '_');
+    return str.replace(/[. ]/g, '_');
 };
 
 // Matches an #ID value, captures the ID name
@@ -143,6 +149,15 @@ var addPrefixToBeginEndAttr = function(attr) {
     attr.value = parts.join('; ');
 };
 
+const getBasename = (path) => {
+  // extract everything after latest slash or backslash
+  const matched = path.match(/[/\\]([^/\\]+)$/);
+  if (matched) {
+    return matched[1];
+  }
+  return '';
+};
+
 /**
  * Prefixes identifiers
  *
@@ -170,7 +185,7 @@ exports.fn = function(node, opts, extra) {
     } else if (opts.prefix === false) {
         prefix = false;
     } else if (extra && extra.path && extra.path.length > 0) {
-        var filename = path.basename(extra.path);
+        var filename = getBasename(extra.path);
         prefix = filename;
     }
 

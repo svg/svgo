@@ -35,7 +35,7 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
  * convert transforms to the matrices and multiply them all into one,
  * remove useless transforms.
  *
- * @see http://www.w3.org/TR/SVG/coords.html#TransformMatrixDefined
+ * @see https://www.w3.org/TR/SVG11/coords.html#TransformMatrixDefined
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params
@@ -110,7 +110,6 @@ function convertTransform(item, attrName, params) {
  * @return {Array} output array
  */
 function definePrecision(data, params) {
-    /* jshint validthis: true */
     var matrixData = data.reduce(getMatrixData, []),
         significantDigits = params.transformPrecision;
 
@@ -237,8 +236,6 @@ function convertToShorts(transforms, params) {
 
             // splice compensation
             i -= 2;
-
-            transform = transforms[i];
         }
 
     }

@@ -41,27 +41,34 @@ exports.fn = function(item, params) {
         // remove stroke*
         if (
             params.stroke &&
-            (!stroke ||
-                stroke == 'none' ||
-                item.computedAttr('stroke-opacity', '0') ||
-                item.computedAttr('stroke-width', '0')
+            (
+              !stroke ||
+              stroke == 'none' ||
+              item.computedAttr('stroke-opacity', '0') ||
+              item.computedAttr('stroke-width', '0')
             )
         ) {
-            var parentStroke = item.parentNode.computedAttr('stroke'),
-                declineStroke = parentStroke && parentStroke != 'none';
+            // stroke-width may affect the size of marker-end
+            if (
+              item.computedAttr('stroke-width', '0') === true ||
+              item.computedAttr('marker-end') == null
+            ) {
+                var parentStroke = item.parentNode.computedAttr('stroke'),
+                    declineStroke = parentStroke && parentStroke != 'none';
 
-            item.eachAttr(function(attr) {
-                if (regStrokeProps.test(attr.name)) {
-                    item.removeAttr(attr.name);
-                }
-            });
+                item.eachAttr(function(attr) {
+                    if (regStrokeProps.test(attr.name)) {
+                        item.removeAttr(attr.name);
+                    }
+                });
 
-            if (declineStroke) item.addAttr({
-                name: 'stroke',
-                value: 'none',
-                prefix: '',
-                local: 'stroke'
-            });
+                if (declineStroke) item.addAttr({
+                    name: 'stroke',
+                    value: 'none',
+                    prefix: '',
+                    local: 'stroke'
+                });
+            }
         }
 
         // remove fill*

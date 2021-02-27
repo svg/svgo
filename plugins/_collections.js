@@ -1,6 +1,6 @@
 'use strict';
 
-// http://www.w3.org/TR/SVG11/intro.html#Definitions
+// https://www.w3.org/TR/SVG11/intro.html#Definitions
 exports.elemsGroups = {
     animation: ['animate', 'animateColor', 'animateMotion', 'animateTransform', 'set'],
     descriptive: ['desc', 'metadata', 'title'],
@@ -15,9 +15,11 @@ exports.elemsGroups = {
     filterPrimitive: ['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feFlood', 'feGaussianBlur', 'feImage', 'feMerge', 'feMorphology', 'feOffset', 'feSpecularLighting', 'feTile', 'feTurbulence']
 };
 
+exports.textElems = exports.elemsGroups.textContent.concat('title');
+
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
-// http://www.w3.org/TR/SVG11/intro.html#Definitions
+// https://www.w3.org/TR/SVG11/intro.html#Definitions
 exports.attrsGroups = {
     animationAddition: ['additive', 'accumulate'],
     animationAttributeTarget: ['attributeType', 'attributeName'],
@@ -98,7 +100,7 @@ exports.attrsGroups = {
 };
 
 exports.attrsGroupsDefaults = {
-    core: {'xml:space': 'preserve'},
+    core: {'xml:space': 'default'},
     filterPrimitive: {x: '0', y: '0', width: '100%', height: '100%'},
     presentation: {
         clip: 'auto',
@@ -156,7 +158,7 @@ exports.attrsGroupsDefaults = {
     transferFunction: {slope: '1', intercept: '0', amplitude: '1', exponent: '1', offset: '0'}
 };
 
-// http://www.w3.org/TR/SVG11/eltindex.html
+// https://www.w3.org/TR/SVG11/eltindex.html
 exports.elems = {
     a: {
         attrsGroups: [
@@ -201,7 +203,9 @@ exports.elems = {
             'style',
             'switch',
             'text',
-            'view'
+            'view',
+            // not spec compliant
+            'tspan',
         ]
     },
     altGlyph: {
@@ -1520,6 +1524,7 @@ exports.elems = {
             'y',
             'width',
             'height',
+            'mask-type',
             'maskUnits',
             'maskContentUnits'
         ],
@@ -2264,7 +2269,7 @@ exports.elems = {
     }
 };
 
-// http://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+// https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
 exports.editorNamespaces = [
     'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
     'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
@@ -2290,7 +2295,7 @@ exports.editorNamespaces = [
     'http://www.vector.evaxdesign.sk'
 ];
 
-// http://www.w3.org/TR/SVG11/linking.html#processingIRI
+// https://www.w3.org/TR/SVG11/linking.html#processingIRI
 exports.referencesProps = [
     'clip-path',
     'color-profile',
@@ -2304,7 +2309,7 @@ exports.referencesProps = [
     'style'
 ];
 
-// http://www.w3.org/TR/SVG11/propidx.html
+// https://www.w3.org/TR/SVG11/propidx.html
 exports.inheritableAttrs = [
     'clip-rule',
     'color',
@@ -2365,7 +2370,7 @@ exports.presentationNonInheritableGroupAttrs = [
     'visibility'
 ];
 
-// http://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+// https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
 exports.colorsNames = {
     'aliceblue': '#f0f8ff',
     'antiquewhite': '#faebd7',
@@ -2552,7 +2557,7 @@ exports.colorsShortNames = {
   '#f5deb3': 'wheat'
 };
 
-// http://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
+// https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
 exports.colorsProps = [
     'color', 'fill', 'stroke', 'stop-color', 'flood-color', 'lighting-color'
 ];

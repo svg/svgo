@@ -1,11 +1,6 @@
-node_modules/
-lib-cov/
-html-report/
-lcov.info
+node_modules
+dist
+coverage
 bin/svgo-profiling
-*.sublime-*
-*.log
 .DS_Store
-.idea
-.vscode
-.npmrc
+*.log

@@ -1,0 +1,15 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg">
+  <text x="20" y="20">
+    <tspan>Another tspan</tspan>
+    <tspan>Inside tspan</tspan> - outside tspan
+  </text>
+</svg>
+
+@@@
+
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg">
+    <text x="20" y="20">
+    <tspan>Another tspan</tspan>
+    <tspan>Inside tspan</tspan> - outside tspan
+  </text>
+</svg>

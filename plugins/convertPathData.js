@@ -23,8 +23,8 @@ exports.params = {
     utilizeAbsolute: true,
     leadingZero: true,
     negativeExtraSpace: true,
-    noSpaceAfterFlags: true,
-    forceAbsolutePath: false
+    noSpaceAfterFlags: false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
+    forceAbsolutePath: false,
 };
 
 var pathElems = require('./_collections.js').pathElems,
@@ -48,7 +48,7 @@ var pathElems = require('./_collections.js').pathElems,
  * trim useless delimiters and leading zeros,
  * decrease accuracy of floating-point numbers.
  *
- * @see http://www.w3.org/TR/SVG/paths.html#PathData
+ * @see https://www.w3.org/TR/SVG11/paths.html#PathData
  *
  * @param {Object} item current iteration item
  * @param {Object} params plugin params

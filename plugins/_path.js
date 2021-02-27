@@ -1,4 +1,3 @@
-/* global a2c */
 'use strict';
 
 var rNumber = String.raw`[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?\s*`,
@@ -11,7 +10,7 @@ var rNumber = String.raw`[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?\s*`,
 var regPathInstructions = /([MmLlHhVvCcSsQqTtAaZz])\s*/,
     regCoordinateSequence = new RegExp(rNumber, 'g'),
     regArcArgumentSequence = new RegExp(rArcSeq, 'g'),
-    regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/,
+    regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
     transform2js = require('./_transforms').transform2js,
     transformsMultiply = require('./_transforms').transformsMultiply,
     transformArc = require('./_transforms').transformArc,
@@ -61,7 +60,6 @@ exports.path2js = function(path) {
             }
         // data item
         } else {
-            /* jshint boss: true */
             if (instruction == 'A' || instruction == 'a') {
                 var newData = [];
                 for (var args; (args = regArcArgumentSequence.exec(data));) {
@@ -77,7 +75,7 @@ exports.path2js = function(path) {
 
             data = data.map(Number);
             // Subsequent moveto pairs of coordinates are threated as implicit lineto commands
-            // http://www.w3.org/TR/SVG/paths.html#PathDataMovetoCommands
+            // https://www.w3.org/TR/SVG11/paths.html#PathDataMovetoCommands
             if (instruction == 'M' || instruction == 'm') {
                 pathData.push({
                     instruction: pathData.length == 0 ? 'M' : instruction,
@@ -242,6 +240,18 @@ exports.applyTransforms = function(elem, path, params) {
                         })
                     });
                 }
+
+                if (elem.hasAttr('stroke-dashoffset')) {
+                  elem.attrs['stroke-dashoffset'].value = elem.attrs['stroke-dashoffset'].value
+                    .trim()
+                    .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
+                }
+
+                if (elem.hasAttr('stroke-dasharray')) {
+                  elem.attrs['stroke-dasharray'].value = elem.attrs['stroke-dasharray'].value
+                    .trim()
+                    .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
+                }
             }
         }
     } else if (id) { // Stroke and stroke-width can be redefined with <use>
@@ -344,7 +354,7 @@ function transformPoint(matrix, x, y) {
 /**
  * Compute Cubic Bézie bounding box.
  *
- * @see http://processingjs.nihongoresources.com/bezierinfo/
+ * @see https://pomax.github.io/bezierinfo/
  *
  * @param {Float} xa
  * @param {Float} ya
@@ -451,7 +461,7 @@ function computeCubicFirstDerivativeRoots(a, b, c, d) {
 /**
  * Compute Quadratic Bézier bounding box.
  *
- * @see http://processingjs.nihongoresources.com/bezierinfo/
+ * @see https://pomax.github.io/bezierinfo/
  *
  * @param {Float} xa
  * @param {Float} ya
@@ -613,15 +623,13 @@ function set(dest, source) {
 /**
  * Checks if two paths have an intersection by checking convex hulls
  * collision using Gilbert-Johnson-Keerthi distance algorithm
- * http://entropyinteractive.com/2011/04/gjk-algorithm/
+ * https://web.archive.org/web/20180822200027/http://entropyinteractive.com/2011/04/gjk-algorithm/
  *
  * @param {Array} path1 JS path representation
  * @param {Array} path2 JS path representation
  * @return {Boolean}
  */
 exports.intersects = function(path1, path2) {
-    if (path1.length < 3 || path2.length < 3) return false; // nothing to fill
-
     // Collect points of every subpath.
     var points1 = relative2absolute(path1).reduce(gatherPoints, []),
         points2 = relative2absolute(path2).reduce(gatherPoints, []);
@@ -654,7 +662,9 @@ exports.intersects = function(path1, path2) {
                 direction = minus(simplex[0]); // set the direction to point towards the origin
 
             var iterations = 1e4; // infinite loop protection, 10 000 iterations is more than enough
+            // eslint-disable-next-line no-constant-condition
             while (true) {
+                // eslint-disable-next-line no-constant-condition
                 if (iterations-- == 0) {
                     console.error('Error: infinite loop while processing mergePaths plugin.');
                     return true; // true is the safe value that means “do nothing with paths”
@@ -691,11 +701,10 @@ exports.intersects = function(path1, path2) {
 };
 
 function processSimplex(simplex, direction) {
-    /* jshint -W004 */
 
     // we only need to handle to 1-simplex and 2-simplex
     if (simplex.length == 2) { // 1-simplex
-        var a = simplex[1],
+        let a = simplex[1],
             b = simplex[0],
             AO = minus(simplex[1]),
             AB = sub(b, a);
@@ -709,7 +718,7 @@ function processSimplex(simplex, direction) {
             simplex.shift();
         }
     } else { // 2-simplex
-        var a = simplex[2], // [a, b, c] = simplex
+        let a = simplex[2], // [a, b, c] = simplex
             b = simplex[1],
             c = simplex[0],
             AB = sub(b, a),
@@ -843,12 +852,11 @@ function gatherPoints(points, item, index, path) {
 
 /**
  * Forms a convex hull from set of points of every subpath using monotone chain convex hull algorithm.
- * http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+ * https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
  *
  * @param points An array of [X, Y] coordinates
  */
 function convexHull(points) {
-    /* jshint -W004 */
 
     points.sort(function(a, b) {
         return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
@@ -857,7 +865,7 @@ function convexHull(points) {
     var lower = [],
         minY = 0,
         bottom = 0;
-    for (var i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i++) {
         while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], points[i]) <= 0) {
             lower.pop();
         }
@@ -871,7 +879,7 @@ function convexHull(points) {
     var upper = [],
         maxY = points.length - 1,
         top = 0;
-    for (var i = points.length; i--;) {
+    for (let i = points.length; i--;) {
         while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], points[i]) <= 0) {
             upper.pop();
         }
@@ -904,10 +912,9 @@ function cross(o, a, b) {
  * Thanks to Dmitry Baranovskiy for his great work!
  */
 
-// jshint ignore: start
 function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
     // for more information of where this Math came from visit:
-    // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
+    // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
     var _120 = Math.PI * 120 / 180,
         rad = Math.PI / 180 * (+angle || 0),
         res = [],
@@ -985,4 +992,3 @@ function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursiv
         return newres;
     }
 }
-// jshint ignore: end
