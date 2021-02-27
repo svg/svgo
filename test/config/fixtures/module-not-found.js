@@ -1,2 +1,2 @@
 require('unknown-module');
-module.exports = {}
+module.exports = {};
