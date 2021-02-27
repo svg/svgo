@@ -25,9 +25,7 @@ var collections = require('./_collections'),
     applyGroups = collections.presentationNonInheritableGroupAttrs;
 
 // collect and extend all references
-for (var elem in elems) {
-    elem = elems[elem];
-
+for (const elem of Object.values(elems)) {
     if (elem.attrsGroups) {
         elem.attrs = elem.attrs || [];
 
@@ -39,8 +37,8 @@ for (var elem in elems) {
             if (groupDefaults) {
                 elem.defaults = elem.defaults || {};
 
-                for (var attrName in groupDefaults) {
-                    elem.defaults[attrName] = groupDefaults[attrName];
+                for (const [attrName, attr] of Object.entries(groupDefaults)) {
+                    elem.defaults[attrName] = attr;
                 }
             }
         });

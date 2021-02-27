@@ -54,13 +54,7 @@ exports.fn = function(ast, options) {
 };
 
 function cloneObject(obj) {
-    var result = {};
-
-    for (var key in obj) {
-        result[key] = obj[key];
-    }
-
-    return result;
+    return {...obj};
 }
 
 function findStyleElems(ast) {
@@ -149,9 +143,9 @@ function collectUsageData(ast, options) {
         safe = true;
     }
 
-    for (var key in rawData) {
+    for (const [key, data] of Object.entries(rawData)) {
         if (shouldFilter(options, key)) {
-            usageData[key] = Object.keys(rawData[key]);
+            usageData[key] = Object.keys(data);
             hasData = true;
         }
     }
