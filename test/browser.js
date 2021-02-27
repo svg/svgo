@@ -42,7 +42,7 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
     res.end(fs.readFileSync('./dist/svgo.browser.js'));
   }
-  res.end()
+  res.end();
 });
 
 const runTest = async () => {
@@ -52,14 +52,14 @@ const runTest = async () => {
   await page.goto('http://localhost:5000');
   const actual = await page.evaluate(() => globalThis.result);
   assert.equal(actual, expected);
-  await browser.close()
-}
+  await browser.close();
+};
 
 server.listen(5000, async () => {
   try {
     await runTest();
     console.info('Tested successfully');
-    server.close()
+    server.close();
   } catch (error) {
     server.close();
     console.error(error.toString());
