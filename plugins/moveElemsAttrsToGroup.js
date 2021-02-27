@@ -63,7 +63,7 @@ exports.fn = function(item) {
 
             item.content.forEach(function(g) {
 
-                for (var name in intersection) {
+                for (const [name, attr] of Object.entries(intersection)) {
 
                     if (!allPath && !hasClip || name !== 'transform') {
 
@@ -72,15 +72,15 @@ exports.fn = function(item) {
                         if (name === 'transform') {
                             if (!hasTransform) {
                                 if (item.hasAttr('transform')) {
-                                    item.attr('transform').value += ' ' + intersection[name].value;
+                                    item.attr('transform').value += ' ' + attr.value;
                                 } else {
-                                    item.addAttr(intersection[name]);
+                                    item.addAttr(attr);
                                 }
 
                                 hasTransform = true;
                             }
                         } else {
-                            item.addAttr(intersection[name]);
+                            item.addAttr(attr);
                         }
 
                     }
@@ -106,17 +106,17 @@ function intersectInheritableAttrs(a, b) {
 
     var c = {};
 
-    for (var n in a) {
+    for (const [n, attr] of Object.entries(a)) {
         if (
             // eslint-disable-next-line no-prototype-builtins
             b.hasOwnProperty(n) &&
             inheritableAttrs.indexOf(n) > -1 &&
-            a[n].name === b[n].name &&
-            a[n].value === b[n].value &&
-            a[n].prefix === b[n].prefix &&
-            a[n].local === b[n].local
+            attr.name === b[n].name &&
+            attr.value === b[n].value &&
+            attr.prefix === b[n].prefix &&
+            attr.local === b[n].local
         ) {
-            c[n] = a[n];
+            c[n] = attr;
         }
     }
 
