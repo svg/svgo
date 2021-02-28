@@ -69,9 +69,11 @@ exports.fn = function(item, params) {
         }
         hasMarkerMid = item.hasAttr('marker-mid');
 
-        var stroke = item.computedAttr('stroke'),
-            strokeLinecap = item.computedAttr('stroke');
-        hasStrokeLinecap = stroke && stroke != 'none' && strokeLinecap && strokeLinecap != 'butt';
+        const stroke = item.computedAttr('stroke');
+        const strokeLinecap = item.computedAttr('stroke-linecap');
+        // stroke-linecap may exist in inline styles which are not parsed for now
+        hasStrokeLinecap = item.hasAttr('style') ||
+          stroke && stroke != 'none' && strokeLinecap && strokeLinecap != 'butt';
 
         var data = path2js(item);
 
