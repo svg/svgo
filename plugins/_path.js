@@ -187,13 +187,20 @@ var relative2absolute = exports.relative2absolute = function(data) {
  * @return {Array} output path data
  */
 exports.applyTransforms = function(elem, path, params) {
-    // if there are no 'stroke' attr and references to other objects such as
-    // gradiends or clip-path which are also subjects to transform.
-    if (!elem.hasAttr('transform') || !elem.attr('transform').value ||
-        elem.someAttr(function(attr) {
-            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
-        }))
-        return path;
+  // if there are no 'stroke' attr and references to other objects such as
+  // gradiends or clip-path which are also subjects to transform.
+  if (
+    !elem.hasAttr('transform') ||
+    !elem.attr('transform').value ||
+    // styles are not considered when applying transform
+    // can be fixed properly with new style engine
+    elem.hasAttr('style') ||
+    elem.someAttr((attr) =>
+      referencesProps.includes(attr.name) && attr.value.includes('url(')
+    )
+  ) {
+      return path;
+  }
 
     var matrix = transformsMultiply(transform2js(elem.attr('transform').value)),
         stroke = elem.computedAttr('stroke'),
