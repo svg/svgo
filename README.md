@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./logo/logo.svg" width="348.61" height="100" alt="SVGO logo"/>
+  <img src="./logo/logo-web.svg" width="348.61" height="100" alt="SVGO logo"/>
 </div>
 
 
