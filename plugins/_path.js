@@ -1,6 +1,6 @@
 'use strict';
 
-const { parsePathData } = require('../lib/path.js');
+const { parsePathData, stringifyPathData } = require('../lib/path.js');
 
 var regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
     transform2js = require('./_transforms').transform2js,
@@ -500,63 +500,31 @@ function computeQuadraticFirstDerivativeRoot(a, b, c) {
  */
 exports.js2path = function(path, data, params) {
 
-    path.pathJS = data;
+  path.pathJS = data;
 
-    if (params.collapseRepeated) {
-        data = collapseRepeated(data);
+  const pathData = [];
+  for (const item of data) {
+    // remove moveto commands which are followed by moveto commands
+    if (
+      pathData.length !== 0 &&
+      (item.instruction === 'M' || item.instruction === 'm')
+    ) {
+      const last = pathData[pathData.length - 1];
+      if (last.command === 'M' || last.command === 'm') {
+        pathData.pop();
+      }
     }
+    pathData.push({
+      command: item.instruction,
+      args: item.data || [],
+    });
+  }
 
-    path.attr('d').value = data.reduce(function(pathString, item) {
-        var strData = '';
-        if (item.data) {
-            strData = cleanupOutData(item.data, params, item.instruction);
-        }
-        return pathString += item.instruction + strData;
-    }, '');
-
+  path.attr('d').value = stringifyPathData({
+    pathData,
+    precision: params.floatPrecision,
+  });
 };
-
-/**
- * Collapse repeated instructions data
- *
- * @param {Array} path input path data
- * @return {Array} output path data
- */
-function collapseRepeated(data) {
-
-    var prev,
-        prevIndex;
-
-    // copy an array and modifieds item to keep original data untouched
-    data = data.reduce(function(newPath, item) {
-        if (
-            prev && item.data &&
-            item.instruction == prev.instruction
-        ) {
-            // concat previous data with current
-            if (item.instruction != 'M') {
-                prev = newPath[prevIndex] = {
-                    instruction: prev.instruction,
-                    data: prev.data.concat(item.data),
-                    coords: item.coords,
-                    base: prev.base
-                };
-            } else {
-                prev.data = item.data;
-                prev.coords = item.coords;
-            }
-        } else {
-            newPath.push(item);
-            prev = item;
-            prevIndex = newPath.length - 1;
-        }
-
-        return newPath;
-    }, []);
-
-    return data;
-
-}
 
 function set(dest, source) {
     dest[0] = source[source.length - 2];
