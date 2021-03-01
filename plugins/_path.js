@@ -9,7 +9,6 @@ var regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g,
     collections = require('./_collections.js'),
     referencesProps = collections.referencesProps,
     defaultStrokeWidth = collections.attrsGroupsDefaults.presentation['stroke-width'],
-    cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero,
     prevCtrlPoint;
 
