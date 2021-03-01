@@ -1,4 +1,6 @@
-<img src="https://svg.github.io/svgo-logo.svg" width="200" height="200" alt="logo"/>
+<div align="center">
+  <img src="./logo/logo.svg" width="348.61" height="100" alt="SVGO logo"/>
+</div>
 
 
 ## SVGO [![npm version](https://img.shields.io/npm/v/svgo)](https://npmjs.org/package/svgo) [![Discord](https://img.shields.io/discord/815166721315831868)](https://discord.gg/z8jX8NYxrE)
@@ -286,4 +288,4 @@ const config = await loadConfig(configFile, cwd)
 
 This software is released under the terms of the [MIT license](https://github.com/svg/svgo/blob/master/LICENSE).
 
-Logo by [Yegor Bolshakov](http://xizzzy.ru/).
+Logo by [André Castillo](https://github.com/DerianAndre).
