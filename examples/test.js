@@ -39,28 +39,26 @@ const config = {
     'convertShapeToPath',
     'sortAttrs',
     'removeDimensions',
-    { name: 'removeAttrs', attrs: '(stroke|fill)'},
-  ]
+    { name: 'removeAttrs', attrs: '(stroke|fill)' },
+  ],
 };
 
-FS.readFile(filepath, 'utf8', function(err, data) {
+FS.readFile(filepath, 'utf8', function (err, data) {
+  if (err) {
+    throw err;
+  }
 
-    if (err) {
-        throw err;
-    }
+  const result = optimize(data, { path: filepath, ...config });
 
-    const result = optimize(data, {path: filepath, ...config});
+  console.log(result);
 
-    console.log(result);
-
-    // {
-    //     // optimized SVG data string
-    //     data: '<svg width="10" height="20">test</svg>'
-    //     // additional info such as width/height
-    //     info: {
-    //         width: '10',
-    //         height: '20'
-    //     }
-    // }
-
+  // {
+  //     // optimized SVG data string
+  //     data: '<svg width="10" height="20">test</svg>'
+  //     // additional info such as width/height
+  //     info: {
+  //         width: '10',
+  //         height: '20'
+  //     }
+  // }
 });
