@@ -142,6 +142,7 @@ exports.applyTransforms = function(elem, path, params) {
         stroke = elem.computedAttr('stroke'),
         id = elem.computedAttr('id'),
         transformPrecision = params.transformPrecision,
+        leadingZero = params.leadingZero,
         newPoint, scale;
 
     if (stroke && stroke != 'none') {
@@ -171,7 +172,7 @@ exports.applyTransforms = function(elem, path, params) {
                 if (elem.hasAttr('stroke-width')) {
                     elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value.trim()
                         .replace(regNumericValues, function(num) {
-                            return removeLeadingZero(num * scale);
+                            return leadingZero ? removeLeadingZero(num * scale) : (num * scale);
                         });
                 } else {
                     elem.addAttr({
@@ -179,7 +180,7 @@ exports.applyTransforms = function(elem, path, params) {
                         prefix: '',
                         local: 'stroke-width',
                         value: strokeWidth.replace(regNumericValues, function(num) {
-                            return removeLeadingZero(num * scale);
+                            return leadingZero ? removeLeadingZero(num * scale) : (num * scale);
                         })
                     });
                 }

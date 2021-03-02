@@ -7,6 +7,8 @@ exports.active = true;
 exports.description = 'optimizes path data: writes in shorter form, applies transformations';
 
 exports.params = {
+    applyRelative: true,
+    applySort: false,
     applyTransforms: true,
     applyTransformsStroked: true,
     makeArcs: {
@@ -30,6 +32,7 @@ exports.params = {
 var pathElems = require('./_collections.js').pathElems,
     path2js = require('./_path.js').path2js,
     js2path = require('./_path.js').js2path,
+    relative2absolute = require('./_path.js').relative2absolute,
     applyTransforms = require('./_path.js').applyTransforms,
     cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
     roundData,
@@ -79,7 +82,13 @@ exports.fn = function(item, params) {
 
         // TODO: get rid of functions returns
         if (data.length) {
-            convertToRelative(data);
+            if (params.applySort) {
+                data = applySort(data);
+            }
+
+            if(params.applyRelative) {
+                data = convertToRelative(data);
+            }
 
             if (params.applyTransforms) {
                 data = applyTransforms(item, data, params);
@@ -99,10 +108,117 @@ exports.fn = function(item, params) {
 };
 
 /**
+ * Reorder part to shorten or eliminate move operations
+ *
+ * @param {Array} path input path data
+ * @return {Array} output path data
+ */
+function applySort(path, params) {
+
+    var sections = [],
+        lastEndPoint = [0, 0];
+
+    // First convert to absolute in order to calculate move distance
+    path = relative2absolute(path);
+
+    // Split path by move commands
+    path.forEach(function(item) {
+
+        if(item.instruction === 'M') {
+
+            sections.push(new Array());
+
+        }
+
+        if(item.data) {
+
+            item.data = roundData(item.data);
+
+        }
+
+        sections[sections.length -1].push(item);
+
+    });
+
+    // Sort Path shortest move command
+    path = [];
+
+    while(sections.length > 0) {
+
+        var closest = 100000000;
+        var closestIndex = 0;
+        var closestEndPoint = 0;
+        var reverse = false;
+
+        sections.forEach(function(section, index) {
+
+            var start = getXY(section[0]);
+            var end = section[section.length - 1].instruction == 'z' ? start : getXY(section[section.length - 1])
+            var distance = getDistance(lastEndPoint, start);
+            var reverseDistance = getDistance(lastEndPoint, end);
+
+            if(distance < closest) {
+
+                closest = distance;
+                closestIndex = index;
+                closestEndPoint = end;
+                reverse = false;
+
+            }
+
+            if(reverseDistance < closest) {
+
+                closest = reverseDistance;
+                closestIndex = index;
+                closestEndPoint = start;
+                reverse = true;
+
+            }
+
+        });
+
+        lastEndPoint = closestEndPoint;
+
+        var section = sections.splice(closestIndex,1)[0];
+
+        // Reverse section if needed
+        if(reverse) {
+
+            var points = section.map(getXY);
+
+            section.forEach(function(item, index) {
+
+                setXY(item, points[points.length-index-1]);
+
+                if(item.instruction == "A") {
+
+                    item.data[4] = item.data[4] ? 0 : 1;
+
+                }
+
+            });
+
+        }
+
+        // Remove redundant move operation
+        if(closest <= 2 * error) {
+
+            section.splice(0,1);
+
+        }
+
+        path = path.concat(section);
+
+    }
+
+    return path;
+
+}
+
+/**
  * Convert absolute path data coordinates to relative.
  *
  * @param {Array} path input path data
- * @param {Object} params plugin params
  * @return {Array} output path data
  */
 function convertToRelative(path) {
@@ -516,7 +632,7 @@ function filters(path, params) {
                 instruction == prev.instruction.toLowerCase() &&
                 (
                     (instruction != 'h' && instruction != 'v') ||
-                    (prev.data[0] >= 0) == (data[0] >= 0)
+                    (prev.data[0] >= 0) == (item.data[0] >= 0)
             )) {
                 prev.data[0] += data[0];
                 if (instruction != 'h' && instruction != 'v') {
@@ -970,4 +1086,29 @@ function data2Path(params, pathData) {
         }
         return pathString + item.instruction + strData;
     }, '');
+}
+
+/**
+ * Get X/Y point from path data.
+ *
+ * @param {Object} item
+ * @return {Array}
+ */
+
+function getXY(item)
+{
+    return item.data.slice(-2);
+}
+
+/**
+ * Set X/Y point on path data.
+ *
+ * @param {Object} item
+ * @param {Array} point
+ */
+
+function setXY(item, point)
+{
+    item.data[item.data.length - 2] = point[0];
+    item.data[item.data.length - 1] = point[1];
 }
