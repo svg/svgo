@@ -26,7 +26,7 @@ yarn global add svgo
 ## CLI usage
 
 ```sh
-svgo one.svg two.svg -p one.min.svg two.min.svg
+svgo one.svg two.svg -o one.min.svg two.min.svg
 ```
 
 Or use the `--folder`/`-f` flag to optimize a whole folder of SVG icons
