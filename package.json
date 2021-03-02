@@ -51,7 +51,7 @@
   "scripts": {
     "test": "c8 --reporter=html --reporter=text mocha \"test/*/_index.js\" \"**/*.test.js\" --ignore=\"node_modules/**\"",
     "lint": "eslint .",
-    "types:check": "tsc",
+    "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
     "prepublishOnly": "rm -rf dist && rollup -c"
   },
