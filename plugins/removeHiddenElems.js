@@ -88,8 +88,9 @@ exports.fn = function (item, params) {
       computedStyle.opacity.value === '0' &&
       // transparent element inside clipPath still affect clipped elements
       item.closestElem('clipPath') == null
-    )
+    ) {
       return false;
+    }
 
     // Circles with zero radius
     //
@@ -102,8 +103,9 @@ exports.fn = function (item, params) {
       item.isElem('circle') &&
       item.isEmpty() &&
       item.hasAttr('r', '0')
-    )
+    ) {
       return false;
+    }
 
     // Ellipse with zero x-axis radius
     //
@@ -116,8 +118,9 @@ exports.fn = function (item, params) {
       item.isElem('ellipse') &&
       item.isEmpty() &&
       item.hasAttr('rx', '0')
-    )
+    ) {
       return false;
+    }
 
     // Ellipse with zero y-axis radius
     //
@@ -130,8 +133,9 @@ exports.fn = function (item, params) {
       item.isElem('ellipse') &&
       item.isEmpty() &&
       item.hasAttr('ry', '0')
-    )
+    ) {
       return false;
+    }
 
     // Rectangle with zero width
     //
@@ -144,8 +148,9 @@ exports.fn = function (item, params) {
       item.isElem('rect') &&
       item.isEmpty() &&
       item.hasAttr('width', '0')
-    )
+    ) {
       return false;
+    }
 
     // Rectangle with zero height
     //
@@ -159,8 +164,9 @@ exports.fn = function (item, params) {
       item.isElem('rect') &&
       item.isEmpty() &&
       item.hasAttr('height', '0')
-    )
+    ) {
       return false;
+    }
 
     // Pattern with zero width
     //
@@ -172,8 +178,9 @@ exports.fn = function (item, params) {
       params.patternWidth0 &&
       item.isElem('pattern') &&
       item.hasAttr('width', '0')
-    )
+    ) {
       return false;
+    }
 
     // Pattern with zero height
     //
@@ -185,8 +192,9 @@ exports.fn = function (item, params) {
       params.patternHeight0 &&
       item.isElem('pattern') &&
       item.hasAttr('height', '0')
-    )
+    ) {
       return false;
+    }
 
     // Image with zero width
     //
@@ -198,8 +206,9 @@ exports.fn = function (item, params) {
       params.imageWidth0 &&
       item.isElem('image') &&
       item.hasAttr('width', '0')
-    )
+    ) {
       return false;
+    }
 
     // Image with zero height
     //
@@ -211,8 +220,9 @@ exports.fn = function (item, params) {
       params.imageHeight0 &&
       item.isElem('image') &&
       item.hasAttr('height', '0')
-    )
+    ) {
       return false;
+    }
 
     // Path with empty data
     //
@@ -223,8 +233,9 @@ exports.fn = function (item, params) {
       params.pathEmptyD &&
       item.isElem('path') &&
       (!item.hasAttr('d') || !regValidPath.test(item.attr('d').value))
-    )
+    ) {
       return false;
+    }
 
     // Polyline with empty points
     //
@@ -235,8 +246,9 @@ exports.fn = function (item, params) {
       params.polylineEmptyPoints &&
       item.isElem('polyline') &&
       !item.hasAttr('points')
-    )
+    ) {
       return false;
+    }
 
     // Polygon with empty points
     //
@@ -247,7 +259,8 @@ exports.fn = function (item, params) {
       params.polygonEmptyPoints &&
       item.isElem('polygon') &&
       !item.hasAttr('points')
-    )
+    ) {
       return false;
+    }
   }
 };
