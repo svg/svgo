@@ -55,10 +55,7 @@ const readSvgFiles = async () => {
     stream.resume();
     next();
   });
-  await pipeline(
-    response.body,
-    extract,
-  );
+  await pipeline(response.body, extract);
   return svgFiles;
 };
 
@@ -145,11 +142,14 @@ const runTests = async ({ svgFiles }) => {
       mismatched += 1;
       console.error(`${name} is mismatched`);
       await fs.promises.mkdir('diffs', { recursive: true });
-      await fs.promises.writeFile(`diffs/${name}.diff.png`, PNG.sync.write(diff));
+      await fs.promises.writeFile(
+        `diffs/${name}.diff.png`,
+        PNG.sync.write(diff)
+      );
     }
-  }
+  };
   const browser = await chromium.launch();
-  const context = await browser.newContext();
+  const context = await browser.newContext({ javaScriptEnabled: false });
   const chunks = chunkInto(svgFiles, 8);
   await Promise.all(
     chunks.map(async (chunk) => {
@@ -157,10 +157,10 @@ const runTests = async ({ svgFiles }) => {
       for (const [name, string] of chunk) {
         await processFile(page, name, string);
       }
-      await page.close()
+      await page.close();
     })
   );
-  await browser.close()
+  await browser.close();
   console.info(`Skipped: ${skipped}`);
   console.info(`Mismatched: ${mismatched}`);
   console.info(`Passed: ${passed}`);
@@ -174,7 +174,7 @@ const runTests = async ({ svgFiles }) => {
     const svgFiles = await readSvgFiles();
     const passed = await runTests({ svgFiles });
     const end = process.hrtime.bigint();
-    const diff = (end - start) / BigInt(1e+6);
+    const diff = (end - start) / BigInt(1e6);
     if (passed) {
       console.info(`Regression tests successfully completed in ${diff}ms`);
     } else {
