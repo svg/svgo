@@ -39,7 +39,7 @@ const config = {
     'convertShapeToPath',
     'sortAttrs',
     'removeDimensions',
-    { name: 'removeAttrs', attrs: '(stroke|fill)' },
+    { name: 'removeAttrs', params: { attrs: '(stroke|fill)' } },
   ],
 };
 
