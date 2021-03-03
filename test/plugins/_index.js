@@ -22,19 +22,23 @@ describe('plugins tests', function () {
 
       it(name + '.' + index, function () {
         return readFile(file).then(function (data) {
-          var splitted = normalize(data).split(/\s*@@@\s*/),
-            orig = splitted[0],
-            should = splitted[1],
-            params = splitted[2];
+          // remove description
+          const items = normalize(data).split(/\s*===\s*/);
+          const test = items.length === 2 ? items[1] : items[0];
+          // extract test case
+          const [original, should, params] = test.split(/\s*@@@\s*/);
           const plugin = {
             name,
             params: params ? JSON.parse(params) : {},
           };
-          const result = optimize(orig, {
+          const result = optimize(original, {
             path: file,
             plugins: [plugin],
             js2svg: { pretty: true },
           });
+          if (result.error != null) {
+            expect.fail(result.error);
+          }
           //FIXME: results.data has a '\n' at the end while it should not
           expect(normalize(result.data)).to.equal(should);
         });
