@@ -106,7 +106,17 @@ const runTests = async ({ svgFiles }) => {
       name === 'styling-css-04-f' ||
       name === 'styling-css-08-f' ||
       // unstable test
-      name === 'filters-light-04-f'
+      name === 'filters-light-04-f' ||
+      // mismatched draft cases
+      name === 'filters-offset-02-b' ||
+      name === 'imp-path-01-f' ||
+      name === 'interact-pointer-04-f' ||
+      name === 'painting-marker-properties-01-f' ||
+      name === 'pservers-pattern-05-f' ||
+      name === 'struct-cond-overview-03-f' ||
+      name === 'struct-use-07-b' ||
+      name === 'styling-css-10-f' ||
+      name === 'styling-pres-04-f'
     ) {
       console.info(`${name} is skipped`);
       skipped += 1;
@@ -117,12 +127,6 @@ const runTests = async ({ svgFiles }) => {
     const height = 720;
     await page.goto(`data:image/svg+xml,${encodeURIComponent(string)}`);
     await page.setViewportSize({ width, height });
-    const draft = await page.$('#draft-watermark');
-    if (draft != null) {
-      console.info(`${name} is skipped`);
-      skipped += 1;
-      return;
-    }
     const originalBuffer = await page.screenshot({
       omitBackground: true,
       clip: { x: 0, y: 0, width, height },
