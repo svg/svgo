@@ -22,19 +22,7 @@ const readSvgFiles = async () => {
   const extract = tarStream.extract();
   extract.on('entry', async (header, stream, next) => {
     try {
-      // ignore all animated svg
-      if (
-        header.name.startsWith('svg/') &&
-        // hard to detect the end of animation
-        header.name.includes('animate') === false &&
-        // fails because removeEmptyContainers removes <g> used in script
-        header.name !== 'svg/coords-dom-03-f.svg' &&
-        header.name !== 'svg/coords-dom-04-f.svg' &&
-        // fails because <defs><font-face> is removed
-        header.name !== 'svg/coords-viewattr-01-b.svg' &&
-        // fails because script is not run in base64
-        header.name !== 'svg/masking-path-12-f.svg'
-      ) {
+      if (header.name.startsWith('svg/')) {
         if (header.name.endsWith('.svg')) {
           // strip folder and extension
           const name = header.name.slice('svg/'.length, -'.svg'.length);
@@ -104,6 +92,24 @@ const runTests = async ({ svgFiles }) => {
   let passed = 0;
   console.info('Start browser...');
   const processFile = async (page, name, string) => {
+    if (
+      // hard to detect the end of animation
+      name.startsWith('animate-') ||
+      // other cases which require complex changes
+      name === 'painting-marker-07-f' ||
+      name === 'pservers-grad-18-b' ||
+      name === 'struct-image-02-b' ||
+      name === 'struct-use-10-f' ||
+      name === 'struct-use-11-f' ||
+      name === 'styling-css-01-b' ||
+      name === 'styling-css-03-b' ||
+      // name === 'styling-css-04-f' ||
+      name === 'styling-css-08-f'
+    ) {
+      console.info(`${name} is skipped`);
+      skipped += 1;
+      return;
+    }
     const optimized = optimizedFiles.get(name);
     const width = 960;
     const height = 720;
@@ -141,11 +147,13 @@ const runTests = async ({ svgFiles }) => {
     } else {
       mismatched += 1;
       console.error(`${name} is mismatched`);
-      await fs.promises.mkdir('diffs', { recursive: true });
-      await fs.promises.writeFile(
-        `diffs/${name}.diff.png`,
-        PNG.sync.write(diff)
-      );
+      if (process.env.NO_DIFF == null) {
+        await fs.promises.mkdir('diffs', { recursive: true });
+        await fs.promises.writeFile(
+          `diffs/${name}.diff.png`,
+          PNG.sync.write(diff)
+        );
+      }
     }
   };
   const browser = await chromium.launch();
