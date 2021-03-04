@@ -104,7 +104,9 @@ const runTests = async ({ svgFiles }) => {
       name === 'styling-css-01-b' ||
       name === 'styling-css-03-b' ||
       name === 'styling-css-04-f' ||
-      name === 'styling-css-08-f'
+      name === 'styling-css-08-f' ||
+      // unstable test
+      name === 'filters-light-04-f'
     ) {
       console.info(`${name} is skipped`);
       skipped += 1;
