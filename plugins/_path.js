@@ -553,6 +553,7 @@ exports.js2path = function (path, data, params) {
   path.attr('d').value = stringifyPathData({
     pathData,
     precision: params.floatPrecision,
+    disableSpaceAfterFlags: params.noSpaceAfterFlags,
   });
 };
 
