@@ -29,6 +29,7 @@ jobs:
             ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
       - run: npm ci
       - run: npm run lint
+      - run: npm run typecheck
   test:
     name: Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
