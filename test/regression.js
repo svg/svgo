@@ -103,7 +103,7 @@ const runTests = async ({ svgFiles }) => {
       name === 'struct-use-11-f' ||
       name === 'styling-css-01-b' ||
       name === 'styling-css-03-b' ||
-      // name === 'styling-css-04-f' ||
+      name === 'styling-css-04-f' ||
       name === 'styling-css-08-f'
     ) {
       console.info(`${name} is skipped`);
