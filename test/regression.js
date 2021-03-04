@@ -64,7 +64,7 @@ const optimizeSvgFiles = (svgFiles) => {
   let failed = 0;
   for (const [name, string] of svgFiles) {
     try {
-      const result = optimize(string, { path: name });
+      const result = optimize(string, { path: name, floatPrecision: 4 });
       if (result.error) {
         console.error(result.error);
         console.error(`File: ${name}`);
