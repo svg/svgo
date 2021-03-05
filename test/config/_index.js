@@ -64,27 +64,36 @@ describe('config', function () {
     const config = {
       multipass: true,
       floatPrecision: 2,
-      plugins: [{ name: 'cleanupNumericValues' }],
+      plugins: [
+        'convertPathData',
+        { name: 'cleanupNumericValues' },
+        { name: 'customPlugin', fn: () => {} },
+      ],
     };
     const plugins = config.plugins.map((plugin) =>
       resolvePluginConfig(plugin, config)
     );
     const cleanupNumericValues = getPlugin('cleanupNumericValues', plugins);
+    const convertPathData = getPlugin('convertPathData', plugins);
+    const customPlugin = getPlugin('customPlugin', plugins);
 
     it('should have "multipass"', function () {
       expect(config.multipass).to.be.true;
     });
 
-    it('config.plugins should have length 1', function () {
-      expect(plugins).to.have.length(1);
+    it('config.plugins should have length 3', function () {
+      expect(plugins).to.have.length(3);
     });
 
-    it('cleanupNumericValues plugin should be enabled', function () {
-      expect(cleanupNumericValues.active).to.be.true;
+    it('specified plugins should be enabled', function () {
+      expect(cleanupNumericValues.active).to.equal(true);
+      expect(convertPathData.active).to.equal(true);
     });
 
-    it('cleanupNumericValues plugin should have floatPrecision set from parameters', function () {
+    it('plugins should inherit floatPrecision top level config', function () {
       expect(cleanupNumericValues.params.floatPrecision).to.be.equal(2);
+      expect(convertPathData.params.floatPrecision).to.be.equal(2);
+      expect(customPlugin.params.floatPrecision).to.be.equal(2);
     });
   });
 
