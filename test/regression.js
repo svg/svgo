@@ -95,6 +95,8 @@ const runTests = async ({ svgFiles }) => {
     if (
       // hard to detect the end of animation
       name.startsWith('animate-') ||
+      // breaks because of optimisation despite of script
+      name === 'interact-pointer-04-f' ||
       // other cases which require complex changes
       name === 'painting-marker-07-f' ||
       name === 'pservers-grad-18-b' ||
@@ -108,8 +110,6 @@ const runTests = async ({ svgFiles }) => {
       // unstable test
       name === 'filters-light-04-f' ||
       // mismatched draft cases
-      name === 'interact-pointer-04-f' ||
-      name === 'pservers-pattern-05-f' ||
       name === 'struct-cond-overview-03-f' ||
       name === 'struct-use-07-b' ||
       name === 'styling-css-10-f' ||
