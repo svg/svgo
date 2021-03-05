@@ -1,6 +1,7 @@
 'use strict';
 
 const { computeStyle } = require('../lib/style.js');
+const { parsePathData } = require('../lib/path.js');
 
 exports.type = 'perItem';
 
@@ -26,8 +27,6 @@ exports.params = {
   polylineEmptyPoints: true,
   polygonEmptyPoints: true,
 };
-
-var regValidPath = /M\s*(?:[-+]?(?:\d*\.\d+|\d+(?:\.|(?!\.)))([eE][-+]?\d+)?(?!\d)\s*,?\s*){2}\D*\d/i;
 
 /**
  * Remove hidden elements with disabled rendering:
@@ -229,12 +228,23 @@ exports.fn = function (item, params) {
     // https://www.w3.org/TR/SVG11/paths.html#DAttribute
     //
     // <path d=""/>
-    if (
-      params.pathEmptyD &&
-      item.isElem('path') &&
-      (!item.hasAttr('d') || !regValidPath.test(item.attr('d').value))
-    ) {
-      return false;
+    if (params.pathEmptyD && item.isElem('path')) {
+      if (item.hasAttr('d') === false) {
+        return false;
+      }
+      const pathData = parsePathData(item.attr('d').value);
+      if (pathData.length === 0) {
+        return false;
+      }
+      // keep single point paths for markers
+      if (
+        pathData.length === 1 &&
+        computedStyle['marker-start'] == null &&
+        computedStyle['marker-end'] == null
+      ) {
+        return false;
+      }
+      return true;
     }
 
     // Polyline with empty points
