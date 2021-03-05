@@ -108,7 +108,6 @@ const runTests = async ({ svgFiles }) => {
       // unstable test
       name === 'filters-light-04-f' ||
       // mismatched draft cases
-      name === 'filters-offset-02-b' ||
       name === 'imp-path-01-f' ||
       name === 'interact-pointer-04-f' ||
       name === 'painting-marker-properties-01-f' ||
