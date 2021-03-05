@@ -1,6 +1,9 @@
 'use strict';
 
 const { computeStyle } = require('../lib/style.js');
+const { pathElems } = require('./_collections.js');
+const { path2js, js2path, applyTransforms } = require('./_path.js');
+const { cleanupOutData } = require('../lib/svgo/tools');
 
 exports.type = 'perItem';
 
@@ -30,17 +33,11 @@ exports.params = {
   forceAbsolutePath: false,
 };
 
-var pathElems = require('./_collections.js').pathElems,
-  path2js = require('./_path.js').path2js,
-  js2path = require('./_path.js').js2path,
-  applyTransforms = require('./_path.js').applyTransforms,
-  cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
-  roundData,
-  precision,
-  error,
-  arcThreshold,
-  arcTolerance,
-  hasMarkerMid;
+let roundData;
+let precision;
+let error;
+let arcThreshold;
+let arcTolerance;
 
 /**
  * Convert absolute Path to relative,
@@ -69,7 +66,7 @@ exports.fn = function (item, params) {
       arcThreshold = params.makeArcs.threshold;
       arcTolerance = params.makeArcs.tolerance;
     }
-    hasMarkerMid = item.hasAttr('marker-mid');
+    const hasMarkerMid = computedStyle['marker-mid'] != null;
 
     const maybeHasStroke =
       computedStyle.stroke &&
@@ -93,6 +90,7 @@ exports.fn = function (item, params) {
 
       data = filters(data, params, {
         maybeHasStrokeAndLinecap,
+        hasMarkerMid,
       });
 
       if (params.utilizeAbsolute) {
@@ -256,7 +254,7 @@ function convertToRelative(path) {
  * @param {Object} params plugin params
  * @return {Array} output path data
  */
-function filters(path, params, { maybeHasStrokeAndLinecap }) {
+function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
     pathBase = [0, 0],
@@ -499,7 +497,7 @@ function filters(path, params, { maybeHasStrokeAndLinecap }) {
       // h 20 h 30 -> h 50
       if (
         params.collapseRepeated &&
-        !hasMarkerMid &&
+        hasMarkerMid === false &&
         'mhv'.indexOf(instruction) > -1 &&
         prev.instruction &&
         instruction == prev.instruction.toLowerCase() &&

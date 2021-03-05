@@ -108,9 +108,7 @@ const runTests = async ({ svgFiles }) => {
       // unstable test
       name === 'filters-light-04-f' ||
       // mismatched draft cases
-      name === 'imp-path-01-f' ||
       name === 'interact-pointer-04-f' ||
-      name === 'painting-marker-properties-01-f' ||
       name === 'pservers-pattern-05-f' ||
       name === 'struct-cond-overview-03-f' ||
       name === 'struct-use-07-b' ||
