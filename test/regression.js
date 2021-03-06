@@ -107,15 +107,15 @@ const runTests = async ({ svgFiles }) => {
       name === 'styling-css-10-f' ||
       // rect is converted to path which matches wrong styles
       name === 'styling-css-08-f' ||
-      // other cases which require complex changes
+      // external image
       name === 'struct-image-02-b' ||
+      // complex selectors are messed becase of converting shapes to paths
       name === 'struct-use-10-f' ||
       name === 'struct-use-11-f' ||
       name === 'styling-css-01-b' ||
       name === 'styling-css-03-b' ||
       name === 'styling-css-04-f' ||
       // mismatched draft cases
-      name === 'struct-cond-overview-03-f' ||
       name === 'struct-use-07-b'
     ) {
       console.info(`${name} is skipped`);
