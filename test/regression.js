@@ -97,23 +97,26 @@ const runTests = async ({ svgFiles }) => {
       name.startsWith('animate-') ||
       // breaks because of optimisation despite of script
       name === 'interact-pointer-04-f' ||
-      // other cases which require complex changes
-      name === 'painting-marker-07-f' ||
+      // messed gradients
       name === 'pservers-grad-18-b' ||
+      // animated filter
+      name === 'filters-light-04-f' ||
+      // removing wrapping <g> breaks :first-child pseudo-class
+      name === 'styling-pres-04-f' ||
+      // messed case insensitivity while inlining styles
+      name === 'styling-css-10-f' ||
+      // rect is converted to path which matches wrong styles
+      name === 'styling-css-08-f' ||
+      // other cases which require complex changes
       name === 'struct-image-02-b' ||
       name === 'struct-use-10-f' ||
       name === 'struct-use-11-f' ||
       name === 'styling-css-01-b' ||
       name === 'styling-css-03-b' ||
       name === 'styling-css-04-f' ||
-      name === 'styling-css-08-f' ||
-      // unstable test
-      name === 'filters-light-04-f' ||
       // mismatched draft cases
       name === 'struct-cond-overview-03-f' ||
-      name === 'struct-use-07-b' ||
-      name === 'styling-css-10-f' ||
-      name === 'styling-pres-04-f'
+      name === 'struct-use-07-b'
     ) {
       console.info(`${name} is skipped`);
       skipped += 1;

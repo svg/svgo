@@ -72,7 +72,9 @@ exports.fn = function (item, params) {
       params.displayNone &&
       computedStyle.display &&
       computedStyle.display.type === 'static' &&
-      computedStyle.display.value === 'none'
+      computedStyle.display.value === 'none' &&
+      // markers with display: none still rendered
+      item.isElem('marker') === false
     ) {
       return false;
     }
