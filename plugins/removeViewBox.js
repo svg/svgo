@@ -23,26 +23,27 @@ var viewBoxElems = ['svg', 'pattern', 'symbol'];
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
-
-    if (
-        item.isElem(viewBoxElems) &&
-        item.hasAttr('viewBox') &&
-        item.hasAttr('width') &&
-        item.hasAttr('height')
-    ) {
-
-        var nums = item.attr('viewBox').value.split(/[ ,]+/g);
-
-        if (
-            nums[0] === '0' &&
-            nums[1] === '0' &&
-            item.attr('width').value.replace(/px$/, '') === nums[2] && // could use parseFloat too
-            item.attr('height').value.replace(/px$/, '') === nums[3]
-        ) {
-            item.removeAttr('viewBox');
-        }
-
+exports.fn = function (item) {
+  if (
+    item.isElem(viewBoxElems) &&
+    item.hasAttr('viewBox') &&
+    item.hasAttr('width') &&
+    item.hasAttr('height')
+  ) {
+    // TODO remove width/height for such case instead
+    if (item.isElem('svg') && item.closestElem('svg')) {
+      return;
     }
 
+    var nums = item.attr('viewBox').value.split(/[ ,]+/g);
+
+    if (
+      nums[0] === '0' &&
+      nums[1] === '0' &&
+      item.attr('width').value.replace(/px$/, '') === nums[2] && // could use parseFloat too
+      item.attr('height').value.replace(/px$/, '') === nums[3]
+    ) {
+      item.removeAttr('viewBox');
+    }
+  }
 };
