@@ -4,18 +4,19 @@ exports.type = 'full';
 
 exports.active = true;
 
-exports.description = 'minifies styles and removes unused styles based on usage data';
+exports.description =
+  'minifies styles and removes unused styles based on usage data';
 
 exports.params = {
-    // ... CSSO options goes here
+  // ... CSSO options goes here
 
-    // additional 
-    usage: {
-        force: false,  // force to use usage data even if it unsafe (document contains <script> or on* attributes)
-        ids: true,
-        classes: true,
-        tags: true
-    }
+  // additional
+  usage: {
+    force: false, // force to use usage data even if it unsafe (document contains <script> or on* attributes)
+    ids: true,
+    classes: true,
+    tags: true,
+  },
 };
 
 var csso = require('csso');
@@ -25,130 +26,146 @@ var csso = require('csso');
  *
  * @author strarsis <strarsis@gmail.com>
  */
-exports.fn = function(ast, options) {
-    options = options || {};
+exports.fn = function (ast, options) {
+  options = options || {};
 
-    var minifyOptionsForStylesheet = cloneObject(options);
-    var minifyOptionsForAttribute = cloneObject(options);
-    var elems = findStyleElems(ast);
+  var minifyOptionsForStylesheet = cloneObject(options);
+  var minifyOptionsForAttribute = cloneObject(options);
+  var elems = findStyleElems(ast);
 
-    minifyOptionsForStylesheet.usage = collectUsageData(ast, options);
-    minifyOptionsForAttribute.usage = null;
+  minifyOptionsForStylesheet.usage = collectUsageData(ast, options);
+  minifyOptionsForAttribute.usage = null;
 
-    elems.forEach(function(elem) {
-        if (elem.isElem('style')) {
-            // <style> element
-            var styleCss = elem.content[0].text || elem.content[0].cdata || [];
-            var DATA = styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0 ? 'cdata' : 'text';
+  elems.forEach(function (elem) {
+    if (elem.isElem('style')) {
+      // <style> element
+      var styleCss = elem.content[0].text || elem.content[0].cdata || [];
+      var DATA =
+        styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0
+          ? 'cdata'
+          : 'text';
 
-            elem.content[0][DATA] = csso.minify(styleCss, minifyOptionsForStylesheet).css;
-        } else {
-            // style attribute
-            var elemStyle = elem.attr('style').value;
+      elem.content[0][DATA] = csso.minify(
+        styleCss,
+        minifyOptionsForStylesheet
+      ).css;
+    } else {
+      // style attribute
+      var elemStyle = elem.attr('style').value;
 
-            elem.attr('style').value = csso.minifyBlock(elemStyle, minifyOptionsForAttribute).css;
-        }
-    });
+      elem.attr('style').value = csso.minifyBlock(
+        elemStyle,
+        minifyOptionsForAttribute
+      ).css;
+    }
+  });
 
-    return ast;
+  return ast;
 };
 
 function cloneObject(obj) {
-    return {...obj};
+  return { ...obj };
 }
 
 function findStyleElems(ast) {
+  function walk(items, styles) {
+    for (var i = 0; i < items.content.length; i++) {
+      var item = items.content[i];
 
-    function walk(items, styles) {
-        for (var i = 0; i < items.content.length; i++) {
-            var item = items.content[i];
+      // go deeper
+      if (item.content) {
+        walk(item, styles);
+      }
 
-            // go deeper
-            if (item.content) {
-                walk(item, styles);
-            }
-
-            if (item.isElem('style') && !item.isEmpty()) {
-                styles.push(item);
-            } else if (item.isElem() && item.hasAttr('style')) {
-                styles.push(item);
-            }
-        }
-
-        return styles;
+      if (item.isElem('style') && !item.isEmpty()) {
+        styles.push(item);
+      } else if (item.isElem() && item.hasAttr('style')) {
+        styles.push(item);
+      }
     }
 
-    return walk(ast, []);
+    return styles;
+  }
+
+  return walk(ast, []);
 }
 
 function shouldFilter(options, name) {
-    if ('usage' in options === false) {
-        return true;
-    }
+  if ('usage' in options === false) {
+    return true;
+  }
 
-    if (options.usage && name in options.usage === false) {
-        return true;
-    }
+  if (options.usage && name in options.usage === false) {
+    return true;
+  }
 
-    return Boolean(options.usage && options.usage[name]);
+  return Boolean(options.usage && options.usage[name]);
 }
 
 function collectUsageData(ast, options) {
+  function walk(items, usageData) {
+    for (var i = 0; i < items.content.length; i++) {
+      var item = items.content[i];
 
-    function walk(items, usageData) {
-        for (var i = 0; i < items.content.length; i++) {
-            var item = items.content[i];
+      // go deeper
+      if (item.content) {
+        walk(item, usageData);
+      }
 
-            // go deeper
-            if (item.content) {
-                walk(item, usageData);
-            }
+      if (item.isElem('script')) {
+        safe = false;
+      }
 
-            if (item.isElem('script')) {
-                safe = false;
-            }
+      if (item.isElem()) {
+        usageData.tags[item.elem] = true;
 
-            if (item.isElem()) {
-                usageData.tags[item.elem] = true;
-
-                if (item.hasAttr('id')) {
-                    usageData.ids[item.attr('id').value] = true;
-                }
-
-                if (item.hasAttr('class')) {
-                    item.attr('class').value.replace(/^\s+|\s+$/g, '').split(/\s+/).forEach(function(className) {
-                        usageData.classes[className] = true;
-                    });
-                }
-
-                if (item.attrs && Object.keys(item.attrs).some(function(name) { return /^on/i.test(name); })) {
-                    safe = false;
-                }
-            }
+        if (item.hasAttr('id')) {
+          usageData.ids[item.attr('id').value] = true;
         }
 
-        return usageData;
-    }
-
-    var safe = true;
-    var usageData = {};
-    var hasData = false;
-    var rawData = walk(ast, {
-        ids: Object.create(null),
-        classes: Object.create(null),
-        tags: Object.create(null)
-    });
-
-    if (!safe && options.usage && options.usage.force) {
-        safe = true;
-    }
-
-    for (const [key, data] of Object.entries(rawData)) {
-        if (shouldFilter(options, key)) {
-            usageData[key] = Object.keys(data);
-            hasData = true;
+        if (item.hasAttr('class')) {
+          item
+            .attr('class')
+            .value.replace(/^\s+|\s+$/g, '')
+            .split(/\s+/)
+            .forEach(function (className) {
+              usageData.classes[className] = true;
+            });
         }
+
+        if (
+          item.attrs &&
+          Object.keys(item.attrs).some(function (name) {
+            return /^on/i.test(name);
+          })
+        ) {
+          safe = false;
+        }
+      }
     }
 
-    return safe && hasData ? usageData : null;
+    return usageData;
+  }
+
+  var safe = true;
+  var usageData = {};
+  var hasData = false;
+  var rawData = walk(ast, {
+    ids: Object.create(null),
+    classes: Object.create(null),
+    tags: Object.create(null),
+  });
+
+  if (!safe && options.usage && options.usage.force) {
+    safe = true;
+  }
+
+  for (const [key, data] of Object.entries(rawData)) {
+    if (shouldFilter(options, key)) {
+      usageData[key] = Object.keys(data);
+      hasData = true;
+    }
+  }
+
+  return safe && hasData ? usageData : null;
 }

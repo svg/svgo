@@ -16,8 +16,6 @@ exports.description = 'removes <metadata>';
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
-
-    return !item.isElem('metadata');
-
+exports.fn = function (item) {
+  return !item.isElem('metadata');
 };

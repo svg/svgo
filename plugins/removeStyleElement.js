@@ -16,8 +16,6 @@ exports.description = 'removes <style> element (disabled by default)';
  *
  * @author Betsy Dupuis
  */
-exports.fn = function(item) {
-
-    return !item.isElem('style');
-
+exports.fn = function (item) {
+  return !item.isElem('style');
 };

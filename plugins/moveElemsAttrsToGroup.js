@@ -7,7 +7,7 @@ exports.active = true;
 exports.description = 'moves elements attributes to the existing group wrapper';
 
 var inheritableAttrs = require('./_collections').inheritableAttrs,
-    pathElems = require('./_collections.js').pathElems;
+  pathElems = require('./_collections.js').pathElems;
 
 /**
  * Collapse content's intersected and inheritable
@@ -33,65 +33,54 @@ var inheritableAttrs = require('./_collections').inheritableAttrs,
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
+exports.fn = function (item) {
+  if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
+    var intersection = {},
+      hasTransform = false,
+      hasClip = item.hasAttr('clip-path') || item.hasAttr('mask'),
+      intersected = item.content.every(function (inner) {
+        if (inner.isElem() && inner.hasAttr()) {
+          // don't mess with possible styles (hack until CSS parsing is implemented)
+          if (inner.hasAttr('class')) return false;
+          if (!Object.keys(intersection).length) {
+            intersection = inner.attrs;
+          } else {
+            intersection = intersectInheritableAttrs(intersection, inner.attrs);
 
-    if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
+            if (!intersection) return false;
+          }
 
-        var intersection = {},
-            hasTransform = false,
-            hasClip = item.hasAttr('clip-path') || item.hasAttr('mask'),
-            intersected = item.content.every(function(inner) {
-                if (inner.isElem() && inner.hasAttr()) {
-                    // don't mess with possible styles (hack until CSS parsing is implemented)
-                    if (inner.hasAttr('class')) return false;
-                    if (!Object.keys(intersection).length) {
-                        intersection = inner.attrs;
-                    } else {
-                        intersection = intersectInheritableAttrs(intersection, inner.attrs);
-
-                        if (!intersection) return false;
-                    }
-
-                    return true;
-                }
-            }),
-            allPath = item.content.every(function(inner) {
-                return inner.isElem(pathElems);
-            });
-
-        if (intersected) {
-
-            item.content.forEach(function(g) {
-
-                for (const [name, attr] of Object.entries(intersection)) {
-
-                    if (!allPath && !hasClip || name !== 'transform') {
-
-                        g.removeAttr(name);
-
-                        if (name === 'transform') {
-                            if (!hasTransform) {
-                                if (item.hasAttr('transform')) {
-                                    item.attr('transform').value += ' ' + attr.value;
-                                } else {
-                                    item.addAttr(attr);
-                                }
-
-                                hasTransform = true;
-                            }
-                        } else {
-                            item.addAttr(attr);
-                        }
-
-                    }
-                }
-
-            });
-
+          return true;
         }
+      }),
+      allPath = item.content.every(function (inner) {
+        return inner.isElem(pathElems);
+      });
 
+    if (intersected) {
+      item.content.forEach(function (g) {
+        for (const [name, attr] of Object.entries(intersection)) {
+          if ((!allPath && !hasClip) || name !== 'transform') {
+            g.removeAttr(name);
+
+            if (name === 'transform') {
+              if (!hasTransform) {
+                if (item.hasAttr('transform')) {
+                  item.attr('transform').value += ' ' + attr.value;
+                } else {
+                  item.addAttr(attr);
+                }
+
+                hasTransform = true;
+              }
+            } else {
+              item.addAttr(attr);
+            }
+          }
+        }
+      });
     }
-
+  }
 };
 
 /**
@@ -103,25 +92,23 @@ exports.fn = function(item) {
  * @return {Object} intersected attrs object
  */
 function intersectInheritableAttrs(a, b) {
+  var c = {};
 
-    var c = {};
-
-    for (const [n, attr] of Object.entries(a)) {
-        if (
-            // eslint-disable-next-line no-prototype-builtins
-            b.hasOwnProperty(n) &&
-            inheritableAttrs.indexOf(n) > -1 &&
-            attr.name === b[n].name &&
-            attr.value === b[n].value &&
-            attr.prefix === b[n].prefix &&
-            attr.local === b[n].local
-        ) {
-            c[n] = attr;
-        }
+  for (const [n, attr] of Object.entries(a)) {
+    if (
+      // eslint-disable-next-line no-prototype-builtins
+      b.hasOwnProperty(n) &&
+      inheritableAttrs.indexOf(n) > -1 &&
+      attr.name === b[n].name &&
+      attr.value === b[n].value &&
+      attr.prefix === b[n].prefix &&
+      attr.local === b[n].local
+    ) {
+      c[n] = attr;
     }
+  }
 
-    if (!Object.keys(c).length) return false;
+  if (!Object.keys(c).length) return false;
 
-    return c;
-
+  return c;
 }

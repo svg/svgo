@@ -4,11 +4,12 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'removes arbitrary elements by ID or className (disabled by default)';
+exports.description =
+  'removes arbitrary elements by ID or className (disabled by default)';
 
 exports.params = {
   id: [],
-  class: []
+  class: [],
 };
 
 /**
@@ -50,11 +51,11 @@ exports.params = {
  *
  * @author Eli Dupuis (@elidupuis)
  */
-exports.fn = function(item, params) {
+exports.fn = function (item, params) {
   // wrap params in an array if not already
-  ['id', 'class'].forEach(function(key) {
+  ['id', 'class'].forEach(function (key) {
     if (!Array.isArray(params[key])) {
-      params[key] = [ params[key] ];
+      params[key] = [params[key]];
     }
   });
 
@@ -73,6 +74,6 @@ exports.fn = function(item, params) {
   const elemClass = item.attr('class');
   if (elemClass && params.class.length !== 0) {
     const classList = elemClass.value.split(' ');
-    return params.class.some(item => classList.includes(item)) === false;
+    return params.class.some((item) => classList.includes(item)) === false;
   }
 };
