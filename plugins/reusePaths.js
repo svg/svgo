@@ -39,8 +39,6 @@ exports.fn = function (data) {
       if (!hasSeen.elem.hasAttr('id')) {
         hasSeen.elem.addAttr({
           name: 'id',
-          local: 'id',
-          prefix: '',
           value: 'reuse-' + count++,
         });
       }
@@ -52,8 +50,6 @@ exports.fn = function (data) {
     const defsTag = new JSAPI(
       {
         elem: 'defs',
-        prefix: '',
-        local: 'defs',
         content: [],
         attrs: [],
       },
@@ -89,8 +85,6 @@ function convertToUse(item, href) {
   item.removeAttr('fill');
   item.addAttr({
     name: 'xlink:href',
-    local: 'xlink:href',
-    prefix: 'none',
     value: '#' + href,
   });
   delete item.pathJS;

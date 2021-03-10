@@ -66,8 +66,6 @@ exports.fn = function (item, params) {
           item.addAttr({
             name: 'stroke',
             value: 'none',
-            prefix: '',
-            local: 'stroke',
           });
       }
     }
@@ -86,8 +84,6 @@ exports.fn = function (item, params) {
           item.addAttr({
             name: 'fill',
             value: 'none',
-            prefix: '',
-            local: 'fill',
           });
       }
     }

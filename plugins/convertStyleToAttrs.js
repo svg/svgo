@@ -104,8 +104,6 @@ exports.fn = function (item, params) {
             attrs[prop] = {
               name: prop,
               value: val,
-              local: prop,
-              prefix: '',
             };
 
             return false;

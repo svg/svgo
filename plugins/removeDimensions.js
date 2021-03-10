@@ -38,8 +38,6 @@ exports.fn = function (item) {
           Number(item.attr('width').value) +
           ' ' +
           Number(item.attr('height').value),
-        prefix: '',
-        local: 'viewBox',
       });
       item.removeAttr('width');
       item.removeAttr('height');

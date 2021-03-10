@@ -100,9 +100,7 @@ function intersectInheritableAttrs(a, b) {
       b.hasOwnProperty(n) &&
       inheritableAttrs.indexOf(n) > -1 &&
       attr.name === b[n].name &&
-      attr.value === b[n].value &&
-      attr.prefix === b[n].prefix &&
-      attr.local === b[n].local
+      attr.value === b[n].value
     ) {
       c[n] = attr;
     }

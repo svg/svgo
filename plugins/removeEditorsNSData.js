@@ -1,5 +1,7 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+
 exports.type = 'perItem';
 
 exports.active = true;
@@ -35,11 +37,9 @@ exports.fn = function (item, params) {
   if (item.elem) {
     if (item.isElem('svg')) {
       item.eachAttr(function (attr) {
-        if (
-          attr.prefix === 'xmlns' &&
-          editorNamespaces.indexOf(attr.value) > -1
-        ) {
-          prefixes.push(attr.local);
+        const { prefix, local } = parseName(attr.name);
+        if (prefix === 'xmlns' && editorNamespaces.includes(attr.value)) {
+          prefixes.push(local);
 
           // <svg xmlns:sodipodi="">
           item.removeAttr(attr.name);
@@ -49,13 +49,15 @@ exports.fn = function (item, params) {
 
     // <* sodipodi:*="">
     item.eachAttr(function (attr) {
-      if (prefixes.indexOf(attr.prefix) > -1) {
+      const { prefix } = parseName(attr.name);
+      if (prefixes.includes(prefix)) {
         item.removeAttr(attr.name);
       }
     });
 
     // <sodipodi:*>
-    if (prefixes.indexOf(item.prefix) > -1) {
+    const { prefix } = parseName(item.elem);
+    if (prefixes.includes(prefix)) {
       return false;
     }
   }

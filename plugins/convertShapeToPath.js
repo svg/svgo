@@ -58,8 +58,6 @@ exports.fn = function (item, params) {
     item.addAttr({
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
-      prefix: '',
-      local: 'd',
     });
     item.renameElem('path').removeAttr(['x', 'y', 'width', 'height']);
   }
@@ -77,8 +75,6 @@ exports.fn = function (item, params) {
     item.addAttr({
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
-      prefix: '',
-      local: 'd',
     });
     item.renameElem('path').removeAttr(['x1', 'y1', 'x2', 'y2']);
   }
@@ -102,8 +98,6 @@ exports.fn = function (item, params) {
     item.addAttr({
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
-      prefix: '',
-      local: 'd',
     });
     item.renameElem('path').removeAttr('points');
   }
@@ -124,8 +118,6 @@ exports.fn = function (item, params) {
     item.addAttr({
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
-      prefix: '',
-      local: 'd',
     });
     item.renameElem('path').removeAttr(['cx', 'cy', 'r']);
   }
@@ -147,8 +139,6 @@ exports.fn = function (item, params) {
     item.addAttr({
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
-      prefix: '',
-      local: 'd',
     });
     item.renameElem('path').removeAttr(['cx', 'cy', 'rx', 'ry']);
   }
