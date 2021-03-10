@@ -50,8 +50,6 @@ exports.fn = function (item) {
       } else {
         inner.addAttr({
           name: attr.name,
-          local: attr.local,
-          prefix: attr.prefix,
           value: attr.value,
         });
       }

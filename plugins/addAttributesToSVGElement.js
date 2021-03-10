@@ -65,8 +65,6 @@ exports.fn = function (data, params) {
         if (!svg.hasAttr(attribute)) {
           svg.addAttr({
             name: attribute,
-            prefix: '',
-            local: attribute,
           });
         }
       } else if (typeof attribute === 'object') {
@@ -75,8 +73,6 @@ exports.fn = function (data, params) {
             svg.addAttr({
               name: key,
               value: attribute[key],
-              prefix: '',
-              local: key,
             });
           }
         });

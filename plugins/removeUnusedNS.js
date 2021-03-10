@@ -1,5 +1,7 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+
 exports.type = 'full';
 
 exports.active = true;
@@ -48,9 +50,10 @@ exports.fn = function (data) {
 
       if (item.isElem('svg')) {
         item.eachAttr(function (attr) {
+          const { prefix, local } = parseName(attr.name);
           // collect namespaces
-          if (attr.prefix === 'xmlns' && attr.local) {
-            xmlnsCollection.push(attr.local);
+          if (prefix === 'xmlns' && local) {
+            xmlnsCollection.push(local);
           }
         });
 
@@ -62,14 +65,16 @@ exports.fn = function (data) {
       }
 
       if (xmlnsCollection.length) {
+        const { prefix } = parseName(item.elem);
         // check item for the ns-attrs
-        if (item.prefix) {
-          removeNSfromCollection(item.prefix);
+        if (prefix) {
+          removeNSfromCollection(prefix);
         }
 
         // check each attr for the ns-attrs
         item.eachAttr(function (attr) {
-          removeNSfromCollection(attr.prefix);
+          const { prefix } = parseName(attr.name);
+          removeNSfromCollection(prefix);
         });
       }
 

@@ -1,5 +1,7 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+
 exports.type = 'perItem';
 
 exports.active = true;
@@ -66,7 +68,7 @@ for (const elem of Object.values(elems)) {
  */
 exports.fn = function (item, params) {
   // elems w/o namespace prefix
-  if (item.isElem() && !item.prefix) {
+  if (item.isElem() && !parseName(item.elem).prefix) {
     var elem = item.elem;
 
     // remove unknown element's content
@@ -79,7 +81,7 @@ exports.fn = function (item, params) {
       item.content.forEach(function (content, i) {
         if (
           content.isElem() &&
-          !content.prefix &&
+          !parseName(content.elem).prefix &&
           ((elems[elem].content && // Do we have a record of its permitted content?
             elems[elem].content.indexOf(content.elem) === -1) ||
             (!elems[elem].content && // we dont know about its permitted content
@@ -93,9 +95,10 @@ exports.fn = function (item, params) {
     // remove element's unknown attrs and attrs with default values
     if (elems[elem] && elems[elem].attrs) {
       item.eachAttr(function (attr) {
+        const { prefix } = parseName(attr.name);
         if (
           attr.name !== 'xmlns' &&
-          (attr.prefix === 'xml' || !attr.prefix) &&
+          (prefix === 'xml' || !prefix) &&
           (!params.keepDataAttrs || attr.name.indexOf('data-') != 0) &&
           (!params.keepAriaAttrs || attr.name.indexOf('aria-') != 0) &&
           (!params.keepRoleAttr || attr.name != 'role')

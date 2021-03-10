@@ -172,8 +172,6 @@ exports.applyTransforms = function (elem, path, params) {
         } else {
           elem.addAttr({
             name: 'stroke-width',
-            prefix: '',
-            local: 'stroke-width',
             value: strokeWidth.replace(regNumericValues, function (num) {
               return removeLeadingZero(num * scale);
             }),

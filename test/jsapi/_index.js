@@ -12,13 +12,9 @@ describe('svgo api', function () {
   it('should be able to create content item', function () {
     var item = createContentItem({
       elem: 'elementName',
-      prefix: 'prefixName',
-      local: 'localName',
     });
     expect(item).to.be.instanceOf(JSAPI);
     expect(item).to.have.ownProperty('elem').equal('elementName');
-    expect(item).to.have.ownProperty('prefix').equal('prefixName');
-    expect(item).to.have.ownProperty('local').equal('localName');
   });
 
   it('should be able create content item without argument', function () {

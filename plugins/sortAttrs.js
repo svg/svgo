@@ -1,5 +1,7 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+
 exports.type = 'perItem';
 
 exports.active = false;
@@ -48,13 +50,15 @@ exports.fn = function (item, params) {
     });
 
     attrs.sort(function (a, b) {
-      if (a.prefix != b.prefix) {
+      const { prefix: prefixA } = parseName(a.name);
+      const { prefix: prefixB } = parseName(b.name);
+      if (prefixA != prefixB) {
         // xmlns attributes implicitly have the prefix xmlns
         if (xmlnsOrder == 'front') {
-          if (a.prefix == 'xmlns') return -1;
-          if (b.prefix == 'xmlns') return 1;
+          if (prefixA === 'xmlns') return -1;
+          if (prefixB === 'xmlns') return 1;
         }
-        return a.prefix < b.prefix ? -1 : 1;
+        return prefixA < prefixB ? -1 : 1;
       }
 
       var aindex = orderlen;

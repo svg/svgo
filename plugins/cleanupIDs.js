@@ -1,5 +1,7 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+
 exports.type = 'full';
 
 exports.active = true;
@@ -157,13 +159,14 @@ exports.fn = function (data, params) {
             return;
           }
           // save references
+          const { local } = parseName(attr.name);
           if (
             referencesProps.has(attr.name) &&
             (match = attr.value.match(regReferencesUrl))
           ) {
             key = match[2]; // url() reference
           } else if (
-            (attr.local === 'href' &&
+            (local === 'href' &&
               (match = attr.value.match(regReferencesHref))) ||
             (attr.name === 'begin' &&
               (match = attr.value.match(regReferencesBegin)))

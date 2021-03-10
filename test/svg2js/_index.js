@@ -103,14 +103,6 @@ describe('svg2js', function () {
       it('should have property elem: "svg"', function () {
         expect(root.content[3]).to.have.property('elem', 'svg');
       });
-
-      it('should have property prefix: ""', function () {
-        expect(root.content[3]).to.have.property('prefix', '');
-      });
-
-      it('should have property local: "svg"', function () {
-        expect(root.content[3]).to.have.property('local', 'svg');
-      });
     });
 
     describe('attributes', function () {
@@ -144,17 +136,6 @@ describe('svg2js', function () {
           expect(root.content[3].attrs.version).to.have.property(
             'value',
             '1.1'
-          );
-        });
-
-        it('should have property prefix: ""', function () {
-          expect(root.content[3].attrs.version).to.have.property('prefix', '');
-        });
-
-        it('should have property local: "version"', function () {
-          expect(root.content[3].attrs.version).to.have.property(
-            'local',
-            'version'
           );
         });
       });
@@ -335,8 +316,6 @@ describe('svg2js', function () {
         var attr = {
           name: 'test',
           value: 3,
-          prefix: '',
-          local: 'test',
         };
 
         it('svg should have property "addAttr"', function () {
@@ -351,31 +330,6 @@ describe('svg2js', function () {
           expect(
             root.content[3].content[1].content[0].addAttr(attr)
           ).to.be.an.instanceOf(Object);
-        });
-
-        it('svg.addAttr({ name: "trololo" }) should be false', function () {
-          expect(root.content[3].addAttr({ name: 'trololo' })).to.be.false;
-        });
-
-        it('svg.addAttr({ name: "trololo", value: 3 }) should be false', function () {
-          expect(root.content[3].addAttr({ name: 'trololo', value: 3 })).to.be
-            .false;
-        });
-
-        it('svg.addAttr({ name: "trololo", value: 3, prefix: "" }) should be false', function () {
-          expect(
-            root.content[3].addAttr({ name: 'trololo', value: 3, prefix: '' })
-          ).to.be.false;
-        });
-
-        it('svg.addAttr({ name: "trololo", value: 3, local: "trololo" }) should be false', function () {
-          expect(
-            root.content[3].addAttr({
-              name: 'trololo',
-              value: 3,
-              local: 'trololo',
-            })
-          ).to.be.false;
         });
 
         it('svg.addAttr() should be false', function () {

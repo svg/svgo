@@ -32,8 +32,6 @@ exports.fn = function (item) {
       item.addAttr({
         name: 'r',
         value: radius,
-        prefix: '',
-        local: 'r',
       });
     }
   }
