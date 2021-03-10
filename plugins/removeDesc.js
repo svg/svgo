@@ -30,7 +30,8 @@ exports.fn = function (item, params) {
     !(
       params.removeAny ||
       item.isEmpty() ||
-      standardDescs.test(item.content[0].text)
+      (item.content[0].type === 'text' &&
+        standardDescs.test(item.content[0].value))
     )
   );
 };

@@ -203,7 +203,10 @@ exports.fn = function (node, opts, extra) {
       return node;
     }
 
-    var cssStr = node.content[0].text || node.content[0].cdata || [];
+    var cssStr = '';
+    if (node.content[0].type === 'text' || node.content[0].type === 'cdata') {
+      cssStr = node.content[0].value;
+    }
 
     var cssAst = {};
     try {
@@ -246,7 +249,7 @@ exports.fn = function (node, opts, extra) {
     });
 
     // update <style>s
-    node.content[0].text = csstree.generate(cssAst);
+    node.content[0].value = csstree.generate(cssAst);
     return node;
   }
 
