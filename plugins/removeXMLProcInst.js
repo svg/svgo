@@ -18,7 +18,8 @@ exports.description = 'removes XML processing instructions';
  * @author Kir Belevich
  */
 exports.fn = function (item) {
-  return !(
-    item.processinginstruction && item.processinginstruction.name === 'xml'
-  );
+  if (item.type === 'instruction' && item.name === 'xml') {
+    return false;
+  }
+  return true;
 };
