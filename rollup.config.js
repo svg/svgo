@@ -1,6 +1,7 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import { terser } from 'rollup-plugin-terser';
 
 export default {
   input: './lib/svgo.js',
@@ -31,5 +32,12 @@ export default {
     nodeResolve({ browser: true, preferBuiltins: false }),
     commonjs(),
     json(),
+    // Whitespaces and comments removal makes the browser bundle lighter
+    // while retaining the ability to debug errors
+    terser({
+      compress: false,
+      mangle: false,
+      format: { comments: false },
+    }),
   ],
 };
