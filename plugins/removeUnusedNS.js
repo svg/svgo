@@ -65,7 +65,7 @@ exports.fn = function (data) {
       }
 
       if (xmlnsCollection.length) {
-        const { prefix, local } = parseName(item.elem);
+        const { prefix } = parseName(item.elem);
         // check item for the ns-attrs
         if (prefix) {
           removeNSfromCollection(prefix);
