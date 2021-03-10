@@ -117,13 +117,12 @@ exports.fn = function (data, params) {
    * @return {Array} output items
    */
   function monkeys(items) {
-    for (var i = 0; i < items.content.length && !hasStyleOrScript; i++) {
-      var item = items.content[i];
+    for (var i = 0; i < items.children.length && !hasStyleOrScript; i++) {
+      var item = items.children[i];
 
       // quit if <style> or <script> present ('force' param prevents quitting)
       if (!params.force) {
-        var isNotEmpty = item.isEmpty() === false;
-        if (item.isElem(styleOrScript) && isNotEmpty) {
+        if (item.isElem(styleOrScript) && item.children.length !== 0) {
           hasStyleOrScript = true;
           continue;
         }
@@ -132,8 +131,8 @@ exports.fn = function (data, params) {
         if (item.isElem('svg')) {
           var hasDefsOnly = true;
 
-          for (var j = 0; j < item.content.length; j++) {
-            if (!item.content[j].isElem('defs')) {
+          for (var j = 0; j < item.children.length; j++) {
+            if (!item.children[j].isElem('defs')) {
               hasDefsOnly = false;
               break;
             }
@@ -181,7 +180,7 @@ exports.fn = function (data, params) {
         });
       }
       // go deeper
-      if (item.content) {
+      if (item.children) {
         monkeys(item);
       }
     }

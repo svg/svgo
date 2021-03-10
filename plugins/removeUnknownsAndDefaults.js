@@ -74,11 +74,10 @@ exports.fn = function (item, params) {
     // remove unknown element's content
     if (
       params.unknownContent &&
-      !item.isEmpty() &&
       elems[elem] && // make sure we know of this element before checking its children
       elem !== 'foreignObject' // Don't check foreignObject
     ) {
-      item.content.forEach(function (content, i) {
+      item.children.forEach(function (content, i) {
         if (
           content.type === 'element' &&
           !parseName(content.name).prefix &&
@@ -87,7 +86,7 @@ exports.fn = function (item, params) {
             (!elems[elem].content && // we dont know about its permitted content
               !elems[content.name])) // check that we know about the element at all
         ) {
-          item.content.splice(i, 1);
+          item.children.splice(i, 1);
         }
       });
     }

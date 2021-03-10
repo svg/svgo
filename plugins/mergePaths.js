@@ -26,19 +26,19 @@ exports.params = {
  * @author Kir Belevich, Lev Solntsev
  */
 exports.fn = function (item, params) {
-  if (item.type !== 'element' || item.isEmpty()) return;
+  if (item.type !== 'element' || item.children.length === 0) return;
 
   var prevContentItem = null,
     prevContentItemKeys = null;
 
-  item.content = item.content.filter(function (contentItem) {
+  item.children = item.children.filter(function (contentItem) {
     if (
       prevContentItem &&
       prevContentItem.isElem('path') &&
-      prevContentItem.isEmpty() &&
+      prevContentItem.children.length === 0 &&
       prevContentItem.hasAttr('d') &&
       contentItem.isElem('path') &&
-      contentItem.isEmpty() &&
+      contentItem.children.length === 0 &&
       contentItem.hasAttr('d')
     ) {
       const computedStyle = computeStyle(contentItem);

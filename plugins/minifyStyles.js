@@ -38,17 +38,20 @@ exports.fn = function (ast, options) {
 
   elems.forEach(function (elem) {
     if (elem.isElem('style')) {
-      if (elem.content[0].type === 'text' || elem.content[0].type === 'cdata') {
-        const styleCss = elem.content[0].value;
+      if (
+        elem.children[0].type === 'text' ||
+        elem.children[0].type === 'cdata'
+      ) {
+        const styleCss = elem.children[0].value;
         const minified = csso.minify(styleCss, minifyOptionsForStylesheet).css;
         // preserve cdata if necessary
         // TODO split cdata -> text optimisation into separate plugin
         if (styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0) {
-          elem.content[0].type = 'cdata';
-          elem.content[0].value = minified;
+          elem.children[0].type = 'cdata';
+          elem.children[0].value = minified;
         } else {
-          elem.content[0].type = 'text';
-          elem.content[0].value = minified;
+          elem.children[0].type = 'text';
+          elem.children[0].value = minified;
         }
       }
     } else {
@@ -71,15 +74,15 @@ function cloneObject(obj) {
 
 function findStyleElems(ast) {
   function walk(items, styles) {
-    for (var i = 0; i < items.content.length; i++) {
-      var item = items.content[i];
+    for (var i = 0; i < items.children.length; i++) {
+      var item = items.children[i];
 
       // go deeper
-      if (item.content) {
+      if (item.children) {
         walk(item, styles);
       }
 
-      if (item.isElem('style') && !item.isEmpty()) {
+      if (item.isElem('style') && item.children.length !== 0) {
         styles.push(item);
       } else if (item.type === 'element' && item.hasAttr('style')) {
         styles.push(item);
@@ -106,11 +109,11 @@ function shouldFilter(options, name) {
 
 function collectUsageData(ast, options) {
   function walk(items, usageData) {
-    for (var i = 0; i < items.content.length; i++) {
-      var item = items.content[i];
+    for (var i = 0; i < items.children.length; i++) {
+      var item = items.children[i];
 
       // go deeper
-      if (item.content) {
+      if (item.children) {
         walk(item, usageData);
       }
 

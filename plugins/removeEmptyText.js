@@ -35,12 +35,17 @@ exports.params = {
  */
 exports.fn = function (item, params) {
   // Remove empty text element
-  if (params.text && item.isElem('text') && item.isEmpty()) return false;
+  if (params.text && item.isElem('text') && item.children.length === 0) {
+    return false;
+  }
 
   // Remove empty tspan element
-  if (params.tspan && item.isElem('tspan') && item.isEmpty()) return false;
+  if (params.tspan && item.isElem('tspan') && item.children.length === 0) {
+    return false;
+  }
 
   // Remove tref with empty xlink:href attribute
-  if (params.tref && item.isElem('tref') && !item.hasAttrLocal('href'))
+  if (params.tref && item.isElem('tref') && !item.hasAttrLocal('href')) {
     return false;
+  }
 };

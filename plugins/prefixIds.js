@@ -197,15 +197,15 @@ exports.fn = function (node, opts, extra) {
 
   // <style/> property values
 
-  if (node.name === 'style') {
-    if (node.isEmpty()) {
+  if (node.type === 'element' && node.name === 'style') {
+    if (node.children.length === 0) {
       // skip empty <style/>s
       return node;
     }
 
     var cssStr = '';
-    if (node.content[0].type === 'text' || node.content[0].type === 'cdata') {
-      cssStr = node.content[0].value;
+    if (node.children[0].type === 'text' || node.children[0].type === 'cdata') {
+      cssStr = node.children[0].value;
     }
 
     var cssAst = {};
@@ -249,7 +249,7 @@ exports.fn = function (node, opts, extra) {
     });
 
     // update <style>s
-    node.content[0].value = csstree.generate(cssAst);
+    node.children[0].value = csstree.generate(cssAst);
     return node;
   }
 

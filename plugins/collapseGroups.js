@@ -13,7 +13,9 @@ var collections = require('./_collections'),
 function hasAnimatedAttr(item) {
   return (
     (item.isElem(animationElems) && item.hasAttr('attributeName', this)) ||
-    (!item.isEmpty() && item.content.some(hasAnimatedAttr, this))
+    (item.type === 'element' &&
+      item.children.length !== 0 &&
+      item.children.some(hasAnimatedAttr, this))
   );
 }
 
@@ -42,13 +44,17 @@ function hasAnimatedAttr(item) {
  */
 exports.fn = function (item) {
   // non-empty elements
-  if (item.type === 'element' && !item.isElem('switch') && !item.isEmpty()) {
-    item.content.forEach(function (g, i) {
+  if (
+    item.type === 'element' &&
+    !item.isElem('switch') &&
+    item.children.length !== 0
+  ) {
+    item.children.forEach(function (g, i) {
       // non-empty groups
-      if (g.isElem('g') && !g.isEmpty()) {
-        // move group attibutes to the single content element
-        if (g.hasAttr() && g.content.length === 1) {
-          var inner = g.content[0];
+      if (g.isElem('g') && g.children.length !== 0) {
+        // move group attibutes to the single child element
+        if (g.hasAttr() && g.children.length === 1) {
+          var inner = g.children[0];
 
           if (
             inner.type === 'element' &&
@@ -61,7 +67,7 @@ exports.fn = function (item) {
                 !inner.hasAttr('transform')))
           ) {
             g.eachAttr(function (attr) {
-              if (g.content.some(hasAnimatedAttr, attr.name)) return;
+              if (g.children.some(hasAnimatedAttr, attr.name)) return;
 
               if (!inner.hasAttr(attr.name)) {
                 inner.addAttr(attr);
@@ -85,11 +91,11 @@ exports.fn = function (item) {
         // collapse groups without attributes
         if (
           !g.hasAttr() &&
-          !g.content.some(function (item) {
+          !g.children.some(function (item) {
             return item.isElem(animationElems);
           })
         ) {
-          item.spliceContent(i, 1, g.content);
+          item.spliceContent(i, 1, g.children);
         }
       }
     });
