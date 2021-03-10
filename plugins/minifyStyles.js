@@ -41,7 +41,8 @@ exports.fn = function (ast, options) {
       if (elem.content[0].type === 'text' || elem.content[0].type === 'cdata') {
         const styleCss = elem.content[0].value;
         const minified = csso.minify(styleCss, minifyOptionsForStylesheet).css;
-        // TODO figure out if this check is necessary
+        // preserve cdata if necessary
+        // TODO split cdata -> text optimisation into separate plugin
         if (styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0) {
           elem.content[0].type = 'cdata';
           elem.content[0].value = minified;
