@@ -44,7 +44,7 @@ var cleanupOutData = require('../lib/svgo/tools').cleanupOutData,
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.elem) {
+  if (item.type === 'element') {
     // transform
     if (item.hasAttr('transform')) {
       convertTransform(item, 'transform', params);

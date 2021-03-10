@@ -44,7 +44,7 @@ exports.fn = function (item, params) {
     orderlen = params.order.length + 1,
     xmlnsOrder = params.xmlnsOrder || 'front';
 
-  if (item.elem) {
+  if (item.type === 'element') {
     item.eachAttr(function (attr) {
       attrs.push(attr);
     });

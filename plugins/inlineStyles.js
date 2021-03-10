@@ -248,7 +248,7 @@ exports.fn = function (document, opts) {
         1
       );
 
-      if (styleParentEl.elem === 'defs' && styleParentEl.content.length === 0) {
+      if (styleParentEl.name === 'defs' && styleParentEl.content.length === 0) {
         // also clean up now empty <def/>s
         var defsParentEl = styleParentEl.parentNode;
         defsParentEl.spliceContent(

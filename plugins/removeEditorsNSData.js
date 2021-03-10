@@ -34,7 +34,7 @@ exports.fn = function (item, params) {
     editorNamespaces = editorNamespaces.concat(params.additionalNamespaces);
   }
 
-  if (item.elem) {
+  if (item.type === 'element') {
     if (item.isElem('svg')) {
       item.eachAttr(function (attr) {
         const { prefix, local } = parseName(attr.name);
@@ -56,7 +56,7 @@ exports.fn = function (item, params) {
     });
 
     // <sodipodi:*>
-    const { prefix } = parseName(item.elem);
+    const { prefix } = parseName(item.name);
     if (prefixes.includes(prefix)) {
       return false;
     }

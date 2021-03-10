@@ -81,7 +81,7 @@ function findStyleElems(ast) {
 
       if (item.isElem('style') && !item.isEmpty()) {
         styles.push(item);
-      } else if (item.isElem() && item.hasAttr('style')) {
+      } else if (item.type === 'element' && item.hasAttr('style')) {
         styles.push(item);
       }
     }
@@ -118,8 +118,8 @@ function collectUsageData(ast, options) {
         safe = false;
       }
 
-      if (item.isElem()) {
-        usageData.tags[item.elem] = true;
+      if (item.type === 'element') {
+        usageData.tags[item.name] = true;
 
         if (item.hasAttr('id')) {
           usageData.ids[item.attr('id').value] = true;

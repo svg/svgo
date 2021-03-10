@@ -27,7 +27,7 @@ var regNewlinesNeedSpace = /(\S)\r?\n(\S)/g,
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.isElem()) {
+  if (item.type === 'element') {
     item.eachAttr(function (attr) {
       if (params.newlines) {
         // new line which requires a space instead of themselve

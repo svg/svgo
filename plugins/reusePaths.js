@@ -49,7 +49,8 @@ exports.fn = function (data) {
   if (defs.length > 0) {
     const defsTag = new JSAPI(
       {
-        elem: 'defs',
+        type: 'element',
+        name: 'defs',
         content: [],
         attrs: [],
       },

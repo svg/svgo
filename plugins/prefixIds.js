@@ -197,7 +197,7 @@ exports.fn = function (node, opts, extra) {
 
   // <style/> property values
 
-  if (node.elem === 'style') {
+  if (node.name === 'style') {
     if (node.isEmpty()) {
       // skip empty <style/>s
       return node;

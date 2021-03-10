@@ -19,23 +19,23 @@ exports.fn = function (item) {
   if (item.isElem('defs')) {
     if (item.content) {
       var frequency = item.content.reduce(function (frequency, child) {
-        if (child.elem in frequency) {
-          frequency[child.elem]++;
+        if (child.name in frequency) {
+          frequency[child.name]++;
         } else {
-          frequency[child.elem] = 1;
+          frequency[child.name] = 1;
         }
         return frequency;
       }, {});
       item.content.sort(function (a, b) {
-        var frequencyComparison = frequency[b.elem] - frequency[a.elem];
+        var frequencyComparison = frequency[b.name] - frequency[a.name];
         if (frequencyComparison !== 0) {
           return frequencyComparison;
         }
-        var lengthComparison = b.elem.length - a.elem.length;
+        var lengthComparison = b.name.length - a.name.length;
         if (lengthComparison !== 0) {
           return lengthComparison;
         }
-        return a.elem != b.elem ? (a.elem > b.elem ? -1 : 1) : 0;
+        return a.name != b.name ? (a.name > b.name ? -1 : 1) : 0;
       });
     }
 

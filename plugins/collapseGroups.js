@@ -42,7 +42,7 @@ function hasAnimatedAttr(item) {
  */
 exports.fn = function (item) {
   // non-empty elements
-  if (item.isElem() && !item.isElem('switch') && !item.isEmpty()) {
+  if (item.type === 'element' && !item.isElem('switch') && !item.isEmpty()) {
     item.content.forEach(function (g, i) {
       // non-empty groups
       if (g.isElem('g') && !g.isEmpty()) {
@@ -51,7 +51,7 @@ exports.fn = function (item) {
           var inner = g.content[0];
 
           if (
-            inner.isElem() &&
+            inner.type === 'element' &&
             !inner.hasAttr('id') &&
             !g.hasAttr('filter') &&
             !(g.hasAttr('class') && inner.hasAttr('class')) &&

@@ -76,9 +76,11 @@ describe('svg2js', function () {
       });
     });
 
-    describe('elem', function () {
-      it('should have property elem: "svg"', function () {
-        expect(root.content[3]).to.have.property('elem', 'svg');
+    describe('name', function () {
+      it('should have property name: "svg"', function () {
+        expect(root.content[3]).to.include({
+          name: 'svg',
+        });
       });
     });
 
