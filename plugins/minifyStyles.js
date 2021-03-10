@@ -38,17 +38,18 @@ exports.fn = function (ast, options) {
 
   elems.forEach(function (elem) {
     if (elem.isElem('style')) {
-      // <style> element
-      var styleCss = elem.content[0].text || elem.content[0].cdata || [];
-      var DATA =
-        styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0
-          ? 'cdata'
-          : 'text';
-
-      elem.content[0][DATA] = csso.minify(
-        styleCss,
-        minifyOptionsForStylesheet
-      ).css;
+      if (elem.content[0].type === 'text' || elem.content[0].type === 'cdata') {
+        const styleCss = elem.content[0].value;
+        const minified = csso.minify(styleCss, minifyOptionsForStylesheet).css;
+        // TODO figure out if this check is necessary
+        if (styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0) {
+          elem.content[0].type = 'cdata';
+          elem.content[0].value = minified;
+        } else {
+          elem.content[0].type = 'text';
+          elem.content[0].value = minified;
+        }
+      }
     } else {
       // style attribute
       var elemStyle = elem.attr('style').value;
