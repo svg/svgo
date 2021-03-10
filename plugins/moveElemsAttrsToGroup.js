@@ -43,9 +43,12 @@ exports.fn = function (item) {
           // don't mess with possible styles (hack until CSS parsing is implemented)
           if (inner.hasAttr('class')) return false;
           if (!Object.keys(intersection).length) {
-            intersection = inner.attrs;
+            intersection = inner.attributes;
           } else {
-            intersection = intersectInheritableAttrs(intersection, inner.attrs);
+            intersection = intersectInheritableAttrs(
+              intersection,
+              inner.attributes
+            );
 
             if (!intersection) return false;
           }
@@ -59,22 +62,22 @@ exports.fn = function (item) {
 
     if (intersected) {
       item.content.forEach(function (g) {
-        for (const [name, attr] of Object.entries(intersection)) {
+        for (const [name, value] of Object.entries(intersection)) {
           if ((!allPath && !hasClip) || name !== 'transform') {
             g.removeAttr(name);
 
             if (name === 'transform') {
               if (!hasTransform) {
                 if (item.hasAttr('transform')) {
-                  item.attr('transform').value += ' ' + attr.value;
+                  item.attr('transform').value += ' ' + value;
                 } else {
-                  item.addAttr(attr);
+                  item.addAttr({ name, value });
                 }
 
                 hasTransform = true;
               }
             } else {
-              item.addAttr(attr);
+              item.addAttr({ name, value });
             }
           }
         }
@@ -94,15 +97,14 @@ exports.fn = function (item) {
 function intersectInheritableAttrs(a, b) {
   var c = {};
 
-  for (const [n, attr] of Object.entries(a)) {
+  for (const [name, value] of Object.entries(a)) {
     if (
       // eslint-disable-next-line no-prototype-builtins
-      b.hasOwnProperty(n) &&
-      inheritableAttrs.indexOf(n) > -1 &&
-      attr.name === b[n].name &&
-      attr.value === b[n].value
+      b.hasOwnProperty(name) &&
+      inheritableAttrs.includes(name) &&
+      value === b[name]
     ) {
-      c[n] = attr;
+      c[name] = value;
     }
   }
 

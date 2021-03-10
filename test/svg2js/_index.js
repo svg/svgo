@@ -324,11 +324,11 @@ describe('svg2js', function () {
         it('svg.content[0].eachAttr(function() {}) should be true', function () {
           expect(
             root.content[3].content[0].eachAttr(function (attr) {
-              attr.test = 1;
+              attr.value = '1';
             })
           ).to.be.true;
 
-          expect(root.content[3].content[0].attr('type').test).to.equal(1);
+          expect(root.content[3].content[0].attr('type').value).to.equal('1');
         });
 
         it('svg.content[1].eachAttr(function() {}) should be false', function () {
