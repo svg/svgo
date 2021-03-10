@@ -87,7 +87,7 @@ exports.fn = function (item, params) {
     params.attrs = [params.attrs];
   }
 
-  if (item.isElem()) {
+  if (item.type === 'element') {
     var elemSeparator =
       typeof params.elemSeparator == 'string'
         ? params.elemSeparator
@@ -122,7 +122,7 @@ exports.fn = function (item, params) {
     // loop patterns
     patterns.forEach(function (pattern) {
       // matches element
-      if (pattern[0].test(item.elem)) {
+      if (pattern[0].test(item.name)) {
         // loop attributes
         item.eachAttr(function (attr) {
           var name = attr.name;

@@ -68,8 +68,8 @@ for (const elem of Object.values(elems)) {
  */
 exports.fn = function (item, params) {
   // elems w/o namespace prefix
-  if (item.isElem() && !parseName(item.elem).prefix) {
-    var elem = item.elem;
+  if (item.type === 'element' && !parseName(item.name).prefix) {
+    var elem = item.name;
 
     // remove unknown element's content
     if (
@@ -80,12 +80,12 @@ exports.fn = function (item, params) {
     ) {
       item.content.forEach(function (content, i) {
         if (
-          content.isElem() &&
-          !parseName(content.elem).prefix &&
+          content.type === 'element' &&
+          !parseName(content.name).prefix &&
           ((elems[elem].content && // Do we have a record of its permitted content?
-            elems[elem].content.indexOf(content.elem) === -1) ||
+            elems[elem].content.indexOf(content.name) === -1) ||
             (!elems[elem].content && // we dont know about its permitted content
-              !elems[content.elem])) // check that we know about the element at all
+              !elems[content.name])) // check that we know about the element at all
         ) {
           item.content.splice(i, 1);
         }

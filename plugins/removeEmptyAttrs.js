@@ -17,7 +17,7 @@ exports.description = 'removes empty attributes';
  * @author Kir Belevich
  */
 exports.fn = function (item) {
-  if (item.elem) {
+  if (item.type === 'element') {
     item.eachAttr(function (attr) {
       if (
         attr.value === '' &&

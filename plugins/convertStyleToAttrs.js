@@ -67,7 +67,7 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.elem && item.hasAttr('style')) {
+  if (item.type === 'element' && item.hasAttr('style')) {
     // ['opacity: 1', 'color: #000']
     var styleValue = item.attr('style').value,
       styles = [],

@@ -48,7 +48,7 @@ exports.params = {
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.elem) {
+  if (item.type === 'element') {
     // Removes hidden elements
     // https://www.w3schools.com/cssref/pr_class_visibility.asp
     const computedStyle = computeStyle(item);

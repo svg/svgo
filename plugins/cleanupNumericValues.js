@@ -36,7 +36,7 @@ var regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.isElem()) {
+  if (item.type === 'element') {
     var floatPrecision = params.floatPrecision;
 
     if (item.hasAttr('viewBox')) {

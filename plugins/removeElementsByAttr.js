@@ -60,7 +60,7 @@ exports.fn = function (item, params) {
   });
 
   // abort if current item is no an element
-  if (!item.isElem()) {
+  if (item.type !== 'element') {
     return;
   }
 

@@ -122,14 +122,14 @@ exports.fn = function (data, params) {
 
       // quit if <style> or <script> present ('force' param prevents quitting)
       if (!params.force) {
-        var isNotEmpty = Boolean(item.content);
+        var isNotEmpty = item.isEmpty() === false;
         if (item.isElem(styleOrScript) && isNotEmpty) {
           hasStyleOrScript = true;
           continue;
         }
 
         // Don't remove IDs if the whole SVG consists only of defs.
-        if (item.isElem('svg') && item.content) {
+        if (item.isElem('svg')) {
           var hasDefsOnly = true;
 
           for (var j = 0; j < item.content.length; j++) {
@@ -144,7 +144,7 @@ exports.fn = function (data, params) {
         }
       }
       // …and don't remove any ID if yes
-      if (item.isElem()) {
+      if (item.type === 'element') {
         item.eachAttr(function (attr) {
           var key, match;
 

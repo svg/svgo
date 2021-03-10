@@ -50,7 +50,7 @@ var collections = require('./_collections'),
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.elem) {
+  if (item.type === 'element') {
     item.eachAttr(function (attr) {
       if (collections.colorsProps.indexOf(attr.name) > -1) {
         var val = attr.value,

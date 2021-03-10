@@ -26,7 +26,7 @@ exports.params = {
  * @author Kir Belevich, Lev Solntsev
  */
 exports.fn = function (item, params) {
-  if (!item.isElem() || item.isEmpty()) return;
+  if (item.type !== 'element' || item.isEmpty()) return;
 
   var prevContentItem = null,
     prevContentItemKeys = null;
