@@ -21,4 +21,5 @@ exports.fn = function (item) {
   if (item.type === 'instruction' && item.name === 'xml') {
     return false;
   }
+  return true;
 };
