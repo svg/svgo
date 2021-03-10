@@ -49,53 +49,30 @@ describe('svg2js', function () {
       });
     });
 
-    describe('root.content[0].processinginstruction', function () {
-      it('should exist', function () {
-        expect(root.content[0].processinginstruction).to.exist;
-      });
-
-      it('should be an instance of Object', function () {
-        expect(root.content[0].processinginstruction).to.be.an.instanceOf(
-          Object
-        );
-      });
-
-      it('should have property "name" with value "xml"', function () {
-        expect(root.content[0].processinginstruction).to.have.property(
-          'name',
-          'xml'
-        );
-      });
-
-      it('should have property "body" with value `version="1.0" encoding="utf-8"`', function () {
-        expect(root.content[0].processinginstruction).to.have.property(
-          'body',
-          'version="1.0" encoding="utf-8"'
-        );
+    it('the first node should be instruction', () => {
+      expect(root.content[0]).to.include({
+        type: 'instruction',
+        name: 'xml',
+        value: 'version="1.0" encoding="utf-8"',
       });
     });
 
-    describe('root.content[1].comment', function () {
-      it('should exist', function () {
-        expect(root.content[1].comment).to.exist;
-      });
-
-      it('should equal "Generator: Adobe Illustrator…"', function () {
-        expect(root.content[1].comment).to.equal(
-          'Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)'
-        );
+    it('the second node should be comment', () => {
+      expect(root.content[1]).to.include({
+        type: 'comment',
+        value:
+          'Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)',
       });
     });
 
-    describe('root.content[2].doctype', function () {
-      it('should exist', function () {
-        expect(root.content[2].doctype).to.exist;
-      });
-
-      it('should eventually equal " svg PUBLIC…"', function () {
-        expect(root.content[2].doctype).to.equal(
-          ' svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"'
-        );
+    it('the third node should be doctype', () => {
+      expect(root.content[2]).to.deep.include({
+        type: 'doctype',
+        name: 'svg',
+        data: {
+          doctype:
+            ' svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"',
+        },
       });
     });
 

@@ -32,7 +32,7 @@ exports.description = 'removes doctype declaration';
  * @author Kir Belevich
  */
 exports.fn = function (item) {
-  if (item.doctype) {
+  if (item.type === 'doctype') {
     return false;
   }
 };
