@@ -104,7 +104,7 @@ function parseViewBox(svg) {
   var path = new JSAPI({
     type: 'element',
     name: 'path',
-    content: []
+    content: [],
   });
   path.addAttr({
     name: 'd',
