@@ -51,12 +51,12 @@ exports.fn = function (data) {
       {
         type: 'element',
         name: 'defs',
-        content: [],
-        attrs: [],
+        children: [],
+        attrs: {},
       },
       data
     );
-    data.content[0].spliceContent(0, 0, defsTag);
+    data.children[0].spliceContent(0, 0, defsTag);
     for (let def of defs) {
       // Remove class and style before copying to avoid circular refs in
       // JSON.stringify. This is fine because we don't actually want class or
@@ -94,11 +94,10 @@ function convertToUse(item, href) {
 
 /** */
 function traverse(parent, callback) {
-  if (parent.isEmpty()) {
-    return;
-  }
-  for (let child of parent.content) {
-    callback(child);
-    traverse(child, callback);
+  if (parent.type === 'root' || parent.type === 'element') {
+    for (let child of parent.children) {
+      callback(child);
+      traverse(child, callback);
+    }
   }
 }

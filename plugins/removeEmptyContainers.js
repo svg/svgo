@@ -27,7 +27,7 @@ var container = require('./_collections').elemsGroups.container;
 exports.fn = function (item) {
   return (
     item.isElem(container) === false ||
-    item.isEmpty() === false ||
+    (item.type === 'element' && item.children.length !== 0) ||
     item.isElem('svg') ||
     // empty patterns may contain reusable configuration
     (item.isElem('pattern') && Object.keys(item.attrs).length !== 0) ||

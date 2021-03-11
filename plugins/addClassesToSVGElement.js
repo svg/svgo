@@ -45,7 +45,7 @@ exports.fn = function (data, params) {
   }
 
   var classNames = params.classNames || [params.className],
-    svg = data.content[0];
+    svg = data.children[0];
 
   if (svg.isElem('svg')) {
     svg.class.add.apply(svg.class, classNames);

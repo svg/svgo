@@ -43,10 +43,10 @@ exports.fn = function (data) {
    */
   function monkeys(items) {
     var i = 0,
-      length = items.content.length;
+      length = items.children.length;
 
     while (i < length) {
-      var item = items.content[i];
+      var item = items.children[i];
 
       if (item.isElem('svg')) {
         item.eachAttr(function (attr) {
@@ -79,7 +79,7 @@ exports.fn = function (data) {
       }
 
       // if nothing is found - go deeper
-      if (xmlnsCollection.length && item.content) {
+      if (xmlnsCollection.length && item.children) {
         monkeys(item);
       }
 

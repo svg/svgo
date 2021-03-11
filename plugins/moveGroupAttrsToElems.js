@@ -33,16 +33,16 @@ exports.fn = function (item) {
   // move group transform attr to content's pathElems
   if (
     item.isElem('g') &&
+    item.children.length !== 0 &&
     item.hasAttr('transform') &&
-    !item.isEmpty() &&
     !item.someAttr(function (attr) {
       return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
     }) &&
-    item.content.every(function (inner) {
+    item.children.every(function (inner) {
       return inner.isElem(pathElems) && !inner.hasAttr('id');
     })
   ) {
-    item.content.forEach(function (inner) {
+    item.children.forEach(function (inner) {
       var attr = item.attr('transform');
       if (inner.hasAttr('transform')) {
         inner.attr('transform').value =

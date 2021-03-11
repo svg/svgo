@@ -29,9 +29,9 @@ exports.fn = function (item, params) {
     !item.isElem('desc') ||
     !(
       params.removeAny ||
-      item.isEmpty() ||
-      (item.content[0].type === 'text' &&
-        standardDescs.test(item.content[0].value))
+      item.children.length === 0 ||
+      (item.children[0].type === 'text' &&
+        standardDescs.test(item.children[0].value))
     )
   );
 };

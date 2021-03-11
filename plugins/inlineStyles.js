@@ -62,7 +62,7 @@ exports.fn = function (document, opts) {
       continue;
     }
     // skip empty <style/>s or <foreignObject> content.
-    if (styleEl.isEmpty() || styleEl.closestElem('foreignObject')) {
+    if (styleEl.children.length === 0 || styleEl.closestElem('foreignObject')) {
       continue;
     }
 
@@ -244,15 +244,18 @@ exports.fn = function (document, opts) {
       // clean up now emtpy <style/>s
       var styleParentEl = style.styleEl.parentNode;
       styleParentEl.spliceContent(
-        styleParentEl.content.indexOf(style.styleEl),
+        styleParentEl.children.indexOf(style.styleEl),
         1
       );
 
-      if (styleParentEl.name === 'defs' && styleParentEl.content.length === 0) {
+      if (
+        styleParentEl.name === 'defs' &&
+        styleParentEl.children.length === 0
+      ) {
         // also clean up now empty <def/>s
         var defsParentEl = styleParentEl.parentNode;
         defsParentEl.spliceContent(
-          defsParentEl.content.indexOf(styleParentEl),
+          defsParentEl.children.indexOf(styleParentEl),
           1
         );
       }

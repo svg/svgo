@@ -60,10 +60,10 @@ exports.fn = function (data) {
   }
 
   function monkeys(items, fn) {
-    items.content.forEach(function (item) {
+    items.children.forEach(function (item) {
       fn(item);
 
-      if (item.content) {
+      if (item.children) {
         monkeys(item, fn);
       }
     });

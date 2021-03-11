@@ -57,7 +57,7 @@ exports.fn = function (data, params) {
   }
 
   var attributes = params.attributes || [params.attribute],
-    svg = data.content[0];
+    svg = data.children[0];
 
   if (svg.isElem('svg')) {
     attributes.forEach(function (attribute) {

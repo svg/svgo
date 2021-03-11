@@ -34,11 +34,11 @@ var inheritableAttrs = require('./_collections').inheritableAttrs,
  * @author Kir Belevich
  */
 exports.fn = function (item) {
-  if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
+  if (item.isElem('g') && item.children.length > 1) {
     var intersection = {},
       hasTransform = false,
       hasClip = item.hasAttr('clip-path') || item.hasAttr('mask'),
-      intersected = item.content.every(function (inner) {
+      intersected = item.children.every(function (inner) {
         if (inner.type === 'element' && inner.hasAttr()) {
           // don't mess with possible styles (hack until CSS parsing is implemented)
           if (inner.hasAttr('class')) return false;
@@ -56,12 +56,12 @@ exports.fn = function (item) {
           return true;
         }
       }),
-      allPath = item.content.every(function (inner) {
+      allPath = item.children.every(function (inner) {
         return inner.isElem(pathElems);
       });
 
     if (intersected) {
-      item.content.forEach(function (g) {
+      item.children.forEach(function (g) {
         for (const [name, value] of Object.entries(intersection)) {
           if ((!allPath && !hasClip) || name !== 'transform') {
             g.removeAttr(name);
