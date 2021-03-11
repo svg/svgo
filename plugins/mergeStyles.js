@@ -15,7 +15,7 @@ var cssTools = require('../lib/css-tools');
  *
  * @author strarsis <strarsis@gmail.com>
  */
-exports.fn = function(document, opts) {
+exports.fn = function(document) {
 
     // collect <style/>s (preserve order)
     var styleEls = document.querySelectorAll('style');
