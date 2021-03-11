@@ -54,6 +54,7 @@
     "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
     "test-regression": "NO_DIFF=1 node ./test/regression.js",
+    "test-performance": "node ./test/performance.js",
     "prepublishOnly": "rm -rf dist && rollup -c"
   },
   "prettier": {

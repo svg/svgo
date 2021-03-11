@@ -34,11 +34,29 @@ const measureOptimize = (fixturePath) => {
   return diff;
 };
 
-const baseTime = measureFibonacci(50_000_000);
-const subjectTime = measureOptimize(
-  path.join(__dirname, 'performance-fixtures', 'nlin-sierpinski-mbx.svg')
+const baseTime = measureFibonacci(40_000_000);
+const fixturesDir = path.join(__dirname, 'performance-fixtures');
+const snapshot = JSON.parse(
+  fs.readFileSync(path.join(fixturesDir, 'snapshot.json'), 'utf-8')
 );
+const errors = [];
 
-console.log(
-  `SVG is measured in ${subjectTime / baseTime} times longer than fibonacci`
-);
+for (const [file, ratio] of Object.entries(snapshot)) {
+  const optimisationTime = measureOptimize(path.join(fixturesDir, file));
+  const newRatio = Number(optimisationTime / baseTime);
+  const percentile = Math.abs((newRatio / ratio) * 100 - 100);
+  if (percentile > 10) {
+    errors.push(
+      `${file} has ${newRatio} ratio instead of ${ratio} in snapshot`
+    );
+  }
+  console.log(
+    `${file} optimisation is ${newRatio} times slower than fibonacci`
+  );
+}
+
+if (errors.length !== 0) {
+  console.error('Snapshot does not match measures');
+  console.error(errors.join('\n'));
+  process.exit(1);
+}

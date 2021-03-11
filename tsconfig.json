@@ -10,11 +10,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": false
   },
-  "include": [
-    "lib/**/*",
-    "plugins/**/*",
-    "test/**/*",
-  ],
+  "include": ["lib/**/*", "plugins/**/*", "test/**/*"],
   "exclude": [
     "lib/svgo-node.js",
     "lib/style.test.js",
@@ -77,7 +73,8 @@
     "test/jsapi/_index.js",
     "test/plugins/_index.js",
     "test/regression.js",
+    "test/performance.js",
     "test/svg2js/_index.js",
-    "test/svgo/_index.js",
+    "test/svgo/_index.js"
   ]
 }
