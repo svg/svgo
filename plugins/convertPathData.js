@@ -109,143 +109,170 @@ exports.fn = function (item, params) {
  * @param {Object} params plugin params
  * @return {Array} output path data
  */
-function convertToRelative(path) {
-  var point = [0, 0],
-    subpathPoint = [0, 0],
-    baseItem;
+const convertToRelative = (pathData) => {
+  let start = [0, 0];
+  let cursor = [0, 0];
+  let prevCoords = [0, 0];
 
-  path.forEach(function (item, index) {
-    var instruction = item.instruction,
-      data = item.data;
+  for (let i = 0; i < pathData.length; i += 1) {
+    const pathItem = pathData[i];
+    let { instruction: command, data: args } = pathItem;
 
-    // data !== !z
-    if (data) {
-      // already relative
-      // recalculate current point
-      if ('mcslqta'.indexOf(instruction) > -1) {
-        point[0] += data[data.length - 2];
-        point[1] += data[data.length - 1];
-
-        if (instruction === 'm') {
-          subpathPoint[0] = point[0];
-          subpathPoint[1] = point[1];
-          baseItem = item;
-        }
-      } else if (instruction === 'h') {
-        point[0] += data[0];
-      } else if (instruction === 'v') {
-        point[1] += data[0];
-      }
-
-      // convert absolute path data coordinates to relative
-      // if "M" was not transformed from "m"
+    // moveto (x y)
+    if (command === 'm') {
+      // update start and cursor
+      cursor[0] += args[0];
+      cursor[1] += args[1];
+      start[0] = cursor[0];
+      start[1] = cursor[1];
+    }
+    if (command === 'M') {
       // M → m
-      if (instruction === 'M') {
-        if (index > 0) instruction = 'm';
-
-        data[0] -= point[0];
-        data[1] -= point[1];
-
-        subpathPoint[0] = point[0] += data[0];
-        subpathPoint[1] = point[1] += data[1];
-
-        baseItem = item;
+      // skip first moveto
+      if (i !== 0) {
+        command = 'm';
       }
+      args[0] -= cursor[0];
+      args[1] -= cursor[1];
+      // update start and cursor
+      cursor[0] += args[0];
+      cursor[1] += args[1];
+      start[0] = cursor[0];
+      start[1] = cursor[1];
+    }
 
+    // lineto (x y)
+    if (command === 'l') {
+      cursor[0] += args[0];
+      cursor[1] += args[1];
+    }
+    if (command === 'L') {
       // L → l
+      command = 'l';
+      args[0] -= cursor[0];
+      args[1] -= cursor[1];
+      cursor[0] += args[0];
+      cursor[1] += args[1];
+    }
+
+    // horizontal lineto (x)
+    if (command === 'h') {
+      cursor[0] += args[0];
+    }
+    if (command === 'H') {
+      // H → h
+      command = 'h';
+      args[0] -= cursor[0];
+      cursor[0] += args[0];
+    }
+
+    // vertical lineto (y)
+    if (command === 'v') {
+      cursor[1] += args[0];
+    }
+    if (command === 'V') {
+      // V → v
+      command = 'v';
+      args[0] -= cursor[1];
+      cursor[1] += args[0];
+    }
+
+    // curveto (x1 y1 x2 y2 x y)
+    if (command === 'c') {
+      cursor[0] += args[4];
+      cursor[1] += args[5];
+    }
+    if (command === 'C') {
+      // C → c
+      command = 'c';
+      args[0] -= cursor[0];
+      args[1] -= cursor[1];
+      args[2] -= cursor[0];
+      args[3] -= cursor[1];
+      args[4] -= cursor[0];
+      args[5] -= cursor[1];
+      cursor[0] += args[4];
+      cursor[1] += args[5];
+    }
+
+    // smooth curveto (x2 y2 x y)
+    if (command === 's') {
+      cursor[0] += args[2];
+      cursor[1] += args[3];
+    }
+    if (command === 'S') {
+      // S → s
+      command = 's';
+      args[0] -= cursor[0];
+      args[1] -= cursor[1];
+      args[2] -= cursor[0];
+      args[3] -= cursor[1];
+      cursor[0] += args[2];
+      cursor[1] += args[3];
+    }
+
+    // quadratic Bézier curveto (x1 y1 x y)
+    if (command === 'q') {
+      cursor[0] += args[2];
+      cursor[1] += args[3];
+    }
+    if (command === 'Q') {
+      // Q → q
+      command = 'q';
+      args[0] -= cursor[0];
+      args[1] -= cursor[1];
+      args[2] -= cursor[0];
+      args[3] -= cursor[1];
+      cursor[0] += args[2];
+      cursor[1] += args[3];
+    }
+
+    // smooth quadratic Bézier curveto (x y)
+    if (command === 't') {
+      cursor[0] += args[0];
+      cursor[1] += args[1];
+    }
+    if (command === 'T') {
       // T → t
-      else if ('LT'.indexOf(instruction) > -1) {
-        instruction = instruction.toLowerCase();
-
-        // x y
-        // 0 1
-        data[0] -= point[0];
-        data[1] -= point[1];
-
-        point[0] += data[0];
-        point[1] += data[1];
-
-        // C → c
-      } else if (instruction === 'C') {
-        instruction = 'c';
-
-        // x1 y1 x2 y2 x y
-        // 0  1  2  3  4 5
-        data[0] -= point[0];
-        data[1] -= point[1];
-        data[2] -= point[0];
-        data[3] -= point[1];
-        data[4] -= point[0];
-        data[5] -= point[1];
-
-        point[0] += data[4];
-        point[1] += data[5];
-
-        // S → s
-        // Q → q
-      } else if ('SQ'.indexOf(instruction) > -1) {
-        instruction = instruction.toLowerCase();
-
-        // x1 y1 x y
-        // 0  1  2 3
-        data[0] -= point[0];
-        data[1] -= point[1];
-        data[2] -= point[0];
-        data[3] -= point[1];
-
-        point[0] += data[2];
-        point[1] += data[3];
-
-        // A → a
-      } else if (instruction === 'A') {
-        instruction = 'a';
-
-        // rx ry x-axis-rotation large-arc-flag sweep-flag x y
-        // 0  1  2               3              4          5 6
-        data[5] -= point[0];
-        data[6] -= point[1];
-
-        point[0] += data[5];
-        point[1] += data[6];
-
-        // H → h
-      } else if (instruction === 'H') {
-        instruction = 'h';
-
-        data[0] -= point[0];
-
-        point[0] += data[0];
-
-        // V → v
-      } else if (instruction === 'V') {
-        instruction = 'v';
-
-        data[0] -= point[1];
-
-        point[1] += data[0];
-      }
-
-      item.instruction = instruction;
-      item.data = data;
-
-      // store absolute coordinates for later use
-      item.coords = point.slice(-2);
+      command = 't';
+      args[0] -= cursor[0];
+      args[1] -= cursor[1];
+      cursor[0] += args[0];
+      cursor[1] += args[1];
     }
 
-    // !data === z, reset current point
-    else if (instruction == 'z') {
-      if (baseItem) {
-        item.coords = baseItem.coords;
-      }
-      point[0] = subpathPoint[0];
-      point[1] = subpathPoint[1];
+    // elliptical arc (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+    if (command === 'a') {
+      cursor[0] += args[5];
+      cursor[1] += args[6];
+    }
+    if (command === 'A') {
+      // A → a
+      command = 'a';
+      args[5] -= cursor[0];
+      args[6] -= cursor[1];
+      cursor[0] += args[5];
+      cursor[1] += args[6];
     }
 
-    item.base = index > 0 ? path[index - 1].coords : [0, 0];
-  });
+    // closepath
+    if (command === 'Z' || command === 'z') {
+      // reset current cursor
+      cursor[0] = start[0];
+      cursor[1] = start[1];
+    }
 
-  return path;
-}
+    pathItem.instruction = command;
+    pathItem.data = args;
+    // store absolute coordinates for later use
+    // base should preserve reference from other element
+    pathItem.base = prevCoords;
+    pathItem.coords = [cursor[0], cursor[1]];
+    prevCoords = pathItem.coords;
+  }
+
+  return pathData;
+};
 
 /**
  * Main filters loop.

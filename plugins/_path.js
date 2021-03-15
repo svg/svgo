@@ -124,7 +124,6 @@ exports.applyTransforms = function (elem, path, params) {
     stroke = elem.computedAttr('stroke'),
     id = elem.computedAttr('id'),
     transformPrecision = params.transformPrecision,
-    newPoint,
     scale;
 
   if (stroke && stroke != 'none') {
@@ -200,74 +199,89 @@ exports.applyTransforms = function (elem, path, params) {
     return path;
   }
 
+  let lastMovetoCoords = [0, 0];
+
   path.forEach(function (pathItem) {
-    if (pathItem.data) {
-      // h -> l
-      if (pathItem.instruction === 'h') {
-        pathItem.instruction = 'l';
-        pathItem.data[1] = 0;
+    // h -> l
+    if (pathItem.instruction === 'h') {
+      pathItem.instruction = 'l';
+      pathItem.data[1] = 0;
 
-        // v -> l
-      } else if (pathItem.instruction === 'v') {
-        pathItem.instruction = 'l';
-        pathItem.data[1] = pathItem.data[0];
-        pathItem.data[0] = 0;
-      }
+      // v -> l
+    } else if (pathItem.instruction === 'v') {
+      pathItem.instruction = 'l';
+      pathItem.data[1] = pathItem.data[0];
+      pathItem.data[0] = 0;
+    }
 
-      // if there is a translate() transform
-      if (
-        pathItem.instruction === 'M' &&
-        (matrix.data[4] !== 0 || matrix.data[5] !== 0)
-      ) {
-        // then apply it only to the first absoluted M
-        newPoint = transformPoint(
-          matrix.data,
-          pathItem.data[0],
-          pathItem.data[1]
-        );
-        set(pathItem.data, newPoint);
-        set(pathItem.coords, newPoint);
+    // if there is a translate() transform
+    if (pathItem.instruction === 'M') {
+      // then apply it only to the first absoluted M
+      const newPoint = transformPoint(
+        matrix.data,
+        pathItem.data[0],
+        pathItem.data[1]
+      );
+      pathItem.data[0] = newPoint[0];
+      pathItem.data[1] = newPoint[1];
+      pathItem.coords[0] = newPoint[0];
+      pathItem.coords[1] = newPoint[1];
+      lastMovetoCoords[0] = pathItem.coords[0];
+      lastMovetoCoords[1] = pathItem.coords[1];
+      // clear translate() data from transform matrix
+      matrix.data[4] = 0;
+      matrix.data[5] = 0;
+    } else if (pathItem.instruction === 'm') {
+      const newPoint = transformPoint(
+        matrix.data,
+        pathItem.data[0],
+        pathItem.data[1]
+      );
+      pathItem.data[0] = newPoint[0];
+      pathItem.data[1] = newPoint[1];
+      pathItem.coords[0] = pathItem.base[0] + newPoint[0];
+      pathItem.coords[1] = pathItem.base[1] + newPoint[1];
+      lastMovetoCoords[0] = pathItem.coords[0];
+      lastMovetoCoords[1] = pathItem.coords[1];
+    } else if (pathItem.instruction === 'Z' || pathItem.instruction === 'z') {
+      pathItem.coords[0] = lastMovetoCoords[0];
+      pathItem.coords[1] = lastMovetoCoords[1];
+    } else {
+      if (pathItem.instruction == 'a') {
+        transformArc(pathItem.data, matrix.data);
 
-        // clear translate() data from transform matrix
-        matrix.data[4] = 0;
-        matrix.data[5] = 0;
-      } else {
-        if (pathItem.instruction == 'a') {
-          transformArc(pathItem.data, matrix.data);
-
-          // reduce number of digits in rotation angle
-          if (Math.abs(pathItem.data[2]) > 80) {
-            var a = pathItem.data[0],
-              rotation = pathItem.data[2];
-            pathItem.data[0] = pathItem.data[1];
-            pathItem.data[1] = a;
-            pathItem.data[2] = rotation + (rotation > 0 ? -90 : 90);
-          }
-
-          newPoint = transformPoint(
-            matrix.data,
-            pathItem.data[5],
-            pathItem.data[6]
-          );
-          pathItem.data[5] = newPoint[0];
-          pathItem.data[6] = newPoint[1];
-        } else {
-          for (var i = 0; i < pathItem.data.length; i += 2) {
-            newPoint = transformPoint(
-              matrix.data,
-              pathItem.data[i],
-              pathItem.data[i + 1]
-            );
-            pathItem.data[i] = newPoint[0];
-            pathItem.data[i + 1] = newPoint[1];
-          }
+        // reduce number of digits in rotation angle
+        if (Math.abs(pathItem.data[2]) > 80) {
+          var a = pathItem.data[0],
+            rotation = pathItem.data[2];
+          pathItem.data[0] = pathItem.data[1];
+          pathItem.data[1] = a;
+          pathItem.data[2] = rotation + (rotation > 0 ? -90 : 90);
         }
 
-        pathItem.coords[0] =
-          pathItem.base[0] + pathItem.data[pathItem.data.length - 2];
-        pathItem.coords[1] =
-          pathItem.base[1] + pathItem.data[pathItem.data.length - 1];
+        const newPoint = transformPoint(
+          matrix.data,
+          pathItem.data[5],
+          pathItem.data[6]
+        );
+        pathItem.data[5] = newPoint[0];
+        pathItem.data[6] = newPoint[1];
+      } else {
+        for (var i = 0; i < pathItem.data.length; i += 2) {
+          const newPoint = transformPoint(
+            matrix.data,
+            pathItem.data[i],
+            pathItem.data[i + 1]
+          );
+          pathItem.data[i] = newPoint[0];
+          pathItem.data[i + 1] = newPoint[1];
+        }
       }
+
+      pathItem.coords[0] =
+        pathItem.base[0] + pathItem.data[pathItem.data.length - 2];
+      pathItem.coords[1] =
+        pathItem.base[1] + pathItem.data[pathItem.data.length - 1];
     }
   });
 
