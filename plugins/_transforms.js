@@ -261,19 +261,22 @@ function transformToMatrix(transform) {
  * rotate(θ)·scale(a b)·rotate(φ). This gives us new ellipse params a, b and θ.
  * SVD is being done with the formulae provided by Wolffram|Alpha (svd {{m0, m2}, {m1, m3}})
  *
+ * @param {Array} cursor [x, y]
  * @param {Array} arc [a, b, rotation in deg]
  * @param {Array} transform transformation matrix
  * @return {Array} arc transformed input arc
  */
-exports.transformArc = function (arc, transform) {
+exports.transformArc = function (cursor, arc, transform) {
+  const x = arc[5] - cursor[0];
+  const y = arc[6] - cursor[1];
   var a = arc[0],
     b = arc[1],
     rot = (arc[2] * Math.PI) / 180,
     cos = Math.cos(rot),
     sin = Math.sin(rot),
     h =
-      Math.pow(arc[5] * cos + arc[6] * sin, 2) / (4 * a * a) +
-      Math.pow(arc[6] * cos - arc[5] * sin, 2) / (4 * b * b);
+      Math.pow(x * cos + y * sin, 2) / (4 * a * a) +
+      Math.pow(y * cos - x * sin, 2) / (4 * b * b);
   if (h > 1) {
     h = Math.sqrt(h);
     a *= h;
