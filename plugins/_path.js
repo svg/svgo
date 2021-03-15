@@ -215,10 +215,7 @@ exports.applyTransforms = function (elem, path, params) {
     }
 
     // if there is a translate() transform
-    if (
-      pathItem.instruction === 'M' &&
-      (matrix.data[4] !== 0 || matrix.data[5] !== 0)
-    ) {
+    if (pathItem.instruction === 'M') {
       // then apply it only to the first absoluted M
       const newPoint = transformPoint(
         matrix.data,
