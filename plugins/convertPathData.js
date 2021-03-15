@@ -2,7 +2,8 @@
 
 const { computeStyle } = require('../lib/style.js');
 const { pathElems } = require('./_collections.js');
-const { path2js, js2path, applyTransforms } = require('./_path.js');
+const { path2js, js2path } = require('./_path.js');
+const { applyTransforms } = require('./_applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
 exports.type = 'perItem';
@@ -82,11 +83,11 @@ exports.fn = function (item, params) {
 
     // TODO: get rid of functions returns
     if (data.length) {
-      convertToRelative(data);
-
       if (params.applyTransforms) {
-        data = applyTransforms(item, data, params);
+        applyTransforms(item, data, params);
       }
+
+      convertToRelative(data);
 
       data = filters(data, params, {
         maybeHasStrokeAndLinecap,
@@ -257,7 +258,7 @@ const convertToRelative = (pathData) => {
 
     // closepath
     if (command === 'Z' || command === 'z') {
-      // reset current cursor
+      // reset cursor
       cursor[0] = start[0];
       cursor[1] = start[1];
     }

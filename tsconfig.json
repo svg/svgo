@@ -10,11 +10,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": false
   },
-  "include": [
-    "lib/**/*",
-    "plugins/**/*",
-    "test/**/*",
-  ],
+  "include": ["lib/**/*", "plugins/**/*", "test/**/*"],
   "exclude": [
     "lib/svgo-node.js",
     "lib/style.test.js",
@@ -26,6 +22,7 @@
     "lib/svgo.js",
     "plugins/_path.js",
     "plugins/_transforms.js",
+    "plugins/_applyTransforms.js",
     "plugins/cleanupAttrs.js",
     "plugins/cleanupEnableBackground.js",
     "plugins/cleanupIDs.js",
@@ -78,6 +75,6 @@
     "test/plugins/_index.js",
     "test/regression.js",
     "test/svg2js/_index.js",
-    "test/svgo/_index.js",
+    "test/svgo/_index.js"
   ]
 }
