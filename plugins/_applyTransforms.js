@@ -122,6 +122,7 @@ const applyTransforms = (elem, pathData, params) => {
 
   return;
 };
+exports.applyTransforms = applyTransforms;
 
 const transformAbsolutePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y + matrix[4];
@@ -325,4 +326,3 @@ const applyMatrixToPathData = (pathData, matrix) => {
     pathItem.data = args;
   }
 };
-exports.applyTransforms = applyTransforms;
