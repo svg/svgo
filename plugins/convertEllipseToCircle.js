@@ -18,8 +18,8 @@ exports.description = 'converts non-eccentric <ellipse>s to <circle>s';
  */
 exports.fn = function (item) {
   if (item.isElem('ellipse')) {
-    var rx = (item.hasAttr('rx') && item.attr('rx').value) || 0;
-    var ry = (item.hasAttr('ry') && item.attr('ry').value) || 0;
+    const rx = item.attributes.rx || 0;
+    const ry = item.attributes.ry || 0;
 
     if (
       rx === ry ||
@@ -28,12 +28,9 @@ exports.fn = function (item) {
     ) {
       var radius = rx !== 'auto' ? rx : ry;
       item.renameElem('circle');
-      item.removeAttr(['rx', 'ry']);
-      item.addAttr({
-        name: 'r',
-        value: radius,
-      });
+      delete item.attributes.rx;
+      delete item.attributes.ry;
+      item.attributes.r = radius;
     }
   }
-  return;
 };

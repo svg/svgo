@@ -30,23 +30,23 @@ exports.fn = function (data) {
   function checkEnableBackground(item) {
     if (
       item.isElem(elems) &&
-      item.hasAttr('enable-background') &&
-      item.hasAttr('width') &&
-      item.hasAttr('height')
+      item.attributes['enable-background'] != null &&
+      item.attributes.width != null &&
+      item.attributes.height != null
     ) {
-      var match = item
-        .attr('enable-background')
-        .value.match(regEnableBackground);
+      var match = item.attributes['enable-background'].match(
+        regEnableBackground
+      );
 
       if (match) {
         if (
-          item.attr('width').value === match[1] &&
-          item.attr('height').value === match[3]
+          item.attributes.width === match[1] &&
+          item.attributes.height === match[3]
         ) {
           if (item.isElem('svg')) {
-            item.removeAttr('enable-background');
+            delete item.attributes['enable-background'];
           } else {
-            item.attr('enable-background').value = 'new';
+            item.attributes['enable-background'] = 'new';
           }
         }
       }
@@ -79,8 +79,10 @@ exports.fn = function (data) {
 
   return hasFilter
     ? firstStep
-    : monkeys(firstStep, function (item) {
-        //we don't need 'enable-background' if we have no filters
-        item.removeAttr('enable-background');
+    : monkeys(firstStep, (item) => {
+        if (item.type === 'element') {
+          //we don't need 'enable-background' if we have no filters
+          delete item.attributes['enable-background'];
+        }
       });
 };

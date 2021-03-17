@@ -154,7 +154,7 @@ exports.fn = function (data, params) {
           if (name === 'id') {
             key = value;
             if (IDs.has(key)) {
-              item.removeAttr('id'); // remove repeated id
+              delete item.attributes.id; // remove repeated id
             } else {
               IDs.set(key, item);
             }
@@ -230,7 +230,7 @@ exports.fn = function (data, params) {
   if (params.remove) {
     for (var keyElem of IDs) {
       if (!idPreserved(keyElem[0])) {
-        keyElem[1].removeAttr('id');
+        delete keyElem[1].attributes.id;
       }
     }
   }

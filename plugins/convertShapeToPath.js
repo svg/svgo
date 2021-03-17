@@ -59,7 +59,11 @@ exports.fn = function (item, params) {
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
     });
-    item.renameElem('path').removeAttr(['x', 'y', 'width', 'height']);
+    item.renameElem('path');
+    delete item.attributes.x;
+    delete item.attributes.y;
+    delete item.attributes.width;
+    delete item.attributes.height;
   }
 
   if (item.isElem('line')) {
@@ -76,7 +80,11 @@ exports.fn = function (item, params) {
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
     });
-    item.renameElem('path').removeAttr(['x1', 'y1', 'x2', 'y2']);
+    item.renameElem('path');
+    delete item.attributes.x1;
+    delete item.attributes.y1;
+    delete item.attributes.x2;
+    delete item.attributes.y2;
   }
 
   if (
@@ -99,7 +107,8 @@ exports.fn = function (item, params) {
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
     });
-    item.renameElem('path').removeAttr('points');
+    item.renameElem('path');
+    delete item.attributes.points;
   }
 
   if (item.isElem('circle') && convertArcs) {
@@ -119,7 +128,10 @@ exports.fn = function (item, params) {
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
     });
-    item.renameElem('path').removeAttr(['cx', 'cy', 'r']);
+    item.renameElem('path');
+    delete item.attributes.cx;
+    delete item.attributes.cy;
+    delete item.attributes.r;
   }
 
   if (item.isElem('ellipse') && convertArcs) {
@@ -140,6 +152,10 @@ exports.fn = function (item, params) {
       name: 'd',
       value: stringifyPathData({ pathData, precision }),
     });
-    item.renameElem('path').removeAttr(['cx', 'cy', 'rx', 'ry']);
+    item.renameElem('path');
+    delete item.attributes.cx;
+    delete item.attributes.cy;
+    delete item.attributes.rx;
+    delete item.attributes.ry;
   }
 };

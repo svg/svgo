@@ -29,7 +29,7 @@ exports.fn = function (item) {
         inheritableAttrs.includes(name) === false &&
         presentationNonInheritableGroupAttrs.includes(name) === false
       ) {
-        item.removeAttr(name);
+        delete item.attributes[name];
       }
     }
   }

@@ -32,7 +32,8 @@ var collections = require('./_collections.js'),
 exports.fn = function (item) {
   // move group transform attr to content's pathElems
   if (
-    item.isElem('g') &&
+    item.type === 'element' &&
+    item.name === 'g' &&
     item.children.length !== 0 &&
     item.attributes.transform != null &&
     Object.entries(item.attributes).some(
@@ -52,6 +53,6 @@ exports.fn = function (item) {
       }
     }
 
-    item.removeAttr('transform');
+    delete item.attributes.transform;
   }
 };

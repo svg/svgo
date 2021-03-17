@@ -68,11 +68,11 @@ exports.fn = function (data) {
       const defClone = def.clone();
       def.style = style;
       def.class = defClass;
-      defClone.removeAttr('transform');
+      delete defClone.attributes.transform;
       defsTag.spliceContent(0, 0, defClone);
       // Convert the original def to a use so the first usage isn't duplicated.
       def = convertToUse(def, defClone.attr('id').value);
-      def.removeAttr('id');
+      delete def.attributes.id;
     }
   }
   return data;
@@ -81,9 +81,9 @@ exports.fn = function (data) {
 /** */
 function convertToUse(item, href) {
   item.renameElem('use');
-  item.removeAttr('d');
-  item.removeAttr('stroke');
-  item.removeAttr('fill');
+  delete item.attributes.d;
+  delete item.attributes.stroke;
+  delete item.attributes.fill;
   item.addAttr({
     name: 'xlink:href',
     value: '#' + href,

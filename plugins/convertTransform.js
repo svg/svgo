@@ -88,9 +88,9 @@ function convertTransform(item, attrName, params) {
   }
 
   if (data.length) {
-    item.attr(attrName).value = js2transform(data, params);
+    item.attributes[attrName] = js2transform(data, params);
   } else {
-    item.removeAttr(attrName);
+    delete item.attributes[attrName];
   }
 }
 

@@ -17,8 +17,8 @@ exports.description = 'removes unused namespaces declaration';
  * @author Kir Belevich
  */
 exports.fn = function (data) {
-  var svgElem,
-    xmlnsCollection = [];
+  let svgElem;
+  const xmlnsCollection = [];
 
   /**
    * Remove namespace from collection.
@@ -26,7 +26,7 @@ exports.fn = function (data) {
    * @param {String} ns namescape name
    */
   function removeNSfromCollection(ns) {
-    var pos = xmlnsCollection.indexOf(ns);
+    const pos = xmlnsCollection.indexOf(ns);
 
     // if found - remove ns from the namespaces collection
     if (pos > -1) {
@@ -89,7 +89,7 @@ exports.fn = function (data) {
   // remove svg element ns-attributes if they are not used even once
   if (xmlnsCollection.length) {
     xmlnsCollection.forEach(function (name) {
-      svgElem.removeAttr('xmlns:' + name);
+      delete svgElem.attributes['xmlns:' + name];
     });
   }
 
