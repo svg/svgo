@@ -51,10 +51,10 @@ var collections = require('./_collections'),
  */
 exports.fn = function (item, params) {
   if (item.type === 'element') {
-    item.eachAttr(function (attr) {
-      if (collections.colorsProps.indexOf(attr.name) > -1) {
-        var val = attr.value,
-          match;
+    for (const [name, value] of Object.entries(item.attributes)) {
+      if (collections.colorsProps.includes(name)) {
+        let val = value;
+        let match;
 
         // Convert colors to currentColor
         if (params.currentColor) {
@@ -99,9 +99,9 @@ exports.fn = function (item, params) {
           }
         }
 
-        attr.value = val;
+        item.attributes[name] = val;
       }
-    });
+    }
   }
 };
 

@@ -49,13 +49,13 @@ exports.fn = function (item, params) {
         .join(' ');
     }
 
-    item.eachAttr(function (attr) {
+    for (const [name, value] of Object.entries(item.attributes)) {
       // The `version` attribute is a text string and cannot be rounded
-      if (attr.name === 'version') {
-        return;
+      if (name === 'version') {
+        continue;
       }
 
-      var match = attr.value.match(regNumericValues);
+      var match = value.match(regNumericValues);
 
       // if attribute value matches regNumericValues
       if (match) {
@@ -85,8 +85,8 @@ exports.fn = function (item, params) {
           units = '';
         }
 
-        attr.value = num + units;
+        item.attributes[name] = num + units;
       }
-    });
+    }
   }
 };

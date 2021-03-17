@@ -25,14 +25,14 @@ const applyTransforms = (elem, pathData, params) => {
   // if there are no 'stroke' attr and references to other objects such as
   // gradiends or clip-path which are also subjects to transform.
   if (
-    !elem.hasAttr('transform') ||
-    !elem.attr('transform').value ||
+    elem.attributes.transform == null ||
+    elem.attributes.transform === '' ||
     // styles are not considered when applying transform
     // can be fixed properly with new style engine
-    elem.hasAttr('style') ||
-    elem.someAttr(
-      (attr) =>
-        referencesProps.includes(attr.name) && attr.value.includes('url(')
+    elem.attributes.style != null ||
+    Object.entries(elem.attributes).some(
+      ([name, value]) =>
+        referencesProps.includes(name) && value.includes('url(')
     )
   ) {
     return;

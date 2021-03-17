@@ -42,48 +42,43 @@ exports.fn = function (data) {
    * @return {Array} output items
    */
   function monkeys(items) {
-    var i = 0,
-      length = items.children.length;
-
-    while (i < length) {
-      var item = items.children[i];
-
-      if (item.isElem('svg')) {
-        item.eachAttr(function (attr) {
-          const { prefix, local } = parseName(attr.name);
-          // collect namespaces
-          if (prefix === 'xmlns' && local) {
-            xmlnsCollection.push(local);
+    for (const item of items.children) {
+      if (item.type === 'element') {
+        if (item.name === 'svg') {
+          for (const name of Object.keys(item.attributes)) {
+            const { prefix, local } = parseName(name);
+            // collect namespaces
+            if (prefix === 'xmlns' && local) {
+              xmlnsCollection.push(local);
+            }
           }
-        });
 
-        // if svg element has ns-attr
+          // if svg element has ns-attr
+          if (xmlnsCollection.length) {
+            // save svg element
+            svgElem = item;
+          }
+        }
+
         if (xmlnsCollection.length) {
-          // save svg element
-          svgElem = item;
+          const { prefix } = parseName(item.name);
+          // check item for the ns-attrs
+          if (prefix) {
+            removeNSfromCollection(prefix);
+          }
+
+          // check each attr for the ns-attrs
+          for (const name of Object.keys(item.attributes)) {
+            const { prefix } = parseName(name);
+            removeNSfromCollection(prefix);
+          }
+        }
+
+        // if nothing is found - go deeper
+        if (xmlnsCollection.length && item.children) {
+          monkeys(item);
         }
       }
-
-      if (xmlnsCollection.length) {
-        const { prefix } = parseName(item.name);
-        // check item for the ns-attrs
-        if (prefix) {
-          removeNSfromCollection(prefix);
-        }
-
-        // check each attr for the ns-attrs
-        item.eachAttr(function (attr) {
-          const { prefix } = parseName(attr.name);
-          removeNSfromCollection(prefix);
-        });
-      }
-
-      // if nothing is found - go deeper
-      if (xmlnsCollection.length && item.children) {
-        monkeys(item);
-      }
-
-      i++;
     }
 
     return items;

@@ -93,37 +93,36 @@ exports.fn = function (item, params) {
 
     // remove element's unknown attrs and attrs with default values
     if (elems[elem] && elems[elem].attrs) {
-      item.eachAttr(function (attr) {
-        const { prefix } = parseName(attr.name);
+      for (const [name, value] of Object.entries(item.attributes)) {
+        const { prefix } = parseName(name);
         if (
-          attr.name !== 'xmlns' &&
+          name !== 'xmlns' &&
           (prefix === 'xml' || !prefix) &&
-          (!params.keepDataAttrs || attr.name.indexOf('data-') != 0) &&
-          (!params.keepAriaAttrs || attr.name.indexOf('aria-') != 0) &&
-          (!params.keepRoleAttr || attr.name != 'role')
+          (!params.keepDataAttrs || name.indexOf('data-') != 0) &&
+          (!params.keepAriaAttrs || name.indexOf('aria-') != 0) &&
+          (!params.keepRoleAttr || name != 'role')
         ) {
           if (
             // unknown attrs
-            (params.unknownAttrs &&
-              elems[elem].attrs.indexOf(attr.name) === -1) ||
+            (params.unknownAttrs && elems[elem].attrs.indexOf(name) === -1) ||
             // attrs with default values
             (params.defaultAttrs &&
               !item.hasAttr('id') &&
               elems[elem].defaults &&
-              elems[elem].defaults[attr.name] === attr.value &&
-              (attrsInheritable.indexOf(attr.name) < 0 ||
-                !item.parentNode.computedAttr(attr.name))) ||
+              elems[elem].defaults[name] === value &&
+              (attrsInheritable.indexOf(name) < 0 ||
+                !item.parentNode.computedAttr(name))) ||
             // useless overrides
             (params.uselessOverrides &&
               !item.hasAttr('id') &&
-              applyGroups.indexOf(attr.name) < 0 &&
-              attrsInheritable.indexOf(attr.name) > -1 &&
-              item.parentNode.computedAttr(attr.name, attr.value))
+              applyGroups.indexOf(name) < 0 &&
+              attrsInheritable.indexOf(name) > -1 &&
+              item.parentNode.computedAttr(name, value))
           ) {
-            item.removeAttr(attr.name);
+            item.removeAttr(name);
           }
         }
-      });
+      }
     }
   }
 };

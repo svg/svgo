@@ -28,27 +28,25 @@ var regNewlinesNeedSpace = /(\S)\r?\n(\S)/g,
  */
 exports.fn = function (item, params) {
   if (item.type === 'element') {
-    item.eachAttr(function (attr) {
+    for (const name of Object.keys(item.attributes)) {
       if (params.newlines) {
         // new line which requires a space instead of themselve
-        attr.value = attr.value.replace(
+        item.attributes[name] = item.attributes[name].replace(
           regNewlinesNeedSpace,
-          function (match, p1, p2) {
-            return p1 + ' ' + p2;
-          }
+          (match, p1, p2) => p1 + ' ' + p2
         );
 
         // simple new line
-        attr.value = attr.value.replace(regNewlines, '');
+        item.attributes[name] = item.attributes[name].replace(regNewlines, '');
       }
 
       if (params.trim) {
-        attr.value = attr.value.trim();
+        item.attributes[name] = item.attributes[name].trim();
       }
 
       if (params.spaces) {
-        attr.value = attr.value.replace(regSpaces, ' ');
+        item.attributes[name] = item.attributes[name].replace(regSpaces, ' ');
       }
-    });
+    }
   }
 };

@@ -56,11 +56,11 @@ exports.fn = function (item, params) {
         var parentStroke = item.parentNode.computedAttr('stroke'),
           declineStroke = parentStroke && parentStroke != 'none';
 
-        item.eachAttr(function (attr) {
-          if (regStrokeProps.test(attr.name)) {
-            item.removeAttr(attr.name);
+        for (const name of Object.keys(item.attributes)) {
+          if (regStrokeProps.test(name)) {
+            item.removeAttr(name);
           }
-        });
+        }
 
         if (declineStroke)
           item.addAttr({
@@ -72,11 +72,11 @@ exports.fn = function (item, params) {
 
     // remove fill*
     if (params.fill && (!fill || item.computedAttr('fill-opacity', '0'))) {
-      item.eachAttr(function (attr) {
-        if (regFillProps.test(attr.name)) {
-          item.removeAttr(attr.name);
+      for (const name of Object.keys(item.attributes)) {
+        if (regFillProps.test(name)) {
+          item.removeAttr(name);
         }
-      });
+      }
 
       if (fill) {
         if (item.hasAttr('fill')) item.attr('fill').value = 'none';
