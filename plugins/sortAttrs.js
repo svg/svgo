@@ -39,39 +39,36 @@ exports.params = {
  * @author Nikolay Frantsev
  */
 exports.fn = function (item, params) {
-  const attrs = [];
   const orderlen = params.order.length + 1;
   const xmlnsOrder = params.xmlnsOrder || 'front';
 
   if (item.type === 'element') {
-    for (const [name, value] of Object.entries(item.attributes)) {
-      attrs.push({ name, value });
-    }
+    const attrs = Object.entries(item.attributes);
 
-    attrs.sort(function (a, b) {
-      const { prefix: prefixA } = parseName(a.name);
-      const { prefix: prefixB } = parseName(b.name);
-      if (prefixA != prefixB) {
+    attrs.sort(([aName], [bName]) => {
+      const { prefix: aPrefix } = parseName(aName);
+      const { prefix: bPrefix } = parseName(bName);
+      if (aPrefix != bPrefix) {
         // xmlns attributes implicitly have the prefix xmlns
         if (xmlnsOrder == 'front') {
-          if (prefixA === 'xmlns') return -1;
-          if (prefixB === 'xmlns') return 1;
+          if (aPrefix === 'xmlns') return -1;
+          if (bPrefix === 'xmlns') return 1;
         }
-        return prefixA < prefixB ? -1 : 1;
+        return aPrefix < bPrefix ? -1 : 1;
       }
 
-      var aindex = orderlen;
-      var bindex = orderlen;
+      let aindex = orderlen;
+      let bindex = orderlen;
 
-      for (var i = 0; i < params.order.length; i++) {
-        if (a.name == params.order[i]) {
+      for (let i = 0; i < params.order.length; i++) {
+        if (aName == params.order[i]) {
           aindex = i;
-        } else if (a.name.indexOf(params.order[i] + '-') === 0) {
+        } else if (aName.indexOf(params.order[i] + '-') === 0) {
           aindex = i + 0.5;
         }
-        if (b.name == params.order[i]) {
+        if (bName == params.order[i]) {
           bindex = i;
-        } else if (b.name.indexOf(params.order[i] + '-') === 0) {
+        } else if (bName.indexOf(params.order[i] + '-') === 0) {
           bindex = i + 0.5;
         }
       }
@@ -79,14 +76,13 @@ exports.fn = function (item, params) {
       if (aindex != bindex) {
         return aindex - bindex;
       }
-      return a.name < b.name ? -1 : 1;
+      return aName < bName ? -1 : 1;
     });
 
     const sorted = {};
-    attrs.forEach(function (attr) {
-      sorted[attr.name] = attr.value;
-    });
-
+    for (const [name, value] of attrs) {
+      sorted[name] = value;
+    }
     item.attributes = sorted;
   }
 };
