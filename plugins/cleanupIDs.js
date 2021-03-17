@@ -146,11 +146,6 @@ exports.fn = function (data, params) {
       }
       // …and don't remove any ID if yes
       if (item.type === 'element') {
-        const each = (item, fn) => {
-          for (const [name, value] of Object.entries(item.attributes)) {
-            fn([name, value]);
-          }
-        };
         for (const [name, value] of Object.entries(item.attributes)) {
           let key;
           let match;
