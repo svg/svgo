@@ -64,7 +64,7 @@ exports.fn = function (item) {
       item.children.forEach(function (g) {
         for (const [name, value] of Object.entries(intersection)) {
           if ((!allPath && !hasClip) || name !== 'transform') {
-            delete g.attributes[name]
+            delete g.attributes[name];
 
             if (name === 'transform') {
               if (!hasTransform) {
