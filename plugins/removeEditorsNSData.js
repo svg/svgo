@@ -36,24 +36,24 @@ exports.fn = function (item, params) {
 
   if (item.type === 'element') {
     if (item.isElem('svg')) {
-      item.eachAttr(function (attr) {
-        const { prefix, local } = parseName(attr.name);
-        if (prefix === 'xmlns' && editorNamespaces.includes(attr.value)) {
+      for (const [name, value] of Object.entries(item.attributes)) {
+        const { prefix, local } = parseName(name);
+        if (prefix === 'xmlns' && editorNamespaces.includes(value)) {
           prefixes.push(local);
 
           // <svg xmlns:sodipodi="">
-          item.removeAttr(attr.name);
+          item.removeAttr(name);
         }
-      });
+      }
     }
 
     // <* sodipodi:*="">
-    item.eachAttr(function (attr) {
-      const { prefix } = parseName(attr.name);
+    for (const name of Object.keys(item.attributes)) {
+      const { prefix } = parseName(name);
       if (prefixes.includes(prefix)) {
-        item.removeAttr(attr.name);
+        item.removeAttr(name);
       }
-    });
+    }
 
     // <sodipodi:*>
     const { prefix } = parseName(item.name);

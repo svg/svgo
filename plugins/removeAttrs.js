@@ -124,9 +124,7 @@ exports.fn = function (item, params) {
       // matches element
       if (pattern[0].test(item.name)) {
         // loop attributes
-        item.eachAttr(function (attr) {
-          var name = attr.name;
-          var value = attr.value;
+        for (const [name, value] of Object.entries(item.attributes)) {
           var isFillCurrentColor =
             preserveCurrentColor && name == 'fill' && value == 'currentColor';
           var isStrokeCurrentColor =
@@ -136,12 +134,12 @@ exports.fn = function (item, params) {
             // matches attribute name
             if (pattern[1].test(name)) {
               // matches attribute value
-              if (pattern[2].test(attr.value)) {
+              if (pattern[2].test(value)) {
                 item.removeAttr(name);
               }
             }
           }
-        });
+        }
       }
     });
   }

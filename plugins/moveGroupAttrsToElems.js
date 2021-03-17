@@ -34,26 +34,23 @@ exports.fn = function (item) {
   if (
     item.isElem('g') &&
     item.children.length !== 0 &&
-    item.hasAttr('transform') &&
-    !item.someAttr(function (attr) {
-      return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
-    }) &&
-    item.children.every(function (inner) {
-      return inner.isElem(pathElems) && !inner.hasAttr('id');
-    })
+    item.attributes.transform != null &&
+    Object.entries(item.attributes).some(
+      ([name, value]) =>
+        referencesProps.includes(name) && value.includes('url(')
+    ) === false &&
+    item.children.every(
+      (inner) => inner.isElem(pathElems) && !inner.hasAttr('id')
+    )
   ) {
-    item.children.forEach(function (inner) {
-      var attr = item.attr('transform');
-      if (inner.hasAttr('transform')) {
-        inner.attr('transform').value =
-          attr.value + ' ' + inner.attr('transform').value;
+    for (const inner of item.children) {
+      const value = item.attributes.transform;
+      if (inner.attributes.transform != null) {
+        inner.attributes.transform = value + ' ' + inner.attributes.transform;
       } else {
-        inner.addAttr({
-          name: attr.name,
-          value: attr.value,
-        });
+        inner.attributes.transform = value;
       }
-    });
+    }
 
     item.removeAttr('transform');
   }

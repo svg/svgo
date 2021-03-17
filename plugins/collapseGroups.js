@@ -66,25 +66,24 @@ exports.fn = function (item) {
                 !g.hasAttr('transform') &&
                 !inner.hasAttr('transform')))
           ) {
-            g.eachAttr(function (attr) {
-              if (g.children.some(hasAnimatedAttr, attr.name)) return;
+            for (const [name, value] of Object.entries(g.attributes)) {
+              if (g.children.some(hasAnimatedAttr, name)) return;
 
-              if (!inner.hasAttr(attr.name)) {
-                inner.addAttr(attr);
-              } else if (attr.name == 'transform') {
-                inner.attr(attr.name).value =
-                  attr.value + ' ' + inner.attr(attr.name).value;
-              } else if (inner.hasAttr(attr.name, 'inherit')) {
-                inner.attr(attr.name).value = attr.value;
+              if (!inner.hasAttr(name)) {
+                inner.attributes[name] = value;
+              } else if (name == 'transform') {
+                inner.attributes[name] = value + ' ' + inner.attributes[name];
+              } else if (inner.hasAttr(name, 'inherit')) {
+                inner.attributes[name] = value;
               } else if (
-                attrsInheritable.indexOf(attr.name) < 0 &&
-                !inner.hasAttr(attr.name, attr.value)
+                attrsInheritable.includes(name) === false &&
+                !inner.hasAttr(name, value)
               ) {
                 return;
               }
 
-              g.removeAttr(attr.name);
-            });
+              g.removeAttr(name);
+            }
           }
         }
 

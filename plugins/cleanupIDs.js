@@ -117,8 +117,10 @@ exports.fn = function (data, params) {
    * @return {Array} output items
    */
   function monkeys(items) {
-    for (var i = 0; i < items.children.length && !hasStyleOrScript; i++) {
-      var item = items.children[i];
+    for (const item of items.children) {
+      if (hasStyleOrScript === true) {
+        break;
+      }
 
       // quit if <style> or <script> present ('force' param prevents quitting)
       if (!params.force) {
@@ -144,43 +146,47 @@ exports.fn = function (data, params) {
       }
       // …and don't remove any ID if yes
       if (item.type === 'element') {
-        item.eachAttr(function (attr) {
-          var key, match;
+        const each = (item, fn) => {
+          for (const [name, value] of Object.entries(item.attributes)) {
+            fn([name, value]);
+          }
+        };
+        for (const [name, value] of Object.entries(item.attributes)) {
+          let key;
+          let match;
 
           // save IDs
-          if (attr.name === 'id') {
-            key = attr.value;
+          if (name === 'id') {
+            key = value;
             if (IDs.has(key)) {
               item.removeAttr('id'); // remove repeated id
             } else {
               IDs.set(key, item);
             }
-            return;
+          } else {
+            // save references
+            const { local } = parseName(name);
+            if (
+              referencesProps.has(name) &&
+              (match = value.match(regReferencesUrl))
+            ) {
+              key = match[2]; // url() reference
+            } else if (
+              (local === 'href' && (match = value.match(regReferencesHref))) ||
+              (name === 'begin' && (match = value.match(regReferencesBegin)))
+            ) {
+              key = match[1]; // href reference
+            }
+            if (key) {
+              const refs = referencesIDs.get(key) || [];
+              refs.push({ element: item, name, value });
+              referencesIDs.set(key, refs);
+            }
           }
-          // save references
-          const { local } = parseName(attr.name);
-          if (
-            referencesProps.has(attr.name) &&
-            (match = attr.value.match(regReferencesUrl))
-          ) {
-            key = match[2]; // url() reference
-          } else if (
-            (local === 'href' &&
-              (match = attr.value.match(regReferencesHref))) ||
-            (attr.name === 'begin' &&
-              (match = attr.value.match(regReferencesBegin)))
-          ) {
-            key = match[1]; // href reference
-          }
-          if (key) {
-            var ref = referencesIDs.get(key) || [];
-            ref.push(attr);
-            referencesIDs.set(key, ref);
-          }
-        });
+        }
       }
       // go deeper
-      if (item.children) {
+      if (item.type === 'root' || item.type === 'element') {
         monkeys(item);
       }
     }
@@ -196,9 +202,7 @@ exports.fn = function (data, params) {
   const idPreserved = (id) =>
     preserveIDs.has(id) || idMatchesPrefix(preserveIDPrefixes, id);
 
-  for (var ref of referencesIDs) {
-    var key = ref[0];
-
+  for (const [key, refs] of referencesIDs) {
     if (IDs.has(key)) {
       // replace referenced IDs with the minified ones
       if (params.minify && !idPreserved(key)) {
@@ -211,13 +215,13 @@ exports.fn = function (data, params) {
 
         IDs.get(key).attr('id').value = currentIDstring;
 
-        for (var attr of ref[1]) {
-          attr.value = attr.value.includes(idValuePrefix)
-            ? attr.value.replace(
+        for (const { element, name, value } of refs) {
+          element.attributes[name] = value.includes(idValuePrefix)
+            ? value.replace(
                 idValuePrefix + key,
                 idValuePrefix + currentIDstring
               )
-            : attr.value.replace(
+            : value.replace(
                 key + idValuePostfix,
                 currentIDstring + idValuePostfix
               );

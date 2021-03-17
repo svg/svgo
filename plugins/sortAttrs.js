@@ -39,15 +39,14 @@ exports.params = {
  * @author Nikolay Frantsev
  */
 exports.fn = function (item, params) {
-  var attrs = [],
-    sorted = {},
-    orderlen = params.order.length + 1,
-    xmlnsOrder = params.xmlnsOrder || 'front';
+  const attrs = [];
+  const orderlen = params.order.length + 1;
+  const xmlnsOrder = params.xmlnsOrder || 'front';
 
   if (item.type === 'element') {
-    item.eachAttr(function (attr) {
-      attrs.push(attr);
-    });
+    for (const [name, value] of Object.entries(item.attributes)) {
+      attrs.push({ name, value });
+    }
 
     attrs.sort(function (a, b) {
       const { prefix: prefixA } = parseName(a.name);
@@ -83,10 +82,11 @@ exports.fn = function (item, params) {
       return a.name < b.name ? -1 : 1;
     });
 
+    const sorted = {};
     attrs.forEach(function (attr) {
-      sorted[attr.name] = attr;
+      sorted[attr.name] = attr.value;
     });
 
-    item.attrs = sorted;
+    item.attributes = sorted;
   }
 };

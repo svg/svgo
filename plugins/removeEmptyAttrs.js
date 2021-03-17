@@ -18,14 +18,14 @@ exports.description = 'removes empty attributes';
  */
 exports.fn = function (item) {
   if (item.type === 'element') {
-    item.eachAttr(function (attr) {
+    for (const [name, value] of Object.entries(item.attributes)) {
       if (
-        attr.value === '' &&
+        value === '' &&
         // empty conditional processing attributes prevents elements from rendering
-        attrsGroups.conditionalProcessing.includes(attr.name) === false
+        attrsGroups.conditionalProcessing.includes(name) === false
       ) {
-        item.removeAttr(attr.name);
+        item.removeAttr(name);
       }
-    });
+    }
   }
 };
