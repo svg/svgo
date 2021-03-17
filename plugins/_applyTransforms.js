@@ -118,7 +118,7 @@ const applyTransforms = (elem, pathData, params) => {
   applyMatrixToPathData(pathData, matrix.data);
 
   // remove transform attr
-  elem.removeAttr('transform');
+  delete elem.attributes.transform;
 
   return;
 };

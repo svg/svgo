@@ -135,7 +135,7 @@ exports.fn = function (item, params) {
             if (pattern[1].test(name)) {
               // matches attribute value
               if (pattern[2].test(value)) {
-                item.removeAttr(name);
+                delete item.attributes[name];
               }
             }
           }

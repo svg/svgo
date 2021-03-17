@@ -122,7 +122,7 @@ exports.fn = function (item, params) {
           })
           .join(';');
       } else {
-        item.removeAttr('style');
+        delete item.attributes.style;
       }
     }
   }

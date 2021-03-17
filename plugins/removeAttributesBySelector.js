@@ -60,9 +60,15 @@ exports.description =
 exports.fn = function (item, params) {
   var selectors = Array.isArray(params.selectors) ? params.selectors : [params];
 
-  selectors.map(function (i) {
-    if (item.matches(i.selector)) {
-      item.removeAttr(i.attributes);
+  selectors.map(({ selector, attributes }) => {
+    if (item.matches(selector)) {
+      if (Array.isArray(attributes)) {
+        for (const name of attributes) {
+          delete item.attributes[name];
+        }
+      } else {
+        delete item.attributes[attributes];
+      }
     }
   });
 };

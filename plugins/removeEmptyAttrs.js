@@ -24,7 +24,7 @@ exports.fn = function (item) {
         // empty conditional processing attributes prevents elements from rendering
         attrsGroups.conditionalProcessing.includes(name) === false
       ) {
-        item.removeAttr(name);
+        delete item.attributes[name];
       }
     }
   }

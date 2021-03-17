@@ -107,19 +107,19 @@ exports.fn = function (item, params) {
             (params.unknownAttrs && elems[elem].attrs.indexOf(name) === -1) ||
             // attrs with default values
             (params.defaultAttrs &&
-              !item.hasAttr('id') &&
+              item.attributes.id == null &&
               elems[elem].defaults &&
               elems[elem].defaults[name] === value &&
-              (attrsInheritable.indexOf(name) < 0 ||
+              (attrsInheritable.includes(name) === false ||
                 !item.parentNode.computedAttr(name))) ||
             // useless overrides
             (params.uselessOverrides &&
-              !item.hasAttr('id') &&
-              applyGroups.indexOf(name) < 0 &&
-              attrsInheritable.indexOf(name) > -1 &&
+              item.attributes.id == null &&
+              applyGroups.includes(name) === false &&
+              attrsInheritable.includes(name) === true &&
               item.parentNode.computedAttr(name, value))
           ) {
-            item.removeAttr(name);
+            delete item.attributes[name];
           }
         }
       }

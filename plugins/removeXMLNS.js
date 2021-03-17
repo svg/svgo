@@ -21,7 +21,7 @@ exports.description =
  * @author Ricardo Tomasi
  */
 exports.fn = function (item) {
-  if (item.isElem('svg') && item.hasAttr('xmlns')) {
-    item.removeAttr('xmlns');
+  if (item.type === 'element' && item.name === 'svg') {
+    delete item.attributes.xmlns;
   }
 };

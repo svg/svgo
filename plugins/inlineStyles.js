@@ -207,12 +207,14 @@ exports.fn = function (document, opts) {
       }
       // clean up now empty class attributes
       if (typeof selectedEl.class.item(0) === 'undefined') {
-        selectedEl.removeAttr('class');
+        delete selectedEl.attributes.class;
       }
 
       // ID
       if (firstSubSelector.type === 'IdSelector') {
-        selectedEl.removeAttr('id', firstSubSelector.name);
+        if (selectedEl.attributes.id === firstSubSelector.name) {
+          delete selectedEl.attributes.id;
+        }
       }
     }
   }

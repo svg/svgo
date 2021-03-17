@@ -58,15 +58,13 @@ exports.fn = function (item, params) {
 
         for (const name of Object.keys(item.attributes)) {
           if (regStrokeProps.test(name)) {
-            item.removeAttr(name);
+            delete item.attributes[name];
           }
         }
 
-        if (declineStroke)
-          item.addAttr({
-            name: 'stroke',
-            value: 'none',
-          });
+        if (declineStroke) {
+          item.attributes.stroke = 'none';
+        }
       }
     }
 
@@ -74,17 +72,12 @@ exports.fn = function (item, params) {
     if (params.fill && (!fill || item.computedAttr('fill-opacity', '0'))) {
       for (const name of Object.keys(item.attributes)) {
         if (regFillProps.test(name)) {
-          item.removeAttr(name);
+          delete item.attributes[name];
         }
       }
 
       if (fill) {
-        if (item.hasAttr('fill')) item.attr('fill').value = 'none';
-        else
-          item.addAttr({
-            name: 'fill',
-            value: 'none',
-          });
+        item.attributes.fill = 'none';
       }
     }
 

@@ -46,7 +46,7 @@ exports.fn = function (item) {
   // non-empty elements
   if (
     item.type === 'element' &&
-    !item.isElem('switch') &&
+    item.name !== 'switch' &&
     item.children.length !== 0
   ) {
     item.children.forEach(function (g, i) {
@@ -82,7 +82,7 @@ exports.fn = function (item) {
                 return;
               }
 
-              g.removeAttr(name);
+              delete g.attributes[name];
             }
           }
         }
