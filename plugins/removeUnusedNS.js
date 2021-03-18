@@ -1,6 +1,6 @@
 'use strict';
 
-const { traverse, traverseBreak } = require('../lib/xast.js');
+const { traverse } = require('../lib/xast.js');
 const { parseName } = require('../lib/svgo/tools.js');
 
 exports.type = 'full';
