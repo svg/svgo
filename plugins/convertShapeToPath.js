@@ -13,7 +13,6 @@ exports.params = {
   floatPrecision: null,
 };
 
-const none = { value: 0 };
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**

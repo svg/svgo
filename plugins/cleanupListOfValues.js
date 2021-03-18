@@ -93,8 +93,7 @@ exports.fn = function (item, params) {
       match,
       matchNew,
       listsArr = lists.split(regSeparator),
-      roundedList = [],
-      roundedList;
+      roundedList = [];
 
     for (const elem of listsArr) {
       match = elem.match(regNumericValues);
