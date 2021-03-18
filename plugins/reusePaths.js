@@ -1,6 +1,7 @@
 'use strict';
 
-var JSAPI = require('../lib/svgo/jsAPI');
+const { traverse } = require('../lib/xast.js');
+const JSAPI = require('../lib/svgo/jsAPI');
 
 exports.type = 'full';
 
@@ -17,25 +18,25 @@ exports.description =
  *
  * @author Jacob Howcroft
  */
-exports.fn = function (data) {
+exports.fn = function (root) {
   const seen = new Map();
   let count = 0;
   const defs = [];
-  traverse(data, (item) => {
+  traverse(root, (node) => {
     if (
-      item.type !== 'element' ||
-      item.name !== 'path' ||
-      item.attributes.d == null
+      node.type !== 'element' ||
+      node.name !== 'path' ||
+      node.attributes.d == null
     ) {
       return;
     }
-    const d = item.attributes.d;
-    const fill = item.attributes.fill || '';
-    const stroke = item.attributes.stroke || '';
+    const d = node.attributes.d;
+    const fill = node.attributes.fill || '';
+    const stroke = node.attributes.stroke || '';
     const key = d + ';s:' + stroke + ';f:' + fill;
     const hasSeen = seen.get(key);
     if (!hasSeen) {
-      seen.set(key, { elem: item, reused: false });
+      seen.set(key, { elem: node, reused: false });
       return;
     }
     if (!hasSeen.reused) {
@@ -45,7 +46,7 @@ exports.fn = function (data) {
       }
       defs.push(hasSeen.elem);
     }
-    convertToUse(item, hasSeen.elem.attributes.id);
+    convertToUse(node, hasSeen.elem.attributes.id);
   });
   if (defs.length > 0) {
     const defsTag = new JSAPI(
@@ -55,9 +56,9 @@ exports.fn = function (data) {
         attributes: {},
         children: [],
       },
-      data
+      root
     );
-    data.children[0].spliceContent(0, 0, defsTag);
+    root.children[0].spliceContent(0, 0, defsTag);
     for (let def of defs) {
       // Remove class and style before copying to avoid circular refs in
       // JSON.stringify. This is fine because we don't actually want class or
@@ -76,7 +77,7 @@ exports.fn = function (data) {
       delete def.attributes.id;
     }
   }
-  return data;
+  return root;
 };
 
 /** */
@@ -88,14 +89,4 @@ function convertToUse(item, href) {
   item.attributes['xlink:href'] = '#' + href;
   delete item.pathJS;
   return item;
-}
-
-/** */
-function traverse(parent, callback) {
-  if (parent.type === 'root' || parent.type === 'element') {
-    for (let child of parent.children) {
-      callback(child);
-      traverse(child, callback);
-    }
-  }
 }

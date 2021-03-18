@@ -1,5 +1,7 @@
 'use strict';
 
+const { closestByName } = require('../lib/xast.js');
+
 exports.type = 'perItem';
 
 exports.active = true;
@@ -32,7 +34,7 @@ exports.fn = function (item) {
     item.attributes.height != null
   ) {
     // TODO remove width/height for such case instead
-    if (item.name === 'svg' && item.closestElem('svg')) {
+    if (item.name === 'svg' && closestByName(item.parentNode, 'svg')) {
       return;
     }
 

@@ -1,5 +1,6 @@
 'use strict';
 
+const { traverse, traverseBreak } = require('../lib/xast.js');
 const { parseName } = require('../lib/svgo/tools.js');
 
 exports.type = 'full';
@@ -87,7 +88,7 @@ var referencesProps = new Set(require('./_collections').referencesProps),
  *
  * @author Kir Belevich
  */
-exports.fn = function (data, params) {
+exports.fn = function (root, params) {
   var currentID,
     currentIDstring,
     IDs = new Map(),
@@ -110,88 +111,73 @@ exports.fn = function (data, params) {
     idValuePrefix = '#',
     idValuePostfix = '.';
 
-  /**
-   * Bananas!
-   *
-   * @param {Array} items input items
-   * @return {Array} output items
-   */
-  function monkeys(items) {
-    for (const item of items.children) {
-      if (hasStyleOrScript === true) {
-        break;
+  traverse(root, (node) => {
+    if (hasStyleOrScript === true) {
+      return traverseBreak;
+    }
+
+    // quit if <style> or <script> present ('force' param prevents quitting)
+    if (!params.force) {
+      if (node.isElem(styleOrScript) && node.children.length !== 0) {
+        hasStyleOrScript = true;
+        return;
       }
 
-      // quit if <style> or <script> present ('force' param prevents quitting)
-      if (!params.force) {
-        if (item.isElem(styleOrScript) && item.children.length !== 0) {
-          hasStyleOrScript = true;
-          continue;
-        }
-
-        // Don't remove IDs if the whole SVG consists only of defs.
-        if (item.isElem('svg')) {
-          var hasDefsOnly = true;
-
-          for (var j = 0; j < item.children.length; j++) {
-            if (!item.children[j].isElem('defs')) {
-              hasDefsOnly = false;
-              break;
-            }
-          }
-          if (hasDefsOnly) {
+      // Don't remove IDs if the whole SVG consists only of defs.
+      if (node.type === 'element' && node.name === 'svg') {
+        let hasDefsOnly = true;
+        for (const child of node.children) {
+          if (child.type !== 'element' || child.name !== 'defs') {
+            hasDefsOnly = false;
             break;
           }
         }
+        if (hasDefsOnly) {
+          return traverseBreak;
+        }
       }
-      // …and don't remove any ID if yes
-      if (item.type === 'element') {
-        for (const [name, value] of Object.entries(item.attributes)) {
-          let key;
-          let match;
+    }
 
-          // save IDs
-          if (name === 'id') {
-            key = value;
-            if (IDs.has(key)) {
-              delete item.attributes.id; // remove repeated id
-            } else {
-              IDs.set(key, item);
-            }
+    // …and don't remove any ID if yes
+    if (node.type === 'element') {
+      for (const [name, value] of Object.entries(node.attributes)) {
+        let key;
+        let match;
+
+        // save IDs
+        if (name === 'id') {
+          key = value;
+          if (IDs.has(key)) {
+            delete node.attributes.id; // remove repeated id
           } else {
-            // save references
-            const { local } = parseName(name);
-            if (
-              referencesProps.has(name) &&
-              (match = value.match(regReferencesUrl))
-            ) {
-              key = match[2]; // url() reference
-            } else if (
-              (local === 'href' && (match = value.match(regReferencesHref))) ||
-              (name === 'begin' && (match = value.match(regReferencesBegin)))
-            ) {
-              key = match[1]; // href reference
-            }
-            if (key) {
-              const refs = referencesIDs.get(key) || [];
-              refs.push({ element: item, name, value });
-              referencesIDs.set(key, refs);
-            }
+            IDs.set(key, node);
+          }
+        } else {
+          // save references
+          const { local } = parseName(name);
+          if (
+            referencesProps.has(name) &&
+            (match = value.match(regReferencesUrl))
+          ) {
+            key = match[2]; // url() reference
+          } else if (
+            (local === 'href' && (match = value.match(regReferencesHref))) ||
+            (name === 'begin' && (match = value.match(regReferencesBegin)))
+          ) {
+            key = match[1]; // href reference
+          }
+          if (key) {
+            const refs = referencesIDs.get(key) || [];
+            refs.push({ element: node, name, value });
+            referencesIDs.set(key, refs);
           }
         }
       }
-      // go deeper
-      if (item.type === 'root' || item.type === 'element') {
-        monkeys(item);
-      }
     }
-    return items;
-  }
-
-  data = monkeys(data);
+  });
 
   if (hasStyleOrScript) {
-    return data;
+    return root;
   }
 
   const idPreserved = (id) =>
@@ -234,7 +220,7 @@ exports.fn = function (data, params) {
       }
     }
   }
-  return data;
+  return root;
 };
 
 /**

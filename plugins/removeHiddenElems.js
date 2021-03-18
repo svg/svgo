@@ -1,5 +1,6 @@
 'use strict';
 
+const { querySelector, closestByName } = require('../lib/xast.js');
 const { computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
 
@@ -58,7 +59,7 @@ exports.fn = function (item, params) {
       computedStyle.visibility.type === 'static' &&
       computedStyle.visibility.value === 'hidden' &&
       // keep if any descendant enables visibility
-      item.querySelector('[visibility=visible]') == null
+      querySelector(item, '[visibility=visible]') == null
     ) {
       return false;
     }
@@ -88,7 +89,7 @@ exports.fn = function (item, params) {
       computedStyle.opacity.type === 'static' &&
       computedStyle.opacity.value === '0' &&
       // transparent element inside clipPath still affect clipped elements
-      item.closestElem('clipPath') == null
+      closestByName(item, 'clipPath') == null
     ) {
       return false;
     }

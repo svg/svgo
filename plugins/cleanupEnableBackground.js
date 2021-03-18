@@ -1,5 +1,7 @@
 'use strict';
 
+const { traverse } = require('../lib/xast.js');
+
 exports.type = 'full';
 
 exports.active = true;
@@ -17,72 +19,55 @@ exports.description =
  *             ⬇
  * <svg width="100" height="50">
  *
- * @param {Object} item current iteration item
+ * @param {Object} root current iteration item
  * @return {Boolean} if false, item will be filtered out
  *
  * @author Kir Belevich
  */
-exports.fn = function (data) {
-  var regEnableBackground = /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/,
-    hasFilter = false,
-    elems = ['svg', 'mask', 'pattern'];
+exports.fn = function (root) {
+  const regEnableBackground = /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/;
+  let hasFilter = false;
+  const elems = ['svg', 'mask', 'pattern'];
 
-  function checkEnableBackground(item) {
-    if (
-      item.isElem(elems) &&
-      item.attributes['enable-background'] != null &&
-      item.attributes.width != null &&
-      item.attributes.height != null
-    ) {
-      var match = item.attributes['enable-background'].match(
-        regEnableBackground
-      );
+  traverse(root, (node) => {
+    if (node.type === 'element') {
+      if (
+        elems.includes(node.name) &&
+        node.attributes['enable-background'] != null &&
+        node.attributes.width != null &&
+        node.attributes.height != null
+      ) {
+        const match = node.attributes['enable-background'].match(
+          regEnableBackground
+        );
 
-      if (match) {
-        if (
-          item.attributes.width === match[1] &&
-          item.attributes.height === match[3]
-        ) {
-          if (item.isElem('svg')) {
-            delete item.attributes['enable-background'];
-          } else {
-            item.attributes['enable-background'] = 'new';
+        if (match) {
+          if (
+            node.attributes.width === match[1] &&
+            node.attributes.height === match[3]
+          ) {
+            if (node.name === 'svg') {
+              delete node.attributes['enable-background'];
+            } else {
+              node.attributes['enable-background'] = 'new';
+            }
           }
         }
       }
-    }
-  }
-
-  function checkForFilter(item) {
-    if (item.isElem('filter')) {
-      hasFilter = true;
-    }
-  }
-
-  function monkeys(items, fn) {
-    items.children.forEach(function (item) {
-      fn(item);
-
-      if (item.children) {
-        monkeys(item, fn);
+      if (node.name === 'filter') {
+        hasFilter = true;
       }
-    });
-    return items;
-  }
-
-  var firstStep = monkeys(data, function (item) {
-    checkEnableBackground(item);
-    if (!hasFilter) {
-      checkForFilter(item);
     }
   });
 
-  return hasFilter
-    ? firstStep
-    : monkeys(firstStep, (item) => {
-        if (item.type === 'element') {
-          //we don't need 'enable-background' if we have no filters
-          delete item.attributes['enable-background'];
-        }
-      });
+  if (hasFilter === false) {
+    traverse(root, (node) => {
+      if (node.type === 'element') {
+        //we don't need 'enable-background' if we have no filters
+        delete node.attributes['enable-background'];
+      }
+    });
+  }
+
+  return root;
 };

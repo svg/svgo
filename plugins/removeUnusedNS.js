@@ -1,5 +1,6 @@
 'use strict';
 
+const { traverse, traverseBreak } = require('../lib/xast.js');
 const { parseName } = require('../lib/svgo/tools.js');
 
 exports.type = 'full';
@@ -16,7 +17,7 @@ exports.description = 'removes unused namespaces declaration';
  *
  * @author Kir Belevich
  */
-exports.fn = function (data) {
+exports.fn = function (root) {
   let svgElem;
   const xmlnsCollection = [];
 
@@ -34,64 +35,46 @@ exports.fn = function (data) {
     }
   }
 
-  /**
-   * Bananas!
-   *
-   * @param {Array} items input items
-   *
-   * @return {Array} output items
-   */
-  function monkeys(items) {
-    for (const item of items.children) {
-      if (item.type === 'element') {
-        if (item.name === 'svg') {
-          for (const name of Object.keys(item.attributes)) {
-            const { prefix, local } = parseName(name);
-            // collect namespaces
-            if (prefix === 'xmlns' && local) {
-              xmlnsCollection.push(local);
-            }
-          }
-
-          // if svg element has ns-attr
-          if (xmlnsCollection.length) {
-            // save svg element
-            svgElem = item;
+  traverse(root, (node) => {
+    if (node.type === 'element') {
+      if (node.name === 'svg') {
+        for (const name of Object.keys(node.attributes)) {
+          const { prefix, local } = parseName(name);
+          // collect namespaces
+          if (prefix === 'xmlns' && local) {
+            xmlnsCollection.push(local);
           }
         }
 
+        // if svg element has ns-attr
         if (xmlnsCollection.length) {
-          const { prefix } = parseName(item.name);
-          // check item for the ns-attrs
-          if (prefix) {
-            removeNSfromCollection(prefix);
-          }
+          // save svg element
+          svgElem = node;
+        }
+      }
 
-          // check each attr for the ns-attrs
-          for (const name of Object.keys(item.attributes)) {
-            const { prefix } = parseName(name);
-            removeNSfromCollection(prefix);
-          }
+      if (xmlnsCollection.length) {
+        const { prefix } = parseName(node.name);
+        // check node for the ns-attrs
+        if (prefix) {
+          removeNSfromCollection(prefix);
         }
 
-        // if nothing is found - go deeper
-        if (xmlnsCollection.length && item.children) {
-          monkeys(item);
+        // check each attr for the ns-attrs
+        for (const name of Object.keys(node.attributes)) {
+          const { prefix } = parseName(name);
+          removeNSfromCollection(prefix);
         }
       }
     }
-
-    return items;
-  }
-
-  data = monkeys(data);
+  });
 
   // remove svg element ns-attributes if they are not used even once
   if (xmlnsCollection.length) {
-    xmlnsCollection.forEach(function (name) {
+    for (const name of xmlnsCollection) {
       delete svgElem.attributes['xmlns:' + name];
-    });
+    }
   }
 
-  return data;
+  return root;
 };
