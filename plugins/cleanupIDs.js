@@ -208,7 +208,7 @@ exports.fn = function (data, params) {
           );
         } while (idPreserved(currentIDstring));
 
-        IDs.get(key).attr('id').value = currentIDstring;
+        IDs.get(key).attributes.id = currentIDstring;
 
         for (const { element, name, value } of refs) {
           element.attributes[name] = value.includes(idValuePrefix)

@@ -103,7 +103,7 @@ exports.fn = function (item, params) {
       params.circleR0 &&
       item.isElem('circle') &&
       item.children.length === 0 &&
-      item.hasAttr('r', '0')
+      item.attributes.r === '0'
     ) {
       return false;
     }
@@ -118,7 +118,7 @@ exports.fn = function (item, params) {
       params.ellipseRX0 &&
       item.isElem('ellipse') &&
       item.children.length === 0 &&
-      item.hasAttr('rx', '0')
+      item.attributes.rx === '0'
     ) {
       return false;
     }
@@ -133,7 +133,7 @@ exports.fn = function (item, params) {
       params.ellipseRY0 &&
       item.isElem('ellipse') &&
       item.children.length === 0 &&
-      item.hasAttr('ry', '0')
+      item.attributes.ry === '0'
     ) {
       return false;
     }
@@ -148,7 +148,7 @@ exports.fn = function (item, params) {
       params.rectWidth0 &&
       item.isElem('rect') &&
       item.children.length === 0 &&
-      item.hasAttr('width', '0')
+      item.attributes.width === '0'
     ) {
       return false;
     }
@@ -164,7 +164,7 @@ exports.fn = function (item, params) {
       params.rectWidth0 &&
       item.isElem('rect') &&
       item.children.length === 0 &&
-      item.hasAttr('height', '0')
+      item.attributes.height === '0'
     ) {
       return false;
     }
@@ -178,7 +178,7 @@ exports.fn = function (item, params) {
     if (
       params.patternWidth0 &&
       item.isElem('pattern') &&
-      item.hasAttr('width', '0')
+      item.attributes.width === '0'
     ) {
       return false;
     }
@@ -192,7 +192,7 @@ exports.fn = function (item, params) {
     if (
       params.patternHeight0 &&
       item.isElem('pattern') &&
-      item.hasAttr('height', '0')
+      item.attributes.height === '0'
     ) {
       return false;
     }
@@ -206,7 +206,7 @@ exports.fn = function (item, params) {
     if (
       params.imageWidth0 &&
       item.isElem('image') &&
-      item.hasAttr('width', '0')
+      item.attributes.width === '0'
     ) {
       return false;
     }
@@ -220,7 +220,7 @@ exports.fn = function (item, params) {
     if (
       params.imageHeight0 &&
       item.isElem('image') &&
-      item.hasAttr('height', '0')
+      item.attributes.height === '0'
     ) {
       return false;
     }
@@ -231,10 +231,10 @@ exports.fn = function (item, params) {
     //
     // <path d=""/>
     if (params.pathEmptyD && item.isElem('path')) {
-      if (item.hasAttr('d') === false) {
+      if (item.attributes.d == null) {
         return false;
       }
-      const pathData = parsePathData(item.attr('d').value);
+      const pathData = parsePathData(item.attributes.d);
       if (pathData.length === 0) {
         return false;
       }
@@ -257,7 +257,7 @@ exports.fn = function (item, params) {
     if (
       params.polylineEmptyPoints &&
       item.isElem('polyline') &&
-      !item.hasAttr('points')
+      item.attributes.points == null
     ) {
       return false;
     }
@@ -270,7 +270,7 @@ exports.fn = function (item, params) {
     if (
       params.polygonEmptyPoints &&
       item.isElem('polygon') &&
-      !item.hasAttr('points')
+      item.attributes.points == null
     ) {
       return false;
     }

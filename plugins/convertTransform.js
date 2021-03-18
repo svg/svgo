@@ -70,7 +70,7 @@ exports.fn = function (item, params) {
  * @param {Object} params plugin params
  */
 function convertTransform(item, attrName, params) {
-  var data = transform2js(item.attr(attrName).value);
+  let data = transform2js(item.attributes[attrName]);
   params = definePrecision(data, params);
 
   if (params.collapseIntoOne && data.length > 1) {

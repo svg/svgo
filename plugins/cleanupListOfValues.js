@@ -1,5 +1,7 @@
 'use strict';
 
+const { removeLeadingZero } = require('../lib/svgo/tools.js');
+
 exports.type = 'perItem';
 
 exports.active = false;
@@ -13,17 +15,16 @@ exports.params = {
   convertToPx: true,
 };
 
-var regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/,
-  regSeparator = /\s+,?\s*|,\s*/,
-  removeLeadingZero = require('../lib/svgo/tools').removeLeadingZero,
-  absoluteLengths = {
-    // relative to px
-    cm: 96 / 2.54,
-    mm: 96 / 25.4,
-    in: 96,
-    pt: 4 / 3,
-    pc: 16,
-  };
+const regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
+const regSeparator = /\s+,?\s*|,\s*/;
+const absoluteLengths = {
+  // relative to px
+  cm: 96 / 2.54,
+  mm: 96 / 25.4,
+  in: 96,
+  pt: 4 / 3,
+  pc: 16,
+};
 
 /**
  * Round list of values to the fixed precision.
@@ -46,49 +47,56 @@ var regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|
  * @author kiyopikko
  */
 exports.fn = function (item, params) {
-  if (item.hasAttr('points')) {
-    roundValues(item.attrs.points);
+  if (item.type !== 'element') {
+    return;
   }
 
-  if (item.hasAttr('enable-background')) {
-    roundValues(item.attrs['enable-background']);
+  if (item.attributes.points != null) {
+    item.attributes.points = roundValues(item.attributes.points);
   }
 
-  if (item.hasAttr('viewBox')) {
-    roundValues(item.attrs.viewBox);
+  if (item.attributes['enable-background'] != null) {
+    item.attributes['enable-background'] = roundValues(
+      item.attributes['enable-background']
+    );
   }
 
-  if (item.hasAttr('stroke-dasharray')) {
-    roundValues(item.attrs['stroke-dasharray']);
+  if (item.attributes.viewBox != null) {
+    item.attributes.viewBox = roundValues(item.attributes.viewBox);
   }
 
-  if (item.hasAttr('dx')) {
-    roundValues(item.attrs.dx);
+  if (item.attributes['stroke-dasharray'] != null) {
+    item.attributes['stroke-dasharray'] = roundValues(
+      item.attributes['stroke-dasharray']
+    );
   }
 
-  if (item.hasAttr('dy')) {
-    roundValues(item.attrs.dy);
+  if (item.attributes.dx != null) {
+    item.attributes.dx = roundValues(item.attributes.dx);
   }
 
-  if (item.hasAttr('x')) {
-    roundValues(item.attrs.x);
+  if (item.attributes.dy != null) {
+    item.attributes.dy = roundValues(item.attributes.dy);
   }
 
-  if (item.hasAttr('y')) {
-    roundValues(item.attrs.y);
+  if (item.attributes.x != null) {
+    item.attributes.x = roundValues(item.attributes.x);
   }
 
-  function roundValues($prop) {
+  if (item.attributes.y != null) {
+    item.attributes.y = roundValues(item.attributes.y);
+  }
+
+  function roundValues(lists) {
     var num,
       units,
       match,
       matchNew,
-      lists = $prop.value,
       listsArr = lists.split(regSeparator),
-      roundedListArr = [],
+      roundedList = [],
       roundedList;
 
-    listsArr.forEach(function (elem) {
+    for (const elem of listsArr) {
       match = elem.match(regNumericValues);
       matchNew = elem.match(/new/);
 
@@ -118,17 +126,16 @@ exports.fn = function (item, params) {
           units = '';
         }
 
-        roundedListArr.push(num + units);
+        roundedList.push(num + units);
       }
       // if attribute value is "new"(only enable-background).
       else if (matchNew) {
-        roundedListArr.push('new');
+        roundedList.push('new');
       } else if (elem) {
-        roundedListArr.push(elem);
+        roundedList.push(elem);
       }
-    });
+    }
 
-    roundedList = roundedListArr.join(' ');
-    $prop.value = roundedList;
+    return roundedList.join(' ');
   }
 };

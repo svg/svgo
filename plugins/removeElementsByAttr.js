@@ -65,15 +65,13 @@ exports.fn = function (item, params) {
   }
 
   // remove element if it's `id` matches configured `id` params
-  const elemId = item.attr('id');
-  if (elemId && params.id.length !== 0) {
-    return params.id.includes(elemId.value) === false;
+  if (item.attributes.id != null && params.id.length !== 0) {
+    return params.id.includes(item.attributes.id) === false;
   }
 
   // remove element if it's `class` contains any of the configured `class` params
-  const elemClass = item.attr('class');
-  if (elemClass && params.class.length !== 0) {
-    const classList = elemClass.value.split(' ');
+  if (item.attributes.class && params.class.length !== 0) {
+    const classList = item.attributes.class.split(' ');
     return params.class.some((item) => classList.includes(item)) === false;
   }
 };

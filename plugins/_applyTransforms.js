@@ -38,7 +38,7 @@ const applyTransforms = (elem, pathData, params) => {
     return;
   }
 
-  const matrix = transformsMultiply(transform2js(elem.attr('transform').value));
+  const matrix = transformsMultiply(transform2js(elem.attributes.transform));
   const stroke = elem.computedAttr('stroke');
   const id = elem.computedAttr('id');
   const transformPrecision = params.transformPrecision;
@@ -77,34 +77,33 @@ const applyTransforms = (elem, pathData, params) => {
         elem.computedAttr('stroke-width') || defaultStrokeWidth;
 
       if (
-        !elem.hasAttr('vector-effect') ||
-        elem.attr('vector-effect').value !== 'non-scaling-stroke'
+        elem.attributes['vector-effect'] == null ||
+        elem.attributes['vector-effect'] !== 'non-scaling-stroke'
       ) {
-        if (elem.hasAttr('stroke-width')) {
-          elem.attrs['stroke-width'].value = elem.attrs['stroke-width'].value
+        if (elem.attributes['stroke-width'] != null) {
+          elem.attributes['stroke-width'] = elem.attributes['stroke-width']
             .trim()
             .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
         } else {
-          elem.addAttr({
-            name: 'stroke-width',
-            value: strokeWidth.replace(regNumericValues, (num) =>
-              removeLeadingZero(num * scale)
-            ),
-          });
+          elem.attributes[
+            'stroke-width'
+          ] = strokeWidth.replace(regNumericValues, (num) =>
+            removeLeadingZero(num * scale)
+          );
         }
 
-        if (elem.hasAttr('stroke-dashoffset')) {
-          elem.attrs['stroke-dashoffset'].value = elem.attrs[
+        if (elem.attributes['stroke-dashoffset'] != null) {
+          elem.attributes['stroke-dashoffset'] = elem.attributes[
             'stroke-dashoffset'
-          ].value
+          ]
             .trim()
             .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
         }
 
-        if (elem.hasAttr('stroke-dasharray')) {
-          elem.attrs['stroke-dasharray'].value = elem.attrs[
+        if (elem.attributes['stroke-dasharray'] != null) {
+          elem.attributes['stroke-dasharray'] = elem.attributes[
             'stroke-dasharray'
-          ].value
+          ]
             .trim()
             .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
         }

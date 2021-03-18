@@ -62,18 +62,13 @@ exports.fn = function (data, params) {
   if (svg.isElem('svg')) {
     attributes.forEach(function (attribute) {
       if (typeof attribute === 'string') {
-        if (!svg.hasAttr(attribute)) {
-          svg.addAttr({
-            name: attribute,
-          });
+        if (svg.attributes[attribute] == null) {
+          svg.attributes[attribute] = undefined;
         }
       } else if (typeof attribute === 'object') {
         Object.keys(attribute).forEach(function (key) {
-          if (!svg.hasAttr(key)) {
-            svg.addAttr({
-              name: key,
-              value: attribute[key],
-            });
+          if (svg.attributes[key] == null) {
+            svg.attributes[key] = attribute[key];
           }
         });
       }

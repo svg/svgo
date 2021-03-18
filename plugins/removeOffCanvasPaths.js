@@ -26,12 +26,12 @@ var _path = require('./_path.js'),
 exports.fn = function (item) {
   if (
     item.isElem('path') &&
-    item.hasAttr('d') &&
+    item.attributes.d != null &&
     typeof viewBox !== 'undefined'
   ) {
     // Consider that any item with a transform attribute or a M instruction
     // within the viewBox is visible
-    if (hasTransform(item) || pathMovesWithinViewBox(item.attr('d').value)) {
+    if (hasTransform(item) || pathMovesWithinViewBox(item.attributes.d)) {
       return true;
     }
 
@@ -71,12 +71,11 @@ function hasTransform(item) {
  */
 function parseViewBox(svg) {
   var viewBoxData = '';
-  if (svg.hasAttr('viewBox')) {
+  if (svg.attributes.viewBox != null) {
     // Remove commas and plus signs, normalize and trim whitespace
-    viewBoxData = svg.attr('viewBox').value;
-  } else if (svg.hasAttr('height') && svg.hasAttr('width')) {
-    viewBoxData =
-      '0 0 ' + svg.attr('width').value + ' ' + svg.attr('height').value;
+    viewBoxData = svg.attributes.viewBox;
+  } else if (svg.attributes.height != null && svg.attributes.width != null) {
+    viewBoxData = `0 0 ${svg.attributes.width} ${svg.attributes.height}`;
   }
 
   // Remove commas and plus signs, normalize and trim whitespace
@@ -104,11 +103,10 @@ function parseViewBox(svg) {
   var path = new JSAPI({
     type: 'element',
     name: 'path',
+    attributes: {
+      d: 'M' + m[1] + ' ' + m[2] + 'h' + m[3] + 'v' + m[4] + 'H' + m[1] + 'z',
+    },
     content: [],
-  });
-  path.addAttr({
-    name: 'd',
-    value: 'M' + m[1] + ' ' + m[2] + 'h' + m[3] + 'v' + m[4] + 'H' + m[1] + 'z',
   });
 
   viewBoxJS = path2js(path);

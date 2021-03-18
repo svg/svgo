@@ -14,7 +14,7 @@ var prevCtrlPoint;
 exports.path2js = function (path) {
   if (path.pathJS) return path.pathJS;
   const pathData = []; // JS representation of the path data
-  const newPathData = parsePathData(path.attr('d').value);
+  const newPathData = parsePathData(path.attributes.d);
   for (const { command, args } of newPathData) {
     if (command === 'Z' || command === 'z') {
       pathData.push({ instruction: 'z' });
@@ -343,7 +343,7 @@ exports.js2path = function (path, data, params) {
     });
   }
 
-  path.attr('d').value = stringifyPathData({
+  path.attributes.d = stringifyPathData({
     pathData,
     precision: params.floatPrecision,
     disableSpaceAfterFlags: params.noSpaceAfterFlags,

@@ -30,7 +30,7 @@ exports.fn = function (item) {
     (item.type === 'element' && item.children.length !== 0) ||
     item.isElem('svg') ||
     // empty patterns may contain reusable configuration
-    (item.isElem('pattern') && Object.keys(item.attrs).length !== 0) ||
+    (item.isElem('pattern') && Object.keys(item.attributes).length !== 0) ||
     // The 'g' may not have content, but the filter may cause a rectangle
     // to be created and filled with pattern.
     (item.isElem('g') && item.hasAttr('filter')) ||
