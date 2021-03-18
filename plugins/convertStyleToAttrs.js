@@ -67,20 +67,22 @@ var stylingProps = require('./_collections').attrsGroups.presentation,
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  if (item.type === 'element' && item.hasAttr('style')) {
+  if (item.type === 'element' && item.attributes.style != null) {
     // ['opacity: 1', 'color: #000']
-    var styleValue = item.attr('style').value,
-      styles = [],
-      attrs = {};
+    let styles = [];
+    const newAttributes = {};
 
     // Strip CSS comments preserving escape sequences and strings.
-    styleValue = styleValue.replace(regStripComments, function (match) {
-      return match[0] == '/'
-        ? ''
-        : match[0] == '\\' && /[-g-z]/i.test(match[1])
-        ? match[1]
-        : match;
-    });
+    const styleValue = item.attributes.style.replace(
+      regStripComments,
+      (match) => {
+        return match[0] == '/'
+          ? ''
+          : match[0] == '\\' && /[-g-z]/i.test(match[1])
+          ? match[1]
+          : match;
+      }
+    );
 
     regDeclarationBlock.lastIndex = 0;
     // eslint-disable-next-line no-cond-assign
@@ -100,11 +102,8 @@ exports.fn = function (item, params) {
             val = val.slice(1, -1);
           }
 
-          if (stylingProps.indexOf(prop) > -1) {
-            attrs[prop] = {
-              name: prop,
-              value: val,
-            };
+          if (stylingProps.includes(prop)) {
+            newAttributes[prop] = val;
 
             return false;
           }
@@ -113,13 +112,11 @@ exports.fn = function (item, params) {
         return true;
       });
 
-      Object.assign(item.attrs, attrs);
+      Object.assign(item.attributes, newAttributes);
 
       if (styles.length) {
-        item.attr('style').value = styles
-          .map(function (declaration) {
-            return declaration.join(':');
-          })
+        item.attributes.style = styles
+          .map((declaration) => declaration.join(':'))
           .join(';');
       } else {
         delete item.attributes.style;

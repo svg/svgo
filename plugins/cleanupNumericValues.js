@@ -39,9 +39,9 @@ exports.fn = function (item, params) {
   if (item.type === 'element') {
     var floatPrecision = params.floatPrecision;
 
-    if (item.hasAttr('viewBox')) {
-      var nums = item.attr('viewBox').value.split(/\s,?\s*|,\s*/g);
-      item.attr('viewBox').value = nums
+    if (item.attributes.viewBox != null) {
+      var nums = item.attributes.viewBox.split(/\s,?\s*|,\s*/g);
+      item.attributes.viewBox = nums
         .map(function (value) {
           var num = +value;
           return isNaN(num) ? value : +num.toFixed(floatPrecision);

@@ -55,9 +55,9 @@ exports.fn = function (document, opts) {
   for (var styleEl of styleEls) {
     // values other than the empty string or text/css are not used
     if (
-      styleEl.hasAttr('type') &&
-      styleEl.attr('type').value !== '' &&
-      styleEl.attr('type').value !== 'text/css'
+      styleEl.attributes.type != null &&
+      styleEl.attributes.type !== '' &&
+      styleEl.attributes.type !== 'text/css'
     ) {
       continue;
     }

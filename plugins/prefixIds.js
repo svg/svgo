@@ -51,11 +51,6 @@ var matchUrl = function (val) {
   return urlMatches[1];
 };
 
-// Checks if attribute is empty
-var attrNotEmpty = function (attr) {
-  return attr && attr.value && attr.value.length > 0;
-};
-
 // prefixes an #ID
 var prefixId = function (val) {
   var idName = matchId(val);
@@ -65,74 +60,88 @@ var prefixId = function (val) {
   return '#' + addPrefix(idName);
 };
 
-// attr.value helper methods
-
 // prefixes a class attribute value
-var addPrefixToClassAttr = function (attr) {
-  if (!attrNotEmpty(attr)) {
+const addPrefixToClassAttr = (element, name) => {
+  if (
+    element.attributes[name] == null ||
+    element.attributes[name].length === 0
+  ) {
     return;
   }
 
-  attr.value = attr.value.split(/\s+/).map(addPrefix).join(' ');
+  element.attributes[name] = element.attributes[name]
+    .split(/\s+/)
+    .map(addPrefix)
+    .join(' ');
 };
 
 // prefixes an ID attribute value
-var addPrefixToIdAttr = function (attr) {
-  if (!attrNotEmpty(attr)) {
+const addPrefixToIdAttr = (element, name) => {
+  if (
+    element.attributes[name] == null ||
+    element.attributes[name].length === 0
+  ) {
     return;
   }
 
-  attr.value = addPrefix(attr.value);
+  element.attributes[name] = addPrefix(element.attributes[name]);
 };
 
 // prefixes a href attribute value
-var addPrefixToHrefAttr = function (attr) {
-  if (!attrNotEmpty(attr)) {
+const addPrefixToHrefAttr = (element, name) => {
+  if (
+    element.attributes[name] == null ||
+    element.attributes[name].length === 0
+  ) {
     return;
   }
 
-  var idPrefixed = prefixId(attr.value);
+  const idPrefixed = prefixId(element.attributes[name]);
   if (!idPrefixed) {
     return;
   }
-  attr.value = idPrefixed;
+  element.attributes[name] = idPrefixed;
 };
 
 // prefixes an URL attribute value
-var addPrefixToUrlAttr = function (attr) {
-  if (!attrNotEmpty(attr)) {
+const addPrefixToUrlAttr = (element, name) => {
+  if (
+    element.attributes[name] == null ||
+    element.attributes[name].length === 0
+  ) {
     return;
   }
 
   // url(...) in value
-  var urlVal = matchUrl(attr.value);
+  const urlVal = matchUrl(element.attributes[name]);
   if (!urlVal) {
     return;
   }
 
-  var idPrefixed = prefixId(urlVal);
+  const idPrefixed = prefixId(urlVal);
   if (!idPrefixed) {
     return;
   }
 
-  attr.value = 'url(' + idPrefixed + ')';
+  element.attributes[name] = 'url(' + idPrefixed + ')';
 };
 
 // prefixes begin/end attribute value
-var addPrefixToBeginEndAttr = function (attr) {
-  if (!attrNotEmpty(attr)) {
+const addPrefixToBeginEndAttr = (element, name) => {
+  if (
+    element.attributes[name] == null ||
+    element.attributes[name].length === 0
+  ) {
     return;
   }
 
-  var parts = attr.value.split('; ').map(function (val) {
+  const parts = element.attributes[name].split('; ').map((val) => {
     val = val.trim();
 
     if (val.endsWith('.end') || val.endsWith('.start')) {
-      var idPostfix = val.split('.'),
-        id = idPostfix[0],
-        postfix = idPostfix[1];
+      const [id, postfix] = val.split('.');
 
-      var idPrefixed = prefixId(`#${id}`);
+      let idPrefixed = prefixId(`#${id}`);
 
       if (!idPrefixed) {
         return val;
@@ -145,7 +154,7 @@ var addPrefixToBeginEndAttr = function (attr) {
     }
   });
 
-  attr.value = parts.join('; ');
+  element.attributes[name] = parts.join('; ');
 };
 
 const getBasename = (path) => {
@@ -169,7 +178,7 @@ const getBasename = (path) => {
 exports.fn = function (node, opts, extra) {
   // skip subsequent passes when multipass is used
   if (extra.multipassCount && extra.multipassCount > 0) {
-    return node;
+    return;
   }
 
   // prefix, from file name or option
@@ -200,7 +209,7 @@ exports.fn = function (node, opts, extra) {
   if (node.type === 'element' && node.name === 'style') {
     if (node.children.length === 0) {
       // skip empty <style/>s
-      return node;
+      return;
     }
 
     var cssStr = '';
@@ -219,7 +228,7 @@ exports.fn = function (node, opts, extra) {
         'Warning: Parse error of styles of <style/> element, skipped. Error details: ' +
           parseError
       );
-      return node;
+      return;
     }
 
     var idPrefixed = '';
@@ -250,42 +259,40 @@ exports.fn = function (node, opts, extra) {
 
     // update <style>s
     node.children[0].value = csstree.generate(cssAst);
-    return node;
+    return;
   }
 
   // element attributes
 
-  if (!node.attrs) {
-    return node;
+  if (node.type !== 'element') {
+    return;
   }
 
   // Nodes
 
   if (opts.prefixIds) {
     // ID
-    addPrefixToIdAttr(node.attrs.id);
+    addPrefixToIdAttr(node, 'id');
   }
 
   if (opts.prefixClassNames) {
     // Class
-    addPrefixToClassAttr(node.attrs.class);
+    addPrefixToClassAttr(node, 'class');
   }
 
   // References
 
   // href
-  addPrefixToHrefAttr(node.attrs.href);
+  addPrefixToHrefAttr(node, 'href');
 
   // (xlink:)href (deprecated, must be still supported)
-  addPrefixToHrefAttr(node.attrs['xlink:href']);
+  addPrefixToHrefAttr(node, 'xlink:href');
 
   // (referenceable) properties
   for (var referencesProp of referencesProps) {
-    addPrefixToUrlAttr(node.attrs[referencesProp]);
+    addPrefixToUrlAttr(node, referencesProp);
   }
 
-  addPrefixToBeginEndAttr(node.attrs.begin);
-  addPrefixToBeginEndAttr(node.attrs.end);
-
-  return node;
+  addPrefixToBeginEndAttr(node, 'begin');
+  addPrefixToBeginEndAttr(node, 'end');
 };

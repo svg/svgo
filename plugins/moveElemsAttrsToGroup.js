@@ -69,15 +69,16 @@ exports.fn = function (item) {
             if (name === 'transform') {
               if (!hasTransform) {
                 if (item.hasAttr('transform')) {
-                  item.attr('transform').value += ' ' + value;
+                  item.attributes.transform =
+                    item.attributes.transform + ' ' + value;
                 } else {
-                  item.addAttr({ name, value });
+                  item.attributes.transform = value;
                 }
 
                 hasTransform = true;
               }
             } else {
-              item.addAttr({ name, value });
+              item.attributes[name] = value;
             }
           }
         }

@@ -83,9 +83,8 @@ exports.fn = function (item, params) {
 
     if (
       params.removeNone &&
-      (!stroke ||
-        (item.hasAttr('stroke') && item.attr('stroke').value == 'none')) &&
-      (!fill || (item.hasAttr('fill') && item.attr('fill').value == 'none'))
+      (!stroke || item.attributes.stroke == 'none') &&
+      (!fill || item.attributes.fill == 'none')
     ) {
       return false;
     }

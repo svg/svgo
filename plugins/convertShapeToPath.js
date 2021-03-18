@@ -13,7 +13,6 @@ exports.params = {
   floatPrecision: null,
 };
 
-const none = { value: 0 };
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
@@ -35,15 +34,15 @@ exports.fn = function (item, params) {
 
   if (
     item.isElem('rect') &&
-    item.hasAttr('width') &&
-    item.hasAttr('height') &&
-    !item.hasAttr('rx') &&
-    !item.hasAttr('ry')
+    item.attributes.width != null &&
+    item.attributes.height != null &&
+    item.attributes.rx == null &&
+    item.attributes.ry == null
   ) {
-    var x = +(item.attr('x') || none).value,
-      y = +(item.attr('y') || none).value,
-      width = +item.attr('width').value,
-      height = +item.attr('height').value;
+    const x = Number(item.attributes.x || '0');
+    const y = Number(item.attributes.y || '0');
+    const width = Number(item.attributes.width);
+    const height = Number(item.attributes.height);
     // Values like '100%' compute to NaN, thus running after
     // cleanupNumericValues when 'px' units has already been removed.
     // TODO: Calculate sizes from % and non-px units if possible.
@@ -55,10 +54,7 @@ exports.fn = function (item, params) {
       { command: 'H', args: [x] },
       { command: 'z', args: [] },
     ];
-    item.addAttr({
-      name: 'd',
-      value: stringifyPathData({ pathData, precision }),
-    });
+    item.attributes.d = stringifyPathData({ pathData, precision });
     item.renameElem('path');
     delete item.attributes.x;
     delete item.attributes.y;
@@ -67,19 +63,16 @@ exports.fn = function (item, params) {
   }
 
   if (item.isElem('line')) {
-    var x1 = +(item.attr('x1') || none).value,
-      y1 = +(item.attr('y1') || none).value,
-      x2 = +(item.attr('x2') || none).value,
-      y2 = +(item.attr('y2') || none).value;
+    const x1 = Number(item.attributes.x1 || '0');
+    const y1 = Number(item.attributes.y1 || '0');
+    const x2 = Number(item.attributes.x2 || '0');
+    const y2 = Number(item.attributes.y2 || '0');
     if (isNaN(x1 - y1 + x2 - y2)) return;
     const pathData = [
       { command: 'M', args: [x1, y1] },
       { command: 'L', args: [x2, y2] },
     ];
-    item.addAttr({
-      name: 'd',
-      value: stringifyPathData({ pathData, precision }),
-    });
+    item.attributes.d = stringifyPathData({ pathData, precision });
     item.renameElem('path');
     delete item.attributes.x1;
     delete item.attributes.y1;
@@ -89,9 +82,9 @@ exports.fn = function (item, params) {
 
   if (
     (item.isElem('polyline') || item.isElem('polygon')) &&
-    item.hasAttr('points')
+    item.attributes.points != null
   ) {
-    var coords = (item.attr('points').value.match(regNumber) || []).map(Number);
+    const coords = (item.attributes.points.match(regNumber) || []).map(Number);
     if (coords.length < 4) return false;
     const pathData = [];
     for (let i = 0; i < coords.length; i += 2) {
@@ -103,18 +96,15 @@ exports.fn = function (item, params) {
     if (item.isElem('polygon')) {
       pathData.push({ command: 'z', args: [] });
     }
-    item.addAttr({
-      name: 'd',
-      value: stringifyPathData({ pathData, precision }),
-    });
+    item.attributes.d = stringifyPathData({ pathData, precision });
     item.renameElem('path');
     delete item.attributes.points;
   }
 
   if (item.isElem('circle') && convertArcs) {
-    var cx = +(item.attr('cx') || none).value;
-    var cy = +(item.attr('cy') || none).value;
-    var r = +(item.attr('r') || none).value;
+    const cx = Number(item.attributes.cx || '0');
+    const cy = Number(item.attributes.cy || '0');
+    const r = Number(item.attributes.r || '0');
     if (isNaN(cx - cy + r)) {
       return;
     }
@@ -124,10 +114,7 @@ exports.fn = function (item, params) {
       { command: 'A', args: [r, r, 0, 1, 0, cx, cy - r] },
       { command: 'z', args: [] },
     ];
-    item.addAttr({
-      name: 'd',
-      value: stringifyPathData({ pathData, precision }),
-    });
+    item.attributes.d = stringifyPathData({ pathData, precision });
     item.renameElem('path');
     delete item.attributes.cx;
     delete item.attributes.cy;
@@ -135,10 +122,10 @@ exports.fn = function (item, params) {
   }
 
   if (item.isElem('ellipse') && convertArcs) {
-    var ecx = +(item.attr('cx') || none).value;
-    var ecy = +(item.attr('cy') || none).value;
-    var rx = +(item.attr('rx') || none).value;
-    var ry = +(item.attr('ry') || none).value;
+    const ecx = Number(item.attributes.cx || '0');
+    const ecy = Number(item.attributes.cy || '0');
+    const rx = Number(item.attributes.rx || '0');
+    const ry = Number(item.attributes.ry || '0');
     if (isNaN(ecx - ecy + rx - ry)) {
       return;
     }
@@ -148,10 +135,7 @@ exports.fn = function (item, params) {
       { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy - ry] },
       { command: 'z', args: [] },
     ];
-    item.addAttr({
-      name: 'd',
-      value: stringifyPathData({ pathData, precision }),
-    });
+    item.attributes.d = stringifyPathData({ pathData, precision });
     item.renameElem('path');
     delete item.attributes.cx;
     delete item.attributes.cy;

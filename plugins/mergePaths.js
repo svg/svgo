@@ -28,18 +28,18 @@ exports.params = {
 exports.fn = function (item, params) {
   if (item.type !== 'element' || item.children.length === 0) return;
 
-  var prevContentItem = null,
-    prevContentItemKeys = null;
+  let prevContentItem = null;
+  let prevContentItemKeys = null;
 
   item.children = item.children.filter(function (contentItem) {
     if (
       prevContentItem &&
       prevContentItem.isElem('path') &&
       prevContentItem.children.length === 0 &&
-      prevContentItem.hasAttr('d') &&
+      prevContentItem.attributes.d != null &&
       contentItem.isElem('path') &&
       contentItem.children.length === 0 &&
-      contentItem.hasAttr('d')
+      contentItem.attributes.d != null
     ) {
       const computedStyle = computeStyle(contentItem);
       // keep path to not break markers
@@ -51,21 +51,21 @@ exports.fn = function (item, params) {
         return true;
       }
       if (!prevContentItemKeys) {
-        prevContentItemKeys = Object.keys(prevContentItem.attrs);
+        prevContentItemKeys = Object.keys(prevContentItem.attributes);
       }
 
-      var contentItemAttrs = Object.keys(contentItem.attrs),
-        equalData =
-          prevContentItemKeys.length == contentItemAttrs.length &&
-          contentItemAttrs.every(function (key) {
-            return (
-              key == 'd' ||
-              (prevContentItem.hasAttr(key) &&
-                prevContentItem.attr(key).value == contentItem.attr(key).value)
-            );
-          }),
-        prevPathJS = path2js(prevContentItem),
-        curPathJS = path2js(contentItem);
+      const contentItemAttrs = Object.keys(contentItem.attributes);
+      const equalData =
+        prevContentItemKeys.length == contentItemAttrs.length &&
+        contentItemAttrs.every(function (key) {
+          return (
+            key == 'd' ||
+            (prevContentItem.attributes[key] != null &&
+              prevContentItem.attributes[key] == contentItem.attributes[key])
+          );
+        });
+      const prevPathJS = path2js(prevContentItem);
+      const curPathJS = path2js(contentItem);
 
       if (equalData && (params.force || !intersects(prevPathJS, curPathJS))) {
         js2path(prevContentItem, prevPathJS.concat(curPathJS), params);

@@ -22,12 +22,16 @@ exports.fn = function (data) {
   let count = 0;
   const defs = [];
   traverse(data, (item) => {
-    if (!item.isElem('path') || !item.hasAttr('d')) {
+    if (
+      item.type !== 'element' ||
+      item.name !== 'path' ||
+      item.attributes.d == null
+    ) {
       return;
     }
-    const d = item.attr('d').value;
-    const fill = (item.hasAttr('fill') && item.attr('fill').value) || '';
-    const stroke = (item.hasAttr('stroke') && item.attr('stroke').value) || '';
+    const d = item.attributes.d;
+    const fill = item.attributes.fill || '';
+    const stroke = item.attributes.stroke || '';
     const key = d + ';s:' + stroke + ';f:' + fill;
     const hasSeen = seen.get(key);
     if (!hasSeen) {
@@ -36,23 +40,20 @@ exports.fn = function (data) {
     }
     if (!hasSeen.reused) {
       hasSeen.reused = true;
-      if (!hasSeen.elem.hasAttr('id')) {
-        hasSeen.elem.addAttr({
-          name: 'id',
-          value: 'reuse-' + count++,
-        });
+      if (hasSeen.elem.attributes.id == null) {
+        hasSeen.elem.attributes.id = 'reuse-' + count++;
       }
       defs.push(hasSeen.elem);
     }
-    convertToUse(item, hasSeen.elem.attr('id').value);
+    convertToUse(item, hasSeen.elem.attributes.id);
   });
   if (defs.length > 0) {
     const defsTag = new JSAPI(
       {
         type: 'element',
         name: 'defs',
+        attributes: {},
         children: [],
-        attrs: {},
       },
       data
     );
@@ -71,7 +72,7 @@ exports.fn = function (data) {
       delete defClone.attributes.transform;
       defsTag.spliceContent(0, 0, defClone);
       // Convert the original def to a use so the first usage isn't duplicated.
-      def = convertToUse(def, defClone.attr('id').value);
+      def = convertToUse(def, defClone.attributes.id);
       delete def.attributes.id;
     }
   }
@@ -84,10 +85,7 @@ function convertToUse(item, href) {
   delete item.attributes.d;
   delete item.attributes.stroke;
   delete item.attributes.fill;
-  item.addAttr({
-    name: 'xlink:href',
-    value: '#' + href,
-  });
+  item.attributes['xlink:href'] = '#' + href;
   delete item.pathJS;
   return item;
 }

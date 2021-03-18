@@ -56,9 +56,9 @@ exports.fn = function (ast, options) {
       }
     } else {
       // style attribute
-      var elemStyle = elem.attr('style').value;
+      var elemStyle = elem.attributes.style;
 
-      elem.attr('style').value = csso.minifyBlock(
+      elem.attributes.style = csso.minifyBlock(
         elemStyle,
         minifyOptionsForAttribute
       ).css;
@@ -84,7 +84,7 @@ function findStyleElems(ast) {
 
       if (item.isElem('style') && item.children.length !== 0) {
         styles.push(item);
-      } else if (item.type === 'element' && item.hasAttr('style')) {
+      } else if (item.type === 'element' && item.attributes.style != null) {
         styles.push(item);
       }
     }
@@ -109,41 +109,33 @@ function shouldFilter(options, name) {
 
 function collectUsageData(ast, options) {
   function walk(items, usageData) {
-    for (var i = 0; i < items.children.length; i++) {
-      var item = items.children[i];
-
+    for (const item of items.children) {
       // go deeper
-      if (item.children) {
+      if (item.type === 'root' || item.type === 'element') {
         walk(item, usageData);
       }
 
-      if (item.isElem('script')) {
-        safe = false;
-      }
-
       if (item.type === 'element') {
-        usageData.tags[item.name] = true;
-
-        if (item.hasAttr('id')) {
-          usageData.ids[item.attr('id').value] = true;
+        if (item.name === 'script') {
+          safe = false;
         }
 
-        if (item.hasAttr('class')) {
-          item
-            .attr('class')
-            .value.replace(/^\s+|\s+$/g, '')
+        usageData.tags[item.name] = true;
+
+        if (item.attributes.id != null) {
+          usageData.ids[item.attributes.id] = true;
+        }
+
+        if (item.attributes.class != null) {
+          item.attributes.class
+            .replace(/^\s+|\s+$/g, '')
             .split(/\s+/)
             .forEach(function (className) {
               usageData.classes[className] = true;
             });
         }
 
-        if (
-          item.attrs &&
-          Object.keys(item.attrs).some(function (name) {
-            return /^on/i.test(name);
-          })
-        ) {
+        if (Object.keys(item.attributes).some((name) => /^on/i.test(name))) {
           safe = false;
         }
       }
