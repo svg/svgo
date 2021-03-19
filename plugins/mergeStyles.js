@@ -40,9 +40,8 @@ exports.fn = function (document) {
   }
 
   var collectedStyles = [];
-  for (var styleNo in styles) {
-    var style = styles[styleNo];
-
+  var styleNo = 0;
+  for (var style of styles) {
     if (style.mq) {
       let wrappedStyles =
         '@media ' + style.mq.value + ' {' + '\n' + style.cssStr + '\n' + '}';
@@ -51,7 +50,7 @@ exports.fn = function (document) {
       collectedStyles.push(style.cssStr);
     }
 
-    if (parseInt(styleNo) > 0) {
+    if (styleNo > 0) {
       // remove all processed style elements – except the first one
       var styleParentEl = style.styleEl.parentNode;
       styleParentEl.spliceContent(
@@ -59,6 +58,7 @@ exports.fn = function (document) {
         1
       );
     }
+    styleNo++;
   }
 
   // assign the collected styles to the first style element
