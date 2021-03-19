@@ -59,7 +59,7 @@ exports.fn = function(document) {
         if(styleNo > 0) {
             // remove all processed style elements – except the first one
             var styleParentEl = style.styleEl.parentNode;
-            styleParentEl.spliceContent(styleParentEl.content.indexOf(style.styleEl), 1);
+            styleParentEl.spliceContent(styleParentEl.children.indexOf(style.styleEl), 1);
         }
     }
 
