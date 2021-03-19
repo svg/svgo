@@ -10,7 +10,6 @@ var cssTools = require('../lib/css-tools');
  * Merge multiple style elements into one.
  *
  * @param {Object} document document element
- * @param {Object} opts plugin params
  *
  * @author strarsis <strarsis@gmail.com>
  */
@@ -52,7 +51,7 @@ exports.fn = function (document) {
       collectedStyles.push(style.cssStr);
     }
 
-    if (styleNo > 0) {
+    if (parseInt(styleNo) > 0) {
       // remove all processed style elements – except the first one
       var styleParentEl = style.styleEl.parentNode;
       styleParentEl.spliceContent(
