@@ -51,6 +51,7 @@
   "scripts": {
     "test": "c8 --reporter=html --reporter=text mocha \"test/*/_index.js\" \"**/*.test.js\" --ignore=\"node_modules/**\"",
     "lint": "eslint . && prettier --list-different \"**/*.js\" --ignore-path .gitignore",
+    "fix": "eslint . --fix && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
     "test-regression": "NO_DIFF=1 node ./test/regression.js",
