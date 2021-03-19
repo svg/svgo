@@ -1,5 +1,9 @@
 'use strict';
 
+const csstree = require('css-tree');
+const { querySelectorAll, closestByName } = require('../lib/xast.js');
+const cssTools = require('../lib/css-tools');
+
 exports.type = 'full';
 
 exports.active = true;
@@ -12,9 +16,6 @@ exports.params = {
 };
 
 exports.description = 'inline styles (additional options)';
-
-var csstree = require('css-tree'),
-  cssTools = require('../lib/css-tools');
 
 /**
  * Moves + merges styles from style elements to element styles
@@ -35,18 +36,18 @@ var csstree = require('css-tree'),
  *     what pseudo-classes/-elements to be used
  *     empty string element for all non-pseudo-classes and/or -elements
  *
- * @param {Object} document document element
+ * @param {Object} root document element
  * @param {Object} opts plugin params
  *
  * @author strarsis <strarsis@gmail.com>
  */
-exports.fn = function (document, opts) {
+exports.fn = function (root, opts) {
   // collect <style/>s
-  var styleEls = document.querySelectorAll('style');
+  var styleEls = querySelectorAll(root, 'style');
 
   //no <styles/>s, nothing to do
-  if (styleEls === null) {
-    return document;
+  if (styleEls.length === 0) {
+    return root;
   }
 
   var styles = [],
@@ -62,7 +63,10 @@ exports.fn = function (document, opts) {
       continue;
     }
     // skip empty <style/>s or <foreignObject> content.
-    if (styleEl.children.length === 0 || styleEl.closestElem('foreignObject')) {
+    if (
+      styleEl.children.length === 0 ||
+      closestByName(styleEl, 'foreignObject')
+    ) {
       continue;
     }
 
@@ -108,13 +112,13 @@ exports.fn = function (document, opts) {
       selectedEls = null;
 
     try {
-      selectedEls = document.querySelectorAll(selectorStr);
+      selectedEls = querySelectorAll(root, selectorStr);
     } catch (selectError) {
       // console.warn('Warning: Syntax error when trying to select \n\n' + selectorStr + '\n\n, skipped. Error details: ' + selectError);
       continue;
     }
 
-    if (selectedEls === null) {
+    if (selectedEls.length === 0) {
       // nothing selected
       continue;
     }
@@ -181,7 +185,7 @@ exports.fn = function (document, opts) {
   }
 
   if (!opts.removeMatchedSelectors) {
-    return document; // no further processing required
+    return root; // no further processing required
   }
 
   // clean up matched class + ID attribute values
@@ -269,5 +273,5 @@ exports.fn = function (document, opts) {
     cssTools.setCssStr(style.styleEl, csstree.generate(style.cssAst));
   }
 
-  return document;
+  return root;
 };

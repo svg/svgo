@@ -1,5 +1,8 @@
 'use strict';
 
+const csso = require('csso');
+const { traverse } = require('../lib/xast.js');
+
 exports.type = 'full';
 
 exports.active = true;
@@ -18,8 +21,6 @@ exports.params = {
     tags: true,
   },
 };
-
-var csso = require('csso');
 
 /**
  * Minifies styles (<style> element + style attribute) using CSSO
@@ -73,26 +74,17 @@ function cloneObject(obj) {
 }
 
 function findStyleElems(ast) {
-  function walk(items, styles) {
-    for (var i = 0; i < items.children.length; i++) {
-      var item = items.children[i];
-
-      // go deeper
-      if (item.children) {
-        walk(item, styles);
-      }
-
-      if (item.isElem('style') && item.children.length !== 0) {
-        styles.push(item);
-      } else if (item.type === 'element' && item.attributes.style != null) {
-        styles.push(item);
+  const nodesWithStyles = [];
+  traverse(ast, (node) => {
+    if (node.type === 'element') {
+      if (node.name === 'style' && node.children.length !== 0) {
+        nodesWithStyles.push(node);
+      } else if (node.attributes.style != null) {
+        nodesWithStyles.push(node);
       }
     }
-
-    return styles;
-  }
-
-  return walk(ast, []);
+  });
+  return nodesWithStyles;
 }
 
 function shouldFilter(options, name) {
@@ -108,49 +100,40 @@ function shouldFilter(options, name) {
 }
 
 function collectUsageData(ast, options) {
-  function walk(items, usageData) {
-    for (const item of items.children) {
-      // go deeper
-      if (item.type === 'root' || item.type === 'element') {
-        walk(item, usageData);
-      }
-
-      if (item.type === 'element') {
-        if (item.name === 'script') {
-          safe = false;
-        }
-
-        usageData.tags[item.name] = true;
-
-        if (item.attributes.id != null) {
-          usageData.ids[item.attributes.id] = true;
-        }
-
-        if (item.attributes.class != null) {
-          item.attributes.class
-            .replace(/^\s+|\s+$/g, '')
-            .split(/\s+/)
-            .forEach(function (className) {
-              usageData.classes[className] = true;
-            });
-        }
-
-        if (Object.keys(item.attributes).some((name) => /^on/i.test(name))) {
-          safe = false;
-        }
-      }
-    }
-
-    return usageData;
-  }
-
-  var safe = true;
-  var usageData = {};
-  var hasData = false;
-  var rawData = walk(ast, {
+  let safe = true;
+  const usageData = {};
+  let hasData = false;
+  const rawData = {
     ids: Object.create(null),
     classes: Object.create(null),
     tags: Object.create(null),
+  };
+
+  traverse(ast, (node) => {
+    if (node.type === 'element') {
+      if (node.name === 'script') {
+        safe = false;
+      }
+
+      rawData.tags[node.name] = true;
+
+      if (node.attributes.id != null) {
+        rawData.ids[node.attributes.id] = true;
+      }
+
+      if (node.attributes.class != null) {
+        node.attributes.class
+          .replace(/^\s+|\s+$/g, '')
+          .split(/\s+/)
+          .forEach((className) => {
+            rawData.classes[className] = true;
+          });
+      }
+
+      if (Object.keys(node.attributes).some((name) => /^on/i.test(name))) {
+        safe = false;
+      }
+    }
   });
 
   if (!safe && options.usage && options.usage.force) {
