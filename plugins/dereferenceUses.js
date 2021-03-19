@@ -69,7 +69,7 @@ exports.fn = function(document, options) {
 
         var useParentEl = useEl.parentNode;
         // position of <use/> in parent
-        var useElPosition = useParentEl.content.indexOf(useEl);
+        var useElPosition = useParentEl.children.indexOf(useEl);
 
         // <symbol/> elements are template elements (hence not visible),
         // browsers would place a <symbol/> element as a different element

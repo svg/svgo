@@ -33,6 +33,7 @@ exports.removeEmptyContainers = require('./removeEmptyContainers.js');
 exports.removeEmptyText = require('./removeEmptyText.js');
 exports.removeHiddenElems = require('./removeHiddenElems.js');
 exports.removeMetadata = require('./removeMetadata.js');
+exports.dereferenceUses = require('./dereferenceUses.js');
 exports.removeNonInheritableGroupAttrs = require('./removeNonInheritableGroupAttrs.js');
 exports.removeOffCanvasPaths = require('./removeOffCanvasPaths.js');
 exports.removeRasterImages = require('./removeRasterImages.js');
