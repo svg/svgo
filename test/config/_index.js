@@ -279,9 +279,5 @@ describe('config', function () {
 });
 
 function getPlugin(name, plugins) {
-  return plugins.find(function (plugin) {
-    if (plugin.name === name) {
-      return plugin;
-    }
-  });
+  return plugins.find((plugin) => plugin.name === name);
 }
