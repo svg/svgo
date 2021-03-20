@@ -1,0 +1,31 @@
+name: Regression tests
+
+env:
+  FORCE_COLOR: 2
+  NODE: 14
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE }}
+      - name: Set up npm cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
+      - run: npm ci
+      - run: npm run test-regression
