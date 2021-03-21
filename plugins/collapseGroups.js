@@ -1,22 +1,23 @@
 'use strict';
 
+const { inheritableAttrs, elemsGroups } = require('./_collections');
+
 exports.type = 'perItemReverse';
 
 exports.active = true;
 
 exports.description = 'collapses useless groups';
 
-var collections = require('./_collections'),
-  attrsInheritable = collections.inheritableAttrs,
-  animationElems = collections.elemsGroups.animation;
-
-function hasAnimatedAttr(item) {
-  return (
-    (item.isElem(animationElems) && item.hasAttr('attributeName', this)) ||
-    (item.type === 'element' &&
-      item.children.length !== 0 &&
-      item.children.some(hasAnimatedAttr, this))
-  );
+function hasAnimatedAttr(item, name) {
+  if (item.type === 'element') {
+    return (
+      (elemsGroups.animation.includes(item.name) &&
+        item.attributes.attributeName === name) ||
+      (item.children.length !== 0 &&
+        item.children.some((child) => hasAnimatedAttr(child, name)))
+    );
+  }
+  return false;
 }
 
 /*
@@ -51,33 +52,35 @@ exports.fn = function (item) {
   ) {
     item.children.forEach(function (g, i) {
       // non-empty groups
-      if (g.isElem('g') && g.children.length !== 0) {
+      if (g.type === 'element' && g.name === 'g' && g.children.length !== 0) {
         // move group attibutes to the single child element
-        if (g.hasAttr() && g.children.length === 1) {
+        if (Object.keys(g.attributes).length !== 0 && g.children.length === 1) {
           var inner = g.children[0];
 
           if (
             inner.type === 'element' &&
-            !inner.hasAttr('id') &&
-            !g.hasAttr('filter') &&
-            !(g.hasAttr('class') && inner.hasAttr('class')) &&
-            ((!g.hasAttr('clip-path') && !g.hasAttr('mask')) ||
-              (inner.isElem('g') &&
-                !g.hasAttr('transform') &&
-                !inner.hasAttr('transform')))
+            inner.attributes.id == null &&
+            g.attributes.filter == null &&
+            (g.attributes.class == null || inner.attributes.class == null) &&
+            ((g.attributes['clip-path'] == null && g.attributes.mask == null) ||
+              (inner.type === 'element' &&
+                inner.name === 'g' &&
+                g.attributes.transform == null &&
+                inner.attributes.transform == null))
           ) {
             for (const [name, value] of Object.entries(g.attributes)) {
-              if (g.children.some(hasAnimatedAttr, name)) return;
+              if (g.children.some((item) => hasAnimatedAttr(item, name)))
+                return;
 
-              if (!inner.hasAttr(name)) {
+              if (inner.attributes[name] == null) {
                 inner.attributes[name] = value;
               } else if (name == 'transform') {
                 inner.attributes[name] = value + ' ' + inner.attributes[name];
-              } else if (inner.hasAttr(name, 'inherit')) {
+              } else if (inner.attributes[name] === 'inherit') {
                 inner.attributes[name] = value;
               } else if (
-                attrsInheritable.includes(name) === false &&
-                !inner.hasAttr(name, value)
+                inheritableAttrs.includes(name) === false &&
+                inner.attributes[name] !== value
               ) {
                 return;
               }
@@ -89,10 +92,8 @@ exports.fn = function (item) {
 
         // collapse groups without attributes
         if (
-          !g.hasAttr() &&
-          !g.children.some(function (item) {
-            return item.isElem(animationElems);
-          })
+          Object.keys(g.attributes).length === 0 &&
+          !g.children.some((item) => item.isElem(elemsGroups.animation))
         ) {
           item.spliceContent(i, 1, g.children);
         }

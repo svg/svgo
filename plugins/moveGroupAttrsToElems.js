@@ -1,14 +1,14 @@
 'use strict';
 
+const { pathElems, referencesProps } = require('./_collections.js');
+
 exports.type = 'perItem';
 
 exports.active = true;
 
 exports.description = 'moves some group attributes to the content elements';
 
-var collections = require('./_collections.js'),
-  pathElems = collections.pathElems.concat(['g', 'text']),
-  referencesProps = collections.referencesProps;
+const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
 
 /**
  * Move group attrs to the content elements.
@@ -41,7 +41,9 @@ exports.fn = function (item) {
         referencesProps.includes(name) && value.includes('url(')
     ) === false &&
     item.children.every(
-      (inner) => inner.isElem(pathElems) && !inner.hasAttr('id')
+      (inner) =>
+        pathElemsWithGroupsAndText.includes(inner.name) &&
+        inner.attributes.id == null
     )
   ) {
     for (const inner of item.children) {

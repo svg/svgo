@@ -25,7 +25,8 @@ var _path = require('./_path.js'),
  */
 exports.fn = function (item) {
   if (
-    item.isElem('path') &&
+    item.type === 'element' &&
+    item.name === 'path' &&
     item.attributes.d != null &&
     typeof viewBox !== 'undefined'
   ) {
@@ -44,7 +45,7 @@ exports.fn = function (item) {
 
     return intersects(viewBoxJS, pathJS);
   }
-  if (item.isElem('svg')) {
+  if (item.type === 'element' && item.name === 'svg') {
     parseViewBox(item);
   }
 
@@ -59,8 +60,10 @@ exports.fn = function (item) {
  */
 function hasTransform(item) {
   return (
-    item.hasAttr('transform') ||
-    (item.parentNode && hasTransform(item.parentNode))
+    item.attributes.transform != null ||
+    (item.parentNode &&
+      item.parentNode.type === 'element' &&
+      hasTransform(item.parentNode))
   );
 }
 
