@@ -39,4 +39,5 @@ exports.fn = function (item) {
       (item.name === 'mask' && item.attributes.id != null)
     );
   }
+  return true;
 };
