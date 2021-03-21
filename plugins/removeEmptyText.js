@@ -34,18 +34,24 @@ exports.params = {
  * @author Kir Belevich
  */
 exports.fn = function (item, params) {
-  // Remove empty text element
-  if (params.text && item.isElem('text') && item.children.length === 0) {
-    return false;
-  }
+  if (item.type === 'element') {
+    // Remove empty text element
+    if (params.text && item.name === 'text' && item.children.length === 0) {
+      return false;
+    }
 
-  // Remove empty tspan element
-  if (params.tspan && item.isElem('tspan') && item.children.length === 0) {
-    return false;
-  }
+    // Remove empty tspan element
+    if (params.tspan && item.name === 'tspan' && item.children.length === 0) {
+      return false;
+    }
 
-  // Remove tref with empty xlink:href attribute
-  if (params.tref && item.isElem('tref') && !item.hasAttrLocal('href')) {
-    return false;
+    // Remove tref with empty xlink:href attribute
+    if (
+      params.tref &&
+      item.name === 'tref' &&
+      item.attributes['xlink:href'] == null
+    ) {
+      return false;
+    }
   }
 };
