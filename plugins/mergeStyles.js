@@ -29,7 +29,7 @@ exports.fn = function (document) {
       continue;
     }
 
-    var cssStr = cssTools.getCssStr(styleEl);
+    const cssStr = cssTools.getCssStr(styleEl);
 
     styles.push({
       styleEl: styleEl,
