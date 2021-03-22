@@ -4,12 +4,8 @@ exports.type = 'full';
 exports.active = true;
 exports.description = 'merge multiple style elements into one';
 
-const cssTools = require('../lib/css-tools');
-const xast = require('../lib/xast');
-const querySelectorAll = xast.querySelectorAll;
-const closestByName = xast.closestByName;
-const getCssStr = cssTools.getCssStr;
-const setCssStr = cssTools.setCssStr;
+const { querySelectorAll, closestByName } = require('../lib/xast.js');
+const { getCssStr,        setCssStr     } = require('../lib/css-tools');
 
 /**
  * Merge multiple style elements into one.
