@@ -16,15 +16,15 @@ const cssTools = require('../lib/css-tools'),
  */
 exports.fn = function (document) {
   // collect <style/>s (preserve order)
-  var styleEls = xast.querySelectorAll(document, 'style');
+  const styleEls = xast.querySelectorAll(document, 'style');
 
   // no <styles/>s, nothing to do
   if (styleEls === null || styleEls.length <= 1) {
     return document;
   }
 
-  var styles = [];
-  for (var styleEl of styleEls) {
+  let styles = [];
+  for (let styleEl of styleEls) {
     if (styleEl.isEmpty() || styleEl.closestElem('foreignObject')) {
       // skip empty <style/>s or <foreignObject> content.
       continue;
@@ -40,7 +40,7 @@ exports.fn = function (document) {
     });
   }
 
-  var collectedStyles = [];
+  let collectedStyles = [];
   for (let styleNo = 0; styleNo < styles.length; styleNo += 1) {
     const style = styles[styleNo];
 
@@ -54,7 +54,7 @@ exports.fn = function (document) {
 
 	// remove all processed style elements – except the first one
     if (styleNo > 0) {
-      var styleParentEl = style.styleEl.parentNode;
+      const styleParentEl = style.styleEl.parentNode;
       styleParentEl.children = styleParentEl.children.splice(
         styleParentEl.children.indexOf(style.styleEl),
         1
@@ -64,7 +64,7 @@ exports.fn = function (document) {
 
   // assign the collected styles to the first style element
   styles[0].styleEl.removeAttr('media'); // remove media mq attribute as CSS media queries are used
-  var collectedStylesStr = collectedStyles.join('\n\n');
+  const collectedStylesStr = collectedStyles.join('\n\n');
   cssTools.setCssStr(styles[0].styleEl, collectedStylesStr);
 
   return document;
