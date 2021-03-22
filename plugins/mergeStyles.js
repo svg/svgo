@@ -35,7 +35,7 @@ exports.fn = function (document) {
     styles.push({
       styleEl: styleEl,
 
-      mq: styleEl.attr('media'),
+      mq: styleEl.attributes.media,
       cssStr: cssStr,
     });
   }
@@ -46,7 +46,7 @@ exports.fn = function (document) {
 
     if (style.mq) {
       let wrappedStyles =
-        '@media ' + style.mq.value + ' {' + '\n' + style.cssStr + '\n' + '}';
+        '@media ' + style.mq + ' {' + '\n' + style.cssStr + '\n' + '}';
       collectedStyles.push(wrappedStyles);
     } else {
       collectedStyles.push(style.cssStr);
