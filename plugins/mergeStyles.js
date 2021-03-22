@@ -52,8 +52,8 @@ exports.fn = function (document) {
       collectedStyles.push(style.cssStr);
     }
 
+	// remove all processed style elements – except the first one
     if (styleNo > 0) {
-      // remove all processed style elements – except the first one
       var styleParentEl = style.styleEl.parentNode;
       styleParentEl.children = styleParentEl.children.splice(
         styleParentEl.children.indexOf(style.styleEl),
