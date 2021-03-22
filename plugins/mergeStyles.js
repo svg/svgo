@@ -19,13 +19,13 @@ exports.fn = function (document) {
   const styleEls = querySelectorAll(document, 'style');
 
   // no <styles/>s, nothing to do
-  if (styleEls === null || styleEls.length <= 1) {
+  if (styleEls.length <= 1) {
     return document;
   }
 
   let styles = [];
   for (let styleEl of styleEls) {
-    if (styleEl.isEmpty() || closestByName(styleEl, 'foreignObject')) {
+    if (styleEl.length === 0 || closestByName(styleEl, 'foreignObject')) {
       // skip empty <style/>s or <foreignObject> content.
       continue;
     }
