@@ -75,6 +75,16 @@ exports.fn = function (document, options) {
     // browsers would place a <symbol/> element as a different element
     if (insertEl.isElem('symbol')) insertEl.renameElem(options.symbolContainer);
 
+    // apply styles of <use/> element on top of the referenced Element
+    const useElProperties = useEl.style.getProperties();
+    useElProperties.forEach(function (property, propertyName) {
+      insertEl.style.setProperty(
+        propertyName,
+        property.value,
+        property.priority
+      );
+    });
+
     // replace the <use/> element with the referenced element
     useParentEl.spliceContent(useElPosition, 1, insertEl);
   }
