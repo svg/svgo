@@ -6,6 +6,10 @@ exports.description = 'merge multiple style elements into one';
 
 const cssTools = require('../lib/css-tools');
 const xast = require('../lib/xast');
+const querySelectorAll = xast.querySelectorAll;
+const closestByName = xast.closestByName;
+const getCssStr = cssTools.getCssStr;
+const setCssStr = cssTools.setCssStr;
 
 /**
  * Merge multiple style elements into one.
@@ -16,7 +20,7 @@ const xast = require('../lib/xast');
  */
 exports.fn = function (document) {
   // collect <style/>s (preserve order)
-  const styleEls = xast.querySelectorAll(document, 'style');
+  const styleEls = querySelectorAll(document, 'style');
 
   // no <styles/>s, nothing to do
   if (styleEls === null || styleEls.length <= 1) {
@@ -25,12 +29,12 @@ exports.fn = function (document) {
 
   let styles = [];
   for (let styleEl of styleEls) {
-    if (styleEl.isEmpty() || xast.closestByName(styleEl, 'foreignObject')) {
+    if (styleEl.isEmpty() || closestByName(styleEl, 'foreignObject')) {
       // skip empty <style/>s or <foreignObject> content.
       continue;
     }
 
-    const cssStr = cssTools.getCssStr(styleEl);
+    const cssStr = getCssStr(styleEl);
 
     styles.push({
       styleEl: styleEl,
@@ -65,7 +69,7 @@ exports.fn = function (document) {
   // assign the collected styles to the first style element
   styles[0].styleEl.removeAttr('media'); // remove media mq attribute as CSS media queries are used
   const collectedStylesStr = collectedStyles.join('\n\n');
-  cssTools.setCssStr(styles[0].styleEl, collectedStylesStr);
+  setCssStr(styles[0].styleEl, collectedStylesStr);
 
   return document;
 };
