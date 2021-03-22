@@ -1,11 +1,11 @@
 'use strict';
 
+const { querySelectorAll, closestByName } = require('../lib/xast.js');
+const { getCssStr,        setCssStr     } = require('../lib/css-tools');
+
 exports.type = 'full';
 exports.active = true;
 exports.description = 'merge multiple style elements into one';
-
-const { querySelectorAll, closestByName } = require('../lib/xast.js');
-const { getCssStr,        setCssStr     } = require('../lib/css-tools');
 
 /**
  * Merge multiple style elements into one.
