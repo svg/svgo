@@ -15,7 +15,7 @@
             <path/>
         </symbol>
     </defs>
-    <svg style="fill:#000">
+    <svg overflow="visible" xlink:href="#a" style="fill:#000">
         <path/>
     </svg>
 </svg>
