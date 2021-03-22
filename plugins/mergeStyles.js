@@ -5,7 +5,7 @@ exports.active = true;
 exports.description = 'merge multiple style elements into one';
 
 const cssTools = require('../lib/css-tools');
-const xast     = require('../lib/xast');
+const xast = require('../lib/xast');
 
 /**
  * Merge multiple style elements into one.
@@ -52,7 +52,7 @@ exports.fn = function (document) {
       collectedStyles.push(style.cssStr);
     }
 
-	// remove all processed style elements – except the first one
+    // remove all processed style elements – except the first one
     if (styleNo > 0) {
       const styleParentEl = style.styleEl.parentNode;
       styleParentEl.children = styleParentEl.children.splice(
