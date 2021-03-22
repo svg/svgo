@@ -25,7 +25,7 @@ exports.fn = function (document) {
 
   let styles = [];
   for (let styleEl of styleEls) {
-    if (styleEl.isEmpty() || styleEl.closestElem('foreignObject')) {
+    if (styleEl.isEmpty() || xast.closestByName(styleEl, 'foreignObject')) {
       // skip empty <style/>s or <foreignObject> content.
       continue;
     }
