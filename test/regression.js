@@ -1,8 +1,10 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const util = require('util');
 const zlib = require('zlib');
+const http = require('http');
 const stream = require('stream');
 const fetch = require('node-fetch');
 const tarStream = require('tar-stream');
@@ -15,10 +17,22 @@ const { optimize } = require('../lib/svgo.js');
 const pipeline = util.promisify(stream.pipeline);
 
 const readSvgFiles = async () => {
-  const svgFiles = [];
-  const response = await fetch(
-    'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz'
+  const cachedArchiveFile = path.join(
+    process.cwd(),
+    'node_modules/.cache/W3C_SVG_11_TestSuite.tar.gz'
   );
+  const svgFiles = new Map();
+  let fileStream;
+  try {
+    await fs.promises.access(cachedArchiveFile);
+    fileStream = fs.createReadStream(cachedArchiveFile);
+  } catch {
+    const response = await fetch(
+      'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz'
+    );
+    fileStream = response.body;
+    fileStream.pipe(fs.createWriteStream(cachedArchiveFile));
+  }
   const extract = tarStream.extract();
   extract.on('entry', async (header, stream, next) => {
     try {
@@ -27,13 +41,13 @@ const readSvgFiles = async () => {
           // strip folder and extension
           const name = header.name.slice('svg/'.length, -'.svg'.length);
           const string = await getStream(stream);
-          svgFiles.push([name, string]);
+          svgFiles.set(name, string);
         }
         if (header.name.endsWith('.svgz')) {
           // strip folder and extension
           const name = header.name.slice('svg/'.length, -'.svgz'.length);
           const string = await getStream(stream.pipe(zlib.createGunzip()));
-          svgFiles.push([name, string]);
+          svgFiles.set(name, string);
         }
       }
     } catch (error) {
@@ -43,7 +57,7 @@ const readSvgFiles = async () => {
     stream.resume();
     next();
   });
-  await pipeline(response.body, extract);
+  await pipeline(fileStream, extract);
   return svgFiles;
 };
 
@@ -86,12 +100,11 @@ const chunkInto = (array, chunksCount) => {
 };
 
 const runTests = async ({ svgFiles }) => {
-  const optimizedFiles = optimizeSvgFiles(svgFiles);
   let skipped = 0;
   let mismatched = 0;
   let passed = 0;
   console.info('Start browser...');
-  const processFile = async (page, name, string) => {
+  const processFile = async (page, name) => {
     if (
       // hard to detect the end of animation
       name.startsWith('animate-') ||
@@ -122,16 +135,15 @@ const runTests = async ({ svgFiles }) => {
       skipped += 1;
       return;
     }
-    const optimized = optimizedFiles.get(name);
     const width = 960;
     const height = 720;
-    await page.goto(`data:image/svg+xml,${encodeURIComponent(string)}`);
+    await page.goto(`http://localhost:5000/original/${name}`);
     await page.setViewportSize({ width, height });
     const originalBuffer = await page.screenshot({
       omitBackground: true,
       clip: { x: 0, y: 0, width, height },
     });
-    await page.goto(`data:image/svg+xml,${encodeURIComponent(optimized)}`);
+    await page.goto(`http://localhost:5000/optimized/${name}`);
     const optimizedBuffer = await page.screenshot({
       omitBackground: true,
       clip: { x: 0, y: 0, width, height },
@@ -168,8 +180,8 @@ const runTests = async ({ svgFiles }) => {
   await Promise.all(
     chunks.map(async (chunk) => {
       const page = await context.newPage();
-      for (const [name, string] of chunk) {
-        await processFile(page, name, string);
+      for (const name of chunk) {
+        await processFile(page, name);
       }
       await page.close();
     })
@@ -186,7 +198,32 @@ const runTests = async ({ svgFiles }) => {
     const start = process.hrtime.bigint();
     console.info('Download W3C SVG 1.1 Test Suite and extract svg files');
     const svgFiles = await readSvgFiles();
-    const passed = await runTests({ svgFiles });
+    const optimizedFiles = optimizeSvgFiles(svgFiles);
+    const server = http.createServer((req, res) => {
+      if (req.url.startsWith('/original/')) {
+        const name = req.url.slice('/original/'.length);
+        if (svgFiles.has(name)) {
+          res.setHeader('Content-Type', 'image/svg+xml');
+          res.end(svgFiles.get(name));
+          return;
+        }
+      }
+      if (req.url.startsWith('/optimized/')) {
+        const name = req.url.slice('/optimized/'.length);
+        if (optimizedFiles.has(name)) {
+          res.setHeader('Content-Type', 'image/svg+xml');
+          res.end(optimizedFiles.get(name));
+          return;
+        }
+      }
+      res.statusCode = 404;
+      res.end();
+    });
+    await new Promise((resolve) => {
+      server.listen(5000, resolve);
+    });
+    const passed = await runTests({ svgFiles: Array.from(svgFiles.keys()) });
+    server.close();
     const end = process.hrtime.bigint();
     const diff = (end - start) / BigInt(1e6);
     if (passed) {
