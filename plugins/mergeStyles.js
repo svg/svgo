@@ -40,8 +40,9 @@ exports.fn = function (document) {
   }
 
   var collectedStyles = [];
-  var styleNo = 0;
-  for (var style of styles) {
+  for (let styleNo = 0; styleNo < styles.length; styleNo += 1) {
+    const style = styles[styleNo];
+
     if (style.mq) {
       let wrappedStyles =
         '@media ' + style.mq.value + ' {' + '\n' + style.cssStr + '\n' + '}';
@@ -58,7 +59,6 @@ exports.fn = function (document) {
         1
       );
     }
-    styleNo++;
   }
 
   // assign the collected styles to the first style element
