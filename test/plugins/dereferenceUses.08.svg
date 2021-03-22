@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1 1" height="64" width="64">
+    <defs>
+        <symbol id="a" overflow="visible">
+            <path/>
+        </symbol>
+    </defs>
+    <use xlink:href="#a" style="fill:#000"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1 1" height="64" width="64">
+    <defs>
+        <symbol id="a" overflow="visible">
+            <path/>
+        </symbol>
+    </defs>
+    <svg style="fill:#000">
+        <path/>
+    </svg>
+</svg>
+
+@@@
+
+{"keepHref":true}
