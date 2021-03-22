@@ -49,7 +49,7 @@ exports.fn = function (document) {
     const style = styles[styleNo];
 
     if (style.mq) {
-      let wrappedStyles =
+      const wrappedStyles =
         '@media ' + style.mq + ' {' + '\n' + style.cssStr + '\n' + '}';
       collectedStyles.push(wrappedStyles);
     } else {
