@@ -190,6 +190,18 @@ describe('config', function () {
         'customPlugin'
       );
     });
+    it('should pass global floatPrecision when plugin one not specified', () => {
+      const convertPathDataPlugin = resolvePluginConfig(
+        extendedPlugins.find((item) => item.name === 'convertPathData'),
+        { floatPrecision: 1 }
+      );
+      const convertTransformPlugin = resolvePluginConfig(
+        extendedPlugins.find((item) => item.name === 'convertTransform'),
+        {}
+      );
+      expect(convertPathDataPlugin.params.floatPrecision).to.equal(1);
+      expect(convertTransformPlugin.params.floatPrecision).to.equal(3);
+    });
   });
 
   describe('config', () => {
