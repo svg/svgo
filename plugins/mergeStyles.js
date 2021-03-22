@@ -4,7 +4,8 @@ exports.type = 'full';
 exports.active = true;
 exports.description = 'merge multiple style elements into one';
 
-var cssTools = require('../lib/css-tools');
+const cssTools = require('../lib/css-tools'),
+      xast     = require('../lib/xast');
 
 /**
  * Merge multiple style elements into one.
@@ -15,7 +16,7 @@ var cssTools = require('../lib/css-tools');
  */
 exports.fn = function (document) {
   // collect <style/>s (preserve order)
-  var styleEls = document.querySelectorAll('style');
+  var styleEls = xast.querySelectorAll(document, 'style');
 
   // no <styles/>s, nothing to do
   if (styleEls === null || styleEls.length <= 1) {
