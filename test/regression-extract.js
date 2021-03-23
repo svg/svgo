@@ -10,7 +10,7 @@ const tarStream = require('tar-stream');
 
 const pipeline = util.promisify(stream.pipeline);
 
-const extractTarGz = (baseDir, include) => {
+const extractTarGz = async (url, baseDir, include) => {
   const extract = tarStream.extract();
   extract.on('entry', async (header, stream, next) => {
     try {
@@ -38,40 +38,18 @@ const extractTarGz = (baseDir, include) => {
     stream.resume();
     next();
   });
-  return extract;
-};
-
-const extractW3cSvg11TestSuite = async () => {
-  const cachedArchiveFile = path.join(
-    process.cwd(),
-    'node_modules/.cache/W3C_SVG_11_TestSuite.tar.gz'
-  );
-  const svgFiles = new Map();
-  let fileStream;
-  try {
-    await fs.promises.access(cachedArchiveFile);
-    fileStream = fs.createReadStream(cachedArchiveFile);
-  } catch {
-    const response = await fetch(
-      'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz'
-    );
-    fileStream = response.body;
-    fileStream.pipe(fs.createWriteStream(cachedArchiveFile));
-  }
-  await pipeline(
-    fileStream,
-    extractTarGz(
-      path.join(__dirname, 'regression-fixtures', 'w3c-svg-11-test-suite'),
-      /^svg\//
-    )
-  );
-  return svgFiles;
+  const response = await fetch(url);
+  await pipeline(response.body, extract);
 };
 
 (async () => {
   try {
     console.info('Download W3C SVG 1.1 Test Suite and extract svg files');
-    await extractW3cSvg11TestSuite();
+    await extractTarGz(
+      'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz',
+      path.join(__dirname, 'regression-fixtures', 'w3c-svg-11-test-suite'),
+      /^svg\//
+    );
   } catch (error) {
     console.error(error);
     process.exit(1);
