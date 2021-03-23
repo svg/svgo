@@ -34,6 +34,8 @@ const runTests = async ({ list }) => {
       name === 'w3c-svg-11-test-suite/svg/pservers-grad-18-b.svg' ||
       // animated filter
       name === 'w3c-svg-11-test-suite/svg/filters-light-04-f.svg' ||
+      // animated filter
+      name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // removing wrapping <g> breaks :first-child pseudo-class
       name === 'w3c-svg-11-test-suite/svg/styling-pres-04-f.svg' ||
       // messed case insensitivity while inlining styles
