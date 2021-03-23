@@ -74,6 +74,7 @@
     "test/jsapi/_index.js",
     "test/plugins/_index.js",
     "test/regression.js",
+    "test/performance.js",
     "test/svg2js/_index.js",
     "test/svgo/_index.js"
   ]
