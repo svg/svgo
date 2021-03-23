@@ -7,7 +7,6 @@ const zlib = require('zlib');
 const stream = require('stream');
 const fetch = require('node-fetch');
 const tarStream = require('tar-stream');
-const getStream = require('get-stream');
 
 const pipeline = util.promisify(stream.pipeline);
 
