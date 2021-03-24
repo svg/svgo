@@ -2,91 +2,11 @@
 
 const fs = require('fs');
 const path = require('path');
-const util = require('util');
-const zlib = require('zlib');
 const http = require('http');
-const stream = require('stream');
-const fetch = require('node-fetch');
-const tarStream = require('tar-stream');
-const getStream = require('get-stream');
 const { chromium } = require('playwright');
 const { PNG } = require('pngjs');
 const pixelmatch = require('pixelmatch');
 const { optimize } = require('../lib/svgo.js');
-
-const pipeline = util.promisify(stream.pipeline);
-
-const readSvgFiles = async () => {
-  const cachedArchiveFile = path.join(
-    process.cwd(),
-    'node_modules/.cache/W3C_SVG_11_TestSuite.tar.gz'
-  );
-  const svgFiles = new Map();
-  let fileStream;
-  try {
-    await fs.promises.access(cachedArchiveFile);
-    fileStream = fs.createReadStream(cachedArchiveFile);
-  } catch {
-    const response = await fetch(
-      'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz'
-    );
-    fileStream = response.body;
-    fileStream.pipe(fs.createWriteStream(cachedArchiveFile));
-  }
-  const extract = tarStream.extract();
-  extract.on('entry', async (header, stream, next) => {
-    try {
-      if (header.name.startsWith('svg/')) {
-        if (header.name.endsWith('.svg')) {
-          // strip folder and extension
-          const name = header.name.slice('svg/'.length, -'.svg'.length);
-          const string = await getStream(stream);
-          svgFiles.set(name, string);
-        }
-        if (header.name.endsWith('.svgz')) {
-          // strip folder and extension
-          const name = header.name.slice('svg/'.length, -'.svgz'.length);
-          const string = await getStream(stream.pipe(zlib.createGunzip()));
-          svgFiles.set(name, string);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      process.exit(1);
-    }
-    stream.resume();
-    next();
-  });
-  await pipeline(fileStream, extract);
-  return svgFiles;
-};
-
-const optimizeSvgFiles = (svgFiles) => {
-  const optimizedFiles = new Map();
-  let failed = 0;
-  for (const [name, string] of svgFiles) {
-    try {
-      const result = optimize(string, { path: name, floatPrecision: 4 });
-      if (result.error) {
-        console.error(result.error);
-        console.error(`File: ${name}`);
-        failed += 1;
-        continue;
-      } else {
-        optimizedFiles.set(name, result.data);
-      }
-    } catch (error) {
-      console.error(error);
-      console.error(`File: ${name}`);
-      failed += 1;
-      continue;
-    }
-  }
-  if (failed !== 0) {
-    throw Error(`Failed to optimize ${failed} cases`);
-  }
-  return optimizedFiles;
-};
 
 const chunkInto = (array, chunksCount) => {
   // take upper bound to include tail
@@ -99,7 +19,7 @@ const chunkInto = (array, chunksCount) => {
   return result;
 };
 
-const runTests = async ({ svgFiles }) => {
+const runTests = async ({ list }) => {
   let skipped = 0;
   let mismatched = 0;
   let passed = 0;
@@ -107,29 +27,31 @@ const runTests = async ({ svgFiles }) => {
   const processFile = async (page, name) => {
     if (
       // hard to detect the end of animation
-      name.startsWith('animate-') ||
+      name.startsWith('w3c-svg-11-test-suite/svg/animate-') ||
       // breaks because of optimisation despite of script
-      name === 'interact-pointer-04-f' ||
+      name === 'w3c-svg-11-test-suite/svg/interact-pointer-04-f.svg' ||
       // messed gradients
-      name === 'pservers-grad-18-b' ||
+      name === 'w3c-svg-11-test-suite/svg/pservers-grad-18-b.svg' ||
       // animated filter
-      name === 'filters-light-04-f' ||
+      name === 'w3c-svg-11-test-suite/svg/filters-light-04-f.svg' ||
+      // animated filter
+      name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // removing wrapping <g> breaks :first-child pseudo-class
-      name === 'styling-pres-04-f' ||
+      name === 'w3c-svg-11-test-suite/svg/styling-pres-04-f.svg' ||
       // messed case insensitivity while inlining styles
-      name === 'styling-css-10-f' ||
+      name === 'w3c-svg-11-test-suite/svg/styling-css-10-f.svg' ||
       // rect is converted to path which matches wrong styles
-      name === 'styling-css-08-f' ||
+      name === 'w3c-svg-11-test-suite/svg/styling-css-08-f.svg' ||
       // external image
-      name === 'struct-image-02-b' ||
+      name === 'w3c-svg-11-test-suite/svg/struct-image-02-b.svg' ||
       // complex selectors are messed becase of converting shapes to paths
-      name === 'struct-use-10-f' ||
-      name === 'struct-use-11-f' ||
-      name === 'styling-css-01-b' ||
-      name === 'styling-css-03-b' ||
-      name === 'styling-css-04-f' ||
+      name === 'w3c-svg-11-test-suite/svg/struct-use-10-f.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/struct-use-11-f.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/styling-css-01-b.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/styling-css-03-b.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/styling-css-04-f.svg' ||
       // strange artifact breaks inconsistently  breaks regression tests
-      name === 'filters-conv-05-f'
+      name === 'w3c-svg-11-test-suite/svg/filters-conv-05-f.svg'
     ) {
       console.info(`${name} is skipped`);
       skipped += 1;
@@ -166,17 +88,19 @@ const runTests = async ({ svgFiles }) => {
       mismatched += 1;
       console.error(`${name} is mismatched`);
       if (process.env.NO_DIFF == null) {
-        await fs.promises.mkdir('diffs', { recursive: true });
-        await fs.promises.writeFile(
-          `diffs/${name}.diff.png`,
-          PNG.sync.write(diff)
+        const file = path.join(
+          __dirname,
+          'regression-diffs',
+          `${name}.diff.png`
         );
+        await fs.promises.mkdir(path.dirname(file), { recursive: true });
+        await fs.promises.writeFile(file, PNG.sync.write(diff));
       }
     }
   };
   const browser = await chromium.launch();
   const context = await browser.newContext({ javaScriptEnabled: false });
-  const chunks = chunkInto(svgFiles, 8);
+  const chunks = chunkInto(list, 8);
   await Promise.all(
     chunks.map(async (chunk) => {
       const page = await context.newPage();
@@ -193,18 +117,60 @@ const runTests = async ({ svgFiles }) => {
   return mismatched === 0;
 };
 
+const readdirRecursive = async (absolute, relative = '') => {
+  let result = [];
+  const list = await fs.promises.readdir(absolute, { withFileTypes: true });
+  for (const item of list) {
+    const itemAbsolute = path.join(absolute, item.name);
+    const itemRelative = path.join(relative, item.name);
+    if (item.isDirectory()) {
+      const itemList = await readdirRecursive(itemAbsolute, itemRelative);
+      result = [...result, ...itemList];
+    } else if (item.name.endsWith('.svg')) {
+      result = [...result, itemRelative];
+    }
+  }
+  return result;
+};
+
 (async () => {
   try {
     const start = process.hrtime.bigint();
-    console.info('Download W3C SVG 1.1 Test Suite and extract svg files');
-    const svgFiles = await readSvgFiles();
-    const optimizedFiles = optimizeSvgFiles(svgFiles);
+    const fixturesDir = path.join(__dirname, 'regression-fixtures');
+    const list = await readdirRecursive(fixturesDir);
+    const originalFiles = new Map();
+    const optimizedFiles = new Map();
+    // read original and optimize
+    let failed = 0;
+    for (const name of list) {
+      try {
+        const file = path.join(fixturesDir, name);
+        const original = await fs.promises.readFile(file, 'utf-8');
+        const result = optimize(original, { path: name, floatPrecision: 4 });
+        if (result.error) {
+          console.error(result.error);
+          console.error(`File: ${name}`);
+          failed += 1;
+        } else {
+          originalFiles.set(name, original);
+          optimizedFiles.set(name, result.data);
+        }
+      } catch (error) {
+        console.error(error);
+        console.error(`File: ${name}`);
+        failed += 1;
+      }
+    }
+    if (failed !== 0) {
+      throw Error(`Failed to optimize ${failed} cases`);
+    }
+    // setup server
     const server = http.createServer((req, res) => {
       if (req.url.startsWith('/original/')) {
         const name = req.url.slice('/original/'.length);
-        if (svgFiles.has(name)) {
+        if (originalFiles.has(name)) {
           res.setHeader('Content-Type', 'image/svg+xml');
-          res.end(svgFiles.get(name));
+          res.end(originalFiles.get(name));
           return;
         }
       }
@@ -222,8 +188,9 @@ const runTests = async ({ svgFiles }) => {
     await new Promise((resolve) => {
       server.listen(5000, resolve);
     });
-    const passed = await runTests({ svgFiles: Array.from(svgFiles.keys()) });
+    const passed = await runTests({ list });
     server.close();
+    // compute time
     const end = process.hrtime.bigint();
     const diff = (end - start) / BigInt(1e6);
     if (passed) {
