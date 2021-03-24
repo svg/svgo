@@ -126,7 +126,7 @@ const readdirRecursive = async (absolute, relative = '') => {
     if (item.isDirectory()) {
       const itemList = await readdirRecursive(itemAbsolute, itemRelative);
       result = [...result, ...itemList];
-    } else {
+    } else if (item.name.endsWith('.svg')) {
       result = [...result, itemRelative];
     }
   }
