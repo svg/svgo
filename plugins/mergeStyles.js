@@ -25,8 +25,12 @@ exports.fn = function (document) {
 
   let styles = [];
   for (let styleElement of styleElements) {
-    if ((styleElement.attributes.type && styleElement.attributes.type !== 'text/css') ||
-        closestByName(styleElement, 'foreignObject')) {
+    if (styleElement.attributes.type && styleElement.attributes.type !== 'text/css') {
+      // skip <style> with invalid type attribute
+      continue;
+    }
+
+    if(closestByName(styleElement, 'foreignObject')) {
       // skip <foreignObject> content
       continue;
     }
