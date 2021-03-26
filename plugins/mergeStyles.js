@@ -16,10 +16,7 @@ exports.description = 'merge multiple style elements into one';
  */
 exports.fn = function (document) {
   // collect <style/>s with valid type attribute (preserve order)
-  const styleElements = querySelectorAll(
-    document,
-    'style:not([type]), style[type=""], style[type="text/css"]'
-  );
+  const styleElements = querySelectorAll(document, 'style');
 
   // no <styles/>s, nothing to do
   if (styleElements.length <= 1) {
@@ -28,7 +25,8 @@ exports.fn = function (document) {
 
   let styles = [];
   for (let styleElement of styleElements) {
-    if (closestByName(styleElement, 'foreignObject')) {
+    if ((styleElement.attributes.type && styleElement.attributes.type !== 'text/css') ||
+        closestByName(styleElement, 'foreignObject')) {
       // skip <foreignObject> content
       continue;
     }
