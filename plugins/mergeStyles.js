@@ -25,8 +25,8 @@ exports.fn = function (document) {
 
   let styles = [];
   for (let styleEl of styleEls) {
-    if (styleEl.length === 0 || closestByName(styleEl, 'foreignObject')) {
-      // skip empty <style/>s or <foreignObject> content.
+    if (closestByName(styleEl, 'foreignObject')) {
+      // skip <foreignObject> content
       continue;
     }
 
@@ -54,18 +54,28 @@ exports.fn = function (document) {
 
     // remove all processed style elements – except the first one
     if (styleNo > 0) {
-      const styleParentEl = style.styleEl.parentNode;
-      styleParentEl.children.splice(
-        styleParentEl.children.indexOf(style.styleEl),
-        1
-      );
+      removeFromParent(style.styleEl);
     }
   }
 
-  // assign the collected styles to the first style element
-  styles[0].styleEl.removeAttr('media'); // remove media mq attribute as CSS media queries are used
+  // re-assign the collected styles to the first style element
+  let firstStyle = styles[0];
+  delete firstStyle.styleEl.attributes.media; // remove media mq attribute as CSS media queries are used
   const collectedStylesStr = collectedStyles.join('');
-  setCssStr(styles[0].styleEl, collectedStylesStr);
+  if(collectedStylesStr.trim().length > 0) {
+    setCssStr(firstStyle.styleEl, collectedStylesStr);
+  } else {
+    removeFromParent(firstStyle.styleEl);
+  }
 
   return document;
 };
+
+
+function removeFromParent(el) {
+  const parentEl = el.parentNode;
+  return parentEl.children.splice(
+	parentEl.children.indexOf(el),
+	1
+  );
+}
