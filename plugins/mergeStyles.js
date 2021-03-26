@@ -62,11 +62,11 @@ exports.fn = function (document) {
       removeFromParent(style.styleElement);
     }
   }
+  const collectedStylesString = collectedStyles.join('');
 
   // re-assign the collected styles to the first style element
   let firstStyle = styles[0];
   delete firstStyle.styleElement.attributes.media; // remove media mq attribute as CSS media queries are used
-  const collectedStylesString = collectedStyles.join('');
   if (collectedStylesString.trim().length > 0) {
     setCssStr(firstStyle.styleElement, collectedStylesString);
   } else {
