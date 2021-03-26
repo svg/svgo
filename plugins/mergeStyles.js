@@ -15,8 +15,11 @@ exports.description = 'merge multiple style elements into one';
  * @author strarsis <strarsis@gmail.com>
  */
 exports.fn = function (document) {
-  // collect <style/>s (preserve order)
-  const styleElements = querySelectorAll(document, 'style');
+  // collect <style/>s with valid type attribute (preserve order)
+  const styleElements = querySelectorAll(
+    document,
+    'style:not([type]), style[type=""], style[type="text/css"]'
+  );
 
   // no <styles/>s, nothing to do
   if (styleElements.length <= 1) {
