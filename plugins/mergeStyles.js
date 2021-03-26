@@ -1,7 +1,7 @@
 'use strict';
 
 const { querySelectorAll, closestByName } = require('../lib/xast.js');
-const { getCssStr,        setCssStr     } = require('../lib/css-tools');
+const { getCssStr, setCssStr } = require('../lib/css-tools');
 
 exports.type = 'full';
 exports.active = true;
@@ -55,7 +55,7 @@ exports.fn = function (document) {
     // remove all processed style elements – except the first one
     if (styleNo > 0) {
       const styleParentEl = style.styleEl.parentNode;
-      styleParentEl.children = styleParentEl.children.splice(
+      styleParentEl.children.splice(
         styleParentEl.children.indexOf(style.styleEl),
         1
       );
@@ -64,7 +64,7 @@ exports.fn = function (document) {
 
   // assign the collected styles to the first style element
   styles[0].styleEl.removeAttr('media'); // remove media mq attribute as CSS media queries are used
-  const collectedStylesStr = collectedStyles.join('\n\n');
+  const collectedStylesStr = collectedStyles.join('');
   setCssStr(styles[0].styleEl, collectedStylesStr);
 
   return document;

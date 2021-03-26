@@ -15,11 +15,7 @@ Check whether plugin works with two style elements that contain styles that also
     <style>
         @media print {
 .st0{ fill:red; padding-top: 1em; padding-right: 1em; padding-bottom: 1em; padding-left: 1em; }
-}
-
-.test { background: red; }
-
-@media only screen and (min-width: 600px) {
+}.test { background: red; }@media only screen and (min-width: 600px) {
 .wrapper { color: blue; }
 }
     </style>
