@@ -19,7 +19,7 @@ exports.fn = function (document) {
   const styleElements = querySelectorAll(document, 'style');
 
   // no <styles/>s, nothing to do
-  if (styleElements.length <= 1) {
+  if (styleElements.length === 0) {
     return document;
   }
 
