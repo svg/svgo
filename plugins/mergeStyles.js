@@ -23,8 +23,8 @@ exports.fn = function (document) {
     return document;
   }
 
-  let styles = [];
-  for (let styleElement of styleElements) {
+  const styles = [];
+  for (const styleElement of styleElements) {
     if (
       styleElement.attributes.type &&
       styleElement.attributes.type !== 'text/css'
@@ -48,7 +48,7 @@ exports.fn = function (document) {
     });
   }
 
-  let collectedStyles = [];
+  const collectedStyles = [];
   for (let styleNo = 0; styleNo < styles.length; styleNo += 1) {
     const style = styles[styleNo];
 
@@ -69,7 +69,7 @@ ${style.cssStr}
   const collectedStylesString = collectedStyles.join('');
 
   // combine collected styles in the first style element
-  let firstStyle = styles[0];
+  const firstStyle = styles[0];
   delete firstStyle.styleElement.attributes.media; // remove media mq attribute as CSS media queries are used
   if (collectedStylesString.trim().length > 0) {
     setCssStr(firstStyle.styleElement, collectedStylesString);
