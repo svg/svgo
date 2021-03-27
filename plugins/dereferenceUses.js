@@ -67,7 +67,7 @@ exports.fn = function (document, options) {
     const insertElementAttributeNames = Object.keys(insertElement.attributes);
     const OverridingUseAttributesNames = Object.keys(OverridingUseAttributes);
     for (const attributeName in useElement.attributes) {
-      // don't remove attributes from referenced that by specs overrides the one of the <use> element
+      // don't remove attributes from the referenced element that, by specs, override the one of the <use> element
       if (
         insertElementAttributeNames.includes(attributeName) &&
         !OverridingUseAttributesNames.includes(attributeName)
