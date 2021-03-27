@@ -14,7 +14,7 @@ exports.params = {
   symbolContainer: 'svg', // browsers use <svg/> as container of <symbol/> content (`g` could also be used)
 };
 
-const OverridingUseAttributes = [
+const OverridingUseAttributeNames = [
   'x',
   'y',
   'width',
@@ -22,7 +22,7 @@ const OverridingUseAttributes = [
   'href',
   'xlink:href',
 ];
-const HrefAttributes = ['href', 'xlink:href'];
+const HrefAttributeNames = ['href', 'xlink:href'];
 
 /**
  * Dereferences <use> elements
@@ -60,25 +60,26 @@ exports.fn = function (document, options) {
     // clone referenced element for insertion
     const insertElement = targetElement.clone();
 
-    // Attribute inheritance of the dereferenced element
+    // Attribute inheritance of the referenced element
     // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
     //   "Only the attributes x, y, width, height and href on the use element will override those set on the referenced element.
     //    However, any other attributes not set on the referenced element will be applied to the use element."
     const insertElementAttributeNames = Object.keys(insertElement.attributes);
-    const OverridingUseAttributesNames = Object.keys(OverridingUseAttributes);
     for (const attributeName in useElement.attributes) {
       // don't remove attributes from the referenced element that, by specs, override the one of the <use> element
       if (
         insertElementAttributeNames.includes(attributeName) &&
-        !OverridingUseAttributesNames.includes(attributeName)
+        !OverridingUseAttributeNames.includes(attributeName)
       )
         continue;
 
       // don't remove href attribute with keepHref option turned on
-      if (!options.keepHref && HrefAttributes.includes(attributeName)) continue;
+      if (!options.keepHref && HrefAttributeNames.includes(attributeName))
+        continue;
 
-      // remove overriding attributes from referenced node
-      delete insertElement.attributes[attributeName];
+      // set overriding attributes from referenced node
+      insertElement.attributes[attributeName] =
+        useElement.attributes[attributeName];
     }
 
     // only the original node is allowed to have this ID (IDs must be unique)
