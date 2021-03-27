@@ -54,7 +54,9 @@ exports.fn = function (document) {
 
     if (style.mq) {
       const wrappedStyles =
-        '@media ' + style.mq + ' {' + '\n' + style.cssStr + '\n' + '}';
+        `@media ${style.mq} {
+${style.cssStr}
+}`;
       collectedStyles.push(wrappedStyles);
     } else {
       collectedStyles.push(style.cssStr);
