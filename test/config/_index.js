@@ -164,7 +164,7 @@ describe('config', function () {
     );
     it('should preserve internal plugins order', () => {
       expect(removeAttrsIndex).to.equal(41);
-      expect(cleanupIDsIndex).to.equal(10);
+      expect(cleanupIDsIndex).to.equal(11);
     });
     it('should activate inactive by default plugins', () => {
       const removeAttrsPlugin = resolvePluginConfig(
