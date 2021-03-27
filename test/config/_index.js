@@ -163,8 +163,8 @@ describe('config', function () {
       (item) => item.name === 'cleanupIDs'
     );
     it('should preserve internal plugins order', () => {
-      expect(removeAttrsIndex).to.equal(40);
-      expect(cleanupIDsIndex).to.equal(10);
+      expect(removeAttrsIndex).to.equal(41);
+      expect(cleanupIDsIndex).to.equal(11);
     });
     it('should activate inactive by default plugins', () => {
       const removeAttrsPlugin = resolvePluginConfig(
@@ -189,6 +189,18 @@ describe('config', function () {
       expect(extendedPlugins[extendedPlugins.length - 1].name).to.equal(
         'customPlugin'
       );
+    });
+    it('should pass global floatPrecision when plugin one not specified', () => {
+      const convertPathDataPlugin = resolvePluginConfig(
+        extendedPlugins.find((item) => item.name === 'convertPathData'),
+        { floatPrecision: 1 }
+      );
+      const convertTransformPlugin = resolvePluginConfig(
+        extendedPlugins.find((item) => item.name === 'convertTransform'),
+        {}
+      );
+      expect(convertPathDataPlugin.params.floatPrecision).to.equal(1);
+      expect(convertTransformPlugin.params.floatPrecision).to.equal(3);
     });
   });
 
