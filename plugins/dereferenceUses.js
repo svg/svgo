@@ -1,5 +1,7 @@
 'use strict';
 
+const { querySelectorAll, querySelector } = require('../lib/xast.js');
+
 exports.type = 'full';
 
 exports.active = true;
@@ -28,7 +30,7 @@ exports.fn = function (document, options) {
   options = options || {};
 
   // collect <use/>s
-  var useEls = document.querySelectorAll('use');
+  const useEls = querySelectorAll(document, 'use');
 
   // no <use/>s, nothing to do
   if (useEls === null) {
@@ -36,20 +38,20 @@ exports.fn = function (document, options) {
   }
 
   // replace <use/> with referenced node
-  for (var useEl of useEls) {
+  for (const useEl of useEls) {
     // `href`/`xlink:href` value
-    var hrefAttr = useEl.attr('href')
+    const hrefAttr = useEl.attr('href')
       ? useEl.attr('href')
       : useEl.attr('xlink:href');
     if (!hrefAttr || hrefAttr.value.length === 0) continue;
-    var href = hrefAttr.value;
+    const href = hrefAttr.value;
 
     // look up referenced element
-    var targetEl = document.querySelector(href);
+    const targetEl = querySelector(document, href);
     if (!targetEl) continue;
 
     // clone referenced element for insertion
-    var insertEl = targetEl.clone();
+    const insertEl = targetEl.clone();
 
     // Attribute inheritance of the dereferenced element
     // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
@@ -67,9 +69,9 @@ exports.fn = function (document, options) {
     });
     insertEl.removeAttr('id'); // only the original node is allowed to have this ID (IDs must be unique)
 
-    var useParentEl = useEl.parentNode;
+    const useParentEl = useEl.parentNode;
     // position of <use/> in parent
-    var useElPosition = useParentEl.children.indexOf(useEl);
+    const useElPosition = useParentEl.children.indexOf(useEl);
 
     // <symbol/> elements are template elements (hence not visible),
     // browsers would place a <symbol/> element as a different element
@@ -86,7 +88,7 @@ exports.fn = function (document, options) {
     });
 
     // replace the <use/> element with the referenced element
-    useParentEl.spliceContent(useElPosition, 1, insertEl);
+    useParentEl.children.splice(useElPosition, 1, insertEl);
   }
 
   return document;

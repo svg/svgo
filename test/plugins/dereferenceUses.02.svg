@@ -1,3 +1,7 @@
+Check whether the plugin works with <use> elements that reference to IDs without element, while keeping the href attributes.
+
+===
+
 <svg viewBox="0 0 30 10" xmlns="http://www.w3.org/2000/svg">
     <circle id="myCircle" cx="5" cy="5" r="4" />
     <use href="#nonExisting" />

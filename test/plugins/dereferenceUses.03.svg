@@ -1,3 +1,7 @@
+Check whether plugin works with dereferencing multiple <use> elements that reference the same element, while keeping the href attributes.
+
+===
+
 <svg viewBox="0 0 30 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <circle id="myCircle" cx="5" cy="5" r="4" x="5" />
     <use href="#myCircle" x="10" />
