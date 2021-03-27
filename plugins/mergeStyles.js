@@ -53,8 +53,7 @@ exports.fn = function (document) {
     const style = styles[styleNo];
 
     if (style.mq) {
-      const wrappedStyles =
-        `@media ${style.mq} {
+      const wrappedStyles = `@media ${style.mq} {
 ${style.cssStr}
 }`;
       collectedStyles.push(wrappedStyles);
