@@ -14,8 +14,15 @@ exports.params = {
   symbolContainer: 'svg', // browsers use <svg/> as container of <symbol/> content (`g` could also be used)
 };
 
-const overridingUseAttrs = ['x', 'y', 'width', 'height', 'href', 'xlink:href'];
-const hrefAttrs = ['href', 'xlink:href'];
+const OverridingUseAttributes = [
+  'x',
+  'y',
+  'width',
+  'height',
+  'href',
+  'xlink:href',
+];
+const HrefAttributes = ['href', 'xlink:href'];
 
 /**
  * Dereferences <use> elements
@@ -30,65 +37,78 @@ exports.fn = function (document, options) {
   options = options || {};
 
   // collect <use/>s
-  const useEls = querySelectorAll(document, 'use');
+  const useElements = querySelectorAll(document, 'use');
 
   // no <use/>s, nothing to do
-  if (useEls === null) {
+  if (useElements === null) {
     return document;
   }
 
-  // replace <use/> with referenced node
-  for (const useEl of useEls) {
+  // replace each <use/> with its referenced node
+  for (const useElement of useElements) {
     // `href`/`xlink:href` value
-    const hrefAttr = useEl.attr('href')
-      ? useEl.attr('href')
-      : useEl.attr('xlink:href');
-    if (!hrefAttr || hrefAttr.value.length === 0) continue;
-    const href = hrefAttr.value;
+    const hrefAttribute = useElement.attr('href')
+      ? useElement.attr('href')
+      : useElement.attr('xlink:href');
+    if (!hrefAttribute || hrefAttribute.value.length === 0) continue;
+    const href = hrefAttribute.value;
 
     // look up referenced element
-    const targetEl = querySelector(document, href);
-    if (!targetEl) continue;
+    const targetElement = querySelector(document, href);
+    if (!targetElement) continue;
 
     // clone referenced element for insertion
-    const insertEl = targetEl.clone();
+    const insertElement = targetElement.clone();
 
     // Attribute inheritance of the dereferenced element
     // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
     //   "Only the attributes x, y, width, height and href on the use element will override those set on the referenced element.
     //    However, any other attributes not set on the referenced element will be applied to the use element."
-    useEl.eachAttr(function (attr) {
+    const insertElementAttributeNames = Object.keys(insertElement.attributes);
+    const OverridingUseAttributesNames = Object.keys(OverridingUseAttributes);
+    for (const attributeName in useElement.attributes) {
+      // don't remove attributes from referenced that by specs overrides the one of the <use> element
       if (
-        insertEl.hasAttr(attr.name) &&
-        !overridingUseAttrs.includes(attr.name)
+        insertElementAttributeNames.includes(attributeName) &&
+        !OverridingUseAttributesNames.includes(attributeName)
       )
-        return;
-      if (!options.keepHref && hrefAttrs.includes(attr.name)) return;
+        continue;
 
-      insertEl.addAttr(attr);
-    });
-    insertEl.removeAttr('id'); // only the original node is allowed to have this ID (IDs must be unique)
+      // don't remove href attribute with keepHref option turned on
+      if (!options.keepHref && HrefAttributes.includes(attributeName)) continue;
 
-    const useParentEl = useEl.parentNode;
-    // position of <use/> in parent
-    const useElPosition = useParentEl.children.indexOf(useEl);
+      // remove overriding attributes from referenced node
+      delete insertElement.attributes[attributeName];
+    }
+
+    // only the original node is allowed to have this ID (IDs must be unique)
+    delete insertElement.attributes['id'];
 
     // <symbol/> elements are template elements (hence not visible),
     // browsers would place a <symbol/> element as a different element
-    if (insertEl.isElem('symbol')) insertEl.renameElem(options.symbolContainer);
+    if (insertElement.isElem('symbol')) {
+      insertElement.name = options.symbolContainer;
+    }
 
     // apply styles of <use/> element on top of the referenced Element
-    const useElProperties = useEl.style.getProperties();
-    useElProperties.forEach(function (property, propertyName) {
-      insertEl.style.setProperty(
+    const useElementProperties = useElement.style.getProperties();
+    for (const propertyName in useElementProperties) {
+      const property = useElementProperties[propertyName];
+
+      insertElement.style.setProperty(
         propertyName,
         property.value,
         property.priority
       );
-    });
+    }
 
     // replace the <use/> element with the referenced element
-    useParentEl.children.splice(useElPosition, 1, insertEl);
+    const useParentElement = useElement.parentNode;
+
+    // position of <use/> in parent
+    const useElementPosition = useParentElement.children.indexOf(useElement);
+
+    useParentElement.children.splice(useElementPosition, 1, insertElement);
   }
 
   return document;
