@@ -68,7 +68,7 @@ ${style.cssStr}
   }
   const collectedStylesString = collectedStyles.join('');
 
-  // re-assign the collected styles to the first style element
+  // combine collected styles in the first style element
   let firstStyle = styles[0];
   delete firstStyle.styleElement.attributes.media; // remove media mq attribute as CSS media queries are used
   if (collectedStylesString.trim().length > 0) {
