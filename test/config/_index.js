@@ -163,7 +163,7 @@ describe('config', function () {
       (item) => item.name === 'cleanupIDs'
     );
     it('should preserve internal plugins order', () => {
-      expect(removeAttrsIndex).to.equal(40);
+      expect(removeAttrsIndex).to.equal(41);
       expect(cleanupIDsIndex).to.equal(10);
     });
     it('should activate inactive by default plugins', () => {
