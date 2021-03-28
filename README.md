@@ -122,6 +122,7 @@ module.exports = {
     'removeMetadata',
     'removeEditorsNSData',
     'cleanupAttrs',
+    'mergeStyles',
     'inlineStyles',
     'minifyStyles',
     'cleanupIDs',
@@ -208,6 +209,7 @@ const config = await loadConfig(configFile, cwd)
 | Plugin | Description | Default |
 | ------ | ----------- | ------- |
 | [cleanupAttrs](https://github.com/svg/svgo/blob/master/plugins/cleanupAttrs.js) | cleanup attributes from newlines, trailing, and repeating spaces | `enabled` |
+| [mergeStyles](https://github.com/svg/svgo/blob/master/plugins/mergeStyles.js) | merge multiple style elements into one | `enabled` |
 | [inlineStyles](https://github.com/svg/svgo/blob/master/plugins/inlineStyles.js) | move and merge styles from `<style>` elements to element `style` attributes | `enabled` |
 | [removeDoctype](https://github.com/svg/svgo/blob/master/plugins/removeDoctype.js) | remove `doctype` declaration | `enabled` |
 | [removeXMLProcInst](https://github.com/svg/svgo/blob/master/plugins/removeXMLProcInst.js) | remove XML processing instructions | `enabled` |
