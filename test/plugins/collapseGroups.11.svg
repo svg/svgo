@@ -1,3 +1,7 @@
+Preserve groups when clip-path and mask are used without any other attributes
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <clipPath id="a">
        <path d="..."/>

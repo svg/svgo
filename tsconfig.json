@@ -36,6 +36,7 @@
     "plugins/convertStyleToAttrs.js",
     "plugins/convertTransform.js",
     "plugins/mergePaths.js",
+    "plugins/mergeStyles.js",
     "plugins/moveElemsAttrsToGroup.js",
     "plugins/moveGroupAttrsToElems.js",
     "plugins/plugins.js",

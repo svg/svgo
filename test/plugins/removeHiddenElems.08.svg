@@ -1,3 +1,7 @@
+Remove empty or single point paths without markers
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <g>
         <path/>
