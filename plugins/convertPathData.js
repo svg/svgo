@@ -6,10 +6,8 @@ const { path2js, js2path } = require('./_path.js');
 const { applyTransforms } = require('./_applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
-exports.type = 'perItem';
-
+exports.type = 'visitor';
 exports.active = true;
-
 exports.description =
   'optimizes path data: writes in shorter form, applies transformations';
 
@@ -56,55 +54,59 @@ let arcTolerance;
  *
  * @author Kir Belevich
  */
-exports.fn = function (item, params) {
-  if (
-    item.type === 'element' &&
-    pathElems.includes(item.name) &&
-    item.attributes.d != null
-  ) {
-    const computedStyle = computeStyle(item);
-    precision = params.floatPrecision;
-    error =
-      precision !== false ? +Math.pow(0.1, precision).toFixed(precision) : 1e-2;
-    roundData = precision > 0 && precision < 20 ? strongRound : round;
-    if (params.makeArcs) {
-      arcThreshold = params.makeArcs.threshold;
-      arcTolerance = params.makeArcs.tolerance;
-    }
-    const hasMarkerMid = computedStyle['marker-mid'] != null;
+exports.fn = (root, params) => {
+  return {
+    element: {
+      enter: (node) => {
+        if (pathElems.includes(node.name) && node.attributes.d != null) {
+          const computedStyle = computeStyle(node);
+          precision = params.floatPrecision;
+          error =
+            precision !== false
+              ? +Math.pow(0.1, precision).toFixed(precision)
+              : 1e-2;
+          roundData = precision > 0 && precision < 20 ? strongRound : round;
+          if (params.makeArcs) {
+            arcThreshold = params.makeArcs.threshold;
+            arcTolerance = params.makeArcs.tolerance;
+          }
+          const hasMarkerMid = computedStyle['marker-mid'] != null;
 
-    const maybeHasStroke =
-      computedStyle.stroke &&
-      (computedStyle.stroke.type === 'dynamic' ||
-        computedStyle.stroke.value !== 'none');
-    const maybeHasLinecap =
-      computedStyle['stroke-linecap'] &&
-      (computedStyle['stroke-linecap'].type === 'dynamic' ||
-        computedStyle['stroke-linecap'].value !== 'butt');
-    const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
+          const maybeHasStroke =
+            computedStyle.stroke &&
+            (computedStyle.stroke.type === 'dynamic' ||
+              computedStyle.stroke.value !== 'none');
+          const maybeHasLinecap =
+            computedStyle['stroke-linecap'] &&
+            (computedStyle['stroke-linecap'].type === 'dynamic' ||
+              computedStyle['stroke-linecap'].value !== 'butt');
+          const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
 
-    var data = path2js(item);
+          var data = path2js(node);
 
-    // TODO: get rid of functions returns
-    if (data.length) {
-      if (params.applyTransforms) {
-        applyTransforms(item, data, params);
-      }
+          // TODO: get rid of functions returns
+          if (data.length) {
+            if (params.applyTransforms) {
+              applyTransforms(node, data, params);
+            }
 
-      convertToRelative(data);
+            convertToRelative(data);
 
-      data = filters(data, params, {
-        maybeHasStrokeAndLinecap,
-        hasMarkerMid,
-      });
+            data = filters(data, params, {
+              maybeHasStrokeAndLinecap,
+              hasMarkerMid,
+            });
 
-      if (params.utilizeAbsolute) {
-        data = convertToMixed(data, params);
-      }
+            if (params.utilizeAbsolute) {
+              data = convertToMixed(data, params);
+            }
 
-      js2path(item, data, params);
-    }
-  }
+            js2path(node, data, params);
+          }
+        }
+      },
+    },
+  };
 };
 
 /**
