@@ -1,7 +1,7 @@
 'use strict';
 
 const csso = require('csso');
-const { traverse } = require('../lib/xast.js');
+const { traverse, detachNodeFromParent } = require('../lib/xast.js');
 
 exports.type = 'full';
 
@@ -45,6 +45,13 @@ exports.fn = function (ast, options) {
       ) {
         const styleCss = elem.children[0].value;
         const minified = csso.minify(styleCss, minifyOptionsForStylesheet).css;
+
+        // If the result of CSS minified is empty, remove it.
+        if (minified.length === 0) {
+          detachNodeFromParent(elem);
+          return;
+        }
+
         // preserve cdata if necessary
         // TODO split cdata -> text optimisation into separate plugin
         if (styleCss.indexOf('>') >= 0 || styleCss.indexOf('<') >= 0) {
