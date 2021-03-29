@@ -22,7 +22,7 @@ exports.fn = (root, params) => {
     floatPrecision,
     noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
   } = params;
-  const stylesheet = collectStylesheet(root)
+  const stylesheet = collectStylesheet(root);
 
   return {
     element: {

@@ -49,7 +49,7 @@ exports.fn = (root, params) => {
     polylineEmptyPoints = true,
     polygonEmptyPoints = true,
   } = params;
-  const stylesheet = collectStylesheet(root)
+  const stylesheet = collectStylesheet(root);
 
   return {
     element: {
