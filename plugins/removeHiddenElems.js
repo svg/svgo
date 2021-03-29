@@ -5,7 +5,7 @@ const {
   closestByName,
   detachNodeFromParent,
 } = require('../lib/xast.js');
-const { computeStyle } = require('../lib/style.js');
+const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
 
 exports.type = 'visitor';
@@ -49,12 +49,14 @@ exports.fn = (root, params) => {
     polylineEmptyPoints = true,
     polygonEmptyPoints = true,
   } = params;
+  const stylesheet = collectStylesheet(root)
+
   return {
     element: {
       enter: (node) => {
         // Removes hidden elements
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
-        const computedStyle = computeStyle(node);
+        const computedStyle = computeStyle(stylesheet, node);
         if (
           isHidden &&
           computedStyle.visibility &&
