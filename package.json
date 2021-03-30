@@ -46,7 +46,8 @@
     "bin",
     "lib",
     "plugins",
-    "dist"
+    "dist",
+    "!**/**.test.js"
   ],
   "scripts": {
     "test": "c8 --reporter=html --reporter=text mocha \"test/*/_index.js\" \"**/*.test.js\" --ignore=\"node_modules/**\"",
