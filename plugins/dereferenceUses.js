@@ -47,11 +47,14 @@ exports.fn = function (document, options) {
   // replace each <use/> with its referenced node
   for (const useElement of useElements) {
     // `href`/`xlink:href` value
-    const hrefAttribute = useElement.attr('href')
-      ? useElement.attr('href')
-      : useElement.attr('xlink:href');
-    if (!hrefAttribute || hrefAttribute.value.length === 0) continue;
-    const href = hrefAttribute.value;
+	let href = '';
+	for(let hrefAttributeName of HrefAttributeNames) {
+		if((href = useElement.attributes[hrefAttributeName])) {
+			// use only the first matching href-attribute
+			break;
+		}
+	}
+    if(!href) continue;
 
     // look up referenced element
     const targetElement = querySelector(document, href);
