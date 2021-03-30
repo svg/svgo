@@ -1,4 +1,4 @@
-Check whether plugin works with dereferencing multiple <use> elements that reference the same element, while keeping the href attributes.
+Works with dereferencing multiple <use> elements that reference the same element, while keeping the href attributes.
 
 ===
 

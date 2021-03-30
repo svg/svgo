@@ -1,4 +1,4 @@
-Check whether plugin correctly keeps and overrides attributes of <use> and referenced elements adhering to spec, while keeping the href attributes.
+Correctly keeps and overrides attributes of <use> and referenced elements adhering to spec, while keeping the href attributes.
 
 ===
 

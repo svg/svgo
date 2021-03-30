@@ -1,4 +1,4 @@
-Check whether plugin can handle more complex SVGs with attribute override between <use> elements and their referenced elements.
+Handle more complex SVGs with attribute override between <use> elements and their referenced elements.
 
 ===
 
