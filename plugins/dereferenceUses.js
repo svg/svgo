@@ -29,12 +29,12 @@ const HrefAttributeNames = ['href', 'xlink:href'];
  *
  *
  * @param {Object} document document element
- * @param {Object} options plugin params
+ * @param {Object} params plugin params
  *
  * @author strarsis <strarsis@gmail.com>
  */
-exports.fn = function (document, options) {
-  options = options || {};
+exports.fn = function (document, params) {
+  params = params || {};
 
   // collect <use/>s
   const useElements = querySelectorAll(document, 'use');
@@ -77,7 +77,7 @@ exports.fn = function (document, options) {
         continue;
 
       // don't remove href attribute with keepHref option turned on
-      if (!options.keepHref && HrefAttributeNames.includes(attributeName))
+      if (!params.keepHref && HrefAttributeNames.includes(attributeName))
         continue;
 
       // set overriding attributes from referenced node
@@ -91,7 +91,7 @@ exports.fn = function (document, options) {
     // <symbol/> elements are template elements (hence not visible),
     // browsers would place a <symbol/> element as a different element
     if (insertElement.isElem('symbol')) {
-      insertElement.name = options.symbolContainer;
+      insertElement.name = params.symbolContainer;
     }
 
     // apply styles of <use/> element on top of the referenced Element
