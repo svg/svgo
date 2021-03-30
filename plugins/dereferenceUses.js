@@ -10,7 +10,6 @@ exports.description = 'dereferences <use/> elements';
 
 exports.params = {
   keepHref: false, // keep (xlink:)href attributes
-
   symbolContainer: 'svg', // browsers use <svg/> as container of <symbol/> content (`g` could also be used)
 };
 
@@ -34,7 +33,7 @@ const HrefAttributeNames = ['href', 'xlink:href'];
  * @author strarsis <strarsis@gmail.com>
  */
 exports.fn = function (document, params) {
-  params = params || {};
+  const { keepHref = false, symbolContainer = 'svg' } = params;
 
   // collect <use/>s
   const useElements = querySelectorAll(document, 'use');
@@ -47,14 +46,14 @@ exports.fn = function (document, params) {
   // replace each <use/> with its referenced node
   for (const useElement of useElements) {
     // `href`/`xlink:href` value
-	let href = '';
-	for(let hrefAttributeName of HrefAttributeNames) {
-		if((href = useElement.attributes[hrefAttributeName])) {
-			// use only the first matching href-attribute
-			break;
-		}
-	}
-    if(!href) continue;
+    let href = '';
+    for (let hrefAttributeName of HrefAttributeNames) {
+      if ((href = useElement.attributes[hrefAttributeName])) {
+        // use only the first matching href-attribute
+        break;
+      }
+    }
+    if (!href) continue;
 
     // look up referenced element
     const targetElement = querySelector(document, href);
@@ -77,8 +76,7 @@ exports.fn = function (document, params) {
         continue;
 
       // don't remove href attribute with keepHref option turned on
-      if (!params.keepHref && HrefAttributeNames.includes(attributeName))
-        continue;
+      if (!keepHref && HrefAttributeNames.includes(attributeName)) continue;
 
       // set overriding attributes from referenced node
       insertElement.attributes[attributeName] =
@@ -91,7 +89,7 @@ exports.fn = function (document, params) {
     // <symbol/> elements are template elements (hence not visible),
     // browsers would place a <symbol/> element as a different element
     if (insertElement.isElem('symbol')) {
-      insertElement.name = params.symbolContainer;
+      insertElement.name = symbolContainer;
     }
 
     // apply styles of <use/> element on top of the referenced Element
