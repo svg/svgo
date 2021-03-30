@@ -1,4 +1,4 @@
-Check whether plugin dereference multiple <use> elements while keeping the href attributes.
+Dereference multiple <use> elements while keeping the href attributes.
 
 ===
 
