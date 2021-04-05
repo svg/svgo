@@ -5,7 +5,8 @@ const collections = require('./_collections.js');
 exports.type = 'visitor';
 exports.name = 'convertColors';
 exports.active = true;
-exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
+exports.description =
+  'converts colors: rgb() to #rrggbb and #rrggbb to #rgb, optionally to currentColor';
 
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
 const rComma = '\\s*,\\s*';
@@ -60,6 +61,13 @@ const convertRgbToHex = ([r, g, b]) => {
  *
  * Convert hex to short name
  * #000080 ➡ navy
+ *
+ * To optionally convert colors to `currentColor`, set `params.currentColor` to
+ * `true` to replace all colors (except "none") or set it to a string containing
+ * the color to replace or set it to a regex to replace multiple colors. e.g.
+ * params: { currentColor: true }
+ * params: { currentColor: '#000' }
+ * params: { currentColor: /#0{3,6}/ }
  *
  * @author Kir Belevich
  *
