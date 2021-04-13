@@ -98,7 +98,8 @@
     "css-select": "^3.1.2",
     "css-tree": "^1.1.2",
     "csso": "^4.2.0",
-    "stable": "^0.1.8"
+    "stable": "^0.1.8",
+    "txml": "^4.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.1.0",
