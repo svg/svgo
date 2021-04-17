@@ -9,6 +9,7 @@ exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 exports.params = {
   currentColor: false,
   names2hex: true,
+  hsl2hex: true,
   rgb2hex: true,
   shorthex: true,
   shortname: true,
@@ -17,6 +18,9 @@ exports.params = {
 var collections = require('./_collections'),
   rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)',
   rComma = '\\s*,\\s*',
+  regHSL = new RegExp(
+    '^hsl\\(\\s*' + rNumber + rComma + rNumber + '%' + rComma + rNumber + '%\\s*\\)$'
+  ),
   regRGB = new RegExp(
     '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'
   ),
@@ -32,6 +36,9 @@ var collections = require('./_collections'),
  * @example
  * Convert color name keyword to long hex:
  * fuchsia ➡ #ff00ff
+ *
+ * Convert hsl() to long hex:
+ * hsl(120, 100%, 50%) ➡ #00ff00
  *
  * Convert rgb() to long hex:
  * rgb(255, 0, 255) ➡ #ff00ff
@@ -75,6 +82,12 @@ exports.fn = function (item, params) {
           val = collections.colorsNames[val.toLowerCase()];
         }
 
+        // Convert hsl() to long hex
+        if (params.hsl2hex && (match = val.match(regHSL))) {
+          match = match.slice(1, 4);
+          val = hsl2hex(match);
+        }
+
         // Convert rgb() to long hex
         if (params.rgb2hex && (match = val.match(regRGB))) {
           match = match.slice(1, 4).map(function (m) {
@@ -104,6 +117,26 @@ exports.fn = function (item, params) {
     }
   }
 };
+
+/**
+ * Convert [h, s, l] to #rrggbb.
+ *
+ * @example
+ * hsl2hex([120, 100, 50]) // '#00ff00'
+ *
+ * @param {Array} hsl [h, s, l]
+ * @return {String} #rrggbb
+ */
+function hsl2hex(hsl) {
+  hsl[2] /= 100;
+  const a = hsl[1] * Math.min(hsl[2], 1 - hsl[2]) / 100;
+  const f = n => {
+    const k = (n + hsl[0] / 30) % 12;
+    const color = hsl[2] - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
 
 /**
  * Convert [r, g, b] to #rrggbb.
