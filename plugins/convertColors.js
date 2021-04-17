@@ -19,7 +19,14 @@ var collections = require('./_collections'),
   rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)',
   rComma = '\\s*,\\s*',
   regHSL = new RegExp(
-    '^hsl\\(\\s*' + rNumber + rComma + rNumber + '%' + rComma + rNumber + '%\\s*\\)$'
+    '^hsl\\(\\s*' +
+      rNumber +
+      rComma +
+      rNumber +
+      '%' +
+      rComma +
+      rNumber +
+      '%\\s*\\)$'
   ),
   regRGB = new RegExp(
     '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'
@@ -129,11 +136,13 @@ exports.fn = function (item, params) {
  */
 function hsl2hex(hsl) {
   hsl[2] /= 100;
-  const a = hsl[1] * Math.min(hsl[2], 1 - hsl[2]) / 100;
-  const f = n => {
+  const a = (hsl[1] * Math.min(hsl[2], 1 - hsl[2])) / 100;
+  const f = (n) => {
     const k = (n + hsl[0] / 30) % 12;
     const color = hsl[2] - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color).toString(16).padStart(2, '0');
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, '0');
   };
   return `#${f(0)}${f(8)}${f(4)}`;
 }
