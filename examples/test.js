@@ -39,8 +39,9 @@ const config = {
     'convertShapeToPath',
     'sortAttrs',
     'removeDimensions',
+    'currentColor',
     { name: 'removeAttrs', params: { attrs: '(stroke|fill)' } },
-  ],
+  ]
 };
 
 FS.readFile(filepath, 'utf8', function (err, data) {
