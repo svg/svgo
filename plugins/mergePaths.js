@@ -1,73 +1,99 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
+const { computeStyle } = require('../lib/style.js');
+const { path2js, js2path, intersects } = require('./_path.js');
 
+exports.type = 'visitor';
 exports.active = true;
-
 exports.description = 'merges multiple paths in one if possible';
-
-exports.params = {
-    collapseRepeated: true,
-    force: false,
-    leadingZero: true,
-    negativeExtraSpace: true,
-    noSpaceAfterFlags: true
-};
-
-var path2js = require('./_path.js').path2js,
-    js2path = require('./_path.js').js2path,
-    intersects = require('./_path.js').intersects;
 
 /**
  * Merge multiple Paths into one.
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
+ * @param {Object} root
+ * @param {Object} params
  *
  * @author Kir Belevich, Lev Solntsev
  */
-exports.fn = function(item, params) {
+exports.fn = (root, params) => {
+  const {
+    force = false,
+    floatPrecision,
+    noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
+  } = params;
 
-    if (!item.isElem() || item.isEmpty()) return;
+  return {
+    element: {
+      enter: (node) => {
+        let prevChild = null;
 
-    var prevContentItem = null,
-        prevContentItemKeys = null;
+        for (const child of node.children) {
+          // skip if previous element is not path or contains animation elements
+          if (
+            prevChild == null ||
+            prevChild.type !== 'element' ||
+            prevChild.name !== 'path' ||
+            prevChild.children.length !== 0 ||
+            prevChild.attributes.d == null
+          ) {
+            prevChild = child;
+            continue;
+          }
 
-    item.content = item.content.filter(function(contentItem) {
+          // skip if element is not path or contains animation elements
+          if (
+            child.type !== 'element' ||
+            child.name !== 'path' ||
+            child.children.length !== 0 ||
+            child.attributes.d == null
+          ) {
+            prevChild = child;
+            continue;
+          }
 
-        if (prevContentItem &&
-            prevContentItem.isElem('path') &&
-            prevContentItem.isEmpty() &&
-            prevContentItem.hasAttr('d') &&
-            contentItem.isElem('path') &&
-            contentItem.isEmpty() &&
-            contentItem.hasAttr('d')
-        ) {
+          // preserve paths with markers
+          const computedStyle = computeStyle(child);
+          if (
+            computedStyle['marker-start'] ||
+            computedStyle['marker-mid'] ||
+            computedStyle['marker-end']
+          ) {
+            prevChild = child;
+            continue;
+          }
 
-            if (!prevContentItemKeys) {
-                prevContentItemKeys = Object.keys(prevContentItem.attrs);
+          const prevChildAttrs = Object.keys(prevChild.attributes);
+          const childAttrs = Object.keys(child.attributes);
+          let attributesAreEqual = prevChildAttrs.length === childAttrs.length;
+          for (const name of childAttrs) {
+            if (name !== 'd') {
+              if (
+                prevChild.attributes[name] == null ||
+                prevChild.attributes[name] !== child.attributes[name]
+              ) {
+                attributesAreEqual = false;
+              }
             }
+          }
+          const prevPathJS = path2js(prevChild);
+          const curPathJS = path2js(child);
 
-            var contentItemAttrs = Object.keys(contentItem.attrs),
-                equalData = prevContentItemKeys.length == contentItemAttrs.length &&
-                    contentItemAttrs.every(function(key) {
-                        return key == 'd' ||
-                            prevContentItem.hasAttr(key) &&
-                            prevContentItem.attr(key).value == contentItem.attr(key).value;
-                    }),
-                prevPathJS = path2js(prevContentItem),
-                curPathJS = path2js(contentItem);
+          if (
+            attributesAreEqual &&
+            (force || !intersects(prevPathJS, curPathJS))
+          ) {
+            js2path(prevChild, prevPathJS.concat(curPathJS), {
+              floatPrecision,
+              noSpaceAfterFlags,
+            });
+            detachNodeFromParent(child);
+            continue;
+          }
 
-            if (equalData && (params.force || !intersects(prevPathJS, curPathJS))) {
-                js2path(prevContentItem, prevPathJS.concat(curPathJS), params);
-                return false;
-            }
+          prevChild = child;
         }
-
-        prevContentItem = contentItem;
-        prevContentItemKeys = null;
-        return true;
-
-    });
-
+      },
+    },
+  };
 };

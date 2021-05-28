@@ -1,3 +1,7 @@
+Preserve groups with classes
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <style>
         .n{display:none}
@@ -15,7 +19,8 @@
 
 <svg xmlns="http://www.w3.org/2000/svg">
     <style>
-        .n{display:none} .i{display:inline}
+        .n{display:none}
+        .i{display:inline}
     </style>
     <g class="i" id="a"/>
     <g id="b" class="n">

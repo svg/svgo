@@ -1,12 +1,12 @@
 'use strict';
 
+const { elemsGroups } = require('./_collections');
+
 exports.type = 'perItem';
 
 exports.active = true;
 
 exports.description = 'removes elements in <defs> without id';
-
-var nonRendering = require('./_collections').elemsGroups.nonRendering;
 
 /**
  * Removes content of defs and properties that aren't rendered directly without ids.
@@ -16,38 +16,33 @@ var nonRendering = require('./_collections').elemsGroups.nonRendering;
  *
  * @author Lev Solntsev
  */
-exports.fn = function(item) {
-
-    if (item.isElem('defs')) {
-
-        if (item.content) {
-            item.content = getUsefulItems(item, []);
-        }
-        
-        if (item.isEmpty()) return false;
-
-    } else if (item.isElem(nonRendering) && !item.hasAttr('id')) {
-
+exports.fn = function (item) {
+  if (item.type === 'element') {
+    if (item.name === 'defs') {
+      item.children = getUsefulItems(item, []);
+      if (item.children.length === 0) {
         return false;
-
+      }
+    } else if (
+      elemsGroups.nonRendering.includes(item.name) &&
+      item.attributes.id == null
+    ) {
+      return false;
     }
-
+  }
 };
 
 function getUsefulItems(item, usefulItems) {
+  for (const child of item.children) {
+    if (child.type === 'element') {
+      if (child.attributes.id != null || child.name === 'style') {
+        usefulItems.push(child);
+        child.parentNode = item;
+      } else {
+        child.children = getUsefulItems(child, usefulItems);
+      }
+    }
+  }
 
-    item.content.forEach(function(child) {
-        if (child.hasAttr('id') || child.isElem('style')) {
-
-            usefulItems.push(child);
-            child.parentNode = item;
-
-        } else if (!child.isEmpty()) {
-
-            child.content = getUsefulItems(child, usefulItems);
-
-        }
-    });
-
-    return usefulItems;
+  return usefulItems;
 }

@@ -16,13 +16,13 @@ exports.description = 'removes raster images (disabled by default)';
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
-
-    if (
-        item.isElem('image') &&
-        item.hasAttrLocal('href', /(\.|image\/)(jpg|png|gif)/)
-    ) {
-        return false;
-    }
-
+exports.fn = function (item) {
+  if (
+    item.type === 'element' &&
+    item.name === 'image' &&
+    item.attributes['xlink:href'] != null &&
+    /(\.|image\/)(jpg|png|gif)/.test(item.attributes['xlink:href'])
+  ) {
+    return false;
+  }
 };

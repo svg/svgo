@@ -31,10 +31,8 @@ exports.description = 'removes doctype declaration';
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
-
-    if (item.doctype) {
-        return false;
-    }
-
+exports.fn = function (item) {
+  if (item.type === 'doctype') {
+    return false;
+  }
 };

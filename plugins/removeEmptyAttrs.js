@@ -1,5 +1,7 @@
 'use strict';
 
+const { attrsGroups } = require('./_collections.js');
+
 exports.type = 'perItem';
 
 exports.active = true;
@@ -14,16 +16,16 @@ exports.description = 'removes empty attributes';
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
-
-    if (item.elem) {
-
-        item.eachAttr(function(attr) {
-            if (attr.value === '') {
-                item.removeAttr(attr.name);
-            }
-        });
-
+exports.fn = function (item) {
+  if (item.type === 'element') {
+    for (const [name, value] of Object.entries(item.attributes)) {
+      if (
+        value === '' &&
+        // empty conditional processing attributes prevents elements from rendering
+        attrsGroups.conditionalProcessing.includes(name) === false
+      ) {
+        delete item.attributes[name];
+      }
     }
-
+  }
 };

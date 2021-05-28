@@ -1,3 +1,7 @@
+Combine own child transform and inherited
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">
         <g transform="rotate(45)">

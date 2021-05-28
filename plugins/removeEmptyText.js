@@ -7,15 +7,15 @@ exports.active = true;
 exports.description = 'removes empty <text> elements';
 
 exports.params = {
-    text: true,
-    tspan: true,
-    tref: true
+  text: true,
+  tspan: true,
+  tref: true,
 };
 
 /**
  * Remove empty Text elements.
  *
- * @see http://www.w3.org/TR/SVG/text.html
+ * @see https://www.w3.org/TR/SVG11/text.html
  *
  * @example
  * Remove empty text element:
@@ -33,27 +33,25 @@ exports.params = {
  *
  * @author Kir Belevich
  */
-exports.fn = function(item, params) {
-
+exports.fn = function (item, params) {
+  if (item.type === 'element') {
     // Remove empty text element
-    if (
-        params.text &&
-        item.isElem('text') &&
-        item.isEmpty()
-    ) return false;
+    if (params.text && item.name === 'text' && item.children.length === 0) {
+      return false;
+    }
 
     // Remove empty tspan element
-    if (
-        params.tspan &&
-        item.isElem('tspan') &&
-        item.isEmpty()
-    ) return false;
+    if (params.tspan && item.name === 'tspan' && item.children.length === 0) {
+      return false;
+    }
 
     // Remove tref with empty xlink:href attribute
     if (
-        params.tref &&
-        item.isElem('tref') &&
-        !item.hasAttrLocal('href')
-    ) return false;
-
+      params.tref &&
+      item.name === 'tref' &&
+      item.attributes['xlink:href'] == null
+    ) {
+      return false;
+    }
+  }
 };

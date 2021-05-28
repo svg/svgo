@@ -1,5 +1,7 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+
 exports.type = 'perItem';
 
 exports.active = false;
@@ -7,15 +9,25 @@ exports.active = false;
 exports.description = 'sorts element attributes (disabled by default)';
 
 exports.params = {
-	order: [
-		'id',
-		'width', 'height',
-		'x', 'x1', 'x2',
-		'y', 'y1', 'y2',
-		'cx', 'cy', 'r',
-		'fill', 'stroke', 'marker',
-		'd', 'points'
-	]
+  order: [
+    'id',
+    'width',
+    'height',
+    'x',
+    'x1',
+    'x2',
+    'y',
+    'y1',
+    'y2',
+    'cx',
+    'cy',
+    'r',
+    'fill',
+    'stroke',
+    'marker',
+    'd',
+    'points',
+  ],
 };
 
 /**
@@ -26,59 +38,51 @@ exports.params = {
  *
  * @author Nikolay Frantsev
  */
-exports.fn = function(item, params) {
+exports.fn = function (item, params) {
+  const orderlen = params.order.length + 1;
+  const xmlnsOrder = params.xmlnsOrder || 'front';
 
-	var attrs = [],
-		sorted = {},
-		orderlen = params.order.length + 1,
-		xmlnsOrder = params.xmlnsOrder || 'front';
+  if (item.type === 'element') {
+    const attrs = Object.entries(item.attributes);
 
-	if (item.elem) {
+    attrs.sort(([aName], [bName]) => {
+      const { prefix: aPrefix } = parseName(aName);
+      const { prefix: bPrefix } = parseName(bName);
+      if (aPrefix != bPrefix) {
+        // xmlns attributes implicitly have the prefix xmlns
+        if (xmlnsOrder == 'front') {
+          if (aPrefix === 'xmlns') return -1;
+          if (bPrefix === 'xmlns') return 1;
+        }
+        return aPrefix < bPrefix ? -1 : 1;
+      }
 
-		item.eachAttr(function(attr) {
-			attrs.push(attr);
-		});
+      let aindex = orderlen;
+      let bindex = orderlen;
 
-		attrs.sort(function(a, b) {
-			if (a.prefix != b.prefix) {
-				// xmlns attributes implicitly have the prefix xmlns
-				if (xmlnsOrder == 'front') {
-                    if (a.prefix == 'xmlns')
-                        return -1;
-                    if (b.prefix == 'xmlns')
-                        return 1;
-                }
-				return a.prefix < b.prefix ? -1 : 1;
-			}
+      for (let i = 0; i < params.order.length; i++) {
+        if (aName == params.order[i]) {
+          aindex = i;
+        } else if (aName.indexOf(params.order[i] + '-') === 0) {
+          aindex = i + 0.5;
+        }
+        if (bName == params.order[i]) {
+          bindex = i;
+        } else if (bName.indexOf(params.order[i] + '-') === 0) {
+          bindex = i + 0.5;
+        }
+      }
 
-			var aindex = orderlen;
-			var bindex = orderlen;
+      if (aindex != bindex) {
+        return aindex - bindex;
+      }
+      return aName < bName ? -1 : 1;
+    });
 
-			for (var i = 0; i < params.order.length; i++) {
-				if (a.name == params.order[i]) {
-					aindex = i;
-				} else if (a.name.indexOf(params.order[i] + '-') === 0) {
-					aindex = i + .5;
-				}
-				if (b.name == params.order[i]) {
-					bindex = i;
-				} else if (b.name.indexOf(params.order[i] + '-') === 0) {
-					bindex = i + .5;
-				}
-			}
-
-			if (aindex != bindex) {
-				return aindex - bindex;
-			}
-			return a.name < b.name ? -1 : 1;
-		});
-
-		attrs.forEach(function (attr) {
-			sorted[attr.name] = attr;
-		});
-
-		item.attrs = sorted;
-
-	}
-
+    const sorted = {};
+    for (const [name, value] of attrs) {
+      sorted[name] = value;
+    }
+    item.attributes = sorted;
+  }
 };

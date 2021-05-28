@@ -1,14 +1,14 @@
 'use strict';
 
+const { pathElems, referencesProps } = require('./_collections.js');
+
 exports.type = 'perItem';
 
 exports.active = true;
 
 exports.description = 'moves some group attributes to the content elements';
 
-var collections = require('./_collections.js'),
-    pathElems = collections.pathElems.concat(['g', 'text']),
-    referencesProps = collections.referencesProps;
+const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
 
 /**
  * Move group attrs to the content elements.
@@ -29,35 +29,32 @@ var collections = require('./_collections.js'),
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
-
-    // move group transform attr to content's pathElems
-    if (
-        item.isElem('g') &&
-        item.hasAttr('transform') &&
-        !item.isEmpty() &&
-        !item.someAttr(function(attr) {
-            return ~referencesProps.indexOf(attr.name) && ~attr.value.indexOf('url(');
-        }) &&
-        item.content.every(function(inner) {
-            return inner.isElem(pathElems) && !inner.hasAttr('id');
-        })
-    ) {
-        item.content.forEach(function(inner) {
-            var attr = item.attr('transform');
-            if (inner.hasAttr('transform')) {
-                inner.attr('transform').value = attr.value + ' ' + inner.attr('transform').value;
-            } else {
-                inner.addAttr({
-                    'name': attr.name,
-                    'local': attr.local,
-                    'prefix': attr.prefix,
-                    'value': attr.value
-                });
-            }
-        });
-
-        item.removeAttr('transform');
+exports.fn = function (item) {
+  // move group transform attr to content's pathElems
+  if (
+    item.type === 'element' &&
+    item.name === 'g' &&
+    item.children.length !== 0 &&
+    item.attributes.transform != null &&
+    Object.entries(item.attributes).some(
+      ([name, value]) =>
+        referencesProps.includes(name) && value.includes('url(')
+    ) === false &&
+    item.children.every(
+      (inner) =>
+        pathElemsWithGroupsAndText.includes(inner.name) &&
+        inner.attributes.id == null
+    )
+  ) {
+    for (const inner of item.children) {
+      const value = item.attributes.transform;
+      if (inner.attributes.transform != null) {
+        inner.attributes.transform = value + ' ' + inner.attributes.transform;
+      } else {
+        inner.attributes.transform = value;
+      }
     }
 
+    delete item.attributes.transform;
+  }
 };

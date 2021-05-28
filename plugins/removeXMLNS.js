@@ -4,7 +4,8 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'removes xmlns attribute (for inline svg, disabled by default)';
+exports.description =
+  'removes xmlns attribute (for inline svg, disabled by default)';
 
 /**
  * Remove the xmlns attribute when present.
@@ -19,10 +20,8 @@ exports.description = 'removes xmlns attribute (for inline svg, disabled by defa
  *
  * @author Ricardo Tomasi
  */
-exports.fn = function(item) {
-
-    if (item.isElem('svg') && item.hasAttr('xmlns')) {
-        item.removeAttr('xmlns');
-    }
-
+exports.fn = function (item) {
+  if (item.type === 'element' && item.name === 'svg') {
+    delete item.attributes.xmlns;
+  }
 };

@@ -1,11 +1,24 @@
+Remove elements with zero opacity
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .a { opacity: 0.5; }
+    </style>
     <g>
-        <path opacity="0" d="..."/>
+        <rect opacity="0" x="0" y="0" width="20" height="20" />
+        <rect opacity="0" class="a" x="0" y="0" width="20" height="20" />
     </g>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g/>
+    <style>
+        .a { opacity: 0.5; }
+    </style>
+    <g>
+        <rect opacity="0" class="a" x="0" y="0" width="20" height="20"/>
+    </g>
 </svg>

@@ -16,8 +16,6 @@ exports.description = 'removes <title>';
  *
  * @author Igor Kalashnikov
  */
-exports.fn = function(item) {
-
-    return !item.isElem('title');
-
+exports.fn = function (item) {
+  return !item.isElem('title');
 };

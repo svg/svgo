@@ -12,7 +12,7 @@
     <g>
         <g>
             <circle fill="#ff0000" cx="60px" cy="60px" r="50px"/>
-            <text>test</text>
+            <text>  test  </text>
         </g>
     </g>
     <g style="color: black" class="unknown-class"></g>

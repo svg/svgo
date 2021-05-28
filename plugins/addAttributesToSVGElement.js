@@ -1,6 +1,8 @@
 'use strict';
 
-exports.type = 'full';
+const { closestByName } = require('../lib/xast.js');
+
+exports.type = 'perItem';
 
 exports.active = false;
 
@@ -10,73 +12,72 @@ var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
 It should have a list of "attributes" or one "attribute".
 Config example:
 
-plugins:
-- addAttributesToSVGElement:
-    attribute: "mySvg"
+plugins: [
+  {
+    name: 'addAttributesToSVGElement',
+    params: {
+      attribute: "mySvg"
+    }
+  }
+]
 
-plugins:
-- addAttributesToSVGElement:
-    attributes: ["mySvg", "size-big"]
+plugins: [
+  {
+    name: 'addAttributesToSVGElement',
+    params: {
+      attributes: ["mySvg", "size-big"]
+    }
+  }
+]
 
-plugins:
-- addAttributesToSVGElement:
-    attributes:
-        - focusable: false
-        - data-image: icon`;
+plugins: [
+  {
+    name: 'addAttributesToSVGElement',
+    params: {
+      attributes: [
+        {
+          focusable: false
+        },
+        {
+          'data-image': icon
+        }
+      ]
+    }
+  }
+]
+`;
 
 /**
  * Add attributes to an outer <svg> element. Example config:
  *
- * plugins:
- * - addAttributesToSVGElement:
- *     attribute: 'data-icon'
- *
- * plugins:
- * - addAttributesToSVGElement:
- *     attributes: ['data-icon', 'data-disabled']
- *
- * plugins:
- * - addAttributesToSVGElement:
- *     attributes:
- *         - focusable: false
- *         - data-image: icon
- *
  * @author April Arcus
  */
-exports.fn = function(data, params) {
+exports.fn = (node, params) => {
+  if (
+    node.type === 'element' &&
+    node.name === 'svg' &&
+    closestByName(node.parentNode, 'svg') == null
+  ) {
     if (!params || !(Array.isArray(params.attributes) || params.attribute)) {
-        console.error(ENOCLS);
-        return data;
+      console.error(ENOCLS);
+      return;
     }
 
-    var attributes = params.attributes || [ params.attribute ],
-        svg = data.content[0];
+    const attributes = params.attributes || [params.attribute];
 
-    if (svg.isElem('svg')) {
-        attributes.forEach(function (attribute) {
-            if (typeof attribute === 'string') {
-                if (!svg.hasAttr(attribute)) {
-                    svg.addAttr({
-                        name: attribute,
-                        prefix: '',
-                        local: attribute
-                    });
-                }
-            } else if (typeof attribute === 'object') {
-                Object.keys(attribute).forEach(function (key) {
-                    if (!svg.hasAttr(key)) {
-                        svg.addAttr({
-                            name: key,
-                            value: attribute[key],
-                            prefix: '',
-                            local: key
-                        });
-                    }
-                });
-            }
-        });
+    for (const attribute of attributes) {
+      if (typeof attribute === 'string') {
+        if (node.attributes[attribute] == null) {
+          node.attributes[attribute] = undefined;
+        }
+      }
+      if (typeof attribute === 'object') {
+        for (const key of Object.keys(attribute)) {
+          if (node.attributes[key] == null) {
+            node.attributes[key] = attribute[key];
+          }
+        }
+      }
     }
-
-    return data;
-
+  }
 };

@@ -5,5 +5,5 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path d="M100 200l300 400zm100 200h100"/>
+    <path d="m100 200 300 400zm100 200h100"/>
 </svg>

@@ -1,0 +1,19 @@
+Ignore nested <svg> elements
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    test
+    <svg />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" data-icon>
+    test
+    <svg/>
+</svg>
+
+@@@
+
+{"attributes":["data-icon"]}

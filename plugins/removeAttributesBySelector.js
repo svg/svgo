@@ -4,8 +4,8 @@ exports.type = 'perItem';
 
 exports.active = false;
 
-exports.description = 'removes attributes of elements that match a css selector';
-
+exports.description =
+  'removes attributes of elements that match a css selector';
 
 /**
  * Removes attributes of elements that match a css selector.
@@ -23,7 +23,7 @@ exports.description = 'removes attributes of elements that match a css selector'
  *
  * <rect x="0" y="0" width="100" height="100" fill="#00ff00" stroke="#00ff00"/>
  *   ↓
- * <rect x="0" y="0" width="100" height="100" stroke="#00ff00"/>     
+ * <rect x="0" y="0" width="100" height="100" stroke="#00ff00"/>
  *
  * <caption>A selector removing multiple attributes</caption>
  * plugins:
@@ -35,7 +35,7 @@ exports.description = 'removes attributes of elements that match a css selector'
  *
  * <rect x="0" y="0" width="100" height="100" fill="#00ff00" stroke="#00ff00"/>
  *   ↓
- * <rect x="0" y="0" width="100" height="100"/>     
+ * <rect x="0" y="0" width="100" height="100"/>
  *
  * <caption>Multiple selectors removing attributes</caption>
  * plugins:
@@ -57,14 +57,18 @@ exports.description = 'removes attributes of elements that match a css selector'
  *
  * @author Bradley Mease
  */
-exports.fn = function(item, params) {
+exports.fn = function (item, params) {
+  var selectors = Array.isArray(params.selectors) ? params.selectors : [params];
 
-    var selectors = Array.isArray(params.selectors) ? params.selectors : [params];
-
-    selectors.map(function(i) {
-        if (item.matches(i.selector)) {
-            item.removeAttr(i.attributes);
+  selectors.map(({ selector, attributes }) => {
+    if (item.matches(selector)) {
+      if (Array.isArray(attributes)) {
+        for (const name of attributes) {
+          delete item.attributes[name];
         }
-    });
-
+      } else {
+        delete item.attributes[attributes];
+      }
+    }
+  });
 };

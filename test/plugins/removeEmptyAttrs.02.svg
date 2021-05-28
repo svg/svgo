@@ -1,0 +1,18 @@
+Empty conditional processing attributes should be preserved
+to hide elements
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g requiredFeatures=""/>
+    <g requiredExtensions=""/>
+    <g systemLanguage=""/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g requiredFeatures=""/>
+    <g requiredExtensions=""/>
+    <g systemLanguage=""/>
+</svg>

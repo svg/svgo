@@ -1,13 +1,12 @@
 'use strict';
 
+const { inheritableAttrs, pathElems } = require('./_collections');
+
 exports.type = 'perItemReverse';
 
 exports.active = true;
 
 exports.description = 'moves elements attributes to the existing group wrapper';
-
-var inheritableAttrs = require('./_collections').inheritableAttrs,
-    pathElems = require('./_collections.js').pathElems;
 
 /**
  * Collapse content's intersected and inheritable
@@ -33,65 +32,66 @@ var inheritableAttrs = require('./_collections').inheritableAttrs,
  *
  * @author Kir Belevich
  */
-exports.fn = function(item) {
+exports.fn = function (item) {
+  if (
+    item.type === 'element' &&
+    item.name === 'g' &&
+    item.children.length > 1
+  ) {
+    var intersection = {},
+      hasTransform = false,
+      hasClip =
+        item.attributes['clip-path'] != null || item.attributes.mask != null,
+      intersected = item.children.every(function (inner) {
+        if (
+          inner.type === 'element' &&
+          Object.keys(inner.attributes).length !== 0
+        ) {
+          // don't mess with possible styles (hack until CSS parsing is implemented)
+          if (inner.attributes.class) return false;
+          if (!Object.keys(intersection).length) {
+            intersection = inner.attributes;
+          } else {
+            intersection = intersectInheritableAttrs(
+              intersection,
+              inner.attributes
+            );
 
-    if (item.isElem('g') && !item.isEmpty() && item.content.length > 1) {
+            if (!intersection) return false;
+          }
 
-        var intersection = {},
-            hasTransform = false,
-            hasClip = item.hasAttr('clip-path') || item.hasAttr('mask'),
-            intersected = item.content.every(function(inner) {
-                if (inner.isElem() && inner.hasAttr()) {
-                    // don't mess with possible styles (hack until CSS parsing is implemented)
-                    if (inner.hasAttr('class')) return false;
-                    if (!Object.keys(intersection).length) {
-                        intersection = inner.attrs;
-                    } else {
-                        intersection = intersectInheritableAttrs(intersection, inner.attrs);
-
-                        if (!intersection) return false;
-                    }
-
-                    return true;
-                }
-            }),
-            allPath = item.content.every(function(inner) {
-                return inner.isElem(pathElems);
-            });
-
-        if (intersected) {
-
-            item.content.forEach(function(g) {
-
-                for (var name in intersection) {
-
-                    if (!allPath && !hasClip || name !== 'transform') {
-
-                        g.removeAttr(name);
-
-                        if (name === 'transform') {
-                            if (!hasTransform) {
-                                if (item.hasAttr('transform')) {
-                                    item.attr('transform').value += ' ' + intersection[name].value;
-                                } else {
-                                    item.addAttr(intersection[name]);
-                                }
-
-                                hasTransform = true;
-                            }
-                        } else {
-                            item.addAttr(intersection[name]);
-                        }
-
-                    }
-                }
-
-            });
-
+          return true;
         }
+      }),
+      allPath = item.children.every(function (inner) {
+        return inner.isElem(pathElems);
+      });
 
+    if (intersected) {
+      item.children.forEach(function (g) {
+        for (const [name, value] of Object.entries(intersection)) {
+          if ((!allPath && !hasClip) || name !== 'transform') {
+            delete g.attributes[name];
+
+            if (name === 'transform') {
+              if (!hasTransform) {
+                if (item.attributes.transform != null) {
+                  item.attributes.transform =
+                    item.attributes.transform + ' ' + value;
+                } else {
+                  item.attributes.transform = value;
+                }
+
+                hasTransform = true;
+              }
+            } else {
+              item.attributes[name] = value;
+            }
+          }
+        }
+      });
     }
-
+  }
 };
 
 /**
@@ -103,24 +103,20 @@ exports.fn = function(item) {
  * @return {Object} intersected attrs object
  */
 function intersectInheritableAttrs(a, b) {
+  var c = {};
 
-    var c = {};
-
-    for (var n in a) {
-        if (
-            b.hasOwnProperty(n) &&
-            inheritableAttrs.indexOf(n) > -1 &&
-            a[n].name === b[n].name &&
-            a[n].value === b[n].value &&
-            a[n].prefix === b[n].prefix &&
-            a[n].local === b[n].local
-        ) {
-            c[n] = a[n];
-        }
+  for (const [name, value] of Object.entries(a)) {
+    if (
+      // eslint-disable-next-line no-prototype-builtins
+      b.hasOwnProperty(name) &&
+      inheritableAttrs.includes(name) &&
+      value === b[name]
+    ) {
+      c[name] = value;
     }
+  }
 
-    if (!Object.keys(c).length) return false;
+  if (!Object.keys(c).length) return false;
 
-    return c;
-
+  return c;
 }

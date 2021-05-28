@@ -1,16 +1,18 @@
 'use strict';
 
+const { parseName } = require('../lib/svgo/tools.js');
+const { editorNamespaces } = require('./_collections');
+
 exports.type = 'perItem';
 
 exports.active = true;
 
 exports.description = 'removes editors namespaces, elements and attributes';
 
-var editorNamespaces = require('./_collections').editorNamespaces,
-    prefixes = [];
+const prefixes = [];
 
 exports.params = {
-    additionalNamespaces: []
+  additionalNamespaces: [],
 };
 
 /**
@@ -27,39 +29,37 @@ exports.params = {
  *
  * @author Kir Belevich
  */
-exports.fn = function(item, params) {
+exports.fn = function (item, params) {
+  let namespaces = editorNamespaces;
+  if (Array.isArray(params.additionalNamespaces)) {
+    namespaces = [...editorNamespaces, ...params.additionalNamespaces];
+  }
 
-    if (Array.isArray(params.additionalNamespaces)) {
-        editorNamespaces = editorNamespaces.concat(params.additionalNamespaces);
+  if (item.type === 'element') {
+    if (item.isElem('svg')) {
+      for (const [name, value] of Object.entries(item.attributes)) {
+        const { prefix, local } = parseName(name);
+        if (prefix === 'xmlns' && namespaces.includes(value)) {
+          prefixes.push(local);
+
+          // <svg xmlns:sodipodi="">
+          delete item.attributes[name];
+        }
+      }
     }
 
-    if (item.elem) {
-
-        if (item.isElem('svg')) {
-
-            item.eachAttr(function(attr) {
-                if (attr.prefix === 'xmlns' && editorNamespaces.indexOf(attr.value) > -1) {
-                    prefixes.push(attr.local);
-
-                    // <svg xmlns:sodipodi="">
-                    item.removeAttr(attr.name);
-                }
-            });
-
-        }
-
-        // <* sodipodi:*="">
-        item.eachAttr(function(attr) {
-            if (prefixes.indexOf(attr.prefix) > -1) {
-                item.removeAttr(attr.name);
-            }
-        });
-
-        // <sodipodi:*>
-        if (prefixes.indexOf(item.prefix) > -1) {
-            return false;
-        }
-
+    // <* sodipodi:*="">
+    for (const name of Object.keys(item.attributes)) {
+      const { prefix } = parseName(name);
+      if (prefixes.includes(prefix)) {
+        delete item.attributes[name];
+      }
     }
 
+    // <sodipodi:*>
+    const { prefix } = parseName(item.name);
+    if (prefixes.includes(prefix)) {
+      return false;
+    }
+  }
 };
