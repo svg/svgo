@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="a">
+       <path d="..."/>
+    </clipPath>
+    <g transform="matrix(0 -1.25 -1.25 0 100 100)" clip-path="url(#a)">
+        <g transform="scale(.2)">
+            <path d="..."/>
+            <path d="..."/>
+        </g>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="a">
+        <path d="..."/>
+    </clipPath>
+    <g transform="matrix(0 -1.25 -1.25 0 100 100)" clip-path="url(#a)">
+        <path d="..." transform="scale(.2)"/>
+        <path d="..." transform="scale(.2)"/>
+    </g>
+</svg>
