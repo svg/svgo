@@ -1,6 +1,6 @@
 'use strict';
 
-const { computeStyle } = require('../lib/style.js');
+const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
 const { applyTransforms } = require('./_applyTransforms.js');
@@ -55,11 +55,12 @@ let arcTolerance;
  * @author Kir Belevich
  */
 exports.fn = (root, params) => {
+  const stylesheet = collectStylesheet(root);
   return {
     element: {
       enter: (node) => {
         if (pathElems.includes(node.name) && node.attributes.d != null) {
-          const computedStyle = computeStyle(node);
+          const computedStyle = computeStyle(stylesheet, node);
           precision = params.floatPrecision;
           error =
             precision !== false
