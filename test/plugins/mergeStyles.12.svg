@@ -1,23 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48">
     <defs>
-        <style></style>
-        <linearGradient id="file-name_svg__file-name_svg__original-id" x1="12" y1="-1" x2="33" y2="46" gradientUnits="userSpaceOnUse">
+        <style />
+        <linearGradient id="foo" x1="12" y1="-1" x2="33" y2="46" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#6b5aed" stop-opacity="0" />
             <stop offset="1" stop-color="#6b5aed" />
         </linearGradient>
     </defs>
-    <path d="M5 24a21.9 21.9 10 1 1 8 18" fill="url(#file-name_svg__file-name_svg__original-id)"/>
+    <path d="M5 24a21.9 21.9 10 1 1 8 18" fill="url(#foo)"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48">
     <defs>
-        <style/>
-        <linearGradient id="a" x1="12" y1="-1" x2="33" y2="46" gradientUnits="userSpaceOnUse">
+        <linearGradient id="foo" x1="12" y1="-1" x2="33" y2="46" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#6b5aed" stop-opacity="0"/>
             <stop offset="1" stop-color="#6b5aed"/>
         </linearGradient>
     </defs>
-    <path d="M5 24a21.9 21.9 10 1 1 8 18" fill="url(#a)"/>
+    <path d="M5 24a21.9 21.9 10 1 1 8 18" fill="url(#foo)"/>
 </svg>
