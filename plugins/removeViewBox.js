@@ -4,7 +4,7 @@ const { closestByName } = require('../lib/xast.js');
 
 exports.type = 'perItem';
 
-exports.active = true;
+exports.active = false;
 
 exports.description = 'removes viewBox attribute when possible';
 

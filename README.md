@@ -132,7 +132,6 @@ module.exports = {
     'removeUnknownsAndDefaults',
     'removeNonInheritableGroupAttrs',
     'removeUselessStrokeAndFill',
-    'removeViewBox',
     'cleanupEnableBackground',
     'removeHiddenElems',
     'removeEmptyText',
