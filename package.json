@@ -1,6 +1,6 @@
 {
   "packageManager": "yarn@2.4.3",
-  "name": "svgo",
+  "name": "@mbank-design/svgo",
   "version": "3.0.2",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "license": "MIT",
@@ -38,7 +38,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/svg/svgo.git"
+    "url": "git://github.com/mbank-design/svgo.git"
   },
   "funding": {
     "type": "opencollective",
