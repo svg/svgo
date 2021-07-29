@@ -8,6 +8,7 @@
 
 node_modules
 dist
+assets-examples
 test/regression-fixtures
 test/regression-diffs
 test/cli/output
