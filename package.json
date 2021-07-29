@@ -111,6 +111,8 @@
     "csso": "^4.2.0",
     "picocolors": "^1.0.0",
     "stable": "^0.1.8"
+    "i18n-iso-countries": "^6.8.0",
+    "svg-path-bbox": "^1.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
