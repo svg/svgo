@@ -53,6 +53,8 @@
     "plugins",
     "dist",
     "!**/*.test.js"
+    "pluginsValidate",
+    "dist"
   ],
   "engines": {
     "node": ">=14.0.0"
