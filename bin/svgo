@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { red } = require('chalk');
+const { red } = require('colorette');
 const { program } = require('commander');
 const makeProgram = require('../lib/svgo/coa');
 makeProgram(program);
