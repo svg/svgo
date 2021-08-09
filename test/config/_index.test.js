@@ -71,7 +71,6 @@ describe('config', function () {
     const plugins = config.plugins.map((plugin) => resolvePluginConfig(plugin));
     const cleanupNumericValues = getPlugin('cleanupNumericValues', plugins);
     const convertPathData = getPlugin('convertPathData', plugins);
-    const customPlugin = getPlugin('customPlugin', plugins);
 
     it('should have "multipass"', function () {
       expect(config.multipass).toEqual(true);

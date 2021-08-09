@@ -1,6 +1,5 @@
 'use strict';
 
-const plugins = require('./plugins.js');
 const { createPreset } = require('../lib/svgo/plugins.js');
 
 const removeDoctype = require('./removeDoctype.js');
