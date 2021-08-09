@@ -6,7 +6,7 @@ const { path2js, js2path } = require('./_path.js');
 const { applyTransforms } = require('./_applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
-exports.name = 'convertPathData'
+exports.name = 'convertPathData';
 exports.type = 'visitor';
 exports.active = true;
 exports.description =

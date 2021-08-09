@@ -3,7 +3,7 @@
 const { traverse, traverseBreak } = require('../lib/xast.js');
 const { parseName } = require('../lib/svgo/tools.js');
 
-exports.name = 'cleanupIDs'
+exports.name = 'cleanupIDs';
 
 exports.type = 'full';
 

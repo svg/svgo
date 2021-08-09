@@ -54,4 +54,3 @@ exports.removeXMLProcInst = require('./removeXMLProcInst.js');
 exports.reusePaths = require('./reusePaths.js');
 exports.sortAttrs = require('./sortAttrs.js');
 exports.sortDefsChildren = require('./sortDefsChildren.js');
-
