@@ -1,7 +1,7 @@
 'use strict';
 
 // builtin presets
-exports.preset_default = require('./preset_default.js');
+exports['preset-default'] = require('./preset-default.js');
 
 // builtin plugins
 exports.addAttributesToSVGElement = require('./addAttributesToSVGElement.js');

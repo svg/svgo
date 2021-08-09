@@ -62,6 +62,7 @@
     "plugins/removeXMLNS.js",
     "plugins/reusePaths.js",
     "plugins/sortDefsChildren.js",
+    "plugins/preset-default.js",
     "lib/svgo/jsAPI.js",
     "test/browser.js",
     "test/coa/_index.test.js",
