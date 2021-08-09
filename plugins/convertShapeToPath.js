@@ -3,6 +3,7 @@
 const { stringifyPathData } = require('../lib/path.js');
 const { detachNodeFromParent } = require('../lib/xast.js');
 
+exports.name = 'convertShapeToPath';
 exports.type = 'visitor';
 exports.active = true;
 exports.description = 'converts basic shapes to more compact path form';

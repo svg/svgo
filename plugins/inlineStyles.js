@@ -4,6 +4,8 @@ const csstree = require('css-tree');
 const { querySelectorAll, closestByName } = require('../lib/xast.js');
 const cssTools = require('../lib/css-tools');
 
+exports.name = 'inlineStyles';
+
 exports.type = 'full';
 
 exports.active = true;

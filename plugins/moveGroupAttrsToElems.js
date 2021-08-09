@@ -2,6 +2,8 @@
 
 const { pathElems, referencesProps } = require('./_collections.js');
 
+exports.name = 'moveGroupAttrsToElems';
+
 exports.type = 'perItem';
 
 exports.active = true;

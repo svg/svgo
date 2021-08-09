@@ -3,6 +3,8 @@
 const { traverse } = require('../lib/xast.js');
 const { parseName } = require('../lib/svgo/tools.js');
 
+exports.name = 'removeUnusedNS';
+
 exports.type = 'full';
 
 exports.active = true;

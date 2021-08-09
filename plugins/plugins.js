@@ -1,5 +1,9 @@
 'use strict';
 
+// builtin presets
+exports.preset_default = require('./preset_default.js');
+
+// builtin plugins
 exports.addAttributesToSVGElement = require('./addAttributesToSVGElement.js');
 exports.addClassesToSVGElement = require('./addClassesToSVGElement.js');
 exports.cleanupAttrs = require('./cleanupAttrs.js');
@@ -50,3 +54,4 @@ exports.removeXMLProcInst = require('./removeXMLProcInst.js');
 exports.reusePaths = require('./reusePaths.js');
 exports.sortAttrs = require('./sortAttrs.js');
 exports.sortDefsChildren = require('./sortDefsChildren.js');
+

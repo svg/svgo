@@ -2,6 +2,8 @@
 
 const { parseName } = require('../lib/svgo/tools.js');
 
+exports.name = 'removeUnknownsAndDefaults';
+
 exports.type = 'perItem';
 
 exports.active = true;

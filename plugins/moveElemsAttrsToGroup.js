@@ -2,6 +2,8 @@
 
 const { inheritableAttrs, pathElems } = require('./_collections');
 
+exports.name = 'moveElemsAttrsToGroup';
+
 exports.type = 'perItemReverse';
 
 exports.active = true;

@@ -1,5 +1,6 @@
 'use strict';
 
+exports.name = 'cleanupAttrs';
 exports.type = 'visitor';
 exports.active = true;
 exports.description =

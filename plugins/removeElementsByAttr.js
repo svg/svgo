@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'removeElementsByAttr';
+
 exports.type = 'perItem';
 
 exports.active = false;

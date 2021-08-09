@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'removeOffCanvasPaths';
+
 exports.type = 'perItem';
 
 exports.active = false;

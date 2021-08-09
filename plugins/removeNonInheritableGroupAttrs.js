@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'removeNonInheritableGroupAttrs';
+
 exports.type = 'perItem';
 
 exports.active = true;
