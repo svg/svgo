@@ -37,11 +37,7 @@ describe('svgo', () => {
     const [original, expected] = await parseFixture('multipass-prefix-ids.svg');
     const result = optimize(original, {
       multipass: true,
-      plugins: extendDefaultPlugins([
-        {
-          name: 'prefixIds',
-        },
-      ]),
+      plugins: ['preset-default', 'prefixIds'],
     });
     expect(normalize(result.data)).toEqual(expected);
   });
