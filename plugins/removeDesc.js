@@ -25,9 +25,9 @@ exports.fn = (root, params) => {
         if (node.name === 'desc') {
           if (
             removeAny ||
-            item.children.length === 0 ||
-            (item.children[0].type === 'text' &&
-              standardDescs.test(item.children[0].value))
+            node.children.length === 0 ||
+            (node.children[0].type === 'text' &&
+              standardDescs.test(node.children[0].value))
           ) {
             detachNodeFromParent(node, parentNode);
           }
