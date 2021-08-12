@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const del = require('del');
-const { expect } = require('chai');
 const { Command } = require('commander');
 const svgo = require('../../lib/svgo/coa.js');
 
@@ -37,7 +36,7 @@ describe('coa', function () {
     await fs.promises.mkdir(tempFolder);
   });
 
-  after(async () => {
+  afterAll(async () => {
     await del(tempFolder);
   });
 
@@ -105,8 +104,8 @@ describe('coa', function () {
       '--quiet',
     ]);
     const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
-    expect(optimizedWeight).gt(0);
-    expect(initWeight).lte(optimizedWeight);
+    expect(optimizedWeight).toBeGreaterThan(0);
+    expect(initWeight).toBeLessThanOrEqual(optimizedWeight);
   });
 
   it('should optimize folder recursively', async () => {
@@ -120,8 +119,8 @@ describe('coa', function () {
       '--recursive',
     ]);
     const optimizedWeight = calcFolderSvgWeight(svgFolderPathRecursively);
-    expect(optimizedWeight).gt(0);
-    expect(initWeight).lte(optimizedWeight);
+    expect(optimizedWeight).toBeGreaterThan(0);
+    expect(initWeight).toBeLessThanOrEqual(optimizedWeight);
   });
 
   it('should optimize file', async () => {
@@ -130,7 +129,7 @@ describe('coa', function () {
     ).length;
     await runProgram(['--input', svgPath, '--output', 'temp.svg', '--quiet']);
     const optimizedFileLength = fs.readFileSync('temp.svg').length;
-    expect(optimizedFileLength).lte(initialFileLength);
+    expect(optimizedFileLength).toBeLessThanOrEqual(initialFileLength);
     await del('temp.svg');
   });
 
@@ -144,8 +143,8 @@ describe('coa', function () {
       '--quiet',
     ]);
     const optimizedWeight = calcFolderSvgWeight(tempFolder);
-    expect(optimizedWeight).gt(0);
-    expect(optimizedWeight).lte(initWeight);
+    expect(optimizedWeight).toBeGreaterThan(0);
+    expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
     await del('temp.svg');
   });
 
@@ -167,7 +166,7 @@ describe('coa', function () {
       ]);
     } finally {
       const optimizedFileLength = fs.readFileSync('temp.svg').length;
-      expect(optimizedFileLength).lte(initialFile.length);
+      expect(optimizedFileLength).toBeLessThanOrEqual(initialFile.length);
       await del('temp.svg');
     }
   });
@@ -182,7 +181,7 @@ describe('coa', function () {
       '--quiet',
     ]);
     let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
-    expect(optimizedWeight).lte(initWeight);
+    expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
   });
 
   it('should throw error when stated in input folder does not exist', async () => {
@@ -196,7 +195,7 @@ describe('coa', function () {
       ]);
     } catch (error) {
       restoreConsoleError();
-      expect(error.message).to.match(/no such file or directory/);
+      expect(error.message).toMatch(/no such file or directory/);
     }
   });
 
@@ -214,7 +213,7 @@ describe('coa', function () {
         ]);
       } finally {
         restoreConsoleLog();
-        expect(output).to.match(/www\.w3\.org\/2000\/svg/);
+        expect(output).toMatch(/www\.w3\.org\/2000\/svg/);
       }
     });
 
@@ -226,7 +225,7 @@ describe('coa', function () {
       try {
         await runProgram(['--folder', emptyFolderPath, '--quiet']);
       } catch (error) {
-        expect(error.message).to.match(/No SVG files/);
+        expect(error.message).toMatch(/No SVG files/);
       }
     });
 
@@ -238,7 +237,7 @@ describe('coa', function () {
           '--quiet',
         ]);
       } catch (error) {
-        expect(error.message).to.match(/No SVG files have been found/);
+        expect(error.message).toMatch(/No SVG files have been found/);
       }
     });
 
@@ -248,7 +247,7 @@ describe('coa', function () {
         await runProgram(['--show-plugins']);
       } finally {
         restoreConsoleLog();
-        expect(output).to.match(/Currently available plugins:/);
+        expect(output).toMatch(/Currently available plugins:/);
       }
     });
   });
