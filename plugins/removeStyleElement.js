@@ -13,7 +13,7 @@ exports.description = 'removes <style> element (disabled by default)';
  *
  * @author Betsy Dupuis
  */
-exports.fn = (item) => {
+exports.fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {
