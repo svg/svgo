@@ -35,9 +35,6 @@ describe('plugins tests', function () {
             plugins: [plugin],
             js2svg: { pretty: true },
           });
-          if (result.error != null) {
-            expect.fail(result.error);
-          }
           expect(result.error).not.toEqual(expect.anything());
           //FIXME: results.data has a '\n' at the end while it should not
           expect(normalize(result.data)).toEqual(should);
