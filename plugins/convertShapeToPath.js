@@ -35,29 +35,62 @@ exports.fn = function (item, params) {
   if (
     item.isElem('rect') &&
     item.attributes.width != null &&
-    item.attributes.height != null &&
-    item.attributes.rx == null &&
-    item.attributes.ry == null
+    item.attributes.height != null
   ) {
     const x = Number(item.attributes.x || '0');
     const y = Number(item.attributes.y || '0');
+    let rx = Number(item.attributes.rx) || 'auto';
+    let ry = Number(item.attributes.ry) || 'auto';
     const width = Number(item.attributes.width);
     const height = Number(item.attributes.height);
     // Values like '100%' compute to NaN, thus running after
     // cleanupNumericValues when 'px' units has already been removed.
     // TODO: Calculate sizes from % and non-px units if possible.
     if (isNaN(x - y + width - height)) return;
-    const pathData = [
-      { command: 'M', args: [x, y] },
-      { command: 'H', args: [x + width] },
-      { command: 'V', args: [y + height] },
-      { command: 'H', args: [x] },
+
+
+    if (rx === 'auto' && ry === 'auto') {
+      // If neither rx nor ry has a properly specified value, this is rectangle with square corners
+      rx = ry = 0
+    } else if ( ry === 'auto') {
+      // If ry missing, use value of rx
+      ry = rx
+    } else if ( rx === 'auto') {
+      // If rx missing, use value of ry
+      rx = ry
+    }
+    // If value of rx greater than half of width, reset to half of width.
+    // Do same for ry.
+    if (rx > width / 2) {
+      rx = width / 2
+    }
+    if (ry > height / 2) {
+      ry = height / 2
+    }
+
+    const hasCurves = rx > 0 && ry > 0
+    if (hasCurves && !convertArcs) return;
+
+    let pathData = [
+      { command: 'M', args: [x + rx, y] },
+      { command: 'H', args: [x + width - rx] },
+      hasCurves && { command: 'A', args: [rx, ry, 0, 0, 1, x + width, y + ry] },
+      { command: 'V', args: [y + height - ry] },
+      hasCurves && { command: 'A', args: [rx, ry, 0, 0, 1, x + width - rx, y + height] },
+      { command: 'H', args: [x + rx] },
+      hasCurves && { command: 'A', args: [rx, ry, 0, 0, 1, x, y + height - ry] },
+      hasCurves && { command: 'V', args: [y + ry] },
+      hasCurves && { command: 'A', args: [rx, ry, 0, 0, 1, x + rx, y ] },
       { command: 'z', args: [] },
     ];
+    // filter out null vallues
+    pathData = pathData.filter(val => !!val);
     item.attributes.d = stringifyPathData({ pathData, precision });
     item.renameElem('path');
     delete item.attributes.x;
     delete item.attributes.y;
+    delete item.attributes.rx;
+    delete item.attributes.ry;
     delete item.attributes.width;
     delete item.attributes.height;
   }
