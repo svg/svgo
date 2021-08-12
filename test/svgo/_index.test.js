@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { EOL } = require('os');
-const { optimize, extendDefaultPlugins } = require('../../lib/svgo.js');
+const { optimize } = require('../../lib/svgo.js');
 
 const regEOL = new RegExp(EOL, 'g');
 
