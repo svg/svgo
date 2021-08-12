@@ -1,0 +1,22 @@
+Conver the rectangles with given radius to path
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="10" width="50" height="50" rx="4"/>
+    <rect x="10" y="10" width="50" height="50" rx="4" ry="8"/>
+    <rect x="10" y="10" width="50" height="50" ry="8"/>
+    <rect x="10" y="10" width="50" height="50" ry="100"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 10H56A4 4 0 0 1 60 14V56A4 4 0 0 1 56 60H14A4 4 0 0 1 10 56V14A4 4 0 0 1 14 10z"/>
+    <path d="M14 10H56A4 8 0 0 1 60 18V52A4 8 0 0 1 56 60H14A4 8 0 0 1 10 52V18A4 8 0 0 1 14 10z"/>
+    <path d="M18 10H52A8 8 0 0 1 60 18V52A8 8 0 0 1 52 60H18A8 8 0 0 1 10 52V18A8 8 0 0 1 18 10z"/>
+    <path d="M35 10H35A25 25 0 0 1 60 35V35A25 25 0 0 1 35 60H35A25 25 0 0 1 10 35V35A25 25 0 0 1 35 10z"/>
+</svg>
+
+@@@
+
+{ "convertArcs": true }
