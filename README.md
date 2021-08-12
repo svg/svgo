@@ -263,7 +263,6 @@ const config = await loadConfig(configFile, cwd)
 
 * as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a GitHub Action – [SVGO Action](https://github.com/marketplace/actions/svgo-action)
-* as a Node.js module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * as a Mimosa module – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
