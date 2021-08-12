@@ -50,8 +50,8 @@
     "!**/**.test.js"
   ],
   "scripts": {
-    "test": "c8 --reporter=html --reporter=text mocha \"test/*/_index.js\" \"**/*.test.js\" --ignore=\"node_modules/**\"",
-    "lint": "eslint --ignore-path .gitignore . && prettier --list-different \"**/*.js\" --ignore-path .gitignore",
+    "test": "jest --coverage",
+    "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
@@ -83,11 +83,10 @@
       },
       {
         "files": [
-          "test/**/*.js",
           "**/*.test.js"
         ],
         "env": {
-          "mocha": true
+          "jest": true
         }
       }
     ]
@@ -105,12 +104,9 @@
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
-    "@types/mocha": "^8.2.2",
-    "c8": "^7.6.0",
-    "chai": "^4.3.4",
     "del": "^6.0.0",
     "eslint": "^7.22.0",
-    "mocha": "^8.3.2",
+    "jest": "^27.0.6",
     "mock-stdin": "^1.0.0",
     "node-fetch": "^2.6.1",
     "pixelmatch": "^5.2.1",
