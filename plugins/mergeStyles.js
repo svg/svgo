@@ -17,7 +17,7 @@ exports.fn = () => {
   let collectedStyles = '';
   let styleContentType = 'text';
 
-  const enterElement = (node) => {
+  const enterElement = (node, parentNode) => {
     // collect style elements
     if (node.name !== 'style') {
       return;
@@ -51,7 +51,7 @@ exports.fn = () => {
 
     // remove empty style elements
     if (css.trim().length === 0) {
-      detachNodeFromParent(node);
+      detachNodeFromParent(node, parentNode);
       return;
     }
 
@@ -67,7 +67,7 @@ exports.fn = () => {
     if (firstStyleElement == null) {
       firstStyleElement = node;
     } else {
-      detachNodeFromParent(node);
+      detachNodeFromParent(node, parentNode);
       firstStyleElement.children = [
         new JSAPI(
           { type: styleContentType, value: collectedStyles },

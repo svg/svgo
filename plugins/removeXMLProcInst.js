@@ -1,9 +1,9 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
+exports.type = 'visitor';
 exports.active = true;
-
 exports.description = 'removes XML processing instructions';
 
 /**
@@ -12,14 +12,16 @@ exports.description = 'removes XML processing instructions';
  * @example
  * <?xml version="1.0" encoding="utf-8"?>
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
  */
-exports.fn = function (item) {
-  if (item.type === 'instruction' && item.name === 'xml') {
-    return false;
-  }
-  return true;
+exports.fn = () => {
+  return {
+    instruction: {
+      enter: (node, parentNode) => {
+        if (node.name === 'xml') {
+          detachNodeFromParent(node, parentNode);
+        }
+      },
+    },
+  };
 };

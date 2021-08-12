@@ -1,6 +1,6 @@
 {
   "name": "svgo",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "keywords": [
     "svgo",
@@ -46,11 +46,12 @@
     "bin",
     "lib",
     "plugins",
-    "dist"
+    "dist",
+    "!**/**.test.js"
   ],
   "scripts": {
-    "test": "c8 --reporter=html --reporter=text mocha \"test/*/_index.js\" \"**/*.test.js\" --ignore=\"node_modules/**\"",
-    "lint": "eslint --ignore-path .gitignore . && prettier --list-different \"**/*.js\" --ignore-path .gitignore",
+    "test": "jest --coverage",
+    "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
@@ -82,20 +83,19 @@
       },
       {
         "files": [
-          "test/**/*.js",
           "**/*.test.js"
         ],
         "env": {
-          "mocha": true
+          "jest": true
         }
       }
     ]
   },
   "dependencies": {
     "@trysound/sax": "0.1.1",
-    "chalk": "^4.1.0",
+    "colorette": "^1.2.2",
     "commander": "^7.1.0",
-    "css-select": "^3.1.2",
+    "css-select": "^4.1.3",
     "css-tree": "^1.1.2",
     "csso": "^4.2.0",
     "stable": "^0.1.8"
@@ -104,12 +104,10 @@
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
-    "@types/mocha": "^8.2.2",
-    "c8": "^7.6.0",
-    "chai": "^4.3.4",
+    "@types/jest": "^27.0.0",
     "del": "^6.0.0",
     "eslint": "^7.22.0",
-    "mocha": "^8.3.2",
+    "jest": "^27.0.6",
     "mock-stdin": "^1.0.0",
     "node-fetch": "^2.6.1",
     "pixelmatch": "^5.2.1",

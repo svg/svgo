@@ -227,7 +227,7 @@ const config = await loadConfig(configFile, cwd)
 | [removeViewBox](https://github.com/svg/svgo/blob/master/plugins/removeViewBox.js) | remove `viewBox` attribute when possible | `enabled` |
 | [cleanupEnableBackground](https://github.com/svg/svgo/blob/master/plugins/cleanupEnableBackground.js) | remove or cleanup `enable-background` attribute when possible | `enabled` |
 | [minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js) | minify `<style>` elements content with [CSSO](https://github.com/css/csso) | `enabled` |
-| [convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) | convert styles into attributes | `disabled ` |
+| [convertStyleToAttrs](https://github.com/svg/svgo/blob/master/plugins/convertStyleToAttrs.js) | convert styles into attributes | `disabled` |
 | [convertColors](https://github.com/svg/svgo/blob/master/plugins/convertColors.js) | convert colors (from `rgb()` to `#rrggbb`, from `#rrggbb` to `#rgb`) | `enabled` |
 | [convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js) | convert Path data to relative or absolute (whichever is shorter), convert one segment to another, trim useless delimiters, smart rounding, and much more | `enabled` |
 | [convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js) | collapse multiple transforms into one, convert matrices to the short aliases, and much more | `enabled` |
@@ -263,7 +263,6 @@ const config = await loadConfig(configFile, cwd)
 
 * as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
 * as a GitHub Action – [SVGO Action](https://github.com/marketplace/actions/svgo-action)
-* as a Node.js module – [examples](https://github.com/svg/svgo/tree/master/examples)
 * as a Grunt task – [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)
 * as a Gulp task – [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)
 * as a Mimosa module – [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)
@@ -273,12 +272,15 @@ const config = await loadConfig(configFile, cwd)
 * as a PostCSS plugin – [postcss-svgo](https://github.com/ben-eb/postcss-svgo)
 * as an Inkscape plugin – [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)
 * as a Sketch plugin - [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)
-* as macOS app - [Image Shrinker](https://image-shrinker.com)
+* as a macOS app - [Image Shrinker](https://image-shrinker.com)
 * as a Rollup plugin - [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)
 * as a VS Code plugin - [vscode-svgo](https://github.com/1000ch/vscode-svgo)
 * as a Atom plugin - [atom-svgo](https://github.com/1000ch/atom-svgo)
 * as a Sublime plugin - [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)
 * as a Figma plugin - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
+* as a Linux app - [Oh My SVG](https://github.com/sonnyp/OhMySVG)
+* as a Browser extension - [SVG Gobbler](https://github.com/rossmoody/svg-gobbler)
+* as an API - [Vector Express](https://github.com/smidyo/vectorexpress-api#convertor-svgo)
 
 ## Donators
 

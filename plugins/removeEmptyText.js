@@ -1,16 +1,10 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
+exports.type = 'visitor';
 exports.active = true;
-
 exports.description = 'removes empty <text> elements';
-
-exports.params = {
-  text: true,
-  tspan: true,
-  tref: true,
-};
 
 /**
  * Remove empty Text elements.
@@ -27,31 +21,30 @@ exports.params = {
  * Remove tref with empty xlink:href attribute:
  * <tref xlink:href=""/>
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
  */
-exports.fn = function (item, params) {
-  if (item.type === 'element') {
-    // Remove empty text element
-    if (params.text && item.name === 'text' && item.children.length === 0) {
-      return false;
-    }
-
-    // Remove empty tspan element
-    if (params.tspan && item.name === 'tspan' && item.children.length === 0) {
-      return false;
-    }
-
-    // Remove tref with empty xlink:href attribute
-    if (
-      params.tref &&
-      item.name === 'tref' &&
-      item.attributes['xlink:href'] == null
-    ) {
-      return false;
-    }
-  }
+exports.fn = (root, params) => {
+  const { text = true, tspan = true, tref = true } = params;
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        // Remove empty text element
+        if (text && node.name === 'text' && node.children.length === 0) {
+          detachNodeFromParent(node, parentNode);
+        }
+        // Remove empty tspan element
+        if (tspan && node.name === 'tspan' && node.children.length === 0) {
+          detachNodeFromParent(node, parentNode);
+        }
+        // Remove tref with empty xlink:href attribute
+        if (
+          tref &&
+          node.name === 'tref' &&
+          node.attributes['xlink:href'] == null
+        ) {
+          detachNodeFromParent(node, parentNode);
+        }
+      },
+    },
+  };
 };

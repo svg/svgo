@@ -1,9 +1,9 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
+exports.type = 'visitor';
 exports.active = true;
-
 exports.description = 'removes <metadata>';
 
 /**
@@ -11,11 +11,16 @@ exports.description = 'removes <metadata>';
  *
  * https://www.w3.org/TR/SVG11/metadata.html
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
  */
-exports.fn = function (item) {
-  return !item.isElem('metadata');
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.name === 'metadata') {
+          detachNodeFromParent(node, parentNode);
+        }
+      },
+    },
+  };
 };

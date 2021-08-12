@@ -64,18 +64,18 @@
     "plugins/sortDefsChildren.js",
     "lib/svgo/jsAPI.js",
     "test/browser.js",
-    "test/coa/_index.js",
-    "test/config/_index.js",
+    "test/coa/_index.test.js",
+    "test/config/_index.test.js",
     "test/config/fixtures/invalid-array.js",
     "test/config/fixtures/invalid-null.js",
     "test/config/fixtures/invalid-string.js",
     "test/config/fixtures/invalid/svgo.config.js",
     "test/config/fixtures/module-not-found.js",
     "test/config/fixtures/one/two/config.js",
-    "test/jsapi/_index.js",
-    "test/plugins/_index.js",
+    "test/jsapi/_index.test.js",
+    "test/plugins/_index.test.js",
     "test/regression.js",
-    "test/svg2js/_index.js",
-    "test/svgo/_index.js"
+    "test/svg2js/_index.test.js",
+    "test/svgo/_index.test.js"
   ]
 }

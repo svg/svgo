@@ -1,9 +1,9 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
+exports.type = 'visitor';
 exports.active = true;
-
 exports.description = 'removes comments';
 
 /**
@@ -13,13 +13,16 @@ exports.description = 'removes comments';
  * <!-- Generator: Adobe Illustrator 15.0.0, SVG Export
  * Plug-In . SVG Version: 6.00 Build 0)  -->
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
  */
-exports.fn = function (item) {
-  if (item.type === 'comment' && item.value.charAt(0) !== '!') {
-    return false;
-  }
+exports.fn = () => {
+  return {
+    comment: {
+      enter: (node, parentNode) => {
+        if (node.value.charAt(0) !== '!') {
+          detachNodeFromParent(node, parentNode);
+        }
+      },
+    },
+  };
 };

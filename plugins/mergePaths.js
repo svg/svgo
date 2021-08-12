@@ -1,7 +1,7 @@
 'use strict';
 
 const { detachNodeFromParent } = require('../lib/xast.js');
-const { computeStyle } = require('../lib/style.js');
+const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { path2js, js2path, intersects } = require('./_path.js');
 
 exports.type = 'visitor';
@@ -22,6 +22,7 @@ exports.fn = (root, params) => {
     floatPrecision,
     noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
   } = params;
+  const stylesheet = collectStylesheet(root);
 
   return {
     element: {
@@ -53,7 +54,7 @@ exports.fn = (root, params) => {
           }
 
           // preserve paths with markers
-          const computedStyle = computeStyle(child);
+          const computedStyle = computeStyle(stylesheet, child);
           if (
             computedStyle['marker-start'] ||
             computedStyle['marker-mid'] ||
@@ -87,7 +88,7 @@ exports.fn = (root, params) => {
               floatPrecision,
               noSpaceAfterFlags,
             });
-            detachNodeFromParent(child);
+            detachNodeFromParent(child, node);
             continue;
           }
 
