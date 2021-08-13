@@ -323,6 +323,11 @@ const applyMatrixToPathData = (pathData, matrix) => {
       args[6] = y;
     }
 
+    if (command === 'z' || command === 'Z') {
+      cursor[0] = start[0];
+      cursor[1] = start[1];
+    }
+
     pathItem.instruction = command;
     pathItem.data = args;
   }
