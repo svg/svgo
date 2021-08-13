@@ -2,6 +2,8 @@
 
 var DEFAULT_SEPARATOR = ':';
 
+exports.name = 'removeAttrs';
+
 exports.type = 'perItem';
 
 exports.active = false;

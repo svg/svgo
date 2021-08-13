@@ -2,6 +2,8 @@
 
 const { closestByName } = require('../lib/xast.js');
 
+exports.name = 'addAttributesToSVGElement';
+
 exports.type = 'perItem';
 
 exports.active = false;

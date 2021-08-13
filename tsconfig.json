@@ -12,8 +12,8 @@
   },
   "include": ["lib/**/*", "plugins/**/*", "test/**/*"],
   "exclude": [
+    "**/*.test.js",
     "lib/svgo-node.js",
-    "lib/style.test.js",
     "lib/svgo/coa.js",
     "lib/svgo/config.js",
     "lib/svgo/js2svg.js",
@@ -62,20 +62,11 @@
     "plugins/removeXMLNS.js",
     "plugins/reusePaths.js",
     "plugins/sortDefsChildren.js",
+    "plugins/preset-default.js",
     "lib/svgo/jsAPI.js",
     "test/browser.js",
-    "test/coa/_index.test.js",
-    "test/config/_index.test.js",
-    "test/config/fixtures/invalid-array.js",
-    "test/config/fixtures/invalid-null.js",
-    "test/config/fixtures/invalid-string.js",
-    "test/config/fixtures/invalid/svgo.config.js",
-    "test/config/fixtures/module-not-found.js",
-    "test/config/fixtures/one/two/config.js",
-    "test/jsapi/_index.test.js",
-    "test/plugins/_index.test.js",
+    "test/config/fixtures/**/*.js",
     "test/regression.js",
-    "test/svg2js/_index.test.js",
-    "test/svgo/_index.test.js"
+    "lib/svgo/plugins.js"
   ]
 }

@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'convertStyleToAttrs';
+
 exports.type = 'perItem';
 
 exports.active = false;

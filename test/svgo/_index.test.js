@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { EOL } = require('os');
-const { optimize, extendDefaultPlugins } = require('../../lib/svgo.js');
+const { optimize } = require('../../lib/svgo.js');
 
 const regEOL = new RegExp(EOL, 'g');
 
@@ -37,11 +37,7 @@ describe('svgo', () => {
     const [original, expected] = await parseFixture('multipass-prefix-ids.svg');
     const result = optimize(original, {
       multipass: true,
-      plugins: extendDefaultPlugins([
-        {
-          name: 'prefixIds',
-        },
-      ]),
+      plugins: ['preset-default', 'prefixIds'],
     });
     expect(normalize(result.data)).toEqual(expected);
   });

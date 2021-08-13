@@ -2,6 +2,8 @@
 
 const { attrsGroups } = require('./_collections.js');
 
+exports.name = 'removeEmptyAttrs';
+
 exports.type = 'perItem';
 
 exports.active = true;

@@ -2,6 +2,8 @@
 
 const { removeLeadingZero } = require('../lib/svgo/tools.js');
 
+exports.name = 'cleanupListOfValues';
+
 exports.type = 'perItem';
 
 exports.active = false;

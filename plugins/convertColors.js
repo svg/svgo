@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'convertColors';
+
 exports.type = 'perItem';
 
 exports.active = true;

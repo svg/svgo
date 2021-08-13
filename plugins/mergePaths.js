@@ -4,6 +4,7 @@ const { detachNodeFromParent } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { path2js, js2path, intersects } = require('./_path.js');
 
+exports.name = 'mergePaths';
 exports.type = 'visitor';
 exports.active = true;
 exports.description = 'merges multiple paths in one if possible';

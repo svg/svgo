@@ -3,6 +3,8 @@
 const { traverse } = require('../lib/xast.js');
 const JSAPI = require('../lib/svgo/jsAPI');
 
+exports.name = 'reusePaths';
+
 exports.type = 'full';
 
 exports.active = false;

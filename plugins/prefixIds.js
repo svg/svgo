@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'prefixIds';
+
 exports.type = 'perItem';
 
 exports.active = false;

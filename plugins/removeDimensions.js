@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'removeDimensions';
+
 exports.type = 'perItem';
 
 exports.active = false;

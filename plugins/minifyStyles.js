@@ -3,6 +3,8 @@
 const csso = require('csso');
 const { traverse } = require('../lib/xast.js');
 
+exports.name = 'minifyStyles';
+
 exports.type = 'full';
 
 exports.active = true;

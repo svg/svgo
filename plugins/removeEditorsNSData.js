@@ -3,6 +3,8 @@
 const { parseName } = require('../lib/svgo/tools.js');
 const { editorNamespaces } = require('./_collections');
 
+exports.name = 'removeEditorsNSData';
+
 exports.type = 'perItem';
 
 exports.active = true;

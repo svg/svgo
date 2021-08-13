@@ -2,6 +2,8 @@
 
 const { traverse } = require('../lib/xast.js');
 
+exports.name = 'cleanupEnableBackground';
+
 exports.type = 'full';
 
 exports.active = true;

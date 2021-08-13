@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'convertTransform';
+
 exports.type = 'perItem';
 
 exports.active = true;

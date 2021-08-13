@@ -1,5 +1,6 @@
 'use strict';
 
+exports.name = 'convertEllipseToCircle';
 exports.type = 'visitor';
 exports.active = true;
 exports.description = 'converts non-eccentric <ellipse>s to <circle>s';

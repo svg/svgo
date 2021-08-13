@@ -2,6 +2,8 @@
 
 const { elemsGroups } = require('./_collections');
 
+exports.name = 'removeEmptyContainers';
+
 exports.type = 'perItemReverse';
 
 exports.active = true;

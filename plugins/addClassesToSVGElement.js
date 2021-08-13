@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'addClassesToSVGElement';
+
 exports.type = 'full';
 
 exports.active = false;

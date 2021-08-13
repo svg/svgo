@@ -2,6 +2,8 @@
 
 const { inheritableAttrs, elemsGroups } = require('./_collections');
 
+exports.name = 'collapseGroups';
+
 exports.type = 'perItemReverse';
 
 exports.active = true;

@@ -2,6 +2,8 @@
 
 const { elemsGroups } = require('./_collections');
 
+exports.name = 'removeUselessDefs';
+
 exports.type = 'perItem';
 
 exports.active = true;

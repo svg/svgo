@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'removeUselessStrokeAndFill';
+
 exports.type = 'perItem';
 
 exports.active = true;

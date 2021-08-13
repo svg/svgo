@@ -2,6 +2,8 @@
 
 const { parseName } = require('../lib/svgo/tools.js');
 
+exports.name = 'sortAttrs';
+
 exports.type = 'perItem';
 
 exports.active = false;

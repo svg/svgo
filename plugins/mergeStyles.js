@@ -3,6 +3,7 @@
 const { closestByName, detachNodeFromParent } = require('../lib/xast.js');
 const JSAPI = require('../lib/svgo/jsAPI.js');
 
+exports.name = 'mergeStyles';
 exports.type = 'visitor';
 exports.active = true;
 exports.description = 'merge multiple style elements into one';

@@ -1,5 +1,7 @@
 'use strict';
 
+exports.name = 'cleanupNumericValues';
+
 exports.type = 'perItem';
 
 exports.active = true;
