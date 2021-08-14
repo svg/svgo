@@ -10,13 +10,13 @@ const DEFAULT_SEPARATOR = ':';
 /**
  * Remove attributes
  *
- * @param elemSeparator
+ * @example elemSeparator
  *   format: string
  *
- * @param preserveCurrentColor
+ * @example preserveCurrentColor
  *   format: boolean
  *
- * @param attrs:
+ * @example attrs:
  *
  *   format: [ element* : attribute* : value* ]
  *
@@ -69,6 +69,12 @@ const DEFAULT_SEPARATOR = ':';
  *
  *
  * @author Benny Schudel
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   elemSeparator?: string,
+ *   preserveCurrentColor?: boolean,
+ *   attrs: string | Array<string>
+ * }>}
  */
 exports.fn = (root, params) => {
   // wrap into an array if params is not

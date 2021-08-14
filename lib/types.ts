@@ -71,4 +71,4 @@ export type Visitor = {
   root?: VisitorRoot;
 };
 
-export type Plugin<Params> = (root: XastRoot, params: Params) => Visitor;
+export type Plugin<Params> = (root: XastRoot, params: Params) => null | Visitor;

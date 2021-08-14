@@ -50,6 +50,11 @@ plugins: [
  * ]
  *
  * @author April Arcus
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   className?: string,
+ *   classNames?: Array<string>
+ * }>}
  */
 exports.fn = (root, params) => {
   if (
@@ -57,13 +62,14 @@ exports.fn = (root, params) => {
     !params.className
   ) {
     console.error(ENOCLS);
-    return;
+    return null;
   }
   const classNames = params.classNames || [params.className];
   return {
     element: {
       enter: (node, parentNode) => {
         if (node.name === 'svg' && parentNode.type === 'root') {
+          // @ts-ignore class attribute will be just a string eventually
           node.class.add(...classNames);
         }
       },

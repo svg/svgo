@@ -31,11 +31,8 @@
     "plugins/moveGroupAttrsToElems.js",
     "plugins/plugins.js",
     "plugins/prefixIds.js",
-    "plugins/removeAttributesBySelector.js",
-    "plugins/removeAttrs.js",
     "plugins/removeDimensions.js",
     "plugins/removeEditorsNSData.js",
-    "plugins/removeElementsByAttr.js",
     "plugins/removeEmptyAttrs.js",
     "plugins/removeHiddenElems.js",
     "plugins/removeNonInheritableGroupAttrs.js",
@@ -52,8 +49,6 @@
     "plugins/removeEmptyContainers.js",
     "plugins/minifyStyles.js",
     "plugins/inlineStyles.js",
-    "plugins/addClassesToSVGElement.js",
-    "plugins/addAttributesToSVGElement.js",
     "plugins/preset-default.js"
   ]
 }
