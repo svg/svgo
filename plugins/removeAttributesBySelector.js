@@ -60,9 +60,11 @@ exports.description =
  * @author Bradley Mease
  */
 exports.fn = function (item, params) {
-  var selectors = Array.isArray(params.selectors) ? params.selectors : [params];
+  const selectors = Array.isArray(params.selectors)
+    ? params.selectors
+    : [params];
 
-  selectors.map(({ selector, attributes }) => {
+  for (const { selector, attributes } of selectors) {
     if (item.matches(selector)) {
       if (Array.isArray(attributes)) {
         for (const name of attributes) {
@@ -72,5 +74,5 @@ exports.fn = function (item, params) {
         delete item.attributes[attributes];
       }
     }
-  });
+  }
 };
