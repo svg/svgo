@@ -26,7 +26,7 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        for (const [name, value] of Object.entries(node.attributes)) {
+        for (const name of Object.keys(node.attributes)) {
           if (newlines) {
             // new line which requires a space instead of themselve
             node.attributes[name] = node.attributes[name].replace(
