@@ -243,6 +243,7 @@ const config = await loadConfig(configFile, cwd);
 | [removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js)                         | remove `<style>` elements                                                                                                                                | `disabled` |
 | [removeScriptElement](https://github.com/svg/svgo/blob/master/plugins/removeScriptElement.js)                       | remove `<script>` elements                                                                                                                               | `disabled` |
 | [reusePaths](https://github.com/svg/svgo/blob/master/plugins/reusePaths.js)                                         | Find duplicated <path> elements and replace them with <use> links                                                                                        | `disabled` |
+| [currentColor](https://github.com/svg/svgo/blob/master/plugins/currentColor.js)                                     | set `currentColor` for `color`, `fill` and `stroke` attributes for redefine ability from CSS                                                             | `disabled` |
 
 ## Other Ways to Use SVGO
 

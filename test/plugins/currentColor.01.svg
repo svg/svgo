@@ -1,0 +1,19 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path stroke="#1F273B"/>
+    <path fill="rgb(255, 255, 255)"/>
+    <g>
+        <path stroke="red"/>
+        <path fill="none"/>
+    </g>
+</svg>
+
+@@@
+
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path stroke="currentColor"/>
+    <path fill="currentColor"/>
+    <g>
+        <path stroke="currentColor"/>
+        <path fill="none"/>
+    </g>
+</svg>

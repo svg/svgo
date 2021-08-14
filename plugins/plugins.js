@@ -18,6 +18,7 @@ exports.convertPathData = require('./convertPathData.js');
 exports.convertShapeToPath = require('./convertShapeToPath.js');
 exports.convertStyleToAttrs = require('./convertStyleToAttrs.js');
 exports.convertTransform = require('./convertTransform.js');
+exports.currentColor = require('./currentColor')
 exports.mergeStyles = require('./mergeStyles.js');
 exports.inlineStyles = require('./inlineStyles.js');
 exports.mergePaths = require('./mergePaths.js');
