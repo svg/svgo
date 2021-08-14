@@ -1,18 +1,12 @@
 'use strict';
 
+const { detachNodeFromParent } = require('../lib/xast.js');
+
 exports.name = 'removeElementsByAttr';
-
-exports.type = 'perItem';
-
+exports.type = 'visitor';
 exports.active = false;
-
 exports.description =
   'removes arbitrary elements by ID or className (disabled by default)';
-
-exports.params = {
-  id: [],
-  class: [],
-};
 
 /**
  * Remove arbitrary SVG elements by ID or className.
@@ -47,33 +41,37 @@ exports.params = {
  *         - 'elementClass'
  *         - 'anotherClass'
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Eli Dupuis (@elidupuis)
  */
-exports.fn = function (item, params) {
-  // wrap params in an array if not already
-  ['id', 'class'].forEach(function (key) {
-    if (!Array.isArray(params[key])) {
-      params[key] = [params[key]];
-    }
-  });
-
-  // abort if current item is no an element
-  if (item.type !== 'element') {
-    return;
-  }
-
-  // remove element if it's `id` matches configured `id` params
-  if (item.attributes.id != null && params.id.length !== 0) {
-    return params.id.includes(item.attributes.id) === false;
-  }
-
-  // remove element if it's `class` contains any of the configured `class` params
-  if (item.attributes.class && params.class.length !== 0) {
-    const classList = item.attributes.class.split(' ');
-    return params.class.some((item) => classList.includes(item)) === false;
-  }
+exports.fn = (root, params) => {
+  const ids =
+    params.id == null ? [] : Array.isArray(params.id) ? params.id : [params.id];
+  const classes =
+    params.class == null
+      ? []
+      : Array.isArray(params.class)
+      ? params.class
+      : [params.class];
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        // remove element if it's `id` matches configured `id` params
+        if (node.attributes.id != null && ids.length !== 0) {
+          if (ids.includes(node.attributes.id)) {
+            detachNodeFromParent(node, parentNode);
+          }
+        }
+        // remove element if it's `class` contains any of the configured `class` params
+        if (node.attributes.class && classes.length !== 0) {
+          const classList = node.attributes.class.split(' ');
+          for (const item of classes) {
+            if (classList.includes(item)) {
+              detachNodeFromParent(node, parentNode);
+              break;
+            }
+          }
+        }
+      },
+    },
+  };
 };
