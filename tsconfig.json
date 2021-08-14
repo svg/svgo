@@ -8,18 +8,10 @@
     "checkJs": true,
     "strict": true,
     "resolveJsonModule": true,
-    "noImplicitAny": false
+    "noImplicitAny": true
   },
-  "include": ["lib/**/*", "plugins/**/*", "test/**/*"],
+  "include": ["plugins/**/*"],
   "exclude": [
-    "**/*.test.js",
-    "lib/svgo-node.js",
-    "lib/svgo/coa.js",
-    "lib/svgo/config.js",
-    "lib/svgo/js2svg.js",
-    "lib/svgo/svg2js.js",
-    "lib/svgo/jsAPI.js",
-    "lib/svgo.js",
     "plugins/_path.js",
     "plugins/_transforms.js",
     "plugins/_applyTransforms.js",
@@ -62,11 +54,17 @@
     "plugins/removeXMLNS.js",
     "plugins/reusePaths.js",
     "plugins/sortDefsChildren.js",
-    "plugins/preset-default.js",
-    "lib/svgo/jsAPI.js",
-    "test/browser.js",
-    "test/config/fixtures/**/*.js",
-    "test/regression.js",
-    "lib/svgo/plugins.js"
+    "plugins/sortAttrs.js",
+    "plugins/removeTitle.js",
+    "plugins/removeStyleElement.js",
+    "plugins/removeMetadata.js",
+    "plugins/removeScriptElement.js",
+    "plugins/removeEmptyContainers.js",
+    "plugins/removeDesc.js",
+    "plugins/minifyStyles.js",
+    "plugins/inlineStyles.js",
+    "plugins/addClassesToSVGElement.js",
+    "plugins/addAttributesToSVGElement.js",
+    "plugins/preset-default.js"
   ]
 }
