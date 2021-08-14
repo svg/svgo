@@ -34,13 +34,19 @@ exports.fn = (root, params) => {
               (match, p1, p2) => p1 + ' ' + p2
             );
             // simple new line
-            node.attributes[name] = node.attributes[name].replace(regNewlines, '');
+            node.attributes[name] = node.attributes[name].replace(
+              regNewlines,
+              ''
+            );
           }
           if (trim) {
             node.attributes[name] = node.attributes[name].trim();
           }
           if (spaces) {
-            node.attributes[name] = node.attributes[name].replace(regSpaces, ' ');
+            node.attributes[name] = node.attributes[name].replace(
+              regSpaces,
+              ' '
+            );
           }
         }
       },
