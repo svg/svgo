@@ -13,6 +13,8 @@ exports.description = 'removes <title>';
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title
  *
  * @author Igor Kalashnikov
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
 exports.fn = () => {
   return {

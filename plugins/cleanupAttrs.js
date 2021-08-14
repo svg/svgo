@@ -14,6 +14,12 @@ const regSpaces = /\s{2,}/g;
  * Cleanup attributes values from newlines, trailing and repeating spaces.
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   newlines?: boolean,
+ *   trim?: boolean,
+ *   spaces?: boolean
+ * }>}
  */
 exports.fn = (root, params) => {
   const { newlines = true, trim = true, spaces = true } = params;
