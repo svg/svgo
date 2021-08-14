@@ -29,18 +29,18 @@ exports.fn = (root, params) => {
         for (const [name, value] of Object.entries(node.attributes)) {
           if (newlines) {
             // new line which requires a space instead of themselve
-            node.attributes[name] = value.replace(
+            node.attributes[name] = node.attributes[name].replace(
               regNewlinesNeedSpace,
               (match, p1, p2) => p1 + ' ' + p2
             );
             // simple new line
-            node.attributes[name] = value.replace(regNewlines, '');
+            node.attributes[name] = node.attributes[name].replace(regNewlines, '');
           }
           if (trim) {
-            node.attributes[name] = value.trim();
+            node.attributes[name] = node.attributes[name].trim();
           }
           if (spaces) {
-            node.attributes[name] = value.replace(regSpaces, ' ');
+            node.attributes[name] = node.attributes[name].replace(regSpaces, ' ');
           }
         }
       },
