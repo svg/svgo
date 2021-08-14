@@ -64,6 +64,8 @@ exports.fn = function (item) {
 
           return true;
         }
+
+        return false;
       }),
       allPath = item.children.every(function (inner) {
         return inner.isElem(pathElems);
