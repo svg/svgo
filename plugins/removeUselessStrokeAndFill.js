@@ -16,8 +16,6 @@ exports.params = {
 };
 
 var shape = require('./_collections').elemsGroups.shape,
-  regStrokeProps = /^stroke/,
-  regFillProps = /^fill-/,
   styleOrScript = ['style', 'script'];
 
 /**
@@ -59,7 +57,7 @@ exports.fn = function (item, params) {
           declineStroke = parentStroke && parentStroke != 'none';
 
         for (const name of Object.keys(item.attributes)) {
-          if (regStrokeProps.test(name)) {
+          if (name.startsWith('stroke')) {
             delete item.attributes[name];
           }
         }
@@ -73,7 +71,7 @@ exports.fn = function (item, params) {
     // remove fill*
     if (params.fill && (!fill || item.computedAttr('fill-opacity', '0'))) {
       for (const name of Object.keys(item.attributes)) {
-        if (regFillProps.test(name)) {
+        if (name.startsWith('fill-')) {
           delete item.attributes[name];
         }
       }
