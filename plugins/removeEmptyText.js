@@ -23,6 +23,12 @@ exports.description = 'removes empty <text> elements';
  * <tref xlink:href=""/>
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   text?: boolean,
+ *   tspan?: boolean,
+ *   tref?: boolean
+ * }>}
  */
 exports.fn = (root, params) => {
   const { text = true, tspan = true, tref = true } = params;

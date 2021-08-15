@@ -15,6 +15,8 @@ exports.description = 'removes comments';
  * Plug-In . SVG Version: 6.00 Build 0)  -->
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
 exports.fn = () => {
   return {

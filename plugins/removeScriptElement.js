@@ -12,8 +12,9 @@ exports.description = 'removes <script> elements (disabled by default)';
  *
  * https://www.w3.org/TR/SVG11/script.html
  *
- *
  * @author Patrick Klingemann
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
 exports.fn = () => {
   return {

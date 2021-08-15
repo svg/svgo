@@ -13,6 +13,8 @@ exports.description = 'removes <metadata>';
  * https://www.w3.org/TR/SVG11/metadata.html
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
 exports.fn = () => {
   return {

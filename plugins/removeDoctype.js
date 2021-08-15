@@ -28,6 +28,8 @@ exports.description = 'removes doctype declaration';
  * ]>
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
 exports.fn = () => {
   return {

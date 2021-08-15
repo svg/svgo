@@ -14,6 +14,8 @@ exports.description = 'removes XML processing instructions';
  * <?xml version="1.0" encoding="utf-8"?>
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
 exports.fn = () => {
   return {
