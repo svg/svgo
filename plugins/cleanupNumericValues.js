@@ -8,7 +8,8 @@ exports.active = true;
 exports.description =
   'rounds numeric values to the fixed precision, removes default ‘px’ units';
 
-const regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
+const regNumericValues =
+  /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
 const absoluteLengths = {
   // relative to px
   cm: 96 / 2.54,

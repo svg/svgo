@@ -27,7 +27,8 @@ exports.description =
  * @author Kir Belevich
  */
 exports.fn = function (root) {
-  const regEnableBackground = /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/;
+  const regEnableBackground =
+    /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/;
   let hasFilter = false;
   const elems = ['svg', 'mask', 'pattern'];
 
@@ -39,9 +40,8 @@ exports.fn = function (root) {
         node.attributes.width != null &&
         node.attributes.height != null
       ) {
-        const match = node.attributes['enable-background'].match(
-          regEnableBackground
-        );
+        const match =
+          node.attributes['enable-background'].match(regEnableBackground);
 
         if (match) {
           if (

@@ -7,7 +7,8 @@ exports.type = 'visitor';
 exports.active = false;
 exports.description = 'rounds list of values to the fixed precision';
 
-const regNumericValues = /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
+const regNumericValues =
+  /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
 const regSeparator = /\s+,?\s*|,\s*/;
 const absoluteLengths = {
   // relative to px

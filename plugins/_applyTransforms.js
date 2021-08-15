@@ -87,10 +87,9 @@ const applyTransforms = (elem, pathData, params) => {
             .trim()
             .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
         } else {
-          elem.attributes[
-            'stroke-width'
-          ] = strokeWidth.replace(regNumericValues, (num) =>
-            removeLeadingZero(num * scale)
+          elem.attributes['stroke-width'] = strokeWidth.replace(
+            regNumericValues,
+            (num) => removeLeadingZero(num * scale)
           );
         }
 
