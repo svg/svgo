@@ -160,7 +160,7 @@ module.exports = {
 
 ## API usage
 
-SVGO provides a few low level utilities. `extendDefaultPlugins` is described above.
+SVGO provides a few low level utilities.
 
 ### optimize
 
