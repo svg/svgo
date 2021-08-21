@@ -34,7 +34,6 @@
     "plugins/removeDimensions.js",
     "plugins/removeEditorsNSData.js",
     "plugins/removeEmptyAttrs.js",
-    "plugins/removeHiddenElems.js",
     "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeOffCanvasPaths.js",
     "plugins/removeUnknownsAndDefaults.js",

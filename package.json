@@ -104,6 +104,8 @@
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
+    "@types/css-tree": "^1.0.6",
+    "@types/csso": "^4.2.0",
     "@types/jest": "^27.0.1",
     "del": "^6.0.0",
     "eslint": "^7.32.0",
