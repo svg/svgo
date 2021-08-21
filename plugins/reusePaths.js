@@ -62,16 +62,7 @@ exports.fn = function (root) {
     );
     root.children[0].spliceContent(0, 0, defsTag);
     for (let def of defs) {
-      // Remove class and style before copying to avoid circular refs in
-      // JSON.stringify. This is fine because we don't actually want class or
-      // style information to be copied.
-      const style = def.style;
-      const defClass = def.class;
-      delete def.style;
-      delete def.class;
       const defClone = def.clone();
-      def.style = style;
-      def.class = defClass;
       delete defClone.attributes.transform;
       defsTag.spliceContent(0, 0, defClone);
       // Convert the original def to a use so the first usage isn't duplicated.
