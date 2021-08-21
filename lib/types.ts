@@ -27,7 +27,7 @@ type XastText = {
   value: string;
 };
 
-type XastElement = {
+export type XastElement = {
   type: 'element';
   name: string;
   attributes: Record<string, string>;
@@ -42,7 +42,7 @@ export type XastChild =
   | XastText
   | XastElement;
 
-type XastRoot = {
+export type XastRoot = {
   type: 'root';
   children: Array<XastChild>;
 };
@@ -53,12 +53,12 @@ export type XastNode = XastRoot | XastChild;
 
 type VisitorNode<Node> = {
   enter?: (node: Node, parentNode: XastParent) => void;
-  leave?: (node: Node, parentNode: XastParent) => void;
+  exit?: (node: Node, parentNode: XastParent) => void;
 };
 
 type VisitorRoot = {
   enter?: (node: XastRoot, parentNode: null) => void;
-  leave?: (node: XastRoot, parentNode: null) => void;
+  exit?: (node: XastRoot, parentNode: null) => void;
 };
 
 export type Visitor = {
@@ -72,3 +72,58 @@ export type Visitor = {
 };
 
 export type Plugin<Params> = (root: XastRoot, params: Params) => null | Visitor;
+
+export type Specificity = [number, number, number, number];
+
+export type StylesheetDeclaration = {
+  name: string;
+  value: string;
+  important: boolean;
+};
+
+export type StylesheetRule = {
+  dynamic: boolean;
+  selectors: string;
+  specificity: Specificity;
+  declarations: Array<StylesheetDeclaration>;
+};
+
+type StaticStyle = {
+  type: 'static';
+  inherited: boolean;
+  value: string;
+};
+
+type DynamicStyle = {
+  type: 'dynamic';
+  inherited: boolean;
+};
+
+export type ComputedStyles = Record<string, StaticStyle | DynamicStyle>;
+
+export type PathDataCommand =
+  | 'M'
+  | 'm'
+  | 'Z'
+  | 'z'
+  | 'L'
+  | 'l'
+  | 'H'
+  | 'h'
+  | 'V'
+  | 'v'
+  | 'C'
+  | 'c'
+  | 'S'
+  | 's'
+  | 'Q'
+  | 'q'
+  | 'T'
+  | 't'
+  | 'A'
+  | 'a';
+
+export type PathDataItem = {
+  command: PathDataCommand;
+  args: Array<number>;
+};
