@@ -207,13 +207,19 @@ exports.fn = function (root, opts) {
 
     for (selectedEl of selector.selectedEls) {
       // class
-      var firstSubSelector = selector.item.data.children.first();
+      const classList = new Set(
+        selectedEl.attributes.class == null
+          ? null
+          : selectedEl.attributes.class.split(' ')
+      );
+      const firstSubSelector = selector.item.data.children.first();
       if (firstSubSelector.type === 'ClassSelector') {
-        selectedEl.class.remove(firstSubSelector.name);
+        classList.delete(firstSubSelector.name);
       }
-      // clean up now empty class attributes
-      if (typeof selectedEl.class.item(0) === 'undefined') {
+      if (classList.size === 0) {
         delete selectedEl.attributes.class;
+      } else {
+        selectedEl.attributes.class = Array.from(classList).join(' ');
       }
 
       // ID

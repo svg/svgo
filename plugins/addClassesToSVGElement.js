@@ -69,8 +69,17 @@ exports.fn = (root, params) => {
     element: {
       enter: (node, parentNode) => {
         if (node.name === 'svg' && parentNode.type === 'root') {
-          // @ts-ignore class attribute will be just a string eventually
-          node.class.add(...classNames);
+          const classList = new Set(
+            node.attributes.class == null
+              ? null
+              : node.attributes.class.split(' ')
+          );
+          for (const className of classNames) {
+            if (className != null) {
+              classList.add(className);
+            }
+          }
+          node.attributes.class = Array.from(classList).join(' ');
         }
       },
     },
