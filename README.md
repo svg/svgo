@@ -89,7 +89,7 @@ module.exports = {
       name: 'preset-default',
       params: {
         overrides: {
-          // customize options for plugins that are enabled by default
+          // customize options for plugins included in preset
           builtinPluginName: {
             optionName: 'optionValue',
           },
@@ -98,7 +98,7 @@ module.exports = {
         },
       },
     },
-    // Enable builtin plugin that is not enabled by default
+    // Enable builtin plugin that is not included in preset
     'moreBuiltinPlugin',
     // Enable and configure builtin plugin
     {
