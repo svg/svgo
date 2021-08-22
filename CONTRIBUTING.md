@@ -63,7 +63,7 @@ Our documentation is maintained in [MDX](https://mdxjs.com/), which is Markdown 
 
 To preview local changes, follow the steps to run the website locally in [svg/svgo.dev](https://github.com/svg/svgo.dev).
 
-New plugins, plugin parameters, and notable any features should be paired with documentation in the [`docs/`](./docs/) directory and pushed in the same pull request.
+New plugins, plugin parameters, and notable features should be paired with documentation in the [`docs/`](./docs/) directory and included in the same pull request.
 
 ## Funding
 

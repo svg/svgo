@@ -6,7 +6,13 @@ svgo:
 
 Removes the `xmlns` attribute from the top-most `<svg>` element in the document.
 
-This optimization is encouraged if you plan to use your SVGs inline an HTML document. The HTML syntax does not support explicit namespaces, so these are ignored by the browser anyway.
+It's recommended to use this plugin if you intend to inline SVGs into an HTML document. HTML does not support explicit namespaces, so these are ignored by the browser anyway.
+
+:::tip
+
+This plugin pairs well with the [Remove XLink](/docs/plugins/remove-xlink/) plugin. Remove XLink drops XLink namespaces and migrates references to them to the modern equivalent, supported by SVG 2 and inline an HTML document. When using this, it's recommended to enable Remove XLink too.
+
+:::
 
 :::caution
 
