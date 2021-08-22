@@ -148,32 +148,51 @@ exports.fn = function (root, opts) {
       if (selector.rule === null) {
         continue;
       }
-
+      const styleDeclarationList = csstree.parse(
+        selectedEl.attributes.style == null ? '' : selectedEl.attributes.style,
+        {
+          context: 'declarationList',
+          parseValue: false,
+        }
+      );
+      const styleDeclarationItems = new Map();
+      csstree.walk(styleDeclarationList, {
+        visit: 'Declaration',
+        enter(node, item) {
+          styleDeclarationItems.set(node.property, item);
+        },
+      });
       // merge declarations
       csstree.walk(selector.rule, {
         visit: 'Declaration',
-        enter: function (styleCsstreeDeclaration) {
+        enter(ruleDeclaration) {
           // existing inline styles have higher priority
           // no inline styles, external styles,                                    external styles used
           // inline styles,    external styles same   priority as inline styles,   inline   styles used
           // inline styles,    external styles higher priority than inline styles, external styles used
-          var styleDeclaration = cssTools.csstreeToStyleDeclaration(
-            styleCsstreeDeclaration
+          const matchedItem = styleDeclarationItems.get(
+            ruleDeclaration.property
           );
-          if (
-            selectedEl.style.getPropertyValue(styleDeclaration.name) !== null &&
-            selectedEl.style.getPropertyPriority(styleDeclaration.name) >=
-              styleDeclaration.priority
+          const ruleDeclarationItem =
+            styleDeclarationList.children.createItem(ruleDeclaration);
+          if (matchedItem == null) {
+            styleDeclarationList.children.append(ruleDeclarationItem);
+          } else if (
+            matchedItem.data.important !== true &&
+            ruleDeclaration.important === true
           ) {
-            return;
+            styleDeclarationList.children.replace(
+              matchedItem,
+              ruleDeclarationItem
+            );
+            styleDeclarationItems.set(
+              ruleDeclaration.property,
+              ruleDeclarationItem
+            );
           }
-          selectedEl.style.setProperty(
-            styleDeclaration.name,
-            styleDeclaration.value,
-            styleDeclaration.priority
-          );
         },
       });
+      selectedEl.attributes.style = csstree.generate(styleDeclarationList);
     }
 
     if (
