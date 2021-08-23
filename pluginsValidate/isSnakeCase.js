@@ -23,9 +23,11 @@ exports.fn = function (root, validateResult) {
   if (root.filename) {
     // remove extension from filename
     const filename = root.filename.split('.').slice(0, -1).join('.');
-    const regex = /^[a-z][a-z0-9_]+$/;
-    const result = regex.test(filename);
-
+    const filename_normalized = filename
+      .normalize('NFKD')
+      .replace(/\p{Diacritic}/gu, '');
+    const regex = /^|[a-z][a-z0-9_]+$/;
+    const result = regex.test(filename_normalized);
     validateResult.isSnakeCase = result;
   } else {
     validateResult.isSnakeCase = false;

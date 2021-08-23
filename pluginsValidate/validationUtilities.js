@@ -115,9 +115,25 @@ exports.countElements = countElements;
 
 //find all elements with a given attribute
 function walkTree(svg, callback) {
+  if (!isWalkable(svg)) {
+    throw Error(
+      'There was a technical error in the asset validation engine. Please contact the design system theme with the assets you are trying to validate'
+    );
+  }
   for (const child of svg.children) {
+    if (!isWalkable(child)) {
+      continue;
+    }
     callback(child);
     walkTree(child, callback);
   }
 }
 exports.walkTree = walkTree;
+
+function isWalkable(svg) {
+  if (svg.children === undefined) {
+    return false;
+  } else {
+    return true;
+  }
+}
