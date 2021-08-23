@@ -98,9 +98,9 @@ module.exports = {
         },
       },
     },
-    // Enable builtin plugin that is not included in preset
+    // Enable builtin plugin not included in preset
     'moreBuiltinPlugin',
-    // Enable and configure builtin plugin
+    // Enable and configure builtin plugin not included in preset
     {
       name: 'manyBuiltInPlugin',
       params: {
