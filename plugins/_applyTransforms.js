@@ -141,7 +141,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
   let cursor = [0, 0];
 
   for (const pathItem of pathData) {
-    let { instruction: command, data: args } = pathItem;
+    let { command, args } = pathItem;
     // moveto (x y)
     if (command === 'M') {
       cursor[0] = args[0];
@@ -327,7 +327,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
       cursor[1] = start[1];
     }
 
-    pathItem.instruction = command;
-    pathItem.data = args;
+    pathItem.command = command;
+    pathItem.args = args;
   }
 };

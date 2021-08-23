@@ -32,7 +32,7 @@ exports.fn = function (item) {
     item.attributes.d != null &&
     typeof viewBox !== 'undefined'
   ) {
-    // Consider that any item with a transform attribute or a M instruction
+    // Consider that any item with a transform attribute or a M command
     // within the viewBox is visible
     if (hasTransform(item) || pathMovesWithinViewBox(item.attributes.d)) {
       return true;
@@ -42,7 +42,7 @@ exports.fn = function (item) {
     if (pathJS.length === 2) {
       // Use a closed clone of the path if it's too short for intersects()
       pathJS = JSON.parse(JSON.stringify(pathJS));
-      pathJS.push({ instruction: 'z' });
+      pathJS.push({ command: 'z', args: [] });
     }
 
     return intersects(viewBoxJS, pathJS);
@@ -118,7 +118,7 @@ function parseViewBox(svg) {
 }
 
 /**
- * Test whether given path has a M instruction with coordinates within the viewBox.
+ * Test whether given path has a M command with coordinates within the viewBox.
  *
  * @param {String} path
  * @return {Boolean}
