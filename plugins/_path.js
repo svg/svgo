@@ -16,15 +16,11 @@ exports.path2js = function (path) {
   const pathData = []; // JS representation of the path data
   const newPathData = parsePathData(path.attributes.d);
   for (const { command, args } of newPathData) {
-    if (command === 'Z' || command === 'z') {
-      pathData.push({ instruction: 'z' });
-    } else {
-      pathData.push({ instruction: command, data: args });
-    }
+    pathData.push({ command, args });
   }
   // First moveto is actually absolute. Subsequent coordinates were separated above.
-  if (pathData.length && pathData[0].instruction == 'm') {
-    pathData[0].instruction = 'M';
+  if (pathData.length && pathData[0].command == 'm') {
+    pathData[0].command = 'M';
   }
   path.pathJS = pathData;
   return pathData;
@@ -42,47 +38,60 @@ var relative2absolute = (exports.relative2absolute = function (data) {
     i;
 
   return data.map(function (item) {
-    var instruction = item.instruction,
-      itemData = item.data && item.data.slice();
+    const command = item.command;
+    const itemData = item.args.slice();
 
-    if (instruction == 'M') {
+    if (command == 'M') {
       set(currentPoint, itemData);
       set(subpathPoint, itemData);
-    } else if ('mlcsqt'.indexOf(instruction) > -1) {
+    } else if (
+      command === 'm' ||
+      command === 'l' ||
+      command === 'c' ||
+      command === 's' ||
+      command === 'q' ||
+      command === 't'
+    ) {
       for (i = 0; i < itemData.length; i++) {
         itemData[i] += currentPoint[i % 2];
       }
       set(currentPoint, itemData);
 
-      if (instruction == 'm') {
+      if (command == 'm') {
         set(subpathPoint, itemData);
       }
-    } else if (instruction == 'a') {
+    } else if (command == 'a') {
       itemData[5] += currentPoint[0];
       itemData[6] += currentPoint[1];
       set(currentPoint, itemData);
-    } else if (instruction == 'h') {
+    } else if (command == 'h') {
       itemData[0] += currentPoint[0];
       currentPoint[0] = itemData[0];
-    } else if (instruction == 'v') {
+    } else if (command == 'v') {
       itemData[0] += currentPoint[1];
       currentPoint[1] = itemData[0];
-    } else if ('MZLCSQTA'.indexOf(instruction) > -1) {
+    } else if (
+      command === 'M' ||
+      command === 'Z' ||
+      command === 'L' ||
+      command === 'C' ||
+      command === 'S' ||
+      command === 'Q' ||
+      command === 'T' ||
+      command === 'A'
+    ) {
       set(currentPoint, itemData);
-    } else if (instruction == 'H') {
+    } else if (command == 'H') {
       currentPoint[0] = itemData[0];
-    } else if (instruction == 'V') {
+    } else if (command == 'V') {
       currentPoint[1] = itemData[0];
-    } else if (instruction == 'z') {
+    } else if (command == 'z') {
       set(currentPoint, subpathPoint);
     }
 
-    return instruction == 'z'
-      ? { instruction: 'z' }
-      : {
-          instruction: instruction.toUpperCase(),
-          data: itemData,
-        };
+    return command == 'z'
+      ? { command: 'z', args: itemData }
+      : { command: command.toUpperCase(), args: itemData };
   });
 });
 
@@ -330,7 +339,7 @@ exports.js2path = function (path, data, params) {
     // remove moveto commands which are followed by moveto commands
     if (
       pathData.length !== 0 &&
-      (item.instruction === 'M' || item.instruction === 'm')
+      (item.command === 'M' || item.command === 'm')
     ) {
       const last = pathData[pathData.length - 1];
       if (last.command === 'M' || last.command === 'm') {
@@ -338,8 +347,8 @@ exports.js2path = function (path, data, params) {
       }
     }
     pathData.push({
-      command: item.instruction,
-      args: item.data || [],
+      command: item.command,
+      args: item.args,
     });
   }
 
@@ -524,10 +533,10 @@ function gatherPoints(points, item, index, path) {
   var subPath = points.length && points[points.length - 1],
     prev = index && path[index - 1],
     basePoint = subPath.length && subPath[subPath.length - 1],
-    data = item.data,
+    data = item.args,
     ctrlPoint = basePoint;
 
-  switch (item.instruction) {
+  switch (item.command) {
     case 'M':
       points.push((subPath = []));
       break;
@@ -542,7 +551,7 @@ function gatherPoints(points, item, index, path) {
       prevCtrlPoint = [data[2] - data[0], data[3] - data[1]]; // Save control point for shorthand
       break;
     case 'T':
-      if (prev.instruction == 'Q' || prev.instruction == 'T') {
+      if (prev.command == 'Q' || prev.command == 'T') {
         ctrlPoint = [
           basePoint[0] + prevCtrlPoint[0],
           basePoint[1] + prevCtrlPoint[1],
@@ -562,7 +571,7 @@ function gatherPoints(points, item, index, path) {
       prevCtrlPoint = [data[4] - data[2], data[5] - data[3]]; // Save control point for shorthand
       break;
     case 'S':
-      if (prev.instruction == 'C' || prev.instruction == 'S') {
+      if (prev.command == 'C' || prev.command == 'S') {
         addPoint(subPath, [
           basePoint[0] + 0.5 * prevCtrlPoint[0],
           basePoint[1] + 0.5 * prevCtrlPoint[1],
@@ -600,7 +609,7 @@ function gatherPoints(points, item, index, path) {
       break;
   }
   // Save final command coordinates
-  if (data && data.length >= 2) addPoint(subPath, data.slice(-2));
+  if (data.length >= 2) addPoint(subPath, data.slice(-2));
   return points;
 
   function toAbsolute(n, i) {
