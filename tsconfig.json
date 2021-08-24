@@ -14,7 +14,6 @@
   "exclude": [
     "plugins/_transforms.js",
     "plugins/_applyTransforms.js",
-    "plugins/cleanupEnableBackground.js",
     "plugins/cleanupIDs.js",
     "plugins/cleanupListOfValues.js",
     "plugins/cleanupNumericValues.js",
