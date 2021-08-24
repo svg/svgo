@@ -15,8 +15,6 @@
     "plugins/_transforms.js",
     "plugins/_applyTransforms.js",
     "plugins/cleanupIDs.js",
-    "plugins/cleanupListOfValues.js",
-    "plugins/cleanupNumericValues.js",
     "plugins/collapseGroups.js",
     "plugins/convertColors.js",
     "plugins/convertPathData.js",

@@ -17,6 +17,7 @@ const absoluteLengths = {
   in: 96,
   pt: 4 / 3,
   pc: 16,
+  px: 1,
 };
 
 /**
@@ -27,15 +28,20 @@ const absoluteLengths = {
  *         ⬇
  * <svg viewBox="0 0 200.284 200.284" enable-background="new 0 0 200.284 200.284">
  *
- *
  * <polygon points="208.250977 77.1308594 223.069336 ... "/>
  *         ⬇
  * <polygon points="208.251 77.131 223.069 ... "/>
  *
- *
  * @author kiyopikko
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   floatPrecision?: number,
+ *   leadingZero?: boolean,
+ *   defaultPx?: boolean,
+ *   convertToPx?: boolean
+ * }>}
  */
-exports.fn = (root, params) => {
+exports.fn = (_root, params) => {
   const {
     floatPrecision = 3,
     leadingZero = true,
@@ -43,6 +49,9 @@ exports.fn = (root, params) => {
     convertToPx = true,
   } = params;
 
+  /**
+   * @type {(lists: string) => string}
+   */
   const roundValues = (lists) => {
     const roundedList = [];
 
@@ -54,12 +63,19 @@ exports.fn = (root, params) => {
       if (match) {
         // round it to the fixed precision
         let num = Number(Number(match[1]).toFixed(floatPrecision));
-        let units = match[3] || '';
+        /**
+         * @type {any}
+         */
+        let matchedUnit = match[3] || '';
+        /**
+         * @type{'' | keyof typeof absoluteLengths}
+         */
+        let units = matchedUnit;
 
         // convert absolute values to pixels
         if (convertToPx && units && units in absoluteLengths) {
           const pxNum = Number(
-            (absoluteLengths[units] * match[1]).toFixed(floatPrecision)
+            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision)
           );
 
           if (pxNum.toString().length < match[0].length) {
@@ -69,8 +85,11 @@ exports.fn = (root, params) => {
         }
 
         // and remove leading zero
+        let str;
         if (leadingZero) {
-          num = removeLeadingZero(num);
+          str = removeLeadingZero(num);
+        } else {
+          str = num.toString();
         }
 
         // remove default 'px' units
@@ -78,7 +97,7 @@ exports.fn = (root, params) => {
           units = '';
         }
 
-        roundedList.push(num + units);
+        roundedList.push(str + units);
       }
       // if attribute value is "new"(only enable-background).
       else if (matchNew) {
