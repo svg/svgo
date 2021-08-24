@@ -137,11 +137,12 @@ const transformRelativePoint = (matrix, x, y) => {
 };
 
 const applyMatrixToPathData = (pathData, matrix) => {
-  let start = [0, 0];
-  let cursor = [0, 0];
+  const start = [0, 0];
+  const cursor = [0, 0];
 
   for (const pathItem of pathData) {
     let { command, args } = pathItem;
+
     // moveto (x y)
     if (command === 'M') {
       cursor[0] = args[0];
@@ -322,6 +323,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
       args[6] = y;
     }
 
+    // closepath
     if (command === 'z' || command === 'Z') {
       cursor[0] = start[0];
       cursor[1] = start[1];

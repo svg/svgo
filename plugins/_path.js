@@ -1,18 +1,28 @@
 'use strict';
 
+/**
+ * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ */
+
 const { parsePathData, stringifyPathData } = require('../lib/path.js');
 
+/**
+ * @type {[number, number]}
+ */
 var prevCtrlPoint;
 
 /**
  * Convert path string to JS representation.
  *
- * @param {String} pathString input string
- * @param {Object} params plugin params
- * @return {Array} output array
+ * @type {(path: XastElement) => Array<PathDataItem>}
  */
-exports.path2js = function (path) {
+const path2js = (path) => {
+  // @ts-ignore legacy
   if (path.pathJS) return path.pathJS;
+  /**
+   * @type {Array<PathDataItem>}
+   */
   const pathData = []; // JS representation of the path data
   const newPathData = parsePathData(path.attributes.d);
   for (const { command, args } of newPathData) {
@@ -22,78 +32,145 @@ exports.path2js = function (path) {
   if (pathData.length && pathData[0].command == 'm') {
     pathData[0].command = 'M';
   }
+  // @ts-ignore legacy
   path.pathJS = pathData;
   return pathData;
 };
+exports.path2js = path2js;
 
 /**
  * Convert relative Path data to absolute.
  *
- * @param {Array} data input data
- * @return {Array} output data
+ * @type {(data: Array<PathDataItem>) => Array<PathDataItem>}
+ *
  */
-var relative2absolute = (exports.relative2absolute = function (data) {
-  var currentPoint = [0, 0],
-    subpathPoint = [0, 0],
-    i;
+const convertRelativeToAbsolute = (data) => {
+  /**
+   * @type {Array<PathDataItem>}
+   */
+  const newData = [];
+  let start = [0, 0];
+  let cursor = [0, 0];
 
-  return data.map(function (item) {
-    const command = item.command;
-    const itemData = item.args.slice();
+  for (let { command, args } of data) {
+    args = args.slice();
 
-    if (command == 'M') {
-      set(currentPoint, itemData);
-      set(subpathPoint, itemData);
-    } else if (
-      command === 'm' ||
-      command === 'l' ||
-      command === 'c' ||
-      command === 's' ||
-      command === 'q' ||
-      command === 't'
-    ) {
-      for (i = 0; i < itemData.length; i++) {
-        itemData[i] += currentPoint[i % 2];
-      }
-      set(currentPoint, itemData);
-
-      if (command == 'm') {
-        set(subpathPoint, itemData);
-      }
-    } else if (command == 'a') {
-      itemData[5] += currentPoint[0];
-      itemData[6] += currentPoint[1];
-      set(currentPoint, itemData);
-    } else if (command == 'h') {
-      itemData[0] += currentPoint[0];
-      currentPoint[0] = itemData[0];
-    } else if (command == 'v') {
-      itemData[0] += currentPoint[1];
-      currentPoint[1] = itemData[0];
-    } else if (
-      command === 'M' ||
-      command === 'Z' ||
-      command === 'L' ||
-      command === 'C' ||
-      command === 'S' ||
-      command === 'Q' ||
-      command === 'T' ||
-      command === 'A'
-    ) {
-      set(currentPoint, itemData);
-    } else if (command == 'H') {
-      currentPoint[0] = itemData[0];
-    } else if (command == 'V') {
-      currentPoint[1] = itemData[0];
-    } else if (command == 'z') {
-      set(currentPoint, subpathPoint);
+    // moveto (x y)
+    if (command === 'm') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      command = 'M';
+    }
+    if (command === 'M') {
+      cursor[0] = args[0];
+      cursor[1] = args[1];
+      start[0] = cursor[0];
+      start[1] = cursor[1];
     }
 
-    return command == 'z'
-      ? { command: 'z', args: itemData }
-      : { command: command.toUpperCase(), args: itemData };
-  });
-});
+    // horizontal lineto (x)
+    if (command === 'h') {
+      args[0] += cursor[0];
+      command = 'H';
+    }
+    if (command === 'H') {
+      cursor[0] = args[0];
+    }
+
+    // vertical lineto (y)
+    if (command === 'v') {
+      args[0] += cursor[1];
+      command = 'V';
+    }
+    if (command === 'V') {
+      cursor[1] = args[0];
+    }
+
+    // lineto (x y)
+    if (command === 'l') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      command = 'L';
+    }
+    if (command === 'L') {
+      cursor[0] = args[0];
+      cursor[1] = args[1];
+    }
+
+    // curveto (x1 y1 x2 y2 x y)
+    if (command === 'c') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      args[2] += cursor[0];
+      args[3] += cursor[1];
+      args[4] += cursor[0];
+      args[5] += cursor[1];
+      command = 'C';
+    }
+    if (command === 'C') {
+      cursor[0] = args[4];
+      cursor[1] = args[5];
+    }
+
+    // smooth curveto (x2 y2 x y)
+    if (command === 's') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      args[2] += cursor[0];
+      args[3] += cursor[1];
+      command = 'S';
+    }
+    if (command === 'S') {
+      cursor[0] = args[2];
+      cursor[1] = args[3];
+    }
+
+    // quadratic Bézier curveto (x1 y1 x y)
+    if (command === 'q') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      args[2] += cursor[0];
+      args[3] += cursor[1];
+      command = 'Q';
+    }
+    if (command === 'Q') {
+      cursor[0] = args[2];
+      cursor[1] = args[3];
+    }
+
+    // smooth quadratic Bézier curveto (x y)
+    if (command === 't') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      command = 'T';
+    }
+    if (command === 'T') {
+      cursor[0] = args[0];
+      cursor[1] = args[1];
+    }
+
+    // elliptical arc (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+    if (command === 'a') {
+      args[5] += cursor[0];
+      args[6] += cursor[1];
+      command = 'A';
+    }
+    if (command === 'A') {
+      cursor[0] = args[5];
+      cursor[1] = args[6];
+    }
+
+    // closepath
+    if (command === 'z' || command === 'Z') {
+      cursor[0] = start[0];
+      cursor[1] = start[1];
+      command = 'z';
+    }
+
+    newData.push({ command, args });
+  }
+  return newData;
+};
 
 /**
  * Compute Cubic Bézie bounding box.
@@ -376,8 +453,8 @@ function set(dest, source) {
  */
 exports.intersects = function (path1, path2) {
   // Collect points of every subpath.
-  var points1 = relative2absolute(path1).reduce(gatherPoints, []),
-    points2 = relative2absolute(path2).reduce(gatherPoints, []);
+  const points1 = convertRelativeToAbsolute(path1).reduce(gatherPoints, []);
+  const points2 = convertRelativeToAbsolute(path2).reduce(gatherPoints, []);
 
   // Axis-aligned bounding box check.
   if (
