@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ */
+
 const { stringifyPathData } = require('../lib/path.js');
 const { detachNodeFromParent } = require('../lib/xast.js');
 
@@ -18,9 +22,14 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  * @see https://www.w3.org/TR/SVG11/shapes.html
  *
  * @author Lev Solntsev
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   convertArcs?: boolean,
+ *   floatPrecision?: number
+ * }>}
  */
 exports.fn = (root, params) => {
-  const { convertArcs = false, floatPrecision: precision = null } = params;
+  const { convertArcs = false, floatPrecision: precision } = params;
 
   return {
     element: {
@@ -41,6 +50,9 @@ exports.fn = (root, params) => {
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
           if (Number.isNaN(x - y + width - height)) return;
+          /**
+           * @type {Array<PathDataItem>}
+           */
           const pathData = [
             { command: 'M', args: [x, y] },
             { command: 'H', args: [x + width] },
@@ -63,6 +75,9 @@ exports.fn = (root, params) => {
           const x2 = Number(node.attributes.x2 || '0');
           const y2 = Number(node.attributes.y2 || '0');
           if (Number.isNaN(x1 - y1 + x2 - y2)) return;
+          /**
+           * @type {Array<PathDataItem>}
+           */
           const pathData = [
             { command: 'M', args: [x1, y1] },
             { command: 'L', args: [x2, y2] },
@@ -87,6 +102,9 @@ exports.fn = (root, params) => {
             detachNodeFromParent(node, parentNode);
             return;
           }
+          /**
+           * @type {Array<PathDataItem>}
+           */
           const pathData = [];
           for (let i = 0; i < coords.length; i += 2) {
             pathData.push({
@@ -110,6 +128,9 @@ exports.fn = (root, params) => {
           if (Number.isNaN(cx - cy + r)) {
             return;
           }
+          /**
+           * @type {Array<PathDataItem>}
+           */
           const pathData = [
             { command: 'M', args: [cx, cy - r] },
             { command: 'A', args: [r, r, 0, 1, 0, cx, cy + r] },
@@ -132,6 +153,9 @@ exports.fn = (root, params) => {
           if (Number.isNaN(ecx - ecy + rx - ry)) {
             return;
           }
+          /**
+           * @type {Array<PathDataItem>}
+           */
           const pathData = [
             { command: 'M', args: [ecx, ecy - ry] },
             { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy + ry] },

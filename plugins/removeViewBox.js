@@ -1,13 +1,8 @@
 'use strict';
 
-const { closestByName } = require('../lib/xast.js');
-
+exports.type = 'visitor';
 exports.name = 'removeViewBox';
-
-exports.type = 'perItem';
-
 exports.active = true;
-
 exports.description = 'removes viewBox attribute when possible';
 
 const viewBoxElems = ['svg', 'pattern', 'symbol'];
@@ -22,33 +17,35 @@ const viewBoxElems = ['svg', 'pattern', 'symbol'];
  *             ⬇
  * <svg width="100" height="50">
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (item) {
-  if (
-    item.type === 'element' &&
-    viewBoxElems.includes(item.name) &&
-    item.attributes.viewBox != null &&
-    item.attributes.width != null &&
-    item.attributes.height != null
-  ) {
-    // TODO remove width/height for such case instead
-    if (item.name === 'svg' && closestByName(item.parentNode, 'svg')) {
-      return;
-    }
-
-    const nums = item.attributes.viewBox.split(/[ ,]+/g);
-
-    if (
-      nums[0] === '0' &&
-      nums[1] === '0' &&
-      item.attributes.width.replace(/px$/, '') === nums[2] && // could use parseFloat too
-      item.attributes.height.replace(/px$/, '') === nums[3]
-    ) {
-      delete item.attributes.viewBox;
-    }
-  }
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (
+          viewBoxElems.includes(node.name) &&
+          node.attributes.viewBox != null &&
+          node.attributes.width != null &&
+          node.attributes.height != null
+        ) {
+          // TODO remove width/height for such case instead
+          if (node.name === 'svg' && parentNode.type !== 'root') {
+            return;
+          }
+          const nums = node.attributes.viewBox.split(/[ ,]+/g);
+          if (
+            nums[0] === '0' &&
+            nums[1] === '0' &&
+            node.attributes.width.replace(/px$/, '') === nums[2] && // could use parseFloat too
+            node.attributes.height.replace(/px$/, '') === nums[3]
+          ) {
+            delete node.attributes.viewBox;
+          }
+        }
+      },
+    },
+  };
 };
