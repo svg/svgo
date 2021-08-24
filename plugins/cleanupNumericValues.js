@@ -10,6 +10,7 @@ exports.description =
 
 const regNumericValues =
   /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
+
 const absoluteLengths = {
   // relative to px
   cm: 96 / 2.54,
@@ -17,6 +18,7 @@ const absoluteLengths = {
   in: 96,
   pt: 4 / 3,
   pc: 16,
+  px: 1,
 };
 
 /**
@@ -24,8 +26,15 @@ const absoluteLengths = {
  * remove default 'px' units.
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   floatPrecision?: number,
+ *   leadingZero?: boolean,
+ *   defaultPx?: boolean,
+ *   convertToPx?: boolean
+ * }>}
  */
-exports.fn = (root, params) => {
+exports.fn = (_root, params) => {
   const {
     floatPrecision = 3,
     leadingZero = true,
@@ -60,12 +69,21 @@ exports.fn = (root, params) => {
           if (match) {
             // round it to the fixed precision
             let num = Number(Number(match[1]).toFixed(floatPrecision));
-            let units = match[3] || '';
+            /**
+             * @type {any}
+             */
+            let matchedUnit = match[3] || '';
+            /**
+             * @type{'' | keyof typeof absoluteLengths}
+             */
+            let units = matchedUnit;
 
             // convert absolute values to pixels
-            if (convertToPx && units && units in absoluteLengths) {
+            if (convertToPx && units !== '' && units in absoluteLengths) {
               const pxNum = Number(
-                (absoluteLengths[units] * match[1]).toFixed(floatPrecision)
+                (absoluteLengths[units] * Number(match[1])).toFixed(
+                  floatPrecision
+                )
               );
               if (pxNum.toString().length < match[0].length) {
                 num = pxNum;
@@ -74,8 +92,11 @@ exports.fn = (root, params) => {
             }
 
             // and remove leading zero
+            let str;
             if (leadingZero) {
-              num = removeLeadingZero(num);
+              str = removeLeadingZero(num);
+            } else {
+              str = num.toString();
             }
 
             // remove default 'px' units
@@ -83,7 +104,7 @@ exports.fn = (root, params) => {
               units = '';
             }
 
-            node.attributes[name] = num + units;
+            node.attributes[name] = str + units;
           }
         }
       },
