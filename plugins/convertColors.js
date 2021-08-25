@@ -95,7 +95,7 @@ exports.fn = (_root, params) => {
               } else if (currentColor instanceof RegExp) {
                 matched = currentColor.exec(val) != null;
               } else {
-                matched = val !== 'none'
+                matched = val !== 'none';
               }
               if (matched) {
                 val = 'currentColor';
