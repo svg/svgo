@@ -52,10 +52,6 @@ describe('config', function () {
       it('"params" should have property "shorthex" with value of false', function () {
         expect(convertColors.params).toHaveProperty('shorthex', false);
       });
-
-      it('"params" should have property "rgb2hex" with value of true', function () {
-        expect(convertColors.params).toHaveProperty('rgb2hex', true);
-      });
     });
   });
 
