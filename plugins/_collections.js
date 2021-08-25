@@ -1938,7 +1938,11 @@ exports.presentationNonInheritableGroupAttrs = [
   'visibility',
 ];
 
-// https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+/**
+ * https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+ *
+ * @type {Record<string, string>}
+ */
 exports.colorsNames = {
   aliceblue: '#f0f8ff',
   antiquewhite: '#faebd7',
@@ -2090,6 +2094,9 @@ exports.colorsNames = {
   yellowgreen: '#9acd32',
 };
 
+/**
+ * @type {Record<string, string>}
+ */
 exports.colorsShortNames = {
   '#f0ffff': 'azure',
   '#f5f5dc': 'beige',
