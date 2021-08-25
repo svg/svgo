@@ -35,7 +35,7 @@ exports.fn = () => {
           // TODO remove in SVGO 3
           for (const usefulNode of usefulNodes) {
             // @ts-ignore parentNode is legacy
-            usefulNode.parentNode = node
+            usefulNode.parentNode = node;
           }
           node.children = usefulNodes;
         } else if (
