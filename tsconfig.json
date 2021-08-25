@@ -12,13 +12,11 @@
   },
   "include": ["plugins/**/*"],
   "exclude": [
-    "plugins/_transforms.js",
     "plugins/_applyTransforms.js",
     "plugins/cleanupIDs.js",
     "plugins/collapseGroups.js",
     "plugins/convertPathData.js",
     "plugins/convertStyleToAttrs.js",
-    "plugins/convertTransform.js",
     "plugins/mergeStyles.js",
     "plugins/moveElemsAttrsToGroup.js",
     "plugins/moveGroupAttrsToElems.js",
