@@ -26,7 +26,6 @@
     "plugins/removeEditorsNSData.js",
     "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",
-    "plugins/removeOffCanvasPaths.js",
     "plugins/removeUnknownsAndDefaults.js",
     "plugins/removeUnusedNS.js",
     "plugins/removeUselessStrokeAndFill.js",
