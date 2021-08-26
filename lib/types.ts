@@ -52,7 +52,7 @@ export type XastParent = XastRoot | XastElement;
 export type XastNode = XastRoot | XastChild;
 
 type VisitorNode<Node> = {
-  enter?: (node: Node, parentNode: XastParent) => void;
+  enter?: (node: Node, parentNode: XastParent) => void | symbol;
   exit?: (node: Node, parentNode: XastParent) => void;
 };
 
