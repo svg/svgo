@@ -309,40 +309,42 @@ const transformToMatrix = (transform) => {
 exports.transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
   const y = arc[6] - cursor[1];
-  var a = arc[0],
-    b = arc[1],
-    rot = (arc[2] * Math.PI) / 180,
-    cos = Math.cos(rot),
-    sin = Math.sin(rot),
-    h =
+  let a = arc[0];
+  let b = arc[1];
+  const rot = (arc[2] * Math.PI) / 180;
+  const cos = Math.cos(rot);
+  const sin = Math.sin(rot);
+  // skip if radius is 0
+  if (a > 0 && b > 0) {
+    let h =
       Math.pow(x * cos + y * sin, 2) / (4 * a * a) +
       Math.pow(y * cos - x * sin, 2) / (4 * b * b);
-  if (h > 1) {
-    h = Math.sqrt(h);
-    a *= h;
-    b *= h;
+    if (h > 1) {
+      h = Math.sqrt(h);
+      a *= h;
+      b *= h;
+    }
   }
-  var ellipse = [a * cos, a * sin, -b * sin, b * cos, 0, 0],
-    m = multiplyTransformMatrices(transform, ellipse),
-    // Decompose the new ellipse matrix
-    lastCol = m[2] * m[2] + m[3] * m[3],
-    squareSum = m[0] * m[0] + m[1] * m[1] + lastCol,
-    root =
-      Math.hypot(m[0] - m[3], m[1] + m[2]) *
-      Math.hypot(m[0] + m[3], m[1] - m[2]);
+  const ellipse = [a * cos, a * sin, -b * sin, b * cos, 0, 0];
+  const m = multiplyTransformMatrices(transform, ellipse);
+  // Decompose the new ellipse matrix
+  const lastCol = m[2] * m[2] + m[3] * m[3];
+  const squareSum = m[0] * m[0] + m[1] * m[1] + lastCol;
+  const root =
+    Math.hypot(m[0] - m[3], m[1] + m[2]) * Math.hypot(m[0] + m[3], m[1] - m[2]);
 
   if (!root) {
     // circle
     arc[0] = arc[1] = Math.sqrt(squareSum / 2);
     arc[2] = 0;
   } else {
-    var majorAxisSqr = (squareSum + root) / 2,
-      minorAxisSqr = (squareSum - root) / 2,
-      major = Math.abs(majorAxisSqr - lastCol) > 1e-6,
-      sub = (major ? majorAxisSqr : minorAxisSqr) - lastCol,
-      rowsSum = m[0] * m[2] + m[1] * m[3],
-      term1 = m[0] * sub + m[2] * rowsSum,
-      term2 = m[1] * sub + m[3] * rowsSum;
+    const majorAxisSqr = (squareSum + root) / 2;
+    const minorAxisSqr = (squareSum - root) / 2;
+    const major = Math.abs(majorAxisSqr - lastCol) > 1e-6;
+    const sub = (major ? majorAxisSqr : minorAxisSqr) - lastCol;
+    const rowsSum = m[0] * m[2] + m[1] * m[3];
+    const term1 = m[0] * sub + m[2] * rowsSum;
+    const term2 = m[1] * sub + m[3] * rowsSum;
     arc[0] = Math.sqrt(majorAxisSqr);
     arc[1] = Math.sqrt(minorAxisSqr);
     arc[2] =
