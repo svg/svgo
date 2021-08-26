@@ -10,7 +10,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": true
   },
-  "include": ["plugins/**/*"],
+  "include": ["plugins/**/*", "lib/xast.test.js"],
   "exclude": [
     "plugins/_applyTransforms.js",
     "plugins/cleanupIDs.js",
