@@ -95,7 +95,6 @@
     "@trysound/sax": "0.1.1",
     "colorette": "^1.3.0",
     "commander": "^7.2.0",
-    "css-select": "^4.1.3",
     "css-tree": "^1.1.3",
     "csso": "^4.2.0",
     "stable": "^0.1.8"

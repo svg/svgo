@@ -88,6 +88,11 @@ export type StylesheetRule = {
   declarations: Array<StylesheetDeclaration>;
 };
 
+export type Stylesheet = {
+  root: XastRoot;
+  rules: Array<StylesheetRule>;
+};
+
 type StaticStyle = {
   type: 'static';
   inherited: boolean;
