@@ -195,6 +195,7 @@ exports.attrsGroups = {
     'text-overflow',
     'text-rendering',
     'transform',
+    'transform-origin',
     'unicode-bidi',
     'vector-effect',
     'visibility',
