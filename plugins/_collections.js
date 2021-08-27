@@ -1954,7 +1954,6 @@ exports.presentationNonInheritableGroupAttrs = [
   'text-decoration',
   'transform',
   'unicode-bidi',
-  'visibility',
 ];
 
 /**
