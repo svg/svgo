@@ -1,6 +1,10 @@
 'use strict';
 
 // https://www.w3.org/TR/SVG11/intro.html#Definitions
+
+/**
+ * @type {Record<string, Array<string>>}
+ */
 exports.elemsGroups = {
   animation: [
     'animate',
@@ -88,6 +92,9 @@ exports.textElems = exports.elemsGroups.textContent.concat('title');
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
 // https://www.w3.org/TR/SVG11/intro.html#Definitions
+/**
+ * @type {Record<string, Array<string>>}
+ */
 exports.attrsGroups = {
   animationAddition: ['additive', 'accumulate'],
   animationAttributeTarget: ['attributeType', 'attributeName'],
@@ -223,6 +230,9 @@ exports.attrsGroups = {
   ],
 };
 
+/**
+ * @type {Record<string, Record<string, string>>}
+ */
 exports.attrsGroupsDefaults = {
   core: { 'xml:space': 'default' },
   presentation: {
@@ -288,6 +298,15 @@ exports.attrsGroupsDefaults = {
 };
 
 // https://www.w3.org/TR/SVG11/eltindex.html
+/**
+ * @type {Record<string, {
+ *   attrsGroups: Array<string>,
+ *   attrs?: Array<string>,
+ *   defaults?: Record<string, string>,
+ *   contentGroups?: Array<string>,
+ *   content?: Array<string>,
+ * }>}
+ */
 exports.elems = {
   a: {
     attrsGroups: [
@@ -958,8 +977,8 @@ exports.elems = {
       'height',
     ],
     defaults: {
-      x: 0,
-      y: 0,
+      x: '0',
+      y: '0',
     },
   },
   g: {
@@ -1648,8 +1667,8 @@ exports.elems = {
       'refY',
     ],
     defaults: {
-      refX: 0,
-      refY: 0,
+      refX: '0',
+      refY: '0',
     },
     contentGroups: [
       'animation',
@@ -1935,7 +1954,6 @@ exports.presentationNonInheritableGroupAttrs = [
   'text-decoration',
   'transform',
   'unicode-bidi',
-  'visibility',
 ];
 
 /**

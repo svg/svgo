@@ -1,130 +1,218 @@
 'use strict';
 
-const { parseName } = require('../lib/svgo/tools.js');
+const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
+const { collectStylesheet, computeStyle } = require('../lib/style.js');
+const {
+  elems,
+  attrsGroups,
+  elemsGroups,
+  attrsGroupsDefaults,
+  presentationNonInheritableGroupAttrs,
+} = require('./_collections');
 
+exports.type = 'visitor';
 exports.name = 'removeUnknownsAndDefaults';
-
-exports.type = 'perItem';
-
 exports.active = true;
-
 exports.description =
   'removes unknown elements content and attributes, removes attrs with default values';
 
-exports.params = {
-  unknownContent: true,
-  unknownAttrs: true,
-  defaultAttrs: true,
-  uselessOverrides: true,
-  keepDataAttrs: true,
-  keepAriaAttrs: true,
-  keepRoleAttr: false,
-};
+// resolve all groups references
 
-var collections = require('./_collections'),
-  elems = collections.elems,
-  attrsGroups = collections.attrsGroups,
-  elemsGroups = collections.elemsGroups,
-  attrsGroupsDefaults = collections.attrsGroupsDefaults,
-  attrsInheritable = collections.inheritableAttrs,
-  applyGroups = collections.presentationNonInheritableGroupAttrs;
+/**
+ * @type {Map<string, Set<string>>}
+ */
+const allowedChildrenPerElement = new Map();
+/**
+ * @type {Map<string, Set<string>>}
+ */
+const allowedAttributesPerElement = new Map();
+/**
+ * @type {Map<string, Map<string, string>>}
+ */
+const attributesDefaultsPerElement = new Map();
 
-// collect and extend all references
-for (const elem of Object.values(elems)) {
-  if (elem.attrsGroups) {
-    elem.attrs = elem.attrs || [];
-
-    elem.attrsGroups.forEach(function (attrsGroupName) {
-      elem.attrs = elem.attrs.concat(attrsGroups[attrsGroupName]);
-
-      var groupDefaults = attrsGroupsDefaults[attrsGroupName];
-
-      if (groupDefaults) {
-        elem.defaults = elem.defaults || {};
-
-        for (const [attrName, attr] of Object.entries(groupDefaults)) {
-          elem.defaults[attrName] = attr;
+for (const [name, config] of Object.entries(elems)) {
+  /**
+   * @type {Set<string>}
+   */
+  const allowedChildren = new Set();
+  if (config.content) {
+    for (const elementName of config.content) {
+      allowedChildren.add(elementName);
+    }
+  }
+  if (config.contentGroups) {
+    for (const contentGroupName of config.contentGroups) {
+      const elemsGroup = elemsGroups[contentGroupName];
+      if (elemsGroup) {
+        for (const elementName of elemsGroup) {
+          allowedChildren.add(elementName);
         }
       }
-    });
+    }
   }
-
-  if (elem.contentGroups) {
-    elem.content = elem.content || [];
-
-    elem.contentGroups.forEach(function (contentGroupName) {
-      elem.content = elem.content.concat(elemsGroups[contentGroupName]);
-    });
+  /**
+   * @type {Set<string>}
+   */
+  const allowedAttributes = new Set();
+  if (config.attrs) {
+    for (const attrName of config.attrs) {
+      allowedAttributes.add(attrName);
+    }
   }
+  /**
+   * @type {Map<string, string>}
+   */
+  const attributesDefaults = new Map();
+  if (config.defaults) {
+    for (const [attrName, defaultValue] of Object.entries(config.defaults)) {
+      attributesDefaults.set(attrName, defaultValue);
+    }
+  }
+  for (const attrsGroupName of config.attrsGroups) {
+    const attrsGroup = attrsGroups[attrsGroupName];
+    if (attrsGroup) {
+      for (const attrName of attrsGroup) {
+        allowedAttributes.add(attrName);
+      }
+    }
+    const groupDefaults = attrsGroupsDefaults[attrsGroupName];
+    if (groupDefaults) {
+      for (const [attrName, defaultValue] of Object.entries(groupDefaults)) {
+        attributesDefaults.set(attrName, defaultValue);
+      }
+    }
+  }
+  allowedChildrenPerElement.set(name, allowedChildren);
+  allowedAttributesPerElement.set(name, allowedAttributes);
+  attributesDefaultsPerElement.set(name, attributesDefaults);
 }
 
 /**
  * Remove unknown elements content and attributes,
  * remove attributes with default values.
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   unknownContent?: boolean,
+ *   unknownAttrs?: boolean,
+ *   defaultAttrs?: boolean,
+ *   uselessOverrides?: boolean,
+ *   keepDataAttrs?: boolean,
+ *   keepAriaAttrs?: boolean,
+ *   keepRoleAttr?: boolean,
+ * }>}
  */
-exports.fn = function (item, params) {
-  // elems w/o namespace prefix
-  if (item.type === 'element' && !parseName(item.name).prefix) {
-    var elem = item.name;
+exports.fn = (root, params) => {
+  const {
+    unknownContent = true,
+    unknownAttrs = true,
+    defaultAttrs = true,
+    uselessOverrides = true,
+    keepDataAttrs = true,
+    keepAriaAttrs = true,
+    keepRoleAttr = false,
+  } = params;
+  const stylesheet = collectStylesheet(root);
 
-    // remove unknown element's content
-    if (
-      params.unknownContent &&
-      elems[elem] && // make sure we know of this element before checking its children
-      elem !== 'foreignObject' // Don't check foreignObject
-    ) {
-      item.children.forEach(function (content, i) {
-        if (
-          content.type === 'element' &&
-          !parseName(content.name).prefix &&
-          ((elems[elem].content && // Do we have a record of its permitted content?
-            elems[elem].content.indexOf(content.name) === -1) ||
-            (!elems[elem].content && // we dont know about its permitted content
-              !elems[content.name])) // check that we know about the element at all
-        ) {
-          item.children.splice(i, 1);
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        // skip namespaced elements
+        if (node.name.includes(':')) {
+          return;
         }
-      });
-    }
+        // skip visiting foreignObject subtree
+        if (node.name === 'foreignObject') {
+          return visitSkip;
+        }
 
-    // remove element's unknown attrs and attrs with default values
-    if (elems[elem] && elems[elem].attrs) {
-      for (const [name, value] of Object.entries(item.attributes)) {
-        const { prefix } = parseName(name);
-        if (
-          name !== 'xmlns' &&
-          (prefix === 'xml' || !prefix) &&
-          (!params.keepDataAttrs || name.indexOf('data-') != 0) &&
-          (!params.keepAriaAttrs || name.indexOf('aria-') != 0) &&
-          (!params.keepRoleAttr || name != 'role')
-        ) {
-          if (
-            // unknown attrs
-            (params.unknownAttrs && elems[elem].attrs.indexOf(name) === -1) ||
-            // attrs with default values
-            (params.defaultAttrs &&
-              item.attributes.id == null &&
-              elems[elem].defaults &&
-              elems[elem].defaults[name] === value &&
-              (attrsInheritable.includes(name) === false ||
-                !item.parentNode.computedAttr(name))) ||
-            // useless overrides
-            (params.uselessOverrides &&
-              item.attributes.id == null &&
-              applyGroups.includes(name) === false &&
-              attrsInheritable.includes(name) === true &&
-              item.parentNode.computedAttr(name, value))
-          ) {
-            delete item.attributes[name];
+        // remove unknown element's content
+        if (unknownContent && parentNode.type === 'element') {
+          const allowedChildren = allowedChildrenPerElement.get(
+            parentNode.name
+          );
+          if (allowedChildren == null || allowedChildren.size === 0) {
+            // remove unknown elements
+            if (allowedChildrenPerElement.get(node.name) == null) {
+              detachNodeFromParent(node, parentNode);
+              return;
+            }
+          } else {
+            // remove not allowed children
+            if (allowedChildren.has(node.name) === false) {
+              detachNodeFromParent(node, parentNode);
+              return;
+            }
           }
         }
-      }
-    }
-  }
+
+        const allowedAttributes = allowedAttributesPerElement.get(node.name);
+        const attributesDefaults = attributesDefaultsPerElement.get(node.name);
+        const computedParentStyle =
+          parentNode.type === 'element'
+            ? computeStyle(stylesheet, parentNode)
+            : null;
+
+        // remove element's unknown attrs and attrs with default values
+        for (const [name, value] of Object.entries(node.attributes)) {
+          if (keepDataAttrs && name.startsWith('data-')) {
+            continue;
+          }
+          if (keepAriaAttrs && name.startsWith('aria-')) {
+            continue;
+          }
+          if (keepRoleAttr && name === 'role') {
+            continue;
+          }
+          // skip xmlns attribute
+          if (name === 'xmlns') {
+            continue;
+          }
+          // skip namespaced attributes except xml:* and xlink:*
+          if (name.includes(':')) {
+            const [prefix] = name.split(':');
+            if (prefix !== 'xml' && prefix !== 'xlink') {
+              continue;
+            }
+          }
+
+          if (
+            unknownAttrs &&
+            allowedAttributes &&
+            allowedAttributes.has(name) === false
+          ) {
+            delete node.attributes[name];
+          }
+          if (
+            defaultAttrs &&
+            node.attributes.id == null &&
+            attributesDefaults &&
+            attributesDefaults.get(name) === value
+          ) {
+            // keep defaults if parent has own or inherited style
+            if (
+              computedParentStyle == null ||
+              computedParentStyle[name] == null
+            ) {
+              delete node.attributes[name];
+            }
+          }
+          if (uselessOverrides && node.attributes.id == null) {
+            const style =
+              computedParentStyle == null ? null : computedParentStyle[name];
+            if (
+              presentationNonInheritableGroupAttrs.includes(name) === false &&
+              style != null &&
+              style.type === 'static' &&
+              style.value === value
+            ) {
+              delete node.attributes[name];
+            }
+          }
+        }
+      },
+    },
+  };
 };
