@@ -32,7 +32,7 @@ const ENOCLS = `Error in plugin "isArtboardCorrect": absent parameters.
 exports.fn = function (root, validateResult, params) {
   if (
     (params || params === {}) &&
-    root.children[0].attributes.viewBox &&
+    root.children && root.children[0].attributes.viewBox &&
     root.children[0].attributes.viewBox !== undefined
   ) {
     const [paramViewBoxWidth, paramViewBoxHeight] = params.size;
