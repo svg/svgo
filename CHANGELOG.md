@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/mbank-design/svgo/compare/v2.5.0...v2.6.0) (2021-08-28)
+
+
+### Features
+
+* Add SVG validation/linting ([f8a9711](https://github.com/mbank-design/svgo/commit/f8a97112ed247ec79d21bd2cac6ed598414e799d))
+
+
+### Bug Fixes
+
+* secure walkTree function errors and fulfill snake_case rules ([7a64f7d](https://github.com/mbank-design/svgo/commit/7a64f7d47a723a5f4a86b89483f2a75da40c9ed9))
+
 ### [2.4.2](https://github.com/mbank-design/svgo/compare/v2.4.1...v2.4.2) (2021-08-23)
 
 
