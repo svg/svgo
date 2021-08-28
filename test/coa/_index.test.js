@@ -17,11 +17,11 @@ const noop = () => {};
 
 const { checkIsDir } = svgo;
 
-function runProgram(args) {
+async function runProgram(args) {
   const program = new Command();
   svgo(program);
   // prevent running process.exit
-  program.exitOverride(() => {});
+  program.exitOverride(noop);
   // parser skips first two arguments
   return program.parseAsync([0, 1, ...args]);
 }

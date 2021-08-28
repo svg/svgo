@@ -47,7 +47,7 @@
     "lib",
     "plugins",
     "dist",
-    "!**/*.test.js"
+    "!**/*.test.js",
     "pluginsValidate",
     "dist"
   ],
