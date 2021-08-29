@@ -1,14 +1,16 @@
 'use strict';
 
-const { traverse } = require('../lib/xast.js');
-const JSAPI = require('../lib/svgo/jsAPI');
+/**
+ * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').XastParent} XastParent
+ * @typedef {import('../lib/types').XastNode} XastNode
+ */
 
+const JSAPI = require('../lib/svgo/jsAPI.js');
+
+exports.type = 'visitor';
 exports.name = 'reusePaths';
-
-exports.type = 'full';
-
 exports.active = false;
-
 exports.description =
   'Finds <path> elements with the same d, fill, and ' +
   'stroke, and converts them to <use> elements ' +
@@ -19,67 +21,90 @@ exports.description =
  * <use> elements referencing a single <path> def.
  *
  * @author Jacob Howcroft
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (root) {
-  const seen = new Map();
-  let count = 0;
-  const defs = [];
-  traverse(root, (node) => {
-    if (
-      node.type !== 'element' ||
-      node.name !== 'path' ||
-      node.attributes.d == null
-    ) {
-      return;
-    }
-    const d = node.attributes.d;
-    const fill = node.attributes.fill || '';
-    const stroke = node.attributes.stroke || '';
-    const key = d + ';s:' + stroke + ';f:' + fill;
-    const hasSeen = seen.get(key);
-    if (!hasSeen) {
-      seen.set(key, { elem: node, reused: false });
-      return;
-    }
-    if (!hasSeen.reused) {
-      hasSeen.reused = true;
-      if (hasSeen.elem.attributes.id == null) {
-        hasSeen.elem.attributes.id = 'reuse-' + count++;
-      }
-      defs.push(hasSeen.elem);
-    }
-    convertToUse(node, hasSeen.elem.attributes.id);
-  });
-  if (defs.length > 0) {
-    const defsTag = new JSAPI(
-      {
-        type: 'element',
-        name: 'defs',
-        attributes: {},
-        children: [],
-      },
-      root
-    );
-    root.children[0].spliceContent(0, 0, defsTag);
-    for (let def of defs) {
-      const defClone = def.clone();
-      delete defClone.attributes.transform;
-      defsTag.spliceContent(0, 0, defClone);
-      // Convert the original def to a use so the first usage isn't duplicated.
-      def = convertToUse(def, defClone.attributes.id);
-      delete def.attributes.id;
-    }
-  }
-  return root;
-};
+exports.fn = () => {
+  /**
+   * @type {Map<string, Array<XastElement>>}
+   */
+  const paths = new Map();
 
-/** */
-function convertToUse(item, href) {
-  item.renameElem('use');
-  delete item.attributes.d;
-  delete item.attributes.stroke;
-  delete item.attributes.fill;
-  item.attributes['xlink:href'] = '#' + href;
-  delete item.pathJS;
-  return item;
-}
+  return {
+    element: {
+      enter: (node) => {
+        if (node.name === 'path' && node.attributes.d != null) {
+          const d = node.attributes.d;
+          const fill = node.attributes.fill || '';
+          const stroke = node.attributes.stroke || '';
+          const key = d + ';s:' + stroke + ';f:' + fill;
+          let list = paths.get(key);
+          if (list == null) {
+            list = [];
+            paths.set(key, list);
+          }
+          list.push(node);
+        }
+      },
+
+      exit: (node, parentNode) => {
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          /**
+           * @type {XastElement}
+           */
+          const rawDefs = {
+            type: 'element',
+            name: 'defs',
+            attributes: {},
+            children: [],
+          };
+          /**
+           * @type {XastElement}
+           */
+          const defsTag = new JSAPI(rawDefs, node);
+          let index = 0;
+          for (const list of paths.values()) {
+            if (list.length > 1) {
+              // add reusable path to defs
+              /**
+               * @type {XastElement}
+               */
+              const rawPath = {
+                type: 'element',
+                name: 'path',
+                attributes: { ...list[0].attributes },
+                children: [],
+              };
+              delete rawPath.attributes.transform;
+              let id;
+              if (rawPath.attributes.id == null) {
+                id = 'reuse-' + index;
+                index += 1;
+                rawPath.attributes.id = id;
+              } else {
+                id = rawPath.attributes.id;
+                delete list[0].attributes.id;
+              }
+              /**
+               * @type {XastElement}
+               */
+              const reusablePath = new JSAPI(rawPath, defsTag);
+              defsTag.children.push(reusablePath);
+              // convert paths to <use>
+              for (const pathNode of list) {
+                pathNode.name = 'use';
+                pathNode.attributes['xlink:href'] = '#' + id;
+                delete pathNode.attributes.d;
+                delete pathNode.attributes.stroke;
+                delete pathNode.attributes.fill;
+              }
+            }
+          }
+          if (defsTag.children.length !== 0) {
+            node.children.unshift(defsTag);
+          }
+        }
+      },
+    },
+  };
+};
