@@ -27,7 +27,6 @@
     "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeUnusedNS.js",
-    "plugins/removeUselessStrokeAndFill.js",
     "plugins/removeXMLNS.js",
     "plugins/reusePaths.js",
     "plugins/sortAttrs.js",
