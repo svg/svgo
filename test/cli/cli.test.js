@@ -3,6 +3,7 @@
 const { spawn } = require('child_process');
 
 test('should exit with 1 code on syntax error', async () => {
+  const { default: stripAnsi } = await import('strip-ansi');
   const proc = spawn('node', ['../../bin/svgo', 'invalid.svg'], {
     cwd: __dirname,
   });
@@ -19,7 +20,7 @@ test('should exit with 1 code on syntax error', async () => {
     }),
   ]);
   expect(code).toEqual(1);
-  expect(stderr)
+  expect(stripAnsi(stderr))
     .toEqual(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
 
   1 | <svg>
@@ -27,5 +28,6 @@ test('should exit with 1 code on syntax error', async () => {
     |                           ^
   3 | </svg>
   4 | 
+
 `);
 });
