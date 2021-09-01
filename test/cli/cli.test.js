@@ -19,13 +19,12 @@ test('should exit with 1 code on syntax error', async () => {
     }),
   ]);
   expect(code).toEqual(1);
-  expect(stderr).toEqual(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
+  expect(stderr.trim())
+    .toEqual(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
 
   1 | <svg>
 > 2 |   <rect x="0" y="0" width=10" height="20" />
     |                           ^
   3 | </svg>
-  4 | 
-
-`);
+  4 |`);
 });
