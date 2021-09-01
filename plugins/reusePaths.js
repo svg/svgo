@@ -101,6 +101,9 @@ exports.fn = () => {
             }
           }
           if (defsTag.children.length !== 0) {
+            if (node.attributes['xmlns:xlink'] == null) {
+              node.attributes['xmlns:xlink'] = 'http://www.w3.org/1999/xlink';
+            }
             node.children.unshift(defsTag);
           }
         }
