@@ -1,9 +1,9 @@
 'use strict';
 
 const { spawn } = require('child_process');
+const stripAnsi = require('strip-ansi');
 
 test('should exit with 1 code on syntax error', async () => {
-  const { default: stripAnsi } = await import('strip-ansi');
   const proc = spawn('node', ['../../bin/svgo', 'invalid.svg'], {
     cwd: __dirname,
   });
