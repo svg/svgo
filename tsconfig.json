@@ -30,7 +30,6 @@
     "plugins/removeXMLNS.js",
     "plugins/sortAttrs.js",
     "plugins/removeEmptyContainers.js",
-    "plugins/minifyStyles.js",
     "plugins/inlineStyles.js",
     "plugins/preset-default.js"
   ]
