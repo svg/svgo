@@ -86,7 +86,7 @@ exports.fn = (root, params) => {
     typeof params.preserveCurrentColor == 'boolean'
       ? params.preserveCurrentColor
       : false;
-  const attrs = Array.isArray(params.attrs) ? params.attrs : [params.attrs];
+  const attrs = Array.isArray(params.attrs) ? params.attrs : (params.attrs ? [params.attrs] : []);
 
   return {
     element: {
