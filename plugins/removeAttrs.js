@@ -73,7 +73,7 @@ const DEFAULT_SEPARATOR = ':';
  * @type {import('../lib/types').Plugin<{
  *   elemSeparator?: string,
  *   preserveCurrentColor?: boolean,
- *   attrs: string | Array<string>
+ *   attrs: string | Array<string> | undefined
  * }>}
  */
 exports.fn = (root, params) => {
