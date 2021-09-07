@@ -57,7 +57,7 @@ function fillColorOrderCorrect(stripeElements, stripeElementColorOrder) {
   }
   for (let i = 0; i < stripeElementColorOrder.length; i++) {
     if (
-      stripeElements[i].attributes.fill.toLowerCase() !==
+      stripeElements[i].toLowerCase() !==
       stripeElementColorOrder[i].toLowerCase()
     ) {
       return false;
