@@ -89,12 +89,12 @@ function findFillElementsByColors(svg, colors) {
   ];
 
   walkTree(svg, function (node) {
-    if (
-      node.type === 'element' &&
-      shapeElements.includes(node.name) &&
-      colors.includes(node.attributes.fill)
-    ) {
-      result.push(node);
+    if (node.type === 'element' && shapeElements.includes(node.name)) {
+      if (node.attributes.fill) {
+        colors.includes(node.attributes.fill.toUpperCase())
+          ? result.push(node.attributes.fill)
+          : null;
+      }
     }
   });
   return result;
