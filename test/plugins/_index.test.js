@@ -30,14 +30,21 @@ describe('plugins tests', function () {
             name,
             params: params ? JSON.parse(params) : {},
           };
-          const result = optimize(original, {
-            path: file,
-            plugins: [plugin],
-            js2svg: { pretty: true },
-          });
-          expect(result.error).not.toEqual(expect.anything());
-          //FIXME: results.data has a '\n' at the end while it should not
-          expect(normalize(result.data)).toEqual(should);
+          let lastResultData = original;
+          // test plugins idempotence
+          const exclude = ['addAttributesToSVGElement', 'convertTransform'];
+          const multipass = exclude.includes(name) ? 1 : 2;
+          for (let i = 0; i < multipass; i += 1) {
+            const result = optimize(lastResultData, {
+              path: file,
+              plugins: [plugin],
+              js2svg: { pretty: true },
+            });
+            lastResultData = result.data;
+            expect(result.error).not.toEqual(expect.anything());
+            //FIXME: results.data has a '\n' at the end while it should not
+            expect(normalize(result.data)).toEqual(should);
+          }
         });
       });
     }
