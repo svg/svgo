@@ -19,7 +19,7 @@ exports.description = 'prefix IDs';
  */
 const getBasename = (path) => {
   // extract everything after latest slash or backslash
-  const matched = path.match(/[/\\]([^/\\]+)$/);
+  const matched = path.match(/[/\\]?([^/\\]+)$/);
   if (matched) {
     return matched[1];
   }
