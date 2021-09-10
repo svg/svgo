@@ -56,7 +56,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - 16
+          # restrict the version to fix the bug introduced in 16.9 (https://github.com/nodejs/node/issues/40030)
+          - 16.8
           - 14
           - 12
           - 10
