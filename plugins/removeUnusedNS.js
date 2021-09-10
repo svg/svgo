@@ -6,7 +6,8 @@ exports.active = true;
 exports.description = 'removes unused namespaces declaration';
 
 /**
- * Remove unused namespaces declaration.
+ * Remove unused namespaces declaration from svg element
+ * which are not used in elements or attributes
  *
  * @author Kir Belevich
  *
@@ -16,40 +17,41 @@ exports.fn = () => {
   /**
    * @type {Set<string>}
    */
-  const definedNamespaces = new Set();
+  const unusedNamespaces = new Set();
   return {
     element: {
       enter: (node, parentNode) => {
-        // collect namespaces from svg element
+        // collect all namespaces from svg element
+        // (such as xmlns:xlink="http://www.w3.org/1999/xlink")
         if (node.name === 'svg' && parentNode.type === 'root') {
           for (const name of Object.keys(node.attributes)) {
             if (name.startsWith('xmlns:')) {
               const local = name.slice('xmlns:'.length);
-              definedNamespaces.add(local);
+              unusedNamespaces.add(local);
             }
           }
         }
-        if (definedNamespaces.size !== 0) {
-          // remove element namespace from collected list
+        if (unusedNamespaces.size !== 0) {
+          // preserve namespace used in nested elements names
           if (node.name.includes(':')) {
             const [ns] = node.name.split(':');
-            if (definedNamespaces.has(ns)) {
-              definedNamespaces.delete(ns);
+            if (unusedNamespaces.has(ns)) {
+              unusedNamespaces.delete(ns);
             }
           }
-          // check each attr for the ns-attrs
+          // preserve namespace used in nested elements attributes
           for (const name of Object.keys(node.attributes)) {
             if (name.includes(':')) {
               const [ns] = name.split(':');
-              definedNamespaces.delete(ns);
+              unusedNamespaces.delete(ns);
             }
           }
         }
       },
       exit: (node, parentNode) => {
+        // remove unused namespace attributes from svg element
         if (node.name === 'svg' && parentNode.type === 'root') {
-          // remove svg element ns-attributes if they are not used even once
-          for (const name of definedNamespaces) {
+          for (const name of unusedNamespaces) {
             delete node.attributes[`xmlns:${name}`];
           }
         }
