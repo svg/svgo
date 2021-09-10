@@ -24,7 +24,6 @@
     "plugins/removeDimensions.js",
     "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",
-    "plugins/removeUnusedNS.js",
     "plugins/removeXMLNS.js",
     "plugins/sortAttrs.js",
     "plugins/removeEmptyContainers.js",

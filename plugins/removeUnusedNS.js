@@ -1,82 +1,61 @@
 'use strict';
 
-const { traverse } = require('../lib/xast.js');
-const { parseName } = require('../lib/svgo/tools.js');
-
+exports.type = 'visitor';
 exports.name = 'removeUnusedNS';
-
-exports.type = 'full';
-
 exports.active = true;
-
 exports.description = 'removes unused namespaces declaration';
 
 /**
- * Remove unused namespaces declaration.
- *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
+ * Remove unused namespaces declaration from svg element
+ * which are not used in elements or attributes
  *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (root) {
-  let svgElem;
-  const xmlnsCollection = [];
-
+exports.fn = () => {
   /**
-   * Remove namespace from collection.
-   *
-   * @param {String} ns namescape name
+   * @type {Set<string>}
    */
-  function removeNSfromCollection(ns) {
-    const pos = xmlnsCollection.indexOf(ns);
-
-    // if found - remove ns from the namespaces collection
-    if (pos > -1) {
-      xmlnsCollection.splice(pos, 1);
-    }
-  }
-
-  traverse(root, (node) => {
-    if (node.type === 'element') {
-      if (node.name === 'svg') {
-        for (const name of Object.keys(node.attributes)) {
-          const { prefix, local } = parseName(name);
-          // collect namespaces
-          if (prefix === 'xmlns' && local) {
-            xmlnsCollection.push(local);
+  const unusedNamespaces = new Set();
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        // collect all namespaces from svg element
+        // (such as xmlns:xlink="http://www.w3.org/1999/xlink")
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          for (const name of Object.keys(node.attributes)) {
+            if (name.startsWith('xmlns:')) {
+              const local = name.slice('xmlns:'.length);
+              unusedNamespaces.add(local);
+            }
           }
         }
-
-        // if svg element has ns-attr
-        if (xmlnsCollection.length) {
-          // save svg element
-          svgElem = node;
+        if (unusedNamespaces.size !== 0) {
+          // preserve namespace used in nested elements names
+          if (node.name.includes(':')) {
+            const [ns] = node.name.split(':');
+            if (unusedNamespaces.has(ns)) {
+              unusedNamespaces.delete(ns);
+            }
+          }
+          // preserve namespace used in nested elements attributes
+          for (const name of Object.keys(node.attributes)) {
+            if (name.includes(':')) {
+              const [ns] = name.split(':');
+              unusedNamespaces.delete(ns);
+            }
+          }
         }
-      }
-
-      if (xmlnsCollection.length) {
-        const { prefix } = parseName(node.name);
-        // check node for the ns-attrs
-        if (prefix) {
-          removeNSfromCollection(prefix);
+      },
+      exit: (node, parentNode) => {
+        // remove unused namespace attributes from svg element
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          for (const name of unusedNamespaces) {
+            delete node.attributes[`xmlns:${name}`];
+          }
         }
-
-        // check each attr for the ns-attrs
-        for (const name of Object.keys(node.attributes)) {
-          const { prefix } = parseName(name);
-          removeNSfromCollection(prefix);
-        }
-      }
-    }
-  });
-
-  // remove svg element ns-attributes if they are not used even once
-  if (xmlnsCollection.length) {
-    for (const name of xmlnsCollection) {
-      delete svgElem.attributes['xmlns:' + name];
-    }
-  }
-
-  return root;
+      },
+    },
+  };
 };
