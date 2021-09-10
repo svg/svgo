@@ -1,21 +1,12 @@
 'use strict';
 
-const { parseName } = require('../lib/svgo/tools.js');
-const { editorNamespaces } = require('./_collections');
+const { detachNodeFromParent } = require('../lib/xast.js');
+const { editorNamespaces } = require('./_collections.js');
 
+exports.type = 'visitor';
 exports.name = 'removeEditorsNSData';
-
-exports.type = 'perItem';
-
 exports.active = true;
-
 exports.description = 'removes editors namespaces, elements and attributes';
-
-const prefixes = [];
-
-exports.params = {
-  additionalNamespaces: [],
-};
 
 /**
  * Remove editors namespaces, elements and attributes.
@@ -25,43 +16,53 @@ exports.params = {
  * <sodipodi:namedview/>
  * <path sodipodi:nodetypes="cccc"/>
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   additionalNamespaces?: Array<string>
+ * }>}
  */
-exports.fn = function (item, params) {
+exports.fn = (_root, params) => {
   let namespaces = editorNamespaces;
   if (Array.isArray(params.additionalNamespaces)) {
     namespaces = [...editorNamespaces, ...params.additionalNamespaces];
   }
-
-  if (item.type === 'element') {
-    if (item.isElem('svg')) {
-      for (const [name, value] of Object.entries(item.attributes)) {
-        const { prefix, local } = parseName(name);
-        if (prefix === 'xmlns' && namespaces.includes(value)) {
-          prefixes.push(local);
-
-          // <svg xmlns:sodipodi="">
-          delete item.attributes[name];
+  /**
+   * @type {Array<string>}
+   */
+  const prefixes = [];
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        // collect namespace aliases from svg element
+        if (node.name === 'svg') {
+          for (const [name, value] of Object.entries(node.attributes)) {
+            if (name.startsWith('xmlns:') && namespaces.includes(value)) {
+              prefixes.push(name.slice('xmlns:'.length));
+              // <svg xmlns:sodipodi="">
+              delete node.attributes[name];
+            }
+          }
         }
-      }
-    }
-
-    // <* sodipodi:*="">
-    for (const name of Object.keys(item.attributes)) {
-      const { prefix } = parseName(name);
-      if (prefixes.includes(prefix)) {
-        delete item.attributes[name];
-      }
-    }
-
-    // <sodipodi:*>
-    const { prefix } = parseName(item.name);
-    if (prefixes.includes(prefix)) {
-      return false;
-    }
-  }
+        // remove editor attributes, for example
+        // <* sodipodi:*="">
+        for (const name of Object.keys(node.attributes)) {
+          if (name.includes(':')) {
+            const [prefix] = name.split(':');
+            if (prefixes.includes(prefix)) {
+              delete node.attributes[name];
+            }
+          }
+        }
+        // remove editor elements, for example
+        // <sodipodi:*>
+        if (node.name.includes(':')) {
+          const [prefix] = node.name.split(':');
+          if (prefixes.includes(prefix)) {
+            detachNodeFromParent(node, parentNode);
+          }
+        }
+      },
+    },
+  };
 };
