@@ -15,17 +15,9 @@ export default {
   plugins: [
     {
       resolveId(importee, importer) {
-        if (importee === 'os') {
-          return importee;
-        }
         // see https://github.com/csstree/csstree/pull/152
         if (importee === 'css-tree') {
           return this.resolve('css-tree/dist/csstree.min.js', importer);
-        }
-      },
-      load(id) {
-        if (id === 'os') {
-          return `export var EOL = '\\n'`;
         }
       },
     },
