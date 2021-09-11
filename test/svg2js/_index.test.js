@@ -341,46 +341,4 @@ describe('svg2js', function () {
       });
     });
   });
-
-  describe('malformed svg', function () {
-    var filepath = PATH.resolve(__dirname, './test.bad.svg'),
-      root,
-      error;
-
-    beforeAll(function (done) {
-      FS.readFile(filepath, 'utf8', function (err, data) {
-        if (err) {
-          throw err;
-        }
-
-        try {
-          root = SVG2JS(data);
-        } catch (e) {
-          error = e;
-        }
-
-        done();
-      });
-    });
-
-    describe('root', function () {
-      it('should have property "error"', function () {
-        expect(root).toHaveProperty('error');
-      });
-    });
-
-    describe('root.error', function () {
-      it('should be "Error in parsing SVG: Unexpected close tag"', function () {
-        expect(root.error).toEqual(
-          'Error in parsing SVG: Unexpected close tag\nLine: 10\nColumn: 15\nChar: >'
-        );
-      });
-    });
-
-    describe('error', function () {
-      it('should not be thrown', function () {
-        expect(error).not.toEqual(expect.anything());
-      });
-    });
-  });
 });

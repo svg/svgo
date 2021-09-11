@@ -46,14 +46,6 @@ describe('svgo', () => {
     const result = optimize(original, { input: 'file', path: 'input.svg' });
     expect(normalize(result.data)).toEqual(expected);
   });
-  it('should handle parse error', async () => {
-    const fixture = await fs.promises.readFile(
-      path.resolve(__dirname, 'invalid.svg')
-    );
-    const result = optimize(fixture, { input: 'file', path: 'input.svg' });
-    expect(result.error).toMatch(/Error in parsing SVG/);
-    expect(result.path).toEqual('input.svg');
-  });
   it('should handle empty svg tag', async () => {
     const result = optimize('<svg />', { input: 'file', path: 'input.svg' });
     expect(result.data).toEqual('<svg/>');
