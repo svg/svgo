@@ -25,7 +25,6 @@
     "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeXMLNS.js",
-    "plugins/sortAttrs.js",
     "plugins/removeEmptyContainers.js",
     "plugins/inlineStyles.js",
     "plugins/preset-default.js"

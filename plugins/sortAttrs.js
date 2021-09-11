@@ -1,90 +1,113 @@
 'use strict';
 
-const { parseName } = require('../lib/svgo/tools.js');
-
+exports.type = 'visitor';
 exports.name = 'sortAttrs';
-
-exports.type = 'perItem';
-
 exports.active = false;
-
-exports.description = 'sorts element attributes (disabled by default)';
-
-exports.params = {
-  order: [
-    'id',
-    'width',
-    'height',
-    'x',
-    'x1',
-    'x2',
-    'y',
-    'y1',
-    'y2',
-    'cx',
-    'cy',
-    'r',
-    'fill',
-    'stroke',
-    'marker',
-    'd',
-    'points',
-  ],
-};
+exports.description = 'Sort element attributes for better compression';
 
 /**
- * Sort element attributes for epic readability.
- *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
+ * Sort element attributes for better compression
  *
  * @author Nikolay Frantsev
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   order?: Array<string>
+ *   xmlnsOrder?: 'front' | 'alphabetical'
+ * }>}
  */
-exports.fn = function (item, params) {
-  const orderlen = params.order.length + 1;
-  const xmlnsOrder = params.xmlnsOrder || 'front';
+exports.fn = (_root, params) => {
+  const {
+    order = [
+      'id',
+      'width',
+      'height',
+      'x',
+      'x1',
+      'x2',
+      'y',
+      'y1',
+      'y2',
+      'cx',
+      'cy',
+      'r',
+      'fill',
+      'stroke',
+      'marker',
+      'd',
+      'points',
+    ],
+    xmlnsOrder = 'front',
+  } = params;
 
-  if (item.type === 'element') {
-    const attrs = Object.entries(item.attributes);
-
-    attrs.sort(([aName], [bName]) => {
-      const { prefix: aPrefix } = parseName(aName);
-      const { prefix: bPrefix } = parseName(bName);
-      if (aPrefix != bPrefix) {
-        // xmlns attributes implicitly have the prefix xmlns
-        if (xmlnsOrder == 'front') {
-          if (aPrefix === 'xmlns') return -1;
-          if (bPrefix === 'xmlns') return 1;
-        }
-        return aPrefix < bPrefix ? -1 : 1;
+  /**
+   * @type {(name: string) => number}
+   */
+  const getNsPriority = (name) => {
+    if (xmlnsOrder === 'front') {
+      // put xmlns first
+      if (name === 'xmlns') {
+        return 3;
       }
-
-      let aindex = orderlen;
-      let bindex = orderlen;
-
-      for (let i = 0; i < params.order.length; i++) {
-        if (aName == params.order[i]) {
-          aindex = i;
-        } else if (aName.indexOf(params.order[i] + '-') === 0) {
-          aindex = i + 0.5;
-        }
-        if (bName == params.order[i]) {
-          bindex = i;
-        } else if (bName.indexOf(params.order[i] + '-') === 0) {
-          bindex = i + 0.5;
-        }
+      // xmlns:* attributes second
+      if (name.startsWith('xmlns:')) {
+        return 2;
       }
-
-      if (aindex != bindex) {
-        return aindex - bindex;
-      }
-      return aName < bName ? -1 : 1;
-    });
-
-    const sorted = {};
-    for (const [name, value] of attrs) {
-      sorted[name] = value;
     }
-    item.attributes = sorted;
-  }
+    // other namespaces after and sort them alphabetically
+    if (name.includes(':')) {
+      return 1;
+    }
+    // other attributes
+    return 0;
+  };
+
+  /**
+   * @type {(a: [string, string], b: [string, string]) => number}
+   */
+  const compareAttrs = ([aName], [bName]) => {
+    // sort namespaces
+    const aPriority = getNsPriority(aName);
+    const bPriority = getNsPriority(bName);
+    const priorityNs = bPriority - aPriority;
+    if (priorityNs !== 0) {
+      return priorityNs;
+    }
+    // extract the first part from attributes
+    // for example "fill" from "fill" and "fill-opacity"
+    const [aPart] = aName.split('-');
+    const [bPart] = bName.split('-');
+    // rely on alphabetical sort when the first part is the same
+    if (aPart !== bPart) {
+      const aInOrderFlag = order.includes(aPart) ? 1 : 0;
+      const bInOrderFlag = order.includes(bPart) ? 1 : 0;
+      // sort by position in order param
+      if (aInOrderFlag === 1 && bInOrderFlag === 1) {
+        return order.indexOf(aPart) - order.indexOf(bPart);
+      }
+      // put attributes from order param before others
+      const priorityOrder = bInOrderFlag - aInOrderFlag;
+      if (priorityOrder !== 0) {
+        return priorityOrder;
+      }
+    }
+    // sort alphabetically
+    return aName < bName ? -1 : 1;
+  };
+
+  return {
+    element: {
+      enter: (node) => {
+        const attrs = Object.entries(node.attributes);
+        attrs.sort(compareAttrs);
+        /**
+         * @type {Record<string, string>}
+         */
+        const sortedAttributes = {};
+        for (const [name, value] of attrs) {
+          sortedAttributes[name] = value;
+        }
+        node.attributes = sortedAttributes;
+      },
+    },
+  };
 };
