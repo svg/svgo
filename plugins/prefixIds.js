@@ -133,9 +133,8 @@ exports.fn = (_root, params, info) => {
           csstree.walk(cssAst, (node) => {
             // #ID, .class selectors
             if (
-              ((prefixIds && node.type === 'IdSelector') ||
-                (prefixClassNames && node.type === 'ClassSelector')) &&
-              node.name
+              (prefixIds && node.type === 'IdSelector') ||
+              (prefixClassNames && node.type === 'ClassSelector')
             ) {
               node.name = prefixId(prefix, node.name);
               return;
