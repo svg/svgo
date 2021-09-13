@@ -1,11 +1,9 @@
-<svg foo="bar" xmlns="http://www.w3.org/2000/svg" height="10" baz="quux" width="10" hello="world">
-    <rect x="0" y="0" width="100" height="100" stroke-width="1" stroke-linejoin="round" fill="red" stroke="orange" xmlns="http://www.w3.org/2000/svg"/>
-    test
-</svg>
+Sort according default list and alphabetically
+
+===
+
+<svg r="" b="" x2="" cx="" y1="" a="" y="" y2="" x1="" cy="" x=""></svg>
 
 @@@
 
-<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" baz="quux" foo="bar" hello="world">
-    <rect xmlns="http://www.w3.org/2000/svg" width="100" height="100" x="0" y="0" fill="red" stroke="orange" stroke-linejoin="round" stroke-width="1"/>
-    test
-</svg>
+<svg x="" x1="" x2="" y="" y1="" y2="" cx="" cy="" r="" a="" b=""/>
