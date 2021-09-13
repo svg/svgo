@@ -93,7 +93,7 @@
   },
   "jest": {
     "coveragePathIgnorePatterns": [
-      "test"
+      "test/**/*.test.js"
     ]
   },
   "dependencies": {
