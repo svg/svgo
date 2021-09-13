@@ -26,21 +26,6 @@ describe('svgo', () => {
     });
     expect(normalize(result.data)).toEqual(expected);
   });
-  it('should run multiple times', async () => {
-    const [original, expected] = await parseFixture('multipass.svg');
-    const result = optimize(original, {
-      multipass: true,
-    });
-    expect(normalize(result.data)).toEqual(expected);
-  });
-  it('should pass multipass count to plugins', async () => {
-    const [original, expected] = await parseFixture('multipass-prefix-ids.svg');
-    const result = optimize(original, {
-      multipass: true,
-      plugins: ['preset-default', 'prefixIds'],
-    });
-    expect(normalize(result.data)).toEqual(expected);
-  });
   it('should handle plugins order properly', async () => {
     const [original, expected] = await parseFixture('plugins-order.svg');
     const result = optimize(original, { input: 'file', path: 'input.svg' });

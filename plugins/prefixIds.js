@@ -1,167 +1,25 @@
 'use strict';
 
+const csstree = require('css-tree');
+const { referencesProps } = require('./_collections.js');
+
+/**
+ * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').PluginInfo} PluginInfo
+ */
+
+exports.type = 'visitor';
 exports.name = 'prefixIds';
-
-exports.type = 'perItem';
-
 exports.active = false;
-
-exports.params = {
-  delim: '__',
-  prefixIds: true,
-  prefixClassNames: true,
-};
-
 exports.description = 'prefix IDs';
 
-var csstree = require('css-tree'),
-  collections = require('./_collections.js'),
-  referencesProps = collections.referencesProps,
-  rxId = /^#(.*)$/, // regular expression for matching an ID + extracing its name
-  addPrefix = null;
-
-const unquote = (string) => {
-  const first = string.charAt(0);
-  if (first === "'" || first === '"') {
-    if (first === string.charAt(string.length - 1)) {
-      return string.slice(1, -1);
-    }
-  }
-  return string;
-};
-
-// Escapes a string for being used as ID
-var escapeIdentifierName = function (str) {
-  return str.replace(/[. ]/g, '_');
-};
-
-// Matches an #ID value, captures the ID name
-var matchId = function (urlVal) {
-  var idUrlMatches = urlVal.match(rxId);
-  if (idUrlMatches === null) {
-    return false;
-  }
-  return idUrlMatches[1];
-};
-
-// Matches an url(...) value, captures the URL
-var matchUrl = function (val) {
-  var urlMatches = /url\((.*?)\)/gi.exec(val);
-  if (urlMatches === null) {
-    return false;
-  }
-  return urlMatches[1];
-};
-
-// prefixes an #ID
-var prefixId = function (val) {
-  var idName = matchId(val);
-  if (!idName) {
-    return false;
-  }
-  return '#' + addPrefix(idName);
-};
-
-// prefixes a class attribute value
-const addPrefixToClassAttr = (element, name) => {
-  if (
-    element.attributes[name] == null ||
-    element.attributes[name].length === 0
-  ) {
-    return;
-  }
-
-  element.attributes[name] = element.attributes[name]
-    .split(/\s+/)
-    .map(addPrefix)
-    .join(' ');
-};
-
-// prefixes an ID attribute value
-const addPrefixToIdAttr = (element, name) => {
-  if (
-    element.attributes[name] == null ||
-    element.attributes[name].length === 0
-  ) {
-    return;
-  }
-
-  element.attributes[name] = addPrefix(element.attributes[name]);
-};
-
-// prefixes a href attribute value
-const addPrefixToHrefAttr = (element, name) => {
-  if (
-    element.attributes[name] == null ||
-    element.attributes[name].length === 0
-  ) {
-    return;
-  }
-
-  const idPrefixed = prefixId(element.attributes[name]);
-  if (!idPrefixed) {
-    return;
-  }
-  element.attributes[name] = idPrefixed;
-};
-
-// prefixes an URL attribute value
-const addPrefixToUrlAttr = (element, name) => {
-  if (
-    element.attributes[name] == null ||
-    element.attributes[name].length === 0
-  ) {
-    return;
-  }
-
-  // url(...) in value
-  const urlVal = matchUrl(element.attributes[name]);
-  if (!urlVal) {
-    return;
-  }
-
-  const idPrefixed = prefixId(urlVal);
-  if (!idPrefixed) {
-    return;
-  }
-
-  element.attributes[name] = 'url(' + idPrefixed + ')';
-};
-
-// prefixes begin/end attribute value
-const addPrefixToBeginEndAttr = (element, name) => {
-  if (
-    element.attributes[name] == null ||
-    element.attributes[name].length === 0
-  ) {
-    return;
-  }
-
-  const parts = element.attributes[name].split('; ').map((val) => {
-    val = val.trim();
-
-    if (val.endsWith('.end') || val.endsWith('.start')) {
-      const [id, postfix] = val.split('.');
-
-      let idPrefixed = prefixId(`#${id}`);
-
-      if (!idPrefixed) {
-        return val;
-      }
-
-      idPrefixed = idPrefixed.slice(1);
-      return `${idPrefixed}.${postfix}`;
-    } else {
-      return val;
-    }
-  });
-
-  element.attributes[name] = parts.join('; ');
-};
-
+/**
+ * extract basename from path
+ * @type {(path: string) => string}
+ */
 const getBasename = (path) => {
   // extract everything after latest slash or backslash
-  const matched = path.match(/[/\\]([^/\\]+)$/);
+  const matched = path.match(/[/\\]?([^/\\]+)$/);
   if (matched) {
     return matched[1];
   }
@@ -169,132 +27,214 @@ const getBasename = (path) => {
 };
 
 /**
+ * escapes a string for being used as ID
+ * @type {(string: string) => string}
+ */
+const escapeIdentifierName = (str) => {
+  return str.replace(/[. ]/g, '_');
+};
+
+/**
+ * @type {(string: string) => string}
+ */
+const unquote = (string) => {
+  if (
+    (string.startsWith('"') && string.endsWith('"')) ||
+    (string.startsWith("'") && string.endsWith("'"))
+  ) {
+    return string.slice(1, -1);
+  }
+  return string;
+};
+
+/**
+ * prefix an ID
+ * @type {(prefix: string, name: string) => string}
+ */
+const prefixId = (prefix, value) => {
+  if (value.startsWith(prefix)) {
+    return value;
+  }
+  return prefix + value;
+};
+
+/**
+ * prefix an #ID
+ * @type {(prefix: string, name: string) => string | null}
+ */
+const prefixReference = (prefix, value) => {
+  if (value.startsWith('#')) {
+    return '#' + prefixId(prefix, value.slice(1));
+  }
+  return null;
+};
+
+/**
  * Prefixes identifiers
  *
- * @param {Object} node node
- * @param {Object} opts plugin params
- * @param {Object} extra plugin extra information
- *
  * @author strarsis <strarsis@gmail.com>
+ *
+ * @type {import('../lib/types').Plugin<{
+ *   prefix?: boolean | string | ((node: XastElement, info: PluginInfo) => string),
+ *   delim?: string,
+ *   prefixIds?: boolean,
+ *   prefixClassNames?: boolean,
+ * }>}
  */
-exports.fn = function (node, opts, extra) {
-  // skip subsequent passes when multipass is used
-  if (extra.multipassCount && extra.multipassCount > 0) {
-    return;
-  }
+exports.fn = (_root, params, info) => {
+  const { delim = '__', prefixIds = true, prefixClassNames = true } = params;
 
-  // prefix, from file name or option
-  var prefix = 'prefix';
-  if (opts.prefix) {
-    if (typeof opts.prefix === 'function') {
-      prefix = opts.prefix(node, extra);
-    } else {
-      prefix = opts.prefix;
-    }
-  } else if (opts.prefix === false) {
-    prefix = false;
-  } else if (extra && extra.path && extra.path.length > 0) {
-    var filename = getBasename(extra.path);
-    prefix = filename;
-  }
+  return {
+    element: {
+      enter: (node) => {
+        /**
+         * prefix, from file name or option
+         * @type {string}
+         */
+        let prefix = 'prefix' + delim;
+        if (typeof params.prefix === 'function') {
+          prefix = params.prefix(node, info) + delim;
+        } else if (typeof params.prefix === 'string') {
+          prefix = params.prefix + delim;
+        } else if (params.prefix === false) {
+          prefix = '';
+        } else if (info.path != null && info.path.length > 0) {
+          prefix = escapeIdentifierName(getBasename(info.path)) + delim;
+        }
 
-  // prefixes a normal value
-  addPrefix = function (name) {
-    if (prefix === false) {
-      return escapeIdentifierName(name);
-    }
-    return escapeIdentifierName(prefix + opts.delim + name);
-  };
+        // prefix id/class selectors and url() references in styles
+        if (node.name === 'style') {
+          // skip empty <style/> elements
+          if (node.children.length === 0) {
+            return;
+          }
 
-  // <style/> property values
+          // parse styles
+          let cssText = '';
+          if (
+            node.children[0].type === 'text' ||
+            node.children[0].type === 'cdata'
+          ) {
+            cssText = node.children[0].value;
+          }
+          /**
+           * @type {null | csstree.CssNode}
+           */
+          let cssAst = null;
+          try {
+            cssAst = csstree.parse(cssText, {
+              parseValue: true,
+              parseCustomProperty: false,
+            });
+          } catch {
+            return;
+          }
 
-  if (node.type === 'element' && node.name === 'style') {
-    if (node.children.length === 0) {
-      // skip empty <style/>s
-      return;
-    }
+          csstree.walk(cssAst, (node) => {
+            // #ID, .class selectors
+            if (
+              (prefixIds && node.type === 'IdSelector') ||
+              (prefixClassNames && node.type === 'ClassSelector')
+            ) {
+              node.name = prefixId(prefix, node.name);
+              return;
+            }
+            // url(...) references
+            if (
+              node.type === 'Url' &&
+              node.value.value &&
+              node.value.value.length > 0
+            ) {
+              const prefixed = prefixReference(
+                prefix,
+                unquote(node.value.value)
+              );
+              if (prefixed != null) {
+                node.value.value = prefixed;
+              }
+            }
+          });
 
-    var cssStr = '';
-    if (node.children[0].type === 'text' || node.children[0].type === 'cdata') {
-      cssStr = node.children[0].value;
-    }
-
-    var cssAst = {};
-    try {
-      cssAst = csstree.parse(cssStr, {
-        parseValue: true,
-        parseCustomProperty: false,
-      });
-    } catch (parseError) {
-      console.warn(
-        'Warning: Parse error of styles of <style/> element, skipped. Error details: ' +
-          parseError
-      );
-      return;
-    }
-
-    var idPrefixed = '';
-    csstree.walk(cssAst, function (node) {
-      // #ID, .class
-      if (
-        ((opts.prefixIds && node.type === 'IdSelector') ||
-          (opts.prefixClassNames && node.type === 'ClassSelector')) &&
-        node.name
-      ) {
-        node.name = addPrefix(node.name);
-        return;
-      }
-
-      // url(...) in value
-      if (
-        node.type === 'Url' &&
-        node.value.value &&
-        node.value.value.length > 0
-      ) {
-        idPrefixed = prefixId(unquote(node.value.value));
-        if (!idPrefixed) {
+          // update styles
+          if (
+            node.children[0].type === 'text' ||
+            node.children[0].type === 'cdata'
+          ) {
+            node.children[0].value = csstree.generate(cssAst);
+          }
           return;
         }
-        node.value.value = idPrefixed;
-      }
-    });
 
-    // update <style>s
-    node.children[0].value = csstree.generate(cssAst);
-    return;
-  }
+        // prefix an ID attribute value
+        if (
+          prefixIds &&
+          node.attributes.id != null &&
+          node.attributes.id.length !== 0
+        ) {
+          node.attributes.id = prefixId(prefix, node.attributes.id);
+        }
 
-  // element attributes
+        // prefix a class attribute value
+        if (
+          prefixClassNames &&
+          node.attributes.class != null &&
+          node.attributes.class.length !== 0
+        ) {
+          node.attributes.class = node.attributes.class
+            .split(/\s+/)
+            .map((name) => prefixId(prefix, name))
+            .join(' ');
+        }
 
-  if (node.type !== 'element') {
-    return;
-  }
+        // prefix a href attribute value
+        // xlink:href is deprecated, must be still supported
+        for (const name of ['href', 'xlink:href']) {
+          if (
+            node.attributes[name] != null &&
+            node.attributes[name].length !== 0
+          ) {
+            const prefixed = prefixReference(prefix, node.attributes[name]);
+            if (prefixed != null) {
+              node.attributes[name] = prefixed;
+            }
+          }
+        }
 
-  // Nodes
+        // prefix an URL attribute value
+        for (const name of referencesProps) {
+          if (
+            node.attributes[name] != null &&
+            node.attributes[name].length !== 0
+          ) {
+            // extract id reference from url(...) value
+            const matches = /url\((.*?)\)/gi.exec(node.attributes[name]);
+            if (matches != null) {
+              const value = matches[1];
+              const prefixed = prefixReference(prefix, value);
+              if (prefixed != null) {
+                node.attributes[name] = `url(${prefixed})`;
+              }
+            }
+          }
+        }
 
-  if (opts.prefixIds) {
-    // ID
-    addPrefixToIdAttr(node, 'id');
-  }
-
-  if (opts.prefixClassNames) {
-    // Class
-    addPrefixToClassAttr(node, 'class');
-  }
-
-  // References
-
-  // href
-  addPrefixToHrefAttr(node, 'href');
-
-  // (xlink:)href (deprecated, must be still supported)
-  addPrefixToHrefAttr(node, 'xlink:href');
-
-  // (referenceable) properties
-  for (var referencesProp of referencesProps) {
-    addPrefixToUrlAttr(node, referencesProp);
-  }
-
-  addPrefixToBeginEndAttr(node, 'begin');
-  addPrefixToBeginEndAttr(node, 'end');
+        // prefix begin/end attribute value
+        for (const name of ['begin', 'end']) {
+          if (
+            node.attributes[name] != null &&
+            node.attributes[name].length !== 0
+          ) {
+            const parts = node.attributes[name].split(/\s*;\s+/).map((val) => {
+              if (val.endsWith('.end') || val.endsWith('.start')) {
+                const [id, postfix] = val.split('.');
+                return `${prefixId(prefix, id)}.${postfix}`;
+              }
+              return val;
+            });
+            node.attributes[name] = parts.join('; ');
+          }
+        }
+      },
+    },
+  };
 };

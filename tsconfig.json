@@ -25,7 +25,6 @@
     "plugins/moveElemsAttrsToGroup.js",
     "plugins/moveGroupAttrsToElems.js",
     "plugins/plugins.js",
-    "plugins/prefixIds.js",
     "plugins/removeDimensions.js",
     "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",

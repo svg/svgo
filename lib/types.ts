@@ -71,7 +71,16 @@ export type Visitor = {
   root?: VisitorRoot;
 };
 
-export type Plugin<Params> = (root: XastRoot, params: Params) => null | Visitor;
+export type PluginInfo = {
+  path?: string;
+  multipassCount: number;
+};
+
+export type Plugin<Params> = (
+  root: XastRoot,
+  params: Params,
+  info: PluginInfo
+) => null | Visitor;
 
 export type Specificity = [number, number, number, number];
 
