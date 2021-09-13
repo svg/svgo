@@ -47,7 +47,7 @@
     "lib",
     "plugins",
     "dist",
-    "!**/**.test.js"
+    "!**/*.test.js"
   ],
   "scripts": {
     "test": "jest --coverage",
@@ -89,6 +89,11 @@
           "jest": true
         }
       }
+    ]
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "fixtures"
     ]
   },
   "dependencies": {
