@@ -57,7 +57,6 @@ exports.fn = () => {
   return {
     element: {
       exit: (node, parentNode) => {
-        // non-empty elements
         if (parentNode.type === 'root' || parentNode.name === 'switch') {
           return;
         }
