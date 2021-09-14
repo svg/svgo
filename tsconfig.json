@@ -17,7 +17,6 @@
   ],
   "exclude": [
     "plugins/_applyTransforms.js",
-    "plugins/collapseGroups.js",
     "plugins/convertPathData.js",
     "plugins/convertStyleToAttrs.js",
     "plugins/mergeStyles.js",
