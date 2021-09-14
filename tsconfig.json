@@ -7,8 +7,7 @@
     "allowJs": true,
     "checkJs": true,
     "strict": true,
-    "resolveJsonModule": true,
-    "noImplicitAny": true
+    "resolveJsonModule": true
   },
   "include": [
     "plugins/**/*",
@@ -29,7 +28,6 @@
     "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeXMLNS.js",
-    "plugins/removeEmptyContainers.js",
     "plugins/inlineStyles.js",
     "plugins/preset-default.js"
   ]

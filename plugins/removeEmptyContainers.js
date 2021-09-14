@@ -1,13 +1,11 @@
 'use strict';
 
-const { elemsGroups } = require('./_collections');
+const { detachNodeFromParent } = require('../lib/xast.js');
+const { elemsGroups } = require('./_collections.js');
 
+exports.type = 'visitor';
 exports.name = 'removeEmptyContainers';
-
-exports.type = 'perItemReverse';
-
 exports.active = true;
-
 exports.description = 'removes empty container elements';
 
 /**
@@ -21,25 +19,40 @@ exports.description = 'removes empty container elements';
  * @example
  * <g><marker><a/></marker></g>
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (item) {
-  if (item.type === 'element') {
-    return (
-      item.children.length !== 0 ||
-      elemsGroups.container.includes(item.name) === false ||
-      item.name === 'svg' ||
-      // empty patterns may contain reusable configuration
-      (item.name === 'pattern' && Object.keys(item.attributes).length !== 0) ||
-      // The 'g' may not have content, but the filter may cause a rectangle
-      // to be created and filled with pattern.
-      (item.name === 'g' && item.attributes.filter != null) ||
-      // empty <mask> hides masked element
-      (item.name === 'mask' && item.attributes.id != null)
-    );
-  }
-  return true;
+exports.fn = () => {
+  return {
+    element: {
+      exit: (node, parentNode) => {
+        // remove only empty non-svg containers
+        if (
+          node.name === 'svg' ||
+          elemsGroups.container.includes(node.name) === false ||
+          node.children.length !== 0
+        ) {
+          return;
+        }
+        // empty patterns may contain reusable configuration
+        if (
+          node.name === 'pattern' &&
+          Object.keys(node.attributes).length !== 0
+        ) {
+          return;
+        }
+        // The <g> may not have content, but the filter may cause a rectangle
+        // to be created and filled with pattern.
+        if (node.name === 'g' && node.attributes.filter != null) {
+          return;
+        }
+        // empty <mask> hides masked element
+        if (node.name === 'mask' && node.attributes.id != null) {
+          return;
+        }
+        detachNodeFromParent(node, parentNode);
+      },
+    },
+  };
 };
