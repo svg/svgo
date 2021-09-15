@@ -1,28 +1,37 @@
 'use strict';
 
-const { inheritableAttrs, elemsGroups } = require('./_collections');
+/**
+ * @typedef {import('../lib/types').XastNode} XastNode
+ */
 
+const { inheritableAttrs, elemsGroups } = require('./_collections.js');
+
+exports.type = 'visitor';
 exports.name = 'collapseGroups';
-
-exports.type = 'perItemReverse';
-
 exports.active = true;
-
 exports.description = 'collapses useless groups';
 
-function hasAnimatedAttr(item, name) {
-  if (item.type === 'element') {
-    return (
-      (elemsGroups.animation.includes(item.name) &&
-        item.attributes.attributeName === name) ||
-      (item.children.length !== 0 &&
-        item.children.some((child) => hasAnimatedAttr(child, name)))
-    );
+/**
+ * @type {(node: XastNode, name: string) => boolean}
+ */
+const hasAnimatedAttr = (node, name) => {
+  if (node.type === 'element') {
+    if (
+      elemsGroups.animation.includes(node.name) &&
+      node.attributes.attributeName === name
+    ) {
+      return true;
+    }
+    for (const child of node.children) {
+      if (hasAnimatedAttr(child, name)) {
+        return true;
+      }
+    }
   }
   return false;
-}
+};
 
-/*
+/**
  * Collapse useless groups.
  *
  * @example
@@ -40,66 +49,87 @@ function hasAnimatedAttr(item, name) {
  *         ⬇
  * <path attr1="val1" d="..."/>
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (item) {
-  // non-empty elements
-  if (
-    item.type === 'element' &&
-    item.name !== 'switch' &&
-    item.children.length !== 0
-  ) {
-    item.children.forEach(function (g, i) {
-      // non-empty groups
-      if (g.type === 'element' && g.name === 'g' && g.children.length !== 0) {
+exports.fn = () => {
+  return {
+    element: {
+      exit: (node, parentNode) => {
+        if (parentNode.type === 'root' || parentNode.name === 'switch') {
+          return;
+        }
+        // non-empty groups
+        if (node.name !== 'g' || node.children.length === 0) {
+          return;
+        }
+
         // move group attibutes to the single child element
-        if (Object.keys(g.attributes).length !== 0 && g.children.length === 1) {
-          var inner = g.children[0];
-
+        if (
+          Object.keys(node.attributes).length !== 0 &&
+          node.children.length === 1
+        ) {
+          const firstChild = node.children[0];
+          // TODO untangle this mess
           if (
-            inner.type === 'element' &&
-            inner.attributes.id == null &&
-            g.attributes.filter == null &&
-            (g.attributes.class == null || inner.attributes.class == null) &&
-            ((g.attributes['clip-path'] == null && g.attributes.mask == null) ||
-              (inner.type === 'element' &&
-                inner.name === 'g' &&
-                g.attributes.transform == null &&
-                inner.attributes.transform == null))
+            firstChild.type === 'element' &&
+            firstChild.attributes.id == null &&
+            node.attributes.filter == null &&
+            (node.attributes.class == null ||
+              firstChild.attributes.class == null) &&
+            ((node.attributes['clip-path'] == null &&
+              node.attributes.mask == null) ||
+              (firstChild.name === 'g' &&
+                node.attributes.transform == null &&
+                firstChild.attributes.transform == null))
           ) {
-            for (const [name, value] of Object.entries(g.attributes)) {
-              if (g.children.some((item) => hasAnimatedAttr(item, name)))
+            for (const [name, value] of Object.entries(node.attributes)) {
+              // avoid copying to not conflict with animated attribute
+              if (hasAnimatedAttr(firstChild, name)) {
                 return;
-
-              if (inner.attributes[name] == null) {
-                inner.attributes[name] = value;
-              } else if (name == 'transform') {
-                inner.attributes[name] = value + ' ' + inner.attributes[name];
-              } else if (inner.attributes[name] === 'inherit') {
-                inner.attributes[name] = value;
+              }
+              if (firstChild.attributes[name] == null) {
+                firstChild.attributes[name] = value;
+              } else if (name === 'transform') {
+                firstChild.attributes[name] =
+                  value + ' ' + firstChild.attributes[name];
+              } else if (firstChild.attributes[name] === 'inherit') {
+                firstChild.attributes[name] = value;
               } else if (
                 inheritableAttrs.includes(name) === false &&
-                inner.attributes[name] !== value
+                firstChild.attributes[name] !== value
               ) {
                 return;
               }
-
-              delete g.attributes[name];
+              delete node.attributes[name];
             }
           }
         }
 
         // collapse groups without attributes
-        if (
-          Object.keys(g.attributes).length === 0 &&
-          !g.children.some((item) => item.isElem(elemsGroups.animation))
-        ) {
-          item.spliceContent(i, 1, g.children);
+        if (Object.keys(node.attributes).length === 0) {
+          // animation elements "add" attributes to group
+          // group should be preserved
+          for (const child of node.children) {
+            if (
+              child.type === 'element' &&
+              elemsGroups.animation.includes(child.name)
+            ) {
+              return;
+            }
+          }
+          // replace current node with all its children
+          const index = parentNode.children.indexOf(node);
+          parentNode.children.splice(index, 1, ...node.children);
+          // TODO remove in v3
+          for (const child of node.children) {
+            // @ts-ignore parentNode is forbidden for public usage
+            // and will be moved in v3
+            child.parentNode = parentNode;
+          }
         }
-      }
-    });
-  }
+      },
+    },
+  };
 };
