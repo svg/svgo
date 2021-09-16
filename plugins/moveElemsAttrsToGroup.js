@@ -65,26 +65,25 @@ exports.fn = (root) => {
         let initial = true;
         let everyChildIsPath = true;
         for (const child of node.children) {
-          if (child.type !== 'element') {
-            continue;
-          }
-          if (pathElems.includes(child.name) === false) {
-            everyChildIsPath = false;
-          }
-          if (initial) {
-            initial = false;
-            // collect all inheritable attributes from first child element
-            for (const [name, value] of Object.entries(child.attributes)) {
-              // consider only inheritable attributes
-              if (inheritableAttrs.includes(name)) {
-                commonAttributes.set(name, value);
-              }
+          if (child.type === 'element') {
+            if (pathElems.includes(child.name) === false) {
+              everyChildIsPath = false;
             }
-          } else {
-            // exclude uncommon attributes from initial list
-            for (const [name, value] of commonAttributes) {
-              if (child.attributes[name] !== value) {
-                commonAttributes.delete(name);
+            if (initial) {
+              initial = false;
+              // collect all inheritable attributes from first child element
+              for (const [name, value] of Object.entries(child.attributes)) {
+                // consider only inheritable attributes
+                if (inheritableAttrs.includes(name)) {
+                  commonAttributes.set(name, value);
+                }
+              }
+            } else {
+              // exclude uncommon attributes from initial list
+              for (const [name, value] of commonAttributes) {
+                if (child.attributes[name] !== value) {
+                  commonAttributes.delete(name);
+                }
               }
             }
           }
