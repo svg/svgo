@@ -1,3 +1,7 @@
+Plugin is deoptimized when style element is present
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <style id="current-color-scheme">
         .ColorScheme-Highlight{color:#3daee9}

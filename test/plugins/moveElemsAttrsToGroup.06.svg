@@ -1,3 +1,8 @@
+Preserve transform when all children are paths
+so the transform could be applied to path data by other plugins
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <g>
         <path transform="scale(2)" d="M0,0 L10,20"/>
