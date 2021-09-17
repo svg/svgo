@@ -97,6 +97,11 @@ export type StylesheetRule = {
   declarations: Array<StylesheetDeclaration>;
 };
 
+export type Stylesheet = {
+  rules: Array<StylesheetRule>;
+  parents: Map<XastElement, XastParent>;
+};
+
 type StaticStyle = {
   type: 'static';
   inherited: boolean;
