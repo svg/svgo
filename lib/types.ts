@@ -1,4 +1,4 @@
-type XastDoctype = {
+export type XastDoctype = {
   type: 'doctype';
   name: string;
   data: {
@@ -6,23 +6,23 @@ type XastDoctype = {
   };
 };
 
-type XastInstruction = {
+export type XastInstruction = {
   type: 'instruction';
   name: string;
   value: string;
 };
 
-type XastComment = {
+export type XastComment = {
   type: 'comment';
   value: string;
 };
 
-type XastCdata = {
+export type XastCdata = {
   type: 'cdata';
   value: string;
 };
 
-type XastText = {
+export type XastText = {
   type: 'text';
   value: string;
 };

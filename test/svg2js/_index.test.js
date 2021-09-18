@@ -5,7 +5,7 @@ const PATH = require('path');
 const JSAPI = require('../../lib/svgo/jsAPI');
 const CSSClassList = require('../../lib/svgo/css-class-list');
 const CSSStyleDeclaration = require('../../lib/svgo/css-style-declaration');
-const SVG2JS = require('../../lib/svgo/svg2js');
+const { parseSvg } = require('../../lib/parser.js');
 
 describe('svg2js', function () {
   describe('working svg', function () {
@@ -18,7 +18,7 @@ describe('svg2js', function () {
           throw err;
         }
 
-        root = SVG2JS(data);
+        root = parseSvg(data);
         done();
       });
     });

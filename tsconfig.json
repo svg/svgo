@@ -11,6 +11,7 @@
   },
   "include": [
     "plugins/**/*",
+    "lib/svg-parser.js",
     "lib/xast.test.js",
     "lib/path.test.js",
     "lib/style.test.js",
