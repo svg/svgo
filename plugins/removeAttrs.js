@@ -6,6 +6,19 @@ exports.active = false;
 exports.description = 'removes specified attributes';
 
 const DEFAULT_SEPARATOR = ':';
+const ENOATTRS = `Warning: The plugin "removeAttrs" requires the "attrs" parameter.
+It should have a pattern to remove, otherwise the plugin is a noop.
+Config example:
+
+plugins: [
+  {
+    name: "removeAttrs",
+    params: {
+      attrs: "(fill|stroke)"
+    }
+  }
+]
+`;
 
 /**
  * Remove attributes
@@ -77,7 +90,11 @@ const DEFAULT_SEPARATOR = ':';
  * }>}
  */
 exports.fn = (root, params) => {
-  // wrap into an array if params is not
+  if (typeof params.attrs == 'undefined') {
+    console.warn(ENOATTRS);
+    return null;
+  }
+
   const elemSeparator =
     typeof params.elemSeparator == 'string'
       ? params.elemSeparator
