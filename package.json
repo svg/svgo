@@ -50,7 +50,8 @@
     "!**/*.test.js"
   ],
   "scripts": {
-    "test": "jest --coverage",
+    "jest": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "yarn jest --coverage",
     "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",

@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const { loadConfig } = require('../../lib/svgo-node.js');
 const {
   resolvePluginConfig,
   extendDefaultPlugins,
@@ -171,91 +170,6 @@ describe('config', function () {
       expect(extendedPlugins[extendedPlugins.length - 1].name).toEqual(
         'customPlugin'
       );
-    });
-  });
-
-  describe('config', () => {
-    it('is loaded by absolute path', async () => {
-      const config = await loadConfig(
-        path.join(process.cwd(), './test/config/fixtures/one/two/config.js')
-      );
-      expect(config).toEqual({ plugins: [] });
-    });
-    it('is loaded by relative path to cwd', async () => {
-      const config = await loadConfig(
-        'one/two/config.js',
-        path.join(process.cwd(), './test/config/fixtures')
-      );
-      expect(config).toEqual({ plugins: [] });
-    });
-    it('is searched in cwd and up', async () => {
-      const config = await loadConfig(
-        null,
-        path.join(process.cwd(), './test/config/fixtures/one/two')
-      );
-      expect(config).toEqual({ plugins: [] });
-    });
-    it('gives null when config is not found', async () => {
-      const config = await loadConfig(
-        null,
-        path.join(process.cwd(), './test/config')
-      );
-      expect(config).toEqual(null);
-    });
-    it('is failed when specified config does not exist', async () => {
-      try {
-        await loadConfig('{}');
-        expect.fail('Config is loaded successfully');
-      } catch (error) {
-        expect(error.message).toMatch(/Cannot find module/);
-      }
-    });
-    it('is failed to load when module exports not an object', async () => {
-      try {
-        await loadConfig(
-          path.join(process.cwd(), './test/config/fixtures/invalid-null.js')
-        );
-        expect.fail('Config is loaded successfully');
-      } catch (error) {
-        expect(error.message).toMatch(/Invalid config file/);
-      }
-      try {
-        await loadConfig(
-          path.join(process.cwd(), './test/config/fixtures/invalid-array.js')
-        );
-        expect.fail('Config is loaded successfully');
-      } catch (error) {
-        expect(error.message).toMatch(/Invalid config file/);
-      }
-      try {
-        await loadConfig(
-          path.join(process.cwd(), './test/config/fixtures/invalid-string.js')
-        );
-        expect.fail('Config is loaded successfully');
-      } catch (error) {
-        expect(error.message).toMatch(/Invalid config file/);
-      }
-    });
-    it('handles config errors properly', async () => {
-      try {
-        await loadConfig(
-          null,
-          path.join(process.cwd(), './test/config/fixtures/invalid/config')
-        );
-        expect.fail('Config is loaded successfully');
-      } catch (error) {
-        expect(error.message).toMatch(/plugins is not defined/);
-      }
-    });
-    it('handles MODULE_NOT_FOUND properly', async () => {
-      try {
-        await loadConfig(
-          path.join(process.cwd(), './test/config/fixtures/module-not-found.js')
-        );
-        expect.fail('Config is loaded successfully');
-      } catch (error) {
-        expect(error.message).toMatch(/Cannot find module 'unknown-module'/);
-      }
     });
   });
 });
