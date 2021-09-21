@@ -50,7 +50,7 @@
     "!**/*.test.js"
   ],
   "scripts": {
-    "jest": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "jest": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
     "test": "yarn jest",
     "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
