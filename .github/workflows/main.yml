@@ -57,7 +57,7 @@ jobs:
       matrix:
         node-version:
           - 16
-          - 14.16.0
+          - 14
           - 12
           - 10
     steps:
