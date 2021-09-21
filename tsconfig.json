@@ -13,6 +13,7 @@
     "plugins/**/*",
     "lib/xast.test.js",
     "lib/path.test.js",
+    "lib/style.test.js",
     "test/cli/**/*"
   ],
   "exclude": [
