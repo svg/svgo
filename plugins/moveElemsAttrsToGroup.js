@@ -1,18 +1,15 @@
 'use strict';
 
-const { inheritableAttrs, pathElems } = require('./_collections');
+const { visit } = require('../lib/xast.js');
+const { inheritableAttrs, pathElems } = require('./_collections.js');
 
+exports.type = 'visitor';
 exports.name = 'moveElemsAttrsToGroup';
-
-exports.type = 'perItemReverse';
-
 exports.active = true;
-
-exports.description = 'moves elements attributes to the existing group wrapper';
+exports.description = 'Move common attributes of group children to the group';
 
 /**
- * Collapse content's intersected and inheritable
- * attributes to the existing group wrapper.
+ * Move common attributes of group children to the group
  *
  * @example
  * <g attr1="val1">
@@ -29,98 +26,105 @@ exports.description = 'moves elements attributes to the existing group wrapper';
  *    <circle attr3="val3"/>
  * </g>
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (item) {
-  if (
-    item.type === 'element' &&
-    item.name === 'g' &&
-    item.children.length > 1
-  ) {
-    var intersection = {},
-      hasTransform = false,
-      hasClip =
-        item.attributes['clip-path'] != null || item.attributes.mask != null,
-      intersected = item.children.every(function (inner) {
-        if (
-          inner.type === 'element' &&
-          Object.keys(inner.attributes).length !== 0
-        ) {
-          // don't mess with possible styles (hack until CSS parsing is implemented)
-          if (inner.attributes.class) return false;
-          if (!Object.keys(intersection).length) {
-            intersection = inner.attributes;
-          } else {
-            intersection = intersectInheritableAttrs(
-              intersection,
-              inner.attributes
-            );
+exports.fn = (root) => {
+  // find if any style element is present
+  let deoptimizedWithStyles = false;
+  visit(root, {
+    element: {
+      enter: (node) => {
+        if (node.name === 'style') {
+          deoptimizedWithStyles = true;
+        }
+      },
+    },
+  });
 
-            if (!intersection) return false;
-          }
-
-          return true;
+  return {
+    element: {
+      exit: (node) => {
+        // process only groups with more than 1 children
+        if (node.name !== 'g' || node.children.length <= 1) {
+          return;
         }
 
-        return false;
-      }),
-      allPath = item.children.every(function (inner) {
-        return inner.isElem(pathElems);
-      });
+        // deoptimize the plugin when style elements are present
+        // selectors may rely on id, classes or tag names
+        if (deoptimizedWithStyles) {
+          return;
+        }
 
-    if (intersected) {
-      item.children.forEach(function (g) {
-        for (const [name, value] of Object.entries(intersection)) {
-          if ((!allPath && !hasClip) || name !== 'transform') {
-            delete g.attributes[name];
-
-            if (name === 'transform') {
-              if (!hasTransform) {
-                if (item.attributes.transform != null) {
-                  item.attributes.transform =
-                    item.attributes.transform + ' ' + value;
-                } else {
-                  item.attributes.transform = value;
+        /**
+         * find common attributes in group children
+         * @type {Map<string, string>}
+         */
+        const commonAttributes = new Map();
+        let initial = true;
+        let everyChildIsPath = true;
+        for (const child of node.children) {
+          if (child.type === 'element') {
+            if (pathElems.includes(child.name) === false) {
+              everyChildIsPath = false;
+            }
+            if (initial) {
+              initial = false;
+              // collect all inheritable attributes from first child element
+              for (const [name, value] of Object.entries(child.attributes)) {
+                // consider only inheritable attributes
+                if (inheritableAttrs.includes(name)) {
+                  commonAttributes.set(name, value);
                 }
-
-                hasTransform = true;
               }
             } else {
-              item.attributes[name] = value;
+              // exclude uncommon attributes from initial list
+              for (const [name, value] of commonAttributes) {
+                if (child.attributes[name] !== value) {
+                  commonAttributes.delete(name);
+                }
+              }
             }
           }
         }
-      });
-    }
-  }
+
+        // preserve transform on children when group has clip-path or mask
+        if (
+          node.attributes['clip-path'] != null ||
+          node.attributes.mask != null
+        ) {
+          commonAttributes.delete('transform');
+        }
+
+        // preserve transform when all children are paths
+        // so the transform could be applied to path data by other plugins
+        if (everyChildIsPath) {
+          commonAttributes.delete('transform');
+        }
+
+        // add common children attributes to group
+        for (const [name, value] of commonAttributes) {
+          if (name === 'transform') {
+            if (node.attributes.transform != null) {
+              node.attributes.transform = `${node.attributes.transform} ${value}`;
+            } else {
+              node.attributes.transform = value;
+            }
+          } else {
+            node.attributes[name] = value;
+          }
+        }
+
+        // delete common attributes from children
+        for (const child of node.children) {
+          if (child.type === 'element') {
+            for (const [name] of commonAttributes) {
+              delete child.attributes[name];
+            }
+          }
+        }
+      },
+    },
+  };
 };
-
-/**
- * Intersect inheritable attributes.
- *
- * @param {Object} a first attrs object
- * @param {Object} b second attrs object
- *
- * @return {Object} intersected attrs object
- */
-function intersectInheritableAttrs(a, b) {
-  var c = {};
-
-  for (const [name, value] of Object.entries(a)) {
-    if (
-      // eslint-disable-next-line no-prototype-builtins
-      b.hasOwnProperty(name) &&
-      inheritableAttrs.includes(name) &&
-      value === b[name]
-    ) {
-      c[name] = value;
-    }
-  }
-
-  if (!Object.keys(c).length) return false;
-
-  return c;
-}

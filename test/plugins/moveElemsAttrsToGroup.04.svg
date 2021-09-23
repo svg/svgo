@@ -1,3 +1,9 @@
+Merge common group children transform attribute with the group transform
+
+Preserve transform on children when group has clip-path or mask
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <mask id="mask">
         <path/>

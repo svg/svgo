@@ -1,18 +1,30 @@
+Move common children attributes to group
+
+===
+
 <svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">
-        <g fill="red">
+        <g fill="red" color="#000" stroke="blue">
             text
         </g>
-        <circle fill="red" attr3="val3"/>
+        <g>
+          <rect fill="red" color="#000" />
+          <ellipsis fill="red" color="#000" />
+        </g>
+        <circle fill="red" color="#000" attr3="val3"/>
     </g>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g attr1="val1" fill="red">
-        <g>
+    <g attr1="val1" fill="red" color="#000">
+        <g stroke="blue">
             text
+        </g>
+        <g>
+            <rect/>
+            <ellipsis/>
         </g>
         <circle attr3="val3"/>
     </g>

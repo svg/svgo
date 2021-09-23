@@ -21,7 +21,6 @@
     "plugins/_applyTransforms.js",
     "plugins/convertPathData.js",
     "plugins/convertStyleToAttrs.js",
-    "plugins/moveElemsAttrsToGroup.js",
     "plugins/moveGroupAttrsToElems.js",
     "plugins/plugins.js",
     "plugins/removeDimensions.js",
