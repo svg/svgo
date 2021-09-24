@@ -1,10 +1,9 @@
 'use strict';
 
 const { spawn } = require('child_process');
-const stripAnsi = require('strip-ansi');
 
 test('should exit with 1 code on syntax error', async () => {
-  const proc = spawn('node', ['../../bin/svgo', 'invalid.svg'], {
+  const proc = spawn('node', ['../../bin/svgo', '--no-color', 'invalid.svg'], {
     cwd: __dirname,
   });
   const [code, stderr] = await Promise.all([
@@ -20,7 +19,7 @@ test('should exit with 1 code on syntax error', async () => {
     }),
   ]);
   expect(code).toEqual(1);
-  expect(stripAnsi(stderr))
+  expect(stderr)
     .toEqual(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
 
   1 | <svg>
