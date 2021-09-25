@@ -50,12 +50,12 @@
     "!**/*.test.js"
   ],
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=3 --coverage",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=3 --coverage",
     "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
-    "test-regression": "node ./test/regression-extract.js && NO_DIFF=1 node ./test/regression.js",
+    "test-regression": "node ./test/regression-extract.js && cross-env NO_DIFF=1 node ./test/regression.js",
     "prepublishOnly": "rm -rf dist && rollup -c"
   },
   "prettier": {
@@ -112,6 +112,7 @@
     "@types/css-tree": "^1.0.6",
     "@types/csso": "^4.2.0",
     "@types/jest": "^27.0.1",
+    "cross-env": "^7.0.3",
     "del": "^6.0.0",
     "eslint": "^7.32.0",
     "jest": "^27.2.1",
