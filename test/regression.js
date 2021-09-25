@@ -23,7 +23,7 @@ const runTests = async ({ list }) => {
   let skipped = 0;
   let mismatched = 0;
   let passed = 0;
-  console.info('Start browser...');
+  console.info('Starting browser...');
   const processFile = async (page, name) => {
     if (
       // hard to detect the end of animation
@@ -82,7 +82,7 @@ const runTests = async ({ list }) => {
     );
     // ignore small aliasing issues
     if (matched <= 4) {
-      console.info(`${name} is passed`);
+      console.info(`${name} passed`);
       passed += 1;
     } else {
       mismatched += 1;

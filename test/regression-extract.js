@@ -44,7 +44,7 @@ const extractTarGz = async (url, baseDir, include) => {
 
 (async () => {
   try {
-    console.info('Download W3C SVG 1.1 Test Suite and extract svg files');
+    console.info('Downloading W3C SVG 1.1 Test Suite and extracting svg files');
     await extractTarGz(
       'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz',
       path.join(__dirname, 'regression-fixtures', 'w3c-svg-11-test-suite'),
