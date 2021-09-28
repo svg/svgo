@@ -2,7 +2,7 @@
 
 exports.type = 'visitor';
 exports.name = 'sortAttrs';
-exports.active = false;
+exports.active = true;
 exports.description = 'Sort element attributes for better compression';
 
 /**

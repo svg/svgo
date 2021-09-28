@@ -36,6 +36,7 @@ const removeUnusedNS = require('./removeUnusedNS.js');
 const sortDefsChildren = require('./sortDefsChildren.js');
 const removeTitle = require('./removeTitle.js');
 const removeDesc = require('./removeDesc.js');
+const sortAttrs = require('./sortAttrs.js');
 
 const presetDefault = createPreset({
   name: 'presetDefault',
@@ -74,6 +75,7 @@ const presetDefault = createPreset({
     sortDefsChildren,
     removeTitle,
     removeDesc,
+    sortAttrs,
   ],
 });
 
