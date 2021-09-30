@@ -210,8 +210,9 @@ exports.fn = (_root, params, info) => {
               /url\((.*?)\)/gi,
               (match, url) => {
                 const prefixed = prefixReference(prefix, url);
-                if (prefixed == null)
+                if (prefixed == null) {
                   return match;
+                }
                 return `url(${prefixed})`;
               }
             );
