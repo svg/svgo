@@ -206,15 +206,16 @@ exports.fn = (_root, params, info) => {
             node.attributes[name] != null &&
             node.attributes[name].length !== 0
           ) {
-            // extract id reference from url(...) value
-            const matches = /url\((.*?)\)/gi.exec(node.attributes[name]);
-            if (matches != null) {
-              const value = matches[1];
-              const prefixed = prefixReference(prefix, value);
-              if (prefixed != null) {
-                node.attributes[name] = `url(${prefixed})`;
+            node.attributes[name] = node.attributes[name].replace(
+              /url\((.*?)\)/gi,
+              (match, url) => {
+                const prefixed = prefixReference(prefix, url);
+                if (prefixed == null) {
+                  return match;
+                }
+                return `url(${prefixed})`;
               }
-            }
+            );
           }
         }
 
