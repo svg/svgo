@@ -1,3 +1,7 @@
+prefixIds should correctly handle url()s in style attribute, including multiple ones
+
+===
+
 <svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <linearGradient id="fill"/>
