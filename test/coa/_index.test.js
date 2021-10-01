@@ -28,7 +28,6 @@ function runProgram(args) {
 
 describe('coa', function () {
   beforeEach(async () => {
-    output = '';
     await del(tempFolder);
     await fs.promises.mkdir(tempFolder);
   });
@@ -41,9 +40,6 @@ describe('coa', function () {
   const initialProcessExit = global.process.exit;
 
   function replaceConsoleError() {
-    global.console.error = (message) => {
-      output += message;
-    };
     global.process.exit = noop;
   }
 
