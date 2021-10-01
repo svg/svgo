@@ -50,7 +50,7 @@
     "!**/*.test.js"
   ],
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=3 --coverage",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
     "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",

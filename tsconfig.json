@@ -10,14 +10,17 @@
     "resolveJsonModule": true
   },
   "include": [
+    "lib/**/*.js",
     "plugins/**/*",
-    "lib/svg-parser.js",
-    "lib/xast.test.js",
-    "lib/path.test.js",
-    "lib/style.test.js",
     "test/cli/**/*"
   ],
   "exclude": [
+    "lib/svgo-node.js",
+    "lib/svgo-node.test.js",
+    "lib/svgo.js",
+    "lib/svgo.test.js",
+    "lib/svgo/**/*.js",
+    "lib/css-tools.js",
     "plugins/_applyTransforms.js",
     "plugins/convertPathData.js",
     "plugins/convertStyleToAttrs.js",
