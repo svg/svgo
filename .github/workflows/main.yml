@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn
+      - run: yarn install
       - run: yarn lint
       - run: yarn typecheck
   regression:
@@ -47,7 +47,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn
+      - run: yarn install
       - run: yarn test-regression
   test:
     name: Node.js ${{ matrix.node-version }}
@@ -74,6 +74,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn
+      - run: yarn install
       - run: yarn test
       - run: yarn test-browser
