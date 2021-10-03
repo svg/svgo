@@ -1,5 +1,5 @@
 {
-  "packageManager": "yarn@3.0.2",
+  "packageManager": "yarn@2.4.3",
   "name": "svgo",
   "version": "2.7.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
