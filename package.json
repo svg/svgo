@@ -1,7 +1,9 @@
 {
+  "packageManager": "yarn@3.0.2",
   "name": "svgo",
   "version": "2.7.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
+  "license": "MIT",
   "keywords": [
     "svgo",
     "svg",
@@ -39,9 +41,7 @@
     "url": "git://github.com/svg/svgo.git"
   },
   "main": "./lib/svgo-node.js",
-  "bin": {
-    "svgo": "./bin/svgo"
-  },
+  "bin": "./bin/svgo",
   "files": [
     "bin",
     "lib",
@@ -49,6 +49,9 @@
     "dist",
     "!**/*.test.js"
   ],
+  "engines": {
+    "node": ">=10.13.0"
+  },
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=3 --coverage",
     "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
@@ -125,9 +128,5 @@
     "rollup-plugin-terser": "^7.0.2",
     "tar-stream": "^2.2.0",
     "typescript": "^4.4.3"
-  },
-  "engines": {
-    "node": ">=10.13.0"
-  },
-  "license": "MIT"
+  }
 }
