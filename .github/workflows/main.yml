@@ -18,18 +18,18 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE }}
-      - name: Set up npm cache
+      - name: Set up yarn cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.npm
             ~/.cache/ms-playwright
-          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
+            .yarn/cache
+          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
+            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
+      - run: yarn install
+      - run: yarn lint
+      - run: yarn typecheck
   regression:
     name: Test regressions
     runs-on: ubuntu-latest
@@ -38,17 +38,17 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE }}
-      - name: Set up npm cache
+      - name: Set up yarn cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.npm
             ~/.cache/ms-playwright
-          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
+            .yarn/cache
+          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
-      - run: npm ci
-      - run: npm run test-regression
+            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
+      - run: yarn install
+      - run: yarn test-regression
   test:
     name: Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
@@ -65,15 +65,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Set up npm cache
+      - name: Set up yarn cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.npm
             ~/.cache/ms-playwright
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+            .yarn/cache
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
-      - run: npm ci
-      - run: npm test
-      - run: npm run test-browser
+            ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+      - run: yarn install
+      - run: yarn test
+      - run: yarn test-browser
