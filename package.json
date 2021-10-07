@@ -68,8 +68,8 @@
     "prepublishOnly": "rm -rf dist && rollup -c",
     "release": "standard-version",
     "build": "yarn prepublishOnly",
-    "release-and-publish": "yarn release && yarn build && yarn publish --non-interactive --tag latest",
-    "publish:external": "yarn release-and-publish --use-yarnrc mbank-design.yarnrc && git push --follow-tags origin master"
+    "release-and-publish": "yarn release && yarn build && npm publish",
+    "publish:external": "git tag --delete $(git tag --list) && git fetch; yarn release-and-publish && git push --follow-tags origin master"
   },
   "prettier": {
     "singleQuote": true

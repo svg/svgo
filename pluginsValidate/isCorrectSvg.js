@@ -1,7 +1,7 @@
 'use strict';
 
 exports.type = 'validate';
-exports.name = 'isSVG';
+exports.name = 'isCorrectSvg';
 
 exports.active = true;
 
@@ -31,9 +31,9 @@ exports.fn = function (root, validateResult) {
 
     const result = svgTag.name === 'svg' && ext === 'svg';
 
-    validateResult.isSVG = result;
+    validateResult.isCorrectSvg = result;
   } else {
-    validateResult.isSVG = false;
+    validateResult.isCorrectSvg = false;
     console.error('no filename provided!');
   }
 

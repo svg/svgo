@@ -65,19 +65,20 @@ describe('svgo', () => {
     expect(normalize(result.data)).toEqual(expected);
   });
 
-  it('should validate SVG file and return an object with property {isSVG: true}', async () => {
+  it('should validate SVG file and return an object with property {isCorrectSvg: true}', async () => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg"><g attr1="val1"><g attr2="val2"><path attr2="val3" d="..."/></g><path d="..."/></g></svg>`;
     const result = validate(svg, 'test.svg', 'ICON_REGULAR', {});
-    expect(result).toMatchObject({isSVG: true});
+    console.log(result)
+    expect(result).toMatchObject({isCorrectSvg: true});
   });
 
-  it('should try to validate PDF file and return an object with property {isSVG: false}', async () => {
+  it('should try to validate PDF file and return an object with property {isCorrectSvg: false}', async () => {
     const result = validate(
       fs.readFileSync(path.resolve(__dirname, 'test.pdf'), 'utf-8'),
       'test.pdf',
       'ICON_REGULAR',
       {}
     );
-    expect(result).toMatchObject({isSVG: false});
+    expect(result).toMatchObject({isCorrectSvg: false});
   });
 });
