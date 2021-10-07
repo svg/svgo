@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.9.0) (2021-10-07)
+
+
+### Features
+
+* Add SVG validation/linting ([acb8566](https://github.com/mbank-design/svgo/commit/acb856656f20a11e452dcdc560395aa30112eec8))
+
+
+### Bug Fixes
+
+* **plugin:** removeAttrs: warn without attrs ([#1582](https://github.com/mbank-design/svgo/issues/1582)) ([8af10de](https://github.com/mbank-design/svgo/commit/8af10de8d440a4bfdeffeadcba6a34bed615b25c))
+* resolve issues with hasCorrectStripeColors and findFillElementsByColors ([3bd27d2](https://github.com/mbank-design/svgo/commit/3bd27d2bcd5620a645107c34d5e4a538f8620f22))
+* secure walkTree function errors and fulfill snake_case rules ([a29f192](https://github.com/mbank-design/svgo/commit/a29f1921375399b9a988a37bb65fb39858840391))
+
 ## [2.8.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.8.0) (2021-09-23)
 
 
