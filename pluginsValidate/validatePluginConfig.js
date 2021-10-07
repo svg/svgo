@@ -2,7 +2,7 @@ var ASSET_TYPE = {
   ICON_REGULAR: {
     plugins: [
       {
-        name: 'isSVG',
+        name: 'isCorrectSvg',
       },
       {
         name: 'isArtboardCorrect',
@@ -41,7 +41,7 @@ var ASSET_TYPE = {
   ICON_COLOR: {
     plugins: [
       {
-        name: 'isSVG',
+        name: 'isCorrectSvg',
       },
       {
         name: 'isArtboardCorrect',
@@ -79,7 +79,7 @@ var ASSET_TYPE = {
   LOGO: {
     plugins: [
       {
-        name: 'isSVG',
+        name: 'isCorrectSvg',
       },
       {
         name: 'isArtboardCorrect',
@@ -111,7 +111,7 @@ var ASSET_TYPE = {
   ILLUSTRATION: {
     plugins: [
       {
-        name: 'isSVG',
+        name: 'isCorrectSvg',
       },
       {
         name: 'isArtboardCorrect',
@@ -145,7 +145,7 @@ var ASSET_TYPE = {
   FLAG: {
     plugins: [
       {
-        name: 'isSVG',
+        name: 'isCorrectSvg',
       },
       {
         name: 'isArtboardCorrect',
@@ -177,7 +177,7 @@ var ASSET_TYPE = {
   AVATAR: {
     plugins: [
       {
-        name: 'isSVG',
+        name: 'isCorrectSvg',
       },
       {
         name: 'isArtboardCorrect',
