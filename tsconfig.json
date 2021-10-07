@@ -27,7 +27,6 @@
     "plugins/moveGroupAttrsToElems.js",
     "plugins/plugins.js",
     "plugins/removeDimensions.js",
-    "plugins/removeEmptyAttrs.js",
     "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeXMLNS.js",
     "plugins/inlineStyles.js",
