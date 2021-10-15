@@ -25,5 +25,6 @@ exports.description =
 exports.fn = function (item) {
   if (item.type === 'element' && item.name === 'svg') {
     delete item.attributes.xmlns;
+    delete item.attributes['xmlns:xlink'];
   }
 };
