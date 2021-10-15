@@ -18,15 +18,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE }}
-      - name: Set up yarn cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/ms-playwright
-            .yarn/cache
-          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
+          cache: yarn
       - run: yarn install
       - run: yarn lint
       - run: yarn typecheck
@@ -38,15 +30,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE }}
-      - name: Set up yarn cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/ms-playwright
-            .yarn/cache
-          key: ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ env.NODE }}-${{ hashFiles('yarn.lock') }}
+          cache: yarn
       - run: yarn install
       - run: yarn test-regression
   test:
@@ -65,15 +49,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Set up yarn cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/ms-playwright
-            .yarn/cache
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+          cache: yarn
       - run: yarn install
       - run: yarn test
       - run: yarn test-browser
