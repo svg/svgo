@@ -6,7 +6,6 @@ const del = require('del');
 const { Command } = require('commander');
 const svgo = require('../../lib/svgo/coa.js');
 
-const svgPath = path.resolve(__dirname, 'test.svg');
 const svgFolderPath = path.resolve(__dirname, 'testSvg');
 const svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively');
 const svgFiles = [
@@ -28,10 +27,7 @@ function runProgram(args) {
 }
 
 describe('coa', function () {
-  let output;
-
   beforeEach(async () => {
-    output = '';
     await del(tempFolder);
     await fs.promises.mkdir(tempFolder);
   });
@@ -40,25 +36,10 @@ describe('coa', function () {
     await del(tempFolder);
   });
 
-  const initialConsoleLog = global.console.log;
-
-  function replaceConsoleLog() {
-    global.console.log = (message) => {
-      output += message;
-    };
-  }
-
-  function restoreConsoleLog() {
-    global.console.log = initialConsoleLog;
-  }
-
   const initialConsoleError = global.console.error;
   const initialProcessExit = global.process.exit;
 
   function replaceConsoleError() {
-    global.console.error = (message) => {
-      output += message;
-    };
     global.process.exit = noop;
   }
 
@@ -82,17 +63,6 @@ describe('coa', function () {
         0
       );
   }
-
-  it('should work properly with string input', async () => {
-    await runProgram([
-      '--string',
-      fs.readFileSync(svgPath, 'utf8'),
-      '--output',
-      'temp.svg',
-      '--quiet',
-    ]);
-    await del('temp.svg');
-  });
 
   it('should optimize folder', async () => {
     const initWeight = calcFolderSvgWeight(svgFolderPath);
@@ -123,16 +93,6 @@ describe('coa', function () {
     expect(initWeight).toBeLessThanOrEqual(optimizedWeight);
   });
 
-  it('should optimize file', async () => {
-    const initialFileLength = fs.readFileSync(
-      path.resolve(__dirname, 'test.svg')
-    ).length;
-    await runProgram(['--input', svgPath, '--output', 'temp.svg', '--quiet']);
-    const optimizedFileLength = fs.readFileSync('temp.svg').length;
-    expect(optimizedFileLength).toBeLessThanOrEqual(initialFileLength);
-    await del('temp.svg');
-  });
-
   it('should optimize several files', async () => {
     const initWeight = calcFolderSvgWeight(svgFolderPath);
     await runProgram([
@@ -146,29 +106,6 @@ describe('coa', function () {
     expect(optimizedWeight).toBeGreaterThan(0);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
     await del('temp.svg');
-  });
-
-  it('should optimize file from process.stdin', async () => {
-    const initialFile = fs.readFileSync(path.resolve(__dirname, 'test.svg'));
-    const stdin = require('mock-stdin').stdin();
-    setTimeout(() => {
-      stdin.send(initialFile, 'ascii').end();
-    }, 1000);
-    try {
-      await runProgram([
-        '--input',
-        '-',
-        '--output',
-        'temp.svg',
-        '--string',
-        fs.readFileSync(svgPath, 'utf8'),
-        '--quiet',
-      ]);
-    } finally {
-      const optimizedFileLength = fs.readFileSync('temp.svg').length;
-      expect(optimizedFileLength).toBeLessThanOrEqual(initialFile.length);
-      await del('temp.svg');
-    }
   });
 
   it('should optimize folder, when it stated in input', async () => {
@@ -200,23 +137,6 @@ describe('coa', function () {
   });
 
   describe('stdout', () => {
-    it('should show file content when no output set', async () => {
-      replaceConsoleLog();
-      try {
-        await runProgram([
-          '--string',
-          fs.readFileSync(svgPath, 'utf8'),
-          '--output',
-          '-',
-          '--datauri',
-          'unenc',
-        ]);
-      } finally {
-        restoreConsoleLog();
-        expect(output).toMatch(/www\.w3\.org\/2000\/svg/);
-      }
-    });
-
     it('should show message when the folder is empty', async () => {
       const emptyFolderPath = path.resolve(__dirname, 'testSvgEmpty');
       if (!fs.existsSync(emptyFolderPath)) {
@@ -238,16 +158,6 @@ describe('coa', function () {
         ]);
       } catch (error) {
         expect(error.message).toMatch(/No SVG files have been found/);
-      }
-    });
-
-    it('should show plugins', async () => {
-      replaceConsoleLog();
-      try {
-        await runProgram(['--show-plugins']);
-      } finally {
-        restoreConsoleLog();
-        expect(output).toMatch(/Currently available plugins:/);
       }
     });
   });

@@ -118,7 +118,6 @@
     "del": "^6.0.0",
     "eslint": "^7.32.0",
     "jest": "^27.2.5",
-    "mock-stdin": "^1.0.0",
     "node-fetch": "^2.6.2",
     "pixelmatch": "^5.2.1",
     "playwright": "^1.14.1",

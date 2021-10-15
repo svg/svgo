@@ -3790,13 +3790,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mock-stdin@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "mock-stdin@npm:1.0.0"
-  checksum: 34d2affa0607813130118a62540c33c0d121f9d5bcdbaf1e2dde3dc91eb899b0e803221a591acdc4950b85271f5c04994efcead3631e63f19d04b4fb3d1e2da4
-  languageName: node
-  linkType: hard
-
 "ms@npm:2.1.2":
   version: 2.1.2
   resolution: "ms@npm:2.1.2"
@@ -4829,7 +4822,6 @@ __metadata:
     del: ^6.0.0
     eslint: ^7.32.0
     jest: ^27.2.5
-    mock-stdin: ^1.0.0
     node-fetch: ^2.6.2
     picocolors: ^1.0.0
     pixelmatch: ^5.2.1
