@@ -29,7 +29,6 @@
     "plugins/removeDimensions.js",
     "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeXMLNS.js",
-    "plugins/inlineStyles.js",
     "plugins/preset-default.js"
   ]
 }
