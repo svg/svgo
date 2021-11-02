@@ -63,16 +63,18 @@ There is a set of [built-in plugins](#built-in-plugins). See how to configure th
 module.exports = {
   plugins: [
     // enable a built-in plugin by name
-    'builtinPluginName',
+    'prefixIds',
+
     // or by expanded version
     {
-      name: 'builtinPluginName',
+      name: 'prefixIds',
     },
+
     // some plugins allow/require to pass options
     {
-      name: 'builtinPluginName',
+      name: 'prefixIds',
       params: {
-        optionName: 'optionValue',
+        prefix: 'my-prefix',
       },
     },
   ],
@@ -90,21 +92,24 @@ module.exports = {
       params: {
         overrides: {
           // customize options for plugins included in preset
-          builtinPluginName: {
-            optionName: 'optionValue',
+          inlineStyles: {
+            onlyMatchedOnce: false,
           },
+
           // or disable plugins
-          anotherBuiltinPlugin: false,
+          removeDoctype: false,
         },
       },
     },
-    // Enable builtin plugin not included in preset
-    'moreBuiltinPlugin',
-    // Enable and configure builtin plugin not included in preset
+
+    // enable builtin plugin not included in default preset
+    'prefixIds',
+
+    // enable and configure builtin plugin not included in preset
     {
-      name: 'manyBuiltInPlugin',
+      name: 'sortAttrs',
       params: {
-        optionName: 'value',
+        xmlnsOrder: 'alphabetical',
       },
     },
   ],
