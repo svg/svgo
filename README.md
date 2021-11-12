@@ -13,30 +13,20 @@ SVG files, especially those exported from various editors, usually contain a lot
 ## Installation
 
 ```sh
+# Via npm
 npm -g install svgo
-```
-
-or
-
-```sh
+# Via yarn
 yarn global add svgo
 ```
 
 ## CLI usage
 
 ```sh
+# Processing single files:
 svgo one.svg two.svg -o one.min.svg two.min.svg
-```
-
-Or use the `--folder`/`-f` flag to optimize a whole folder of SVG icons
-
-```sh
+# Processing directory of svg files, recursively using `-f`, `--folder` :
 svgo -f ./path/to/folder/with/svg/files -o ./path/to/folder/with/svg/output
-```
-
-See help for advanced usage
-
-```sh
+# Help for advanced usage
 svgo --help
 ```
 
