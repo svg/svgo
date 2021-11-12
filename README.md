@@ -42,80 +42,54 @@ svgo --help
 
 ## Configuration
 
-Some options can be configured with CLI though it may be easier to have the configuration in a separate file.
-SVGO automatically loads configuration from `svgo.config.js` or module specified with `--config` flag.
+SVGO has a plugin-based architecture, separate plugins allows the various xml svg optimizations. See the [built-in plugins](#built-in-plugins).
+SVGO automatically loads configuration from `svgo.config.js` or from `--config ./path/myconfig.js`. Some general options can be configured via CLI.
 
 ```js
+// svgo.config.js
 module.exports = {
+  // GENERAL OPTIONS
   multipass: true, // boolean. false by default
-  datauri: 'enc', // 'base64', 'enc' or 'unenc'. 'base64' by default
+  datauri: 'enc', // 'base64' (default), 'enc' or 'unenc'.
   js2svg: {
     indent: 2, // string with spaces or number of spaces. 4 by default
     pretty: true, // boolean, false by default
   },
-};
-```
-
-SVGO has a plugin-based architecture, so almost every optimization is a separate plugin.
-There is a set of [built-in plugins](#built-in-plugins). See how to configure them:
-
-```js
-module.exports = {
-  plugins: [
-    // enable a built-in plugin by name
-    'prefixIds',
-
-    // or by expanded version
-    {
-      name: 'prefixIds',
-    },
-
-    // some plugins allow/require to pass options
-    {
-      name: 'prefixIds',
-      params: {
-        prefix: 'my-prefix',
-      },
-    },
-  ],
-};
-```
-
-The default preset of plugins is fully overridden if the `plugins` field is specified.
-Use `preset-default` plugin to customize plugins options.
-
-```js
-module.exports = {
-  plugins: [
+  plugins:[
+    // MANAGE BUILT-IN DEFAULT PLUGINS
     {
       name: 'preset-default',
       params: {
         overrides: {
-          // customize options for plugins included in preset
+          // customize options
           inlineStyles: {
             onlyMatchedOnce: false,
           },
-
-          // or disable plugins
+          // or disable
           removeDoctype: false,
         },
       },
     },
-
-    // enable builtin plugin not included in default preset
-    'prefixIds',
-
-    // enable and configure builtin plugin not included in preset
+    // MANAGE BUILT-IN NON-DEFAULT PLUGINS
+    // Enable non-default plugins
+    removeRasterImages,    // call by name
+    { name: 'sortAttrs' }, // call by expanded syntax
+    // Enable and configure non-default plugins. Some *requires* options.
+    {
+      name: 'prefixIds',
+      params: { prefix: 'my-prefix' },
+    },
     {
       name: 'sortAttrs',
-      params: {
-        xmlnsOrder: 'alphabetical',
-      },
+      params: { xmlnsOrder: 'alphabetical' },
     },
-  ],
+  ]
 };
 ```
 
+Default plugins can be explicitely configured or disabled to supersede default options. Non-default plugins require explicit declaration and some of them requires options. See above for the proper syntax. Note: plugins' declaration order matters.
+
+### Default preset
 Default preset includes the following list of plugins:
 
 - removeDoctype
@@ -153,6 +127,7 @@ Default preset includes the following list of plugins:
 - removeTitle
 - removeDesc
 
+### Custom plugin
 It's also possible to specify a custom plugin:
 
 ```js
