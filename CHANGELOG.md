@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.1](https://github.com/mbank-design/svgo/compare/v2.10.0...v2.10.1) (2021-11-26)
+
+
+### Bug Fixes
+
+* add margin of error ([8a601a8](https://github.com/mbank-design/svgo/commit/8a601a808d5b425e2f482830a15d022b72b0d03a))
+* update cli file read constant definitions ([c3f801c](https://github.com/mbank-design/svgo/commit/c3f801cc916d93cc11d8f0e827e77eb6022da702))
+
 ## 2.10.0 (2021-11-26)
 
 
