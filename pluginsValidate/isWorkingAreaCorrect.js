@@ -40,26 +40,26 @@ exports.fn = function (root, validateResult, params) {
     root.children[0].attributes.viewBox !== undefined
   ) {
     const pathElement = utils.findElementByName(root, 'path');
-    const [paramPathWidth, paramPathHeight] = params.size;
-    const [
-      svgViewBoxWidth,
-      svgViewBoxHeight,
-    ] = root.children[0].attributes.viewBox
-      .split(' ')
-      .map(function (value, index) {
-        if (index > 1 && value !== 0) {
-          return parseInt(value, 10);
-        }
-      })
-      .filter(function (value) {
-        return value !== undefined;
-      });
-    const [
-      workingAreaX1,
-      workingAreaY1,
-      workingAreaX2,
-      workingAreaY2,
-    ] = svgPathBbox(pathElement.attributes.d);
+    let [paramPathWidth, paramPathHeight] = params.size;
+    // Because of JS calculation error while converting binary to decimal numbers we add margin of error to the allowed defined for each asset working area
+    const MARGIN_OF_ERROR = 0.001;
+    paramPathWidth += MARGIN_OF_ERROR;
+    paramPathHeight += MARGIN_OF_ERROR;
+
+    const [svgViewBoxWidth, svgViewBoxHeight] =
+      root.children[0].attributes.viewBox
+        .split(' ')
+        .map(function (value, index) {
+          if (index > 1 && value !== 0) {
+            return parseInt(value, 10);
+          }
+        })
+        .filter(function (value) {
+          return value !== undefined;
+        });
+    const [workingAreaX1, workingAreaY1, workingAreaX2, workingAreaY2] =
+      svgPathBbox(pathElement.attributes.d);
+
     const [workingAreaWidth, workingAreaHeight] = [
       workingAreaX2 - workingAreaX1,
       workingAreaY2 - workingAreaY1,
@@ -68,6 +68,7 @@ exports.fn = function (root, validateResult, params) {
       (svgViewBoxWidth - paramPathWidth) / 2,
       (svgViewBoxHeight - paramPathHeight) / 2,
     ];
+
     const result =
       workingAreaWidth <= paramPathWidth &&
       workingAreaHeight <= paramPathHeight &&
