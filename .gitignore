@@ -15,3 +15,5 @@ test/cli/output
 coverage
 .DS_Store
 *.log
+
+.idea
