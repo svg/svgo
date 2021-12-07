@@ -1,8 +1,9 @@
 'use strict';
 
 const {
+  visit,
+  visitSkip,
   querySelector,
-  closestByName,
   detachNodeFromParent,
 } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
@@ -67,6 +68,30 @@ exports.fn = (root, params) => {
   } = params;
   const stylesheet = collectStylesheet(root);
 
+  visit(root, {
+    element: {
+      enter: (node, parentNode) => {
+        // transparent element inside clipPath still affect clipped elements
+        if (node.name === 'clipPath') {
+          return visitSkip;
+        }
+        const computedStyle = computeStyle(stylesheet, node);
+        // opacity="0"
+        //
+        // https://www.w3.org/TR/SVG11/masking.html#ObjectAndGroupOpacityProperties
+        if (
+          opacity0 &&
+          computedStyle.opacity &&
+          computedStyle.opacity.type === 'static' &&
+          computedStyle.opacity.value === '0'
+        ) {
+          detachNodeFromParent(node, parentNode);
+          return;
+        }
+      },
+    },
+  });
+
   return {
     element: {
       enter: (node, parentNode) => {
@@ -97,21 +122,6 @@ exports.fn = (root, params) => {
           computedStyle.display.value === 'none' &&
           // markers with display: none still rendered
           node.name !== 'marker'
-        ) {
-          detachNodeFromParent(node, parentNode);
-          return;
-        }
-
-        // opacity="0"
-        //
-        // https://www.w3.org/TR/SVG11/masking.html#ObjectAndGroupOpacityProperties
-        if (
-          opacity0 &&
-          computedStyle.opacity &&
-          computedStyle.opacity.type === 'static' &&
-          computedStyle.opacity.value === '0' &&
-          // transparent element inside clipPath still affect clipped elements
-          closestByName(node, 'clipPath') == null
         ) {
           detachNodeFromParent(node, parentNode);
           return;
