@@ -91,6 +91,8 @@ const myPlugin = {
 }
 ```
 
+## Recipes
+
 To remove node from parent create new array with children
 
 ```js
@@ -102,6 +104,53 @@ const myPlugin = {
       element: {
         enter: (node, parentNode) => {
           parentNode.children = parentNode.children.filter((child) => child !== node);
+        }
+      }
+    }
+  }
+}
+```
+
+Find all elements with specific attribute
+
+```js
+const myPlugin = {
+  type: 'visitor',
+  name: 'pluginName',
+  fn: () => {
+    return {
+      element: {
+        enter: (node, parentNode) => {
+          if (node.attributes.fill != null) {
+            node.attributes.fill = 'modify in any way'
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Collect all elements and analyze later
+
+```js
+const myPlugin = {
+  type: 'visitor',
+  name: 'pluginName',
+  fn: () => {
+    const elements = []
+    return {
+      element: {
+        enter: (node, parentNode) => {
+          elements.push(node);
+        }
+      },
+      root: {
+        // root exit is called last
+        exit: () => {
+          for (const element of elements) {
+            // analyze and modify
+          }
         }
       }
     }
