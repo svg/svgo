@@ -111,7 +111,7 @@ const myPlugin = {
 }
 ```
 
-Find all elements with specific attribute
+Find all circles with specific attribute
 
 ```js
 const myPlugin = {
@@ -121,7 +121,7 @@ const myPlugin = {
     return {
       element: {
         enter: (node, parentNode) => {
-          if (node.attributes.fill != null) {
+          if (node.name === 'circle && node.attributes.fill != null) {
             node.attributes.fill = 'modify in any way'
           }
         }
