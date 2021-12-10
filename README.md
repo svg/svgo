@@ -13,30 +13,20 @@ SVG files, especially those exported from various editors, usually contain a lot
 ## Installation
 
 ```sh
+# Via npm
 npm -g install svgo
-```
-
-or
-
-```sh
+# Via yarn
 yarn global add svgo
 ```
 
 ## CLI usage
 
 ```sh
+# Processing single files:
 svgo one.svg two.svg -o one.min.svg two.min.svg
-```
-
-Or use the `--folder`/`-f` flag to optimize a whole folder of SVG icons
-
-```sh
+# Processing directory of svg files, recursively using `-f`, `--folder` :
 svgo -f ./path/to/folder/with/svg/files -o ./path/to/folder/with/svg/output
-```
-
-See help for advanced usage
-
-```sh
+# Help for advanced usage
 svgo --help
 ```
 
@@ -245,7 +235,7 @@ const config = await loadConfig(configFile, cwd);
 | [removeRasterImages](https://github.com/svg/svgo/blob/master/plugins/removeRasterImages.js)                         | remove raster images                                                                                                                                     | `disabled` |
 | [mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js)                                         | merge multiple Paths into one                                                                                                                            | `enabled`  |
 | [convertShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js)                         | convert some basic shapes to `<path>`                                                                                                                    | `enabled`  |
-| [convertAllShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertAllShapeToPath.js)                         | convert all of shapes to `<path>`                                                                                                                    | `enabled`  |
+| [convertAllShapeToPath](https://github.com/svg/svgo/blob/master/plugins/convertAllShapeToPath.js)                         | convert all shapes to `<path>`                                                                                                                    | `enabled`  |
 | [convertEllipseToCircle](https://github.com/svg/svgo/blob/master/plugins/convertEllipseToCircle.js)                 | convert non-eccentric `<ellipse>` to `<circle>`                                                                                                          | `enabled`  |
 | [sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js)                                           | sort element attributes for epic readability                                                                                                             | `disabled` |
 | [sortDefsChildren](https://github.com/svg/svgo/blob/master/plugins/sortDefsChildren.js)                             | sort children of `<defs>` in order to improve compression                                                                                                | `enabled`  |
