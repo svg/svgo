@@ -16,6 +16,7 @@ exports.convertColors = require('./convertColors.js');
 exports.convertEllipseToCircle = require('./convertEllipseToCircle.js');
 exports.convertPathData = require('./convertPathData.js');
 exports.convertShapeToPath = require('./convertShapeToPath.js');
+exports.convertAllShapeToPath = require('./convertAllShapeToPath.js');
 exports.convertStyleToAttrs = require('./convertStyleToAttrs.js');
 exports.convertTransform = require('./convertTransform.js');
 exports.mergeStyles = require('./mergeStyles.js');
