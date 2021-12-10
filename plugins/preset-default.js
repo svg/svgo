@@ -23,6 +23,7 @@ const cleanupEnableBackground = require('./cleanupEnableBackground.js');
 const removeHiddenElems = require('./removeHiddenElems.js');
 const removeEmptyText = require('./removeEmptyText.js');
 const convertShapeToPath = require('./convertShapeToPath.js');
+const convertAllShapeToPath = require('./convertAllShapeToPath.js');
 const convertEllipseToCircle = require('./convertEllipseToCircle.js');
 const moveElemsAttrsToGroup = require('./moveElemsAttrsToGroup.js');
 const moveGroupAttrsToElems = require('./moveGroupAttrsToElems.js');
@@ -61,6 +62,7 @@ const presetDefault = createPreset({
     removeHiddenElems,
     removeEmptyText,
     convertShapeToPath,
+    convertAllShapeToPath,
     convertEllipseToCircle,
     moveElemsAttrsToGroup,
     moveGroupAttrsToElems,
