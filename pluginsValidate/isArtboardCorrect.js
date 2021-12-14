@@ -6,6 +6,8 @@ exports.active = true;
 
 exports.description = 'checks if viewBox has correct size';
 
+const utils = require('./validationUtilities.js');
+
 /**
  * Checks if viewBox has correct size
  *
@@ -29,11 +31,12 @@ const ENOCLS = `Error in plugin "isArtboardCorrect": absent parameters.
       size: [width, height] // set width or height to 'null' of it does not have to be bounded, but both values cannot be null
   `;
 
-exports.fn = function (root, validateResult, params) {
+exports.fn = function (svg, validateResult, params) {
+  const root = utils.findElementByName(svg, 'svg');
   if (
     (params || params === {}) &&
-    root.children && root.children[0].attributes.viewBox &&
-    root.children[0].attributes.viewBox !== undefined
+    root.attributes.viewBox &&
+    root.attributes.viewBox !== undefined
   ) {
     const [paramViewBoxWidth, paramViewBoxHeight] = params.size;
 
@@ -41,10 +44,7 @@ exports.fn = function (root, validateResult, params) {
       console.log(ENOCLS);
     }
 
-    const [
-      svgViewBoxWidth,
-      svgViewBoxHeight,
-    ] = root.children[0].attributes.viewBox
+    const [svgViewBoxWidth, svgViewBoxHeight] = root.attributes.viewBox
       .split(' ')
       .map(function (value, index) {
         if (index > 1 && value !== 0) {
@@ -71,7 +71,7 @@ exports.fn = function (root, validateResult, params) {
   } else if (
     params === {} ||
     !params ||
-    root.children[0].attributes.viewBox === undefined
+    root.attributes.viewBox === undefined
   ) {
     validateResult.isArtboardCorrect = false;
     if (params.size === undefined) {

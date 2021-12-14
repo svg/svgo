@@ -32,12 +32,13 @@ const ENOCLS = `Error in plugin "isWorkingAreaCorrect": absent parameters.
       size: [width, height]
   `;
 
-exports.fn = function (root, validateResult, params) {
+exports.fn = function (svg, validateResult, params) {
+  const root = utils.findElementByName(svg, 'svg');
   if (
     (params || params === {}) &&
     utils.findElementByName(root, 'path') &&
-    root.children[0].attributes.viewBox &&
-    root.children[0].attributes.viewBox !== undefined
+    root.attributes.viewBox &&
+    root.attributes.viewBox !== undefined
   ) {
     const pathElement = utils.findElementByName(root, 'path');
     let [paramPathWidth, paramPathHeight] = params.size;
@@ -46,17 +47,16 @@ exports.fn = function (root, validateResult, params) {
     paramPathWidth += MARGIN_OF_ERROR;
     paramPathHeight += MARGIN_OF_ERROR;
 
-    const [svgViewBoxWidth, svgViewBoxHeight] =
-      root.children[0].attributes.viewBox
-        .split(' ')
-        .map(function (value, index) {
-          if (index > 1 && value !== 0) {
-            return parseInt(value, 10);
-          }
-        })
-        .filter(function (value) {
-          return value !== undefined;
-        });
+    const [svgViewBoxWidth, svgViewBoxHeight] = root.attributes.viewBox
+      .split(' ')
+      .map(function (value, index) {
+        if (index > 1 && value !== 0) {
+          return parseInt(value, 10);
+        }
+      })
+      .filter(function (value) {
+        return value !== undefined;
+      });
     const [workingAreaX1, workingAreaY1, workingAreaX2, workingAreaY2] =
       svgPathBbox(pathElement.attributes.d);
 
@@ -79,7 +79,7 @@ exports.fn = function (root, validateResult, params) {
   } else if (
     params === {} ||
     !params ||
-    root.children[0].attributes.viewBox === undefined
+    root.attributes.viewBox === undefined
   ) {
     validateResult.isWorkingAreaCorrect = false;
     if (params.size === undefined) {
