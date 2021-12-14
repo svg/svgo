@@ -1,13 +1,13 @@
 'use strict';
 
 function findElementByName(svg, name) {
-  for (const child of svg.children) {
-    if (child.name === name) {
-      return child;
-    } else {
-      return findElementByName(child, name);
+  let result;
+  walkTree(svg, function (node) {
+    if (node.name === name) {
+      result = node;
     }
-  }
+  });
+  return result;
 }
 
 exports.findElementByName = findElementByName;
