@@ -10,6 +10,11 @@
     "optimize",
     "minify"
   ],
+  "publishConfig": {
+    "access": "restricted",
+    "always-auth": true,
+    "registry": "https://npm.pkg.github.com"
+  },
   "homepage": "https://github.com/svg/svgo",
   "bugs": {
     "url": "https://github.com/svg/svgo/issues"
