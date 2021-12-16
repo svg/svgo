@@ -44,7 +44,7 @@ const runTests = async ({ list }) => {
       name === 'w3c-svg-11-test-suite/svg/styling-css-08-f.svg' ||
       // external image
       name === 'w3c-svg-11-test-suite/svg/struct-image-02-b.svg' ||
-      // complex selectors are messed becase of converting shapes to paths
+      // complex selectors are messed because of converting shapes to paths
       name === 'w3c-svg-11-test-suite/svg/struct-use-10-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/struct-use-11-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/styling-css-01-b.svg' ||
