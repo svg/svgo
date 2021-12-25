@@ -23,7 +23,7 @@ exports.description = 'inline styles (additional options)';
 
 /**
  * Compares two selector specificities.
- * extracted from https://github.com/keeganstreet/specificity/blob/master/specificity.js#L211
+ * extracted from https://github.com/keeganstreet/specificity/blob/main/specificity.js#L211
  *
  * @type {(a: Specificity, b: Specificity) => number}
  */
