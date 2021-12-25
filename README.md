@@ -32,47 +32,40 @@ svgo --help
 
 ## Configuration
 
-Some options can be configured with CLI though it may be easier to have the configuration in a separate file.
-SVGO automatically loads configuration from `svgo.config.js` or module specified with `--config` flag.
+SVGO has a plugin-based architecture, separate plugins allows various xml svg optimizations. See [built-in plugins](#built-in-plugins).
+SVGO automatically loads configuration from `svgo.config.js` or from `--config ./path/myconfig.js`. Some general options can be configured via CLI.
 
 ```js
+// svgo.config.js
 module.exports = {
   multipass: true, // boolean. false by default
-  datauri: 'enc', // 'base64', 'enc' or 'unenc'. 'base64' by default
+  datauri: 'enc', // 'base64' (default), 'enc' or 'unenc'.
   js2svg: {
     indent: 2, // string with spaces or number of spaces. 4 by default
     pretty: true, // boolean, false by default
   },
-};
-```
-
-SVGO has a plugin-based architecture, so almost every optimization is a separate plugin.
-There is a set of [built-in plugins](#built-in-plugins). See how to configure them:
-
-```js
-module.exports = {
   plugins: [
-    // enable a built-in plugin by name
+    // set of built-in plugins enabled by default
+    'preset-default',
+
+    // enable built-in plugins by name
     'prefixIds',
 
-    // or by expanded version
+    // or by expanded notation which allows to configure plugin
     {
-      name: 'prefixIds',
-    },
-
-    // some plugins allow/require to pass options
-    {
-      name: 'prefixIds',
+      name: 'sortAttrs',
       params: {
-        prefix: 'my-prefix',
+        xmlnsOrder: 'alphabetical',
       },
     },
   ],
 };
 ```
 
-The default preset of plugins is fully overridden if the `plugins` field is specified.
-Use `preset-default` plugin to customize plugins options.
+### Default preset
+
+When extending default configuration specify `preset-default` plugin to enable optimisations.
+Each plugin of default preset can be disabled or configured with "overrides" param.
 
 ```js
 module.exports = {
@@ -81,7 +74,7 @@ module.exports = {
       name: 'preset-default',
       params: {
         overrides: {
-          // customize options for plugins included in preset
+          // customize default plugin options
           inlineStyles: {
             onlyMatchedOnce: false,
           },
@@ -89,17 +82,6 @@ module.exports = {
           // or disable plugins
           removeDoctype: false,
         },
-      },
-    },
-
-    // enable builtin plugin not included in default preset
-    'prefixIds',
-
-    // enable and configure builtin plugin not included in preset
-    {
-      name: 'sortAttrs',
-      params: {
-        xmlnsOrder: 'alphabetical',
       },
     },
   ],
@@ -142,6 +124,8 @@ Default preset includes the following list of plugins:
 - sortDefsChildren
 - removeTitle
 - removeDesc
+
+### Custom plugin
 
 It's also possible to specify a custom plugin:
 
