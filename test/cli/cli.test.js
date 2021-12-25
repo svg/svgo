@@ -47,7 +47,7 @@ test('accepts svg as input stream', async () => {
   proc.stdin.write('<svg><title>stdin</title></svg>');
   proc.stdin.end();
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>\n');
+  expect(stdout).toEqual('<svg/>');
 });
 
 test('accepts svg as string', async () => {
@@ -58,7 +58,7 @@ test('accepts svg as string', async () => {
     { cwd: __dirname }
   );
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>\n');
+  expect(stdout).toEqual('<svg/>');
 });
 
 test('accepts svg as filename', async () => {
@@ -82,7 +82,7 @@ test('output as stream when "-" is specified', async () => {
     { cwd: __dirname }
   );
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>\n');
+  expect(stdout).toEqual('<svg/>');
 });
 
 test('should exit with 1 code on syntax error', async () => {
