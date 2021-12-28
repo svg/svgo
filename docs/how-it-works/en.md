@@ -18,25 +18,7 @@ Plugins can remove and modify SVG elements, collapse contents, move attributes a
 
 ## How it works
 ### 1. config
-SVGO reads, parses and/or extends the [default config](https://github.com/svg/svgo/blob/master/.svgo.yml), which contains all the SVGO settings, including plugins. Something like this:
-
-```yaml
-plugins:
-  - myTestPlugin
-  - myTestPlugin2: false
-  - myTestPlugin3:
-      param1: 1
-      param2: 2
-    …
-```
-
-It's important to note that every plugin:
-
-  * has its specific position in the plugins list,
-  * can be turned on with `name: true` and off with `name: false`,
-  * can have its own `params` which will be available later inside a plugin.
-
-These settings can be changed by the provided config file with `--config` command line option.
+Please see the [Configuration section of the README](https://github.com/svg/svgo/blob/main/README.md#configuration) for information on reading, parsing, and extending configurations.
 
 - - -
 
