@@ -18,7 +18,7 @@ exports.description =
  * <svg viewBox="0 0 100 50" />
  *
  * @param {Object} item current iteration item
- * @return {Boolean} if true, with and height will be filtered out
+ * @return {Boolean} if true, width and height will be filtered out
  *
  * @author Benny Schudel
  */
