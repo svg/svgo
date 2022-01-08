@@ -24,10 +24,8 @@
     "plugins/_applyTransforms.js",
     "plugins/convertPathData.js",
     "plugins/convertStyleToAttrs.js",
-    "plugins/moveGroupAttrsToElems.js",
     "plugins/plugins.js",
     "plugins/removeDimensions.js",
-    "plugins/removeNonInheritableGroupAttrs.js",
     "plugins/removeXMLNS.js",
     "plugins/preset-default.js"
   ]
