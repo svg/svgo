@@ -136,7 +136,9 @@ const applyTransforms = (root, params) => {
         }
 
         const pathData = path2js(node);
-        applyMatrixToPathData(pathData, matrix.data);
+        if (pathData.length !== 0) {
+          applyMatrixToPathData(pathData, matrix.data);
+        }
 
         // remove transform attr
         delete node.attributes.transform;
