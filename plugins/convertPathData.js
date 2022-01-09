@@ -1,9 +1,10 @@
 'use strict';
 
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
+const { visit } = require('../lib/xast.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
-const { applyTransforms } = require('./_applyTransforms.js');
+const { applyTransforms } = require('./applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
 exports.name = 'convertPathData';
@@ -13,6 +14,7 @@ exports.description =
   'optimizes path data: writes in shorter form, applies transformations';
 
 exports.params = {
+  // TODO convert to separate plugin in v3
   applyTransforms: true,
   applyTransformsStroked: true,
   makeArcs: {
@@ -56,6 +58,17 @@ let arcTolerance;
  * @author Kir Belevich
  */
 exports.fn = (root, params) => {
+  // invoke applyTransforms plugin
+  if (params.applyTransforms) {
+    visit(
+      root,
+      applyTransforms(root, {
+        transformPrecision: params.transformPrecision,
+        applyTransformsStroked: params.applyTransformsStroked,
+      })
+    );
+  }
+
   const stylesheet = collectStylesheet(root);
   return {
     element: {
@@ -88,10 +101,6 @@ exports.fn = (root, params) => {
 
           // TODO: get rid of functions returns
           if (data.length) {
-            if (params.applyTransforms) {
-              applyTransforms(node, data, params);
-            }
-
             convertToRelative(data);
 
             data = filters(data, params, {

@@ -21,7 +21,6 @@
     "lib/svgo.test.js",
     "lib/svgo/**/*.js",
     "lib/css-tools.js",
-    "plugins/_applyTransforms.js",
     "plugins/convertPathData.js",
     "plugins/convertStyleToAttrs.js",
     "plugins/moveGroupAttrsToElems.js",

@@ -52,7 +52,7 @@
     </g>
     <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50 70-50v100z"/>
     <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50 70-50v100z" stroke="#000"/>
-    <path id="a" d="M0 0v1000l700-500zm700 500L1400 0v1000z" stroke="#000" stroke-width="5"/>
+    <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50 70-50v100z" stroke="#000" stroke-width=".5"/>
     <g stroke="#000" stroke-width="5">
         <path transform="scale(10)" id="a" d="M0 0v100l70-50zm70 50 70-50v100z"/>
     </g>
