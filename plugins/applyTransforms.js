@@ -36,6 +36,12 @@ const applyTransforms = (root, params) => {
     element: {
       enter: (node) => {
         const computedStyle = computeStyle(stylesheet, node);
+
+        // used only for paths for now
+        if (node.attributes.d == null) {
+          return;
+        }
+
         // stroke and stroke-width can be redefined with <use>
         if (node.attributes.id != null) {
           return;
@@ -136,9 +142,7 @@ const applyTransforms = (root, params) => {
         }
 
         const pathData = path2js(node);
-        if (pathData.length !== 0) {
-          applyMatrixToPathData(pathData, matrix.data);
-        }
+        applyMatrixToPathData(pathData, matrix.data);
 
         // remove transform attr
         delete node.attributes.transform;
