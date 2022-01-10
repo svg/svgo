@@ -98,6 +98,7 @@ const applyTransforms = (root, params) => {
             return;
           }
 
+          // stroke cannot be transformed with different vertical and horizontal scale or skew
           if (
             (matrix.data[0] !== matrix.data[3] ||
               matrix.data[1] !== -matrix.data[2]) &&
