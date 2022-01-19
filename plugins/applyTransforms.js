@@ -1,143 +1,187 @@
 'use strict';
 
-// TODO implement as separate plugin
+/**
+ * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types').XastElement} XastElement
+ */
 
+const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const {
   transformsMultiply,
   transform2js,
   transformArc,
 } = require('./_transforms.js');
+const { path2js } = require('./_path.js');
 const { removeLeadingZero } = require('../lib/svgo/tools.js');
 const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
 
+/**
+ * @typedef {Array<PathDataItem>} PathData
+ * @typedef {Array<number>} Matrix
+ */
+
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
-const defaultStrokeWidth = attrsGroupsDefaults.presentation['stroke-width'];
 
 /**
  * Apply transformation(s) to the Path data.
  *
- * @param {Object} elem current element
- * @param {Array} path input path data
- * @param {Object} params whether to apply transforms to stroked lines and transform precision (used for stroke width)
- * @return {Array} output path data
+ * @type {import('../lib/types').Plugin<{
+ *   transformPrecision: number,
+ *   applyTransformsStroked: boolean,
+ * }>}
  */
-const applyTransforms = (elem, pathData, params) => {
-  // if there are no 'stroke' attr and references to other objects such as
-  // gradiends or clip-path which are also subjects to transform.
-  if (
-    elem.attributes.transform == null ||
-    elem.attributes.transform === '' ||
-    // styles are not considered when applying transform
-    // can be fixed properly with new style engine
-    elem.attributes.style != null ||
-    Object.entries(elem.attributes).some(
-      ([name, value]) =>
-        referencesProps.includes(name) && value.includes('url(')
-    )
-  ) {
-    return;
-  }
+const applyTransforms = (root, params) => {
+  const stylesheet = collectStylesheet(root);
+  return {
+    element: {
+      enter: (node) => {
+        const computedStyle = computeStyle(stylesheet, node);
 
-  const matrix = transformsMultiply(transform2js(elem.attributes.transform));
-  const stroke = elem.computedAttr('stroke');
-  const id = elem.computedAttr('id');
-  const transformPrecision = params.transformPrecision;
-
-  if (stroke && stroke != 'none') {
-    if (
-      !params.applyTransformsStroked ||
-      ((matrix.data[0] != matrix.data[3] ||
-        matrix.data[1] != -matrix.data[2]) &&
-        (matrix.data[0] != -matrix.data[3] || matrix.data[1] != matrix.data[2]))
-    )
-      return;
-
-    // "stroke-width" should be inside the part with ID, otherwise it can be overrided in <use>
-    if (id) {
-      let idElem = elem;
-      let hasStrokeWidth = false;
-
-      do {
-        if (idElem.attributes['stroke-width']) {
-          hasStrokeWidth = true;
-        }
-      } while (
-        idElem.attributes.id !== id &&
-        !hasStrokeWidth &&
-        (idElem = idElem.parentNode)
-      );
-
-      if (!hasStrokeWidth) return;
-    }
-
-    const scale = +Math.sqrt(
-      matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]
-    ).toFixed(transformPrecision);
-
-    if (scale !== 1) {
-      const strokeWidth =
-        elem.computedAttr('stroke-width') || defaultStrokeWidth;
-
-      if (
-        elem.attributes['vector-effect'] == null ||
-        elem.attributes['vector-effect'] !== 'non-scaling-stroke'
-      ) {
-        if (elem.attributes['stroke-width'] != null) {
-          elem.attributes['stroke-width'] = elem.attributes['stroke-width']
-            .trim()
-            .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
-        } else {
-          elem.attributes['stroke-width'] = strokeWidth.replace(
-            regNumericValues,
-            (num) => removeLeadingZero(num * scale)
-          );
+        // used only for paths for now
+        if (node.attributes.d == null) {
+          return;
         }
 
-        if (elem.attributes['stroke-dashoffset'] != null) {
-          elem.attributes['stroke-dashoffset'] = elem.attributes[
-            'stroke-dashoffset'
-          ]
-            .trim()
-            .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
+        // stroke and stroke-width can be redefined with <use>
+        if (node.attributes.id != null) {
+          return;
         }
 
-        if (elem.attributes['stroke-dasharray'] != null) {
-          elem.attributes['stroke-dasharray'] = elem.attributes[
-            'stroke-dasharray'
-          ]
-            .trim()
-            .replace(regNumericValues, (num) => removeLeadingZero(num * scale));
+        // if there are no 'stroke' attr and references to other objects such as
+        // gradiends or clip-path which are also subjects to transform.
+        if (
+          node.attributes.transform == null ||
+          node.attributes.transform === '' ||
+          // styles are not considered when applying transform
+          // can be fixed properly with new style engine
+          node.attributes.style != null ||
+          Object.entries(node.attributes).some(
+            ([name, value]) =>
+              referencesProps.includes(name) && value.includes('url(')
+          )
+        ) {
+          return;
         }
-      }
-    }
-  } else if (id) {
-    // Stroke and stroke-width can be redefined with <use>
-    return;
-  }
 
-  applyMatrixToPathData(pathData, matrix.data);
+        const matrix = transformsMultiply(
+          transform2js(node.attributes.transform)
+        );
+        const stroke =
+          computedStyle.stroke != null && computedStyle.stroke.type === 'static'
+            ? computedStyle.stroke.value
+            : null;
 
-  // remove transform attr
-  delete elem.attributes.transform;
+        const strokeWidth =
+          computedStyle['stroke-width'] != null &&
+          computedStyle['stroke-width'].type === 'static'
+            ? computedStyle['stroke-width'].value
+            : null;
+        const transformPrecision = params.transformPrecision;
 
-  return;
+        if (
+          (computedStyle.stroke != null &&
+            computedStyle.stroke.type === 'dynamic') ||
+          (computedStyle.strokeWidth != null &&
+            computedStyle['stroke-width'].type === 'dynamic')
+        ) {
+          return;
+        }
+
+        const scale = Number(
+          Math.sqrt(
+            matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]
+          ).toFixed(transformPrecision)
+        );
+
+        if (stroke && stroke != 'none') {
+          if (params.applyTransformsStroked === false) {
+            return;
+          }
+
+          // stroke cannot be transformed with different vertical and horizontal scale or skew
+          if (
+            (matrix.data[0] !== matrix.data[3] ||
+              matrix.data[1] !== -matrix.data[2]) &&
+            (matrix.data[0] !== -matrix.data[3] ||
+              matrix.data[1] !== matrix.data[2])
+          ) {
+            return;
+          }
+
+          // apply transform to stroke-width, stroke-dashoffset and stroke-dasharray
+          if (scale !== 1) {
+            if (node.attributes['vector-effect'] !== 'non-scaling-stroke') {
+              node.attributes['stroke-width'] = (
+                strokeWidth || attrsGroupsDefaults.presentation['stroke-width']
+              )
+                .trim()
+                .replace(regNumericValues, (num) =>
+                  removeLeadingZero(Number(num) * scale)
+                );
+
+              if (node.attributes['stroke-dashoffset'] != null) {
+                node.attributes['stroke-dashoffset'] = node.attributes[
+                  'stroke-dashoffset'
+                ]
+                  .trim()
+                  .replace(regNumericValues, (num) =>
+                    removeLeadingZero(Number(num) * scale)
+                  );
+              }
+
+              if (node.attributes['stroke-dasharray'] != null) {
+                node.attributes['stroke-dasharray'] = node.attributes[
+                  'stroke-dasharray'
+                ]
+                  .trim()
+                  .replace(regNumericValues, (num) =>
+                    removeLeadingZero(Number(num) * scale)
+                  );
+              }
+            }
+          }
+        }
+
+        const pathData = path2js(node);
+        applyMatrixToPathData(pathData, matrix.data);
+
+        // remove transform attr
+        delete node.attributes.transform;
+      },
+    },
+  };
 };
 exports.applyTransforms = applyTransforms;
 
+/**
+ * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
+ */
 const transformAbsolutePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y + matrix[4];
   const newY = matrix[1] * x + matrix[3] * y + matrix[5];
   return [newX, newY];
 };
 
+/**
+ * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
+ */
 const transformRelativePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y;
   const newY = matrix[1] * x + matrix[3] * y;
   return [newX, newY];
 };
 
+/**
+ * @type {(pathData: PathData, matrix: Matrix) => void}
+ */
 const applyMatrixToPathData = (pathData, matrix) => {
+  /**
+   * @type {[number, number]}
+   */
   const start = [0, 0];
+  /**
+   * @type {[number, number]}
+   */
   const cursor = [0, 0];
 
   for (const pathItem of pathData) {
