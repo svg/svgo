@@ -22,7 +22,6 @@
     "lib/svgo/**/*.js",
     "lib/css-tools.js",
     "plugins/convertPathData.js",
-    "plugins/convertStyleToAttrs.js",
     "plugins/plugins.js",
     "plugins/removeDimensions.js",
     "plugins/removeXMLNS.js",
