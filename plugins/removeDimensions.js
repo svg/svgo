@@ -1,11 +1,8 @@
 'use strict';
 
+exports.type = 'visitor';
 exports.name = 'removeDimensions';
-
-exports.type = 'perItem';
-
 exports.active = false;
-
 exports.description =
   'removes width and height in presence of viewBox (opposite to removeViewBox, disable it first)';
 
@@ -17,27 +14,32 @@ exports.description =
  *   ↓
  * <svg viewBox="0 0 100 50" />
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if true, width and height will be filtered out
- *
  * @author Benny Schudel
+ *
+ * @type {import('../lib/types').Plugin<void>}
  */
-exports.fn = function (item) {
-  if (item.type === 'element' && item.name === 'svg') {
-    if (item.attributes.viewBox != null) {
-      delete item.attributes.width;
-      delete item.attributes.height;
-    } else if (
-      item.attributes.width != null &&
-      item.attributes.height != null &&
-      Number.isNaN(Number(item.attributes.width)) === false &&
-      Number.isNaN(Number(item.attributes.height)) === false
-    ) {
-      const width = Number(item.attributes.width);
-      const height = Number(item.attributes.height);
-      item.attributes.viewBox = `0 0 ${width} ${height}`;
-      delete item.attributes.width;
-      delete item.attributes.height;
-    }
-  }
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node) => {
+        if (node.name === 'svg') {
+          if (node.attributes.viewBox != null) {
+            delete node.attributes.width;
+            delete node.attributes.height;
+          } else if (
+            node.attributes.width != null &&
+            node.attributes.height != null &&
+            Number.isNaN(Number(node.attributes.width)) === false &&
+            Number.isNaN(Number(node.attributes.height)) === false
+          ) {
+            const width = Number(node.attributes.width);
+            const height = Number(node.attributes.height);
+            node.attributes.viewBox = `0 0 ${width} ${height}`;
+            delete node.attributes.width;
+            delete node.attributes.height;
+          }
+        }
+      },
+    },
+  };
 };
