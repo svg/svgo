@@ -38,7 +38,7 @@ const removeTitle = require('./removeTitle.js');
 const removeDesc = require('./removeDesc.js');
 
 const presetDefault = createPreset({
-  name: 'presetDefault',
+  name: 'preset-default',
   plugins: [
     removeDoctype,
     removeXMLProcInst,
