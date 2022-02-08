@@ -123,7 +123,7 @@ exports.fn = (root, params) => {
             parseValue: false,
             parseCustomProperty: false,
           });
-        } catch {
+        } catch (e) {
           return;
         }
         if (cssAst.type === 'StyleSheet') {
