@@ -30,7 +30,7 @@ Some goodness from pull-requests.
 ### [ [>](https://github.com/svg/svgo/tree/v1.2.0) ] 1.2.0 / 24.02.2019
 Some goodness from pull-requests.
 * Fixed extra blank lines when processing many files (by @panczarny).
-* Added `--recursive` option to process folders recursevely with option `-f` (by @dartess).
+* Added `--recursive` option to process folders recursively with option `-f` (by @dartess).
 * Added `removeAttributesBySelector` plugin to remove elements matching a css selector (by @bmease).
 * Added `removeOffCanvasPaths` plugin to remove elements outside of the viewbox (by @JoshyPHP).
 * `removeAttrs` plugin: added `preserveCurrentColor` color (by @roblevintennis) and 3rd optional filter for a value (by @Herman-Freund).
@@ -173,7 +173,7 @@ Some goodness from pull-requests.
 
 ### [ [>](https://github.com/svg/svgo/tree/v0.6.0) ] 0.6.0 / 08.11.2015
 * New optimization: circular curves now being converted to arcs. A notable improvement for circles within paths.
-* New plugin “[minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js)” which minifies `<style>` elments content with CSSO by @strarsis (svgo still doesn't understand its content)
+* New plugin “[minifyStyles](https://github.com/svg/svgo/blob/master/plugins/minifyStyles.js)” which minifies `<style>` elements content with CSSO by @strarsis (svgo still doesn't understand its content)
 * New plugin “[removeStyleElement](https://github.com/svg/svgo/blob/master/plugins/removeStyleElement.js)” (disabled by default) by @betsydupuis.
 * Fixed issues with parsing numbers with exponent fraction (could happen with high precision >= 7).
 * Fixed rounding error due to incorrect preserving of precision in transformations.
@@ -207,7 +207,7 @@ Some goodness from pull-requests.
 ### [ [>](https://github.com/svg/svgo/tree/v0.5.2) ] 0.5.2 / 24.05.2015
 * Introduced new `transformPrecision` option for better image quality (defaults to 5) in “[convertTransform](https://github.com/svg/svgo/blob/master/plugins/convertTransform.js)” and “[convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js)” (for the purpose of applying transformations) plugins.
 * Matrix transformations now can be decomposed into a combination of few simple transforms like `translate`, `rotate`, `scale`.
-* Arcs (paths `arcto` command) are now correctly being transformed into another arcs without being converting to Bezier curves.
+* Arcs (paths `arcto` command) are now correctly being transformed into another arcs without being converting to Bézier curves.
 * Fixed an issue with “[mergePaths](https://github.com/svg/svgo/blob/master/plugins/mergePaths.js)” failing to detect paths intersection in some cases.
 * Fixed a bug with “[removeUnknownsAndDefaults](https://github.com/svg/svgo/blob/master/plugins/removeUnknownsAndDefaults.js)” removing some paths, which was introduced in [v0.5.1](https://github.com/svg/svgo/tree/v0.5.1).
 * Fixed a bug with transformation having `rotate()` with optional parameters.
@@ -244,9 +244,9 @@ Some goodness from pull-requests.
 * a lot of bug fixes mostly related to transformations
 
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.5) ] 0.4.5 / 02.08.2014
-* significally improved plugin [plugins/convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js):
+* significantly improved plugin [plugins/convertPathData](https://github.com/svg/svgo/blob/master/plugins/convertPathData.js):
   - Now data is being written relative or absolute whichever is shorter. You can turn it off by setting ``utilizeAbsolute`` to ``false``.
-  - Smarter rounding: values like 2.499 now rounds to 2.5. Rounding now takes in account accumulutive error meaning that points will not be misplaced due to rounding more than it neccessary.
+  - Smarter rounding: values like 2.499 now rounds to 2.5. Rounding now takes in account accumulative error meaning that points will not be misplaced due to rounding more than it necessary.
   - Fixed couple bugs.
 * ``--output`` option now can be a folder along with ``--folder``, thanks to @mako-taco.
 * [plugins/cleanupIDs](https://github.com/svg/svgo/blob/master/plugins/cleanupIDs.js) now have ``prefix`` option in case you want to combine multiple svg later (by @DanielMazurkiewicz).
@@ -256,7 +256,7 @@ Some goodness from pull-requests.
 ### [ [>](https://github.com/svg/svgo/tree/v0.4.4) ] 0.4.4 / 14.01.2014
 * new plugin [plugins/removeTitle](https://github.com/svg/svgo/blob/master/plugins/removeTitle.js) (disabled by default, close [#159](https://github.com/svg/svgo/issues/159))
 * plugins/convertPathData: skip data concatenation for z instruction in collapseRepeated
-* plugins/removeUnknownsAndDefaults: do not remove overriden attributes with default values (fix [#161](https://github.com/svg/svgo/issues/161) and [#168](https://github.com/svg/svgo/issues/168))
+* plugins/removeUnknownsAndDefaults: do not remove overridden attributes with default values (fix [#161](https://github.com/svg/svgo/issues/161) and [#168](https://github.com/svg/svgo/issues/168))
 * plugins/removeViewBox: disable by default (fix [#139](https://github.com/svg/svgo/issues/139))
 * update README with [gulp task](https://github.com/ben-eb/gulp-svgmin)
 
@@ -308,7 +308,7 @@ Some goodness from pull-requests.
 ### [ [>](https://github.com/svg/svgo/tree/v0.3.2) ] 0.3.2 / 03.05.2013
 * new plugin [plugins/sortAttrs](https://github.com/svg/svgo/blob/master/plugins/sortAttrs.js)
 * plugins/transformsWithOnePath: buggy hcrop (fix [#111](https://github.com/svg/svgo/issues/111))
-* Impossible to set output presision to 0 (no fractional part) (fix [#110](https://github.com/svg/svgo/issues/110))
+* Impossible to set output precision to 0 (no fractional part) (fix [#110](https://github.com/svg/svgo/issues/110))
 * Istanbul + coveralls.io
 * update README with NPM version from badge.fury.io
 * update README with dependency status from gemnasium.com

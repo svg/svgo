@@ -257,7 +257,7 @@ const config = await loadConfig(configFile, cwd);
 
 ## Donators
 
-| [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/main/fontello-image.svg" width="80">](https://fontello.com/) |
+| [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/8.0.0/fontello-image.svg" width="80">](https://fontello.com/) |
 | :------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
 |                       [SheetJS LLC](https://sheetjs.com/)                        |                                               [Fontello](https://fontello.com/)                                               |
 
