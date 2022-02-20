@@ -1,0 +1,22 @@
+<svg id="test13" width="315" height="92" viewBox="0 0 315 92" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <rect id="a" x="7" y="5" width="301" height="31" rx="3"/>
+        <g id="c">
+            <use href="#b"/>
+        </g>
+        <g id="b">
+            <use href="#a"/>
+        </g>
+    </defs>
+    <use href="#c"/>
+</svg>
+
+    @@@
+
+<svg id="test13" width="315" height="92" viewBox="0 0 315 92" xmlns="http://www.w3.org/2000/svg">
+    <g id="c">
+        <g id="b">
+            <rect id="a" x="7" y="5" width="301" height="31" rx="3"/>
+        </g>
+    </g>
+</svg>
