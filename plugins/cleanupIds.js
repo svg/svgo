@@ -10,9 +10,9 @@ const { referencesProps } = require('./_collections.js');
 exports.name = 'cleanupIds';
 exports.description = 'removes unused IDs and minifies used';
 
-const regReferencesUrl = /\burl\(("|')?#(.+?)\1\)/;
+const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/;
 const regReferencesHref = /^#(.+?)$/;
-const regReferencesBegin = /(\w+)\./;
+const regReferencesBegin = /(\D+)\./;
 const generateIdChars = [
   'a',
   'b',
