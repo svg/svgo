@@ -50,6 +50,7 @@ exports.removeUselessDefs = require('./removeUselessDefs.js');
 exports.removeUselessStrokeAndFill = require('./removeUselessStrokeAndFill.js');
 exports.removeViewBox = require('./removeViewBox.js');
 exports.removeXMLNS = require('./removeXMLNS.js');
+exports.removeXMLSpace = require('./removeXMLSpace.js');
 exports.removeXMLProcInst = require('./removeXMLProcInst.js');
 exports.reusePaths = require('./reusePaths.js');
 exports.sortAttrs = require('./sortAttrs.js');

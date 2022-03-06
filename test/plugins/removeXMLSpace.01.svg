@@ -1,0 +1,13 @@
+Should remove xmlns if requested
+
+===
+
+<svg xml:space="default">
+    test
+</svg>
+
+@@@
+
+<svg>
+    test
+</svg>
