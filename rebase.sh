@@ -1,6 +1,6 @@
-git checkout master
-git pull upstream master
+git checkout main
+git pull upstream main
 git checkout mbank
-git rebase master
-git push origin master
+git rebase main
+git push origin main
 git push origin mbank --force
