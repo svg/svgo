@@ -40,6 +40,10 @@
     "type": "git",
     "url": "git://github.com/svg/svgo.git"
   },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/svgo"
+  },
   "main": "./lib/svgo-node.js",
   "bin": "./bin/svgo",
   "files": [
