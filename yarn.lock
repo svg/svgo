@@ -1668,13 +1668,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-tree@npm:^1.1.2, css-tree@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "css-tree@npm:1.1.3"
+"css-tree@npm:~2.0.4":
+  version: 2.0.4
+  resolution: "css-tree@npm:2.0.4"
   dependencies:
-    mdn-data: 2.0.14
-    source-map: ^0.6.1
-  checksum: 5b1bf44c457f4682feef5d1fccf0758aabaec3b77f264418a022826a0e4c2dc9f2283205223ddba147eba8ee4cb88caa91298b54c4b7e9af345bb820e9a32868
+    mdn-data: 2.0.23
+    source-map-js: ^1.0.1
+  checksum: de9f46dba454d4cc806ca612f9f7411e9d810e9102bcafce7ec075c5b39d8492cdfcb0644e91525d428c993af9ffa214888c74760e1eff936af080eefb618a49
   languageName: node
   linkType: hard
 
@@ -1685,12 +1685,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csso@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "csso@npm:4.2.0"
+"csso@npm:~5.0.2":
+  version: 5.0.2
+  resolution: "csso@npm:5.0.2"
   dependencies:
-    css-tree: ^1.1.2
-  checksum: 757304b1c78052e74d2235b775b9a5fee287c66a189944732165021a0bb45b65ba8e1b9cfa478884d5721967f98c9c6d998240c5c78b2a003e4ab76a5a5b7b10
+    css-tree: ~2.0.4
+  checksum: 7f06a5480b72faf13d565bde59e7a5aa500c683900f7a8939379cb2dfff5052f6528709189ad5524c10456aa065d856a5a4edc5d60a48376273f538e774b298d
   languageName: node
   linkType: hard
 
@@ -3632,10 +3632,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdn-data@npm:2.0.14":
-  version: 2.0.14
-  resolution: "mdn-data@npm:2.0.14"
-  checksum: 57a27f585adb0ab978b0229aa2347dfbdb897e340a3cd3547a7de3162680af641bf2cdf185771b3bca29fabf8c46b486a45a4809dd5d9321465c80e6adad98f4
+"mdn-data@npm:2.0.23":
+  version: 2.0.23
+  resolution: "mdn-data@npm:2.0.23"
+  checksum: 3c9b1a9ccf661292f88a7064a719e6b0313359e3ff973c422f5b398bec840018760d93b3aed3793bc50d39e971f7a35781e6986a5f7e118e4521bbc4e2ae46a1
   languageName: node
   linkType: hard
 
@@ -4589,6 +4589,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"source-map-js@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "source-map-js@npm:1.0.1"
+  checksum: 8096794b7d64f9bc74738f6b8731cbd9f32d81384b16d3bea55ac8bc69fd80e1b8cfb99d638b4c6df5c111ce363c55b4b51a8abd9e609357460c82305ee59471
+  languageName: node
+  linkType: hard
+
 "source-map-support@npm:^0.5.6, source-map-support@npm:~0.5.20":
   version: 0.5.20
   resolution: "source-map-support@npm:0.5.20"
@@ -4817,8 +4824,8 @@ __metadata:
     "@types/jest": ^27.0.1
     commander: ^7.2.0
     css-select: ^4.1.3
-    css-tree: ^1.1.3
-    csso: ^4.2.0
+    css-tree: ~2.0.4
+    csso: ~5.0.2
     del: ^6.0.0
     eslint: ^7.32.0
     jest: ^27.2.5

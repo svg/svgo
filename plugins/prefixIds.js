@@ -142,15 +142,11 @@ exports.fn = (_root, params, info) => {
             // url(...) references
             if (
               node.type === 'Url' &&
-              node.value.value &&
-              node.value.value.length > 0
+              node.value.length > 0
             ) {
-              const prefixed = prefixReference(
-                prefix,
-                unquote(node.value.value)
-              );
+              const prefixed = prefixReference(prefix, node.value);
               if (prefixed != null) {
-                node.value.value = prefixed;
+                node.value = prefixed;
               }
             }
           });

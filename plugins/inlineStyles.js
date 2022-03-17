@@ -8,7 +8,7 @@
 
 const csstree = require('css-tree');
 // @ts-ignore not defined in @types/csso
-const specificity = require('csso/lib/restructure/prepare/specificity');
+const { syntax: { specificity } } = require('csso');
 const stable = require('stable');
 const {
   visitSkip,
@@ -160,7 +160,7 @@ exports.fn = (root, params) => {
              */
             const pseudos = [];
             if (node.type === 'Selector') {
-              node.children.each((childNode, childItem, childList) => {
+              node.children.forEach((childNode, childItem, childList) => {
                 if (
                   childNode.type === 'PseudoClassSelector' ||
                   childNode.type === 'PseudoElementSelector'
@@ -322,7 +322,7 @@ exports.fn = (root, params) => {
                 ? null
                 : selectedEl.attributes.class.split(' ')
             );
-            const firstSubSelector = selector.node.children.first();
+            const firstSubSelector = selector.node.children.first;
             if (
               firstSubSelector != null &&
               firstSubSelector.type === 'ClassSelector'
@@ -355,14 +355,14 @@ exports.fn = (root, params) => {
               if (
                 node.type === 'Rule' &&
                 node.prelude.type === 'SelectorList' &&
-                node.prelude.children.isEmpty()
+                node.prelude.children.isEmpty
               ) {
                 list.remove(item);
               }
             },
           });
 
-          if (style.cssAst.children.isEmpty()) {
+          if (style.cssAst.children.isEmpty) {
             // remove emtpy style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {
