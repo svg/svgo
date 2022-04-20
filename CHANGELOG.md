@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.12.0) (2022-04-20)
+
+
+### Features
+
+* Add SVG validation/linting ([8b0719a](https://github.com/mbank-design/svgo/commit/8b0719a7c22b1739b3953acef74471252cbc5a46))
+
+
+### Bug Fixes
+
+* add margin of error ([89ce236](https://github.com/mbank-design/svgo/commit/89ce236b3769fc9bea79421e22f2dfc4548cf03e))
+* asset error validation ([6b740d7](https://github.com/mbank-design/svgo/commit/6b740d7268cbecf59bba65c847043550f28b9e6c))
+* **plugin:** removeAttrs: warn without attrs ([#1582](https://github.com/mbank-design/svgo/issues/1582)) ([8af10de](https://github.com/mbank-design/svgo/commit/8af10de8d440a4bfdeffeadcba6a34bed615b25c))
+* resolve issues with hasCorrectStripeColors and findFillElementsByColors ([cf90f4d](https://github.com/mbank-design/svgo/commit/cf90f4d76e7d4f886005baffd2d1d71d479589e3))
+* secure walkTree function errors and fulfill snake_case rules ([faad7fc](https://github.com/mbank-design/svgo/commit/faad7fc6dc1fa3b42dbf7910040bc9f8642a2398))
+* update and fix regex for snake_case ([ac8b4b9](https://github.com/mbank-design/svgo/commit/ac8b4b98d22779906d047c5d3000107f85ae430f))
+* update cli file read constant definitions ([193d73c](https://github.com/mbank-design/svgo/commit/193d73c5a9ca225b8db1f0985c29acab453bc16c))
+
 ### [2.10.2](https://github.com/mbank-design/svgo/compare/v2.10.1...v2.10.2) (2021-12-14)
 
 
