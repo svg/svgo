@@ -104,6 +104,12 @@ var ASSET_TYPE = {
         name: 'isSnakeCase',
       },
       {
+        name: 'isPrefixPresent',
+        params: {
+          assetType: 'logo',
+        },
+      },
+      {
         name: 'hasNoDiacriticCharacters',
       },
     ],
@@ -139,6 +145,9 @@ var ASSET_TYPE = {
       },
       {
         name: 'isPrefixPresent',
+        params: {
+          assetType: 'illustration',
+        },
       },
     ],
   },
