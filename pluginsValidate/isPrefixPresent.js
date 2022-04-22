@@ -21,28 +21,17 @@ exports.description = 'checks if the filename has suffix';
  * @author Tymon Żarski
  */
 
-const ENOCLS = `Error in plugin "isPrefixPresent": absent parameters.
- It should have a asset type in "assetType".
- Config example:
-
- plugins:
- - isPrefixPresent:
-     assetType: 'logo' || 'illustration' // set asset type to 'logo' or 'illustration'
- `;
-
-exports.fn = function (root, validateResult, params) {
+exports.fn = function (root, validateResult) {
   if (root.filename) {
-    const assetType = params.assetType;
-
-    if (assetType !== 'logo' && assetType !== 'illustration') {
-      console.log(ENOCLS);
-    }
-
     const filename = root.filename.replace(/\.[^/.]+$/, '');
     const darkThemSuffix = '_dark_theme';
-    const themeSuffixes = ['_retail', '_corporate', '_sme', '_mobile'];
-
-    themeSuffixes.push(assetType === 'logo' ? '_private' : '_private_banking');
+    const themeSuffixes = [
+      '_mass',
+      '_corporate',
+      '_sme',
+      '_mobile',
+      '_private',
+    ];
 
     const isDarkThemSuffix =
       filename.indexOf(darkThemSuffix) ===
