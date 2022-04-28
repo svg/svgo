@@ -104,7 +104,7 @@ var ASSET_TYPE = {
         name: 'isSnakeCase',
       },
       {
-        name: 'isPrefixPresent',
+        name: 'isSuffixPresent',
       },
       {
         name: 'hasNoDiacriticCharacters',
@@ -141,7 +141,7 @@ var ASSET_TYPE = {
         name: 'hasNoDiacriticCharacters',
       },
       {
-        name: 'isPrefixPresent',
+        name: 'isSuffixPresent',
       },
     ],
   },

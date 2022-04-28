@@ -2,7 +2,7 @@
 
 exports.type = 'validate';
 
-exports.name = 'isPrefixPresent';
+exports.name = 'isSuffixPresent';
 
 exports.active = false;
 
@@ -26,11 +26,12 @@ exports.fn = function (root, validateResult) {
     const filename = root.filename.replace(/\.[^/.]+$/, '');
     const darkThemSuffix = '_dark_theme';
     const themeSuffixes = [
-      '_mass',
+      ' _mass',
       '_corporate',
       '_sme',
-      '_mobile',
       '_private',
+      '_affluent',
+      '_young',
     ];
 
     const isDarkThemSuffix =
@@ -38,16 +39,16 @@ exports.fn = function (root, validateResult) {
         filename.length - darkThemSuffix.length ||
       filename.indexOf(darkThemSuffix) === -1;
 
-    const isThemePrefix = themeSuffixes.some((prefix) => {
+    const isThemeSuffix = themeSuffixes.some((prefix) => {
       return filename.indexOf(prefix) !== -1 &&
         filename.indexOf(prefix) === filename.length + isDarkThemSuffix
         ? darkThemSuffix.length
         : null - prefix.length && filename.indexOf(prefix) > 0;
     });
 
-    validateResult.isPrefixPresent = isDarkThemSuffix && isThemePrefix;
+    validateResult.isSuffixPresent = isDarkThemSuffix && isThemeSuffix;
   } else {
-    validateResult.isPrefixPresent = false;
+    validateResult.isSuffixPresent = false;
     console.log('no filename provided!');
   }
 
