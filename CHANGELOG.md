@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.1](https://github.com/mbank-design/svgo/compare/v2.12.0...v2.12.1) (2022-04-28)
+
+
+### Bug Fixes
+
+* change mass to retail ([f68acb4](https://github.com/mbank-design/svgo/commit/f68acb41c1bb2beba6197f485e968a2f00419f1e))
+* rename plugin and add new themes ([aaf16bd](https://github.com/mbank-design/svgo/commit/aaf16bd0abb4340cd19da26cf14910aa4f7ed282))
+
 ## [2.12.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.12.0) (2022-04-20)
 
 
