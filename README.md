@@ -232,6 +232,85 @@ const config = await loadConfig(configFile, cwd);
 | [removeScriptElement](https://github.com/svg/svgo/blob/main/plugins/removeScriptElement.js)                       | remove `<script>` elements                                                                                                                               | `disabled` |
 | [reusePaths](https://github.com/svg/svgo/blob/main/plugins/reusePaths.js)                                         | Find duplicated <path> elements and replace them with <use> links                                                                                        | `disabled` |
 
+## Use `svgo.browser.js`
+
+In published npm package, there is a bundled browser-compatible [es module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) file at `/dist/svgo.browser.js`.
+
+The file can be obtained by unpacking the npm package, or download online through service like: https://unpkg.com/svgo@2/dist/svgo.browser.js.
+
+To use the file directly, add a script tag with `type="module"` and the code will be loaded asynchronously.
+
+Sample test code:
+
+```html
+<!DOCTYPE html><html><body>
+<script type="module">
+  import SVGO, * as SVGO_ALL from 'https://unpkg.com/svgo@2.8.0/dist/svgo.browser.js'
+
+  window.SVGO = SVGO
+  window.SVGO_ALL = SVGO_ALL
+  console.log('done import asynchronously')
+  console.log({ SVGO, SVGO_ALL })
+</script>
+<script>console.log('normal script will load first')</script>
+</body></html>
+```
+
+<details><summary>A more complex test with `optimize`</summary>
+
+```html
+<!DOCTYPE html>
+<html>
+<style>
+  body { display: flex; flex-flow: column; }
+  textarea { min-height: 128px; }
+</style>
+<body>
+<label>input SVG string</label><textarea id="textarea-input">
+<svg xmlns="  http://www.w3.org/2000/svg
+  " attr="a      b" attr2="a
+b">
+    test
+</svg>
+</textarea>
+<button id="button-optimize" disabled=true>waiting for SVGO to load...</button>
+<label>output SVG string</label><textarea id="textarea-output"></textarea>
+<script type="module">
+  import SVGO, * as SVGO_ALL from 'https://unpkg.com/svgo@2.8.0/dist/svgo.browser.js'
+
+  window.SVGO = SVGO
+  window.SVGO_ALL = SVGO_ALL
+  console.log('done import asynchronously')
+  console.log({ SVGO, SVGO_ALL })
+
+  const buttonOptimize = document.querySelector('#button-optimize')
+  buttonOptimize.disabled = false
+  buttonOptimize.innerText = 'optimize!'
+  buttonOptimize.onclick = () => {
+    const textareaInput = document.querySelector('#textarea-input')
+    const textareaOutput = document.querySelector('#textarea-output')
+    const inputSvgString = textareaInput.value
+    if (!inputSvgString.trim()) return textareaOutput.value = 'empty input !'
+    const { data: outputSvgString } = SVGO.optimize(inputSvgString, {
+      plugins: [
+        { name: 'preset-default' }, // enable default preset
+        { name: 'removeScriptElement' } // enable builtin plugin not included in default preset
+      ]
+    })
+    textareaOutput.value = outputSvgString
+  }
+</script>
+<script>console.log('normal script will load first')</script>
+</body>
+</html>
+```
+
+</details>
+
+Same example at: https://jsfiddle.net/4kocyx9t/6/
+
+If non-module browser js file is needed, you can use bundler tools like [webpack](https://webpack.js.org/configuration/output/#type-umd) or [rollup](https://rollupjs.org/guide/en/#outputformat) to compile the code to [UMD (Universal Module Definition)](https://github.com/umdjs/umd) format.
+
 ## Other Ways to Use SVGO
 
 - as a web app – [SVGOMG](https://jakearchibald.github.io/svgomg/)
