@@ -26,7 +26,7 @@ exports.fn = function (root, validateResult) {
     const filename = root.filename.replace(/\.[^/.]+$/, '');
     const darkThemSuffix = '_dark_theme';
     const themeSuffixes = [
-      ' _mass',
+      '_mass',
       '_corporate',
       '_sme',
       '_private',
