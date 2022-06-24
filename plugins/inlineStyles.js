@@ -9,7 +9,6 @@
 const csstree = require('css-tree');
 // @ts-ignore not defined in @types/csso
 const specificity = require('csso/lib/restructure/prepare/specificity');
-const stable = require('stable');
 const {
   visitSkip,
   querySelectorAll,
@@ -200,11 +199,13 @@ exports.fn = (root, params) => {
           return;
         }
         // stable sort selectors
-        const sortedSelectors = stable(selectors, (a, b) => {
-          const aSpecificity = specificity(a.item.data);
-          const bSpecificity = specificity(b.item.data);
-          return compareSpecificity(aSpecificity, bSpecificity);
-        }).reverse();
+        const sortedSelectors = [...selectors]
+          .sort((a, b) => {
+            const aSpecificity = specificity(a.item.data);
+            const bSpecificity = specificity(b.item.data);
+            return compareSpecificity(aSpecificity, bSpecificity);
+          })
+          .reverse();
 
         for (const selector of sortedSelectors) {
           // match selectors

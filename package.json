@@ -109,8 +109,7 @@
     "css-select": "^5.1.0",
     "css-tree": "^1.1.3",
     "csso": "^4.2.0",
-    "picocolors": "^1.0.0",
-    "stable": "^0.1.8"
+    "picocolors": "^1.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",

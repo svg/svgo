@@ -4396,13 +4396,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stable@npm:^0.1.8":
-  version: 0.1.8
-  resolution: "stable@npm:0.1.8"
-  checksum: 2ff482bb100285d16dd75cd8f7c60ab652570e8952c0bfa91828a2b5f646a0ff533f14596ea4eabd48bb7f4aeea408dce8f8515812b975d958a4cc4fa6b9dfeb
-  languageName: node
-  linkType: hard
-
 "stack-utils@npm:^2.0.3":
   version: 2.0.3
   resolution: "stack-utils@npm:2.0.3"
@@ -4583,7 +4576,6 @@ __metadata:
     prettier: ^2.7.1
     rollup: ^2.79.1
     rollup-plugin-terser: ^7.0.2
-    stable: ^0.1.8
     tar-stream: ^2.2.0
     typescript: ^4.8.4
   bin:
