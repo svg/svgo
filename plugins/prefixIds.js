@@ -21,7 +21,7 @@ const getBasename = (path) => {
   // extract everything after latest slash or backslash
   const matched = path.match(/[/\\]?([^/\\]+)$/);
   if (matched) {
-    return matched[1];
+    return matched[1].indexOf('.') ? matched[1].split('.')[0] : matched[1];
   }
   return '';
 };
