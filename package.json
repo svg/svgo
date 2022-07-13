@@ -8,6 +8,8 @@
     "svgo",
     "svg",
     "optimize",
+    "validate",
+    "parseSvg",
     "minify"
   ],
   "publishConfig": {
@@ -58,6 +60,7 @@
     "lib",
     "plugins",
     "dist",
+    "types",
     "!**/*.test.js",
     "pluginsValidate"
   ],
