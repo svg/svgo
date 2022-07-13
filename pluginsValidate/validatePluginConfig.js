@@ -36,6 +36,9 @@ var ASSET_TYPE = {
       {
         name: 'hasNoDiacriticCharacters',
       },
+      {
+        name: 'isText',
+      },
     ],
   },
   ICON_COLOR: {
@@ -74,6 +77,9 @@ var ASSET_TYPE = {
       {
         name: 'hasNoDiacriticCharacters',
       },
+      {
+        name: 'isText',
+      },
     ],
   },
   LOGO: {
@@ -109,6 +115,9 @@ var ASSET_TYPE = {
       {
         name: 'hasNoDiacriticCharacters',
       },
+      {
+        name: 'isText',
+      },
     ],
   },
   ILLUSTRATION: {
@@ -143,6 +152,9 @@ var ASSET_TYPE = {
       {
         name: 'isSuffixPresent',
       },
+      {
+        name: 'isText',
+      },
     ],
   },
   FLAG: {
@@ -175,6 +187,9 @@ var ASSET_TYPE = {
       {
         name: 'hasNoDiacriticCharacters',
       },
+      {
+        name: 'isText',
+      },
     ],
   },
   AVATAR: {
@@ -206,6 +221,9 @@ var ASSET_TYPE = {
       },
       {
         name: 'hasNoDiacriticCharacters',
+      },
+      {
+        name: 'isText',
       },
     ],
   },
