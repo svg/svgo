@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.13.0) (2022-07-13)
+
+
+### Features
+
+* Add SVG validation/linting ([d10532c](https://github.com/mbank-design/svgo/commit/d10532cce378ab78aa0a7442b13a16fff496bd1d))
+* add text validation rule ([719058b](https://github.com/mbank-design/svgo/commit/719058bc11df770060ec2f06db0f6d507e81c1e3))
+
+
+### Bug Fixes
+
+* add margin of error ([02e9a05](https://github.com/mbank-design/svgo/commit/02e9a05a4b4bb41f4d120f93ada818618c69bc68))
+* asset error validation ([8b9dc86](https://github.com/mbank-design/svgo/commit/8b9dc862678a468866b4b6548d47ac993facefd7))
+* change mass to retail ([c3ee751](https://github.com/mbank-design/svgo/commit/c3ee75191042e66d1cddb92572f487637f64068a))
+* **plugin:** removeAttrs: warn without attrs ([#1582](https://github.com/mbank-design/svgo/issues/1582)) ([8af10de](https://github.com/mbank-design/svgo/commit/8af10de8d440a4bfdeffeadcba6a34bed615b25c))
+* rename plugin and add new themes ([494e200](https://github.com/mbank-design/svgo/commit/494e20071260d3f66f76d1f9f031a40e2f39857d))
+* resolve issues with hasCorrectStripeColors and findFillElementsByColors ([f9f366d](https://github.com/mbank-design/svgo/commit/f9f366d10f45b8b88db9787da24ec89475ad4452))
+* resolve typing error ([654aefd](https://github.com/mbank-design/svgo/commit/654aefd564379a6d8a10fe245d04540fd76fca0f))
+* secure walkTree function errors and fulfill snake_case rules ([37dff52](https://github.com/mbank-design/svgo/commit/37dff52b99342a2c19de34b1c29159de88e07388))
+* update and fix regex for snake_case ([85337a7](https://github.com/mbank-design/svgo/commit/85337a7ca293a0bd9d7bc5bae13c9cb9916f111c))
+* update cli file read constant definitions ([c8c4e0d](https://github.com/mbank-design/svgo/commit/c8c4e0d724027f74a697d6ccdec59d0897220911))
+
 ### [2.12.2](https://github.com/mbank-design/svgo/compare/v2.12.1...v2.12.2) (2022-04-29)
 
 
