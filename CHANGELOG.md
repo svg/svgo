@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.0](https://github.com/mbank-design/svgo/compare/v2.13.0...v2.14.0) (2022-07-13)
+
+
+### Features
+
+* add types ([a05f931](https://github.com/mbank-design/svgo/commit/a05f9310b7cc1df99624b712ae55e203564281a7))
+
 ## [2.13.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.13.0) (2022-07-13)
 
 
