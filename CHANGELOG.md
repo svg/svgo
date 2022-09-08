@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/mbank-design/svgo/compare/v2.14.0...v2.15.0) (2022-09-08)
+
+
+### Features
+
+* Remove dynamic import using require() ([b5fdae0](https://github.com/mbank-design/svgo/commit/b5fdae055ae08b43481cc50910dc6b981a7e9c53))
+
 ## [2.14.0](https://github.com/mbank-design/svgo/compare/v2.13.0...v2.14.0) (2022-07-13)
 
 
