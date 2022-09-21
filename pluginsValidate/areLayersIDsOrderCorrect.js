@@ -38,7 +38,7 @@ exports.fn = function (root, validateResult, params) {
   let result = false;
   if (params.layersNameOrder !== undefined) {
     const allElements = utils.findAllElementByAttribute(root, 'id');
-    const layersNameOrder = params.layersNameOrder.reverse();
+    const layersNameOrder = [...params.layersNameOrder].reverse();
 
     const allLayerElements = allElements.filter((element) => {
       let filter = false;
@@ -50,7 +50,6 @@ exports.fn = function (root, validateResult, params) {
       }
       return filter;
     });
-
     result = idsOrderCorrect(allLayerElements, layersNameOrder);
   } else {
     console.error(ENOCLS);
@@ -63,13 +62,21 @@ exports.fn = function (root, validateResult, params) {
 
 // check if values have the same order in the arrays
 function idsOrderCorrect(layersElements, layerNameOrder) {
-  if (layersElements.length !== layerNameOrder.length) {
+  if (
+    layersElements.length !== layerNameOrder.length &&
+    layersElements.length !== 4
+  ) {
     return false;
   }
+
   for (let i = 0; i < layerNameOrder.length; i++) {
-    if (layersElements[i].attributes.id !== layerNameOrder[i]) {
+    if (
+      layersElements[i]?.attributes?.id !== layerNameOrder[i] &&
+      layerNameOrder[i] !== 'blackFill'
+    ) {
       return false;
     }
   }
+
   return true;
 }

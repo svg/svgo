@@ -137,3 +137,9 @@ function isWalkable(svg) {
     return true;
   }
 }
+
+function isEmpty(object) {
+  return Object.keys(object).length === 0;
+}
+
+exports.isEmpty = isEmpty;

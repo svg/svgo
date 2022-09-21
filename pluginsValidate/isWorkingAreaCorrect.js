@@ -35,7 +35,7 @@ const ENOCLS = `Error in plugin "isWorkingAreaCorrect": absent parameters.
 exports.fn = function (svg, validateResult, params) {
   const root = utils.findElementByName(svg, 'svg');
   if (
-    (params || params === {}) &&
+    (params || !utils.isEmpty(params)) &&
     utils.findElementByName(root, 'path') &&
     root.attributes.viewBox &&
     root.attributes.viewBox !== undefined
@@ -77,7 +77,7 @@ exports.fn = function (svg, validateResult, params) {
 
     validateResult.isWorkingAreaCorrect = result;
   } else if (
-    params === {} ||
+    utils.isEmpty(params) ||
     !params ||
     root.attributes.viewBox === undefined
   ) {

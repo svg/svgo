@@ -34,7 +34,7 @@ const ENOCLS = `Error in plugin "isArtboardCorrect": absent parameters.
 exports.fn = function (svg, validateResult, params) {
   const root = utils.findElementByName(svg, 'svg');
   if (
-    (params || params === {}) &&
+    (params || !utils.isEmpty(params)) &&
     root.attributes.viewBox &&
     root.attributes.viewBox !== undefined
   ) {
@@ -69,7 +69,7 @@ exports.fn = function (svg, validateResult, params) {
 
     validateResult.isArtboardCorrect = result;
   } else if (
-    params === {} ||
+    utils.isEmpty(params) ||
     !params ||
     root.attributes.viewBox === undefined
   ) {

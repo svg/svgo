@@ -28,7 +28,7 @@ exports.fn = function (root, validateResult) {
     const filename_normalized = filename
       .normalize('NFKD')
       .replace(/\p{Diacritic}/gu, '');
-    const regex = /\b[a-z]+(_[a-z]+)*\b/;
+    const regex = /\b[a-z]+(_[a-z0-9]+)*\b/;
     const result = regex.test(filename_normalized);
     validateResult.isSnakeCase = result;
   } else {
