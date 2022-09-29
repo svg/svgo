@@ -88,6 +88,14 @@ function findFillElementsByColors(svg, colors) {
     'path',
   ];
 
+  if (Array.isArray(colors)) {
+    colors = colors.map((color) => {
+      color.toUpperCase();
+    });
+  } else {
+    colors = colors.toUpperCase();
+  }
+
   walkTree(svg, function (node) {
     if (node.type === 'element' && shapeElements.includes(node.name)) {
       if (node.attributes.fill) {

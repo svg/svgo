@@ -28,7 +28,6 @@ describe('pluginsValidate tests', function () {
           let [original, should, params] = test.split(/\s*@@@\s*/);
           // change string to boolean
           should = should === 'true';
-
           if (name === 'is_snake_case') {
             name = 'isSnakeCase';
           } else if (name === 'sme_isPrefixPresent') {
@@ -40,6 +39,8 @@ describe('pluginsValidate tests', function () {
               file = 'pl.svg';
             }
             name = 'isISO3166_1Alpha2';
+          } else if (name === 'hasIllustrationCorrectColorLayers') {
+            file = 'skateboard_man_young.svg';
           }
 
           const plugin = {

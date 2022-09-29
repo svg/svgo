@@ -155,6 +155,27 @@ var ASSET_TYPE = {
       {
         name: 'isText',
       },
+      {
+        name: 'hasIllustrationCorrectColorLayers',
+        params: {
+          stripeColors: {
+            mass: ['#e90a0a', '#ff8600', '#ae0000', '#0065b1', '#008520'],
+            sme: ['#008520', '#ff8600', '#0c4369', '#89bf00', '#006618'],
+            corporate: ['#184868', '#a4bdc4', '#0095de', '#565a69', '#ff8600'],
+            private: ['#36302f', '#ae0000', '#c29d67', '#645237', '#183d4d'],
+            young: ['#00ff00', '#0000ff', '#ff0eb2', '#00ff00', '#0000ff'],
+            affluent: [
+              '#ae0000',
+              '#f9b000',
+              '#565a69',
+              '#cf0c0f',
+              '#99037b',
+              '#eb6702',
+            ],
+          },
+          blackFillAndStrokeColor: '#26221e',
+        },
+      },
     ],
   },
   FLAG: {
