@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.17.0](https://github.com/mbank-design/svgo/compare/v2.16.0...v2.17.0) (2022-09-29)
+
+
+### Features
+
+* add hasIllustrationCorrectColorLayers rule ([#9](https://github.com/mbank-design/svgo/issues/9)) ([d00d67f](https://github.com/mbank-design/svgo/commit/d00d67fbdf6f31078efab42a9f161831a1e575a7))
+
+
+### Bug Fixes
+
+* resolve issues with snake_case, blackFill and build ([#8](https://github.com/mbank-design/svgo/issues/8)) ([f297a7a](https://github.com/mbank-design/svgo/commit/f297a7ab5079ab58d761bf19a44cf16af924f3f4))
+
 ### [2.16.2](https://github.com/mbank-design/svgo/compare/v2.16.1...v2.16.2) (2022-09-21)
 
 ### [2.16.1](https://github.com/mbank-design/svgo/compare/v2.16.0...v2.16.1) (2022-09-21)
