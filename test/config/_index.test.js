@@ -1,9 +1,6 @@
 'use strict';
 
-const {
-  resolvePluginConfig,
-  extendDefaultPlugins,
-} = require('../../lib/svgo/config.js');
+const { resolvePluginConfig } = require('../../lib/svgo/config.js');
 
 describe('config', function () {
   describe('extend config with object', function () {
@@ -121,54 +118,6 @@ describe('config', function () {
       it('custom plugin should have been given a name', function () {
         expect(customPlugin.name).toEqual('aCustomPlugin');
       });
-    });
-  });
-
-  describe('allows to extend default plugins list', () => {
-    const extendedPlugins = extendDefaultPlugins([
-      {
-        name: 'customPlugin',
-        fn: () => {},
-      },
-      {
-        name: 'removeAttrs',
-        params: { atts: ['aria-label'] },
-      },
-      {
-        name: 'cleanupIDs',
-        params: { remove: false },
-      },
-    ]);
-    const removeAttrsIndex = extendedPlugins.findIndex(
-      (item) => item.name === 'removeAttrs'
-    );
-    const cleanupIDsIndex = extendedPlugins.findIndex(
-      (item) => item.name === 'cleanupIDs'
-    );
-    it('should preserve internal plugins order', () => {
-      expect(removeAttrsIndex).toEqual(41);
-      expect(cleanupIDsIndex).toEqual(11);
-    });
-    it('should activate inactive by default plugins', () => {
-      const removeAttrsPlugin = resolvePluginConfig(
-        extendedPlugins[removeAttrsIndex]
-      );
-      const cleanupIDsPlugin = resolvePluginConfig(
-        extendedPlugins[cleanupIDsIndex]
-      );
-      expect(removeAttrsPlugin.active).toEqual(true);
-      expect(cleanupIDsPlugin.active).toEqual(true);
-    });
-    it('should leave not extended inactive plugins to be inactive', () => {
-      const inactivePlugin = resolvePluginConfig(
-        extendedPlugins.find((item) => item.name === 'addClassesToSVGElement')
-      );
-      expect(inactivePlugin.active).toEqual(false);
-    });
-    it('should put custom plugins in the end', () => {
-      expect(extendedPlugins[extendedPlugins.length - 1].name).toEqual(
-        'customPlugin'
-      );
     });
   });
 });
