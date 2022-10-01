@@ -113,9 +113,9 @@
     "stable": "^0.1.8"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/css-tree": "^1.0.6",
     "@types/csso": "^4.2.0",
     "@types/jest": "^27.0.1",
@@ -127,7 +127,7 @@
     "playwright": "^1.14.1",
     "pngjs": "^6.0.0",
     "prettier": "^2.4.0",
-    "rollup": "^2.56.3",
+    "rollup": "^2.79.1",
     "rollup-plugin-terser": "^7.0.2",
     "tar-stream": "^2.2.0",
     "typescript": "^4.4.3"
