@@ -121,7 +121,7 @@ const myPlugin = {
     return {
       element: {
         enter: (node, parentNode) => {
-          if (node.name === 'circle && node.attributes.fill != null) {
+          if (node.name === 'circle' && node.attributes.fill != null) {
             node.attributes.fill = 'modify in any way'
           }
         }
