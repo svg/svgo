@@ -54,7 +54,7 @@
     "!**/*.test.js"
   ],
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=14.0.0"
   },
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",

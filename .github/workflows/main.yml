@@ -1,7 +1,7 @@
 name: CI
 env:
   FORCE_COLOR: 2
-  NODE: 14
+  NODE: 18
 on:
   push:
     branches:
@@ -40,10 +40,9 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
+          - 18
           - 16
           - 14
-          - 12
-          - 10
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
