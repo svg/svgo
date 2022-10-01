@@ -4,7 +4,6 @@ const FS = require('fs');
 const PATH = require('path');
 const JSAPI = require('../../lib/svgo/jsAPI');
 const CSSClassList = require('../../lib/svgo/css-class-list');
-const CSSStyleDeclaration = require('../../lib/svgo/css-style-declaration');
 const { parseSvg } = require('../../lib/parser.js');
 
 describe('svg2js', function () {
@@ -146,12 +145,6 @@ describe('svg2js', function () {
 
         it('svg.clone() should be an instance of JSAPI', function () {
           expect(root.children[3].clone()).toBeInstanceOf(JSAPI);
-        });
-
-        it('root.children[3].children[0].clone() has a valid style property', function () {
-          expect(root.children[3].children[0].clone().style).toBeInstanceOf(
-            CSSStyleDeclaration
-          );
         });
 
         it('root.children[3].children[2].clone() has a valid class property', function () {

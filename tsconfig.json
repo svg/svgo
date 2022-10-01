@@ -20,7 +20,6 @@
     "lib/svgo.js",
     "lib/svgo.test.js",
     "lib/svgo/**/*.js",
-    "lib/css-tools.js",
     "plugins/convertPathData.js",
     "plugins/plugins.js",
     "plugins/preset-default.js"

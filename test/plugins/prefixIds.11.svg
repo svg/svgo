@@ -17,5 +17,5 @@ prefixIds should correctly handle url()s in style attribute, including multiple 
         <linearGradient id="prefixIds_11_svg__fill"/>
         <linearGradient id="prefixIds_11_svg__stroke"/>
     </defs>
-    <rect style="fill:url(#prefixIds_11_svg__fill);stroke:url(#prefixIds_11_svg__stroke)" x="10" y="10" width="100" height="100"/>
+    <rect style="fill:url(#prefixIds_11_svg__fill); stroke: url(#prefixIds_11_svg__stroke)" x="10" y="10" width="100" height="100"/>
 </svg>
