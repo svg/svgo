@@ -18,6 +18,7 @@
     "lib/svgo-node.js",
     "lib/svgo-node.test.js",
     "lib/svgo.js",
+    "lib/builtin.js",
     "lib/svgo.test.js",
     "lib/svgo/**/*.js",
     "plugins/convertPathData.js",
