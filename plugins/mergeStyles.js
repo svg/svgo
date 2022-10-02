@@ -2,10 +2,10 @@
 
 /**
  * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').XastChild} XastChild
  */
 
 const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const JSAPI = require('../lib/svgo/jsAPI.js');
 
 exports.name = 'mergeStyles';
 exports.type = 'visitor';
@@ -25,6 +25,9 @@ exports.fn = () => {
    */
   let firstStyleElement = null;
   let collectedStyles = '';
+  /**
+   * @type {'text' | 'cdata'}
+   */
   let styleContentType = 'text';
 
   return {
@@ -80,12 +83,16 @@ exports.fn = () => {
           firstStyleElement = node;
         } else {
           detachNodeFromParent(node, parentNode);
-          firstStyleElement.children = [
-            new JSAPI(
-              { type: styleContentType, value: collectedStyles },
-              firstStyleElement
-            ),
-          ];
+          /**
+           * @type {XastChild}
+           */
+          const child = { type: styleContentType, value: collectedStyles };
+          // TODO remove legacy parentNode in v4
+          Object.defineProperty(child, 'parentNode', {
+            writable: true,
+            value: firstStyleElement,
+          });
+          firstStyleElement.children = [child];
         }
       },
     },

@@ -32,10 +32,12 @@ exports.fn = () => {
           if (usefulNodes.length === 0) {
             detachNodeFromParent(node, parentNode);
           }
-          // TODO remove in SVGO 3
+          // TODO remove legacy parentNode in v4
           for (const usefulNode of usefulNodes) {
-            // @ts-ignore parentNode is legacy
-            usefulNode.parentNode = node;
+            Object.defineProperty(usefulNode, 'parentNode', {
+              writable: true,
+              value: node,
+            });
           }
           node.children = usefulNodes;
         } else if (

@@ -6,8 +6,6 @@
  * @typedef {import('../lib/types').XastNode} XastNode
  */
 
-const JSAPI = require('../lib/svgo/jsAPI.js');
-
 exports.type = 'visitor';
 exports.name = 'reusePaths';
 exports.active = false;
@@ -52,16 +50,17 @@ exports.fn = () => {
           /**
            * @type {XastElement}
            */
-          const rawDefs = {
+          const defsTag = {
             type: 'element',
             name: 'defs',
             attributes: {},
             children: [],
           };
-          /**
-           * @type {XastElement}
-           */
-          const defsTag = new JSAPI(rawDefs, node);
+          // TODO remove legacy parentNode in v4
+          Object.defineProperty(defsTag, 'parentNode', {
+            writable: true,
+            value: node,
+          });
           let index = 0;
           for (const list of paths.values()) {
             if (list.length > 1) {
@@ -69,26 +68,27 @@ exports.fn = () => {
               /**
                * @type {XastElement}
                */
-              const rawPath = {
+              const reusablePath = {
                 type: 'element',
                 name: 'path',
                 attributes: { ...list[0].attributes },
                 children: [],
               };
-              delete rawPath.attributes.transform;
+              delete reusablePath.attributes.transform;
               let id;
-              if (rawPath.attributes.id == null) {
+              if (reusablePath.attributes.id == null) {
                 id = 'reuse-' + index;
                 index += 1;
-                rawPath.attributes.id = id;
+                reusablePath.attributes.id = id;
               } else {
-                id = rawPath.attributes.id;
+                id = reusablePath.attributes.id;
                 delete list[0].attributes.id;
               }
-              /**
-               * @type {XastElement}
-               */
-              const reusablePath = new JSAPI(rawPath, defsTag);
+              // TODO remove legacy parentNode in v4
+              Object.defineProperty(reusablePath, 'parentNode', {
+                writable: true,
+                value: defsTag,
+              });
               defsTag.children.push(reusablePath);
               // convert paths to <use>
               for (const pathNode of list) {

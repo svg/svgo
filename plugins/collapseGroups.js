@@ -122,11 +122,12 @@ exports.fn = () => {
           // replace current node with all its children
           const index = parentNode.children.indexOf(node);
           parentNode.children.splice(index, 1, ...node.children);
-          // TODO remove in v3
+          // TODO remove legacy parentNode in v4
           for (const child of node.children) {
-            // @ts-ignore parentNode is forbidden for public usage
-            // and will be moved in v3
-            child.parentNode = parentNode;
+            Object.defineProperty(child, 'parentNode', {
+              writable: true,
+              value: parentNode,
+            });
           }
         }
       },
