@@ -13,28 +13,6 @@ exports.active = true;
 exports.description =
   'optimizes path data: writes in shorter form, applies transformations';
 
-exports.params = {
-  // TODO convert to separate plugin in v3
-  applyTransforms: true,
-  applyTransformsStroked: true,
-  makeArcs: {
-    threshold: 2.5, // coefficient of rounding error
-    tolerance: 0.5, // percentage of radius
-  },
-  straightCurves: true,
-  lineShorthands: true,
-  curveSmoothShorthands: true,
-  floatPrecision: 3,
-  transformPrecision: 5,
-  removeUseless: true,
-  collapseRepeated: true,
-  utilizeAbsolute: true,
-  leadingZero: true,
-  negativeExtraSpace: true,
-  noSpaceAfterFlags: false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
-  forceAbsolutePath: false,
-};
-
 let roundData;
 let precision;
 let error;
@@ -58,13 +36,53 @@ let arcTolerance;
  * @author Kir Belevich
  */
 exports.fn = (root, params) => {
+  const {
+    // TODO convert to separate plugin in v3
+    applyTransforms: _applyTransforms = true,
+    applyTransformsStroked = true,
+    makeArcs = {
+      threshold: 2.5, // coefficient of rounding error
+      tolerance: 0.5, // percentage of radius
+    },
+    straightCurves = true,
+    lineShorthands = true,
+    curveSmoothShorthands = true,
+    floatPrecision = 3,
+    transformPrecision = 5,
+    removeUseless = true,
+    collapseRepeated = true,
+    utilizeAbsolute = true,
+    leadingZero = true,
+    negativeExtraSpace = true,
+    noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
+    forceAbsolutePath = false,
+  } = params;
+
+  const newParams = {
+    applyTransforms,
+    applyTransformsStroked,
+    makeArcs,
+    straightCurves,
+    lineShorthands,
+    curveSmoothShorthands,
+    floatPrecision,
+    transformPrecision,
+    removeUseless,
+    collapseRepeated,
+    utilizeAbsolute,
+    leadingZero,
+    negativeExtraSpace,
+    noSpaceAfterFlags,
+    forceAbsolutePath,
+  };
+
   // invoke applyTransforms plugin
-  if (params.applyTransforms) {
+  if (_applyTransforms) {
     visit(
       root,
       applyTransforms(root, {
-        transformPrecision: params.transformPrecision,
-        applyTransformsStroked: params.applyTransformsStroked,
+        transformPrecision,
+        applyTransformsStroked,
       })
     );
   }
@@ -75,15 +93,15 @@ exports.fn = (root, params) => {
       enter: (node) => {
         if (pathElems.includes(node.name) && node.attributes.d != null) {
           const computedStyle = computeStyle(stylesheet, node);
-          precision = params.floatPrecision;
+          precision = floatPrecision;
           error =
             precision !== false
               ? +Math.pow(0.1, precision).toFixed(precision)
               : 1e-2;
           roundData = precision > 0 && precision < 20 ? strongRound : round;
-          if (params.makeArcs) {
-            arcThreshold = params.makeArcs.threshold;
-            arcTolerance = params.makeArcs.tolerance;
+          if (makeArcs) {
+            arcThreshold = makeArcs.threshold;
+            arcTolerance = makeArcs.tolerance;
           }
           const hasMarkerMid = computedStyle['marker-mid'] != null;
 
@@ -103,16 +121,16 @@ exports.fn = (root, params) => {
           if (data.length) {
             convertToRelative(data);
 
-            data = filters(data, params, {
+            data = filters(data, newParams, {
               maybeHasStrokeAndLinecap,
               hasMarkerMid,
             });
 
-            if (params.utilizeAbsolute) {
-              data = convertToMixed(data, params);
+            if (utilizeAbsolute) {
+              data = convertToMixed(data, newParams);
             }
 
-            js2path(node, data, params);
+            js2path(node, data, newParams);
           }
         }
       },
