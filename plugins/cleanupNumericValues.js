@@ -3,8 +3,6 @@
 const { removeLeadingZero } = require('../lib/svgo/tools');
 
 exports.name = 'cleanupNumericValues';
-exports.type = 'visitor';
-exports.active = true;
 exports.description =
   'rounds numeric values to the fixed precision, removes default ‘px’ units';
 

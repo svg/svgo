@@ -1,8 +1,6 @@
 'use strict';
 
-exports.type = 'visitor';
 exports.name = 'removeUnusedNS';
-exports.active = true;
 exports.description = 'removes unused namespaces declaration';
 
 /**

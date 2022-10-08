@@ -6,9 +6,7 @@
  * @typedef {import('../lib/types').XastNode} XastNode
  */
 
-exports.type = 'visitor';
 exports.name = 'reusePaths';
-exports.active = false;
 exports.description =
   'Finds <path> elements with the same d, fill, and ' +
   'stroke, and converts them to <use> elements ' +

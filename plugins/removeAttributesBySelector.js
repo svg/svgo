@@ -3,8 +3,6 @@
 const { querySelectorAll } = require('../lib/xast.js');
 
 exports.name = 'removeAttributesBySelector';
-exports.type = 'visitor';
-exports.active = false;
 exports.description =
   'removes attributes of elements that match a css selector';
 

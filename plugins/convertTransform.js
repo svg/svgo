@@ -11,9 +11,7 @@ const {
   matrixToTransform,
 } = require('./_transforms.js');
 
-exports.type = 'visitor';
 exports.name = 'convertTransform';
-exports.active = true;
 exports.description = 'collapses multiple transformations and optimizes it';
 
 /**

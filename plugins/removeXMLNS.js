@@ -1,8 +1,6 @@
 'use strict';
 
-exports.type = 'visitor';
 exports.name = 'removeXMLNS';
-exports.active = false;
 exports.description =
   'removes xmlns attribute (for inline svg, disabled by default)';
 

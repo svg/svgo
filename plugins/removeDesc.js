@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeDesc';
-exports.type = 'visitor';
-exports.active = true;
 exports.description = 'removes <desc>';
 
 const standardDescs = /^(Created with|Created using)/;

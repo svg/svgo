@@ -1,8 +1,6 @@
 'use strict';
 
-exports.type = 'visitor';
 exports.name = 'removeDimensions';
-exports.active = false;
 exports.description =
   'removes width and height in presence of viewBox (opposite to removeViewBox, disable it first)';
 

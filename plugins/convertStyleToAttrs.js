@@ -2,9 +2,7 @@
 
 const { attrsGroups } = require('./_collections');
 
-exports.type = 'visitor';
 exports.name = 'convertStyleToAttrs';
-exports.active = false;
 exports.description = 'converts style to attributes';
 
 /**

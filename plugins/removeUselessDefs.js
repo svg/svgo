@@ -7,9 +7,7 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 const { elemsGroups } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'removeUselessDefs';
-exports.active = true;
 exports.description = 'removes elements in <defs> without id';
 
 /**

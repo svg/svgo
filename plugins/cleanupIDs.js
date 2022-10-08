@@ -7,9 +7,7 @@
 const { visitSkip } = require('../lib/xast.js');
 const { referencesProps } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'cleanupIDs';
-exports.active = true;
 exports.description = 'removes unused IDs and minifies used';
 
 const regReferencesUrl = /\burl\(("|')?#(.+?)\1\)/;

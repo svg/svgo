@@ -2,9 +2,7 @@
 
 const collections = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'convertColors';
-exports.active = true;
 exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';

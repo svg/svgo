@@ -8,9 +8,7 @@ const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
 const { parsePathData } = require('../lib/path.js');
 const { intersects } = require('./_path.js');
 
-exports.type = 'visitor';
 exports.name = 'removeOffCanvasPaths';
-exports.active = false;
 exports.description =
   'removes elements that are drawn outside of the viewbox (disabled by default)';
 

@@ -1,8 +1,6 @@
 'use strict';
 
 exports.name = 'removeAttrs';
-exports.type = 'visitor';
-exports.active = false;
 exports.description = 'removes specified attributes';
 
 const DEFAULT_SEPARATOR = ':';

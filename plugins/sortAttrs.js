@@ -1,8 +1,6 @@
 'use strict';
 
-exports.type = 'visitor';
 exports.name = 'sortAttrs';
-exports.active = false;
 exports.description = 'Sort element attributes for better compression';
 
 /**

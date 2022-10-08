@@ -6,9 +6,7 @@
 
 const { inheritableAttrs, elemsGroups } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'collapseGroups';
-exports.active = true;
 exports.description = 'collapses useless groups';
 
 /**

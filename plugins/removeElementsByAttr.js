@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeElementsByAttr';
-exports.type = 'visitor';
-exports.active = false;
 exports.description =
   'removes arbitrary elements by ID or className (disabled by default)';
 

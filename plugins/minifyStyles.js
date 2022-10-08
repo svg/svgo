@@ -6,9 +6,7 @@
 
 const csso = require('csso');
 
-exports.type = 'visitor';
 exports.name = 'minifyStyles';
-exports.active = true;
 exports.description =
   'minifies styles and removes unused styles based on usage data';
 

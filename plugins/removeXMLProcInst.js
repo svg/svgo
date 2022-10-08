@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeXMLProcInst';
-exports.type = 'visitor';
-exports.active = true;
 exports.description = 'removes XML processing instructions';
 
 /**

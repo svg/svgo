@@ -2,9 +2,7 @@
 
 const { attrsGroups } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'removeEmptyAttrs';
-exports.active = true;
 exports.description = 'removes empty attributes';
 
 /**

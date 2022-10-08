@@ -2,9 +2,7 @@
 
 const { pathElems, referencesProps } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'moveGroupAttrsToElems';
-exports.active = true;
 exports.description = 'moves some group attributes to the content elements';
 
 const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];

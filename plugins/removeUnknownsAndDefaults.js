@@ -10,9 +10,7 @@ const {
   presentationNonInheritableGroupAttrs,
 } = require('./_collections');
 
-exports.type = 'visitor';
 exports.name = 'removeUnknownsAndDefaults';
-exports.active = true;
 exports.description =
   'removes unknown elements content and attributes, removes attrs with default values';
 

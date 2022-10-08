@@ -1,8 +1,6 @@
 'use strict';
 
 exports.name = 'cleanupAttrs';
-exports.type = 'visitor';
-exports.active = true;
 exports.description =
   'cleanups attributes from newlines, trailing and repeating spaces';
 

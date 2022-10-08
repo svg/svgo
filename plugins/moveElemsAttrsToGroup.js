@@ -3,9 +3,7 @@
 const { visit } = require('../lib/xast.js');
 const { inheritableAttrs, pathElems } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'moveElemsAttrsToGroup';
-exports.active = true;
 exports.description = 'Move common attributes of group children to the group';
 
 /**

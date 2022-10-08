@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeStyleElement';
-exports.type = 'visitor';
-exports.active = false;
 exports.description = 'removes <style> element (disabled by default)';
 
 /**

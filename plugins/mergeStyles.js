@@ -8,8 +8,6 @@
 const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'mergeStyles';
-exports.type = 'visitor';
-exports.active = true;
 exports.description = 'merge multiple style elements into one';
 
 /**

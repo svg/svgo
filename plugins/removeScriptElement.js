@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeScriptElement';
-exports.type = 'visitor';
-exports.active = false;
 exports.description = 'removes <script> elements (disabled by default)';
 
 /**

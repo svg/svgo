@@ -3,9 +3,7 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 const { editorNamespaces } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'removeEditorsNSData';
-exports.active = true;
 exports.description = 'removes editors namespaces, elements and attributes';
 
 /**

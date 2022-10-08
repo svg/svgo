@@ -3,8 +3,6 @@
 const { removeLeadingZero } = require('../lib/svgo/tools.js');
 
 exports.name = 'cleanupListOfValues';
-exports.type = 'visitor';
-exports.active = false;
 exports.description = 'rounds list of values to the fixed precision';
 
 const regNumericValues =

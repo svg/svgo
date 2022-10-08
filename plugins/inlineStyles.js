@@ -17,9 +17,7 @@ const {
   detachNodeFromParent,
 } = require('../lib/xast.js');
 
-exports.type = 'visitor';
 exports.name = 'inlineStyles';
-exports.active = true;
 exports.description = 'inline styles (additional options)';
 
 /**

@@ -6,9 +6,7 @@ const {
   presentationNonInheritableGroupAttrs,
 } = require('./_collections');
 
-exports.type = 'visitor';
 exports.name = 'removeNonInheritableGroupAttrs';
-exports.active = true;
 exports.description =
   'removes non-inheritable group’s presentational attributes';
 

@@ -1,8 +1,6 @@
 'use strict';
 
-exports.type = 'visitor';
 exports.name = 'removeViewBox';
-exports.active = true;
 exports.description = 'removes viewBox attribute when possible';
 
 const viewBoxElems = ['svg', 'pattern', 'symbol'];

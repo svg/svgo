@@ -1,8 +1,6 @@
 'use strict';
 
 exports.name = 'addAttributesToSVGElement';
-exports.type = 'visitor';
-exports.active = false;
 exports.description = 'adds attributes to an outer <svg> element';
 
 var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.

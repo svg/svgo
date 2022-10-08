@@ -2,9 +2,7 @@
 
 const { visit } = require('../lib/xast.js');
 
-exports.type = 'visitor';
 exports.name = 'cleanupEnableBackground';
-exports.active = true;
 exports.description =
   'remove or cleanup enable-background attribute when possible';
 

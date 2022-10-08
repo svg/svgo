@@ -1,8 +1,6 @@
 'use strict';
 
-exports.type = 'visitor';
 exports.name = 'sortDefsChildren';
-exports.active = true;
 exports.description = 'Sorts children of <defs> to improve compression';
 
 /**

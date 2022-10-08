@@ -8,9 +8,7 @@ const { referencesProps } = require('./_collections.js');
  * @typedef {import('../lib/types').PluginInfo} PluginInfo
  */
 
-exports.type = 'visitor';
 exports.name = 'prefixIds';
-exports.active = false;
 exports.description = 'prefix IDs';
 
 /**

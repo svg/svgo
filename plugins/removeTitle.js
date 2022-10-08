@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeTitle';
-exports.type = 'visitor';
-exports.active = true;
 exports.description = 'removes <title>';
 
 /**

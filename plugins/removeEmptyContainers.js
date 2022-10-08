@@ -3,9 +3,7 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 const { elemsGroups } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'removeEmptyContainers';
-exports.active = true;
 exports.description = 'removes empty container elements';
 
 /**

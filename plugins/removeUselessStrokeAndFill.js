@@ -4,9 +4,7 @@ const { visit, visitSkip, detachNodeFromParent } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { elemsGroups } = require('./_collections.js');
 
-exports.type = 'visitor';
 exports.name = 'removeUselessStrokeAndFill';
-exports.active = true;
 exports.description = 'removes useless stroke and fill attributes';
 
 /**

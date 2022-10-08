@@ -10,8 +10,6 @@ const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
 
 exports.name = 'removeHiddenElems';
-exports.type = 'visitor';
-exports.active = true;
 exports.description =
   'removes hidden elements (zero sized, with absent attributes)';
 

@@ -3,8 +3,6 @@
 const { detachNodeFromParent } = require('../lib/xast.js');
 
 exports.name = 'removeRasterImages';
-exports.type = 'visitor';
-exports.active = false;
 exports.description = 'removes raster images (disabled by default)';
 
 /**

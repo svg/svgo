@@ -8,8 +8,6 @@ const { applyTransforms } = require('./applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
 exports.name = 'convertPathData';
-exports.type = 'visitor';
-exports.active = true;
 exports.description =
   'optimizes path data: writes in shorter form, applies transformations';
 
