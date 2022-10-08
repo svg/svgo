@@ -121,7 +121,7 @@ export type StylesheetDeclaration = {
 
 export type StylesheetRule = {
   dynamic: boolean;
-  selectors: string;
+  selector: string;
   specificity: Specificity;
   declarations: Array<StylesheetDeclaration>;
 };

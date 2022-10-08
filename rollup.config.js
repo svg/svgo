@@ -13,14 +13,6 @@ export default {
     throw Error(warning.toString());
   },
   plugins: [
-    {
-      resolveId(importee, importer) {
-        // see https://github.com/csstree/csstree/pull/152
-        if (importee === 'css-tree') {
-          return this.resolve('css-tree/dist/csstree.min.js', importer);
-        }
-      },
-    },
     nodeResolve({ browser: true, preferBuiltins: false }),
     commonjs(),
     json(),

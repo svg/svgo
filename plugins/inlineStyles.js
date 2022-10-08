@@ -7,8 +7,10 @@
  */
 
 const csstree = require('css-tree');
-// @ts-ignore not defined in @types/csso
-const specificity = require('csso/lib/restructure/prepare/specificity');
+const {
+  // @ts-ignore not defined in @types/csso
+  syntax: { specificity },
+} = require('csso');
 const {
   visitSkip,
   querySelectorAll,
@@ -36,6 +38,11 @@ const compareSpecificity = (a, b) => {
   }
   return 0;
 };
+
+/**
+ * @type {(value: any) => any}
+ */
+const toAny = (value) => value;
 
 /**
  * Moves + merges styles from style elements to element styles
@@ -159,7 +166,7 @@ exports.fn = (root, params) => {
              */
             const pseudos = [];
             if (node.type === 'Selector') {
-              node.children.each((childNode, childItem, childList) => {
+              node.children.forEach((childNode, childItem, childList) => {
                 if (
                   childNode.type === 'PseudoClassSelector' ||
                   childNode.type === 'PseudoElementSelector'
@@ -323,7 +330,11 @@ exports.fn = (root, params) => {
                 ? null
                 : selectedEl.attributes.class.split(' ')
             );
-            const firstSubSelector = selector.node.children.first();
+            /**
+             * csstree v2 changed this type
+             * @type {csstree.CssNode}
+             */
+            const firstSubSelector = toAny(selector.node.children.first);
             if (
               firstSubSelector != null &&
               firstSubSelector.type === 'ClassSelector'
@@ -356,14 +367,16 @@ exports.fn = (root, params) => {
               if (
                 node.type === 'Rule' &&
                 node.prelude.type === 'SelectorList' &&
-                node.prelude.children.isEmpty()
+                // csstree v2 changed this type
+                toAny(node.prelude.children.isEmpty)
               ) {
                 list.remove(item);
               }
             },
           });
 
-          if (style.cssAst.children.isEmpty()) {
+          // csstree v2 changed this type
+          if (toAny(style.cssAst.children.isEmpty)) {
             // remove emtpy style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {

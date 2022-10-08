@@ -69,6 +69,9 @@ const prefixReference = (prefix, value) => {
   return null;
 };
 
+/** @type {(value: any) => any} */
+const toAny = (value) => value;
+
 /**
  * Prefixes identifiers
  *
@@ -140,17 +143,14 @@ exports.fn = (_root, params, info) => {
               return;
             }
             // url(...) references
-            if (
-              node.type === 'Url' &&
-              node.value.value &&
-              node.value.value.length > 0
-            ) {
+            // csstree v2 changed this type
+            if (node.type === 'Url' && toAny(node.value).length > 0) {
               const prefixed = prefixReference(
                 prefix,
-                unquote(node.value.value)
+                unquote(toAny(node.value))
               );
               if (prefixed != null) {
-                node.value.value = prefixed;
+                toAny(node).value = prefixed;
               }
             }
           });

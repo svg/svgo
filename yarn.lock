@@ -951,19 +951,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/css-tree@npm:*, @types/css-tree@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@types/css-tree@npm:1.0.6"
-  checksum: 98ced65367a920f99e2852ac836288bcd69cf6dbeb742903adcfd304e53cc2cc12d8a3d4e5adb1612f1f0c7b4ab3d36f404aa0568489a415cbbb3b64a97efef3
+"@types/css-tree@npm:*, @types/css-tree@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@types/css-tree@npm:1.0.7"
+  checksum: 65aa89e5c8c6f01374272373e783c42d91faf534dfff0c9959cada9916d8435e16805320ebe08559c4a458e034925455147770ad411423b6c1e3c0c2adb36fca
   languageName: node
   linkType: hard
 
-"@types/csso@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "@types/csso@npm:4.2.0"
+"@types/csso@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@types/csso@npm:5.0.0"
   dependencies:
     "@types/css-tree": "*"
-  checksum: 3aa79fe787e1ea16daa8074a0103ac906f399213937c343a37c0865f025e8efac75afeadc4a766a71e3428a62b61ffd4f7d9ffed14c5336b528f97d1699bbb59
+  checksum: 4aba6f76c4b402cb045525773b18f86fba7f61dc8be451b6c94b926f99c1f83c5c4b3ec62c1423da6f75437b954c8b4eaf9c4008e7a85bb10dd892a8fc42a0ae
   languageName: node
   linkType: hard
 
@@ -1682,13 +1682,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-tree@npm:^1.1.2, css-tree@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "css-tree@npm:1.1.3"
+"css-tree@npm:^2.2.1, css-tree@npm:~2.2.0":
+  version: 2.2.1
+  resolution: "css-tree@npm:2.2.1"
   dependencies:
-    mdn-data: 2.0.14
-    source-map: ^0.6.1
-  checksum: 79f9b81803991b6977b7fcb1588799270438274d89066ce08f117f5cdb5e20019b446d766c61506dd772c839df84caa16042d6076f20c97187f5abe3b50e7d1f
+    mdn-data: 2.0.28
+    source-map-js: ^1.0.1
+  checksum: b94aa8cc2f09e6f66c91548411fcf74badcbad3e150345074715012d16333ce573596ff5dfca03c2a87edf1924716db765120f94247e919d72753628ba3aba27
   languageName: node
   linkType: hard
 
@@ -1699,12 +1699,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csso@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "csso@npm:4.2.0"
+"csso@npm:^5.0.5":
+  version: 5.0.5
+  resolution: "csso@npm:5.0.5"
   dependencies:
-    css-tree: ^1.1.2
-  checksum: 380ba9663da3bcea58dee358a0d8c4468bb6539be3c439dc266ac41c047217f52fd698fb7e4b6b6ccdfb8cf53ef4ceed8cc8ceccb8dfca2aa628319826b5b998
+    css-tree: ~2.2.0
+  checksum: 0ad858d36bf5012ed243e9ec69962a867509061986d2ee07cc040a4b26e4d062c00d4c07e5ba8d430706ceb02dd87edd30a52b5937fd45b1b6f2119c4993d59a
   languageName: node
   linkType: hard
 
@@ -3447,10 +3447,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdn-data@npm:2.0.14":
-  version: 2.0.14
-  resolution: "mdn-data@npm:2.0.14"
-  checksum: 9d0128ed425a89f4cba8f787dca27ad9408b5cb1b220af2d938e2a0629d17d879a34d2cb19318bdb26c3f14c77dd5dfbae67211f5caaf07b61b1f2c5c8c7dc16
+"mdn-data@npm:2.0.28":
+  version: 2.0.28
+  resolution: "mdn-data@npm:2.0.28"
+  checksum: f51d587a6ebe8e426c3376c74ea6df3e19ec8241ed8e2466c9c8a3904d5d04397199ea4f15b8d34d14524b5de926d8724ae85207984be47e165817c26e49e0aa
   languageName: node
   linkType: hard
 
@@ -4339,6 +4339,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"source-map-js@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "source-map-js@npm:1.0.2"
+  checksum: c049a7fc4deb9a7e9b481ae3d424cc793cb4845daa690bc5a05d428bf41bf231ced49b4cf0c9e77f9d42fdb3d20d6187619fc586605f5eabe995a316da8d377c
+  languageName: node
+  linkType: hard
+
 "source-map-support@npm:0.5.13":
   version: 0.5.13
   resolution: "source-map-support@npm:0.5.13"
@@ -4558,13 +4565,13 @@ __metadata:
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^14.1.0
     "@trysound/sax": 0.2.0
-    "@types/css-tree": ^1.0.6
-    "@types/csso": ^4.2.0
+    "@types/css-tree": ^1.0.7
+    "@types/csso": ^5.0.0
     "@types/jest": ^29.1.1
     commander: ^7.2.0
     css-select: ^5.1.0
-    css-tree: ^1.1.3
-    csso: ^4.2.0
+    css-tree: ^2.2.1
+    csso: ^5.0.5
     del: ^6.0.0
     eslint: ^8.24.0
     jest: ^29.1.2
