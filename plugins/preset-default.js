@@ -33,6 +33,7 @@ const removeEmptyAttrs = require('./removeEmptyAttrs.js');
 const removeEmptyContainers = require('./removeEmptyContainers.js');
 const mergePaths = require('./mergePaths.js');
 const removeUnusedNS = require('./removeUnusedNS.js');
+const sortAttrs = require('./sortAttrs.js');
 const sortDefsChildren = require('./sortDefsChildren.js');
 const removeTitle = require('./removeTitle.js');
 const removeDesc = require('./removeDesc.js');
@@ -71,6 +72,7 @@ const presetDefault = createPreset({
     removeEmptyContainers,
     mergePaths,
     removeUnusedNS,
+    sortAttrs,
     sortDefsChildren,
     removeTitle,
     removeDesc,
