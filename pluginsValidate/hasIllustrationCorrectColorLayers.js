@@ -37,71 +37,70 @@ exports.fn = function (root, validateResult, params) {
     const BLACK_FILL_AND_STROKE_COLOR = params.blackFillAndStrokeColor;
 
     const filename = root.filename;
-    // lake_boats_sunset_private.svg -> private
-    // all illustrations have theme suffixes and we need to extract them
-    const themeName = filename.slice(
-      filename.lastIndexOf('_') + 1,
-      filename.lastIndexOf('.')
-    );
-    const stripeColorsOrder = SEGMENT_NAME_TO_STRIPE_COLORS[themeName];
+    const segmentNames = Object.keys(SEGMENT_NAME_TO_STRIPE_COLORS);
+    const themeName = segmentNames.find((name) => filename.includes(name));
+    if (segmentNames.includes(themeName)) {
+      const stripeColorsOrder = SEGMENT_NAME_TO_STRIPE_COLORS[themeName];
 
-    const stripesElement = utils.findAllElementByAttributeValue(
-      root,
-      'id',
-      'stripes'
-    );
-    const blackFillElement = utils.findAllElementByAttributeValue(
-      root,
-      'id',
-      'blackFill'
-    );
-    const blackStrokeElement = utils.findAllElementByAttributeValue(
-      root,
-      'id',
-      'blackStroke'
-    );
+      const stripesElement = utils.findAllElementByAttributeValue(
+        root,
+        'id',
+        'stripes'
+      );
+      const blackFillElement = utils.findAllElementByAttributeValue(
+        root,
+        'id',
+        'blackFill'
+      );
+      const blackStrokeElement = utils.findAllElementByAttributeValue(
+        root,
+        'id',
+        'blackStroke'
+      );
 
-    if (
-      blackStrokeElement.length > 1 ||
-      blackFillElement.length > 1 ||
-      stripesElement.length > 1
-    ) {
-      validateResult.hasIllustrationCorrectColorLayers = false;
-      return validateResult;
-    }
+      if (
+        blackStrokeElement.length > 1 ||
+        blackFillElement.length > 1 ||
+        stripesElement.length > 1
+      ) {
+        validateResult.hasIllustrationCorrectColorLayers = false;
+        return validateResult;
+      }
 
-    if (blackStrokeElement.length < 1 || stripesElement.length < 1) {
-      validateResult.hasIllustrationCorrectColorLayers = false;
-      return validateResult;
-    }
+      if (blackStrokeElement.length < 1 || stripesElement.length < 1) {
+        validateResult.hasIllustrationCorrectColorLayers = false;
+        return validateResult;
+      }
 
-    const stripesFillElements = utils.findAllElementByAttribute(
-      stripesElement[0],
-      'fill'
-    );
-    const stripesColorsElements = collectFillsFromObjects(stripesFillElements);
+      const stripesFillElements = utils.findAllElementByAttribute(
+        stripesElement[0],
+        'fill'
+      );
+      const stripesColorsElements =
+        collectFillsFromObjects(stripesFillElements);
 
-    const blackStrokeColors = utils.findFillElementsByColors(
-      blackStrokeElement[0],
-      BLACK_FILL_AND_STROKE_COLOR
-    );
-
-    let blackFillResult = true;
-    if (blackFillElement.length > 1) {
-      const blackFillColors = utils.findFillElementsByColors(
-        blackFillElement[0],
+      const blackStrokeColors = utils.findFillElementsByColors(
+        blackStrokeElement[0],
         BLACK_FILL_AND_STROKE_COLOR
       );
-      blackFillResult = colorExistsInElement(
-        blackFillColors,
-        BLACK_FILL_AND_STROKE_COLOR
-      );
-    }
 
-    result =
-      isFillColorOrderCorrect(stripesColorsElements, stripeColorsOrder) &&
-      blackFillResult &&
-      colorExistsInElement(blackStrokeColors, BLACK_FILL_AND_STROKE_COLOR);
+      let blackFillResult = true;
+      if (blackFillElement.length > 1) {
+        const blackFillColors = utils.findFillElementsByColors(
+          blackFillElement[0],
+          BLACK_FILL_AND_STROKE_COLOR
+        );
+        blackFillResult = colorExistsInElement(
+          blackFillColors,
+          BLACK_FILL_AND_STROKE_COLOR
+        );
+      }
+
+      result =
+        isFillColorOrderCorrect(stripesColorsElements, stripeColorsOrder) &&
+        blackFillResult &&
+        colorExistsInElement(blackStrokeColors, BLACK_FILL_AND_STROKE_COLOR);
+    }
   } else {
     console.error(ENOCLS);
   }

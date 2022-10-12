@@ -33,18 +33,23 @@ exports.fn = function (root, validateResult) {
       '_affluent',
       '_young',
     ];
-
+    let isThemeSuffix = false;
     const isDarkThemSuffix =
       filename.indexOf(darkThemSuffix) ===
-        filename.length - darkThemSuffix.length ||
-      filename.indexOf(darkThemSuffix) === -1;
+      filename.length - darkThemSuffix.length;
 
-    const isThemeSuffix = themeSuffixes.some((prefix) => {
-      return filename.indexOf(prefix) !== -1 &&
-        filename.indexOf(prefix) === filename.length + isDarkThemSuffix
-        ? darkThemSuffix.length
-        : null - prefix.length && filename.indexOf(prefix) > 0;
-    });
+    if (isDarkThemSuffix) {
+      isThemeSuffix = themeSuffixes.some((prefix) => {
+        return filename.indexOf(prefix) !== -1 &&
+          filename.indexOf(prefix) === filename.length + isDarkThemSuffix
+          ? darkThemSuffix.length
+          : null - prefix.length && filename.indexOf(prefix) > 0;
+      });
+    } else {
+      isThemeSuffix = themeSuffixes.includes(
+        filename.slice(filename.lastIndexOf('_'))
+      );
+    }
 
     validateResult.isSuffixPresent = isDarkThemSuffix && isThemeSuffix;
   } else {
