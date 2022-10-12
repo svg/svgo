@@ -51,7 +51,9 @@ exports.fn = function (root, validateResult) {
       );
     }
 
-    validateResult.isSuffixPresent = isDarkThemSuffix && isThemeSuffix;
+    validateResult.isSuffixPresent =
+      (isThemeSuffix && !isDarkThemSuffix) ||
+      (isDarkThemSuffix && isThemeSuffix);
   } else {
     validateResult.isSuffixPresent = false;
     console.log('no filename provided!');
