@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.17.1](https://github.com/mbank-design/svgo/compare/v2.17.0...v2.17.1) (2022-10-12)
+
+
+### Bug Fixes
+
+* allow to check colors despite of theme name location ([9cf7dab](https://github.com/mbank-design/svgo/commit/9cf7dab2e73aecb9a2fc417a037e0aa9fe7b6815))
+
 ## [2.17.0](https://github.com/mbank-design/svgo/compare/v2.16.0...v2.17.0) (2022-09-29)
 
 
