@@ -2,6 +2,8 @@
 
 exports.type = 'validate';
 
+exports.name = 'hasIllustrationCorrectColorLayers';
+
 exports.active = true;
 
 exports.description = 'checks if illustration colors are correct';

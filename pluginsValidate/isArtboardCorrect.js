@@ -1,7 +1,9 @@
 'use strict';
 
 exports.type = 'validate';
+
 exports.name = 'isArtboardCorrect';
+
 exports.active = true;
 
 exports.description = 'checks if viewBox has correct size';

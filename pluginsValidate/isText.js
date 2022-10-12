@@ -4,6 +4,8 @@ const { findAllElementByName } = require('./validationUtilities');
 
 exports.type = 'validate';
 
+exports.name = 'isText';
+
 exports.active = true;
 
 exports.description = 'checks if svg contains text';

@@ -2,6 +2,8 @@
 
 exports.type = 'validate';
 
+exports.name = 'isJSON';
+
 exports.active = true;
 
 exports.description = 'checks if the file is JSON type';

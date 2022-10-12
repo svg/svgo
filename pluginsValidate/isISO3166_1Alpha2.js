@@ -2,6 +2,8 @@
 
 exports.type = 'validate';
 
+exports.name = 'isISO3166_1Alpha2';
+
 exports.active = false;
 
 exports.description = 'checks if the file is snake_case named';

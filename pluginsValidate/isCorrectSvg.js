@@ -1,6 +1,7 @@
 'use strict';
 
 exports.type = 'validate';
+
 exports.name = 'isCorrectSvg';
 
 exports.active = true;

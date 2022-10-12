@@ -1,7 +1,7 @@
 {
   "packageManager": "yarn@2.4.3",
   "name": "@mbank-design/svgo",
-  "version": "2.17.2",
+  "version": "2.17.3",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "license": "MIT",
   "keywords": [
@@ -51,10 +51,9 @@
     "type": "opencollective",
     "url": "https://opencollective.com/svgo"
   },
-  "types": "./types/index.d.ts",
+  "types": "./lib/svgo.d.ts",
   "main": "./dist/svgo.browser.js",
   "bin": "./bin/svgo",
-  "types": "./lib/svgo.d.ts",
   "files": [
     "bin",
     "lib",
@@ -124,8 +123,10 @@
     "css-select": "^4.1.3",
     "css-tree": "^1.1.3",
     "csso": "^4.2.0",
+    "esbuild": "^0.15.12",
     "i18n-iso-countries": "^6.8.0",
     "picocolors": "^1.0.0",
+    "rollup-plugin-esbuild": "^4.10.1",
     "stable": "^0.1.8",
     "svg-path-bbox": "^1.0.1"
   },

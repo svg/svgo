@@ -1,7 +1,7 @@
 'use strict';
 
 exports.type = 'validate';
-
+exports.name = 'elementsLimitation';
 exports.active = true;
 
 exports.description =

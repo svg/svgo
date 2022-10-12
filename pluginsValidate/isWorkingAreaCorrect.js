@@ -2,6 +2,8 @@
 
 exports.type = 'validate';
 
+exports.name = 'isWorkingAreaCorrect';
+
 exports.active = true;
 
 exports.description = 'checks if working area is within limits';

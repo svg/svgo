@@ -2,6 +2,8 @@
 
 exports.type = 'validate';
 
+exports.name = 'hasCorrectStripeColors';
+
 exports.active = true;
 
 exports.description = 'checks if color stripes are in correct';

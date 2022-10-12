@@ -2,6 +2,8 @@
 
 exports.type = 'validate';
 
+exports.name = 'hasNoAttribute';
+
 exports.active = true;
 
 exports.description = 'checks if shape elements has no given attribute';
