@@ -1,0 +1,22 @@
+It should preserve attributes like style
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <polyline points="0,0 0,100 100,100 100,0" style="stroke: black; stroke-width: 10px; fill: none;"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path style="stroke: black; stroke-width: 10px; fill: none;" d="M0,0v100h100v-100"/>
+</svg>
+
+@@@
+
+{
+    "polyline": {
+        "transform": true,
+        "simplifyThreshold": 2.5
+    }
+}
