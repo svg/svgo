@@ -46,6 +46,7 @@
   },
   "main": "./lib/svgo-node.js",
   "bin": "./bin/svgo",
+  "types": "./lib/svgo.d.ts",
   "files": [
     "bin",
     "lib",

@@ -170,3 +170,5 @@ export type PathDataItem = {
   command: PathDataCommand;
   args: Array<number>;
 };
+
+export type DataUri = 'base64' | 'enc' | 'unenc';
