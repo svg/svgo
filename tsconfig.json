@@ -9,11 +9,7 @@
     "strict": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "lib/**/*.js",
-    "plugins/**/*",
-    "test/cli/**/*"
-  ],
+  "include": ["lib/**/*.js", "plugins/**/*", "test/cli/**/*"],
   "exclude": [
     "lib/svgo-node.js",
     "lib/svgo-node.test.js",
@@ -21,7 +17,6 @@
     "lib/builtin.js",
     "lib/svgo.test.js",
     "lib/svgo/**/*.js",
-    "plugins/convertPathData.js",
     "plugins/plugins.js",
     "plugins/preset-default.js"
   ]
