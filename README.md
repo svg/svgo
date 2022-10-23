@@ -135,7 +135,6 @@ module.exports = {
   plugins: [
     {
       name: 'customPluginName',
-      type: 'perItem', // 'perItem', 'perItemReverse' or 'full'
       params: {
         optionName: 'optionValue',
       },
@@ -219,7 +218,7 @@ const config = await loadConfig(configFile, cwd);
 | [mergePaths](https://github.com/svg/svgo/blob/main/plugins/mergePaths.js)                                         | merge multiple Paths into one                                                                                                                            | `enabled`  |
 | [convertShapeToPath](https://github.com/svg/svgo/blob/main/plugins/convertShapeToPath.js)                         | convert some basic shapes to `<path>`                                                                                                                    | `enabled`  |
 | [convertEllipseToCircle](https://github.com/svg/svgo/blob/main/plugins/convertEllipseToCircle.js)                 | convert non-eccentric `<ellipse>` to `<circle>`                                                                                                          | `enabled`  |
-| [sortAttrs](https://github.com/svg/svgo/blob/main/plugins/sortAttrs.js)                                           | sort element attributes for epic readability                                                                                                             | `disabled` |
+| [sortAttrs](https://github.com/svg/svgo/blob/main/plugins/sortAttrs.js)                                           | sort element attributes for epic readability                                                                                                             | `enabled` |
 | [sortDefsChildren](https://github.com/svg/svgo/blob/main/plugins/sortDefsChildren.js)                             | sort children of `<defs>` in order to improve compression                                                                                                | `enabled`  |
 | [removeDimensions](https://github.com/svg/svgo/blob/main/plugins/removeDimensions.js)                             | remove `width`/`height` and add `viewBox` if it's missing (opposite to removeViewBox, disable it first)                                                  | `disabled` |
 | [removeAttrs](https://github.com/svg/svgo/blob/main/plugins/removeAttrs.js)                                       | remove attributes by pattern                                                                                                                             | `disabled` |
