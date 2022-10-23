@@ -111,10 +111,10 @@ const generateID = (currentID) => {
 /**
  * Get string from generated ID array.
  *
- * @type {(arr: Array<number>, prefix: string) => string}
+ * @type {(arr: Array<number>) => string}
  */
-const getIDstring = (arr, prefix) => {
-  return prefix + arr.map((i) => generateIDchars[i]).join('');
+const getIDstring = (arr) => {
+  return arr.map((i) => generateIDchars[i]).join('');
 };
 
 /**
@@ -126,7 +126,6 @@ const getIDstring = (arr, prefix) => {
  * @type {import('../lib/types').Plugin<{
  *   remove?: boolean,
  *   minify?: boolean,
- *   prefix?: string,
  *   preserve?: Array<string>,
  *   preservePrefixes?: Array<string>,
  *   force?: boolean,
@@ -136,7 +135,6 @@ exports.fn = (_root, params) => {
   const {
     remove = true,
     minify = true,
-    prefix = '',
     preserve = [],
     preservePrefixes = [],
     force = false,
@@ -258,7 +256,7 @@ exports.fn = (_root, params) => {
               let currentIDString = null;
               do {
                 currentID = generateID(currentID);
-                currentIDString = getIDstring(currentID, prefix);
+                currentIDString = getIDstring(currentID);
               } while (isIdPreserved(currentIDString));
               node.attributes.id = currentIDString;
               for (const { element, name, value } of refs) {
