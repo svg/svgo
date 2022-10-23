@@ -2,7 +2,7 @@
 
 exports.name = 'removeDimensions';
 exports.description =
-  'removes width and height in presence of viewBox (opposite to removeViewBox, disable it first)';
+  'removes width and height in presence of viewBox (opposite to removeViewBox)';
 
 /**
  * Remove width/height attributes and add the viewBox attribute if it's missing
