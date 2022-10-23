@@ -11,7 +11,7 @@ const cleanupAttrs = require('./cleanupAttrs.js');
 const mergeStyles = require('./mergeStyles.js');
 const inlineStyles = require('./inlineStyles.js');
 const minifyStyles = require('./minifyStyles.js');
-const cleanupIDs = require('./cleanupIDs.js');
+const cleanupIds = require('./cleanupIds.js');
 const removeUselessDefs = require('./removeUselessDefs.js');
 const cleanupNumericValues = require('./cleanupNumericValues.js');
 const convertColors = require('./convertColors.js');
@@ -50,7 +50,7 @@ const presetDefault = createPreset({
     mergeStyles,
     inlineStyles,
     minifyStyles,
-    cleanupIDs,
+    cleanupIds,
     removeUselessDefs,
     cleanupNumericValues,
     convertColors,

@@ -7,13 +7,13 @@
 const { visitSkip } = require('../lib/xast.js');
 const { referencesProps } = require('./_collections.js');
 
-exports.name = 'cleanupIDs';
+exports.name = 'cleanupIds';
 exports.description = 'removes unused IDs and minifies used';
 
 const regReferencesUrl = /\burl\(("|')?#(.+?)\1\)/;
 const regReferencesHref = /^#(.+?)$/;
 const regReferencesBegin = /(\w+)\./;
-const generateIDchars = [
+const generateIdChars = [
   'a',
   'b',
   'c',
@@ -67,7 +67,7 @@ const generateIDchars = [
   'Y',
   'Z',
 ];
-const maxIDindex = generateIDchars.length - 1;
+const maxIdIndex = generateIdChars.length - 1;
 
 /**
  * Check if an ID starts with any one of a list of strings.
@@ -86,26 +86,26 @@ const hasStringPrefix = (string, prefixes) => {
 /**
  * Generate unique minimal ID.
  *
- * @type {(currentID: null | Array<number>) => Array<number>}
+ * @type {(currentId: null | Array<number>) => Array<number>}
  */
-const generateID = (currentID) => {
-  if (currentID == null) {
+const generateId = (currentId) => {
+  if (currentId == null) {
     return [0];
   }
-  currentID[currentID.length - 1] += 1;
-  for (let i = currentID.length - 1; i > 0; i--) {
-    if (currentID[i] > maxIDindex) {
-      currentID[i] = 0;
-      if (currentID[i - 1] !== undefined) {
-        currentID[i - 1]++;
+  currentId[currentId.length - 1] += 1;
+  for (let i = currentId.length - 1; i > 0; i--) {
+    if (currentId[i] > maxIdIndex) {
+      currentId[i] = 0;
+      if (currentId[i - 1] !== undefined) {
+        currentId[i - 1]++;
       }
     }
   }
-  if (currentID[0] > maxIDindex) {
-    currentID[0] = 0;
-    currentID.unshift(0);
+  if (currentId[0] > maxIdIndex) {
+    currentId[0] = 0;
+    currentId.unshift(0);
   }
-  return currentID;
+  return currentId;
 };
 
 /**
@@ -113,8 +113,8 @@ const generateID = (currentID) => {
  *
  * @type {(arr: Array<number>) => string}
  */
-const getIDstring = (arr) => {
-  return arr.map((i) => generateIDchars[i]).join('');
+const getIdString = (arr) => {
+  return arr.map((i) => generateIdChars[i]).join('');
 };
 
 /**
@@ -139,10 +139,10 @@ exports.fn = (_root, params) => {
     preservePrefixes = [],
     force = false,
   } = params;
-  const preserveIDs = new Set(
+  const preserveIds = new Set(
     Array.isArray(preserve) ? preserve : preserve ? [preserve] : []
   );
-  const preserveIDPrefixes = Array.isArray(preservePrefixes)
+  const preserveIdPrefixes = Array.isArray(preservePrefixes)
     ? preservePrefixes
     : preservePrefixes
     ? [preservePrefixes]
@@ -240,11 +240,11 @@ exports.fn = (_root, params) => {
          * @type {(id: string) => boolean}
          **/
         const isIdPreserved = (id) =>
-          preserveIDs.has(id) || hasStringPrefix(id, preserveIDPrefixes);
+          preserveIds.has(id) || hasStringPrefix(id, preserveIdPrefixes);
         /**
          * @type {null | Array<number>}
          */
-        let currentID = null;
+        let currentId = null;
         for (const [id, refs] of referencesById) {
           const node = nodeById.get(id);
           if (node != null) {
@@ -253,24 +253,24 @@ exports.fn = (_root, params) => {
               /**
                * @type {null | string}
                */
-              let currentIDString = null;
+              let currentIdString = null;
               do {
-                currentID = generateID(currentID);
-                currentIDString = getIDstring(currentID);
-              } while (isIdPreserved(currentIDString));
-              node.attributes.id = currentIDString;
+                currentId = generateId(currentId);
+                currentIdString = getIdString(currentId);
+              } while (isIdPreserved(currentIdString));
+              node.attributes.id = currentIdString;
               for (const { element, name, value } of refs) {
                 if (value.includes('#')) {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(
                     `#${id}`,
-                    `#${currentIDString}`
+                    `#${currentIdString}`
                   );
                 } else {
                   // replace id in begin attribute
                   element.attributes[name] = value.replace(
                     `${id}.`,
-                    `${currentIDString}.`
+                    `${currentIdString}.`
                   );
                 }
               }

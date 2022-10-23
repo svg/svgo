@@ -23,7 +23,7 @@ type CustomPlugin = {
 type DefaultPlugin =
   | Usage<typeof import('../plugins/cleanupAttrs.js')>
   | Usage<typeof import('../plugins/cleanupEnableBackground.js')>
-  | Usage<typeof import('../plugins/cleanupIDs.js')>
+  | Usage<typeof import('../plugins/cleanupIds.js')>
   | Usage<typeof import('../plugins/cleanupNumericValues.js')>
   | Usage<typeof import('../plugins/collapseGroups.js')>
   | Usage<typeof import('../plugins/convertColors.js')>
