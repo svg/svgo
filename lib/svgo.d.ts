@@ -54,6 +54,50 @@ type Output = {
 /** The core of SVGO */
 export declare function optimize(input: string, config?: Config): Output;
 
+type AssetTypes =
+  | 'ICON_REGULAR'
+  | 'ICON_COLOR'
+  | 'LOGO'
+  | 'ILLUSTRATION'
+  | 'AVATAR'
+  | 'FLAG'
+  | 'DOCUMENT'
+  | 'ANIMATION';
+
+type ValidationResult = {
+  isSnakeCase?: boolean;
+  isArtboardCorrect?: boolean;
+  isWorkingAreaCorrect?: boolean;
+  isCorrectSvg?: boolean;
+  isJSON?: boolean;
+  hasNoDiacriticCharacters?: boolean;
+  isSuffixPresent?: boolean;
+  isText?: boolean;
+  areLayersIDsOrderCorrect?: boolean;
+  elementsLimitation?: boolean;
+  isISO3166_1Alpha2?: boolean;
+  hasNoAttribute?: boolean;
+  hasCorrectStripeColors?: boolean;
+  isPdf?: boolean;
+  isSVG?: boolean;
+  hasUniqueName?: boolean;
+  validationError?: boolean;
+};
+
+/**
+ * Validates svg file
+ *
+ * @param {ArrayBuffer | string} input array buffer or base64 svg.
+ * @param {string} filename Name of the asset file.
+ * @param {AssetTypes} type Type of the asset.
+ * @returns {ValidationResult} The resulting state of validated asset.
+ */
+export declare function validate(
+  input: ArrayBuffer | string,
+  filename: string,
+  type: AssetTypes
+): ValidationResult;
+
 /**
  * If you write a tool on top of svgo you might need a way to load svgo config.
  *
@@ -64,3 +108,12 @@ export declare function loadConfig(
   cwd?: string
 ): Promise<Config>;
 export declare function loadConfig(): Promise<Config | null>;
+
+/**
+ * Parses svg file to js object
+ *
+ * @param {data} string An array of numbers to add.
+ * @param {from} string An array of numbers to add.
+ * @returns {XastRoot} The resulting sum of all the numbers.
+ */
+export declare function parseSvg(data: string, from?: string): XastRoot;
