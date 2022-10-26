@@ -76,7 +76,8 @@ function findAllShapeElements(svg) {
 exports.findAllShapeElements = findAllShapeElements;
 
 function findFillElementsByColors(svg, colors) {
-  var result = [];
+  let result = [];
+  let upperCaseColors;
 
   const shapeElements = [
     'circle',
@@ -89,17 +90,15 @@ function findFillElementsByColors(svg, colors) {
   ];
 
   if (Array.isArray(colors)) {
-    colors = colors.map((color) => {
-      color.toUpperCase();
-    });
+    upperCaseColors = colors.map((color) => color.toUpperCase());
   } else {
-    colors = colors.toUpperCase();
+    upperCaseColors = colors.toUpperCase();
   }
 
   walkTree(svg, function (node) {
     if (node.type === 'element' && shapeElements.includes(node.name)) {
       if (node.attributes.fill) {
-        colors.includes(node.attributes.fill.toUpperCase())
+        upperCaseColors.includes(node.attributes.fill.toUpperCase())
           ? result.push(node.attributes.fill)
           : null;
       }
