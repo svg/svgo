@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/mbank-design/svgo/compare/v2.19.1...v2.20.0) (2022-10-26)
+
+
+### Features
+
+* export parseSvg ([2df9788](https://github.com/mbank-design/svgo/commit/2df97886a6d00aa9bf2c69fa58c2a1d98bf7fe78))
+
 ### [2.19.1](https://github.com/mbank-design/svgo/compare/v2.19.0...v2.19.1) (2022-10-26)
 
 
