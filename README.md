@@ -250,6 +250,7 @@ const config = await loadConfig(configFile, cwd);
 - as a Atom plugin - [atom-svgo](https://github.com/1000ch/atom-svgo)
 - as a Sublime plugin - [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)
 - as a Figma plugin - [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)
+- as a Remark plugin - [remark-inline-svg](https://github.com/alvinometric/remark-inline-svg)
 - as a Linux app - [Oh My SVG](https://github.com/sonnyp/OhMySVG)
 - as a Browser extension - [SVG Gobbler](https://github.com/rossmoody/svg-gobbler)
 - as an API - [Vector Express](https://github.com/smidyo/vectorexpress-api#convertor-svgo)
