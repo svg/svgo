@@ -1,6 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
 import { terser } from 'rollup-plugin-terser';
 
 export default {
@@ -15,7 +14,6 @@ export default {
   plugins: [
     nodeResolve({ browser: true, preferBuiltins: false }),
     commonjs(),
-    json(),
     // Whitespaces and comments removal makes the browser bundle lighter
     // while retaining the ability to debug errors
     terser({

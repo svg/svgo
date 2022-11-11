@@ -114,7 +114,6 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/css-tree": "^1.0.7",
     "@types/csso": "^5.0.0",
