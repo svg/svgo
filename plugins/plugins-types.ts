@@ -157,7 +157,23 @@ type DefaultPlugins = {
   sortDefsChildren: void;
 };
 
-type BuiltinsWithOptionalParams = DefaultPlugins & {
+type PresetDefaultOverrides = {
+  [Name in keyof DefaultPlugins]?: DefaultPlugins[Name] | false;
+};
+
+export type BuiltinsWithOptionalParams = DefaultPlugins & {
+  'preset-default': {
+    floatPrecision?: number;
+    /**
+     * All default plugins can be customized or disabled here
+     * for example
+     * {
+     *   sortAttrs: { xmlnsOrder: "alphabetical" },
+     *   cleanupAttrs: false,
+     * }
+     */
+    overrides?: PresetDefaultOverrides;
+  };
   cleanupListOfValues: {
     floatPrecision?: number;
     leadingZero?: boolean;
@@ -185,7 +201,7 @@ type BuiltinsWithOptionalParams = DefaultPlugins & {
   reusePaths: void;
 };
 
-type BuiltinsWithRequiredParams = {
+export type BuiltinsWithRequiredParams = {
   addAttributesToSVGElement: {
     attribute?: string | Record<string, null | string>;
     attributes?: Array<string | Record<string, null | string>>;
