@@ -23,7 +23,7 @@ const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'moveGroupAttrsToElems'>}
  */
 exports.fn = () => {
   return {

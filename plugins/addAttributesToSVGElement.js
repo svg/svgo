@@ -47,10 +47,7 @@ plugins: [
  *
  * @author April Arcus
  *
- * @type {import('../lib/types').Plugin<{
- *   attribute?: string | Record<string, null | string>,
- *   attributes?: Array<string | Record<string, null | string>>
- * }>}
+ * @type {import('./plugins-types').Plugin<'addAttributesToSVGElement'>}
  */
 exports.fn = (root, params) => {
   if (!Array.isArray(params.attributes) && !params.attribute) {

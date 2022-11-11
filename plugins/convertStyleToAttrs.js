@@ -65,9 +65,7 @@ const regStripComments = new RegExp(
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   keepImportant?: boolean
- * }>}
+ * @type {import('./plugins-types').Plugin<'convertStyleToAttrs'>}
  */
 exports.fn = (_root, params) => {
   const { keepImportant = false } = params;

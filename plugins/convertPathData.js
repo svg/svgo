@@ -82,26 +82,7 @@ let arcTolerance;
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *  applyTransforms?: boolean,
- *  applyTransformsStroked?: boolean,
- *  makeArcs?: {
- *    threshold: number,
- *    tolerance: number,
- *  },
- *  straightCurves?: boolean,
- *  lineShorthands?: boolean,
- *  curveSmoothShorthands?: boolean,
- *  floatPrecision?: number | false,
- *  transformPrecision?: number,
- *  removeUseless?: boolean,
- *  collapseRepeated?: boolean,
- *  utilizeAbsolute?: boolean,
- *  leadingZero?: boolean,
- *  negativeExtraSpace?: boolean,
- *  noSpaceAfterFlags?: boolean,
- *  forceAbsolutePath?: boolean,
- * }>}
+ * @type {import('./plugins-types').Plugin<'convertPathData'>}
  */
 exports.fn = (root, params) => {
   const {

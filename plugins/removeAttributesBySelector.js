@@ -73,7 +73,7 @@ exports.description =
  *
  * @author Bradley Mease
  *
- * @type {import('../lib/types').Plugin<any>}
+ * @type {import('./plugins-types').Plugin<'removeAttributesBySelector'>}
  */
 exports.fn = (root, params) => {
   const selectors = Array.isArray(params.selectors)

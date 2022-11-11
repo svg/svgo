@@ -15,7 +15,7 @@ exports.description = 'merge multiple style elements into one';
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'mergeStyles'>}
  */
 exports.fn = () => {
   /**

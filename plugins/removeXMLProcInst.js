@@ -13,7 +13,7 @@ exports.description = 'removes XML processing instructions';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeXMLProcInst'>}
  */
 exports.fn = () => {
   return {

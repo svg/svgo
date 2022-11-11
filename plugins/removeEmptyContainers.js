@@ -19,7 +19,7 @@ exports.description = 'removes empty container elements';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeEmptyContainers'>}
  */
 exports.fn = () => {
   return {

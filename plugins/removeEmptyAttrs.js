@@ -10,7 +10,7 @@ exports.description = 'removes empty attributes';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeEmptyAttrs'>}
  */
 exports.fn = () => {
   return {

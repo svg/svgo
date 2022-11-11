@@ -12,7 +12,7 @@ exports.description = 'removes <script> elements (disabled by default)';
  *
  * @author Patrick Klingemann
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeScriptElement'>}
  */
 exports.fn = () => {
   return {

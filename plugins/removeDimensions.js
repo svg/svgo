@@ -14,7 +14,7 @@ exports.description =
  *
  * @author Benny Schudel
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeDimensions'>}
  */
 exports.fn = () => {
   return {

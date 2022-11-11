@@ -17,7 +17,7 @@ const viewBoxElems = ['svg', 'pattern', 'symbol'];
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeViewBox'>}
  */
 exports.fn = () => {
   return {

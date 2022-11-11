@@ -16,7 +16,7 @@ const standardDescs = /^(Created with|Created using)/;
  *
  * @author Daniel Wabyick
  *
- * @type {import('../lib/types').Plugin<{ removeAny?: boolean }>}
+ * @type {import('./plugins-types').Plugin<'removeDesc'>}
  */
 exports.fn = (root, params) => {
   const { removeAny = true } = params;

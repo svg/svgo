@@ -123,13 +123,7 @@ const getIdString = (arr) => {
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   remove?: boolean,
- *   minify?: boolean,
- *   preserve?: Array<string>,
- *   preservePrefixes?: Array<string>,
- *   force?: boolean,
- * }>}
+ * @type {import('./plugins-types').Plugin<'cleanupIds'>}
  */
 exports.fn = (_root, params) => {
   const {

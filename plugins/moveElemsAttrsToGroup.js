@@ -26,7 +26,7 @@ exports.description = 'Move common attributes of group children to the group';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'moveElemsAttrsToGroup'>}
  */
 exports.fn = (root) => {
   // find if any style element is present

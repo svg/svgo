@@ -15,14 +15,7 @@ exports.description =
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('../lib/types').Plugin<csso.MinifyOptions & Omit<csso.CompressOptions, 'usage'> & {
- *   usage?: boolean | {
- *     force?: boolean,
- *     ids?: boolean,
- *     classes?: boolean,
- *     tags?: boolean
- *   }
- * }>}
+ * @type {import('./plugins-types').Plugin<'minifyStyles'>}
  */
 exports.fn = (_root, { usage, ...params }) => {
   let enableTagsUsage = true;

@@ -13,11 +13,7 @@ const regSpaces = /\s{2,}/g;
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   newlines?: boolean,
- *   trim?: boolean,
- *   spaces?: boolean
- * }>}
+ * @type {import('./plugins-types').Plugin<'cleanupAttrs'>}
  */
 exports.fn = (root, params) => {
   const { newlines = true, trim = true, spaces = true } = params;

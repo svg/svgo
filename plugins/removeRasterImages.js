@@ -12,7 +12,7 @@ exports.description = 'removes raster images (disabled by default)';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeRasterImages'>}
  */
 exports.fn = () => {
   return {

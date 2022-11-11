@@ -12,11 +12,7 @@ exports.description = 'merges multiple paths in one if possible';
  *
  * @author Kir Belevich, Lev Solntsev
  *
- * @type {import('../lib/types').Plugin<{
- *   force?: boolean,
- *   floatPrecision?: number,
- *   noSpaceAfterFlags?: boolean
- * }>}
+ * @type {import('./plugins-types').Plugin<'mergePaths'>}
  */
 exports.fn = (root, params) => {
   const {

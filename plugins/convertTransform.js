@@ -24,20 +24,7 @@ exports.description = 'collapses multiple transformations and optimizes it';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   convertToShorts?: boolean,
- *   degPrecision?: number,
- *   floatPrecision?: number,
- *   transformPrecision?: number,
- *   matrixToTransform?: boolean,
- *   shortTranslate?: boolean,
- *   shortScale?: boolean,
- *   shortRotate?: boolean,
- *   removeUseless?: boolean,
- *   collapseIntoOne?: boolean,
- *   leadingZero?: boolean,
- *   negativeExtraSpace?: boolean,
- * }>}
+ * @type {import('./plugins-types').Plugin<'convertTransform'>}
  */
 exports.fn = (_root, params) => {
   const {
