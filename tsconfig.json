@@ -9,6 +9,13 @@
     "strict": true,
     "resolveJsonModule": true
   },
+  "types": [
+    "@types/css-tree",
+    "@types/csso",
+    "@types/jest",
+    "@types/node",
+    "csso"
+  ],
   "include": ["lib/**/*.js", "plugins/**/*", "test/cli/**/*"],
   "exclude": [
     "lib/svgo-node.js",
