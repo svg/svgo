@@ -1,4 +1,3 @@
-import type * as csso from 'csso';
 import type {
   Plugin as PluginDef,
   PluginInfo,
@@ -84,17 +83,40 @@ type DefaultPlugins = {
     floatPrecision?: number;
     noSpaceAfterFlags?: boolean;
   };
-  minifyStyles: csso.MinifyOptions &
-    Omit<csso.CompressOptions, 'usage'> & {
-      usage?:
-        | boolean
-        | {
-            force?: boolean;
-            ids?: boolean;
-            classes?: boolean;
-            tags?: boolean;
-          };
-    };
+
+  minifyStyles: {
+    /**
+     * Disable or enable a structure optimisations.
+     * @default true
+     */
+    restructure?: boolean | undefined;
+    /**
+     * Enables merging of @media rules with the same media query by splitted by other rules.
+     * The optimisation is unsafe in general, but should work fine in most cases. Use it on your own risk.
+     * @default false
+     */
+    forceMediaMerge?: boolean | undefined;
+    /**
+     * Specify what comments to leave:
+     * - 'exclamation' or true – leave all exclamation comments
+     * - 'first-exclamation' – remove every comment except first one
+     * - false – remove all comments
+     * @default true
+     */
+    comments?: string | boolean | undefined;
+    /**
+     * Advanced optimizations
+     */
+    usage?:
+      | boolean
+      | {
+          force?: boolean;
+          ids?: boolean;
+          classes?: boolean;
+          tags?: boolean;
+        };
+  };
+
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
   removeComments: void;
