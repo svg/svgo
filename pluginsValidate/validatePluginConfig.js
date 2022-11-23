@@ -32,7 +32,9 @@ var ASSET_TYPE = {
       {
         name: 'isSnakeCase',
       },
-
+      {
+        name: 'isFillRule',
+      },
       {
         name: 'hasNoDiacriticCharacters',
       },
@@ -73,6 +75,9 @@ var ASSET_TYPE = {
       },
       {
         name: 'isSnakeCase',
+      },
+      {
+        name: 'isFillRule',
       },
       {
         name: 'hasNoDiacriticCharacters',
@@ -153,6 +158,9 @@ var ASSET_TYPE = {
         name: 'isSuffixPresent',
       },
       {
+        name: 'isFillRule',
+      },
+      {
         name: 'isText',
       },
       {
@@ -204,6 +212,9 @@ var ASSET_TYPE = {
       },
       {
         name: 'isISO3166_1Alpha2',
+      },
+      {
+        name: 'isFillRule',
       },
       {
         name: 'hasNoDiacriticCharacters',
