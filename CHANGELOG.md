@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/mbank-design/svgo/compare/v2.19.1...v2.21.0) (2022-11-23)
+
+
+### Features
+
+* add validate fill-rule ([39aae4b](https://github.com/mbank-design/svgo/commit/39aae4b581a70dce48713289aaf01e1cc6861498))
+* export parseSvg ([2df9788](https://github.com/mbank-design/svgo/commit/2df97886a6d00aa9bf2c69fa58c2a1d98bf7fe78))
+
 ## [2.20.0](https://github.com/mbank-design/svgo/compare/v2.19.1...v2.20.0) (2022-10-26)
 
 
