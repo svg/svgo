@@ -35,6 +35,10 @@ let arcThreshold;
  * @type {number}
  */
 let arcTolerance;
+/**
+ * @type {number[]}
+ */
+const powCache = [1, 10, 100, 1000, 10000, 100000, 1000000];
 
 /**
  * @typedef {{
@@ -127,6 +131,14 @@ exports.fn = (root, params) => {
     noSpaceAfterFlags,
     forceAbsolutePath,
   };
+
+  // Expand powCache only if necessary. Also account for
+  // later narrowing search using floatPrecision + 1.
+  if (floatPrecision !== false && floatPrecision + 1 > powCache.length - 1) {
+    for (let i = powCache.length; i <= floatPrecision + 1; i++) {
+      powCache.push(powCache[i - 1] * 10);
+    }
+  }
 
   // invoke applyTransforms plugin
   if (_applyTransforms) {
@@ -952,6 +964,16 @@ function getIntersection(coords) {
 }
 
 /**
+ * Does the same as `Number.prototype.toFixed` but without casting
+ * the return value to a string.
+ * @type {(num: number, precision: number) => number}
+ */
+function toFixed(num, precision) {
+  const pow = powCache[precision];
+  return Math.round(num * pow) / pow;
+}
+
+/**
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
  * Smart rounds values like 2.3491 to 2.35 instead of 2.349.
@@ -960,16 +982,14 @@ function getIntersection(coords) {
  * @type {(data: number[]) => number[]}
  */
 function strongRound(data) {
-  for (var i = data.length; i-- > 0; ) {
-    // @ts-ignore
-    if (data[i].toFixed(precision) != data[i]) {
-      // @ts-ignore
-      var rounded = +data[i].toFixed(precision - 1);
+  const precisionNum = precision || 0;
+  for (let i = data.length; i-- > 0; ) {
+    const fixed = toFixed(data[i], precisionNum);
+    if (fixed !== data[i]) {
+      const rounded = toFixed(data[i], precisionNum - 1);
       data[i] =
-        // @ts-ignore
-        +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error
-          ? // @ts-ignore
-            +data[i].toFixed(precision)
+        toFixed(Math.abs(rounded - data[i]), precisionNum + 1) >= error
+          ? fixed
           : rounded;
     }
   }
