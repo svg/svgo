@@ -35,10 +35,6 @@ let arcThreshold;
  * @type {number}
  */
 let arcTolerance;
-/**
- * @type {number[]}
- */
-const powCache = [1, 10, 100, 1000, 10000, 100000, 1000000];
 
 /**
  * @typedef {{
@@ -131,14 +127,6 @@ exports.fn = (root, params) => {
     noSpaceAfterFlags,
     forceAbsolutePath,
   };
-
-  // Expand powCache only if necessary. Also account for
-  // later narrowing search using floatPrecision + 1.
-  if (floatPrecision !== false && floatPrecision + 1 > powCache.length - 1) {
-    for (let i = powCache.length; i <= floatPrecision + 1; i++) {
-      powCache.push(powCache[i - 1] * 10);
-    }
-  }
 
   // invoke applyTransforms plugin
   if (_applyTransforms) {
@@ -969,7 +957,7 @@ function getIntersection(coords) {
  * @type {(num: number, precision: number) => number}
  */
 function toFixed(num, precision) {
-  const pow = powCache[precision];
+  const pow = 10 ** precision;
   return Math.round(num * pow) / pow;
 }
 
