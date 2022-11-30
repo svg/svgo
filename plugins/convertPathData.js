@@ -952,6 +952,16 @@ function getIntersection(coords) {
 }
 
 /**
+ * Does the same as `Number.prototype.toFixed` but without casting
+ * the return value to a string.
+ * @type {(num: number, precision: number) => number}
+ */
+function toFixed(num, precision) {
+  const pow = 10 ** precision;
+  return Math.round(num * pow) / pow;
+}
+
+/**
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
  * Smart rounds values like 2.3491 to 2.35 instead of 2.349.
@@ -960,16 +970,14 @@ function getIntersection(coords) {
  * @type {(data: number[]) => number[]}
  */
 function strongRound(data) {
-  for (var i = data.length; i-- > 0; ) {
-    // @ts-ignore
-    if (data[i].toFixed(precision) != data[i]) {
-      // @ts-ignore
-      var rounded = +data[i].toFixed(precision - 1);
+  const precisionNum = precision || 0;
+  for (let i = data.length; i-- > 0; ) {
+    const fixed = toFixed(data[i], precisionNum);
+    if (fixed !== data[i]) {
+      const rounded = toFixed(data[i], precisionNum - 1);
       data[i] =
-        // @ts-ignore
-        +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error
-          ? // @ts-ignore
-            +data[i].toFixed(precision)
+        toFixed(Math.abs(rounded - data[i]), precisionNum + 1) >= error
+          ? fixed
           : rounded;
     }
   }
