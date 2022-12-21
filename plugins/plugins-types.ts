@@ -220,6 +220,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
   removeScriptElement: void;
   removeStyleElement: void;
   removeXMLNS: void;
+  removeXMLSpace: void;
   reusePaths: void;
 };
 
