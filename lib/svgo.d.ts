@@ -6,7 +6,8 @@ import type {
 
 type CustomPlugin = {
   name: string;
-  fn: PluginFn<void>;
+  fn: PluginFn<any>;
+  params: any;
 };
 
 type PluginConfig =
