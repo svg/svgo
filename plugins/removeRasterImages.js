@@ -21,7 +21,7 @@ exports.fn = () => {
         if (
           node.name === 'image' &&
           node.attributes['xlink:href'] != null &&
-          /(\.|image\/)(jpg|png|gif)/.test(node.attributes['xlink:href'])
+          /(\.|image\/)(jpe?g|png|gif)/.test(node.attributes['xlink:href'])
         ) {
           detachNodeFromParent(node, parentNode);
         }
