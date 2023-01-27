@@ -99,7 +99,7 @@ Default preset includes the following list of plugins:
 - mergeStyles
 - inlineStyles
 - minifyStyles
-- cleanupIds
+- cleanupIDs
 - removeUselessDefs
 - cleanupNumericValues
 - convertColors
@@ -208,7 +208,7 @@ const config = await loadConfig(configFile, cwd);
 | [removeUselessStrokeAndFill](https://github.com/svg/svgo/blob/main/plugins/removeUselessStrokeAndFill.js)         | remove useless `stroke` and `fill` attributes                                                                                                            | `enabled`  |
 | [removeUnusedNS](https://github.com/svg/svgo/blob/main/plugins/removeUnusedNS.js)                                 | remove unused namespaces declaration                                                                                                                     | `enabled`  |
 | [prefixIds](https://github.com/svg/svgo/blob/main/plugins/prefixIds.js)                                           | prefix IDs and classes with the SVG filename or an arbitrary string                                                                                      | `disabled` |
-| [cleanupIds](https://github.com/svg/svgo/blob/main/plugins/cleanupIds.js)                                         | remove unused and minify used IDs                                                                                                                        | `enabled`  |
+| [cleanupIDs](https://github.com/svg/svgo/blob/main/plugins/cleanupIds.js)                                         | remove unused and minify used IDs                                                                                                                        | `enabled`  |
 | [cleanupNumericValues](https://github.com/svg/svgo/blob/main/plugins/cleanupNumericValues.js)                     | round numeric values to the fixed precision, remove default `px` units                                                                                   | `enabled`  |
 | [cleanupListOfValues](https://github.com/svg/svgo/blob/main/plugins/cleanupListOfValues.js)                       | round numeric values in attributes that take a list of numbers (like `viewBox` or `enable-background`)                                                   | `disabled` |
 | [moveElemsAttrsToGroup](https://github.com/svg/svgo/blob/main/plugins/moveElemsAttrsToGroup.js)                   | move elements' attributes to their enclosing group                                                                                                       | `enabled`  |
