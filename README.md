@@ -94,7 +94,7 @@ module.exports = {
 };
 ```
 
-The default preset includes plugins marked with 'Yes' in the plugin list below.
+The default preset includes plugins marked with 'Yes' in the [plugin list](#built-in-plugins) below.
 
 ### Custom plugin
 
