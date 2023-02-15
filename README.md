@@ -149,6 +149,14 @@ You can also specify a relative or absolute path and customize the current worki
 const config = await loadConfig(configFile, cwd);
 ```
 
+## Troubleshooting
+
+### SVG won't scale when CSS is applied on it.
+
+**Observed Problem:** I'm using my SVG files on a website. It looks like the rendered SVG doesn't scale when the dimensions are altered using CSS.
+
+**Possible Solution:** Try disabling `removeViewBox` in the configuration. See [issue #1128](https://github.com/svg/svgo/issues/1128) for details and discussion.
+
 ## Built-in plugins
 
 | Plugin                                                                                                            | Description                                                                                                                                              | Default |
