@@ -158,6 +158,13 @@ exports.fn = (root, params) => {
           }
           const hasMarkerMid = computedStyle['marker-mid'] != null;
 
+          const hasRoundLinejoinAndLinecap =
+            computedStyle['stroke-linejoin'] &&
+            computedStyle['stroke-linejoin'].type === 'static' &&
+            computedStyle['stroke-linejoin'].value === 'round' &&
+            computedStyle['stroke-linecap'] &&
+            computedStyle['stroke-linecap'].type === 'static' &&
+            computedStyle['stroke-linecap'].value === 'round'
           const maybeHasStroke =
             computedStyle.stroke &&
             (computedStyle.stroke.type === 'dynamic' ||
@@ -176,6 +183,7 @@ exports.fn = (root, params) => {
 
             data = filters(data, newParams, {
               maybeHasStrokeAndLinecap,
+              hasRoundLinejoinAndLinecap,
               hasMarkerMid,
             });
 
@@ -371,10 +379,10 @@ const convertToRelative = (pathData) => {
  * @type {(
  *   path: PathDataItem[],
  *   params: InternalParams,
- *   aux: { maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
+ *   aux: { maybeHasStrokeAndLinecap: boolean, hasRoundLinejoinAndLinecap: boolean, hasMarkerMid: boolean }
  * ) => PathDataItem[]}
  */
-function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
+function filters(path, params, { maybeHasStrokeAndLinecap, hasRoundLinejoinAndLinecap, hasMarkerMid }) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
     pathBase = [0, 0],
@@ -799,6 +807,15 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
 
       prev = item;
     } else {
+      // remove useless closing path segments
+      if (
+        params.removeUseless &&
+        hasRoundLinejoinAndLinecap &&
+        relSubpoint[0] === pathBase[0] &&
+        relSubpoint[1] === pathBase[1]
+      ) {
+        return false;
+      }
       // z resets coordinates
       relSubpoint[0] = pathBase[0];
       relSubpoint[1] = pathBase[1];
