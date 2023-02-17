@@ -811,6 +811,7 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasRoundLinejoinAndLi
       if (
         params.removeUseless &&
         hasRoundLinejoinAndLinecap &&
+        !hasMarkerMid &&
         relSubpoint[0] === pathBase[0] &&
         relSubpoint[1] === pathBase[1]
       ) {
