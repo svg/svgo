@@ -10,7 +10,7 @@ exports.description = 'converts non-eccentric <ellipse>s to <circle>s';
  *
  * @author Taylor Hunt
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'convertEllipseToCircle'>}
  */
 exports.fn = () => {
   return {

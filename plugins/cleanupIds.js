@@ -10,9 +10,9 @@ const { referencesProps } = require('./_collections.js');
 exports.name = 'cleanupIds';
 exports.description = 'removes unused IDs and minifies used';
 
-const regReferencesUrl = /\burl\(("|')?#(.+?)\1\)/;
+const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/;
 const regReferencesHref = /^#(.+?)$/;
-const regReferencesBegin = /(\w+)\./;
+const regReferencesBegin = /(\D+)\./;
 const generateIdChars = [
   'a',
   'b',
@@ -123,13 +123,7 @@ const getIdString = (arr) => {
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   remove?: boolean,
- *   minify?: boolean,
- *   preserve?: Array<string>,
- *   preservePrefixes?: Array<string>,
- *   force?: boolean,
- * }>}
+ * @type {import('./plugins-types').Plugin<'cleanupIds'>}
  */
 exports.fn = (_root, params) => {
   const {

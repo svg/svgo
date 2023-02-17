@@ -12,11 +12,7 @@ exports.description = 'removes useless stroke and fill attributes';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *  stroke?: boolean,
- *  fill?: boolean,
- *  removeNone?: boolean
- * }>}
+ * @type {import('./plugins-types').Plugin<'removeUselessStrokeAndFill'>}
  */
 exports.fn = (root, params) => {
   const {

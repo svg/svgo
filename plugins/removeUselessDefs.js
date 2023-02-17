@@ -15,7 +15,7 @@ exports.description = 'removes elements in <defs> without id';
  *
  * @author Lev Solntsev
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeUselessDefs'>}
  */
 exports.fn = () => {
   return {

@@ -14,7 +14,7 @@ exports.description = 'removes comments';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeComments'>}
  */
 exports.fn = () => {
   return {

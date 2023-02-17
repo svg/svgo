@@ -32,12 +32,7 @@ const absoluteLengths = {
  *
  * @author kiyopikko
  *
- * @type {import('../lib/types').Plugin<{
- *   floatPrecision?: number,
- *   leadingZero?: boolean,
- *   defaultPx?: boolean,
- *   convertToPx?: boolean
- * }>}
+ * @type {import('./plugins-types').Plugin<'cleanupListOfValues'>}
  */
 exports.fn = (_root, params) => {
   const {

@@ -12,7 +12,7 @@ exports.description = 'removes <metadata>';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeMetadata'>}
  */
 exports.fn = () => {
   return {

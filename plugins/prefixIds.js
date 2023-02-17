@@ -3,11 +3,6 @@
 const csstree = require('css-tree');
 const { referencesProps } = require('./_collections.js');
 
-/**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').PluginInfo} PluginInfo
- */
-
 exports.name = 'prefixIds';
 exports.description = 'prefix IDs';
 
@@ -75,12 +70,7 @@ const toAny = (value) => value;
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('../lib/types').Plugin<{
- *   prefix?: boolean | string | ((node: XastElement, info: PluginInfo) => string),
- *   delim?: string,
- *   prefixIds?: boolean,
- *   prefixClassNames?: boolean,
- * }>}
+ * @type {import('./plugins-types').Plugin<'prefixIds'>}
  */
 exports.fn = (_root, params, info) => {
   const { delim = '__', prefixIds = true, prefixClassNames = true } = params;

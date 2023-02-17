@@ -49,10 +49,7 @@ plugins: [
  *
  * @author April Arcus
  *
- * @type {import('../lib/types').Plugin<{
- *   className?: string,
- *   classNames?: Array<string>
- * }>}
+ * @type {import('./plugins-types').Plugin<'addClassesToSVGElement'>}
  */
 exports.fn = (root, params) => {
   if (

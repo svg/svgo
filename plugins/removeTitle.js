@@ -12,7 +12,7 @@ exports.description = 'removes <title>';
  *
  * @author Igor Kalashnikov
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeTitle'>}
  */
 exports.fn = () => {
   return {

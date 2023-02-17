@@ -15,7 +15,7 @@ exports.description =
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeNonInheritableGroupAttrs'>}
  */
 exports.fn = () => {
   return {

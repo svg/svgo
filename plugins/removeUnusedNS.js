@@ -9,7 +9,7 @@ exports.description = 'removes unused namespaces declaration';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeUnusedNS'>}
  */
 exports.fn = () => {
   /**

@@ -17,7 +17,7 @@ exports.description =
  *
  * @author JoshyPHP
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeOffCanvasPaths'>}
  */
 exports.fn = () => {
   /**

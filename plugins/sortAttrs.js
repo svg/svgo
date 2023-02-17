@@ -8,10 +8,7 @@ exports.description = 'Sort element attributes for better compression';
  *
  * @author Nikolay Frantsev
  *
- * @type {import('../lib/types').Plugin<{
- *   order?: Array<string>
- *   xmlnsOrder?: 'front' | 'alphabetical'
- * }>}
+ * @type {import('./plugins-types').Plugin<'sortAttrs'>}
  */
 exports.fn = (_root, params) => {
   const {

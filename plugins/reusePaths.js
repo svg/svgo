@@ -18,7 +18,7 @@ exports.description =
  *
  * @author Jacob Howcroft
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'reusePaths'>}
  */
 exports.fn = () => {
   /**

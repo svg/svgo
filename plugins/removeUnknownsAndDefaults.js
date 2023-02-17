@@ -92,15 +92,7 @@ for (const [name, config] of Object.entries(elems)) {
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   unknownContent?: boolean,
- *   unknownAttrs?: boolean,
- *   defaultAttrs?: boolean,
- *   uselessOverrides?: boolean,
- *   keepDataAttrs?: boolean,
- *   keepAriaAttrs?: boolean,
- *   keepRoleAttr?: boolean,
- * }>}
+ * @type {import('./plugins-types').Plugin<'removeUnknownsAndDefaults'>}
  */
 exports.fn = (root, params) => {
   const {

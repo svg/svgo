@@ -14,7 +14,7 @@ exports.description =
  *
  * @author Ricardo Tomasi
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeXMLNS'>}
  */
 exports.fn = () => {
   return {

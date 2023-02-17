@@ -49,7 +49,7 @@ const hasAnimatedAttr = (node, name) => {
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'collapseGroups'>}
  */
 exports.fn = () => {
   return {

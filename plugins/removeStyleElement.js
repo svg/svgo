@@ -12,7 +12,7 @@ exports.description = 'removes <style> element (disabled by default)';
  *
  * @author Betsy Dupuis
  *
- * @type {import('../lib/types').Plugin<void>}
+ * @type {import('./plugins-types').Plugin<'removeStyleElement'>}
  */
 exports.fn = () => {
   return {

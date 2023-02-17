@@ -22,11 +22,7 @@ exports.description = 'removes empty <text> elements';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types').Plugin<{
- *   text?: boolean,
- *   tspan?: boolean,
- *   tref?: boolean
- * }>}
+ * @type {import('./plugins-types').Plugin<'removeEmptyText'>}
  */
 exports.fn = (root, params) => {
   const { text = true, tspan = true, tref = true } = params;

@@ -1,107 +1,28 @@
 import type { StringifyOptions, DataUri, Plugin as PluginFn } from './types';
-
-type PluginDef = {
-  name: string;
-  fn: PluginFn<unknown>;
-};
-
-type Usage<T extends PluginDef> = {
-  name: T['name'];
-  params?: Parameters<T['fn']>[1];
-};
-
-type UsageReqParams<T extends PluginDef> = {
-  name: T['name'];
-  params: Parameters<T['fn']>[1];
-};
+import type {
+  BuiltinsWithOptionalParams,
+  BuiltinsWithRequiredParams,
+} from '../plugins/plugins-types';
 
 type CustomPlugin = {
   name: string;
   fn: PluginFn<void>;
 };
 
-type DefaultPlugin =
-  | Usage<typeof import('../plugins/cleanupAttrs.js')>
-  | Usage<typeof import('../plugins/cleanupEnableBackground.js')>
-  | Usage<typeof import('../plugins/cleanupIds.js')>
-  | Usage<typeof import('../plugins/cleanupNumericValues.js')>
-  | Usage<typeof import('../plugins/collapseGroups.js')>
-  | Usage<typeof import('../plugins/convertColors.js')>
-  | Usage<typeof import('../plugins/convertEllipseToCircle.js')>
-  | Usage<typeof import('../plugins/convertPathData.js')>
-  | Usage<typeof import('../plugins/convertShapeToPath.js')>
-  | Usage<typeof import('../plugins/convertTransform.js')>
-  | Usage<typeof import('../plugins/mergeStyles.js')>
-  | Usage<typeof import('../plugins/inlineStyles.js')>
-  | Usage<typeof import('../plugins/mergePaths.js')>
-  | Usage<typeof import('../plugins/minifyStyles.js')>
-  | Usage<typeof import('../plugins/moveElemsAttrsToGroup.js')>
-  | Usage<typeof import('../plugins/moveGroupAttrsToElems.js')>
-  | Usage<typeof import('../plugins/removeComments.js')>
-  | Usage<typeof import('../plugins/removeDesc.js')>
-  | Usage<typeof import('../plugins/removeDoctype.js')>
-  | Usage<typeof import('../plugins/removeEditorsNSData.js')>
-  | Usage<typeof import('../plugins/removeEmptyAttrs.js')>
-  | Usage<typeof import('../plugins/removeEmptyContainers.js')>
-  | Usage<typeof import('../plugins/removeEmptyText.js')>
-  | Usage<typeof import('../plugins/removeHiddenElems.js')>
-  | Usage<typeof import('../plugins/removeMetadata.js')>
-  | Usage<typeof import('../plugins/removeNonInheritableGroupAttrs.js')>
-  | Usage<typeof import('../plugins/removeTitle.js')>
-  | Usage<typeof import('../plugins/removeUnknownsAndDefaults.js')>
-  | Usage<typeof import('../plugins/removeUnusedNS.js')>
-  | Usage<typeof import('../plugins/removeUselessDefs.js')>
-  | Usage<typeof import('../plugins/removeUselessStrokeAndFill.js')>
-  | Usage<typeof import('../plugins/removeViewBox.js')>
-  | Usage<typeof import('../plugins/removeXMLProcInst.js')>
-  | Usage<typeof import('../plugins/sortAttrs.js')>
-  | Usage<typeof import('../plugins/sortDefsChildren.js')>;
-
-type Overrides<T = DefaultPlugin> = T extends DefaultPlugin
-  ? { [key in T['name']]?: T['params'] | false }
-  : never;
-
-type PresetDefault = {
-  name: 'preset-default';
-  params?: {
-    floatPrecision?: number;
-    /**
-     * All default plugins can be customized or disabled here
-     * for example
-     * {
-     *   sortAttrs: { xmlnsOrder: "alphabetical" },
-     *   cleanupAttrs: false,
-     * }
-     */
-    overrides?: Overrides;
-  };
-};
-
-type BuiltinPluginWithOptionalParams =
-  | DefaultPlugin
-  | PresetDefault
-  | Usage<typeof import('../plugins/cleanupListOfValues.js')>
-  | Usage<typeof import('../plugins/convertStyleToAttrs.js')>
-  | Usage<typeof import('../plugins/prefixIds.js')>
-  | Usage<typeof import('../plugins/removeDimensions.js')>
-  | Usage<typeof import('../plugins/removeOffCanvasPaths.js')>
-  | Usage<typeof import('../plugins/removeRasterImages.js')>
-  | Usage<typeof import('../plugins/removeScriptElement.js')>
-  | Usage<typeof import('../plugins/removeStyleElement.js')>
-  | Usage<typeof import('../plugins/removeXMLNS.js')>
-  | Usage<typeof import('../plugins/reusePaths.js')>;
-
-type BuiltinPluginWithRequiredParams =
-  | UsageReqParams<typeof import('../plugins/addAttributesToSVGElement.js')>
-  | UsageReqParams<typeof import('../plugins/addClassesToSVGElement.js')>
-  | UsageReqParams<typeof import('../plugins/removeAttributesBySelector.js')>
-  | UsageReqParams<typeof import('../plugins/removeAttrs.js')>
-  | UsageReqParams<typeof import('../plugins/removeElementsByAttr.js')>;
-
 type PluginConfig =
-  | BuiltinPluginWithOptionalParams['name']
-  | BuiltinPluginWithOptionalParams
-  | BuiltinPluginWithRequiredParams
+  | keyof BuiltinsWithOptionalParams
+  | {
+      [Name in keyof BuiltinsWithOptionalParams]: {
+        name: Name;
+        params?: BuiltinsWithOptionalParams[Name];
+      };
+    }[keyof BuiltinsWithOptionalParams]
+  | {
+      [Name in keyof BuiltinsWithRequiredParams]: {
+        name: Name;
+        params: BuiltinsWithRequiredParams[Name];
+      };
+    }[keyof BuiltinsWithRequiredParams]
   | CustomPlugin;
 
 export type Config = {

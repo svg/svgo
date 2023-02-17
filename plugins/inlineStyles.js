@@ -63,12 +63,7 @@ const toAny = (value) => value;
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('../lib/types').Plugin<{
- *   onlyMatchedOnce?: boolean,
- *   removeMatchedSelectors?: boolean,
- *   useMqs?: Array<string>,
- *   usePseudos?: Array<string>
- * }>}
+ * @type {import('./plugins-types').Plugin<'inlineStyles'>}
  */
 exports.fn = (root, params) => {
   const {
