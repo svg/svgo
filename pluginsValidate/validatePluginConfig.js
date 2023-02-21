@@ -158,9 +158,6 @@ var ASSET_TYPE = {
         name: 'isSuffixPresent',
       },
       {
-        name: 'isFillRule',
-      },
-      {
         name: 'isText',
       },
       {
