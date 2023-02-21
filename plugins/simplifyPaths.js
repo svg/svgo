@@ -93,7 +93,7 @@ export const fn = (_root, params) => {
             path
           );
         } else if (node.name === 'path') {
-          const path = new paper.Path(node.attributes.d);
+          const path = new paper.CompoundPath(node.attributes.d);
           node.attributes.d = simplify(
             pathParams.simplifyThreshold,
             floatPrecision,
