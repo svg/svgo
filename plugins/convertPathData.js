@@ -8,6 +8,7 @@ const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { visit } = require('../lib/xast.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
+const { findArc } = require('./_arc.js');
 const { applyTransforms } = require('./applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
@@ -387,7 +388,7 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
 
     if (command !== 'Z' && command !== 'z') {
       var sdata = data,
-        circle;
+        arc;
 
       if (command === 's') {
         sdata = [0, 0].concat(data);
@@ -403,180 +404,45 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
 
       // convert curves to arcs if possible
       if (
-        params.makeArcs &&
-        (command == 'c' || command == 's') &&
-        isConvex(sdata) &&
-        (circle = findCircle(sdata))
+        (params.makeArcs,
+        // @ts-ignore
+        (arc = findArc(prev.coords, item, {
+          error,
+          arcThreshold,
+          arcTolerance,
+        })))
       ) {
-        var r = roundData([circle.radius])[0],
-          angle = findArcAngle(sdata, circle),
-          sweep = sdata[5] * sdata[0] - sdata[4] * sdata[1] > 0 ? 1 : 0,
-          /**
-           * @type {PathDataItem}
-           */
-          arc = {
-            command: 'a',
-            args: [r, r, 0, 0, sweep, sdata[4], sdata[5]],
-            // @ts-ignore
-            coords: item.coords.slice(),
-            // @ts-ignore
-            base: item.base,
-          },
-          /**
-           * @type {PathDataItem[]}
-           */
-          output = [arc],
-          // relative coordinates to adjust the found circle
-          /**
-           * @type {Point}
-           */
-          relCenter = [
-            circle.center[0] - sdata[4],
-            circle.center[1] - sdata[5],
-          ],
-          relCircle = { center: relCenter, radius: circle.radius },
-          arcCurves = [item],
-          hasPrev = 0,
-          suffix = '',
-          nextLonghand;
-
-        if (
-          // @ts-ignore
-          (prev.command == 'c' &&
-            // @ts-ignore
-            isConvex(prev.args) &&
-            // @ts-ignore
-            isArcPrev(prev.args, circle)) ||
-          // @ts-ignore
-          (prev.command == 'a' && prev.sdata && isArcPrev(prev.sdata, circle))
-        ) {
-          // @ts-ignore
-          arcCurves.unshift(prev);
-          // @ts-ignore
-          arc.base = prev.base;
-          // @ts-ignore
-          arc.args[5] = arc.coords[0] - arc.base[0];
-          // @ts-ignore
-          arc.args[6] = arc.coords[1] - arc.base[1];
-          // @ts-ignore
-          var prevData = prev.command == 'a' ? prev.sdata : prev.args;
-          var prevAngle = findArcAngle(prevData, {
-            center: [
-              prevData[4] + circle.center[0],
-              prevData[5] + circle.center[1],
-            ],
-            radius: circle.radius,
-          });
-          angle += prevAngle;
-          if (angle > Math.PI) arc.args[3] = 1;
-          hasPrev = 1;
-        }
-
-        // check if next curves are fitting the arc
+        var j, nextArc;
         for (
-          var j = index;
-          (next = path[++j]) && ~'cs'.indexOf(next.command);
+          j = index;
+          // @ts-ignore
+          path[j++] &&
+          // @ts-ignore
+          (nextArc = findArc(arc.item.coords, path[j - 1], {
+            error,
+            arcThreshold,
+            arcTolerance,
+          })) &&
+          nextArc;
 
         ) {
-          var nextData = next.args;
-          if (next.command == 's') {
-            nextLonghand = makeLonghand(
-              { command: 's', args: next.args.slice() },
-              path[j - 1].args
-            );
-            nextData = nextLonghand.args;
-            nextLonghand.args = nextData.slice(0, 2);
-            suffix = stringify([nextLonghand]);
-          }
-          if (isConvex(nextData) && isArc(nextData, relCircle)) {
-            angle += findArcAngle(nextData, relCircle);
-            if (angle - 2 * Math.PI > 1e-3) break; // more than 360°
-            if (angle > Math.PI) arc.args[3] = 1;
-            arcCurves.push(next);
-            if (2 * Math.PI - angle > 1e-3) {
-              // less than 360°
-              // @ts-ignore
-              arc.coords = next.coords;
-              // @ts-ignore
-              arc.args[5] = arc.coords[0] - arc.base[0];
-              // @ts-ignore
-              arc.args[6] = arc.coords[1] - arc.base[1];
-            } else {
-              // full circle, make a half-circle arc and add a second one
-              arc.args[5] = 2 * (relCircle.center[0] - nextData[4]);
-              arc.args[6] = 2 * (relCircle.center[1] - nextData[5]);
-              // @ts-ignore
-              arc.coords = [
-                // @ts-ignore
-                arc.base[0] + arc.args[5],
-                // @ts-ignore
-                arc.base[1] + arc.args[6],
-              ];
-              arc = {
-                command: 'a',
-                args: [
-                  r,
-                  r,
-                  0,
-                  0,
-                  sweep,
-                  // @ts-ignore
-                  next.coords[0] - arc.coords[0],
-                  // @ts-ignore
-                  next.coords[1] - arc.coords[1],
-                ],
-                // @ts-ignore
-                coords: next.coords,
-                // @ts-ignore
-                base: arc.coords,
-              };
-              output.push(arc);
-              j++;
-              break;
-            }
-            relCenter[0] -= nextData[4];
-            relCenter[1] -= nextData[5];
-          } else break;
+          // TODO: if (nextArc is full circle) break;
+          // TODO: if (nextArc center is outside of tolerance) break;
+          // @ts-ignore
+          arc.item.coords = nextArc.item.coords;
+          // @ts-ignore
+          arc.item.args[5] = arc.item.coords[0] - arc.item.base[0];
+          // @ts-ignore
+          arc.item.args[6] = arc.item.coords[1] - arc.item.base[1];
         }
 
-        if ((stringify(output) + suffix).length < stringify(arcCurves).length) {
-          if (path[j] && path[j].command == 's') {
-            makeLonghand(path[j], path[j - 1].args);
-          }
-          if (hasPrev) {
-            var prevArc = output.shift();
-            // @ts-ignore
-            roundData(prevArc.args);
-            // @ts-ignore
-            relSubpoint[0] += prevArc.args[5] - prev.args[prev.args.length - 2];
-            // @ts-ignore
-            relSubpoint[1] += prevArc.args[6] - prev.args[prev.args.length - 1];
-            // @ts-ignore
-            prev.command = 'a';
-            // @ts-ignore
-            prev.args = prevArc.args;
-            // @ts-ignore
-            item.base = prev.coords = prevArc.coords;
-          }
-          // @ts-ignore
-          arc = output.shift();
-          if (arcCurves.length == 1) {
-            // @ts-ignore
-            item.sdata = sdata.slice(); // preserve curve data for future checks
-          } else if (arcCurves.length - 1 - hasPrev > 0) {
-            // filter out consumed next items
-            path.splice.apply(
-              path,
-              // @ts-ignore
-              [index + 1, arcCurves.length - 1 - hasPrev].concat(output)
-            );
-          }
-          if (!arc) return false;
-          command = 'a';
-          data = arc.args;
-          // @ts-ignore
-          item.coords = arc.coords;
-        }
+        // TODO check that stringify is shorter
+        command = 'a';
+        data = arc.item.args;
+        // @ts-ignore
+        item.coords = arc.item.coords;
+        // filter out consumed next items
+        path.splice(index + 1, j);
       }
 
       // Rounding relative coordinates, taking in account accummulating error
@@ -893,65 +759,6 @@ function convertToMixed(path, params) {
 }
 
 /**
- * Checks if curve is convex. Control points of such a curve must form
- * a convex quadrilateral with diagonals crosspoint inside of it.
- *
- * @type {(data: number[]) => boolean}
- */
-function isConvex(data) {
-  var center = getIntersection([
-    0,
-    0,
-    data[2],
-    data[3],
-    data[0],
-    data[1],
-    data[4],
-    data[5],
-  ]);
-
-  return (
-    center != null &&
-    data[2] < center[0] == center[0] < 0 &&
-    data[3] < center[1] == center[1] < 0 &&
-    data[4] < center[0] == center[0] < data[0] &&
-    data[5] < center[1] == center[1] < data[1]
-  );
-}
-
-/**
- * Computes lines equations by two points and returns their intersection point.
- *
- * @type {(coords: number[]) => undefined | Point}
- */
-function getIntersection(coords) {
-  // Prev line equation parameters.
-  var a1 = coords[1] - coords[3], // y1 - y2
-    b1 = coords[2] - coords[0], // x2 - x1
-    c1 = coords[0] * coords[3] - coords[2] * coords[1], // x1 * y2 - x2 * y1
-    // Next line equation parameters
-    a2 = coords[5] - coords[7], // y1 - y2
-    b2 = coords[6] - coords[4], // x2 - x1
-    c2 = coords[4] * coords[7] - coords[5] * coords[6], // x1 * y2 - x2 * y1
-    denom = a1 * b2 - a2 * b1;
-
-  if (!denom) return; // parallel lines havn't an intersection
-
-  /**
-   * @type {Point}
-   */
-  var cross = [(b1 * c2 - b2 * c1) / denom, (a1 * c2 - a2 * c1) / -denom];
-  if (
-    !isNaN(cross[0]) &&
-    !isNaN(cross[1]) &&
-    isFinite(cross[0]) &&
-    isFinite(cross[1])
-  ) {
-    return cross;
-  }
-}
-
-/**
  * Does the same as `Number.prototype.toFixed` but without casting
  * the return value to a string.
  * @type {(num: number, precision: number) => number}
@@ -1041,129 +848,6 @@ function makeLonghand(item, data) {
     data[data.length - 1] - data[data.length - 3]
   );
   return item;
-}
-
-/**
- * Returns distance between two points
- *
- * @type {(point1: Point, point2: Point) => number}
- */
-
-function getDistance(point1, point2) {
-  return Math.hypot(point1[0] - point2[0], point1[1] - point2[1]);
-}
-
-/**
- * Returns coordinates of the curve point corresponding to the certain t
- * a·(1 - t)³·p1 + b·(1 - t)²·t·p2 + c·(1 - t)·t²·p3 + d·t³·p4,
- * where pN are control points and p1 is zero due to relative coordinates.
- *
- * @type {(curve: number[], t: number) => Point}
- */
-
-function getCubicBezierPoint(curve, t) {
-  var sqrT = t * t,
-    cubT = sqrT * t,
-    mt = 1 - t,
-    sqrMt = mt * mt;
-
-  return [
-    3 * sqrMt * t * curve[0] + 3 * mt * sqrT * curve[2] + cubT * curve[4],
-    3 * sqrMt * t * curve[1] + 3 * mt * sqrT * curve[3] + cubT * curve[5],
-  ];
-}
-
-/**
- * Finds circle by 3 points of the curve and checks if the curve fits the found circle.
- *
- * @type {(curve: number[]) => undefined | Circle}
- */
-
-function findCircle(curve) {
-  var midPoint = getCubicBezierPoint(curve, 1 / 2),
-    m1 = [midPoint[0] / 2, midPoint[1] / 2],
-    m2 = [(midPoint[0] + curve[4]) / 2, (midPoint[1] + curve[5]) / 2],
-    center = getIntersection([
-      m1[0],
-      m1[1],
-      m1[0] + m1[1],
-      m1[1] - m1[0],
-      m2[0],
-      m2[1],
-      m2[0] + (m2[1] - midPoint[1]),
-      m2[1] - (m2[0] - midPoint[0]),
-    ]),
-    radius = center && getDistance([0, 0], center),
-    // @ts-ignore
-    tolerance = Math.min(arcThreshold * error, (arcTolerance * radius) / 100);
-
-  if (
-    center &&
-    // @ts-ignore
-    radius < 1e15 &&
-    [1 / 4, 3 / 4].every(function (point) {
-      return (
-        Math.abs(
-          // @ts-ignore
-          getDistance(getCubicBezierPoint(curve, point), center) - radius
-        ) <= tolerance
-      );
-    })
-  )
-    // @ts-ignore
-    return { center: center, radius: radius };
-}
-
-/**
- * Checks if a curve fits the given circle.
- *
- * @type {(curve: number[], circle: Circle) => boolean}
- */
-
-function isArc(curve, circle) {
-  var tolerance = Math.min(
-    arcThreshold * error,
-    (arcTolerance * circle.radius) / 100
-  );
-
-  return [0, 1 / 4, 1 / 2, 3 / 4, 1].every(function (point) {
-    return (
-      Math.abs(
-        getDistance(getCubicBezierPoint(curve, point), circle.center) -
-          circle.radius
-      ) <= tolerance
-    );
-  });
-}
-
-/**
- * Checks if a previous curve fits the given circle.
- *
- * @type {(curve: number[], circle: Circle) => boolean}
- */
-
-function isArcPrev(curve, circle) {
-  return isArc(curve, {
-    center: [circle.center[0] + curve[4], circle.center[1] + curve[5]],
-    radius: circle.radius,
-  });
-}
-
-/**
- * Finds angle of a curve fitting the given arc.
-
- * @type {(curve: number[], relCircle: Circle) => number}
- */
-
-function findArcAngle(curve, relCircle) {
-  var x1 = -relCircle.center[0],
-    y1 = -relCircle.center[1],
-    x2 = curve[4] - relCircle.center[0],
-    y2 = curve[5] - relCircle.center[1];
-
-  return Math.acos(
-    (x1 * x2 + y1 * y2) / Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
-  );
 }
 
 /**
