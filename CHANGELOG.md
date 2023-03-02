@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/mbank-design/svgo/compare/v2.23.0...v3.0.3) (2023-03-02)
+
 ## [2.23.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.23.0) (2023-03-02)
 
 
