@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.23.0) (2023-03-02)
+
+
+### Features
+
+* add hasIllustrationCorrectColorLayers rule ([#9](https://github.com/mbank-design/svgo/issues/9)) ([2bbbddf](https://github.com/mbank-design/svgo/commit/2bbbddf14c3ec6d9fa06b9b8d8087bf594ecb050))
+* Add SVG validation/linting ([68b930c](https://github.com/mbank-design/svgo/commit/68b930c41d36ab383cbc2b640dadcd9dcf674e87))
+* add text validation rule ([9f011e1](https://github.com/mbank-design/svgo/commit/9f011e1c132c807f97a7814fb3cc6d3e77d4ce50))
+* add types ([a2f3e74](https://github.com/mbank-design/svgo/commit/a2f3e744ecb001ecb3235b40ed2444af7974c16e))
+* add validate fill-rule ([138398f](https://github.com/mbank-design/svgo/commit/138398fc68bb822566550b5a54454087019569b8))
+* Change 'main' package.json field to browser bundle ([5e513f2](https://github.com/mbank-design/svgo/commit/5e513f265e2edb5917d03cb612edd8220307ba17))
+* export parseSvg ([377f0f0](https://github.com/mbank-design/svgo/commit/377f0f03702223a8380ba9c0d0a1b6e01ff0d8c6))
+* remove fill rule from illustration ([605a740](https://github.com/mbank-design/svgo/commit/605a74044fc83933f6199fa553b9ce2563653aa1))
+
+
+### Bug Fixes
+
+* add @rollup/plugin-json to package.json ([a1781fe](https://github.com/mbank-design/svgo/commit/a1781fe9db33703b9312e94d2c176ddb75e04b42))
+* add margin of error ([4ee3c8a](https://github.com/mbank-design/svgo/commit/4ee3c8a89a4effc6a5a6bb77b44260dcf842838c))
+* allow to check colors despite of theme name location ([215119a](https://github.com/mbank-design/svgo/commit/215119a7e48f563d949349a35351e7511bca324a))
+* asset error validation ([7dd517a](https://github.com/mbank-design/svgo/commit/7dd517abbbf1c63faa252668eecb3fcec19c5825))
+* begin's attribute incorrectly modification ([#1658](https://github.com/mbank-design/svgo/issues/1658)) ([dd70f34](https://github.com/mbank-design/svgo/commit/dd70f34b6778f68285df25be8738e6be0acdeb47))
+* change mass to retail ([ba10199](https://github.com/mbank-design/svgo/commit/ba10199c1b263f06dec4a8f5abdb6e19814562a7))
+* merge type declarations ([e8676e7](https://github.com/mbank-design/svgo/commit/e8676e7a039e535f5f8e60a2036334d624f6a448))
+* **plugin:** removeAttrs: warn without attrs ([#1582](https://github.com/mbank-design/svgo/issues/1582)) ([8af10de](https://github.com/mbank-design/svgo/commit/8af10de8d440a4bfdeffeadcba6a34bed615b25c))
+* rename plugin and add new themes ([a012a6d](https://github.com/mbank-design/svgo/commit/a012a6db3bf0717a535fcf7d566d5275e852487c))
+* resolve issues with hasCorrectStripeColors and findFillElementsByColors ([355ccab](https://github.com/mbank-design/svgo/commit/355ccab58951e3a6b17a4bf2bca5ce0996b56c0a))
+* resolve issues with snake_case, blackFill and build ([#8](https://github.com/mbank-design/svgo/issues/8)) ([b410e71](https://github.com/mbank-design/svgo/commit/b410e7106f6442c31d583483a7b519db754f3a4d))
+* resolve stripe validation issue ([b166f61](https://github.com/mbank-design/svgo/commit/b166f6188356088c5b0cc97178c8bc08886add8b))
+* resolve typing error ([6f57f95](https://github.com/mbank-design/svgo/commit/6f57f95c664d9fef95aaa280b0c064eb7c783997))
+* secure walkTree function errors and fulfill snake_case rules ([e6bf5b9](https://github.com/mbank-design/svgo/commit/e6bf5b929e580b3e025546bba8da9177d7aac91d))
+* stricten prefix rule ([586c3b2](https://github.com/mbank-design/svgo/commit/586c3b2cc999b6c768ed754e1a9472fa6ad0e5c1))
+* update and fix regex for snake_case ([65d7ba8](https://github.com/mbank-design/svgo/commit/65d7ba83db4ef6a947d41382c81be114629e77ec))
+* update cli file read constant definitions ([2894135](https://github.com/mbank-design/svgo/commit/28941359b391b476a14f629c2890c09debdd895d))
+
 ## [2.22.0](https://github.com/mbank-design/svgo/compare/v2.21.0...v2.22.0) (2023-02-21)
 
 
