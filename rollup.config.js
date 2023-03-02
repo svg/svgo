@@ -23,6 +23,7 @@ export default {
       mangle: false,
       format: { comments: false },
     }),
+    json(),
     esbuild({
       // All options are optional
       include: /\.[jt]sx?$/, // default, inferred from `loaders` option
