@@ -441,8 +441,7 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
         data = arc.item.args;
         // @ts-ignore
         item.coords = arc.item.coords;
-        // filter out consumed next items
-        path.splice(index + 1, j);
+        // TODO: filter out consumed next items
       }
 
       // Rounding relative coordinates, taking in account accummulating error
