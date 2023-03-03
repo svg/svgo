@@ -771,6 +771,7 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       var isEnd = !path[index + 1] || path[index + 1].command === 'm';
       if (
         params.removeUseless &&
+        !hasMarkerMid &&
         (!maybeHasStrokeAndLinecap || !(isStart || isEnd))
       ) {
         // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
