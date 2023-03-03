@@ -766,8 +766,13 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
         }
       }
 
-      // remove useless non-first path segments
-      if (params.removeUseless && !maybeHasStrokeAndLinecap) {
+      // remove useless non-start/end path segments
+      var isStart = !path[index - 1] || path[index - 1].command === 'm';
+      var isEnd = !path[index + 1] || path[index + 1].command === 'm';
+      if (
+        params.removeUseless &&
+        (!maybeHasStrokeAndLinecap || !(isStart || isEnd))
+      ) {
         // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
         if (
           (command === 'l' ||
