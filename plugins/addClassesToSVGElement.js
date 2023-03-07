@@ -68,7 +68,7 @@ plugins: [
  *     name: "addClassesToSVGElement",
  *     params: {
  *       classNames: ["mySvg"],
- *       suffixPattern: '__$FILENAME'
+ *       suffixPattern: "__$FILENAME"
  *     }
  *   }
  * ]
