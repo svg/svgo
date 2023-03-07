@@ -26,11 +26,9 @@ plugins: [
     }
   }
 ]
-
 Optionally, the "suffixPattern" can be added to include a duplicate of each
-class name with an added suffix string. The magic keyword "$FILENAME" can 
+class name with an added suffix string. The magic keyword "$FILENAME" can
 be added to include the filename as part of the suffix string. For example:
-
 plugins: [
   {
     name: "addClassesToSVGElement",
@@ -62,7 +60,10 @@ plugins: [
  *     }
  *   }
  * ]
- * 
+ *
+ * Use the suffixPattern parameter to add an arbitrary suffix to
+ * the class names.
+ *
  * plugins: [
  *   {
  *     name: "addClassesToSVGElement",
@@ -72,8 +73,22 @@ plugins: [
  *     }
  *   }
  * ]
- * 
- * @author April Arcus
+ *
+ * Use the boolean doesPreserveClasses parameter to preserve any
+ * existing classes on the SVG element, otherwise any existing
+ * classes will be removed.
+ *
+ * plugins: [
+ *   {
+ *     name: "addClassesToSVGElement",
+ *     params: {
+ *       classNames: ["mySvg"],
+ *       doesPreserveClasses: true
+ *     }
+ *   }
+ * ]
+ *
+ * @author April Arcus, Anselm Bradford
  *
  * @type {import('./plugins-types').Plugin<'addClassesToSVGElement'>}
  */
@@ -110,6 +125,7 @@ exports.fn = (root, params, info) => {
     element: {
       enter: (node, parentNode) => {
         if (node.name === 'svg' && parentNode.type === 'root') {
+          params.doesPreserveClasses ? null : (node.attributes.class = null);
           const classList = new Set(
             node.attributes.class == null
               ? null
