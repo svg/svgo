@@ -8,6 +8,7 @@ exports.description = 'adds classnames to an outer <svg> element';
 var ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
 It should have a list of classes in "classNames" or one "className".
 Config example:
+
 plugins: [
   {
     name: "addClassesToSVGElement",
@@ -16,11 +17,26 @@ plugins: [
     }
   }
 ]
+
 plugins: [
   {
     name: "addClassesToSVGElement",
     params: {
       classNames: ["mySvg", "size-big"]
+    }
+  }
+]
+
+Optionally, the "suffixPattern" can be added to include a duplicate of each
+class name with an added suffix string. The magic keyword "$FILENAME" can 
+be added to include the filename as part of the suffix string. For example:
+
+plugins: [
+  {
+    name: "addClassesToSVGElement",
+    params: {
+      classNames: ["mySvg"],
+      suffixPattern: "__$FILENAME"
     }
   }
 ]
@@ -46,7 +62,17 @@ plugins: [
  *     }
  *   }
  * ]
- *
+ * 
+ * plugins: [
+ *   {
+ *     name: "addClassesToSVGElement",
+ *     params: {
+ *       classNames: ["mySvg"],
+ *       suffixPattern: '__$FILENAME'
+ *     }
+ *   }
+ * ]
+ * 
  * @author April Arcus
  *
  * @type {import('./plugins-types').Plugin<'addClassesToSVGElement'>}
