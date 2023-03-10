@@ -41,6 +41,9 @@ var ASSET_TYPE = {
       {
         name: 'isText',
       },
+      {
+        name: 'hasNoColorSuffix',
+      },
     ],
   },
   ICON_COLOR: {
@@ -84,6 +87,9 @@ var ASSET_TYPE = {
       },
       {
         name: 'isText',
+      },
+      {
+        name: 'hasNoColorSuffix',
       },
     ],
   },

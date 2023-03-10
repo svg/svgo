@@ -70,6 +70,7 @@ type ValidationResult = {
   isWorkingAreaCorrect?: boolean;
   isCorrectSvg?: boolean;
   isJSON?: boolean;
+  hasNoColorSuffix?: boolean;
   hasNoDiacriticCharacters?: boolean;
   isSuffixPresent?: boolean;
   isText?: boolean;
