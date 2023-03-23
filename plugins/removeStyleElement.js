@@ -1,9 +1,8 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
-exports.active = false;
-
+exports.name = 'removeStyleElement';
 exports.description = 'removes <style> element (disabled by default)';
 
 /**
@@ -11,11 +10,18 @@ exports.description = 'removes <style> element (disabled by default)';
  *
  * https://www.w3.org/TR/SVG11/styling.html#StyleElement
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Betsy Dupuis
+ *
+ * @type {import('./plugins-types').Plugin<'removeStyleElement'>}
  */
-exports.fn = function (item) {
-  return !item.isElem('style');
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.name === 'style') {
+          detachNodeFromParent(node, parentNode);
+        }
+      },
+    },
+  };
 };

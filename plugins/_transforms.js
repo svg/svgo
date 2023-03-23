@@ -1,130 +1,176 @@
 'use strict';
 
-var regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/,
-  regTransformSplit = /\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/,
-  regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
+const regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/;
+const regTransformSplit =
+  /\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/;
+const regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
+
+/**
+ * @typedef {{ name: string, data: Array<number> }} TransformItem
+ */
 
 /**
  * Convert transform string to JS representation.
  *
- * @param {String} transformString input string
- * @param {Object} params plugin params
- * @return {Array} output array
+ * @type {(transformString: string) => Array<TransformItem>}
  */
-exports.transform2js = function (transformString) {
+exports.transform2js = (transformString) => {
   // JS representation of the transform data
-  var transforms = [],
-    // current transform context
-    current;
-
+  /**
+   * @type {Array<TransformItem>}
+   */
+  const transforms = [];
+  // current transform context
+  /**
+   * @type {null | TransformItem}
+   */
+  let current = null;
   // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
-  transformString.split(regTransformSplit).forEach(function (item) {
+  for (const item of transformString.split(regTransformSplit)) {
     var num;
-
     if (item) {
       // if item is a translate function
       if (regTransformTypes.test(item)) {
         // then collect it and change current context
-        transforms.push((current = { name: item }));
+        current = { name: item, data: [] };
+        transforms.push(current);
         // else if item is data
       } else {
         // then split it into [10, 50] and collect as context.data
         // eslint-disable-next-line no-cond-assign
         while ((num = regNumericValues.exec(item))) {
           num = Number(num);
-          if (current.data) current.data.push(num);
-          else current.data = [num];
+          if (current != null) {
+            current.data.push(num);
+          }
         }
       }
     }
-  });
-
+  }
   // return empty array if broken transform (no data)
-  return current && current.data ? transforms : [];
+  return current == null || current.data.length == 0 ? [] : transforms;
 };
 
 /**
  * Multiply transforms into one.
  *
- * @param {Array} input transforms array
- * @return {Array} output matrix array
+ * @type {(transforms: Array<TransformItem>) => TransformItem}
  */
-exports.transformsMultiply = function (transforms) {
+exports.transformsMultiply = (transforms) => {
   // convert transforms objects to the matrices
-  transforms = transforms.map(function (transform) {
+  const matrixData = transforms.map((transform) => {
     if (transform.name === 'matrix') {
       return transform.data;
     }
     return transformToMatrix(transform);
   });
-
   // multiply all matrices into one
-  transforms = {
+  const matrixTransform = {
     name: 'matrix',
     data:
-      transforms.length > 0 ? transforms.reduce(multiplyTransformMatrices) : [],
+      matrixData.length > 0 ? matrixData.reduce(multiplyTransformMatrices) : [],
   };
-
-  return transforms;
+  return matrixTransform;
 };
 
 /**
- * Do math like a schoolgirl.
- *
- * @type {Object}
+ * math utilities in radians.
  */
-var mth = (exports.mth = {
-  rad: function (deg) {
+const mth = {
+  /**
+   * @type {(deg: number) => number}
+   */
+  rad: (deg) => {
     return (deg * Math.PI) / 180;
   },
 
-  deg: function (rad) {
+  /**
+   * @type {(rad: number) => number}
+   */
+  deg: (rad) => {
     return (rad * 180) / Math.PI;
   },
 
-  cos: function (deg) {
-    return Math.cos(this.rad(deg));
+  /**
+   * @type {(deg: number) => number}
+   */
+  cos: (deg) => {
+    return Math.cos(mth.rad(deg));
   },
 
-  acos: function (val, floatPrecision) {
-    return +this.deg(Math.acos(val)).toFixed(floatPrecision);
+  /**
+   * @type {(val: number, floatPrecision: number) => number}
+   */
+  acos: (val, floatPrecision) => {
+    return Number(mth.deg(Math.acos(val)).toFixed(floatPrecision));
   },
 
-  sin: function (deg) {
-    return Math.sin(this.rad(deg));
+  /**
+   * @type {(deg: number) => number}
+   */
+  sin: (deg) => {
+    return Math.sin(mth.rad(deg));
   },
 
-  asin: function (val, floatPrecision) {
-    return +this.deg(Math.asin(val)).toFixed(floatPrecision);
+  /**
+   * @type {(val: number, floatPrecision: number) => number}
+   */
+  asin: (val, floatPrecision) => {
+    return Number(mth.deg(Math.asin(val)).toFixed(floatPrecision));
   },
 
-  tan: function (deg) {
-    return Math.tan(this.rad(deg));
+  /**
+   * @type {(deg: number) => number}
+   */
+  tan: (deg) => {
+    return Math.tan(mth.rad(deg));
   },
 
-  atan: function (val, floatPrecision) {
-    return +this.deg(Math.atan(val)).toFixed(floatPrecision);
+  /**
+   * @type {(val: number, floatPrecision: number) => number}
+   */
+  atan: (val, floatPrecision) => {
+    return Number(mth.deg(Math.atan(val)).toFixed(floatPrecision));
   },
-});
+};
+
+/**
+ * @typedef {{
+ *   convertToShorts: boolean,
+ *   floatPrecision: number,
+ *   transformPrecision: number,
+ *   matrixToTransform: boolean,
+ *   shortTranslate: boolean,
+ *   shortScale: boolean,
+ *   shortRotate: boolean,
+ *   removeUseless: boolean,
+ *   collapseIntoOne: boolean,
+ *   leadingZero: boolean,
+ *   negativeExtraSpace: boolean,
+ * }} TransformParams
+ */
 
 /**
  * Decompose matrix into simple transforms. See
  * https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  *
- * @param {Object} data matrix transform object
- * @return {Object|Array} transforms array or original transform object
+ * @type {(transform: TransformItem, params: TransformParams) => Array<TransformItem>}
  */
-exports.matrixToTransform = function (transform, params) {
-  var floatPrecision = params.floatPrecision,
-    data = transform.data,
-    transforms = [],
-    sx = +Math.hypot(data[0], data[1]).toFixed(params.transformPrecision),
-    sy = +((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(
+exports.matrixToTransform = (transform, params) => {
+  let floatPrecision = params.floatPrecision;
+  let data = transform.data;
+  let transforms = [];
+  let sx = Number(
+    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision)
+  );
+  let sy = Number(
+    ((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(
       params.transformPrecision
-    ),
-    colsSum = data[0] * data[2] + data[1] * data[3],
-    rowsSum = data[0] * data[1] + data[2] * data[3],
-    scaleBefore = rowsSum != 0 || sx == sy;
+    )
+  );
+  let colsSum = data[0] * data[2] + data[1] * data[3];
+  let rowsSum = data[0] * data[1] + data[2] * data[3];
+  let scaleBefore = rowsSum != 0 || sx == sy;
 
   // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
   if (data[4] || data[5]) {
@@ -177,17 +223,18 @@ exports.matrixToTransform = function (transform, params) {
       transforms.shift();
       var cos = data[0] / sx,
         sin = data[1] / (scaleBefore ? sx : sy),
-        x = data[4] * (scaleBefore || sy),
-        y = data[5] * (scaleBefore || sx),
+        x = data[4] * (scaleBefore ? 1 : sy),
+        y = data[5] * (scaleBefore ? 1 : sx),
         denom =
-          (Math.pow(1 - cos, 2) + Math.pow(sin, 2)) * (scaleBefore || sx * sy);
+          (Math.pow(1 - cos, 2) + Math.pow(sin, 2)) *
+          (scaleBefore ? 1 : sx * sy);
       rotate.push(((1 - cos) * x - sin * y) / denom);
       rotate.push(((1 - cos) * y + sin * x) / denom);
     }
 
     // Too many transformations, return original matrix if it isn't just a scale/translate
   } else if (data[1] || data[2]) {
-    return transform;
+    return [transform];
   }
 
   if ((scaleBefore && (sx != 1 || sy != 1)) || !transforms.length)
@@ -202,22 +249,19 @@ exports.matrixToTransform = function (transform, params) {
 /**
  * Convert transform to the matrix data.
  *
- * @param {Object} transform transform object
- * @return {Array} matrix data
+ * @type {(transform: TransformItem) => Array<number> }
  */
-function transformToMatrix(transform) {
-  if (transform.name === 'matrix') return transform.data;
-
-  var matrix;
-
+const transformToMatrix = (transform) => {
+  if (transform.name === 'matrix') {
+    return transform.data;
+  }
   switch (transform.name) {
     case 'translate':
       // [1, 0, 0, 1, tx, ty]
-      matrix = [1, 0, 0, 1, transform.data[0], transform.data[1] || 0];
-      break;
+      return [1, 0, 0, 1, transform.data[0], transform.data[1] || 0];
     case 'scale':
       // [sx, 0, 0, sy, 0, 0]
-      matrix = [
+      return [
         transform.data[0],
         0,
         0,
@@ -225,15 +269,13 @@ function transformToMatrix(transform) {
         0,
         0,
       ];
-      break;
     case 'rotate':
       // [cos(a), sin(a), -sin(a), cos(a), x, y]
       var cos = mth.cos(transform.data[0]),
         sin = mth.sin(transform.data[0]),
         cx = transform.data[1] || 0,
         cy = transform.data[2] || 0;
-
-      matrix = [
+      return [
         cos,
         sin,
         -sin,
@@ -241,19 +283,16 @@ function transformToMatrix(transform) {
         (1 - cos) * cx + sin * cy,
         (1 - cos) * cy - sin * cx,
       ];
-      break;
     case 'skewX':
       // [1, 0, tan(a), 1, 0, 0]
-      matrix = [1, 0, mth.tan(transform.data[0]), 1, 0, 0];
-      break;
+      return [1, 0, mth.tan(transform.data[0]), 1, 0, 0];
     case 'skewY':
       // [1, tan(a), 0, 1, 0, 0]
-      matrix = [1, mth.tan(transform.data[0]), 0, 1, 0, 0];
-      break;
+      return [1, mth.tan(transform.data[0]), 0, 1, 0, 0];
+    default:
+      throw Error(`Unknown transform ${transform.name}`);
   }
-
-  return matrix;
-}
+};
 
 /**
  * Applies transformation to an arc. To do so, we represent ellipse as a matrix, multiply it
@@ -261,48 +300,51 @@ function transformToMatrix(transform) {
  * rotate(θ)·scale(a b)·rotate(φ). This gives us new ellipse params a, b and θ.
  * SVD is being done with the formulae provided by Wolffram|Alpha (svd {{m0, m2}, {m1, m3}})
  *
- * @param {Array} cursor [x, y]
- * @param {Array} arc [a, b, rotation in deg]
- * @param {Array} transform transformation matrix
- * @return {Array} arc transformed input arc
+ * @type {(
+ *   cursor: [x: number, y: number],
+ *   arc: Array<number>,
+ *   transform: Array<number>
+ * ) => Array<number>}
  */
-exports.transformArc = function (cursor, arc, transform) {
+exports.transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
   const y = arc[6] - cursor[1];
-  var a = arc[0],
-    b = arc[1],
-    rot = (arc[2] * Math.PI) / 180,
-    cos = Math.cos(rot),
-    sin = Math.sin(rot),
-    h =
+  let a = arc[0];
+  let b = arc[1];
+  const rot = (arc[2] * Math.PI) / 180;
+  const cos = Math.cos(rot);
+  const sin = Math.sin(rot);
+  // skip if radius is 0
+  if (a > 0 && b > 0) {
+    let h =
       Math.pow(x * cos + y * sin, 2) / (4 * a * a) +
       Math.pow(y * cos - x * sin, 2) / (4 * b * b);
-  if (h > 1) {
-    h = Math.sqrt(h);
-    a *= h;
-    b *= h;
+    if (h > 1) {
+      h = Math.sqrt(h);
+      a *= h;
+      b *= h;
+    }
   }
-  var ellipse = [a * cos, a * sin, -b * sin, b * cos, 0, 0],
-    m = multiplyTransformMatrices(transform, ellipse),
-    // Decompose the new ellipse matrix
-    lastCol = m[2] * m[2] + m[3] * m[3],
-    squareSum = m[0] * m[0] + m[1] * m[1] + lastCol,
-    root =
-      Math.hypot(m[0] - m[3], m[1] + m[2]) *
-      Math.hypot(m[0] + m[3], m[1] - m[2]);
+  const ellipse = [a * cos, a * sin, -b * sin, b * cos, 0, 0];
+  const m = multiplyTransformMatrices(transform, ellipse);
+  // Decompose the new ellipse matrix
+  const lastCol = m[2] * m[2] + m[3] * m[3];
+  const squareSum = m[0] * m[0] + m[1] * m[1] + lastCol;
+  const root =
+    Math.hypot(m[0] - m[3], m[1] + m[2]) * Math.hypot(m[0] + m[3], m[1] - m[2]);
 
   if (!root) {
     // circle
     arc[0] = arc[1] = Math.sqrt(squareSum / 2);
     arc[2] = 0;
   } else {
-    var majorAxisSqr = (squareSum + root) / 2,
-      minorAxisSqr = (squareSum - root) / 2,
-      major = Math.abs(majorAxisSqr - lastCol) > 1e-6,
-      sub = (major ? majorAxisSqr : minorAxisSqr) - lastCol,
-      rowsSum = m[0] * m[2] + m[1] * m[3],
-      term1 = m[0] * sub + m[2] * rowsSum,
-      term2 = m[1] * sub + m[3] * rowsSum;
+    const majorAxisSqr = (squareSum + root) / 2;
+    const minorAxisSqr = (squareSum - root) / 2;
+    const major = Math.abs(majorAxisSqr - lastCol) > 1e-6;
+    const sub = (major ? majorAxisSqr : minorAxisSqr) - lastCol;
+    const rowsSum = m[0] * m[2] + m[1] * m[3];
+    const term1 = m[0] * sub + m[2] * rowsSum;
+    const term2 = m[1] * sub + m[3] * rowsSum;
     arc[0] = Math.sqrt(majorAxisSqr);
     arc[1] = Math.sqrt(minorAxisSqr);
     arc[2] =
@@ -323,11 +365,9 @@ exports.transformArc = function (cursor, arc, transform) {
 /**
  * Multiply transformation matrices.
  *
- * @param {Array} a matrix A data
- * @param {Array} b matrix B data
- * @return {Array} result
+ * @type {(a: Array<number>, b: Array<number>) => Array<number>}
  */
-function multiplyTransformMatrices(a, b) {
+const multiplyTransformMatrices = (a, b) => {
   return [
     a[0] * b[0] + a[2] * b[1],
     a[1] * b[0] + a[3] * b[1],
@@ -336,4 +376,4 @@ function multiplyTransformMatrices(a, b) {
     a[0] * b[4] + a[2] * b[5] + a[4],
     a[1] * b[4] + a[3] * b[5] + a[5],
   ];
-}
+};

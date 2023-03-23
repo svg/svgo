@@ -1,328 +1,188 @@
 'use strict';
 
+/**
+ * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ */
+
 const { parsePathData, stringifyPathData } = require('../lib/path.js');
 
+/**
+ * @type {[number, number]}
+ */
 var prevCtrlPoint;
 
 /**
  * Convert path string to JS representation.
  *
- * @param {String} pathString input string
- * @param {Object} params plugin params
- * @return {Array} output array
+ * @type {(path: XastElement) => Array<PathDataItem>}
  */
-exports.path2js = function (path) {
+const path2js = (path) => {
+  // @ts-ignore legacy
   if (path.pathJS) return path.pathJS;
+  /**
+   * @type {Array<PathDataItem>}
+   */
   const pathData = []; // JS representation of the path data
   const newPathData = parsePathData(path.attributes.d);
   for (const { command, args } of newPathData) {
-    if (command === 'Z' || command === 'z') {
-      pathData.push({ instruction: 'z' });
-    } else {
-      pathData.push({ instruction: command, data: args });
-    }
+    pathData.push({ command, args });
   }
   // First moveto is actually absolute. Subsequent coordinates were separated above.
-  if (pathData.length && pathData[0].instruction == 'm') {
-    pathData[0].instruction = 'M';
+  if (pathData.length && pathData[0].command == 'm') {
+    pathData[0].command = 'M';
   }
+  // @ts-ignore legacy
   path.pathJS = pathData;
   return pathData;
 };
+exports.path2js = path2js;
 
 /**
  * Convert relative Path data to absolute.
  *
- * @param {Array} data input data
- * @return {Array} output data
+ * @type {(data: Array<PathDataItem>) => Array<PathDataItem>}
+ *
  */
-var relative2absolute = (exports.relative2absolute = function (data) {
-  var currentPoint = [0, 0],
-    subpathPoint = [0, 0],
-    i;
+const convertRelativeToAbsolute = (data) => {
+  /**
+   * @type {Array<PathDataItem>}
+   */
+  const newData = [];
+  let start = [0, 0];
+  let cursor = [0, 0];
 
-  return data.map(function (item) {
-    var instruction = item.instruction,
-      itemData = item.data && item.data.slice();
+  for (let { command, args } of data) {
+    args = args.slice();
 
-    if (instruction == 'M') {
-      set(currentPoint, itemData);
-      set(subpathPoint, itemData);
-    } else if ('mlcsqt'.indexOf(instruction) > -1) {
-      for (i = 0; i < itemData.length; i++) {
-        itemData[i] += currentPoint[i % 2];
-      }
-      set(currentPoint, itemData);
-
-      if (instruction == 'm') {
-        set(subpathPoint, itemData);
-      }
-    } else if (instruction == 'a') {
-      itemData[5] += currentPoint[0];
-      itemData[6] += currentPoint[1];
-      set(currentPoint, itemData);
-    } else if (instruction == 'h') {
-      itemData[0] += currentPoint[0];
-      currentPoint[0] = itemData[0];
-    } else if (instruction == 'v') {
-      itemData[0] += currentPoint[1];
-      currentPoint[1] = itemData[0];
-    } else if ('MZLCSQTA'.indexOf(instruction) > -1) {
-      set(currentPoint, itemData);
-    } else if (instruction == 'H') {
-      currentPoint[0] = itemData[0];
-    } else if (instruction == 'V') {
-      currentPoint[1] = itemData[0];
-    } else if (instruction == 'z') {
-      set(currentPoint, subpathPoint);
+    // moveto (x y)
+    if (command === 'm') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      command = 'M';
+    }
+    if (command === 'M') {
+      cursor[0] = args[0];
+      cursor[1] = args[1];
+      start[0] = cursor[0];
+      start[1] = cursor[1];
     }
 
-    return instruction == 'z'
-      ? { instruction: 'z' }
-      : {
-          instruction: instruction.toUpperCase(),
-          data: itemData,
-        };
-  });
-});
-
-/**
- * Compute Cubic Bézie bounding box.
- *
- * @see https://pomax.github.io/bezierinfo/
- *
- * @param {Float} xa
- * @param {Float} ya
- * @param {Float} xb
- * @param {Float} yb
- * @param {Float} xc
- * @param {Float} yc
- * @param {Float} xd
- * @param {Float} yd
- *
- * @return {Object}
- */
-exports.computeCubicBoundingBox = function (xa, ya, xb, yb, xc, yc, xd, yd) {
-  var minx = Number.POSITIVE_INFINITY,
-    miny = Number.POSITIVE_INFINITY,
-    maxx = Number.NEGATIVE_INFINITY,
-    maxy = Number.NEGATIVE_INFINITY,
-    ts,
-    t,
-    x,
-    y,
-    i;
-
-  // X
-  if (xa < minx) {
-    minx = xa;
-  }
-  if (xa > maxx) {
-    maxx = xa;
-  }
-  if (xd < minx) {
-    minx = xd;
-  }
-  if (xd > maxx) {
-    maxx = xd;
-  }
-
-  ts = computeCubicFirstDerivativeRoots(xa, xb, xc, xd);
-
-  for (i = 0; i < ts.length; i++) {
-    t = ts[i];
-
-    if (t >= 0 && t <= 1) {
-      x = computeCubicBaseValue(t, xa, xb, xc, xd);
-      // y = computeCubicBaseValue(t, ya, yb, yc, yd);
-
-      if (x < minx) {
-        minx = x;
-      }
-      if (x > maxx) {
-        maxx = x;
-      }
+    // horizontal lineto (x)
+    if (command === 'h') {
+      args[0] += cursor[0];
+      command = 'H';
     }
-  }
-
-  // Y
-  if (ya < miny) {
-    miny = ya;
-  }
-  if (ya > maxy) {
-    maxy = ya;
-  }
-  if (yd < miny) {
-    miny = yd;
-  }
-  if (yd > maxy) {
-    maxy = yd;
-  }
-
-  ts = computeCubicFirstDerivativeRoots(ya, yb, yc, yd);
-
-  for (i = 0; i < ts.length; i++) {
-    t = ts[i];
-
-    if (t >= 0 && t <= 1) {
-      // x = computeCubicBaseValue(t, xa, xb, xc, xd);
-      y = computeCubicBaseValue(t, ya, yb, yc, yd);
-
-      if (y < miny) {
-        miny = y;
-      }
-      if (y > maxy) {
-        maxy = y;
-      }
+    if (command === 'H') {
+      cursor[0] = args[0];
     }
-  }
 
-  return {
-    minx: minx,
-    miny: miny,
-    maxx: maxx,
-    maxy: maxy,
-  };
+    // vertical lineto (y)
+    if (command === 'v') {
+      args[0] += cursor[1];
+      command = 'V';
+    }
+    if (command === 'V') {
+      cursor[1] = args[0];
+    }
+
+    // lineto (x y)
+    if (command === 'l') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      command = 'L';
+    }
+    if (command === 'L') {
+      cursor[0] = args[0];
+      cursor[1] = args[1];
+    }
+
+    // curveto (x1 y1 x2 y2 x y)
+    if (command === 'c') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      args[2] += cursor[0];
+      args[3] += cursor[1];
+      args[4] += cursor[0];
+      args[5] += cursor[1];
+      command = 'C';
+    }
+    if (command === 'C') {
+      cursor[0] = args[4];
+      cursor[1] = args[5];
+    }
+
+    // smooth curveto (x2 y2 x y)
+    if (command === 's') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      args[2] += cursor[0];
+      args[3] += cursor[1];
+      command = 'S';
+    }
+    if (command === 'S') {
+      cursor[0] = args[2];
+      cursor[1] = args[3];
+    }
+
+    // quadratic Bézier curveto (x1 y1 x y)
+    if (command === 'q') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      args[2] += cursor[0];
+      args[3] += cursor[1];
+      command = 'Q';
+    }
+    if (command === 'Q') {
+      cursor[0] = args[2];
+      cursor[1] = args[3];
+    }
+
+    // smooth quadratic Bézier curveto (x y)
+    if (command === 't') {
+      args[0] += cursor[0];
+      args[1] += cursor[1];
+      command = 'T';
+    }
+    if (command === 'T') {
+      cursor[0] = args[0];
+      cursor[1] = args[1];
+    }
+
+    // elliptical arc (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+    if (command === 'a') {
+      args[5] += cursor[0];
+      args[6] += cursor[1];
+      command = 'A';
+    }
+    if (command === 'A') {
+      cursor[0] = args[5];
+      cursor[1] = args[6];
+    }
+
+    // closepath
+    if (command === 'z' || command === 'Z') {
+      cursor[0] = start[0];
+      cursor[1] = start[1];
+      command = 'z';
+    }
+
+    newData.push({ command, args });
+  }
+  return newData;
 };
 
-// compute the value for the cubic bezier function at time=t
-function computeCubicBaseValue(t, a, b, c, d) {
-  var mt = 1 - t;
-
-  return (
-    mt * mt * mt * a + 3 * mt * mt * t * b + 3 * mt * t * t * c + t * t * t * d
-  );
-}
-
-// compute the value for the first derivative of the cubic bezier function at time=t
-function computeCubicFirstDerivativeRoots(a, b, c, d) {
-  var result = [-1, -1],
-    tl = -a + 2 * b - c,
-    tr = -Math.sqrt(-a * (c - d) + b * b - b * (c + d) + c * c),
-    dn = -a + 3 * b - 3 * c + d;
-
-  if (dn !== 0) {
-    result[0] = (tl + tr) / dn;
-    result[1] = (tl - tr) / dn;
-  }
-
-  return result;
-}
-
 /**
- * Compute Quadratic Bézier bounding box.
- *
- * @see https://pomax.github.io/bezierinfo/
- *
- * @param {Float} xa
- * @param {Float} ya
- * @param {Float} xb
- * @param {Float} yb
- * @param {Float} xc
- * @param {Float} yc
- *
- * @return {Object}
+ * @typedef {{ floatPrecision?: number, noSpaceAfterFlags?: boolean }} Js2PathParams
  */
-exports.computeQuadraticBoundingBox = function (xa, ya, xb, yb, xc, yc) {
-  var minx = Number.POSITIVE_INFINITY,
-    miny = Number.POSITIVE_INFINITY,
-    maxx = Number.NEGATIVE_INFINITY,
-    maxy = Number.NEGATIVE_INFINITY,
-    t,
-    x,
-    y;
-
-  // X
-  if (xa < minx) {
-    minx = xa;
-  }
-  if (xa > maxx) {
-    maxx = xa;
-  }
-  if (xc < minx) {
-    minx = xc;
-  }
-  if (xc > maxx) {
-    maxx = xc;
-  }
-
-  t = computeQuadraticFirstDerivativeRoot(xa, xb, xc);
-
-  if (t >= 0 && t <= 1) {
-    x = computeQuadraticBaseValue(t, xa, xb, xc);
-    // y = computeQuadraticBaseValue(t, ya, yb, yc);
-
-    if (x < minx) {
-      minx = x;
-    }
-    if (x > maxx) {
-      maxx = x;
-    }
-  }
-
-  // Y
-  if (ya < miny) {
-    miny = ya;
-  }
-  if (ya > maxy) {
-    maxy = ya;
-  }
-  if (yc < miny) {
-    miny = yc;
-  }
-  if (yc > maxy) {
-    maxy = yc;
-  }
-
-  t = computeQuadraticFirstDerivativeRoot(ya, yb, yc);
-
-  if (t >= 0 && t <= 1) {
-    // x = computeQuadraticBaseValue(t, xa, xb, xc);
-    y = computeQuadraticBaseValue(t, ya, yb, yc);
-
-    if (y < miny) {
-      miny = y;
-    }
-    if (y > maxy) {
-      maxy = y;
-    }
-  }
-
-  return {
-    minx: minx,
-    miny: miny,
-    maxx: maxx,
-    maxy: maxy,
-  };
-};
-
-// compute the value for the quadratic bezier function at time=t
-function computeQuadraticBaseValue(t, a, b, c) {
-  var mt = 1 - t;
-
-  return mt * mt * a + 2 * mt * t * b + t * t * c;
-}
-
-// compute the value for the first derivative of the quadratic bezier function at time=t
-function computeQuadraticFirstDerivativeRoot(a, b, c) {
-  var t = -1,
-    denominator = a - 2 * b + c;
-
-  if (denominator !== 0) {
-    t = (a - b) / denominator;
-  }
-
-  return t;
-}
 
 /**
  * Convert path array to string.
  *
- * @param {Array} path input path data
- * @param {Object} params plugin params
- * @return {String} output path string
+ * @type {(path: XastElement, data: Array<PathDataItem>, params: Js2PathParams) => void}
  */
 exports.js2path = function (path, data, params) {
+  // @ts-ignore legacy
   path.pathJS = data;
 
   const pathData = [];
@@ -330,7 +190,7 @@ exports.js2path = function (path, data, params) {
     // remove moveto commands which are followed by moveto commands
     if (
       pathData.length !== 0 &&
-      (item.instruction === 'M' || item.instruction === 'm')
+      (item.command === 'M' || item.command === 'm')
     ) {
       const last = pathData[pathData.length - 1];
       if (last.command === 'M' || last.command === 'm') {
@@ -338,8 +198,8 @@ exports.js2path = function (path, data, params) {
       }
     }
     pathData.push({
-      command: item.instruction,
-      args: item.data || [],
+      command: item.command,
+      args: item.args,
     });
   }
 
@@ -350,6 +210,9 @@ exports.js2path = function (path, data, params) {
   });
 };
 
+/**
+ * @type {(dest: Array<number>, source: Array<number>) => Array<number>}
+ */
 function set(dest, source) {
   dest[0] = source[source.length - 2];
   dest[1] = source[source.length - 1];
@@ -361,14 +224,12 @@ function set(dest, source) {
  * collision using Gilbert-Johnson-Keerthi distance algorithm
  * https://web.archive.org/web/20180822200027/http://entropyinteractive.com/2011/04/gjk-algorithm/
  *
- * @param {Array} path1 JS path representation
- * @param {Array} path2 JS path representation
- * @return {Boolean}
+ * @type {(path1: Array<PathDataItem>, path2: Array<PathDataItem>) => boolean}
  */
 exports.intersects = function (path1, path2) {
   // Collect points of every subpath.
-  var points1 = relative2absolute(path1).reduce(gatherPoints, []),
-    points2 = relative2absolute(path2).reduce(gatherPoints, []);
+  const points1 = gatherPoints(convertRelativeToAbsolute(path1));
+  const points2 = gatherPoints(convertRelativeToAbsolute(path2));
 
   // Axis-aligned bounding box check.
   if (
@@ -376,13 +237,13 @@ exports.intersects = function (path1, path2) {
     points2.maxX <= points1.minX ||
     points1.maxY <= points2.minY ||
     points2.maxY <= points1.minY ||
-    points1.every(function (set1) {
-      return points2.every(function (set2) {
+    points1.list.every((set1) => {
+      return points2.list.every((set2) => {
         return (
-          set1[set1.maxX][0] <= set2[set2.minX][0] ||
-          set2[set2.maxX][0] <= set1[set1.minX][0] ||
-          set1[set1.maxY][1] <= set2[set2.minY][1] ||
-          set2[set2.maxY][1] <= set1[set1.minY][1]
+          set1.list[set1.maxX][0] <= set2.list[set2.minX][0] ||
+          set2.list[set2.maxX][0] <= set1.list[set1.minX][0] ||
+          set1.list[set1.maxY][1] <= set2.list[set2.minY][1] ||
+          set2.list[set2.maxY][1] <= set1.list[set1.minY][1]
         );
       });
     })
@@ -390,15 +251,15 @@ exports.intersects = function (path1, path2) {
     return false;
 
   // Get a convex hull from points of each subpath. Has the most complexity O(n·log n).
-  var hullNest1 = points1.map(convexHull),
-    hullNest2 = points2.map(convexHull);
+  const hullNest1 = points1.list.map(convexHull);
+  const hullNest2 = points2.list.map(convexHull);
 
   // Check intersection of every subpath of the first path with every subpath of the second.
   return hullNest1.some(function (hull1) {
-    if (hull1.length < 3) return false;
+    if (hull1.list.length < 3) return false;
 
     return hullNest2.some(function (hull2) {
-      if (hull2.length < 3) return false;
+      if (hull2.list.length < 3) return false;
 
       var simplex = [getSupport(hull1, hull2, [1, 0])], // create the initial simplex
         direction = minus(simplex[0]); // set the direction to point towards the origin
@@ -423,6 +284,9 @@ exports.intersects = function (path1, path2) {
     });
   });
 
+  /**
+   * @type {(a: Point, b: Point, direction: Array<number>) => Array<number>}
+   */
   function getSupport(a, b, direction) {
     return sub(supportPoint(a, direction), supportPoint(b, minus(direction)));
   }
@@ -430,6 +294,9 @@ exports.intersects = function (path1, path2) {
   // Computes farthest polygon point in particular direction.
   // Thanks to knowledge of min/max x and y coordinates we can choose a quadrant to search in.
   // Since we're working on convex hull, the dot product is increasing until we find the farthest point.
+  /**
+   * @type {(polygon: Point, direction: Array<number>) => Array<number>}
+   */
   function supportPoint(polygon, direction) {
     var index =
         direction[1] >= 0
@@ -441,14 +308,17 @@ exports.intersects = function (path1, path2) {
           : polygon.minY,
       max = -Infinity,
       value;
-    while ((value = dot(polygon[index], direction)) > max) {
+    while ((value = dot(polygon.list[index], direction)) > max) {
       max = value;
-      index = ++index % polygon.length;
+      index = ++index % polygon.list.length;
     }
-    return polygon[(index || polygon.length) - 1];
+    return polygon.list[(index || polygon.list.length) - 1];
   }
 };
 
+/**
+ * @type {(simplex: Array<Array<number>>, direction: Array<number>) => boolean}
+ */
 function processSimplex(simplex, direction) {
   // we only need to handle to 1-simplex and 2-simplex
   if (simplex.length == 2) {
@@ -503,200 +373,328 @@ function processSimplex(simplex, direction) {
   return false;
 }
 
+/**
+ * @type {(v: Array<number>) => Array<number>}
+ */
 function minus(v) {
   return [-v[0], -v[1]];
 }
 
+/**
+ * @type {(v1: Array<number>, v2: Array<number>) => Array<number>}
+ */
 function sub(v1, v2) {
   return [v1[0] - v2[0], v1[1] - v2[1]];
 }
 
+/**
+ * @type {(v1: Array<number>, v2: Array<number>) => number}
+ */
 function dot(v1, v2) {
   return v1[0] * v2[0] + v1[1] * v2[1];
 }
 
+/**
+ * @type {(v1: Array<number>, v2: Array<number>) => Array<number>}
+ */
 function orth(v, from) {
   var o = [-v[1], v[0]];
   return dot(o, minus(from)) < 0 ? minus(o) : o;
 }
 
-function gatherPoints(points, item, index, path) {
-  var subPath = points.length && points[points.length - 1],
-    prev = index && path[index - 1],
-    basePoint = subPath.length && subPath[subPath.length - 1],
-    data = item.data,
-    ctrlPoint = basePoint;
+/**
+ * @typedef {{
+ *   list: Array<Array<number>>,
+ *   minX: number,
+ *   minY: number,
+ *   maxX: number,
+ *   maxY: number
+ * }} Point
+ */
 
-  switch (item.instruction) {
-    case 'M':
-      points.push((subPath = []));
-      break;
-    case 'H':
-      addPoint(subPath, [data[0], basePoint[1]]);
-      break;
-    case 'V':
-      addPoint(subPath, [basePoint[0], data[0]]);
-      break;
-    case 'Q':
-      addPoint(subPath, data.slice(0, 2));
-      prevCtrlPoint = [data[2] - data[0], data[3] - data[1]]; // Save control point for shorthand
-      break;
-    case 'T':
-      if (prev.instruction == 'Q' || prev.instruction == 'T') {
-        ctrlPoint = [
-          basePoint[0] + prevCtrlPoint[0],
-          basePoint[1] + prevCtrlPoint[1],
-        ];
-        addPoint(subPath, ctrlPoint);
-        prevCtrlPoint = [data[0] - ctrlPoint[0], data[1] - ctrlPoint[1]];
-      }
-      break;
-    case 'C':
-      // Approximate quibic Bezier curve with middle points between control points
-      addPoint(subPath, [
-        0.5 * (basePoint[0] + data[0]),
-        0.5 * (basePoint[1] + data[1]),
-      ]);
-      addPoint(subPath, [0.5 * (data[0] + data[2]), 0.5 * (data[1] + data[3])]);
-      addPoint(subPath, [0.5 * (data[2] + data[4]), 0.5 * (data[3] + data[5])]);
-      prevCtrlPoint = [data[4] - data[2], data[5] - data[3]]; // Save control point for shorthand
-      break;
-    case 'S':
-      if (prev.instruction == 'C' || prev.instruction == 'S') {
-        addPoint(subPath, [
-          basePoint[0] + 0.5 * prevCtrlPoint[0],
-          basePoint[1] + 0.5 * prevCtrlPoint[1],
-        ]);
-        ctrlPoint = [
-          basePoint[0] + prevCtrlPoint[0],
-          basePoint[1] + prevCtrlPoint[1],
-        ];
-      }
-      addPoint(subPath, [
-        0.5 * (ctrlPoint[0] + data[0]),
-        0.5 * (ctrlPoint[1] + data[1]),
-      ]);
-      addPoint(subPath, [0.5 * (data[0] + data[2]), 0.5 * (data[1] + data[3])]);
-      prevCtrlPoint = [data[2] - data[0], data[3] - data[1]];
-      break;
-    case 'A':
-      // Convert the arc to bezier curves and use the same approximation
-      var curves = a2c.apply(0, basePoint.concat(data));
-      for (var cData; (cData = curves.splice(0, 6).map(toAbsolute)).length; ) {
-        addPoint(subPath, [
-          0.5 * (basePoint[0] + cData[0]),
-          0.5 * (basePoint[1] + cData[1]),
-        ]);
-        addPoint(subPath, [
-          0.5 * (cData[0] + cData[2]),
-          0.5 * (cData[1] + cData[3]),
-        ]);
-        addPoint(subPath, [
-          0.5 * (cData[2] + cData[4]),
-          0.5 * (cData[3] + cData[5]),
-        ]);
-        if (curves.length) addPoint(subPath, (basePoint = cData.slice(-2)));
-      }
-      break;
-  }
-  // Save final command coordinates
-  if (data && data.length >= 2) addPoint(subPath, data.slice(-2));
-  return points;
+/**
+ * @typedef {{
+ *   list: Array<Point>,
+ *   minX: number,
+ *   minY: number,
+ *   maxX: number,
+ *   maxY: number
+ * }} Points
+ */
 
-  function toAbsolute(n, i) {
-    return n + basePoint[i % 2];
-  }
+/**
+ * @type {(pathData: Array<PathDataItem>) => Points}
+ */
+function gatherPoints(pathData) {
+  /**
+   * @type {Points}
+   */
+  const points = { list: [], minX: 0, minY: 0, maxX: 0, maxY: 0 };
 
   // Writes data about the extreme points on each axle
-  function addPoint(path, point) {
-    if (!path.length || point[1] > path[path.maxY][1]) {
-      path.maxY = path.length;
-      points.maxY = points.length ? Math.max(point[1], points.maxY) : point[1];
+  /**
+   * @type {(path: Point, point: Array<number>) => void}
+   */
+  const addPoint = (path, point) => {
+    if (!path.list.length || point[1] > path.list[path.maxY][1]) {
+      path.maxY = path.list.length;
+      points.maxY = points.list.length
+        ? Math.max(point[1], points.maxY)
+        : point[1];
     }
-    if (!path.length || point[0] > path[path.maxX][0]) {
-      path.maxX = path.length;
-      points.maxX = points.length ? Math.max(point[0], points.maxX) : point[0];
+    if (!path.list.length || point[0] > path.list[path.maxX][0]) {
+      path.maxX = path.list.length;
+      points.maxX = points.list.length
+        ? Math.max(point[0], points.maxX)
+        : point[0];
     }
-    if (!path.length || point[1] < path[path.minY][1]) {
-      path.minY = path.length;
-      points.minY = points.length ? Math.min(point[1], points.minY) : point[1];
+    if (!path.list.length || point[1] < path.list[path.minY][1]) {
+      path.minY = path.list.length;
+      points.minY = points.list.length
+        ? Math.min(point[1], points.minY)
+        : point[1];
     }
-    if (!path.length || point[0] < path[path.minX][0]) {
-      path.minX = path.length;
-      points.minX = points.length ? Math.min(point[0], points.minX) : point[0];
+    if (!path.list.length || point[0] < path.list[path.minX][0]) {
+      path.minX = path.list.length;
+      points.minX = points.list.length
+        ? Math.min(point[0], points.minX)
+        : point[0];
     }
-    path.push(point);
+    path.list.push(point);
+  };
+
+  for (let i = 0; i < pathData.length; i += 1) {
+    const pathDataItem = pathData[i];
+    let subPath =
+      points.list.length === 0
+        ? { list: [], minX: 0, minY: 0, maxX: 0, maxY: 0 }
+        : points.list[points.list.length - 1];
+    let prev = i === 0 ? null : pathData[i - 1];
+    let basePoint =
+      subPath.list.length === 0 ? null : subPath.list[subPath.list.length - 1];
+    let data = pathDataItem.args;
+    let ctrlPoint = basePoint;
+
+    /**
+     * @type {(n: number, i: number) => number}
+     * TODO fix null hack
+     */
+    const toAbsolute = (n, i) => n + (basePoint == null ? 0 : basePoint[i % 2]);
+
+    switch (pathDataItem.command) {
+      case 'M':
+        subPath = { list: [], minX: 0, minY: 0, maxX: 0, maxY: 0 };
+        points.list.push(subPath);
+        break;
+
+      case 'H':
+        if (basePoint != null) {
+          addPoint(subPath, [data[0], basePoint[1]]);
+        }
+        break;
+
+      case 'V':
+        if (basePoint != null) {
+          addPoint(subPath, [basePoint[0], data[0]]);
+        }
+        break;
+
+      case 'Q':
+        addPoint(subPath, data.slice(0, 2));
+        prevCtrlPoint = [data[2] - data[0], data[3] - data[1]]; // Save control point for shorthand
+        break;
+
+      case 'T':
+        if (
+          basePoint != null &&
+          prev != null &&
+          (prev.command == 'Q' || prev.command == 'T')
+        ) {
+          ctrlPoint = [
+            basePoint[0] + prevCtrlPoint[0],
+            basePoint[1] + prevCtrlPoint[1],
+          ];
+          addPoint(subPath, ctrlPoint);
+          prevCtrlPoint = [data[0] - ctrlPoint[0], data[1] - ctrlPoint[1]];
+        }
+        break;
+
+      case 'C':
+        if (basePoint != null) {
+          // Approximate quibic Bezier curve with middle points between control points
+          addPoint(subPath, [
+            0.5 * (basePoint[0] + data[0]),
+            0.5 * (basePoint[1] + data[1]),
+          ]);
+        }
+        addPoint(subPath, [
+          0.5 * (data[0] + data[2]),
+          0.5 * (data[1] + data[3]),
+        ]);
+        addPoint(subPath, [
+          0.5 * (data[2] + data[4]),
+          0.5 * (data[3] + data[5]),
+        ]);
+        prevCtrlPoint = [data[4] - data[2], data[5] - data[3]]; // Save control point for shorthand
+        break;
+
+      case 'S':
+        if (
+          basePoint != null &&
+          prev != null &&
+          (prev.command == 'C' || prev.command == 'S')
+        ) {
+          addPoint(subPath, [
+            basePoint[0] + 0.5 * prevCtrlPoint[0],
+            basePoint[1] + 0.5 * prevCtrlPoint[1],
+          ]);
+          ctrlPoint = [
+            basePoint[0] + prevCtrlPoint[0],
+            basePoint[1] + prevCtrlPoint[1],
+          ];
+        }
+        if (ctrlPoint != null) {
+          addPoint(subPath, [
+            0.5 * (ctrlPoint[0] + data[0]),
+            0.5 * (ctrlPoint[1] + data[1]),
+          ]);
+        }
+        addPoint(subPath, [
+          0.5 * (data[0] + data[2]),
+          0.5 * (data[1] + data[3]),
+        ]);
+        prevCtrlPoint = [data[2] - data[0], data[3] - data[1]];
+        break;
+
+      case 'A':
+        if (basePoint != null) {
+          // Convert the arc to bezier curves and use the same approximation
+          // @ts-ignore no idea what's going on here
+          var curves = a2c.apply(0, basePoint.concat(data));
+          for (
+            var cData;
+            (cData = curves.splice(0, 6).map(toAbsolute)).length;
+
+          ) {
+            if (basePoint != null) {
+              addPoint(subPath, [
+                0.5 * (basePoint[0] + cData[0]),
+                0.5 * (basePoint[1] + cData[1]),
+              ]);
+            }
+            addPoint(subPath, [
+              0.5 * (cData[0] + cData[2]),
+              0.5 * (cData[1] + cData[3]),
+            ]);
+            addPoint(subPath, [
+              0.5 * (cData[2] + cData[4]),
+              0.5 * (cData[3] + cData[5]),
+            ]);
+            if (curves.length) addPoint(subPath, (basePoint = cData.slice(-2)));
+          }
+        }
+        break;
+    }
+
+    // Save final command coordinates
+    if (data.length >= 2) addPoint(subPath, data.slice(-2));
   }
+
+  return points;
 }
 
 /**
  * Forms a convex hull from set of points of every subpath using monotone chain convex hull algorithm.
  * https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
  *
- * @param points An array of [X, Y] coordinates
+ * @type {(points: Point) => Point}
  */
 function convexHull(points) {
-  points.sort(function (a, b) {
+  points.list.sort(function (a, b) {
     return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
   });
 
   var lower = [],
     minY = 0,
     bottom = 0;
-  for (let i = 0; i < points.length; i++) {
+  for (let i = 0; i < points.list.length; i++) {
     while (
       lower.length >= 2 &&
-      cross(lower[lower.length - 2], lower[lower.length - 1], points[i]) <= 0
+      cross(lower[lower.length - 2], lower[lower.length - 1], points.list[i]) <=
+        0
     ) {
       lower.pop();
     }
-    if (points[i][1] < points[minY][1]) {
+    if (points.list[i][1] < points.list[minY][1]) {
       minY = i;
       bottom = lower.length;
     }
-    lower.push(points[i]);
+    lower.push(points.list[i]);
   }
 
   var upper = [],
-    maxY = points.length - 1,
+    maxY = points.list.length - 1,
     top = 0;
-  for (let i = points.length; i--; ) {
+  for (let i = points.list.length; i--; ) {
     while (
       upper.length >= 2 &&
-      cross(upper[upper.length - 2], upper[upper.length - 1], points[i]) <= 0
+      cross(upper[upper.length - 2], upper[upper.length - 1], points.list[i]) <=
+        0
     ) {
       upper.pop();
     }
-    if (points[i][1] > points[maxY][1]) {
+    if (points.list[i][1] > points.list[maxY][1]) {
       maxY = i;
       top = upper.length;
     }
-    upper.push(points[i]);
+    upper.push(points.list[i]);
   }
 
   // last points are equal to starting points of the other part
   upper.pop();
   lower.pop();
 
-  var hull = lower.concat(upper);
+  const hullList = lower.concat(upper);
 
-  hull.minX = 0; // by sorting
-  hull.maxX = lower.length;
-  hull.minY = bottom;
-  hull.maxY = (lower.length + top) % hull.length;
+  /**
+   * @type {Point}
+   */
+  const hull = {
+    list: hullList,
+    minX: 0, // by sorting
+    maxX: lower.length,
+    minY: bottom,
+    maxY: (lower.length + top) % hullList.length,
+  };
 
   return hull;
 }
 
+/**
+ * @type {(o: Array<number>, a: Array<number>, b: Array<number>) => number}
+ */
 function cross(o, a, b) {
   return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
 }
 
-/* Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
+/**
+ * Based on code from Snap.svg (Apache 2 license). http://snapsvg.io/
  * Thanks to Dmitry Baranovskiy for his great work!
+ *
+ * @type {(
+ *  x1: number,
+ *  y1: number,
+ *  rx: number,
+ *  ry: number,
+ *  angle: number,
+ *  large_arc_flag: number,
+ *  sweep_flag: number,
+ *  x2: number,
+ *  y2: number,
+ *  recursive: Array<number>
+ * ) => Array<number>}
  */
-
-function a2c(
+const a2c = (
   x1,
   y1,
   rx,
@@ -707,18 +705,27 @@ function a2c(
   x2,
   y2,
   recursive
-) {
+) => {
   // for more information of where this Math came from visit:
   // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
-  var _120 = (Math.PI * 120) / 180,
-    rad = (Math.PI / 180) * (+angle || 0),
-    res = [],
-    rotateX = function (x, y, rad) {
-      return x * Math.cos(rad) - y * Math.sin(rad);
-    },
-    rotateY = function (x, y, rad) {
-      return x * Math.sin(rad) + y * Math.cos(rad);
-    };
+  const _120 = (Math.PI * 120) / 180;
+  const rad = (Math.PI / 180) * (+angle || 0);
+  /**
+   * @type {Array<number>}
+   */
+  let res = [];
+  /**
+   * @type {(x: number, y: number, rad: number) => number}
+   */
+  const rotateX = (x, y, rad) => {
+    return x * Math.cos(rad) - y * Math.sin(rad);
+  };
+  /**
+   * @type {(x: number, y: number, rad: number) => number}
+   */
+  const rotateY = (x, y, rad) => {
+    return x * Math.sin(rad) + y * Math.cos(rad);
+  };
   if (!recursive) {
     x1 = rotateX(x1, y1, -rad);
     y1 = rotateY(x1, y1, -rad);
@@ -732,20 +739,19 @@ function a2c(
       rx = h * rx;
       ry = h * ry;
     }
-    var rx2 = rx * rx,
-      ry2 = ry * ry,
-      k =
-        (large_arc_flag == sweep_flag ? -1 : 1) *
-        Math.sqrt(
-          Math.abs(
-            (rx2 * ry2 - rx2 * y * y - ry2 * x * x) /
-              (rx2 * y * y + ry2 * x * x)
-          )
-        ),
-      cx = (k * rx * y) / ry + (x1 + x2) / 2,
-      cy = (k * -ry * x) / rx + (y1 + y2) / 2,
-      f1 = Math.asin(((y1 - cy) / ry).toFixed(9)),
-      f2 = Math.asin(((y2 - cy) / ry).toFixed(9));
+    var rx2 = rx * rx;
+    var ry2 = ry * ry;
+    var k =
+      (large_arc_flag == sweep_flag ? -1 : 1) *
+      Math.sqrt(
+        Math.abs(
+          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x)
+        )
+      );
+    var cx = (k * rx * y) / ry + (x1 + x2) / 2;
+    var cy = (k * -ry * x) / rx + (y1 + y2) / 2;
+    var f1 = Math.asin(Number(((y1 - cy) / ry).toFixed(9)));
+    var f2 = Math.asin(Number(((y2 - cy) / ry).toFixed(9)));
 
     f1 = x1 < cx ? Math.PI - f1 : f1;
     f2 = x2 < cx ? Math.PI - f2 : f2;
@@ -807,4 +813,4 @@ function a2c(
     }
     return newres;
   }
-}
+};

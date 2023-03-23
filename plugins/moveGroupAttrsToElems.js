@@ -2,10 +2,7 @@
 
 const { pathElems, referencesProps } = require('./_collections.js');
 
-exports.type = 'perItem';
-
-exports.active = true;
-
+exports.name = 'moveGroupAttrsToElems';
 exports.description = 'moves some group attributes to the content elements';
 
 const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
@@ -24,37 +21,44 @@ const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
  *     <path transform="scale(2) translate(10, 20)" d="M0,10 L20,30"/>
  * </g>
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('./plugins-types').Plugin<'moveGroupAttrsToElems'>}
  */
-exports.fn = function (item) {
-  // move group transform attr to content's pathElems
-  if (
-    item.type === 'element' &&
-    item.name === 'g' &&
-    item.children.length !== 0 &&
-    item.attributes.transform != null &&
-    Object.entries(item.attributes).some(
-      ([name, value]) =>
-        referencesProps.includes(name) && value.includes('url(')
-    ) === false &&
-    item.children.every(
-      (inner) =>
-        pathElemsWithGroupsAndText.includes(inner.name) &&
-        inner.attributes.id == null
-    )
-  ) {
-    for (const inner of item.children) {
-      const value = item.attributes.transform;
-      if (inner.attributes.transform != null) {
-        inner.attributes.transform = value + ' ' + inner.attributes.transform;
-      } else {
-        inner.attributes.transform = value;
-      }
-    }
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node) => {
+        // move group transform attr to content's pathElems
+        if (
+          node.name === 'g' &&
+          node.children.length !== 0 &&
+          node.attributes.transform != null &&
+          Object.entries(node.attributes).some(
+            ([name, value]) =>
+              referencesProps.includes(name) && value.includes('url(')
+          ) === false &&
+          node.children.every(
+            (child) =>
+              child.type === 'element' &&
+              pathElemsWithGroupsAndText.includes(child.name) &&
+              child.attributes.id == null
+          )
+        ) {
+          for (const child of node.children) {
+            const value = node.attributes.transform;
+            if (child.type === 'element') {
+              if (child.attributes.transform != null) {
+                child.attributes.transform = `${value} ${child.attributes.transform}`;
+              } else {
+                child.attributes.transform = value;
+              }
+            }
+          }
 
-    delete item.attributes.transform;
-  }
+          delete node.attributes.transform;
+        }
+      },
+    },
+  };
 };

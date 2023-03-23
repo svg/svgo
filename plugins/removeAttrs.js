@@ -1,29 +1,33 @@
 'use strict';
 
-var DEFAULT_SEPARATOR = ':';
-
-exports.type = 'perItem';
-
-exports.active = false;
-
+exports.name = 'removeAttrs';
 exports.description = 'removes specified attributes';
 
-exports.params = {
-  elemSeparator: DEFAULT_SEPARATOR,
-  preserveCurrentColor: false,
-  attrs: [],
-};
+const DEFAULT_SEPARATOR = ':';
+const ENOATTRS = `Warning: The plugin "removeAttrs" requires the "attrs" parameter.
+It should have a pattern to remove, otherwise the plugin is a noop.
+Config example:
+
+plugins: [
+  {
+    name: "removeAttrs",
+    params: {
+      attrs: "(fill|stroke)"
+    }
+  }
+]
+`;
 
 /**
  * Remove attributes
  *
- * @param elemSeparator
+ * @example elemSeparator
  *   format: string
  *
- * @param preserveCurrentColor
+ * @example preserveCurrentColor
  *   format: boolean
  *
- * @param attrs:
+ * @example attrs:
  *
  *   format: [ element* : attribute* : value* ]
  *
@@ -75,72 +79,75 @@ exports.params = {
  *     attrs: 'stroke.*'
  *
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Benny Schudel
+ *
+ * @type {import('./plugins-types').Plugin<'removeAttrs'>}
  */
-exports.fn = function (item, params) {
-  // wrap into an array if params is not
-  if (!Array.isArray(params.attrs)) {
-    params.attrs = [params.attrs];
+exports.fn = (root, params) => {
+  if (typeof params.attrs == 'undefined') {
+    console.warn(ENOATTRS);
+    return null;
   }
 
-  if (item.type === 'element') {
-    var elemSeparator =
-      typeof params.elemSeparator == 'string'
-        ? params.elemSeparator
-        : DEFAULT_SEPARATOR;
-    var preserveCurrentColor =
-      typeof params.preserveCurrentColor == 'boolean'
-        ? params.preserveCurrentColor
-        : false;
+  const elemSeparator =
+    typeof params.elemSeparator == 'string'
+      ? params.elemSeparator
+      : DEFAULT_SEPARATOR;
+  const preserveCurrentColor =
+    typeof params.preserveCurrentColor == 'boolean'
+      ? params.preserveCurrentColor
+      : false;
+  const attrs = Array.isArray(params.attrs) ? params.attrs : [params.attrs];
 
-    // prepare patterns
-    var patterns = params.attrs.map(function (pattern) {
-      // if no element separators (:), assume it's attribute name, and apply to all elements *regardless of value*
-      if (pattern.indexOf(elemSeparator) === -1) {
-        pattern = ['.*', elemSeparator, pattern, elemSeparator, '.*'].join('');
+  return {
+    element: {
+      enter: (node) => {
+        for (let pattern of attrs) {
+          // if no element separators (:), assume it's attribute name, and apply to all elements *regardless of value*
+          if (pattern.includes(elemSeparator) === false) {
+            pattern = ['.*', elemSeparator, pattern, elemSeparator, '.*'].join(
+              ''
+            );
+            // if only 1 separator, assume it's element and attribute name, and apply regardless of attribute value
+          } else if (pattern.split(elemSeparator).length < 3) {
+            pattern = [pattern, elemSeparator, '.*'].join('');
+          }
 
-        // if only 1 separator, assume it's element and attribute name, and apply regardless of attribute value
-      } else if (pattern.split(elemSeparator).length < 3) {
-        pattern = [pattern, elemSeparator, '.*'].join('');
-      }
+          // create regexps for element, attribute name, and attribute value
+          const list = pattern.split(elemSeparator).map((value) => {
+            // adjust single * to match anything
+            if (value === '*') {
+              value = '.*';
+            }
+            return new RegExp(['^', value, '$'].join(''), 'i');
+          });
 
-      // create regexps for element, attribute name, and attribute value
-      return pattern.split(elemSeparator).map(function (value) {
-        // adjust single * to match anything
-        if (value === '*') {
-          value = '.*';
-        }
-
-        return new RegExp(['^', value, '$'].join(''), 'i');
-      });
-    });
-
-    // loop patterns
-    patterns.forEach(function (pattern) {
-      // matches element
-      if (pattern[0].test(item.name)) {
-        // loop attributes
-        for (const [name, value] of Object.entries(item.attributes)) {
-          var isFillCurrentColor =
-            preserveCurrentColor && name == 'fill' && value == 'currentColor';
-          var isStrokeCurrentColor =
-            preserveCurrentColor && name == 'stroke' && value == 'currentColor';
-
-          if (!(isFillCurrentColor || isStrokeCurrentColor)) {
-            // matches attribute name
-            if (pattern[1].test(name)) {
-              // matches attribute value
-              if (pattern[2].test(value)) {
-                delete item.attributes[name];
+          // matches element
+          if (list[0].test(node.name)) {
+            // loop attributes
+            for (const [name, value] of Object.entries(node.attributes)) {
+              const isFillCurrentColor =
+                preserveCurrentColor &&
+                name == 'fill' &&
+                value == 'currentColor';
+              const isStrokeCurrentColor =
+                preserveCurrentColor &&
+                name == 'stroke' &&
+                value == 'currentColor';
+              if (
+                !isFillCurrentColor &&
+                !isStrokeCurrentColor &&
+                // matches attribute name
+                list[1].test(name) &&
+                // matches attribute value
+                list[2].test(value)
+              ) {
+                delete node.attributes[name];
               }
             }
           }
         }
-      }
-    });
-  }
+      },
+    },
+  };
 };

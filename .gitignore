@@ -1,8 +1,16 @@
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 node_modules
 dist
 test/regression-fixtures
 test/regression-diffs
+test/cli/output
 coverage
-bin/svgo-profiling
 .DS_Store
 *.log

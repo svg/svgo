@@ -1,6 +1,10 @@
 'use strict';
 
 // https://www.w3.org/TR/SVG11/intro.html#Definitions
+
+/**
+ * @type {Record<string, Array<string>>}
+ */
 exports.elemsGroups = {
   animation: [
     'animate',
@@ -71,10 +75,16 @@ exports.elemsGroups = {
     'feConvolveMatrix',
     'feDiffuseLighting',
     'feDisplacementMap',
+    'feDropShadow',
     'feFlood',
+    'feFuncA',
+    'feFuncB',
+    'feFuncG',
+    'feFuncR',
     'feGaussianBlur',
     'feImage',
     'feMerge',
+    'feMergeNode',
     'feMorphology',
     'feOffset',
     'feSpecularLighting',
@@ -88,6 +98,9 @@ exports.textElems = exports.elemsGroups.textContent.concat('title');
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
 // https://www.w3.org/TR/SVG11/intro.html#Definitions
+/**
+ * @type {Record<string, Array<string>>}
+ */
 exports.attrsGroups = {
   animationAddition: ['additive', 'accumulate'],
   animationAttributeTarget: ['attributeType', 'attributeName'],
@@ -188,6 +201,7 @@ exports.attrsGroups = {
     'text-overflow',
     'text-rendering',
     'transform',
+    'transform-origin',
     'unicode-bidi',
     'vector-effect',
     'visibility',
@@ -223,6 +237,9 @@ exports.attrsGroups = {
   ],
 };
 
+/**
+ * @type {Record<string, Record<string, string>>}
+ */
 exports.attrsGroupsDefaults = {
   core: { 'xml:space': 'default' },
   presentation: {
@@ -288,6 +305,15 @@ exports.attrsGroupsDefaults = {
 };
 
 // https://www.w3.org/TR/SVG11/eltindex.html
+/**
+ * @type {Record<string, {
+ *   attrsGroups: Array<string>,
+ *   attrs?: Array<string>,
+ *   defaults?: Record<string, string>,
+ *   contentGroups?: Array<string>,
+ *   content?: Array<string>,
+ * }>}
+ */
 exports.elems = {
   a: {
     attrsGroups: [
@@ -958,8 +984,8 @@ exports.elems = {
       'height',
     ],
     defaults: {
-      x: 0,
-      y: 0,
+      x: '0',
+      y: '0',
     },
   },
   g: {
@@ -1648,8 +1674,8 @@ exports.elems = {
       'refY',
     ],
     defaults: {
-      refX: 0,
-      refY: 0,
+      refX: '0',
+      refY: '0',
     },
     contentGroups: [
       'animation',
@@ -1935,10 +1961,13 @@ exports.presentationNonInheritableGroupAttrs = [
   'text-decoration',
   'transform',
   'unicode-bidi',
-  'visibility',
 ];
 
-// https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+/**
+ * https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+ *
+ * @type {Record<string, string>}
+ */
 exports.colorsNames = {
   aliceblue: '#f0f8ff',
   antiquewhite: '#faebd7',
@@ -2090,6 +2119,9 @@ exports.colorsNames = {
   yellowgreen: '#9acd32',
 };
 
+/**
+ * @type {Record<string, string>}
+ */
 exports.colorsShortNames = {
   '#f0ffff': 'azure',
   '#f5f5dc': 'beige',

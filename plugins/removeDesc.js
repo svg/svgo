@@ -1,16 +1,11 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
-exports.active = true;
-
-exports.params = {
-  removeAny: true,
-};
-
+exports.name = 'removeDesc';
 exports.description = 'removes <desc>';
 
-var standardDescs = /^(Created with|Created using)/;
+const standardDescs = /^(Created with|Created using)/;
 
 /**
  * Removes <desc>.
@@ -19,19 +14,26 @@ var standardDescs = /^(Created with|Created using)/;
  *
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Daniel Wabyick
+ *
+ * @type {import('./plugins-types').Plugin<'removeDesc'>}
  */
-exports.fn = function (item, params) {
-  return (
-    !item.isElem('desc') ||
-    !(
-      params.removeAny ||
-      item.children.length === 0 ||
-      (item.children[0].type === 'text' &&
-        standardDescs.test(item.children[0].value))
-    )
-  );
+exports.fn = (root, params) => {
+  const { removeAny = true } = params;
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.name === 'desc') {
+          if (
+            removeAny ||
+            node.children.length === 0 ||
+            (node.children[0].type === 'text' &&
+              standardDescs.test(node.children[0].value))
+          ) {
+            detachNodeFromParent(node, parentNode);
+          }
+        }
+      },
+    },
+  };
 };

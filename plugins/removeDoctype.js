@@ -1,9 +1,8 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
-exports.active = true;
-
+exports.name = 'removeDoctype';
 exports.description = 'removes doctype declaration';
 
 /**
@@ -26,13 +25,16 @@ exports.description = 'removes doctype declaration';
  *     <!-- an internal subset can be embedded here -->
  * ]>
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('./plugins-types').Plugin<'removeDoctype'>}
  */
-exports.fn = function (item) {
-  if (item.type === 'doctype') {
-    return false;
-  }
+exports.fn = () => {
+  return {
+    doctype: {
+      enter: (node, parentNode) => {
+        detachNodeFromParent(node, parentNode);
+      },
+    },
+  };
 };

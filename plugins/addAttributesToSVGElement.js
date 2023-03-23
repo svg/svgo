@@ -1,11 +1,6 @@
 'use strict';
 
-const { closestByName } = require('../lib/xast.js');
-
-exports.type = 'perItem';
-
-exports.active = false;
-
+exports.name = 'addAttributesToSVGElement';
 exports.description = 'adds attributes to an outer <svg> element';
 
 var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
@@ -51,33 +46,37 @@ plugins: [
  * Add attributes to an outer <svg> element. Example config:
  *
  * @author April Arcus
+ *
+ * @type {import('./plugins-types').Plugin<'addAttributesToSVGElement'>}
  */
-exports.fn = (node, params) => {
-  if (
-    node.type === 'element' &&
-    node.name === 'svg' &&
-    closestByName(node.parentNode, 'svg') == null
-  ) {
-    if (!params || !(Array.isArray(params.attributes) || params.attribute)) {
-      console.error(ENOCLS);
-      return;
-    }
-
-    const attributes = params.attributes || [params.attribute];
-
-    for (const attribute of attributes) {
-      if (typeof attribute === 'string') {
-        if (node.attributes[attribute] == null) {
-          node.attributes[attribute] = undefined;
-        }
-      }
-      if (typeof attribute === 'object') {
-        for (const key of Object.keys(attribute)) {
-          if (node.attributes[key] == null) {
-            node.attributes[key] = attribute[key];
+exports.fn = (root, params) => {
+  if (!Array.isArray(params.attributes) && !params.attribute) {
+    console.error(ENOCLS);
+    return null;
+  }
+  const attributes = params.attributes || [params.attribute];
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          for (const attribute of attributes) {
+            if (typeof attribute === 'string') {
+              if (node.attributes[attribute] == null) {
+                // @ts-ignore disallow explicit nullable attribute value
+                node.attributes[attribute] = undefined;
+              }
+            }
+            if (typeof attribute === 'object') {
+              for (const key of Object.keys(attribute)) {
+                if (node.attributes[key] == null) {
+                  // @ts-ignore disallow explicit nullable attribute value
+                  node.attributes[key] = attribute[key];
+                }
+              }
+            }
           }
         }
-      }
-    }
-  }
+      },
+    },
+  };
 };

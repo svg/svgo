@@ -1,19 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-    <g attr1="val1">
-        <g fill="red" color="#000">
-            text
-        </g>
-        <circle fill="red" color="#000"/>
-    </g>
+Override group attributes with children attributes
+
+===
+
+<svg>
+  <g fill="red">
+    <rect fill="blue" />
+    <circle fill="blue" />
+  </g>
 </svg>
 
 @@@
 
-<svg xmlns="http://www.w3.org/2000/svg">
-    <g attr1="val1" fill="red" color="#000">
-        <g>
-            text
-        </g>
+<svg>
+    <g fill="blue">
+        <rect/>
         <circle/>
     </g>
 </svg>

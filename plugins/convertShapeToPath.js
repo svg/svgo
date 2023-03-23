@@ -1,17 +1,14 @@
 'use strict';
 
+/**
+ * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ */
+
 const { stringifyPathData } = require('../lib/path.js');
+const { detachNodeFromParent } = require('../lib/xast.js');
 
-exports.type = 'perItem';
-
-exports.active = true;
-
+exports.name = 'convertShapeToPath';
 exports.description = 'converts basic shapes to more compact path form';
-
-exports.params = {
-  convertArcs: false,
-  floatPrecision: null,
-};
 
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
@@ -22,124 +19,152 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  *
  * @see https://www.w3.org/TR/SVG11/shapes.html
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Lev Solntsev
+ *
+ * @type {import('./plugins-types').Plugin<'convertShapeToPath'>}
  */
-exports.fn = function (item, params) {
-  const precision = params ? params.floatPrecision : null;
-  const convertArcs = params && params.convertArcs;
+exports.fn = (root, params) => {
+  const { convertArcs = false, floatPrecision: precision } = params;
 
-  if (
-    item.isElem('rect') &&
-    item.attributes.width != null &&
-    item.attributes.height != null &&
-    item.attributes.rx == null &&
-    item.attributes.ry == null
-  ) {
-    const x = Number(item.attributes.x || '0');
-    const y = Number(item.attributes.y || '0');
-    const width = Number(item.attributes.width);
-    const height = Number(item.attributes.height);
-    // Values like '100%' compute to NaN, thus running after
-    // cleanupNumericValues when 'px' units has already been removed.
-    // TODO: Calculate sizes from % and non-px units if possible.
-    if (isNaN(x - y + width - height)) return;
-    const pathData = [
-      { command: 'M', args: [x, y] },
-      { command: 'H', args: [x + width] },
-      { command: 'V', args: [y + height] },
-      { command: 'H', args: [x] },
-      { command: 'z', args: [] },
-    ];
-    item.attributes.d = stringifyPathData({ pathData, precision });
-    item.renameElem('path');
-    delete item.attributes.x;
-    delete item.attributes.y;
-    delete item.attributes.width;
-    delete item.attributes.height;
-  }
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        // convert rect to path
+        if (
+          node.name === 'rect' &&
+          node.attributes.width != null &&
+          node.attributes.height != null &&
+          node.attributes.rx == null &&
+          node.attributes.ry == null
+        ) {
+          const x = Number(node.attributes.x || '0');
+          const y = Number(node.attributes.y || '0');
+          const width = Number(node.attributes.width);
+          const height = Number(node.attributes.height);
+          // Values like '100%' compute to NaN, thus running after
+          // cleanupNumericValues when 'px' units has already been removed.
+          // TODO: Calculate sizes from % and non-px units if possible.
+          if (Number.isNaN(x - y + width - height)) return;
+          /**
+           * @type {Array<PathDataItem>}
+           */
+          const pathData = [
+            { command: 'M', args: [x, y] },
+            { command: 'H', args: [x + width] },
+            { command: 'V', args: [y + height] },
+            { command: 'H', args: [x] },
+            { command: 'z', args: [] },
+          ];
+          node.name = 'path';
+          node.attributes.d = stringifyPathData({ pathData, precision });
+          delete node.attributes.x;
+          delete node.attributes.y;
+          delete node.attributes.width;
+          delete node.attributes.height;
+        }
 
-  if (item.isElem('line')) {
-    const x1 = Number(item.attributes.x1 || '0');
-    const y1 = Number(item.attributes.y1 || '0');
-    const x2 = Number(item.attributes.x2 || '0');
-    const y2 = Number(item.attributes.y2 || '0');
-    if (isNaN(x1 - y1 + x2 - y2)) return;
-    const pathData = [
-      { command: 'M', args: [x1, y1] },
-      { command: 'L', args: [x2, y2] },
-    ];
-    item.attributes.d = stringifyPathData({ pathData, precision });
-    item.renameElem('path');
-    delete item.attributes.x1;
-    delete item.attributes.y1;
-    delete item.attributes.x2;
-    delete item.attributes.y2;
-  }
+        // convert line to path
+        if (node.name === 'line') {
+          const x1 = Number(node.attributes.x1 || '0');
+          const y1 = Number(node.attributes.y1 || '0');
+          const x2 = Number(node.attributes.x2 || '0');
+          const y2 = Number(node.attributes.y2 || '0');
+          if (Number.isNaN(x1 - y1 + x2 - y2)) return;
+          /**
+           * @type {Array<PathDataItem>}
+           */
+          const pathData = [
+            { command: 'M', args: [x1, y1] },
+            { command: 'L', args: [x2, y2] },
+          ];
+          node.name = 'path';
+          node.attributes.d = stringifyPathData({ pathData, precision });
+          delete node.attributes.x1;
+          delete node.attributes.y1;
+          delete node.attributes.x2;
+          delete node.attributes.y2;
+        }
 
-  if (
-    (item.isElem('polyline') || item.isElem('polygon')) &&
-    item.attributes.points != null
-  ) {
-    const coords = (item.attributes.points.match(regNumber) || []).map(Number);
-    if (coords.length < 4) return false;
-    const pathData = [];
-    for (let i = 0; i < coords.length; i += 2) {
-      pathData.push({
-        command: i === 0 ? 'M' : 'L',
-        args: coords.slice(i, i + 2),
-      });
-    }
-    if (item.isElem('polygon')) {
-      pathData.push({ command: 'z', args: [] });
-    }
-    item.attributes.d = stringifyPathData({ pathData, precision });
-    item.renameElem('path');
-    delete item.attributes.points;
-  }
+        // convert polyline and polygon to path
+        if (
+          (node.name === 'polyline' || node.name === 'polygon') &&
+          node.attributes.points != null
+        ) {
+          const coords = (node.attributes.points.match(regNumber) || []).map(
+            Number
+          );
+          if (coords.length < 4) {
+            detachNodeFromParent(node, parentNode);
+            return;
+          }
+          /**
+           * @type {Array<PathDataItem>}
+           */
+          const pathData = [];
+          for (let i = 0; i < coords.length; i += 2) {
+            pathData.push({
+              command: i === 0 ? 'M' : 'L',
+              args: coords.slice(i, i + 2),
+            });
+          }
+          if (node.name === 'polygon') {
+            pathData.push({ command: 'z', args: [] });
+          }
+          node.name = 'path';
+          node.attributes.d = stringifyPathData({ pathData, precision });
+          delete node.attributes.points;
+        }
 
-  if (item.isElem('circle') && convertArcs) {
-    const cx = Number(item.attributes.cx || '0');
-    const cy = Number(item.attributes.cy || '0');
-    const r = Number(item.attributes.r || '0');
-    if (isNaN(cx - cy + r)) {
-      return;
-    }
-    const pathData = [
-      { command: 'M', args: [cx, cy - r] },
-      { command: 'A', args: [r, r, 0, 1, 0, cx, cy + r] },
-      { command: 'A', args: [r, r, 0, 1, 0, cx, cy - r] },
-      { command: 'z', args: [] },
-    ];
-    item.attributes.d = stringifyPathData({ pathData, precision });
-    item.renameElem('path');
-    delete item.attributes.cx;
-    delete item.attributes.cy;
-    delete item.attributes.r;
-  }
+        //  optionally convert circle
+        if (node.name === 'circle' && convertArcs) {
+          const cx = Number(node.attributes.cx || '0');
+          const cy = Number(node.attributes.cy || '0');
+          const r = Number(node.attributes.r || '0');
+          if (Number.isNaN(cx - cy + r)) {
+            return;
+          }
+          /**
+           * @type {Array<PathDataItem>}
+           */
+          const pathData = [
+            { command: 'M', args: [cx, cy - r] },
+            { command: 'A', args: [r, r, 0, 1, 0, cx, cy + r] },
+            { command: 'A', args: [r, r, 0, 1, 0, cx, cy - r] },
+            { command: 'z', args: [] },
+          ];
+          node.name = 'path';
+          node.attributes.d = stringifyPathData({ pathData, precision });
+          delete node.attributes.cx;
+          delete node.attributes.cy;
+          delete node.attributes.r;
+        }
 
-  if (item.isElem('ellipse') && convertArcs) {
-    const ecx = Number(item.attributes.cx || '0');
-    const ecy = Number(item.attributes.cy || '0');
-    const rx = Number(item.attributes.rx || '0');
-    const ry = Number(item.attributes.ry || '0');
-    if (isNaN(ecx - ecy + rx - ry)) {
-      return;
-    }
-    const pathData = [
-      { command: 'M', args: [ecx, ecy - ry] },
-      { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy + ry] },
-      { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy - ry] },
-      { command: 'z', args: [] },
-    ];
-    item.attributes.d = stringifyPathData({ pathData, precision });
-    item.renameElem('path');
-    delete item.attributes.cx;
-    delete item.attributes.cy;
-    delete item.attributes.rx;
-    delete item.attributes.ry;
-  }
+        // optionally covert ellipse
+        if (node.name === 'ellipse' && convertArcs) {
+          const ecx = Number(node.attributes.cx || '0');
+          const ecy = Number(node.attributes.cy || '0');
+          const rx = Number(node.attributes.rx || '0');
+          const ry = Number(node.attributes.ry || '0');
+          if (Number.isNaN(ecx - ecy + rx - ry)) {
+            return;
+          }
+          /**
+           * @type {Array<PathDataItem>}
+           */
+          const pathData = [
+            { command: 'M', args: [ecx, ecy - ry] },
+            { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy + ry] },
+            { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy - ry] },
+            { command: 'z', args: [] },
+          ];
+          node.name = 'path';
+          node.attributes.d = stringifyPathData({ pathData, precision });
+          delete node.attributes.cx;
+          delete node.attributes.cy;
+          delete node.attributes.rx;
+          delete node.attributes.ry;
+        }
+      },
+    },
+  };
 };

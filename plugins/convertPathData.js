@@ -1,44 +1,74 @@
 'use strict';
 
-const { computeStyle } = require('../lib/style.js');
+/**
+ * @typedef {import('../lib//types').PathDataItem} PathDataItem
+ */
+
+const { collectStylesheet, computeStyle } = require('../lib/style.js');
+const { visit } = require('../lib/xast.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
-const { applyTransforms } = require('./_applyTransforms.js');
+const { applyTransforms } = require('./applyTransforms.js');
 const { cleanupOutData } = require('../lib/svgo/tools');
 
-exports.type = 'perItem';
-
-exports.active = true;
-
+exports.name = 'convertPathData';
 exports.description =
   'optimizes path data: writes in shorter form, applies transformations';
 
-exports.params = {
-  applyTransforms: true,
-  applyTransformsStroked: true,
-  makeArcs: {
-    threshold: 2.5, // coefficient of rounding error
-    tolerance: 0.5, // percentage of radius
-  },
-  straightCurves: true,
-  lineShorthands: true,
-  curveSmoothShorthands: true,
-  floatPrecision: 3,
-  transformPrecision: 5,
-  removeUseless: true,
-  collapseRepeated: true,
-  utilizeAbsolute: true,
-  leadingZero: true,
-  negativeExtraSpace: true,
-  noSpaceAfterFlags: false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
-  forceAbsolutePath: false,
-};
-
+/**
+ * @type {(data: number[]) => number[]}
+ */
 let roundData;
+/**
+ * @type {number | false}
+ */
 let precision;
+/**
+ * @type {number}
+ */
 let error;
+/**
+ * @type {number}
+ */
 let arcThreshold;
+/**
+ * @type {number}
+ */
 let arcTolerance;
+
+/**
+ * @typedef {{
+ *   applyTransforms: boolean,
+ *   applyTransformsStroked: boolean,
+ *   makeArcs: {
+ *     threshold: number,
+ *     tolerance: number,
+ *   },
+ *   straightCurves: boolean,
+ *   lineShorthands: boolean,
+ *   curveSmoothShorthands: boolean,
+ *   floatPrecision: number | false,
+ *   transformPrecision: number,
+ *   removeUseless: boolean,
+ *   collapseRepeated: boolean,
+ *   utilizeAbsolute: boolean,
+ *   leadingZero: boolean,
+ *   negativeExtraSpace: boolean,
+ *   noSpaceAfterFlags: boolean,
+ *   forceAbsolutePath: boolean,
+ * }} InternalParams
+ */
+
+/**
+ * @typedef {[number, number]} Point
+ */
+
+/**
+ * @typedef {{
+ *   center: Point,
+ *   radius: number
+ * }} Circle
+ */
 
 /**
  * Convert absolute Path to relative,
@@ -50,69 +80,122 @@ let arcTolerance;
  *
  * @see https://www.w3.org/TR/SVG11/paths.html#PathData
  *
- * @param {Object} item current iteration item
- * @param {Object} params plugin params
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Kir Belevich
+ *
+ * @type {import('./plugins-types').Plugin<'convertPathData'>}
  */
-exports.fn = function (item, params) {
-  if (
-    item.type === 'element' &&
-    pathElems.includes(item.name) &&
-    item.attributes.d != null
-  ) {
-    const computedStyle = computeStyle(item);
-    precision = params.floatPrecision;
-    error =
-      precision !== false ? +Math.pow(0.1, precision).toFixed(precision) : 1e-2;
-    roundData = precision > 0 && precision < 20 ? strongRound : round;
-    if (params.makeArcs) {
-      arcThreshold = params.makeArcs.threshold;
-      arcTolerance = params.makeArcs.tolerance;
-    }
-    const hasMarkerMid = computedStyle['marker-mid'] != null;
+exports.fn = (root, params) => {
+  const {
+    // TODO convert to separate plugin in v3
+    applyTransforms: _applyTransforms = true,
+    applyTransformsStroked = true,
+    makeArcs = {
+      threshold: 2.5, // coefficient of rounding error
+      tolerance: 0.5, // percentage of radius
+    },
+    straightCurves = true,
+    lineShorthands = true,
+    curveSmoothShorthands = true,
+    floatPrecision = 3,
+    transformPrecision = 5,
+    removeUseless = true,
+    collapseRepeated = true,
+    utilizeAbsolute = true,
+    leadingZero = true,
+    negativeExtraSpace = true,
+    noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
+    forceAbsolutePath = false,
+  } = params;
 
-    const maybeHasStroke =
-      computedStyle.stroke &&
-      (computedStyle.stroke.type === 'dynamic' ||
-        computedStyle.stroke.value !== 'none');
-    const maybeHasLinecap =
-      computedStyle['stroke-linecap'] &&
-      (computedStyle['stroke-linecap'].type === 'dynamic' ||
-        computedStyle['stroke-linecap'].value !== 'butt');
-    const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
+  /**
+   * @type {InternalParams}
+   */
+  const newParams = {
+    applyTransforms: _applyTransforms,
+    applyTransformsStroked,
+    makeArcs,
+    straightCurves,
+    lineShorthands,
+    curveSmoothShorthands,
+    floatPrecision,
+    transformPrecision,
+    removeUseless,
+    collapseRepeated,
+    utilizeAbsolute,
+    leadingZero,
+    negativeExtraSpace,
+    noSpaceAfterFlags,
+    forceAbsolutePath,
+  };
 
-    var data = path2js(item);
-
-    // TODO: get rid of functions returns
-    if (data.length) {
-      if (params.applyTransforms) {
-        applyTransforms(item, data, params);
-      }
-
-      convertToRelative(data);
-
-      data = filters(data, params, {
-        maybeHasStrokeAndLinecap,
-        hasMarkerMid,
-      });
-
-      if (params.utilizeAbsolute) {
-        data = convertToMixed(data, params);
-      }
-
-      js2path(item, data, params);
-    }
+  // invoke applyTransforms plugin
+  if (_applyTransforms) {
+    visit(
+      root,
+      // @ts-ignore
+      applyTransforms(root, {
+        transformPrecision,
+        applyTransformsStroked,
+      })
+    );
   }
+
+  const stylesheet = collectStylesheet(root);
+  return {
+    element: {
+      enter: (node) => {
+        if (pathElems.includes(node.name) && node.attributes.d != null) {
+          const computedStyle = computeStyle(stylesheet, node);
+          precision = floatPrecision;
+          error =
+            precision !== false
+              ? +Math.pow(0.1, precision).toFixed(precision)
+              : 1e-2;
+          roundData = precision > 0 && precision < 20 ? strongRound : round;
+          if (makeArcs) {
+            arcThreshold = makeArcs.threshold;
+            arcTolerance = makeArcs.tolerance;
+          }
+          const hasMarkerMid = computedStyle['marker-mid'] != null;
+
+          const maybeHasStroke =
+            computedStyle.stroke &&
+            (computedStyle.stroke.type === 'dynamic' ||
+              computedStyle.stroke.value !== 'none');
+          const maybeHasLinecap =
+            computedStyle['stroke-linecap'] &&
+            (computedStyle['stroke-linecap'].type === 'dynamic' ||
+              computedStyle['stroke-linecap'].value !== 'butt');
+          const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
+
+          var data = path2js(node);
+
+          // TODO: get rid of functions returns
+          if (data.length) {
+            convertToRelative(data);
+
+            data = filters(data, newParams, {
+              maybeHasStrokeAndLinecap,
+              hasMarkerMid,
+            });
+
+            if (utilizeAbsolute) {
+              data = convertToMixed(data, newParams);
+            }
+
+            // @ts-ignore
+            js2path(node, data, newParams);
+          }
+        }
+      },
+    },
+  };
 };
 
 /**
  * Convert absolute path data coordinates to relative.
  *
- * @param {Array} path input path data
- * @param {Object} params plugin params
- * @return {Array} output path data
+ * @type {(pathData: PathDataItem[]) => PathDataItem[]}
  */
 const convertToRelative = (pathData) => {
   let start = [0, 0];
@@ -121,7 +204,7 @@ const convertToRelative = (pathData) => {
 
   for (let i = 0; i < pathData.length; i += 1) {
     const pathItem = pathData[i];
-    let { instruction: command, data: args } = pathItem;
+    let { command, args } = pathItem;
 
     // moveto (x y)
     if (command === 'm') {
@@ -267,12 +350,15 @@ const convertToRelative = (pathData) => {
       cursor[1] = start[1];
     }
 
-    pathItem.instruction = command;
-    pathItem.data = args;
+    pathItem.command = command;
+    pathItem.args = args;
     // store absolute coordinates for later use
     // base should preserve reference from other element
+    // @ts-ignore
     pathItem.base = prevCoords;
+    // @ts-ignore
     pathItem.coords = [cursor[0], cursor[1]];
+    // @ts-ignore
     prevCoords = pathItem.coords;
   }
 
@@ -282,9 +368,11 @@ const convertToRelative = (pathData) => {
 /**
  * Main filters loop.
  *
- * @param {Array} path input path data
- * @param {Object} params plugin params
- * @return {Array} output path data
+ * @type {(
+ *   path: PathDataItem[],
+ *   params: InternalParams,
+ *   aux: { maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
+ * ) => PathDataItem[]}
  */
 function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
   var stringify = data2Path.bind(null, params),
@@ -293,45 +381,55 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
     prev = {};
 
   path = path.filter(function (item, index, path) {
-    var instruction = item.instruction,
-      data = item.data,
-      next = path[index + 1];
+    let command = item.command;
+    let data = item.args;
+    let next = path[index + 1];
 
-    if (data) {
+    if (command !== 'Z' && command !== 'z') {
       var sdata = data,
         circle;
 
-      if (instruction === 's') {
+      if (command === 's') {
         sdata = [0, 0].concat(data);
 
-        if ('cs'.indexOf(prev.instruction) > -1) {
-          var pdata = prev.data,
-            n = pdata.length;
+        // @ts-ignore
+        var pdata = prev.args,
+          n = pdata.length;
 
-          // (-x, -y) of the prev tangent point relative to the current point
-          sdata[0] = pdata[n - 2] - pdata[n - 4];
-          sdata[1] = pdata[n - 1] - pdata[n - 3];
-        }
+        // (-x, -y) of the prev tangent point relative to the current point
+        sdata[0] = pdata[n - 2] - pdata[n - 4];
+        sdata[1] = pdata[n - 1] - pdata[n - 3];
       }
 
       // convert curves to arcs if possible
       if (
         params.makeArcs &&
-        (instruction == 'c' || instruction == 's') &&
+        (command == 'c' || command == 's') &&
         isConvex(sdata) &&
         (circle = findCircle(sdata))
       ) {
         var r = roundData([circle.radius])[0],
           angle = findArcAngle(sdata, circle),
           sweep = sdata[5] * sdata[0] - sdata[4] * sdata[1] > 0 ? 1 : 0,
+          /**
+           * @type {PathDataItem}
+           */
           arc = {
-            instruction: 'a',
-            data: [r, r, 0, 0, sweep, sdata[4], sdata[5]],
+            command: 'a',
+            args: [r, r, 0, 0, sweep, sdata[4], sdata[5]],
+            // @ts-ignore
             coords: item.coords.slice(),
+            // @ts-ignore
             base: item.base,
           },
+          /**
+           * @type {PathDataItem[]}
+           */
           output = [arc],
           // relative coordinates to adjust the found circle
+          /**
+           * @type {Point}
+           */
           relCenter = [
             circle.center[0] - sdata[4],
             circle.center[1] - sdata[5],
@@ -343,18 +441,25 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
           nextLonghand;
 
         if (
-          (prev.instruction == 'c' &&
-            isConvex(prev.data) &&
-            isArcPrev(prev.data, circle)) ||
-          (prev.instruction == 'a' &&
-            prev.sdata &&
-            isArcPrev(prev.sdata, circle))
+          // @ts-ignore
+          (prev.command == 'c' &&
+            // @ts-ignore
+            isConvex(prev.args) &&
+            // @ts-ignore
+            isArcPrev(prev.args, circle)) ||
+          // @ts-ignore
+          (prev.command == 'a' && prev.sdata && isArcPrev(prev.sdata, circle))
         ) {
+          // @ts-ignore
           arcCurves.unshift(prev);
+          // @ts-ignore
           arc.base = prev.base;
-          arc.data[5] = arc.coords[0] - arc.base[0];
-          arc.data[6] = arc.coords[1] - arc.base[1];
-          var prevData = prev.instruction == 'a' ? prev.sdata : prev.data;
+          // @ts-ignore
+          arc.args[5] = arc.coords[0] - arc.base[0];
+          // @ts-ignore
+          arc.args[6] = arc.coords[1] - arc.base[1];
+          // @ts-ignore
+          var prevData = prev.command == 'a' ? prev.sdata : prev.args;
           var prevAngle = findArcAngle(prevData, {
             center: [
               prevData[4] + circle.center[0],
@@ -363,56 +468,66 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
             radius: circle.radius,
           });
           angle += prevAngle;
-          if (angle > Math.PI) arc.data[3] = 1;
+          if (angle > Math.PI) arc.args[3] = 1;
           hasPrev = 1;
         }
 
         // check if next curves are fitting the arc
         for (
           var j = index;
-          (next = path[++j]) && ~'cs'.indexOf(next.instruction);
+          (next = path[++j]) && ~'cs'.indexOf(next.command);
 
         ) {
-          var nextData = next.data;
-          if (next.instruction == 's') {
+          var nextData = next.args;
+          if (next.command == 's') {
             nextLonghand = makeLonghand(
-              { instruction: 's', data: next.data.slice() },
-              path[j - 1].data
+              { command: 's', args: next.args.slice() },
+              path[j - 1].args
             );
-            nextData = nextLonghand.data;
-            nextLonghand.data = nextData.slice(0, 2);
+            nextData = nextLonghand.args;
+            nextLonghand.args = nextData.slice(0, 2);
             suffix = stringify([nextLonghand]);
           }
           if (isConvex(nextData) && isArc(nextData, relCircle)) {
             angle += findArcAngle(nextData, relCircle);
             if (angle - 2 * Math.PI > 1e-3) break; // more than 360°
-            if (angle > Math.PI) arc.data[3] = 1;
+            if (angle > Math.PI) arc.args[3] = 1;
             arcCurves.push(next);
             if (2 * Math.PI - angle > 1e-3) {
               // less than 360°
+              // @ts-ignore
               arc.coords = next.coords;
-              arc.data[5] = arc.coords[0] - arc.base[0];
-              arc.data[6] = arc.coords[1] - arc.base[1];
+              // @ts-ignore
+              arc.args[5] = arc.coords[0] - arc.base[0];
+              // @ts-ignore
+              arc.args[6] = arc.coords[1] - arc.base[1];
             } else {
               // full circle, make a half-circle arc and add a second one
-              arc.data[5] = 2 * (relCircle.center[0] - nextData[4]);
-              arc.data[6] = 2 * (relCircle.center[1] - nextData[5]);
+              arc.args[5] = 2 * (relCircle.center[0] - nextData[4]);
+              arc.args[6] = 2 * (relCircle.center[1] - nextData[5]);
+              // @ts-ignore
               arc.coords = [
-                arc.base[0] + arc.data[5],
-                arc.base[1] + arc.data[6],
+                // @ts-ignore
+                arc.base[0] + arc.args[5],
+                // @ts-ignore
+                arc.base[1] + arc.args[6],
               ];
               arc = {
-                instruction: 'a',
-                data: [
+                command: 'a',
+                args: [
                   r,
                   r,
                   0,
                   0,
                   sweep,
+                  // @ts-ignore
                   next.coords[0] - arc.coords[0],
+                  // @ts-ignore
                   next.coords[1] - arc.coords[1],
                 ],
+                // @ts-ignore
                 coords: next.coords,
+                // @ts-ignore
                 base: arc.coords,
               };
               output.push(arc);
@@ -425,31 +540,41 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
         }
 
         if ((stringify(output) + suffix).length < stringify(arcCurves).length) {
-          if (path[j] && path[j].instruction == 's') {
-            makeLonghand(path[j], path[j - 1].data);
+          if (path[j] && path[j].command == 's') {
+            makeLonghand(path[j], path[j - 1].args);
           }
           if (hasPrev) {
             var prevArc = output.shift();
-            roundData(prevArc.data);
-            relSubpoint[0] += prevArc.data[5] - prev.data[prev.data.length - 2];
-            relSubpoint[1] += prevArc.data[6] - prev.data[prev.data.length - 1];
-            prev.instruction = 'a';
-            prev.data = prevArc.data;
+            // @ts-ignore
+            roundData(prevArc.args);
+            // @ts-ignore
+            relSubpoint[0] += prevArc.args[5] - prev.args[prev.args.length - 2];
+            // @ts-ignore
+            relSubpoint[1] += prevArc.args[6] - prev.args[prev.args.length - 1];
+            // @ts-ignore
+            prev.command = 'a';
+            // @ts-ignore
+            prev.args = prevArc.args;
+            // @ts-ignore
             item.base = prev.coords = prevArc.coords;
           }
+          // @ts-ignore
           arc = output.shift();
           if (arcCurves.length == 1) {
+            // @ts-ignore
             item.sdata = sdata.slice(); // preserve curve data for future checks
           } else if (arcCurves.length - 1 - hasPrev > 0) {
             // filter out consumed next items
             path.splice.apply(
               path,
+              // @ts-ignore
               [index + 1, arcCurves.length - 1 - hasPrev].concat(output)
             );
           }
           if (!arc) return false;
-          instruction = 'a';
-          data = arc.data;
+          command = 'a';
+          data = arc.args;
+          // @ts-ignore
           item.coords = arc.coords;
         }
       }
@@ -458,29 +583,41 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       // to get closer to absolute coordinates. Sum of rounded value remains same:
       // l .25 3 .25 2 .25 3 .25 2 -> l .3 3 .2 2 .3 3 .2 2
       if (precision !== false) {
-        if ('mltqsc'.indexOf(instruction) > -1) {
+        if (
+          command === 'm' ||
+          command === 'l' ||
+          command === 't' ||
+          command === 'q' ||
+          command === 's' ||
+          command === 'c'
+        ) {
           for (var i = data.length; i--; ) {
+            // @ts-ignore
             data[i] += item.base[i % 2] - relSubpoint[i % 2];
           }
-        } else if (instruction == 'h') {
+        } else if (command == 'h') {
+          // @ts-ignore
           data[0] += item.base[0] - relSubpoint[0];
-        } else if (instruction == 'v') {
+        } else if (command == 'v') {
+          // @ts-ignore
           data[0] += item.base[1] - relSubpoint[1];
-        } else if (instruction == 'a') {
+        } else if (command == 'a') {
+          // @ts-ignore
           data[5] += item.base[0] - relSubpoint[0];
+          // @ts-ignore
           data[6] += item.base[1] - relSubpoint[1];
         }
         roundData(data);
 
-        if (instruction == 'h') relSubpoint[0] += data[0];
-        else if (instruction == 'v') relSubpoint[1] += data[0];
+        if (command == 'h') relSubpoint[0] += data[0];
+        else if (command == 'v') relSubpoint[1] += data[0];
         else {
           relSubpoint[0] += data[data.length - 2];
           relSubpoint[1] += data[data.length - 1];
         }
         roundData(relSubpoint);
 
-        if (instruction.toLowerCase() == 'm') {
+        if (command === 'M' || command === 'm') {
           pathBase[0] = relSubpoint[0];
           pathBase[1] = relSubpoint[1];
         }
@@ -489,25 +626,27 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       // convert straight curves into lines segments
       if (params.straightCurves) {
         if (
-          (instruction === 'c' && isCurveStraightLine(data)) ||
-          (instruction === 's' && isCurveStraightLine(sdata))
+          (command === 'c' && isCurveStraightLine(data)) ||
+          (command === 's' && isCurveStraightLine(sdata))
         ) {
-          if (next && next.instruction == 's') makeLonghand(next, data); // fix up next curve
-          instruction = 'l';
+          if (next && next.command == 's') makeLonghand(next, data); // fix up next curve
+          command = 'l';
           data = data.slice(-2);
-        } else if (instruction === 'q' && isCurveStraightLine(data)) {
-          if (next && next.instruction == 't') makeLonghand(next, data); // fix up next curve
-          instruction = 'l';
+        } else if (command === 'q' && isCurveStraightLine(data)) {
+          if (next && next.command == 't') makeLonghand(next, data); // fix up next curve
+          command = 'l';
           data = data.slice(-2);
         } else if (
-          instruction === 't' &&
-          prev.instruction !== 'q' &&
-          prev.instruction !== 't'
+          command === 't' &&
+          // @ts-ignore
+          prev.command !== 'q' &&
+          // @ts-ignore
+          prev.command !== 't'
         ) {
-          instruction = 'l';
+          command = 'l';
           data = data.slice(-2);
-        } else if (instruction === 'a' && (data[0] === 0 || data[1] === 0)) {
-          instruction = 'l';
+        } else if (command === 'a' && (data[0] === 0 || data[1] === 0)) {
+          command = 'l';
           data = data.slice(-2);
         }
       }
@@ -515,12 +654,12 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       // horizontal and vertical line shorthands
       // l 50 0 → h 50
       // l 0 50 → v 50
-      if (params.lineShorthands && instruction === 'l') {
+      if (params.lineShorthands && command === 'l') {
         if (data[1] === 0) {
-          instruction = 'h';
+          command = 'h';
           data.pop();
         } else if (data[0] === 0) {
-          instruction = 'v';
+          command = 'v';
           data.shift();
         }
       }
@@ -530,75 +669,98 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       if (
         params.collapseRepeated &&
         hasMarkerMid === false &&
-        'mhv'.indexOf(instruction) > -1 &&
-        prev.instruction &&
-        instruction == prev.instruction.toLowerCase() &&
-        ((instruction != 'h' && instruction != 'v') ||
-          prev.data[0] >= 0 == data[0] >= 0)
+        (command === 'm' || command === 'h' || command === 'v') &&
+        // @ts-ignore
+        prev.command &&
+        // @ts-ignore
+        command == prev.command.toLowerCase() &&
+        ((command != 'h' && command != 'v') ||
+          // @ts-ignore
+          prev.args[0] >= 0 == data[0] >= 0)
       ) {
-        prev.data[0] += data[0];
-        if (instruction != 'h' && instruction != 'v') {
-          prev.data[1] += data[1];
+        // @ts-ignore
+        prev.args[0] += data[0];
+        if (command != 'h' && command != 'v') {
+          // @ts-ignore
+          prev.args[1] += data[1];
         }
+        // @ts-ignore
         prev.coords = item.coords;
+        // @ts-ignore
         path[index] = prev;
         return false;
       }
 
       // convert curves into smooth shorthands
-      if (params.curveSmoothShorthands && prev.instruction) {
+      // @ts-ignore
+      if (params.curveSmoothShorthands && prev.command) {
         // curveto
-        if (instruction === 'c') {
+        if (command === 'c') {
           // c + c → c + s
           if (
-            prev.instruction === 'c' &&
-            data[0] === -(prev.data[2] - prev.data[4]) &&
-            data[1] === -(prev.data[3] - prev.data[5])
+            // @ts-ignore
+            prev.command === 'c' &&
+            // @ts-ignore
+            data[0] === -(prev.args[2] - prev.args[4]) &&
+            // @ts-ignore
+            data[1] === -(prev.args[3] - prev.args[5])
           ) {
-            instruction = 's';
+            command = 's';
             data = data.slice(2);
           }
 
           // s + c → s + s
           else if (
-            prev.instruction === 's' &&
-            data[0] === -(prev.data[0] - prev.data[2]) &&
-            data[1] === -(prev.data[1] - prev.data[3])
+            // @ts-ignore
+            prev.command === 's' &&
+            // @ts-ignore
+            data[0] === -(prev.args[0] - prev.args[2]) &&
+            // @ts-ignore
+            data[1] === -(prev.args[1] - prev.args[3])
           ) {
-            instruction = 's';
+            command = 's';
             data = data.slice(2);
           }
 
           // [^cs] + c → [^cs] + s
           else if (
-            'cs'.indexOf(prev.instruction) === -1 &&
+            // @ts-ignore
+            prev.command !== 'c' &&
+            // @ts-ignore
+            prev.command !== 's' &&
             data[0] === 0 &&
             data[1] === 0
           ) {
-            instruction = 's';
+            command = 's';
             data = data.slice(2);
           }
         }
 
         // quadratic Bézier curveto
-        else if (instruction === 'q') {
+        else if (command === 'q') {
           // q + q → q + t
           if (
-            prev.instruction === 'q' &&
-            data[0] === prev.data[2] - prev.data[0] &&
-            data[1] === prev.data[3] - prev.data[1]
+            // @ts-ignore
+            prev.command === 'q' &&
+            // @ts-ignore
+            data[0] === prev.args[2] - prev.args[0] &&
+            // @ts-ignore
+            data[1] === prev.args[3] - prev.args[1]
           ) {
-            instruction = 't';
+            command = 't';
             data = data.slice(2);
           }
 
           // t + q → t + t
           else if (
-            prev.instruction === 't' &&
-            data[2] === prev.data[0] &&
-            data[3] === prev.data[1]
+            // @ts-ignore
+            prev.command === 't' &&
+            // @ts-ignore
+            data[2] === prev.args[0] &&
+            // @ts-ignore
+            data[3] === prev.args[1]
           ) {
-            instruction = 't';
+            command = 't';
             data = data.slice(2);
           }
         }
@@ -608,31 +770,40 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       if (params.removeUseless && !maybeHasStrokeAndLinecap) {
         // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
         if (
-          'lhvqtcs'.indexOf(instruction) > -1 &&
+          (command === 'l' ||
+            command === 'h' ||
+            command === 'v' ||
+            command === 'q' ||
+            command === 't' ||
+            command === 'c' ||
+            command === 's') &&
           data.every(function (i) {
             return i === 0;
           })
         ) {
+          // @ts-ignore
           path[index] = prev;
           return false;
         }
 
         // a 25,25 -30 0,1 0,0
-        if (instruction === 'a' && data[5] === 0 && data[6] === 0) {
+        if (command === 'a' && data[5] === 0 && data[6] === 0) {
+          // @ts-ignore
           path[index] = prev;
           return false;
         }
       }
 
-      item.instruction = instruction;
-      item.data = data;
+      item.command = command;
+      item.args = data;
 
       prev = item;
     } else {
       // z resets coordinates
       relSubpoint[0] = pathBase[0];
       relSubpoint[1] = pathBase[1];
-      if (prev.instruction == 'z') return false;
+      // @ts-ignore
+      if (prev.command === 'Z' || prev.command === 'z') return false;
       prev = item;
     }
 
@@ -645,33 +816,44 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
 /**
  * Writes data in shortest form using absolute or relative coordinates.
  *
- * @param {Array} data input path data
- * @return {Boolean} output
+ * @type {(path: PathDataItem[], params: InternalParams) => PathDataItem[]}
  */
 function convertToMixed(path, params) {
   var prev = path[0];
 
   path = path.filter(function (item, index) {
     if (index == 0) return true;
-    if (!item.data) {
+    if (item.command === 'Z' || item.command === 'z') {
       prev = item;
       return true;
     }
 
-    var instruction = item.instruction,
-      data = item.data,
-      adata = data && data.slice(0);
+    var command = item.command,
+      data = item.args,
+      adata = data.slice();
 
-    if ('mltqsc'.indexOf(instruction) > -1) {
+    if (
+      command === 'm' ||
+      command === 'l' ||
+      command === 't' ||
+      command === 'q' ||
+      command === 's' ||
+      command === 'c'
+    ) {
       for (var i = adata.length; i--; ) {
+        // @ts-ignore
         adata[i] += item.base[i % 2];
       }
-    } else if (instruction == 'h') {
+    } else if (command == 'h') {
+      // @ts-ignore
       adata[0] += item.base[0];
-    } else if (instruction == 'v') {
+    } else if (command == 'v') {
+      // @ts-ignore
       adata[0] += item.base[1];
-    } else if (instruction == 'a') {
+    } else if (command == 'a') {
+      // @ts-ignore
       adata[5] += item.base[0];
+      // @ts-ignore
       adata[6] += item.base[1];
     }
 
@@ -682,22 +864,24 @@ function convertToMixed(path, params) {
 
     // Convert to absolute coordinates if it's shorter or forceAbsolutePath is true.
     // v-20 -> V0
-    // Don't convert if it fits following previous instruction.
+    // Don't convert if it fits following previous command.
     // l20 30-10-50 instead of l20 30L20 30
     if (
       params.forceAbsolutePath ||
       (absoluteDataStr.length < relativeDataStr.length &&
         !(
           params.negativeExtraSpace &&
-          instruction == prev.instruction &&
-          prev.instruction.charCodeAt(0) > 96 &&
+          command == prev.command &&
+          prev.command.charCodeAt(0) > 96 &&
           absoluteDataStr.length == relativeDataStr.length - 1 &&
           (data[0] < 0 ||
-            (/^0\./.test(data[0]) && prev.data[prev.data.length - 1] % 1))
+            // @ts-ignore
+            (/^0\./.test(data[0]) && prev.args[prev.args.length - 1] % 1))
         ))
     ) {
-      item.instruction = instruction.toUpperCase();
-      item.data = adata;
+      // @ts-ignore
+      item.command = command.toUpperCase();
+      item.args = adata;
     }
 
     prev = item;
@@ -712,8 +896,7 @@ function convertToMixed(path, params) {
  * Checks if curve is convex. Control points of such a curve must form
  * a convex quadrilateral with diagonals crosspoint inside of it.
  *
- * @param {Array} data input path data
- * @return {Boolean} output
+ * @type {(data: number[]) => boolean}
  */
 function isConvex(data) {
   var center = getIntersection([
@@ -728,7 +911,7 @@ function isConvex(data) {
   ]);
 
   return (
-    center &&
+    center != null &&
     data[2] < center[0] == center[0] < 0 &&
     data[3] < center[1] == center[1] < 0 &&
     data[4] < center[0] == center[0] < data[0] &&
@@ -739,8 +922,7 @@ function isConvex(data) {
 /**
  * Computes lines equations by two points and returns their intersection point.
  *
- * @param {Array} coords 8 numbers for 4 pairs of coordinates (x,y)
- * @return {Array|undefined} output coordinate of lines' crosspoint
+ * @type {(coords: number[]) => undefined | Point}
  */
 function getIntersection(coords) {
   // Prev line equation parameters.
@@ -755,6 +937,9 @@ function getIntersection(coords) {
 
   if (!denom) return; // parallel lines havn't an intersection
 
+  /**
+   * @type {Point}
+   */
   var cross = [(b1 * c2 - b2 * c1) / denom, (a1 * c2 - a2 * c1) / -denom];
   if (
     !isNaN(cross[0]) &&
@@ -767,21 +952,32 @@ function getIntersection(coords) {
 }
 
 /**
+ * Does the same as `Number.prototype.toFixed` but without casting
+ * the return value to a string.
+ * @type {(num: number, precision: number) => number}
+ */
+function toFixed(num, precision) {
+  const pow = 10 ** precision;
+  return Math.round(num * pow) / pow;
+}
+
+/**
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
  * Smart rounds values like 2.3491 to 2.35 instead of 2.349.
  * Doesn't apply "smartness" if the number precision fits already.
  *
- * @param {Array} data input data array
- * @return {Array} output data array
+ * @type {(data: number[]) => number[]}
  */
 function strongRound(data) {
-  for (var i = data.length; i-- > 0; ) {
-    if (data[i].toFixed(precision) != data[i]) {
-      var rounded = +data[i].toFixed(precision - 1);
+  const precisionNum = precision || 0;
+  for (let i = data.length; i-- > 0; ) {
+    const fixed = toFixed(data[i], precisionNum);
+    if (fixed !== data[i]) {
+      const rounded = toFixed(data[i], precisionNum - 1);
       data[i] =
-        +Math.abs(rounded - data[i]).toFixed(precision + 1) >= error
-          ? +data[i].toFixed(precision)
+        toFixed(Math.abs(rounded - data[i]), precisionNum + 1) >= error
+          ? fixed
           : rounded;
     }
   }
@@ -791,8 +987,7 @@ function strongRound(data) {
 /**
  * Simple rounding function if precision is 0.
  *
- * @param {Array} data input data array
- * @return {Array} output data array
+ * @type {(data: number[]) => number[]}
  */
 function round(data) {
   for (var i = data.length; i-- > 0; ) {
@@ -805,9 +1000,7 @@ function round(data) {
  * Checks if a curve is a straight line by measuring distance
  * from middle points to the line formed by end points.
  *
- * @param {Array} xs array of curve points x-coordinates
- * @param {Array} ys array of curve points y-coordinates
- * @return {Boolean}
+ * @type {(data: number[]) => boolean}
  */
 
 function isCurveStraightLine(data) {
@@ -831,20 +1024,19 @@ function isCurveStraightLine(data) {
 /**
  * Converts next curve from shorthand to full form using the current curve data.
  *
- * @param {Object} item curve to convert
- * @param {Array} data current curve data
+ * @type {(item: PathDataItem, data: number[]) => PathDataItem}
  */
 
 function makeLonghand(item, data) {
-  switch (item.instruction) {
+  switch (item.command) {
     case 's':
-      item.instruction = 'c';
+      item.command = 'c';
       break;
     case 't':
-      item.instruction = 'q';
+      item.command = 'q';
       break;
   }
-  item.data.unshift(
+  item.args.unshift(
     data[data.length - 2] - data[data.length - 4],
     data[data.length - 1] - data[data.length - 3]
   );
@@ -854,9 +1046,7 @@ function makeLonghand(item, data) {
 /**
  * Returns distance between two points
  *
- * @param {Array} point1 first point coordinates
- * @param {Array} point2 second point coordinates
- * @return {Number} distance
+ * @type {(point1: Point, point2: Point) => number}
  */
 
 function getDistance(point1, point2) {
@@ -868,9 +1058,7 @@ function getDistance(point1, point2) {
  * a·(1 - t)³·p1 + b·(1 - t)²·t·p2 + c·(1 - t)·t²·p3 + d·t³·p4,
  * where pN are control points and p1 is zero due to relative coordinates.
  *
- * @param {Array} curve array of curve points coordinates
- * @param {Number} t parametric position from 0 to 1
- * @return {Array} Point coordinates
+ * @type {(curve: number[], t: number) => Point}
  */
 
 function getCubicBezierPoint(curve, t) {
@@ -888,8 +1076,7 @@ function getCubicBezierPoint(curve, t) {
 /**
  * Finds circle by 3 points of the curve and checks if the curve fits the found circle.
  *
- * @param {Array} curve
- * @return {Object|undefined} circle
+ * @type {(curve: number[]) => undefined | Circle}
  */
 
 function findCircle(curve) {
@@ -907,28 +1094,30 @@ function findCircle(curve) {
       m2[1] - (m2[0] - midPoint[0]),
     ]),
     radius = center && getDistance([0, 0], center),
+    // @ts-ignore
     tolerance = Math.min(arcThreshold * error, (arcTolerance * radius) / 100);
 
   if (
     center &&
+    // @ts-ignore
     radius < 1e15 &&
     [1 / 4, 3 / 4].every(function (point) {
       return (
         Math.abs(
+          // @ts-ignore
           getDistance(getCubicBezierPoint(curve, point), center) - radius
         ) <= tolerance
       );
     })
   )
+    // @ts-ignore
     return { center: center, radius: radius };
 }
 
 /**
  * Checks if a curve fits the given circle.
  *
- * @param {Object} circle
- * @param {Array} curve
- * @return {Boolean}
+ * @type {(curve: number[], circle: Circle) => boolean}
  */
 
 function isArc(curve, circle) {
@@ -950,9 +1139,7 @@ function isArc(curve, circle) {
 /**
  * Checks if a previous curve fits the given circle.
  *
- * @param {Object} circle
- * @param {Array} curve
- * @return {Boolean}
+ * @type {(curve: number[], circle: Circle) => boolean}
  */
 
 function isArcPrev(curve, circle) {
@@ -965,9 +1152,7 @@ function isArcPrev(curve, circle) {
 /**
  * Finds angle of a curve fitting the given arc.
 
- * @param {Array} curve
- * @param {Object} relCircle
- * @return {Number} angle
+ * @type {(curve: number[], relCircle: Circle) => number}
  */
 
 function findArcAngle(curve, relCircle) {
@@ -984,17 +1169,15 @@ function findArcAngle(curve, relCircle) {
 /**
  * Converts given path data to string.
  *
- * @param {Object} params
- * @param {Array} pathData
- * @return {String}
+ * @type {(params: InternalParams, pathData: PathDataItem[]) => string}
  */
 
 function data2Path(params, pathData) {
   return pathData.reduce(function (pathString, item) {
     var strData = '';
-    if (item.data) {
-      strData = cleanupOutData(roundData(item.data.slice()), params);
+    if (item.args) {
+      strData = cleanupOutData(roundData(item.args.slice()), params);
     }
-    return pathString + item.instruction + strData;
+    return pathString + item.command + strData;
   }, '');
 }

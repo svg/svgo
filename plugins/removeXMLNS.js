@@ -1,9 +1,6 @@
 'use strict';
 
-exports.type = 'perItem';
-
-exports.active = false;
-
+exports.name = 'removeXMLNS';
 exports.description =
   'removes xmlns attribute (for inline svg, disabled by default)';
 
@@ -15,13 +12,19 @@ exports.description =
  *   ↓
  * <svg viewBox="0 0 100 50">
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if true, xmlns will be filtered out
- *
  * @author Ricardo Tomasi
+ *
+ * @type {import('./plugins-types').Plugin<'removeXMLNS'>}
  */
-exports.fn = function (item) {
-  if (item.type === 'element' && item.name === 'svg') {
-    delete item.attributes.xmlns;
-  }
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node) => {
+        if (node.name === 'svg') {
+          delete node.attributes.xmlns;
+          delete node.attributes['xmlns:xlink'];
+        }
+      },
+    },
+  };
 };

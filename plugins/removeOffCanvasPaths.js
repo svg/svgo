@@ -1,139 +1,136 @@
 'use strict';
 
-exports.type = 'perItem';
+/**
+ * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ */
 
-exports.active = false;
+const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
+const { parsePathData } = require('../lib/path.js');
+const { intersects } = require('./_path.js');
 
+exports.name = 'removeOffCanvasPaths';
 exports.description =
   'removes elements that are drawn outside of the viewbox (disabled by default)';
-
-const JSAPI = require('../lib/svgo/jsAPI.js');
-
-var _path = require('./_path.js'),
-  intersects = _path.intersects,
-  path2js = _path.path2js,
-  viewBox,
-  viewBoxJS;
 
 /**
  * Remove elements that are drawn outside of the viewbox.
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author JoshyPHP
- */
-exports.fn = function (item) {
-  if (
-    item.type === 'element' &&
-    item.name === 'path' &&
-    item.attributes.d != null &&
-    typeof viewBox !== 'undefined'
-  ) {
-    // Consider that any item with a transform attribute or a M instruction
-    // within the viewBox is visible
-    if (hasTransform(item) || pathMovesWithinViewBox(item.attributes.d)) {
-      return true;
-    }
-
-    var pathJS = path2js(item);
-    if (pathJS.length === 2) {
-      // Use a closed clone of the path if it's too short for intersects()
-      pathJS = JSON.parse(JSON.stringify(pathJS));
-      pathJS.push({ instruction: 'z' });
-    }
-
-    return intersects(viewBoxJS, pathJS);
-  }
-  if (item.type === 'element' && item.name === 'svg') {
-    parseViewBox(item);
-  }
-
-  return true;
-};
-
-/**
- * Test whether given item or any of its ancestors has a transform attribute.
  *
- * @param {String} path
- * @return {Boolean}
+ * @type {import('./plugins-types').Plugin<'removeOffCanvasPaths'>}
  */
-function hasTransform(item) {
-  return (
-    item.attributes.transform != null ||
-    (item.parentNode &&
-      item.parentNode.type === 'element' &&
-      hasTransform(item.parentNode))
-  );
-}
+exports.fn = () => {
+  /**
+   * @type {null | {
+   *   top: number,
+   *   right: number,
+   *   bottom: number,
+   *   left: number,
+   *   width: number,
+   *   height: number
+   * }}
+   */
+  let viewBoxData = null;
 
-/**
- * Parse the viewBox coordinates and compute the JS representation of its path.
- *
- * @param {Object} svg svg element item
- */
-function parseViewBox(svg) {
-  var viewBoxData = '';
-  if (svg.attributes.viewBox != null) {
-    // Remove commas and plus signs, normalize and trim whitespace
-    viewBoxData = svg.attributes.viewBox;
-  } else if (svg.attributes.height != null && svg.attributes.width != null) {
-    viewBoxData = `0 0 ${svg.attributes.width} ${svg.attributes.height}`;
-  }
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          let viewBox = '';
+          // find viewbox
+          if (node.attributes.viewBox != null) {
+            // remove commas and plus signs, normalize and trim whitespace
+            viewBox = node.attributes.viewBox;
+          } else if (
+            node.attributes.height != null &&
+            node.attributes.width != null
+          ) {
+            viewBox = `0 0 ${node.attributes.width} ${node.attributes.height}`;
+          }
 
-  // Remove commas and plus signs, normalize and trim whitespace
-  viewBoxData = viewBoxData
-    .replace(/[,+]|px/g, ' ')
-    .replace(/\s+/g, ' ')
-    .replace(/^\s*|\s*$/g, '');
+          // parse viewbox
+          // remove commas and plus signs, normalize and trim whitespace
+          viewBox = viewBox
+            .replace(/[,+]|px/g, ' ')
+            .replace(/\s+/g, ' ')
+            .replace(/^\s*|\s*$/g, '');
+          // ensure that the dimensions are 4 values separated by space
+          const m =
+            /^(-?\d*\.?\d+) (-?\d*\.?\d+) (\d*\.?\d+) (\d*\.?\d+)$/.exec(
+              viewBox
+            );
+          if (m == null) {
+            return;
+          }
+          const left = Number.parseFloat(m[1]);
+          const top = Number.parseFloat(m[2]);
+          const width = Number.parseFloat(m[3]);
+          const height = Number.parseFloat(m[4]);
 
-  // Ensure that the dimensions are 4 values separated by space
-  var m = /^(-?\d*\.?\d+) (-?\d*\.?\d+) (\d*\.?\d+) (\d*\.?\d+)$/.exec(
-    viewBoxData
-  );
-  if (!m) {
-    return;
-  }
+          // store the viewBox boundaries
+          viewBoxData = {
+            left,
+            top,
+            right: left + width,
+            bottom: top + height,
+            width,
+            height,
+          };
+        }
 
-  // Store the viewBox boundaries
-  viewBox = {
-    left: parseFloat(m[1]),
-    top: parseFloat(m[2]),
-    right: parseFloat(m[1]) + parseFloat(m[3]),
-    bottom: parseFloat(m[2]) + parseFloat(m[4]),
-  };
+        // consider that any item with a transform attribute is visible
+        if (node.attributes.transform != null) {
+          return visitSkip;
+        }
 
-  var path = new JSAPI({
-    type: 'element',
-    name: 'path',
-    attributes: {
-      d: 'M' + m[1] + ' ' + m[2] + 'h' + m[3] + 'v' + m[4] + 'H' + m[1] + 'z',
+        if (
+          node.name === 'path' &&
+          node.attributes.d != null &&
+          viewBoxData != null
+        ) {
+          const pathData = parsePathData(node.attributes.d);
+
+          // consider that a M command within the viewBox is visible
+          let visible = false;
+          for (const pathDataItem of pathData) {
+            if (pathDataItem.command === 'M') {
+              const [x, y] = pathDataItem.args;
+              if (
+                x >= viewBoxData.left &&
+                x <= viewBoxData.right &&
+                y >= viewBoxData.top &&
+                y <= viewBoxData.bottom
+              ) {
+                visible = true;
+              }
+            }
+          }
+          if (visible) {
+            return;
+          }
+
+          if (pathData.length === 2) {
+            // close the path too short for intersects()
+            pathData.push({ command: 'z', args: [] });
+          }
+
+          const { left, top, width, height } = viewBoxData;
+          /**
+           * @type {Array<PathDataItem>}
+           */
+          const viewBoxPathData = [
+            { command: 'M', args: [left, top] },
+            { command: 'h', args: [width] },
+            { command: 'v', args: [height] },
+            { command: 'H', args: [left] },
+            { command: 'z', args: [] },
+          ];
+
+          if (intersects(viewBoxPathData, pathData) === false) {
+            detachNodeFromParent(node, parentNode);
+          }
+        }
+      },
     },
-    content: [],
-  });
-
-  viewBoxJS = path2js(path);
-}
-
-/**
- * Test whether given path has a M instruction with coordinates within the viewBox.
- *
- * @param {String} path
- * @return {Boolean}
- */
-function pathMovesWithinViewBox(path) {
-  var regexp = /M\s*(-?\d*\.?\d+)(?!\d)\s*(-?\d*\.?\d+)/g,
-    m;
-  while (null !== (m = regexp.exec(path))) {
-    if (
-      m[1] >= viewBox.left &&
-      m[1] <= viewBox.right &&
-      m[2] >= viewBox.top &&
-      m[2] <= viewBox.bottom
-    ) {
-      return true;
-    }
-  }
-
-  return false;
-}
+  };
+};

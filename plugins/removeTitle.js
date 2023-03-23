@@ -1,9 +1,8 @@
 'use strict';
 
-exports.type = 'perItem';
+const { detachNodeFromParent } = require('../lib/xast.js');
 
-exports.active = true;
-
+exports.name = 'removeTitle';
 exports.description = 'removes <title>';
 
 /**
@@ -11,11 +10,18 @@ exports.description = 'removes <title>';
  *
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title
  *
- * @param {Object} item current iteration item
- * @return {Boolean} if false, item will be filtered out
- *
  * @author Igor Kalashnikov
+ *
+ * @type {import('./plugins-types').Plugin<'removeTitle'>}
  */
-exports.fn = function (item) {
-  return !item.isElem('title');
+exports.fn = () => {
+  return {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.name === 'title') {
+          detachNodeFromParent(node, parentNode);
+        }
+      },
+    },
+  };
 };

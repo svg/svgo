@@ -1,0 +1,27 @@
+Current cursor is reset by closepath command with the first moveto coords of segment
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="#E7DACB">
+  <path
+    d="
+      M 152 65
+      V 158
+      H 49
+      V 65
+      z
+      m -14 75
+      V 83
+      H 67
+      V 141
+      z
+    "
+    transform="translate(-24, -41)"
+  />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="#E7DACB">
+    <path d="M128 24v93H25V24zm-14 75V42H43v58z"/>
+</svg>
