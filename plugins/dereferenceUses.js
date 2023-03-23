@@ -26,14 +26,15 @@ const HrefAttributeNames = ['href', 'xlink:href'];
 /**
  * Dereferences <use> elements
  *
- *
- * @param {Object} document document element
- * @param {Object} params plugin params
- *
  * @author strarsis <strarsis@gmail.com>
+ *
+ * @type {import('./plugins-types').Plugin<'dereferenceUses'>}
  */
-exports.fn = function (document, params) {
-  const { keepHref = false, symbolContainer = 'svg' } = params;
+exports.fn = (document, params) => {
+  const {
+    keepHref = false,
+    symbolContainer = 'svg',
+  } = params;
 
   // collect <use/>s
   const useElements = querySelectorAll(document, 'use');
