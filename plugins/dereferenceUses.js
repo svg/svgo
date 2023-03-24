@@ -8,10 +8,7 @@
 
 const csstree = require('css-tree');
 
-const {
-  visitSkip,
-  querySelector,
-} = require('../lib/xast.js');
+const { visitSkip, querySelector } = require('../lib/xast.js');
 
 exports.name = 'dereferenceUses';
 exports.description = 'dereferences <use/> elements';
@@ -20,7 +17,6 @@ exports.params = {
   keepHref: false, // keep (xlink:)href attributes
   symbolContainer: 'svg', // browsers use <svg/> as container of <symbol/> content (e.g. <g> could also be used)
 };
-
 
 const OverridingUseAttributeNames = [
   'x',
@@ -36,7 +32,6 @@ const HrefAttributeNames = [
   'xlink:href',
 ];
 
-
 /**
  * Dereferences <use> elements
  *
@@ -45,16 +40,12 @@ const HrefAttributeNames = [
  * @type {import('./plugins-types').Plugin<'dereferenceUses'>}
  */
 exports.fn = (root, params) => {
-  const {
-    keepHref = false,
-    symbolContainer = 'svg',
-  } = params;
+  const { keepHref = false, symbolContainer = 'svg' } = params;
 
   /**
    * @type {Array<{ node: XastElement, parentNode: XastParent, targetNode?: XastElement }>}
    */
   let useElements = [];
-
 
   return {
     element: {
@@ -70,10 +61,9 @@ exports.fn = (root, params) => {
     },
 
     root: {
-      exit: root => {
+      exit: (root) => {
         // replace each <use/> with its referenced node
         for (const useElement of useElements) {
-
           // `href`/`xlink:href` value
           let href = '';
           for (let hrefAttributeName of HrefAttributeNames) {
@@ -92,7 +82,6 @@ exports.fn = (root, params) => {
             continue;
           }
 
-
           // clone referenced element for insertion
           const insertElement = structuredClone(targetElement);
 
@@ -100,7 +89,9 @@ exports.fn = (root, params) => {
           // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
           //   "Only the attributes x, y, width, height and href on the use element will override those set on the referenced element.
           //    However, any other attributes not set on the referenced element will be applied to the use element."
-          const insertElementAttributeNames = Object.keys(insertElement.attributes);
+          const insertElementAttributeNames = Object.keys(
+            insertElement.attributes
+          );
           for (const attributeName in useElement.node.attributes) {
             // don't remove attributes from the referenced element that, by spec, override the one of the <use> element
             if (
@@ -134,40 +125,51 @@ exports.fn = (root, params) => {
             insertElement.name = symbolContainer;
           }
 
-
           // apply styles of <use/> element also on top of the referenced element
           const useElementStyles = useElement.node.attributes.style;
           const insertElementStyles = insertElement.attributes.style;
           const styleParseOpts = { context: 'declarationList' };
-          if(useElementStyles) {
-            const useElementStylesAst = csstree.parse(useElementStyles, styleParseOpts);
-            if(useElementStylesAst.type !== 'DeclarationList') {
+          if (useElementStyles) {
+            const useElementStylesAst = csstree.parse(
+              useElementStyles,
+              styleParseOpts
+            );
+            if (useElementStylesAst.type !== 'DeclarationList') {
               continue;
             }
 
-            const insertElementStylesAst = csstree.parse(insertElementStyles, styleParseOpts);
-            if(insertElementStylesAst.type !== 'DeclarationList') {
+            const insertElementStylesAst = csstree.parse(
+              insertElementStyles,
+              styleParseOpts
+            );
+            if (insertElementStylesAst.type !== 'DeclarationList') {
               continue;
             }
 
+            insertElementStylesAst.children.appendList(
+              useElementStylesAst.children
+            );
 
-            insertElementStylesAst.children.appendList(useElementStylesAst.children);
-
-            const insertElementStylesAppended = csstree.generate(insertElementStylesAst);
+            const insertElementStylesAppended = csstree.generate(
+              insertElementStylesAst
+            );
             insertElement.attributes.style = insertElementStylesAppended; // append styles (styles from <use/> have higher priority)
           }
-          
-
 
           // replace the <use/> element with the referenced, resolved element
 
           // position of <use/> in parent
-          const useElementPosition = useElement.parentNode.children.indexOf(useElement.node);
+          const useElementPosition = useElement.parentNode.children.indexOf(
+            useElement.node
+          );
 
-          useElement.parentNode.children.splice(useElementPosition, 1, insertElement);
-          
+          useElement.parentNode.children.splice(
+            useElementPosition,
+            1,
+            insertElement
+          );
         }
-      }
-    }
-  }
+      },
+    },
+  };
 };
