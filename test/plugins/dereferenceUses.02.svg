@@ -1,4 +1,4 @@
-Works with <use> elements that reference to IDs without element, while keeping the href attributes.
+Works with <use/> elements that reference to IDs without element, while keeping the href attributes.
 
 ===
 
