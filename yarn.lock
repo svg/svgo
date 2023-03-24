@@ -1056,6 +1056,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ungap__structured-clone@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@types/ungap__structured-clone@npm:0.3.0"
+  checksum: 1502276e64645c2157e7a6d0dc6b572787b99f5a4e64d11711fcc05edb9c5be5d0a7827939d269746a29f24ae96c9581b16f12d00604dacfbfdc6b62ba6025c5
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 21.0.0
   resolution: "@types/yargs-parser@npm:21.0.0"
@@ -4429,6 +4436,7 @@ __metadata:
     "@types/csso": ^5.0.0
     "@types/jest": ^29.1.1
     "@types/node": ^18.15.6
+    "@types/ungap__structured-clone": ^0.3.0
     "@ungap/structured-clone": ^1.0.2
     commander: ^7.2.0
     css-select: ^5.1.0
