@@ -6,6 +6,8 @@
  * @typedef {import('../lib/types').XastParent} XastChild
  */
 
+const structuredClone = require('@ungap/structured-clone').default;
+
 const csstree = require('css-tree');
 
 const { visitSkip, querySelector } = require('../lib/xast.js');

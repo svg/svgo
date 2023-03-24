@@ -1072,6 +1072,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ungap/structured-clone@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@ungap/structured-clone@npm:1.0.2"
+  checksum: aaf0854a66b8a64db90b1ca211f6e7c8b54f15c6cc6f14bab5b509777c296ad4a8e83e057fc5d904060b264cd29eb4de6d8069db07304517da4303e222b358c2
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^1.0.0":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -4422,6 +4429,7 @@ __metadata:
     "@types/csso": ^5.0.0
     "@types/jest": ^29.1.1
     "@types/node": ^18.15.6
+    "@ungap/structured-clone": ^1.0.2
     commander: ^7.2.0
     css-select: ^5.1.0
     css-tree: ^2.2.1

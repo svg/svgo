@@ -106,6 +106,7 @@
   },
   "dependencies": {
     "@trysound/sax": "0.2.0",
+    "@ungap/structured-clone": "^1.0.2",
     "commander": "^7.2.0",
     "css-select": "^5.1.0",
     "css-tree": "^2.2.1",
