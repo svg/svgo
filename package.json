@@ -110,6 +110,7 @@
     "css-select": "^5.1.0",
     "css-tree": "^2.2.1",
     "csso": "^5.0.5",
+    "gunzip-maybe": "^1.4.2",
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
