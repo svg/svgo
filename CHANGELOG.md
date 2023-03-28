@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/mbank-design/svgo/compare/v3.0.3...v3.1.0) (2023-03-28)
+
+
+### Features
+
+* add hasNoColorSuffix rule ([34236af](https://github.com/mbank-design/svgo/commit/34236afad97d09353343ad4090a3bbfe516c2c31))
+
 ### [3.0.3](https://github.com/mbank-design/svgo/compare/v2.23.0...v3.0.3) (2023-03-02)
 
 ## [2.23.0](https://github.com/mbank-design/svgo/compare/v2.6.1...v2.23.0) (2023-03-02)
