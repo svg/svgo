@@ -111,10 +111,10 @@ const generateId = (currentId) => {
 /**
  * Get string from generated ID array.
  *
- * @type {(arr: Array<number>) => string}
+ * @type {(arr: Array<number>, prefix: string) => string}
  */
-const getIdString = (arr) => {
-  return arr.map((i) => generateIdChars[i]).join('');
+const getIdString = (arr, prefix) => {
+  return prefix + arr.map((i) => generateIdChars[i]).join('');
 };
 
 /**
@@ -129,6 +129,7 @@ exports.fn = (_root, params) => {
   const {
     remove = true,
     minify = true,
+    prefix= '',
     preserve = [],
     preservePrefixes = [],
     force = false,
@@ -250,7 +251,7 @@ exports.fn = (_root, params) => {
               let currentIdString = null;
               do {
                 currentId = generateId(currentId);
-                currentIdString = getIdString(currentId);
+                currentIdString = getIdString(currentId, prefix);
               } while (isIdPreserved(currentIdString));
               node.attributes.id = currentIdString;
               for (const { element, name, value } of refs) {

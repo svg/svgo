@@ -14,6 +14,7 @@ type DefaultPlugins = {
   cleanupIds: {
     remove?: boolean;
     minify?: boolean;
+    prefix?: string;
     preserve?: Array<string>;
     preservePrefixes?: Array<string>;
     force?: boolean;
