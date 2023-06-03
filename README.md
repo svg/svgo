@@ -224,7 +224,7 @@ const config = await loadConfig(configFile, cwd);
 | OSX Folder Action | [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action) |
 | Webpack loader | [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader) |
 | Telegram Bot | [svgo_bot](https://github.com/maksugr/svgo_bot) |
-| PostCSS plugin | [postcss-svgo](https://github.com/ben-eb/postcss-svgo) |
+| PostCSS plugin | [postcss-svgo](https://github.com/cssnano/cssnano/tree/master/packages/postcss-svgo) |
 | Inkscape plugin | [inkscape-svgo](https://github.com/konsumer/inkscape-svgo) |
 | Sketch plugin | [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor) |
 | macOS app | [Image Shrinker](https://image-shrinker.com) |
