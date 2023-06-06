@@ -222,7 +222,7 @@ const config = await loadConfig(configFile, cwd);
 | Gulp task | [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin) |
 | Mimosa module | [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg) |
 | OSX Folder Action | [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action) |
-| Webpack loader | [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader) |
+| Webpack loader | [image-minimizer-webpack-plugin](https://github.com/webpack-contrib/image-minimizer-webpack-plugin/#optimize-with-svgo) |
 | Telegram Bot | [svgo_bot](https://github.com/maksugr/svgo_bot) |
 | PostCSS plugin | [postcss-svgo](https://github.com/ben-eb/postcss-svgo) |
 | Inkscape plugin | [inkscape-svgo](https://github.com/konsumer/inkscape-svgo) |
