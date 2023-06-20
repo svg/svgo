@@ -232,6 +232,7 @@ const config = await loadConfig(configFile, cwd);
 | VS Code plugin | [vscode-svgo](https://github.com/1000ch/vscode-svgo) |
 | Atom plugin | [atom-svgo](https://github.com/1000ch/atom-svgo) |
 | Sublime plugin | [Sublime-svgo](https://github.com/1000ch/Sublime-svgo) |
+| Neovim plugin | [svgo.nvim](https://github.com/bennypowers/svgo.nvim) |
 | Figma plugin | [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export) |
 | Linux app | [Oh My SVG](https://github.com/sonnyp/OhMySVG) |
 | Browser extension | [SVG Gobbler](https://github.com/rossmoody/svg-gobbler) |
