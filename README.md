@@ -6,6 +6,10 @@
 
 **SVG O**ptimizer is a Node.js-based tool for optimizing SVG vector graphics files.
 
+## Forks purpose
+
+We saw the need to have a fork of SVGO to use it's architecture - structure and plugins, to create a tool that would allow us to validate the structure of SVG files, by crating a set of rules that would be applied to the SVG files and would return a result of the validation.
+
 ## Why?
 
 SVG files, especially those exported from various editors, usually contain a lot of redundant and useless information. This can include editor metadata, comments, hidden elements, default or non-optimal values and other stuff that can be safely removed or converted without affecting the SVG rendering result.
@@ -13,10 +17,13 @@ SVG files, especially those exported from various editors, usually contain a lot
 ## Installation
 
 Via npm:
+
 ```sh
 npm -g install svgo
 ```
+
 Via yarn:
+
 ```sh
 yarn global add svgo
 ```
@@ -24,14 +31,19 @@ yarn global add svgo
 ## CLI usage
 
 Processing single files:
+
 ```sh
 svgo one.svg two.svg -o one.min.svg two.min.svg
 ```
+
 Processing directory of svg files, recursively using `-f`, `--folder`:
+
 ```sh
 svgo -f ./path/to/folder/with/svg/files -o ./path/to/folder/with/svg/output
 ```
+
 Help for advanced usage:
+
 ```sh
 svgo --help
 ```
@@ -145,6 +157,7 @@ const config = await loadConfig();
 ```
 
 You can also specify a relative or absolute path and customize the current working directory.
+
 ```js
 const config = await loadConfig(configFile, cwd);
 ```
@@ -214,34 +227,34 @@ const config = await loadConfig(configFile, cwd);
 
 ## Other ways to use SVGO
 
-| Method | Reference |
-| ------ | --------- |
-| Web app | [SVGOMG](https://jakearchibald.github.io/svgomg/) |
-| GitHub Action | [SVGO Action](https://github.com/marketplace/actions/svgo-action) |
-| Grunt task | [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin) |
-| Gulp task | [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin) |
-| Mimosa module | [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg) |
-| OSX Folder Action | [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action) |
-| Webpack loader | [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader) |
-| Telegram Bot | [svgo_bot](https://github.com/maksugr/svgo_bot) |
-| PostCSS plugin | [postcss-svgo](https://github.com/ben-eb/postcss-svgo) |
-| Inkscape plugin | [inkscape-svgo](https://github.com/konsumer/inkscape-svgo) |
-| Sketch plugin | [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor) |
-| macOS app | [Image Shrinker](https://image-shrinker.com) |
-| Rollup plugin | [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo) |
-| VS Code plugin | [vscode-svgo](https://github.com/1000ch/vscode-svgo) |
-| Atom plugin | [atom-svgo](https://github.com/1000ch/atom-svgo) |
-| Sublime plugin | [Sublime-svgo](https://github.com/1000ch/Sublime-svgo) |
-| Figma plugin | [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export) |
-| Linux app | [Oh My SVG](https://github.com/sonnyp/OhMySVG) |
-| Browser extension | [SVG Gobbler](https://github.com/rossmoody/svg-gobbler) |
-| API | [Vector Express](https://github.com/smidyo/vectorexpress-api#convertor-svgo) |
+| Method            | Reference                                                                                    |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| Web app           | [SVGOMG](https://jakearchibald.github.io/svgomg/)                                            |
+| GitHub Action     | [SVGO Action](https://github.com/marketplace/actions/svgo-action)                            |
+| Grunt task        | [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)                                 |
+| Gulp task         | [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)                                         |
+| Mimosa module     | [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg)                          |
+| OSX Folder Action | [svgo-osx-folder-action](https://github.com/svg/svgo-osx-folder-action)                      |
+| Webpack loader    | [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader)                     |
+| Telegram Bot      | [svgo_bot](https://github.com/maksugr/svgo_bot)                                              |
+| PostCSS plugin    | [postcss-svgo](https://github.com/ben-eb/postcss-svgo)                                       |
+| Inkscape plugin   | [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)                                   |
+| Sketch plugin     | [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)                         |
+| macOS app         | [Image Shrinker](https://image-shrinker.com)                                                 |
+| Rollup plugin     | [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)                         |
+| VS Code plugin    | [vscode-svgo](https://github.com/1000ch/vscode-svgo)                                         |
+| Atom plugin       | [atom-svgo](https://github.com/1000ch/atom-svgo)                                             |
+| Sublime plugin    | [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)                                       |
+| Figma plugin      | [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export) |
+| Linux app         | [Oh My SVG](https://github.com/sonnyp/OhMySVG)                                               |
+| Browser extension | [SVG Gobbler](https://github.com/rossmoody/svg-gobbler)                                      |
+| API               | [Vector Express](https://github.com/smidyo/vectorexpress-api#convertor-svgo)                 |
 
 ## Donors
 
 | [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/8.0.0/fontello-image.svg" width="80">](https://fontello.com/) |
-| :------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-|                       [SheetJS LLC](https://sheetjs.com/)                        |                                               [Fontello](https://fontello.com/)                                               |
+| :------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: |
+|                       [SheetJS LLC](https://sheetjs.com/)                        |                                              [Fontello](https://fontello.com/)                                               |
 
 ## License and Copyright
 
