@@ -10,16 +10,16 @@
 const { referencesProps } = require('./_collections');
 exports.name = 'reuseDefs';
 exports.description =
-  'Finds <defs> elements with the same def, keep only one ref,' +
-  'and replace id references with the new one.';
+  'Find duplicated def elements, delete them' +
+  ' and replace references by the id left';
 
 const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/;
 const regReferencesHref = /^#(.+?)$/;
 const regReferencesBegin = /(\D+)\./;
 
 /**
- * Finds <defs> elements with the same def, keep only one ref, and replace id
- * references with the new one.
+ * Find duplicated def elements, delete them
+ * and replace references by the id left.
  *
  * @author Sahel LUCAS--SAOUDI
  *
