@@ -38,46 +38,29 @@ exports.fn = () => {
    * @type {Map<string, Array<{element: XastElement, name: string, value: string }>>}
    */
   const referencesById = new Map();
-  /**
-   * @type {XastElement | null}
-   */
-  let defsTag = null;
 
   return {
     element: {
-      enter: (node) => {
-        if (node.name === 'defs') {
-          node.children.forEach((child) => {
-            if (child.type === 'element' && child.attributes.id) {
-              const sameDef = defsChildren.find((def) => {
-                if (def.type !== 'element' || def.name !== child.name) {
-                  return false;
-                }
-                if (
-                  JSON.stringify({ ...def.attributes, id: undefined }) ===
-                  JSON.stringify({ ...child.attributes, id: undefined })
-                ) {
-                  return (
-                    JSON.stringify(def.children) ===
-                    JSON.stringify(child.children)
-                  );
-                }
-                return false;
-              });
+      enter: (node, parentNode) => {
+        if (parentNode.type !== 'root' && parentNode.name === 'defs' && node.attributes.id) {
+          const sameDef = defsChildren.find((def) => def.name === node.name
+            && JSON.stringify({ ...def.attributes, id: undefined }) ===
+            JSON.stringify({ ...node.attributes, id: undefined })
+            && JSON.stringify(def.children) ===
+            JSON.stringify(node.children)
+          );
 
-              if (!sameDef) {
-                defsChildren.push(child);
-              } else {
-                defsReused.set(child.attributes.id, sameDef.attributes.id);
-                // delete child
-                node.children = node.children.filter((c) => c !== child);
-              }
-            }
-          });
+          if (!sameDef) {
+            defsChildren.push(node);
+          } else {
+            defsReused.set(node.attributes.id, sameDef.attributes.id);
+            // delete child
+            parentNode.children = parentNode.children.filter((c) => c !== node);
+          }
         }
 
+        // collect all references
         for (const [name, value] of Object.entries(node.attributes)) {
-          // collect all references
           /**
            * @type {null | string}
            */
@@ -113,7 +96,7 @@ exports.fn = () => {
 
       exit: (node, parentNode) => {
         // remove empty defs node
-        if (node.name === 'defs' && node !== defsTag && node.children.length === 0) {
+        if (node.name === 'defs' && node.children.length === 0) {
           parentNode.children = parentNode.children.filter((c) => c !== node);
         }
       },
