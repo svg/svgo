@@ -20,7 +20,7 @@ exports.description =
  *
  * @type {import('./plugins-types').Plugin<'reusePaths'>}
  */
-exports.fn = () => {
+exports.fn = (root, params) => {
   /**
    * @type {Map<string, Array<XastElement>>}
    */
@@ -91,7 +91,9 @@ exports.fn = () => {
               // convert paths to <use>
               for (const pathNode of list) {
                 pathNode.name = 'use';
-                pathNode.attributes['xlink:href'] = '#' + id;
+                params.noXlink
+                  ? (pathNode.attributes['href'] = '#' + id)
+                  : (pathNode.attributes['xlink:href'] = '#' + id);
                 delete pathNode.attributes.d;
                 delete pathNode.attributes.stroke;
                 delete pathNode.attributes.fill;
@@ -99,8 +101,11 @@ exports.fn = () => {
             }
           }
           if (defsTag.children.length !== 0) {
-            if (node.attributes['xmlns:xlink'] == null) {
+            if (!params.noXlink && node.attributes['xmlns:xlink'] == null) {
               node.attributes['xmlns:xlink'] = 'http://www.w3.org/1999/xlink';
+            }
+            if (params.noXlink && node.attributes['xmlns'] == null) {
+              node.attributes['xmlns'] = 'http://www.w3.org/2000/svg';
             }
             node.children.unshift(defsTag);
           }
