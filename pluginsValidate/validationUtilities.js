@@ -1,5 +1,7 @@
 'use strict';
 
+const svgPathBbox = require('svg-path-bbox');
+
 function findElementByName(svg, name) {
   let result;
   walkTree(svg, function (node) {
@@ -150,3 +152,16 @@ function isEmpty(object) {
 }
 
 exports.isEmpty = isEmpty;
+
+function calculatePathDimensions(d) {
+  const [areaX1, areaY1, areaX2, areaY2] = svgPathBbox(d);
+  // Because of JS calculation error while converting binary to decimal numbers we add margin of error to the allowed defined for each asset working area
+  const MARGIN_OF_ERROR = 0.001;
+
+  return [
+    Math.floor(areaX2 - areaX1 + MARGIN_OF_ERROR),
+    Math.floor(areaY2 - areaY1 + MARGIN_OF_ERROR),
+  ];
+}
+
+exports.calculatePathDimensions = calculatePathDimensions;

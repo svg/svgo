@@ -187,6 +187,19 @@ var ASSET_TYPE = {
           blackFillAndStrokeColor: '#26221e',
         },
       },
+      {
+        name: 'isDarkmodeMaskCorrect',
+        params: {
+          darkmodeFillSize: [240, 240],
+          fillColors: ['white', '#fff', '#ffffff'],
+        },
+      },
+      {
+        name: 'isBlackStrokeCorrect',
+        params: {
+          strokeWidth: [0.4, 0.6],
+        },
+      },
     ],
   },
   FLAG: {

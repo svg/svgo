@@ -83,6 +83,8 @@ type ValidationResult = {
   isSVG?: boolean;
   hasUniqueName?: boolean;
   validationError?: boolean;
+  isDarkmodeMaskCorrect?: boolean;
+  isBlackStrokeCorrect?: boolean;
 };
 
 /**

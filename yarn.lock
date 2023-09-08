@@ -822,7 +822,7 @@ __metadata:
     stable: ^0.1.8
     standard-version: ^9.3.1
     strip-ansi: ^6.0.0
-    svg-path-bbox: ^1.0.1
+    svg-path-bbox: ^1.2.4
     tar-stream: ^2.2.0
     typescript: ^4.8.4
   bin:
@@ -5686,14 +5686,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svg-path-bbox@npm:^1.0.1":
-  version: 1.2.2
-  resolution: "svg-path-bbox@npm:1.2.2"
+"svg-path-bbox@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "svg-path-bbox@npm:1.2.4"
   dependencies:
     svgpath: ^2.2.0
   bin:
-    svg-path-bbox: src/cli.cjs
-  checksum: a268590fb1023941bc71ea0af9bb2598f9a64f3966e89ffb794552f160be733cd8908a7672ad9c5c19ce2908fc5feb0f547d913e2995063466eca8364d114b39
+    svg-path-bbox: src/cli.js
+  checksum: 5c91e0fb099dbb52cc6fa8681f3989b3501a7a5d017f51f253437c34f601708c4a4daed889504e40747935a0e75bd1bb96a186b3ee719a416dfdd0fb41e09a32
   languageName: node
   linkType: hard
 
