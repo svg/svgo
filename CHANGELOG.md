@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/mbank-design/svgo/compare/v3.0.3...v3.2.0) (2023-09-08)
+
+
+### Features
+
+* add fork reasoning to README ([bb3c0c4](https://github.com/mbank-design/svgo/commit/bb3c0c46ad8c665265960dc93759be5fe6e82018))
+* add hasNoColorSuffix rule ([a7bed05](https://github.com/mbank-design/svgo/commit/a7bed058804bf60686c2bd16b0e7e129c25fd24f))
+* add isBlackStrokeCorrect, isDarkmodeMaskCorrect rules ([ef390ae](https://github.com/mbank-design/svgo/commit/ef390ae9e9966e6ccce9b0d681bcee5e1f183219))
+
 ## [3.1.0](https://github.com/mbank-design/svgo/compare/v3.0.3...v3.1.0) (2023-03-28)
 
 
