@@ -37,45 +37,50 @@ const ENOCLS = `Error in plugin "isBlackStrokeCorrect": absent parameters.
 exports.fn = function (root, validateResult, params) {
   if (params || !utils.isEmpty(params)) {
     const svg = utils.findElementByName(root, 'svg');
-    const blackStrokeElement = utils.findAllElementByAttributeValue(
+    const blackStrokeElements = utils.findAllElementByAttributeValue(
       svg,
       'id',
       'blackStroke'
-    )[0];
+    );
+
     let isStrokeWidthCorrect = true;
     let isFillAttributeUsed = false;
 
-    if (blackStrokeElement.name === 'path') {
-      if (
-        Object.keys(blackStrokeElement.attributes).includes('stroke-width') &&
-        !params.strokeWidth.includes(
-          parseFloat(blackStrokeElement.attributes['stroke-width'])
-        )
-      ) {
-        isStrokeWidthCorrect = false;
-      }
-      if (Object.keys(blackStrokeElement.attributes).includes('fill')) {
-        isFillAttributeUsed = true;
-      }
-    } else if (blackStrokeElement.name === 'g') {
-      for (const child of blackStrokeElement.children) {
+    if (blackStrokeElements.length === 1) {
+      const blackStrokeElement = blackStrokeElements[0];
+
+      if (blackStrokeElement.name === 'path') {
         if (
-          Object.keys(child.attributes).includes('stroke-width') &&
+          Object.keys(blackStrokeElement.attributes).includes('stroke-width') &&
           !params.strokeWidth.includes(
-            parseFloat(child.attributes['stroke-width'])
+            parseFloat(blackStrokeElement.attributes['stroke-width'])
           )
         ) {
           isStrokeWidthCorrect = false;
         }
-        if (Object.keys(child.attributes).includes('fill')) {
+        if (Object.keys(blackStrokeElement.attributes).includes('fill')) {
           isFillAttributeUsed = true;
         }
+      } else if (blackStrokeElement.name === 'g') {
+        for (const child of blackStrokeElement.children) {
+          if (
+            Object.keys(child.attributes).includes('stroke-width') &&
+            !params.strokeWidth.includes(
+              parseFloat(child.attributes['stroke-width'])
+            )
+          ) {
+            isStrokeWidthCorrect = false;
+          }
+          if (Object.keys(child.attributes).includes('fill')) {
+            isFillAttributeUsed = true;
+          }
+        }
+      } else {
+        console.error(
+          'Error in plugin isBlackStrokeCorrect: Unhandled element found!'
+        );
       }
-    } else {
-      console.error(
-        'Error in plugin isBlackStrokeCorrect: Unhandled element found!'
-      );
-    }
+    } else isStrokeWidthCorrect = false;
 
     const result = isStrokeWidthCorrect && !isFillAttributeUsed;
 
