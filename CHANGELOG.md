@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.1](https://github.com/mbank-design/svgo/compare/v3.2.0...v3.2.1) (2023-09-15)
+
+
+### Bug Fixes
+
+* check if there is only one element with blackStroke id in isBlackStrokeCorrect rule ([d4d6e05](https://github.com/mbank-design/svgo/commit/d4d6e050f3a0a9b3a50f9e5cb5ce2b1c4b6258e2))
+
 ## [3.2.0](https://github.com/mbank-design/svgo/compare/v3.0.3...v3.2.0) (2023-09-08)
 
 
