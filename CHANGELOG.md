@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.2](https://github.com/mbank-design/svgo/compare/v3.2.1...v3.2.2) (2023-09-15)
+
+
+### Bug Fixes
+
+* check if darkmodemask element is present in isDarkmodeMaskCorrect rule ([e71c451](https://github.com/mbank-design/svgo/commit/e71c4512d7a85ed400fe316a75d8e087b2a40676))
+
 ### [3.2.1](https://github.com/mbank-design/svgo/compare/v3.2.0...v3.2.1) (2023-09-15)
 
 
