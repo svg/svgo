@@ -61,4 +61,12 @@ describe('svgo', () => {
     });
     expect(normalize(result.data)).toEqual(expected);
   });
+  it('should preserve "to" keyframe selector', async () => {
+    const [original, expected] = await parseFixture('keyframe-selectors.svg');
+    const result = optimize(original, {
+      path: 'input.svg',
+      js2svg: { pretty: true },
+    });
+    expect(normalize(result.data)).toEqual(expected);
+  });
 });
