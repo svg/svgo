@@ -1,0 +1,40 @@
+Don't remove and reuse the ID of the duplicate path if it's already being linked
+in an href by another node.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-29.947 60.987 69.975 102.505">
+  <g transform="translate(-59 64)">
+    <g id="b">
+      <path id="a" fill="#000" d="M0 0v1h.5Z" transform="rotate(18 3.157 -.5)"/>
+      <use xlink:href="#a" width="1" height="1" transform="scale(-1 1)"/>
+    </g>
+    <use xlink:href="#b" width="1" height="1" transform="rotate(72)"/>
+    <use xlink:href="#b" width="1" height="1" transform="rotate(-72)"/>
+    <use xlink:href="#b" width="1" height="1" transform="rotate(144)"/>
+    <use xlink:href="#b" width="1" height="1" transform="rotate(-144)"/>
+  </g>
+  <path id="c" fill="#000" d="M0 0v1h.5Z" transform="rotate(18 3.157 -.5)"/>
+  <use xlink:href="#c" width="1" height="1" transform="scale(-1 1)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-29.947 60.987 69.975 102.505">
+    <defs>
+        <path id="reuse-0" fill="#000" d="M0 0v1h.5Z"/>
+    </defs>
+    <g transform="translate(-59 64)">
+        <g id="b">
+            <use id="a" transform="rotate(18 3.157 -.5)" xlink:href="#reuse-0"/>
+            <use xlink:href="#a" width="1" height="1" transform="scale(-1 1)"/>
+        </g>
+        <use xlink:href="#b" width="1" height="1" transform="rotate(72)"/>
+        <use xlink:href="#b" width="1" height="1" transform="rotate(-72)"/>
+        <use xlink:href="#b" width="1" height="1" transform="rotate(144)"/>
+        <use xlink:href="#b" width="1" height="1" transform="rotate(-144)"/>
+    </g>
+    <use id="c" transform="rotate(18 3.157 -.5)" xlink:href="#reuse-0"/>
+    <use xlink:href="#c" width="1" height="1" transform="scale(-1 1)"/>
+</svg>

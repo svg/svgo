@@ -37,6 +37,13 @@ exports.fn = () => {
    */
   let svgDefs;
 
+  /**
+   * Set of hrefs that reference the id of another node.
+   *
+   * @type {Set<string>}
+   */
+  const hrefs = new Set();
+
   return {
     element: {
       enter: (node, parentNode) => {
@@ -61,13 +68,20 @@ exports.fn = () => {
         ) {
           svgDefs = node;
         }
+
+        if (node.name === 'use') {
+          for (const name of ['href', 'xlink:href']) {
+            const href = node.attributes[name];
+
+            if (href != null && href.startsWith('#') && href.length > 1) {
+              hrefs.add(href.slice(1));
+            }
+          }
+        }
       },
 
       exit: (node, parentNode) => {
         if (node.name === 'svg' && parentNode.type === 'root') {
-          /**
-           * @type {XastElement}
-           */
           let defsTag = svgDefs;
 
           if (defsTag == null) {
@@ -99,7 +113,8 @@ exports.fn = () => {
               };
               delete reusablePath.attributes.transform;
               let id;
-              if (reusablePath.attributes.id == null) {
+              const reusablePathId = reusablePath.attributes.id;
+              if (reusablePathId == null || hrefs.has(reusablePathId)) {
                 id = 'reuse-' + index;
                 index += 1;
                 reusablePath.attributes.id = id;
