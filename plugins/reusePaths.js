@@ -26,9 +26,18 @@ exports.fn = () => {
    */
   const paths = new Map();
 
+  /**
+   * Reference to the first defs element that is a direct child of the svg
+   * element if one exists.
+   *
+   * @type {XastElement}
+   * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs
+   */
+  let svgDefs;
+
   return {
     element: {
-      enter: (node) => {
+      enter: (node, parentNode) => {
         if (node.name === 'path' && node.attributes.d != null) {
           const d = node.attributes.d;
           const fill = node.attributes.fill || '';
@@ -41,6 +50,15 @@ exports.fn = () => {
           }
           list.push(node);
         }
+
+        if (
+          svgDefs == null &&
+          node.name === 'defs' &&
+          parentNode.type === 'element' &&
+          parentNode.name === 'svg'
+        ) {
+          svgDefs = node;
+        }
       },
 
       exit: (node, parentNode) => {
@@ -48,17 +66,22 @@ exports.fn = () => {
           /**
            * @type {XastElement}
            */
-          const defsTag = {
-            type: 'element',
-            name: 'defs',
-            attributes: {},
-            children: [],
-          };
-          // TODO remove legacy parentNode in v4
-          Object.defineProperty(defsTag, 'parentNode', {
-            writable: true,
-            value: node,
-          });
+          let defsTag = svgDefs;
+
+          if (defsTag == null) {
+            defsTag = {
+              type: 'element',
+              name: 'defs',
+              attributes: {},
+              children: [],
+            };
+            // TODO remove legacy parentNode in v4
+            Object.defineProperty(defsTag, 'parentNode', {
+              writable: true,
+              value: node,
+            });
+          }
+
           let index = 0;
           for (const list of paths.values()) {
             if (list.length > 1) {
@@ -102,7 +125,10 @@ exports.fn = () => {
             if (node.attributes['xmlns:xlink'] == null) {
               node.attributes['xmlns:xlink'] = 'http://www.w3.org/1999/xlink';
             }
-            node.children.unshift(defsTag);
+
+            if (svgDefs == null) {
+              node.children.unshift(defsTag);
+            }
           }
         }
       },
