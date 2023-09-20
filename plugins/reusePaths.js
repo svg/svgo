@@ -1,5 +1,7 @@
 'use strict';
 
+const { detachNodeFromParent, querySelectorAll } = require('../lib/xast');
+
 /**
  * @typedef {import('../lib/types').XastElement} XastElement
  * @typedef {import('../lib/types').XastParent} XastParent
@@ -113,11 +115,41 @@ exports.fn = () => {
               defsTag.children.push(reusablePath);
               // convert paths to <use>
               for (const pathNode of list) {
-                pathNode.name = 'use';
-                pathNode.attributes['xlink:href'] = '#' + id;
                 delete pathNode.attributes.d;
                 delete pathNode.attributes.stroke;
                 delete pathNode.attributes.fill;
+
+                if (
+                  defsTag.children.includes(pathNode) &&
+                  pathNode.children.length === 0
+                ) {
+                  if (Object.keys(pathNode.attributes).length === 0) {
+                    detachNodeFromParent(pathNode, defsTag);
+                    continue;
+                  }
+
+                  if (
+                    Object.keys(pathNode.attributes).length === 1 &&
+                    pathNode.attributes.id != null
+                  ) {
+                    detachNodeFromParent(pathNode, defsTag);
+                    const selector = `[xlink\\:href=#${pathNode.attributes.id}], [href=#${pathNode.attributes.id}]`;
+                    for (const child of querySelectorAll(node, selector)) {
+                      if (child.type !== 'element') {
+                        continue;
+                      }
+                      for (const name of ['href', 'xlink:href']) {
+                        if (child.attributes[name] != null) {
+                          child.attributes[name] = '#' + id;
+                        }
+                      }
+                    }
+                    continue;
+                  }
+                }
+
+                pathNode.name = 'use';
+                pathNode.attributes['xlink:href'] = '#' + id;
               }
             }
           }
