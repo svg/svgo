@@ -7,6 +7,7 @@ const zlib = require('zlib');
 const stream = require('stream');
 const fetch = require('node-fetch');
 const tarStream = require('tar-stream');
+const gunzip = require('gunzip-maybe');
 
 const pipeline = util.promisify(stream.pipeline);
 
@@ -39,7 +40,7 @@ const extractTarGz = async (url, baseDir, include) => {
     next();
   });
   const response = await fetch(url);
-  await pipeline(response.body, extract);
+  await pipeline(response.body.pipe(gunzip()), extract);
 };
 
 (async () => {
