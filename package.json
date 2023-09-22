@@ -69,7 +69,8 @@
     "typecheck": "tsc",
     "test-browser": "rollup -c && node ./test/browser.js",
     "test-regression": "node ./test/regression-extract.js && NO_DIFF=1 node ./test/regression.js",
-    "prepublishOnly": "rm -rf dist && rollup -c"
+    "prepublishOnly": "rm -rf dist && rollup -c",
+    "qa": "yarn lint && yarn typecheck && yarn test && yarn test-browser && yarn test-regression"
   },
   "prettier": {
     "singleQuote": true
