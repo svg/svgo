@@ -5,11 +5,16 @@ const path = require('path');
 const util = require('util');
 const zlib = require('zlib');
 const stream = require('stream');
-const fetch = require('node-fetch');
+const { default: fetch } = require('node-fetch');
 const tarStream = require('tar-stream');
 
 const pipeline = util.promisify(stream.pipeline);
 
+/**
+ * @param {string} url
+ * @param {string} baseDir
+ * @param {RegExp} include
+ */
 const extractTarGz = async (url, baseDir, include) => {
   const extract = tarStream.extract();
   extract.on('entry', async (header, stream, next) => {
@@ -19,8 +24,7 @@ const extractTarGz = async (url, baseDir, include) => {
           const file = path.join(baseDir, header.name);
           await fs.promises.mkdir(path.dirname(file), { recursive: true });
           await pipeline(stream, fs.createWriteStream(file));
-        }
-        if (header.name.endsWith('.svgz')) {
+        } else if (header.name.endsWith('.svgz')) {
           // .svgz -> .svg
           const file = path.join(baseDir, header.name.slice(0, -1));
           await fs.promises.mkdir(path.dirname(file), { recursive: true });
@@ -39,7 +43,7 @@ const extractTarGz = async (url, baseDir, include) => {
     next();
   });
   const response = await fetch(url);
-  await pipeline(response.body, extract);
+  await pipeline(response.body, zlib.createGunzip(), extract);
 };
 
 (async () => {
