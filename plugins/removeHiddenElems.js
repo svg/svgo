@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').XastParent} XastParent
+ */
+
+const { elemsGroups, referencesProps } = require('./_collections.js');
 const {
   visit,
   visitSkip,
@@ -8,6 +14,8 @@ const {
 } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
+
+const nonRendering = elemsGroups.nonRendering;
 
 exports.name = 'removeHiddenElems';
 exports.description =
@@ -50,11 +58,20 @@ exports.fn = (root, params) => {
   } = params;
   const stylesheet = collectStylesheet(root);
 
+  /**
+   * Skip non-rendered nodes initially, and only detach if they have no ID, or
+   * their ID is not referenced by another node.
+   *
+   * @type {Map<XastElement, XastParent>}
+   */
+  const nonRenderedNodes = new Map();
+
   visit(root, {
     element: {
       enter: (node, parentNode) => {
-        // transparent element inside clipPath still affect clipped elements
-        if (node.name === 'clipPath') {
+        // transparent non-rendering elements still apply where referenced
+        if (nonRendering.includes(node.name)) {
+          nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
         const computedStyle = computeStyle(stylesheet, node);
@@ -303,6 +320,30 @@ exports.fn = (root, params) => {
         ) {
           detachNodeFromParent(node, parentNode);
           return;
+        }
+      },
+
+      exit: (node, parentNode) => {
+        if (node.name !== 'svg' || parentNode.type !== 'root') {
+          return;
+        }
+        for (const [
+          nonRenderedNode,
+          nonRenderedParent,
+        ] of nonRenderedNodes.entries()) {
+          if (nonRenderedNode.attributes.id == null) {
+            detachNodeFromParent(node, nonRenderedParent);
+            continue;
+          }
+
+          const selector = referencesProps
+            .map((attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`)
+            .join(',');
+
+          const element = querySelector(root, selector);
+          if (element == null) {
+            detachNodeFromParent(node, nonRenderedParent);
+          }
         }
       },
     },

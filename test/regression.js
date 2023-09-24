@@ -28,8 +28,6 @@ const runTests = async ({ list }) => {
     if (
       // hard to detect the end of animation
       name.startsWith('w3c-svg-11-test-suite/svg/animate-') ||
-      // breaks because of optimisation despite of script
-      name === 'w3c-svg-11-test-suite/svg/interact-pointer-04-f.svg' ||
       // messed gradients
       name === 'w3c-svg-11-test-suite/svg/pservers-grad-18-b.svg' ||
       // animated filter
