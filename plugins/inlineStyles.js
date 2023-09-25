@@ -252,7 +252,7 @@ exports.fn = (root, params) => {
             csstree.walk(styleDeclarationList, {
               visit: 'Declaration',
               enter(node, item) {
-                styleDeclarationItems.set(node.property, item);
+                styleDeclarationItems.set(node.property.toLowerCase(), item);
               },
             });
             // merge declarations
