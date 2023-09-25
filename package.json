@@ -121,7 +121,7 @@
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/css-tree": "^2.0.0",
-    "@types/csso": "^5.0.0",
+    "@types/csso": "^5.0.1",
     "@types/jest": "^29.5.5",
     "del": "^6.0.0",
     "eslint": "^8.24.0",
