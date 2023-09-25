@@ -1,5 +1,6 @@
 'use strict';
 
+const { collectStylesheet } = require('../lib/style');
 const { detachNodeFromParent, querySelectorAll } = require('../lib/xast');
 
 /**
@@ -22,7 +23,9 @@ exports.description =
  *
  * @type {import('./plugins-types').Plugin<'reusePaths'>}
  */
-exports.fn = () => {
+exports.fn = (root) => {
+  const stylesheet = collectStylesheet(root);
+
   /**
    * @type {Map<string, Array<XastElement>>}
    */
@@ -101,25 +104,31 @@ exports.fn = () => {
           let index = 0;
           for (const list of paths.values()) {
             if (list.length > 1) {
-              // add reusable path to defs
-              /**
-               * @type {XastElement}
-               */
+              /** @type {XastElement} */
               const reusablePath = {
                 type: 'element',
                 name: 'path',
-                attributes: { ...list[0].attributes },
+                attributes: {},
                 children: [],
               };
-              delete reusablePath.attributes.transform;
-              let id;
-              const reusablePathId = reusablePath.attributes.id;
-              if (reusablePathId == null || hrefs.has(reusablePathId)) {
-                id = 'reuse-' + index;
-                index += 1;
-                reusablePath.attributes.id = id;
+
+              for (const attr of ['fill', 'stroke', 'd']) {
+                if (list[0].attributes[attr] != null) {
+                  reusablePath.attributes[attr] = list[0].attributes[attr];
+                }
+              }
+
+              const originalId = list[0].attributes.id;
+              if (
+                originalId == null ||
+                hrefs.has(originalId) ||
+                stylesheet.rules.some(
+                  (rule) => rule.selector === `#${originalId}`
+                )
+              ) {
+                reusablePath.attributes.id = 'reuse-' + index++;
               } else {
-                id = reusablePath.attributes.id;
+                reusablePath.attributes.id = originalId;
                 delete list[0].attributes.id;
               }
               // TODO remove legacy parentNode in v4
@@ -155,7 +164,8 @@ exports.fn = () => {
                       }
                       for (const name of ['href', 'xlink:href']) {
                         if (child.attributes[name] != null) {
-                          child.attributes[name] = '#' + id;
+                          child.attributes[name] =
+                            '#' + reusablePath.attributes.id;
                         }
                       }
                     }
@@ -164,7 +174,8 @@ exports.fn = () => {
                 }
 
                 pathNode.name = 'use';
-                pathNode.attributes['xlink:href'] = '#' + id;
+                pathNode.attributes['xlink:href'] =
+                  '#' + reusablePath.attributes.id;
               }
             }
           }
