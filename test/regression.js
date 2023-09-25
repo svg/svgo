@@ -38,8 +38,6 @@ const runTests = async ({ list }) => {
       name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // removing wrapping <g> breaks :first-child pseudo-class
       name === 'w3c-svg-11-test-suite/svg/styling-pres-04-f.svg' ||
-      // messed case insensitivity while inlining styles
-      name === 'w3c-svg-11-test-suite/svg/styling-css-10-f.svg' ||
       // rect is converted to path which matches wrong styles
       name === 'w3c-svg-11-test-suite/svg/styling-css-08-f.svg' ||
       // external image
