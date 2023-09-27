@@ -1,7 +1,9 @@
 'use strict';
 
 /**
+ * @typedef {import("../lib/types").PathDataItem} PathDataItem
  * @typedef {import('../lib/types').XastChild} XastChild
+ * @typedef {import('../lib/types').XastElement} XastElement
  */
 
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
@@ -35,6 +37,19 @@ exports.fn = (root, params) => {
         /** @type {XastChild[]} */
         const elementsToRemove = [];
         let prevChild = node.children[0];
+        let prevPathData = null;
+
+        /**
+         * @param {XastElement} child
+         * @param {PathDataItem[]} pathData
+         */
+        const updatePreviousPath = (child, pathData) => {
+          js2path(child, pathData, {
+            floatPrecision,
+            noSpaceAfterFlags,
+          });
+          prevPathData = null;
+        };
 
         for (let i = 1; i < node.children.length; i++) {
           const child = node.children[i];
@@ -45,6 +60,9 @@ exports.fn = (root, params) => {
             prevChild.children.length !== 0 ||
             prevChild.attributes.d == null
           ) {
+            if (prevPathData && prevChild.type === 'element') {
+              updatePreviousPath(prevChild, prevPathData);
+            }
             prevChild = child;
             continue;
           }
@@ -55,6 +73,9 @@ exports.fn = (root, params) => {
             child.children.length !== 0 ||
             child.attributes.d == null
           ) {
+            if (prevPathData) {
+              updatePreviousPath(prevChild, prevPathData);
+            }
             prevChild = child;
             continue;
           }
@@ -65,12 +86,17 @@ exports.fn = (root, params) => {
             computedStyle['marker-mid'] ||
             computedStyle['marker-end']
           ) {
+            if (prevPathData) {
+              updatePreviousPath(prevChild, prevPathData);
+            }
             prevChild = child;
             continue;
           }
-
           const childAttrs = Object.keys(child.attributes);
           if (childAttrs.length !== Object.keys(prevChild.attributes).length) {
+            if (prevPathData) {
+              updatePreviousPath(prevChild, prevPathData);
+            }
             prevChild = child;
             continue;
           }
@@ -84,25 +110,33 @@ exports.fn = (root, params) => {
           });
 
           if (areAttrsEqual) {
+            if (prevPathData) {
+              updatePreviousPath(prevChild, prevPathData);
+            }
             prevChild = child;
             continue;
           }
 
-          const prevPathJS = path2js(prevChild);
-          const curPathJS = path2js(child);
+          const hasPrevPath = prevPathData != null;
+          const currentPathData = path2js(child);
+          prevPathData = prevPathData ?? path2js(prevChild);
 
-          if (force || !intersects(prevPathJS, curPathJS)) {
-            prevPathJS.push(...curPathJS);
-            js2path(prevChild, prevPathJS, {
-              floatPrecision,
-              noSpaceAfterFlags,
-            });
-
+          if (force || !intersects(prevPathData, currentPathData)) {
+            prevPathData.push(...currentPathData);
             elementsToRemove.push(child);
             continue;
           }
 
+          if (hasPrevPath) {
+            updatePreviousPath(prevChild, prevPathData);
+          }
+
           prevChild = child;
+          prevPathData = null;
+        }
+
+        if (prevPathData && prevChild.type === 'element') {
+          updatePreviousPath(prevChild, prevPathData);
         }
 
         node.children = node.children.filter(

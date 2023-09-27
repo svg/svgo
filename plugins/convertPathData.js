@@ -154,7 +154,8 @@ exports.fn = (root, params) => {
             precision !== false
               ? +Math.pow(0.1, precision).toFixed(precision)
               : 1e-2;
-          roundData = precision > 0 && precision < 20 ? strongRound : round;
+          roundData =
+            precision && precision > 0 && precision < 20 ? strongRound : round;
           if (makeArcs) {
             arcThreshold = makeArcs.threshold;
             arcTolerance = makeArcs.tolerance;
