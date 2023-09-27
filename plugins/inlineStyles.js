@@ -38,11 +38,6 @@ const compareSpecificity = (a, b) => {
 };
 
 /**
- * @type {(value: any) => any}
- */
-const toAny = (value) => value;
-
-/**
  * Moves + merges styles from style elements to element styles
  *
  * Options
@@ -323,17 +318,13 @@ exports.fn = (root, params) => {
                 ? null
                 : selectedEl.attributes.class.split(' ')
             );
-            /**
-             * csstree v2 changed this type
-             * @type {csstree.CssNode}
-             */
-            const firstSubSelector = toAny(selector.node.children.first);
-            if (
-              firstSubSelector != null &&
-              firstSubSelector.type === 'ClassSelector'
-            ) {
-              classList.delete(firstSubSelector.name);
+
+            for (const child of selector.node.children) {
+              if (child.type === 'ClassSelector') {
+                classList.delete(child.name);
+              }
             }
+
             if (classList.size === 0) {
               delete selectedEl.attributes.class;
             } else {
@@ -341,13 +332,13 @@ exports.fn = (root, params) => {
             }
 
             // ID
+            const firstSubSelector = selector.node.children.first;
             if (
               firstSubSelector != null &&
-              firstSubSelector.type === 'IdSelector'
+              firstSubSelector.type === 'IdSelector' &&
+              selectedEl.attributes.id === firstSubSelector.name
             ) {
-              if (selectedEl.attributes.id === firstSubSelector.name) {
-                delete selectedEl.attributes.id;
-              }
+              delete selectedEl.attributes.id;
             }
           }
         }
@@ -360,8 +351,7 @@ exports.fn = (root, params) => {
               if (
                 node.type === 'Rule' &&
                 node.prelude.type === 'SelectorList' &&
-                // csstree v2 changed this type
-                toAny(node.prelude.children.isEmpty)
+                node.prelude.children.isEmpty
               ) {
                 list.remove(item);
               }
@@ -369,7 +359,7 @@ exports.fn = (root, params) => {
           });
 
           // csstree v2 changed this type
-          if (toAny(style.cssAst.children.isEmpty)) {
+          if (style.cssAst.children.isEmpty) {
             // remove emtpy style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {
