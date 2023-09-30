@@ -2,7 +2,6 @@
 
 /**
  * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {import('../lib/types').XastElement} XastElement
  */
 
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
@@ -57,7 +56,7 @@ const applyTransforms = (root, params) => {
           node.attributes.style != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && value.includes('url(')
+              referencesProps.includes(name) && value && value.includes('url(')
           )
         ) {
           return;

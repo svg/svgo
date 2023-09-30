@@ -71,6 +71,11 @@ exports.fn = (root) => {
               initial = false;
               // collect all inheritable attributes from first child element
               for (const [name, value] of Object.entries(child.attributes)) {
+                if (value == null) {
+                  delete node.attributes[name];
+                  continue;
+                }
+
                 // consider only inheritable attributes
                 if (inheritableAttrs.includes(name)) {
                   commonAttributes.set(name, value);

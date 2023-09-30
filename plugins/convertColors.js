@@ -77,6 +77,11 @@ exports.fn = (_root, params) => {
       enter: (node) => {
         for (const [name, value] of Object.entries(node.attributes)) {
           if (collections.colorsProps.includes(name)) {
+            if (value == null) {
+              delete node.attributes[name];
+              continue;
+            }
+
             let val = value;
 
             // convert colors to currentColor

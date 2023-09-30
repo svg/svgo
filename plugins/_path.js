@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('xast').Element} Element
  * @typedef {import('../lib/types').PathDataItem} PathDataItem
  */
 
@@ -15,7 +15,7 @@ var prevCtrlPoint;
 /**
  * Convert path string to JS representation.
  *
- * @type {(path: XastElement) => Array<PathDataItem>}
+ * @type {(path: Element) => Array<PathDataItem>}
  */
 const path2js = (path) => {
   // @ts-ignore legacy
@@ -24,6 +24,9 @@ const path2js = (path) => {
    * @type {Array<PathDataItem>}
    */
   const pathData = []; // JS representation of the path data
+  if (!path.attributes.d) {
+    return pathData;
+  }
   const newPathData = parsePathData(path.attributes.d);
   for (const { command, args } of newPathData) {
     pathData.push({ command, args });
@@ -179,7 +182,7 @@ const convertRelativeToAbsolute = (data) => {
 /**
  * Convert path array to string.
  *
- * @type {(path: XastElement, data: Array<PathDataItem>, params: Js2PathParams) => void}
+ * @type {(path: Element, data: Array<PathDataItem>, params: Js2PathParams) => void}
  */
 exports.js2path = function (path, data, params) {
   // @ts-ignore legacy

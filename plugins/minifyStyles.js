@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
+ * @typedef {import('xast').Element} Element
+ * @typedef {import('xast').Parents} Parents
  */
 
 const csso = require('csso');
@@ -18,10 +18,10 @@ exports.description = 'minifies styles and removes unused styles';
  * @type {import('./plugins-types').Plugin<'minifyStyles'>}
  */
 exports.fn = (_root, { usage, ...params }) => {
-  /** @type {Map<XastElement, XastParent>} */
+  /** @type {Map<Element, Parents>} */
   const styleElements = new Map();
 
-  /** @type {Array<XastElement>} */
+  /** @type {Array<Element>} */
   const elementsWithStyleAttributes = [];
 
   /** @type {Set<string>} */
@@ -133,6 +133,12 @@ exports.fn = (_root, { usage, ...params }) => {
         for (const node of elementsWithStyleAttributes) {
           // style attribute
           const elemStyle = node.attributes.style;
+
+          if (elemStyle == null) {
+            delete node.attributes.style;
+            continue;
+          }
+
           node.attributes.style = csso.minifyBlock(elemStyle, {
             ...params,
           }).css;

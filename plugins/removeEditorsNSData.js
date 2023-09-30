@@ -33,6 +33,11 @@ exports.fn = (_root, params) => {
         // collect namespace aliases from svg element
         if (node.name === 'svg') {
           for (const [name, value] of Object.entries(node.attributes)) {
+            if (value == null) {
+              delete node.attributes[name];
+              continue;
+            }
+
             if (name.startsWith('xmlns:') && namespaces.includes(value)) {
               prefixes.push(name.slice('xmlns:'.length));
               // <svg xmlns:sodipodi="">

@@ -1,7 +1,22 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('xast').Element} Element
+ * @typedef {{ name: string, data: Array<number> }} TransformItem
+ * @typedef {{
+ *   convertToShorts: boolean,
+ *   degPrecision?: number,
+ *   floatPrecision: number,
+ *   transformPrecision: number,
+ *   matrixToTransform: boolean,
+ *   shortTranslate: boolean,
+ *   shortScale: boolean,
+ *   shortRotate: boolean,
+ *   removeUseless: boolean,
+ *   collapseIntoOne: boolean,
+ *   leadingZero: boolean,
+ *   negativeExtraSpace: boolean,
+ * }} TransformParams
  */
 
 const { cleanupOutData } = require('../lib/svgo/tools.js');
@@ -21,9 +36,7 @@ exports.description = 'collapses multiple transformations and optimizes it';
  * remove useless transforms.
  *
  * @see https://www.w3.org/TR/SVG11/coords.html#TransformMatrixDefined
- *
  * @author Kir Belevich
- *
  * @type {import('./plugins-types').Plugin<'convertTransform'>}
  */
 exports.fn = (_root, params) => {
@@ -59,17 +72,12 @@ exports.fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        // transform
-        if (node.attributes.transform != null) {
-          convertTransform(node, 'transform', newParams);
-        }
-        // gradientTransform
-        if (node.attributes.gradientTransform != null) {
-          convertTransform(node, 'gradientTransform', newParams);
-        }
-        // patternTransform
-        if (node.attributes.patternTransform != null) {
-          convertTransform(node, 'patternTransform', newParams);
+        for (const attr of [
+          'transform',
+          'gradientTransform',
+          'patternTransform',
+        ]) {
+          convertTransform(node, attr, newParams);
         }
       },
     },
@@ -77,33 +85,20 @@ exports.fn = (_root, params) => {
 };
 
 /**
- * @typedef {{
- *   convertToShorts: boolean,
- *   degPrecision?: number,
- *   floatPrecision: number,
- *   transformPrecision: number,
- *   matrixToTransform: boolean,
- *   shortTranslate: boolean,
- *   shortScale: boolean,
- *   shortRotate: boolean,
- *   removeUseless: boolean,
- *   collapseIntoOne: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- * }} TransformParams
- */
-
-/**
- * @typedef {{ name: string, data: Array<number> }} TransformItem
- */
-
-/**
  * Main function.
  *
- * @type {(item: XastElement, attrName: string, params: TransformParams) => void}
+ * @param {Element} item
+ * @param {string} attrName
+ * @param {TransformParams} params
  */
 const convertTransform = (item, attrName, params) => {
-  let data = transform2js(item.attributes[attrName]);
+  const value = item.attributes[attrName];
+
+  if (value == null) {
+    return;
+  }
+
+  let data = transform2js(value);
   params = definePrecision(data, params);
 
   if (params.collapseIntoOne && data.length > 1) {

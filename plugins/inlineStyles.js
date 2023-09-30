@@ -1,9 +1,9 @@
 'use strict';
 
 /**
+ * @typedef {import('xast').Element} Element
+ * @typedef {import('xast').Parents} Parents
  * @typedef {import('../lib/types').Specificity} Specificity
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
  */
 
 const csstree = require('css-tree');
@@ -69,7 +69,7 @@ exports.fn = (root, params) => {
   } = params;
 
   /**
-   * @type {Array<{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }>}
+   * @type {Array<{ node: Element, parentNode: Parents, cssAst: csstree.StyleSheet }>}
    */
   const styles = [];
   /**
@@ -77,7 +77,7 @@ exports.fn = (root, params) => {
    *   node: csstree.Selector,
    *   item: csstree.ListItem<csstree.CssNode>,
    *   rule: csstree.Rule,
-   *   matchedElements?: Array<XastElement>
+   *   matchedElements?: Array<Element>
    * }>}
    */
   let selectors = [];
@@ -206,7 +206,7 @@ exports.fn = (root, params) => {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
           /**
-           * @type {Array<XastElement>}
+           * @type {Array<Element>}
            */
           const matchedElements = [];
           try {

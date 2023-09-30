@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
+ * @typedef {import('xast').Element} Element
+ * @typedef {import('xast').Parents} Parents
  */
 
 const { elemsGroups, referencesProps } = require('./_collections.js');
@@ -62,7 +62,7 @@ exports.fn = (root, params) => {
    * Skip non-rendered nodes initially, and only detach if they have no ID, or
    * their ID is not referenced by another node.
    *
-   * @type {Map<XastElement, XastParent>}
+   * @type {Map<Element, Parents>}
    */
   const nonRenderedNodes = new Map();
 

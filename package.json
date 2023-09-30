@@ -117,6 +117,9 @@
     "csso": "^5.0.5",
     "picocolors": "^1.0.0"
   },
+  "optionalDependencies": {
+    "@types/xast": "^2.0.1"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",

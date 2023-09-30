@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('xast').Element} Element
  */
 
 const { detachNodeFromParent } = require('../lib/xast.js');
@@ -23,7 +23,7 @@ exports.fn = () => {
       enter: (node, parentNode) => {
         if (node.name === 'defs') {
           /**
-           * @type {Array<XastElement>}
+           * @type {Array<Element>}
            */
           const usefulNodes = [];
           collectUsefulNodes(node, usefulNodes);
@@ -50,7 +50,7 @@ exports.fn = () => {
 };
 
 /**
- * @type {(node: XastElement, usefulNodes: Array<XastElement>) => void}
+ * @type {(node: Element, usefulNodes: Array<Element>) => void}
  */
 const collectUsefulNodes = (node, usefulNodes) => {
   for (const child of node.children) {

@@ -62,14 +62,12 @@ exports.fn = (root, params) => {
           for (const attribute of attributes) {
             if (typeof attribute === 'string') {
               if (node.attributes[attribute] == null) {
-                // @ts-ignore disallow explicit nullable attribute value
                 node.attributes[attribute] = undefined;
               }
             }
             if (typeof attribute === 'object') {
               for (const key of Object.keys(attribute)) {
                 if (node.attributes[key] == null) {
-                  // @ts-ignore disallow explicit nullable attribute value
                   node.attributes[key] = attribute[key];
                 }
               }

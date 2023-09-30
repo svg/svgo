@@ -177,11 +177,10 @@ exports.fn = (_root, params, info) => {
         // prefix a href attribute value
         // xlink:href is deprecated, must be still supported
         for (const name of ['href', 'xlink:href']) {
-          if (
-            node.attributes[name] != null &&
-            node.attributes[name].length !== 0
-          ) {
-            const prefixed = prefixReference(prefix, node.attributes[name]);
+          const value = node.attributes[name];
+
+          if (value != null && value.length !== 0) {
+            const prefixed = prefixReference(prefix, value);
             if (prefixed != null) {
               node.attributes[name] = prefixed;
             }
@@ -190,11 +189,10 @@ exports.fn = (_root, params, info) => {
 
         // prefix an URL attribute value
         for (const name of referencesProps) {
-          if (
-            node.attributes[name] != null &&
-            node.attributes[name].length !== 0
-          ) {
-            node.attributes[name] = node.attributes[name].replace(
+          const value = node.attributes[name];
+
+          if (value != null && value.length !== 0) {
+            node.attributes[name] = value.replace(
               /url\((.*?)\)/gi,
               (match, url) => {
                 const prefixed = prefixReference(prefix, url);
@@ -209,11 +207,10 @@ exports.fn = (_root, params, info) => {
 
         // prefix begin/end attribute value
         for (const name of ['begin', 'end']) {
-          if (
-            node.attributes[name] != null &&
-            node.attributes[name].length !== 0
-          ) {
-            const parts = node.attributes[name].split(/\s*;\s+/).map((val) => {
+          const value = node.attributes[name];
+
+          if (value != null && value.length !== 0) {
+            const parts = value.split(/\s*;\s+/).map((val) => {
               if (val.endsWith('.end') || val.endsWith('.start')) {
                 const [id, postfix] = val.split('.');
                 return `${prefixId(prefix, id)}.${postfix}`;

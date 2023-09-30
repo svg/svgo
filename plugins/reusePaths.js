@@ -4,9 +4,7 @@ const { collectStylesheet } = require('../lib/style');
 const { detachNodeFromParent, querySelectorAll } = require('../lib/xast');
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
- * @typedef {import('../lib/types').XastNode} XastNode
+ * @typedef {import('xast').Element} Element
  */
 
 exports.name = 'reusePaths';
@@ -27,7 +25,7 @@ exports.fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
   /**
-   * @type {Map<string, Array<XastElement>>}
+   * @type {Map<string, Array<Element>>}
    */
   const paths = new Map();
 
@@ -35,7 +33,7 @@ exports.fn = (root) => {
    * Reference to the first defs element that is a direct child of the svg
    * element if one exists.
    *
-   * @type {XastElement}
+   * @type {Element}
    * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs
    */
   let svgDefs;
@@ -104,7 +102,7 @@ exports.fn = (root) => {
           let index = 0;
           for (const list of paths.values()) {
             if (list.length > 1) {
-              /** @type {XastElement} */
+              /** @type {Element} */
               const reusablePath = {
                 type: 'element',
                 name: 'path',

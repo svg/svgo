@@ -126,6 +126,11 @@ exports.fn = (root, params) => {
           if (list[0].test(node.name)) {
             // loop attributes
             for (const [name, value] of Object.entries(node.attributes)) {
+              if (value == null) {
+                delete node.attributes[name];
+                continue;
+              }
+
               const isFillCurrentColor =
                 preserveCurrentColor &&
                 name == 'fill' &&

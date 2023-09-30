@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('xast').Element} Element
  */
 
 const { visitSkip } = require('../lib/xast.js');
@@ -142,11 +142,11 @@ exports.fn = (_root, params) => {
     ? [preservePrefixes]
     : [];
   /**
-   * @type {Map<string, XastElement>}
+   * @type {Map<string, import('xast').Element>}
    */
   const nodeById = new Map();
   /**
-   * @type {Map<string, Array<{element: XastElement, name: string }>>}
+   * @type {Map<string, Array<{element: Element, name: string }>>}
    */
   const referencesById = new Map();
   let deoptimized = false;
@@ -180,13 +180,17 @@ exports.fn = (_root, params) => {
         }
 
         for (const [name, value] of Object.entries(node.attributes)) {
+          if (value == null) {
+            delete node.attributes[name];
+            continue;
+          }
+
           if (name === 'id') {
             // collect all ids
-            const id = value;
-            if (nodeById.has(id)) {
+            if (nodeById.has(value)) {
               delete node.attributes.id; // remove repeated id
             } else {
-              nodeById.set(id, node);
+              nodeById.set(value, node);
             }
           } else {
             // collect all references
@@ -255,6 +259,10 @@ exports.fn = (_root, params) => {
               node.attributes.id = currentIdString;
               for (const { element, name } of refs) {
                 const value = element.attributes[name];
+                if (value == null) {
+                  continue;
+                }
+
                 if (value.includes('#')) {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(

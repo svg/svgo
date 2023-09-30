@@ -1039,6 +1039,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/unist@npm:*":
+  version: 3.0.0
+  resolution: "@types/unist@npm:3.0.0"
+  checksum: e9d21a8fb5e332be0acef29192d82632875b2ef3e700f1bc64fdfc1520189542de85c3d4f3bcfbc2f4afdb210f4c23f68061f3fbf10744e920d4f18430d19f49
+  languageName: node
+  linkType: hard
+
+"@types/xast@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@types/xast@npm:2.0.1"
+  dependencies:
+    "@types/unist": "*"
+  checksum: bad184f0a8ffaf574e1e00d8f9a6abfb8cea8384b5575a28a203d2992a58a8eb11857e4a015bd29274a36f34529a3ae1a56534dc499612be6e979afe298bd61c
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 20.2.1
   resolution: "@types/yargs-parser@npm:20.2.1"
@@ -4563,6 +4579,7 @@ __metadata:
     "@types/css-tree": ^2.0.0
     "@types/csso": ^5.0.1
     "@types/jest": ^29.5.5
+    "@types/xast": ^2.0.1
     commander: ^7.2.0
     css-select: ^5.1.0
     css-tree: ^2.2.1
@@ -4580,6 +4597,9 @@ __metadata:
     rollup-plugin-terser: ^7.0.2
     tar-stream: ^3.1.6
     typescript: ^4.8.4
+  dependenciesMeta:
+    "@types/xast":
+      optional: true
   bin:
     svgo: ./bin/svgo
   languageName: unknown

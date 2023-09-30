@@ -1,7 +1,8 @@
+import type { Element } from 'xast';
+
 import type {
   Plugin as PluginDef,
   PluginInfo,
-  XastElement,
 } from '../lib/types';
 
 type DefaultPlugins = {
@@ -209,7 +210,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
     prefix?:
       | boolean
       | string
-      | ((node: XastElement, info: PluginInfo) => string);
+      | ((node: Element, info: PluginInfo) => string);
     delim?: string;
     prefixIds?: boolean;
     prefixClassNames?: boolean;

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').XastNode} XastNode
+ * @typedef {import('xast').ElementContent} ElementContent
  */
 
 const { inheritableAttrs, elemsGroups } = require('./_collections.js');
@@ -10,7 +10,9 @@ exports.name = 'collapseGroups';
 exports.description = 'collapses useless groups';
 
 /**
- * @type {(node: XastNode, name: string) => boolean}
+ * @param {ElementContent} node
+ * @param {string} name
+ * @returns {boolean}
  */
 const hasAnimatedAttr = (node, name) => {
   if (node.type === 'element') {

@@ -51,6 +51,11 @@ exports.fn = (_root, params) => {
         }
 
         for (const [name, value] of Object.entries(node.attributes)) {
+          if (value == null) {
+            delete node.attributes[name];
+            continue;
+          }
+
           // The `version` attribute is a text string and cannot be rounded
           if (name === 'version') {
             continue;

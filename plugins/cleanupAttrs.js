@@ -12,7 +12,6 @@ const regSpaces = /\s{2,}/g;
  * Cleanup attributes values from newlines, trailing and repeating spaces.
  *
  * @author Kir Belevich
- *
  * @type {import('./plugins-types').Plugin<'cleanupAttrs'>}
  */
 exports.fn = (root, params) => {
@@ -21,27 +20,30 @@ exports.fn = (root, params) => {
     element: {
       enter: (node) => {
         for (const name of Object.keys(node.attributes)) {
+          let value = node.attributes[name];
+
+          if (value == null) {
+            delete node.attributes[name];
+            continue;
+          }
+
           if (newlines) {
             // new line which requires a space instead of themselve
-            node.attributes[name] = node.attributes[name].replace(
+            value = value.replace(
               regNewlinesNeedSpace,
               (match, p1, p2) => p1 + ' ' + p2
             );
             // simple new line
-            node.attributes[name] = node.attributes[name].replace(
-              regNewlines,
-              ''
-            );
+            value = value.replace(regNewlines, '');
           }
           if (trim) {
-            node.attributes[name] = node.attributes[name].trim();
+            value = value.trim();
           }
           if (spaces) {
-            node.attributes[name] = node.attributes[name].replace(
-              regSpaces,
-              ' '
-            );
+            value = value.replace(regSpaces, ' ');
           }
+
+          node.attributes[name] = value;
         }
       },
     },
