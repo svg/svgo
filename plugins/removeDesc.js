@@ -19,7 +19,7 @@ const standardDescs = /^(Created with|Created using)/;
  * @type {import('./plugins-types').Plugin<'removeDesc'>}
  */
 exports.fn = (root, params) => {
-  const { removeAny = true } = params;
+  const { removeAny = false } = params;
   return {
     element: {
       enter: (node, parentNode) => {
