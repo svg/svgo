@@ -1,0 +1,37 @@
+---
+title: Cleanup Numeric Values
+svgo:
+  pluginId: cleanupNumericValues
+  defaultPlugin: true
+  parameters:
+    floatPrecision:
+      description: Number of decimal places to round to, using conventional rounding rules.
+      default: 3
+    leadingZero:
+      description: If to trim leading zeros.
+      default: true
+    defaultPx:
+      description: If to remove the units when it's <code>px</code>, as this is the default if not specified.
+      default: true
+    convertToPx:
+      description: If to convert absolute units like <code>cm</code> and <code>in</code> to <code>px</code>.
+      default: true
+---
+
+Rounds numeric values, and removes the unit when it's `px` as this is the default.
+
+## Usage
+
+<PluginUsage/>
+
+### Parameters
+
+<PluginParams/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/cleanupNumericValues.js
