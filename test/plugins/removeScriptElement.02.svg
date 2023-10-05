@@ -1,0 +1,16 @@
+Collapses links to JavaScript functions, and removes event attributes from
+nodes including children of a collapsed links.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <a href="javascript:(() => { alert('uwu') })();">
+    <text y="10" onclick="alert('uwu')">uwu</text>
+  </a>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <text y="10">uwu</text>
+</svg>
