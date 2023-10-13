@@ -5,6 +5,7 @@
  */
 
 const { visitSkip } = require('../lib/xast.js');
+const { hasScripts } = require('../lib/svgo/tools');
 const { referencesProps } = require('./_collections.js');
 
 exports.name = 'cleanupIds';
@@ -154,11 +155,11 @@ exports.fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (force == false) {
-          // deoptimize if style or script elements are present
+        if (!force) {
+          // deoptimize if style or scripts are present
           if (
-            (node.name === 'style' || node.name === 'script') &&
-            node.children.length !== 0
+            (node.name === 'style' && node.children.length !== 0) ||
+            hasScripts(node)
           ) {
             deoptimized = true;
             return;
