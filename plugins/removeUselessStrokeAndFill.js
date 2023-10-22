@@ -2,6 +2,7 @@
 
 const { visit, visitSkip, detachNodeFromParent } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
+const { hasScripts } = require('../lib/svgo/tools.js');
 const { elemsGroups } = require('./_collections.js');
 
 exports.name = 'removeUselessStrokeAndFill';
@@ -26,7 +27,7 @@ exports.fn = (root, params) => {
   visit(root, {
     element: {
       enter: (node) => {
-        if (node.name === 'style' || node.name === 'script') {
+        if (node.name === 'style' || hasScripts(node)) {
           hasStyleOrScript = true;
         }
       },

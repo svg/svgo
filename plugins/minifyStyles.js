@@ -7,6 +7,7 @@
 
 const csso = require('csso');
 const { detachNodeFromParent } = require('../lib/xast');
+const { hasScripts } = require('../lib/svgo/tools');
 
 exports.name = 'minifyStyles';
 exports.description = 'minifies styles and removes unused styles';
@@ -39,7 +40,7 @@ exports.fn = (_root, { usage, ...params }) => {
 
   /**
    * Force to use usage data even if it unsafe. For example, the document
-   * contains <script> or in attributes..
+   * contains scripts or in attributes..
    */
   let forceUsageDeoptimized = false;
 
@@ -60,10 +61,7 @@ exports.fn = (_root, { usage, ...params }) => {
     element: {
       enter: (node, parentNode) => {
         // detect deoptimisations
-        if (
-          node.name === 'script' ||
-          Object.keys(node.attributes).some((name) => name.startsWith('on'))
-        ) {
+        if (hasScripts(node)) {
           deoptimized = true;
         }
 
