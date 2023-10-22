@@ -202,6 +202,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
     defaultPx?: boolean;
     convertToPx?: boolean;
   };
+  convertOneStopGradients: void;
   convertStyleToAttrs: {
     keepImportant?: boolean;
   };
