@@ -230,6 +230,7 @@ const config = await loadConfig(configFile, cwd);
 | Sketch plugin | [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor) |
 | macOS app | [Image Shrinker](https://image-shrinker.com) |
 | Rollup plugin | [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo) |
+| Remark plugin | [remark-inline-svg](https://github.com/alvinometric/remark-inline-svg) |
 | VS Code plugin | [vscode-svgo](https://github.com/1000ch/vscode-svgo) |
 | Atom plugin | [atom-svgo](https://github.com/1000ch/atom-svgo) |
 | Sublime plugin | [Sublime-svgo](https://github.com/1000ch/Sublime-svgo) |
