@@ -119,7 +119,9 @@ type DefaultPlugins = {
 
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
-  removeComments: void;
+  removeComments: {
+    preservePatterns: Array<RegExp|string> | false
+  };
   removeDesc: {
     removeAny?: boolean;
   };
