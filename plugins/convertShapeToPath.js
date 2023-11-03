@@ -33,9 +33,7 @@ exports.fn = (root, params) => {
         if (
           node.name === 'rect' &&
           node.attributes.width != null &&
-          node.attributes.height != null &&
-          node.attributes.rx == null &&
-          node.attributes.ry == null
+          node.attributes.height != null
         ) {
           const x = Number(node.attributes.x || '0');
           const y = Number(node.attributes.y || '0');
@@ -45,18 +43,64 @@ exports.fn = (root, params) => {
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
           if (Number.isNaN(x - y + width - height)) return;
-          /**
-           * @type {Array<PathDataItem>}
-           */
-          const pathData = [
-            { command: 'M', args: [x, y] },
-            { command: 'H', args: [x + width] },
-            { command: 'V', args: [y + height] },
-            { command: 'H', args: [x] },
-            { command: 'z', args: [] },
-          ];
+
+          if (node.attributes.rx != null || node.attributes.ry != null) {
+            const rx = Number(node.attributes.rx || node.attributes.ry);
+            const ry = Number(node.attributes.ry || node.attributes.rx);
+
+            const halfwayX = x + width / 2;
+            const halfwayY = y + height / 2;
+
+            const fullX = x + width;
+            const fullY = y + height;
+
+            /**
+             * @type {Array<PathDataItem>}
+             */
+            const pathData = [
+              { command: 'M', args: [Math.min(halfwayX, x + rx), y] },
+              { command: 'L', args: [Math.max(halfwayX, fullX - rx), y] },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, fullX, Math.min(halfwayY, y + ry)],
+              },
+              {
+                command: 'L',
+                args: [fullX, Math.max(halfwayY, fullY - ry)],
+              },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, Math.max(halfwayX, fullX - rx), fullY],
+              },
+              { command: 'L', args: [Math.min(halfwayX, x + rx), fullY] },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, x, Math.max(halfwayY, fullY - ry)],
+              },
+              { command: 'L', args: [x, Math.min(halfwayY, y + ry)] },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, Math.min(halfwayX, x + rx), y],
+              },
+            ];
+            node.attributes.d = stringifyPathData({ pathData, precision });
+            delete node.attributes.rx;
+            delete node.attributes.ry;
+          } else {
+            /**
+             * @type {Array<PathDataItem>}
+             */
+            const pathData = [
+              { command: 'M', args: [x, y] },
+              { command: 'H', args: [x + width] },
+              { command: 'V', args: [y + height] },
+              { command: 'H', args: [x] },
+              { command: 'z', args: [] },
+            ];
+            node.attributes.d = stringifyPathData({ pathData, precision });
+          }
+
           node.name = 'path';
-          node.attributes.d = stringifyPathData({ pathData, precision });
           delete node.attributes.x;
           delete node.attributes.y;
           delete node.attributes.width;
