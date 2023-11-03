@@ -67,9 +67,6 @@ exports.fn = (root, params) => {
           } else if (!convertArcs) {
             return;
           } else {
-            const halfwayX = x + width / 2;
-            const halfwayY = y + height / 2;
-
             const fullX = x + width;
             const fullY = y + height;
 
@@ -77,28 +74,28 @@ exports.fn = (root, params) => {
              * @type {Array<PathDataItem>}
              */
             const pathData = [
-              { command: 'M', args: [Math.max(halfwayX, fullX - rx), y] },
+              { command: 'M', args: [fullX - rx, y] },
               {
                 command: 'A',
-                args: [rx, ry, 0, 0, 1, fullX, Math.min(halfwayY, y + ry)],
+                args: [rx, ry, 0, 0, 1, fullX, y + ry],
               },
               {
                 command: 'L',
-                args: [fullX, Math.max(halfwayY, fullY - ry)],
+                args: [fullX, fullY - ry],
               },
               {
                 command: 'A',
-                args: [rx, ry, 0, 0, 1, Math.max(halfwayX, fullX - rx), fullY],
+                args: [rx, ry, 0, 0, 1, fullX - rx, fullY],
               },
-              { command: 'L', args: [Math.min(halfwayX, x + rx), fullY] },
+              { command: 'L', args: [x + rx, fullY] },
               {
                 command: 'A',
-                args: [rx, ry, 0, 0, 1, x, Math.max(halfwayY, fullY - ry)],
+                args: [rx, ry, 0, 0, 1, x, fullY - ry],
               },
-              { command: 'L', args: [x, Math.min(halfwayY, y + ry)] },
+              { command: 'L', args: [x, y + ry] },
               {
                 command: 'A',
-                args: [rx, ry, 0, 0, 1, Math.min(halfwayX, x + rx), y],
+                args: [rx, ry, 0, 0, 1, x + rx, y],
               },
               {
                 command: 'z',
