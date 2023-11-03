@@ -58,8 +58,7 @@ exports.fn = (root, params) => {
              * @type {Array<PathDataItem>}
              */
             const pathData = [
-              { command: 'M', args: [Math.min(halfwayX, x + rx), y] },
-              { command: 'L', args: [Math.max(halfwayX, fullX - rx), y] },
+              { command: 'M', args: [Math.max(halfwayX, fullX - rx), y] },
               {
                 command: 'A',
                 args: [rx, ry, 0, 0, 1, fullX, Math.min(halfwayY, y + ry)],
@@ -81,6 +80,10 @@ exports.fn = (root, params) => {
               {
                 command: 'A',
                 args: [rx, ry, 0, 0, 1, Math.min(halfwayX, x + rx), y],
+              },
+              {
+                command: 'z',
+                args: [],
               },
             ];
             node.attributes.d = stringifyPathData({ pathData, precision });
