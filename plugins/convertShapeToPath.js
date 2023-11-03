@@ -100,11 +100,11 @@ exports.fn = (root, params) => {
               },
             ];
             node.attributes.d = stringifyPathData({ pathData, precision });
-            delete node.attributes.rx;
-            delete node.attributes.ry;
           }
 
           node.name = 'path';
+          delete node.attributes.rx;
+          delete node.attributes.ry;
           delete node.attributes.x;
           delete node.attributes.y;
           delete node.attributes.width;
