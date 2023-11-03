@@ -39,15 +39,28 @@ exports.fn = (root, params) => {
           const y = Number(node.attributes.y || '0');
           const width = Number(node.attributes.width);
           const height = Number(node.attributes.height);
+          const rx = Number(node.attributes.rx || node.attributes.ry || '0');
+          const ry = Number(node.attributes.ry || node.attributes.rx || '0');
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
-          if (Number.isNaN(x - y + width - height)) return;
+          if (Number.isNaN(x - y + width - height + rx - ry)) return;
 
-          if (node.attributes.rx != null || node.attributes.ry != null) {
-            const rx = Number(node.attributes.rx || node.attributes.ry);
-            const ry = Number(node.attributes.ry || node.attributes.rx);
-
+          if (rx === 0 && ry === 0) {
+            /**
+             * @type {Array<PathDataItem>}
+             */
+            const pathData = [
+              { command: 'M', args: [x, y] },
+              { command: 'H', args: [x + width] },
+              { command: 'V', args: [y + height] },
+              { command: 'H', args: [x] },
+              { command: 'z', args: [] },
+            ];
+            node.attributes.d = stringifyPathData({ pathData, precision });
+          } else if (!convertArcs) {
+            return;
+          } else {
             const halfwayX = x + width / 2;
             const halfwayY = y + height / 2;
 
@@ -89,18 +102,6 @@ exports.fn = (root, params) => {
             node.attributes.d = stringifyPathData({ pathData, precision });
             delete node.attributes.rx;
             delete node.attributes.ry;
-          } else {
-            /**
-             * @type {Array<PathDataItem>}
-             */
-            const pathData = [
-              { command: 'M', args: [x, y] },
-              { command: 'H', args: [x + width] },
-              { command: 'V', args: [y + height] },
-              { command: 'H', args: [x] },
-              { command: 'z', args: [] },
-            ];
-            node.attributes.d = stringifyPathData({ pathData, precision });
           }
 
           node.name = 'path';
