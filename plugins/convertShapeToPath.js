@@ -39,8 +39,17 @@ exports.fn = (root, params) => {
           const y = Number(node.attributes.y || '0');
           const width = Number(node.attributes.width);
           const height = Number(node.attributes.height);
-          const rx = Number(node.attributes.rx || node.attributes.ry || '0');
-          const ry = Number(node.attributes.ry || node.attributes.rx || '0');
+
+          // negative values for `rx` and `ry` are invalid and must be ignored
+          const rx = Math.max(
+            Number(node.attributes.rx || node.attributes.ry || '0'),
+            0
+          );
+          const ry = Math.max(
+            Number(node.attributes.ry || node.attributes.rx || '0'),
+            0
+          );
+
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
