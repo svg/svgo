@@ -87,7 +87,8 @@ const hasStringPrefix = (string, prefixes) => {
 /**
  * Generate unique minimal ID.
  *
- * @type {(currentId: null | Array<number>) => Array<number>}
+ * @param {?number[]} currentId
+ * @returns {number[]}
  */
 const generateId = (currentId) => {
   if (currentId == null) {
@@ -232,27 +233,28 @@ exports.fn = (_root, params) => {
           return;
         }
         /**
-         * @type {(id: string) => boolean}
-         **/
+         * @param {string} id
+         * @returns {boolean}
+         */
         const isIdPreserved = (id) =>
           preserveIds.has(id) || hasStringPrefix(id, preserveIdPrefixes);
-        /**
-         * @type {null | Array<number>}
-         */
+        /** @type {?number[]} */
         let currentId = null;
         for (const [id, refs] of referencesById) {
           const node = nodeById.get(id);
           if (node != null) {
             // replace referenced IDs with the minified ones
             if (minify && isIdPreserved(id) === false) {
-              /**
-               * @type {null | string}
-               */
+              /** @type {?string} */
               let currentIdString = null;
               do {
                 currentId = generateId(currentId);
                 currentIdString = getIdString(currentId);
-              } while (isIdPreserved(currentIdString));
+              } while (
+                isIdPreserved(currentIdString) ||
+                (referencesById.has(currentIdString) &&
+                  nodeById.get(currentIdString) == null)
+              );
               node.attributes.id = currentIdString;
               for (const { element, name } of refs) {
                 const value = element.attributes[name];
