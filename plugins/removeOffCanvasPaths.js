@@ -21,7 +21,7 @@ exports.description =
  */
 exports.fn = () => {
   /**
-   * @type {null | {
+   * @type {?{
    *   top: number,
    *   right: number,
    *   bottom: number,

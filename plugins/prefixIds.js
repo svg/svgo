@@ -66,7 +66,7 @@ const prefixId = (prefixGenerator, body) => {
  *
  * @param {(id: string) => string} prefixGenerator Function to generate a prefix.
  * @param {string} reference An arbitrary string, should start with "#".
- * @returns {string|null} The given string with a prefix inserted, or null if the string did not start with "#".
+ * @returns {?string} The given string with a prefix inserted, or null if the string did not start with "#".
  */
 const prefixReference = (prefixGenerator, reference) => {
   if (reference.startsWith('#')) {
@@ -158,7 +158,7 @@ exports.fn = (_root, params, info) => {
             cssText = node.children[0].value;
           }
           /**
-           * @type {null | csstree.CssNode}
+           * @type {?csstree.CssNode}
            */
           let cssAst = null;
           try {
