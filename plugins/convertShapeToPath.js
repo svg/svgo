@@ -40,15 +40,12 @@ exports.fn = (root, params) => {
           const width = Number(node.attributes.width);
           const height = Number(node.attributes.height);
 
-          // negative values for `rx` and `ry` are invalid and must be ignored
-          const rx = Math.max(
-            Number(node.attributes.rx || node.attributes.ry || '0'),
-            0
-          );
-          const ry = Math.max(
-            Number(node.attributes.ry || node.attributes.rx || '0'),
-            0
-          );
+          // In accordance with https://svgwg.org/svg2-draft/geometry.html:
+          // `rx` and `ry` must be at minimum zero and the maximum must be 50% of width/height.
+          const _rx = Number(node.attributes.rx || node.attributes.ry || '0');
+          const rx = Math.min(width * 0.5, Math.max(0, _rx));
+          const _ry = Number(node.attributes.ry || node.attributes.rx || '0');
+          const ry = Math.min(height * 0.5, Math.max(0, _ry));
 
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
