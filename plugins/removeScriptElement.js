@@ -9,8 +9,10 @@ exports.description = 'removes scripts (disabled by default)';
 /** Union of all event attributes. */
 const eventAttrs = [
   ...attrsGroups.animationEvent,
-  ...attrsGroups.graphicalEvent,
   ...attrsGroups.documentEvent,
+  ...attrsGroups.documentElementEvent,
+  ...attrsGroups.globalEvent,
+  ...attrsGroups.graphicalEvent,
 ];
 
 /**
