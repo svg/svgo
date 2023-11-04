@@ -49,7 +49,6 @@ exports.fn = () => {
             continue;
           }
 
-          detachNodeFromParent(node, parentNode);
           const index = parentNode.children.indexOf(node);
           parentNode.children.splice(index, 1, ...node.children);
 
