@@ -1,0 +1,19 @@
+Removes hrefs to JavaScript URIs, including unconventional namespaces.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:uwu="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" version="1.1">
+  <a href="javascript:(() => { alert('uwu') })();">
+    <text y="20">uwu</text>
+  </a>
+  <a uwu:href="javascript:(() => { alert('uwu') })();">
+    <text y="30">uwu</text>
+  </a>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:uwu="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" version="1.1">
+    <text y="20">uwu</text>
+    <text y="30">uwu</text>
+</svg>

@@ -43,23 +43,25 @@ exports.fn = () => {
           return;
         }
 
-        for (const attr of ['href', 'xlink:href']) {
-          if (
-            node.attributes[attr] == null ||
-            !node.attributes[attr].trimStart().startsWith('javascript:')
-          ) {
-            continue;
-          }
+        for (const attr of Object.keys(node.attributes)) {
+          if (attr === 'href' || attr.endsWith(':href')) {
+            if (
+              node.attributes[attr] == null ||
+              !node.attributes[attr].trimStart().startsWith('javascript:')
+            ) {
+              continue;
+            }
 
-          const index = parentNode.children.indexOf(node);
-          parentNode.children.splice(index, 1, ...node.children);
+            const index = parentNode.children.indexOf(node);
+            parentNode.children.splice(index, 1, ...node.children);
 
-          // TODO remove legacy parentNode in v4
-          for (const child of node.children) {
-            Object.defineProperty(child, 'parentNode', {
-              writable: true,
-              value: parentNode,
-            });
+            // TODO remove legacy parentNode in v4
+            for (const child of node.children) {
+              Object.defineProperty(child, 'parentNode', {
+                writable: true,
+                value: parentNode,
+              });
+            }
           }
         }
       },
