@@ -109,7 +109,7 @@ exports.fn = (root, params) => {
           }
         }
         /**
-         * @type {null | csstree.CssNode}
+         * @type {?csstree.CssNode}
          */
         let cssAst = null;
         try {
