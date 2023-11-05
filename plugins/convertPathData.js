@@ -681,7 +681,7 @@ function filters(
       }
 
       // convert going home to z
-      // M 0 0 H 5 V 5 L 0 0 -> M 0 0 H 5 V 5 Z
+      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
       if (
         params.convertToZ &&
         isSafeToUseZ &&
