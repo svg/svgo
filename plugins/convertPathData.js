@@ -187,6 +187,7 @@ exports.fn = (root, params) => {
 
             data = filters(data, newParams, {
               isSafeToUseZ,
+              maybeHasStroke,
               maybeHasStrokeAndLinecap,
               hasMarkerMid,
             });
@@ -383,13 +384,13 @@ const convertToRelative = (pathData) => {
  * @type {(
  *   path: PathDataItem[],
  *   params: InternalParams,
- *   aux: { isSafeToUseZ: boolean, maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
+ *   aux: { isSafeToUseZ: boolean, maybeHasStroke: boolean, maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
  * ) => PathDataItem[]}
  */
 function filters(
   path,
   params,
-  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid }
+  { isSafeToUseZ, maybeHasStroke, maybeHasStrokeAndLinecap, hasMarkerMid }
 ) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
@@ -839,7 +840,7 @@ function filters(
     if (
       (command === 'Z' || command === 'z') &&
       params.removeUseless &&
-      !maybeHasStrokeAndLinecap &&
+      !maybeHasStroke &&
       // @ts-ignore
       item.base[0] === item.coords[0] &&
       // @ts-ignore
