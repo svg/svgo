@@ -46,6 +46,7 @@ let arcTolerance;
  *   },
  *   straightCurves: boolean,
  *   lineShorthands: boolean,
+ *   convertToZ: boolean,
  *   curveSmoothShorthands: boolean,
  *   floatPrecision: number | false,
  *   transformPrecision: number,
@@ -95,6 +96,7 @@ exports.fn = (root, params) => {
     },
     straightCurves = true,
     lineShorthands = true,
+    convertToZ = true,
     curveSmoothShorthands = true,
     floatPrecision = 3,
     transformPrecision = 5,
@@ -116,6 +118,7 @@ exports.fn = (root, params) => {
     makeArcs,
     straightCurves,
     lineShorthands,
+    convertToZ,
     curveSmoothShorthands,
     floatPrecision,
     transformPrecision,
@@ -664,6 +667,20 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
         }
       }
 
+      // convert going home to z
+      // M 0 0 H 5 V 5 L 0 0 -> M 0 0 H 5 V 5 Z
+      if (
+        (params.convertToZ && command == 'l') ||
+        command == 'h' ||
+        command == 'v'
+      ) {
+        // @ts-ignore
+        if (pathBase[0] === item.coords[0] && pathBase[1] === item.coords[1]) {
+          command = 'z';
+          data = [];
+        }
+      }
+
       // collapse repeated commands
       // h 20 h 30 -> h 50
       if (
@@ -804,6 +821,15 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       relSubpoint[1] = pathBase[1];
       // @ts-ignore
       if (prev.command === 'Z' || prev.command === 'z') return false;
+      if (
+        params.removeUseless &&
+        !maybeHasStrokeAndLinecap &&
+        // @ts-ignore
+        item.base[0] === item.coords[0] &&
+        // @ts-ignore
+        item.base[1] === item.coords[1]
+      )
+        return false;
       prev = item;
     }
 
