@@ -684,7 +684,7 @@ function filters(
       // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
       if (
         params.convertToZ &&
-        isSafeToUseZ &&
+        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
         (command === 'l' || command === 'h' || command === 'v')
       ) {
         // @ts-ignore
