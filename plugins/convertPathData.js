@@ -170,6 +170,14 @@ exports.fn = (root, params) => {
             (computedStyle['stroke-linecap'].type === 'dynamic' ||
               computedStyle['stroke-linecap'].value !== 'butt');
           const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
+          // TODO: when stroke is used, prefer z more
+          // Z is the same as going home at 90 and 0 degrees, but not at other degrees
+          const isSafeToUseZ = maybeHasStroke
+            ? computedStyle['stroke-linecap']?.type === 'static' &&
+              computedStyle['stroke-linecap'].value === 'round' &&
+              computedStyle['stroke-linejoin']?.type === 'static' &&
+              computedStyle['stroke-linejoin'].value === 'round'
+            : true;
 
           var data = path2js(node);
 
@@ -178,6 +186,7 @@ exports.fn = (root, params) => {
             convertToRelative(data);
 
             data = filters(data, newParams, {
+              isSafeToUseZ,
               maybeHasStrokeAndLinecap,
               hasMarkerMid,
             });
@@ -374,10 +383,14 @@ const convertToRelative = (pathData) => {
  * @type {(
  *   path: PathDataItem[],
  *   params: InternalParams,
- *   aux: { maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
+ *   aux: { isSafeToUseZ: boolean, maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
  * ) => PathDataItem[]}
  */
-function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
+function filters(
+  path,
+  params,
+  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid }
+) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
     pathBase = [0, 0],
@@ -671,7 +684,8 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       // M 0 0 H 5 V 5 L 0 0 -> M 0 0 H 5 V 5 Z
       if (
         params.convertToZ &&
-        (command == 'l' || command == 'h' || command == 'v')
+        isSafeToUseZ &&
+        (command === 'l' || command === 'h' || command === 'v')
       ) {
         // @ts-ignore
         if (pathBase[0] === item.coords[0] && pathBase[1] === item.coords[1]) {
@@ -820,17 +834,18 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       relSubpoint[1] = pathBase[1];
       // @ts-ignore
       if (prev.command === 'Z' || prev.command === 'z') return false;
-      if (
-        params.removeUseless &&
-        !maybeHasStrokeAndLinecap &&
-        // @ts-ignore
-        item.base[0] === item.coords[0] &&
-        // @ts-ignore
-        item.base[1] === item.coords[1]
-      )
-        return false;
       prev = item;
     }
+    if (
+      (command === 'Z' || command === 'z') &&
+      params.removeUseless &&
+      !maybeHasStrokeAndLinecap &&
+      // @ts-ignore
+      item.base[0] === item.coords[0] &&
+      // @ts-ignore
+      item.base[1] === item.coords[1]
+    )
+      return false;
 
     return true;
   });
