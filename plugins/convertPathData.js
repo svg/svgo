@@ -670,9 +670,8 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
       // convert going home to z
       // M 0 0 H 5 V 5 L 0 0 -> M 0 0 H 5 V 5 Z
       if (
-        (params.convertToZ && command == 'l') ||
-        command == 'h' ||
-        command == 'v'
+        params.convertToZ &&
+        (command == 'l' || command == 'h' || command == 'v')
       ) {
         // @ts-ignore
         if (pathBase[0] === item.coords[0] && pathBase[1] === item.coords[1]) {
