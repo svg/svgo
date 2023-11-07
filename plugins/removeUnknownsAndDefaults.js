@@ -182,16 +182,12 @@ exports.fn = (root, params) => {
             attributesDefaults.get(name) === value
           ) {
             // keep defaults if parent has own or inherited style
-            if (
-              computedParentStyle == null ||
-              computedParentStyle[name] == null
-            ) {
+            if (computedParentStyle?.[name] == null) {
               delete node.attributes[name];
             }
           }
           if (uselessOverrides && node.attributes.id == null) {
-            const style =
-              computedParentStyle == null ? null : computedParentStyle[name];
+            const style = computedParentStyle?.[name];
             if (
               presentationNonInheritableGroupAttrs.includes(name) === false &&
               style != null &&

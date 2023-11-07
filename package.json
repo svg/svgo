@@ -115,14 +115,14 @@
     "commander": "^7.2.0",
     "css-select": "^5.1.0",
     "css-tree": "^2.2.1",
-    "csso": "^5.0.5",
+    "csso": "5.0.5",
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/css-tree": "^2.0.0",
-    "@types/csso": "^5.0.1",
+    "@types/csso": "~5.0.3",
     "@types/jest": "^29.5.5",
     "del": "^6.0.0",
     "eslint": "^8.24.0",

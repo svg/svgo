@@ -30,17 +30,11 @@ const runTests = async ({ list }) => {
       name.startsWith('w3c-svg-11-test-suite/svg/animate-') ||
       // messed gradients
       name === 'w3c-svg-11-test-suite/svg/pservers-grad-18-b.svg' ||
-      // animated filter
-      name === 'w3c-svg-11-test-suite/svg/filters-light-04-f.svg' ||
-      // animated filter
-      name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // removing wrapping <g> breaks :first-child pseudo-class
       name === 'w3c-svg-11-test-suite/svg/styling-pres-04-f.svg' ||
       // rect is converted to path which matches wrong styles
       name === 'w3c-svg-11-test-suite/svg/styling-css-08-f.svg' ||
-      // external image
-      name === 'w3c-svg-11-test-suite/svg/struct-image-02-b.svg' ||
-      // complex selectors are messed becase of converting shapes to paths
+      // complex selectors are messed because of converting shapes to paths
       name === 'w3c-svg-11-test-suite/svg/struct-use-10-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/struct-use-11-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/styling-css-01-b.svg' ||
