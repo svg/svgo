@@ -958,12 +958,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/csso@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "@types/csso@npm:5.0.1"
+"@types/csso@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "@types/csso@npm:5.0.2"
   dependencies:
     "@types/css-tree": "*"
-  checksum: 62c7e534dfde79c1bf3b3761baec06ac2aa2b568da9be4a548b95e709b65b3944b8ad4cd4d8926de2b4bb301b4f102fb0f8c1354cb203a92ebccf59e58c957a6
+  checksum: b2e4d6a99b9c233eb7a963eaf333b748f5967f74b62b002cd4bffa0d7ba12a0c10500a03acc001c1b9f87ec67c20e0b49b16720064dd6a3641362bc7abb12386
   languageName: node
   linkType: hard
 
@@ -4563,7 +4563,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^14.1.0
     "@trysound/sax": 0.2.0
     "@types/css-tree": ^2.0.0
-    "@types/csso": ^5.0.1
+    "@types/csso": ^5.0.2
     "@types/jest": ^29.5.5
     commander: ^7.2.0
     css-select: ^5.1.0
