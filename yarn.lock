@@ -958,12 +958,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/csso@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "@types/csso@npm:5.0.2"
+"@types/csso@npm:~5.0.3":
+  version: 5.0.3
+  resolution: "@types/csso@npm:5.0.3"
   dependencies:
     "@types/css-tree": "*"
-  checksum: b2e4d6a99b9c233eb7a963eaf333b748f5967f74b62b002cd4bffa0d7ba12a0c10500a03acc001c1b9f87ec67c20e0b49b16720064dd6a3641362bc7abb12386
+  checksum: 3d299ea755732f9b913cfb3d94849e173cd1019559058af0a372aa1ca8f48a3c63aa74932fdfa2f2f25ee78255a115feaaec01ae4fe9578e76b7c4acd8ae3f2a
   languageName: node
   linkType: hard
 
@@ -1695,7 +1695,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csso@npm:^5.0.5":
+"csso@npm:5.0.5":
   version: 5.0.5
   resolution: "csso@npm:5.0.5"
   dependencies:
@@ -4563,12 +4563,12 @@ __metadata:
     "@rollup/plugin-node-resolve": ^14.1.0
     "@trysound/sax": 0.2.0
     "@types/css-tree": ^2.0.0
-    "@types/csso": ^5.0.2
+    "@types/csso": ~5.0.3
     "@types/jest": ^29.5.5
     commander: ^7.2.0
     css-select: ^5.1.0
     css-tree: ^2.2.1
-    csso: ^5.0.5
+    csso: 5.0.5
     del: ^6.0.0
     eslint: ^8.24.0
     jest: ^29.5.5
