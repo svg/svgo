@@ -10,7 +10,7 @@
     "optimize",
     "minify"
   ],
-  "homepage": "https://github.com/svg/svgo",
+  "homepage": "https://svgo.dev",
   "bugs": {
     "url": "https://github.com/svg/svgo/issues"
   },
