@@ -1,0 +1,31 @@
+---
+title: Convert Shape to Path
+svgo:
+  pluginId: convertShapeToPath
+  defaultPlugin: true
+  parameters:
+    convertArcs:
+      description: If to convert <code>&lt;circle&gt;</code> and <code>&lt;ellipse&gt;</code> elements to paths.
+      default: false
+    floatPrecision:
+      description: Number of decimal places to round to, using conventional rounding rules.
+      default: null
+---
+
+Convert basic shapes to [`<path>`](https://developer.mozilla.org/docs/Web/SVG/Element/path) elements.
+
+## Usage
+
+<PluginUsage/>
+
+### Parameters
+
+<PluginParams/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/convertShapeToPath.js

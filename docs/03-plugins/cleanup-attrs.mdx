@@ -1,0 +1,39 @@
+---
+title: Cleanup Attributes
+svgo:
+  pluginId: cleanupAttrs
+  defaultPlugin: true
+  parameters:
+    newlines:
+      description: Replace instances of a newline with a single whitespace.
+      type: boolean
+      default: true
+    trim:
+      description: Trim whitespace characters from the start and end of attribute values.
+      type: boolean
+      default: true
+    spaces:
+      description: Replace all instances of 2 or more whitespace characters with a single whitespace.
+      type: boolean
+      default: true
+---
+
+Removes redundant whitespaces from attribute values.
+
+This will not modify the attribute keys, nor remove them if the value becomes empty after optimization.
+
+## Usage
+
+<PluginUsage/>
+
+### Parameters
+
+<PluginParams/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/cleanupAttrs.js

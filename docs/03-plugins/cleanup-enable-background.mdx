@@ -1,0 +1,26 @@
+---
+title: Cleanup Enable Background
+svgo:
+  pluginId: cleanupEnableBackground
+  defaultPlugin: true
+---
+
+Removes the [`enable-background`](https://developer.mozilla.org/docs/Web/SVG/Attribute/enable-background) attribute, unless it's used in a [`<filter>`](https://developer.mozilla.org/docs/Web/SVG/Element/filter).
+
+:::info
+
+Some browsers don't support `enable-background`, so it's best to avoid that attribute regardless.
+
+:::
+
+## Usage
+
+<PluginUsage/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/cleanupEnableBackground.js

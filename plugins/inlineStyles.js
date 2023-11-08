@@ -8,7 +8,7 @@
 
 const csstree = require('css-tree');
 const {
-  // @ts-ignore not defined in @types/csso
+  // @ts-ignore internal api
   syntax: { specificity },
 } = require('csso');
 const {
@@ -16,49 +16,16 @@ const {
   querySelectorAll,
   detachNodeFromParent,
 } = require('../lib/xast.js');
+const { compareSpecificity } = require('../lib/style');
 
 exports.name = 'inlineStyles';
 exports.description = 'inline styles (additional options)';
 
 /**
- * Compares two selector specificities.
- * extracted from https://github.com/keeganstreet/specificity/blob/main/specificity.js#L211
- *
- * @type {(a: Specificity, b: Specificity) => number}
- */
-const compareSpecificity = (a, b) => {
-  for (var i = 0; i < 4; i += 1) {
-    if (a[i] < b[i]) {
-      return -1;
-    } else if (a[i] > b[i]) {
-      return 1;
-    }
-  }
-  return 0;
-};
-
-/**
- * Moves + merges styles from style elements to element styles
- *
- * Options
- *   onlyMatchedOnce (default: true)
- *     inline only selectors that match once
- *
- *   removeMatchedSelectors (default: true)
- *     clean up matched selectors,
- *     leave selectors that hadn't matched
- *
- *   useMqs (default: ['', 'screen'])
- *     what media queries to be used
- *     empty string element for styles outside media queries
- *
- *   usePseudos (default: [''])
- *     what pseudo-classes/-elements to be used
- *     empty string element for all non-pseudo-classes and/or -elements
- *
- * @author strarsis <strarsis@gmail.com>
+ * Merges styles from style nodes into inline styles.
  *
  * @type {import('./plugins-types').Plugin<'inlineStyles'>}
+ * @author strarsis <strarsis@gmail.com>
  */
 exports.fn = (root, params) => {
   const {
@@ -205,9 +172,7 @@ exports.fn = (root, params) => {
         for (const selector of sortedSelectors) {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
-          /**
-           * @type {Array<XastElement>}
-           */
+          /** @type {Array<XastElement>} */
           const matchedElements = [];
           try {
             for (const node of querySelectorAll(root, selectorText)) {
@@ -232,9 +197,7 @@ exports.fn = (root, params) => {
           // apply <style/> to matched elements
           for (const selectedEl of matchedElements) {
             const styleDeclarationList = csstree.parse(
-              selectedEl.attributes.style == null
-                ? ''
-                : selectedEl.attributes.style,
+              selectedEl.attributes.style ?? '',
               {
                 context: 'declarationList',
                 parseValue: false,
@@ -280,8 +243,11 @@ exports.fn = (root, params) => {
                 }
               },
             });
-            selectedEl.attributes.style =
-              csstree.generate(styleDeclarationList);
+
+            const newStyles = csstree.generate(styleDeclarationList);
+            if (newStyles.length !== 0) {
+              selectedEl.attributes.style = newStyles;
+            }
           }
 
           if (

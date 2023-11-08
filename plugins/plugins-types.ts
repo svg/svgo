@@ -74,10 +74,28 @@ type DefaultPlugins = {
   };
   mergeStyles: void;
   inlineStyles: {
+    /**
+     * Inlines selectors that match once only.
+     *
+     * @default true
+     */
     onlyMatchedOnce?: boolean;
+    /**
+     * Clean up matched selectors. Unused selects are left as-is.
+     *
+     * @default true
+     */
     removeMatchedSelectors?: boolean;
-    useMqs?: Array<string>;
-    usePseudos?: Array<string>;
+    /**
+     * Media queries to use. An empty string indicates all selectors outside of
+     * media queries.
+     */
+    useMqs?: string[];
+    /**
+     * Pseudo-classes and elements to use. An empty string indicates all
+     * all non-pseudo-classes and elements.
+     */
+    usePseudos?: string[];
   };
   mergePaths: {
     force?: boolean;
@@ -90,13 +108,13 @@ type DefaultPlugins = {
      * Disable or enable a structure optimisations.
      * @default true
      */
-    restructure?: boolean | undefined;
+    restructure?: boolean;
     /**
      * Enables merging of @media rules with the same media query by splitted by other rules.
      * The optimisation is unsafe in general, but should work fine in most cases. Use it on your own risk.
      * @default false
      */
-    forceMediaMerge?: boolean | undefined;
+    forceMediaMerge?: boolean;
     /**
      * Specify what comments to leave:
      * - 'exclamation' or true – leave all exclamation comments
@@ -104,7 +122,7 @@ type DefaultPlugins = {
      * - false – remove all comments
      * @default true
      */
-    comments?: string | boolean | undefined;
+    comments?: string | boolean;
     /**
      * Advanced optimizations
      */
