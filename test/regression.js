@@ -26,8 +26,10 @@ const runTests = async ({ list }) => {
   console.info('Start browser...');
   const processFile = async (page, name) => {
     if (
-      // hard to detect the end of animation
+      // animated
       name.startsWith('w3c-svg-11-test-suite/svg/animate-') ||
+      name === 'w3c-svg-11-test-suite/svg/filters-light-04-f.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // messed gradients
       name === 'w3c-svg-11-test-suite/svg/pservers-grad-18-b.svg' ||
       // removing wrapping <g> breaks :first-child pseudo-class
