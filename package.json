@@ -50,7 +50,9 @@
     "url": "https://opencollective.com/svgo"
   },
   "main": "./lib/svgo-node.js",
-  "bin": "./bin/svgo",
+  "bin": {
+    "svgo": "bin/svgo"
+  },
   "types": "./lib/svgo.d.ts",
   "files": [
     "bin",
