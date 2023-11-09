@@ -1,7 +1,7 @@
 name: CI
 env:
   FORCE_COLOR: 2
-  NODE: 18
+  NODE: 20
 on:
   push:
     branches:
@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
@@ -44,12 +44,13 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
+          - 20
           - 18
           - 16
           - 14
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
