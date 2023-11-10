@@ -1,0 +1,32 @@
+Don't remove the redundant presentation attribute if it's used in a CSS
+selector in a `<style> tag.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <style>
+    .a {
+      stroke: red;
+    }
+
+    [stroke] + path {
+      stroke: purple;
+    }
+  </style>
+  <path class="a" d="M10 10h20" stroke="red"/>
+  <path d="M10 20h20"/>
+  <path d="M10 30h20" stroke="yellow"/>
+  <path d="M10 40h20"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <style>
+        [stroke]+path{stroke:purple}
+    </style>
+    <path d="M10 10h20" stroke="red" style="stroke:red"/>
+    <path d="M10 20h20"/>
+    <path d="M10 30h20" stroke="yellow"/>
+    <path d="M10 40h20"/>
+</svg>

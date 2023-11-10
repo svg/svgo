@@ -1,7 +1,6 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').Specificity} Specificity
  * @typedef {import('../lib/types').XastElement} XastElement
  * @typedef {import('../lib/types').XastParent} XastParent
  */
@@ -16,7 +15,8 @@ const {
   querySelectorAll,
   detachNodeFromParent,
 } = require('../lib/xast.js');
-const { compareSpecificity } = require('../lib/style');
+const { compareSpecificity, containsAttrSelector } = require('../lib/style');
+const { attrsGroups } = require('./_collections');
 
 exports.name = 'inlineStyles';
 exports.description = 'inline styles (additional options)';
@@ -52,15 +52,12 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // skip <foreignObject /> content
         if (node.name === 'foreignObject') {
           return visitSkip;
         }
-        // collect only non-empty <style /> elements
         if (node.name !== 'style' || node.children.length === 0) {
           return;
         }
-        // values other than the empty string or text/css are not used
         if (
           node.attributes.type != null &&
           node.attributes.type !== '' &&
@@ -68,16 +65,14 @@ exports.fn = (root, params) => {
         ) {
           return;
         }
-        // parse css in style element
-        let cssText = '';
-        for (const child of node.children) {
-          if (child.type === 'text' || child.type === 'cdata') {
-            cssText += child.value;
-          }
-        }
-        /**
-         * @type {?csstree.CssNode}
-         */
+
+        const cssText = node.children
+          .filter((child) => child.type === 'text' || child.type === 'cdata')
+          // @ts-ignore
+          .map((child) => child.value)
+          .join('');
+
+        /** @type {?csstree.CssNode} */
         let cssAst = null;
         try {
           cssAst = csstree.parse(cssText, {
@@ -102,14 +97,14 @@ exports.fn = (root, params) => {
             }
 
             // skip media queries not included into useMqs param
-            let mq = '';
+            let mediaQuery = '';
             if (atrule != null) {
-              mq = atrule.name;
+              mediaQuery = atrule.name;
               if (atrule.prelude != null) {
-                mq += ` ${csstree.generate(atrule.prelude)}`;
+                mediaQuery += ` ${csstree.generate(atrule.prelude)}`;
               }
             }
-            if (useMqs.includes(mq) === false) {
+            if (!useMqs.includes(mediaQuery)) {
               return;
             }
 
@@ -138,7 +133,8 @@ exports.fn = (root, params) => {
                 pseudos.map((pseudo) => pseudo.item.data)
               ),
             });
-            if (usePseudos.includes(pseudoSelectors) === false) {
+
+            if (!usePseudos.includes(pseudoSelectors)) {
               return;
             }
 
@@ -160,8 +156,8 @@ exports.fn = (root, params) => {
         if (styles.length === 0) {
           return;
         }
-        // stable sort selectors
-        const sortedSelectors = [...selectors]
+        const sortedSelectors = selectors
+          .slice()
           .sort((a, b) => {
             const aSpecificity = specificity(a.item.data);
             const bSpecificity = specificity(b.item.data);
@@ -221,9 +217,18 @@ exports.fn = (root, params) => {
                 // no inline styles, external styles,                                    external styles used
                 // inline styles,    external styles same   priority as inline styles,   inline   styles used
                 // inline styles,    external styles higher priority than inline styles, external styles used
-                const matchedItem = styleDeclarationItems.get(
-                  ruleDeclaration.property
-                );
+                const property = ruleDeclaration.property;
+
+                if (
+                  attrsGroups.presentation.includes(property) &&
+                  !selectors.some((selector) =>
+                    containsAttrSelector(selector.item, property)
+                  )
+                ) {
+                  delete selectedEl.attributes[property];
+                }
+
+                const matchedItem = styleDeclarationItems.get(property);
                 const ruleDeclarationItem =
                   styleDeclarationList.children.createItem(ruleDeclaration);
                 if (matchedItem == null) {
@@ -236,10 +241,7 @@ exports.fn = (root, params) => {
                     matchedItem,
                     ruleDeclarationItem
                   );
-                  styleDeclarationItems.set(
-                    ruleDeclaration.property,
-                    ruleDeclarationItem
-                  );
+                  styleDeclarationItems.set(property, ruleDeclarationItem);
                 }
               },
             });
@@ -262,7 +264,7 @@ exports.fn = (root, params) => {
         }
 
         // no further processing required
-        if (removeMatchedSelectors === false) {
+        if (!removeMatchedSelectors) {
           return;
         }
 
