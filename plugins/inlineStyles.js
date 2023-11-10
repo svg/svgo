@@ -15,7 +15,7 @@ const {
   querySelectorAll,
   detachNodeFromParent,
 } = require('../lib/xast.js');
-const { compareSpecificity, containsAttrSelector } = require('../lib/style');
+const { compareSpecificity, includesAttrSelector } = require('../lib/style');
 const { attrsGroups } = require('./_collections');
 
 exports.name = 'inlineStyles';
@@ -222,7 +222,7 @@ exports.fn = (root, params) => {
                 if (
                   attrsGroups.presentation.includes(property) &&
                   !selectors.some((selector) =>
-                    containsAttrSelector(selector.item, property)
+                    includesAttrSelector(selector.item, property)
                   )
                 ) {
                   delete selectedEl.attributes[property];
