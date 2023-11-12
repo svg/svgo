@@ -203,9 +203,17 @@ exports.fn = (root, params) => {
               continue;
             }
             const styleDeclarationItems = new Map();
+
+            /** @type {csstree.ListItem<csstree.CssNode>} */
+            let firstListItem;
+
             csstree.walk(styleDeclarationList, {
               visit: 'Declaration',
               enter(node, item) {
+                if (firstListItem == null) {
+                  firstListItem = item;
+                }
+
                 styleDeclarationItems.set(node.property.toLowerCase(), item);
               },
             });
@@ -232,7 +240,10 @@ exports.fn = (root, params) => {
                 const ruleDeclarationItem =
                   styleDeclarationList.children.createItem(ruleDeclaration);
                 if (matchedItem == null) {
-                  styleDeclarationList.children.append(ruleDeclarationItem);
+                  styleDeclarationList.children.insert(
+                    ruleDeclarationItem,
+                    firstListItem
+                  );
                 } else if (
                   matchedItem.data.important !== true &&
                   ruleDeclaration.important === true

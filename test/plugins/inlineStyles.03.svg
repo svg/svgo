@@ -20,5 +20,5 @@
     <style>
         .cls-8{cls-7-and-8:1}
     </style>
-    <path style="cls-7-and-8:1;only-cls-7:1"/>
+    <path style="only-cls-7:1;cls-7-and-8:1"/>
 </svg>
