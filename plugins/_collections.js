@@ -97,7 +97,7 @@ exports.elemsGroups = {
  * Elements where adding or removing whitespace may effect rendering, metadata,
  * or semantic meaning.
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre
+ * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
  */
 exports.textElems = [...exports.elemsGroups.textContent, 'title', 'pre'];
 

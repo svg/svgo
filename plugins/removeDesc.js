@@ -12,7 +12,7 @@ const standardDescs = /^(Created with|Created using)/;
  * Removes only standard editors content or empty elements 'cause it can be used for accessibility.
  * Enable parameter 'removeAny' to remove any description.
  *
- * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc
+ * https://developer.mozilla.org/docs/Web/SVG/Element/desc
  *
  * @author Daniel Wabyick
  *
