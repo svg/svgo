@@ -19,7 +19,7 @@ svgo:
       description: If to convert regular lines to an explicit horizontal or vertical line where possible.
       default: true
     convertToZ:
-      description: If to convert lines that go to the start to a `z` command.
+      description: If to convert lines that go to the start to a <code>z</code> command.
       default: true
     curveSmoothShorthands:
       description: If to convert curves to smooth curves where possible.
@@ -58,7 +58,7 @@ This plugin uses multiple techniques to either reduce the number of instructions
 
 * Convert between relative or absolute coordinates, whichever is shortest.
 * Convert between commands. For example, a bézier curve that behaves like a straight line might as well use a line instruction.
-* Remove commands (when applicable). For example, a command that moves to the current position can be removed.
+* Remove redundant commands. For example, a command that moves to the current position can be removed.
 * Trim redundant delimiters and leading zeros.
 * Round numeric values using conventional rounding rules.
 

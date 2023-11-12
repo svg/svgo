@@ -170,8 +170,6 @@ exports.fn = (root, params) => {
             (computedStyle['stroke-linecap'].type === 'dynamic' ||
               computedStyle['stroke-linecap'].value !== 'butt');
           const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
-          // TODO: when stroke is used, prefer z more
-          // Z is the same as going home at 90 and 0 degrees, but not at other degrees
           const isSafeToUseZ = maybeHasStroke
             ? computedStyle['stroke-linecap']?.type === 'static' &&
               computedStyle['stroke-linecap'].value === 'round' &&
