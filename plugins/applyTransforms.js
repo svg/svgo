@@ -12,7 +12,10 @@ const {
   transformArc,
 } = require('./_transforms.js');
 const { path2js } = require('./_path.js');
-const { removeLeadingZero } = require('../lib/svgo/tools.js');
+const {
+  removeLeadingZero,
+  includesUrlReference,
+} = require('../lib/svgo/tools.js');
 const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
 
 /**
@@ -35,9 +38,6 @@ const applyTransforms = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        const computedStyle = computeStyle(stylesheet, node);
-
-        // used only for paths for now
         if (node.attributes.d == null) {
           return;
         }
@@ -48,7 +48,7 @@ const applyTransforms = (root, params) => {
         }
 
         // if there are no 'stroke' attr and references to other objects such as
-        // gradiends or clip-path which are also subjects to transform.
+        // gradients or clip-path which are also subjects to transform.
         if (
           node.attributes.transform == null ||
           node.attributes.transform === '' ||
@@ -57,8 +57,19 @@ const applyTransforms = (root, params) => {
           node.attributes.style != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && value.includes('url(')
+              referencesProps.includes(name) && includesUrlReference(value)
           )
+        ) {
+          return;
+        }
+
+        const computedStyle = computeStyle(stylesheet, node);
+        const transformStyle = computedStyle.transform;
+
+        // Transform overridden in <style> tag which is not considered
+        if (
+          transformStyle.type === 'static' &&
+          transformStyle.value !== node.attributes.transform
         ) {
           return;
         }
@@ -66,23 +77,21 @@ const applyTransforms = (root, params) => {
         const matrix = transformsMultiply(
           transform2js(node.attributes.transform)
         );
+
         const stroke =
-          computedStyle.stroke != null && computedStyle.stroke.type === 'static'
+          computedStyle.stroke?.type === 'static'
             ? computedStyle.stroke.value
             : null;
 
         const strokeWidth =
-          computedStyle['stroke-width'] != null &&
-          computedStyle['stroke-width'].type === 'static'
+          computedStyle['stroke-width']?.type === 'static'
             ? computedStyle['stroke-width'].value
             : null;
         const transformPrecision = params.transformPrecision;
 
         if (
-          (computedStyle.stroke != null &&
-            computedStyle.stroke.type === 'dynamic') ||
-          (computedStyle.strokeWidth != null &&
-            computedStyle['stroke-width'].type === 'dynamic')
+          computedStyle.stroke?.type === 'dynamic' ||
+          computedStyle['stroke-width']?.type === 'dynamic'
         ) {
           return;
         }
@@ -94,7 +103,7 @@ const applyTransforms = (root, params) => {
         );
 
         if (stroke && stroke != 'none') {
-          if (params.applyTransformsStroked === false) {
+          if (!params.applyTransformsStroked) {
             return;
           }
 
