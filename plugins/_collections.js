@@ -93,13 +93,19 @@ exports.elemsGroups = {
   ],
 };
 
-exports.textElems = exports.elemsGroups.textContent.concat('title');
+/**
+ * Elements where adding or removing whitespace may effect rendering, metadata,
+ * or semantic meaning.
+ *
+ * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
+ */
+exports.textElems = [...exports.elemsGroups.textContent, 'title', 'pre'];
 
 exports.pathElems = ['path', 'glyph', 'missing-glyph'];
 
-// https://www.w3.org/TR/SVG11/intro.html#Definitions
 /**
  * @type {Record<string, Array<string>>}
+ * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
  */
 exports.attrsGroups = {
   animationAddition: ['additive', 'accumulate'],
@@ -363,7 +369,6 @@ exports.attrsGroupsDefaults = {
   },
 };
 
-// https://www.w3.org/TR/SVG11/eltindex.html
 /**
  * @type {Record<string, {
  *   attrsGroups: Array<string>,
@@ -372,6 +377,7 @@ exports.attrsGroupsDefaults = {
  *   contentGroups?: Array<string>,
  *   content?: Array<string>,
  * }>}
+ * @see https://www.w3.org/TR/SVG11/eltindex.html
  */
 exports.elems = {
   a: {
@@ -1948,7 +1954,9 @@ exports.editorNamespaces = [
   'http://www.vector.evaxdesign.sk',
 ];
 
-// https://www.w3.org/TR/SVG11/linking.html#processingIRI
+/**
+ * @see https://www.w3.org/TR/SVG11/linking.html#processingIRI
+ */
 exports.referencesProps = [
   'clip-path',
   'color-profile',
@@ -1962,7 +1970,9 @@ exports.referencesProps = [
   'style',
 ];
 
-// https://www.w3.org/TR/SVG11/propidx.html
+/**
+ * @see https://www.w3.org/TR/SVG11/propidx.html
+ */
 exports.inheritableAttrs = [
   'clip-rule',
   'color',
@@ -2216,7 +2226,9 @@ exports.colorsShortNames = {
   '#f5deb3': 'wheat',
 };
 
-// https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
+/**
+ * @see https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
+ */
 exports.colorsProps = [
   'color',
   'fill',

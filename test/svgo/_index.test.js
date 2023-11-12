@@ -69,4 +69,19 @@ describe('svgo', () => {
     });
     expect(normalize(result.data)).toEqual(expected);
   });
+  it('should not trim whitespace at start and end of pre element', async () => {
+    const [original, expected] = await parseFixture('pre-element.svg');
+    const result = optimize(original, {
+      path: 'input.svg',
+    });
+    expect(normalize(result.data)).toEqual(expected);
+  });
+  it('should not add whitespace in pre element', async () => {
+    const [original, expected] = await parseFixture('pre-element-pretty.svg');
+    const result = optimize(original, {
+      path: 'input.svg',
+      js2svg: { pretty: true },
+    });
+    expect(normalize(result.data)).toEqual(expected);
+  });
 });

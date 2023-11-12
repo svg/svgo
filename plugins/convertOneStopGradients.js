@@ -22,8 +22,8 @@ exports.description =
  *
  * @author Seth Falco <seth@falco.fun>
  * @type {import('./plugins-types').Plugin<'convertOneStopGradients'>}
- * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/linearGradient
- * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/radialGradient
+ * @see https://developer.mozilla.org/docs/Web/SVG/Element/linearGradient
+ * @see https://developer.mozilla.org/docs/Web/SVG/Element/radialGradient
  */
 exports.fn = (root) => {
   const stylesheet = collectStylesheet(root);

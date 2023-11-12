@@ -8,7 +8,7 @@ Converts the [`<linearGradient>`](https://developer.mozilla.org/docs/Web/SVG/Ele
 
 These nodes contain [`<stop>`](https://developer.mozilla.org/docs/Web/SVG/Element/stop) elements, which represent various colors to transition between. However, if a gradient only contains a single `<stop>`, then it's effecitively a solid fill.
 
-Definitions of the gradients are removed, and the parent [`<defs>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs) node is removed if it has no children after optimization. The `xlink:href` namespace is also removed if there are no remaining elements using this attribute.
+Definitions of the gradients are removed, and the parent [`<defs>`](https://developer.mozilla.org/docs/Web/SVG/Element/defs) node is removed if it has no children after optimization. The `xlink:href` namespace is also removed if there are no remaining elements using this attribute.
 
 ## Usage
 
