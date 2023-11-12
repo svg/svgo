@@ -42,6 +42,7 @@ type DefaultPlugins = {
     };
     straightCurves?: boolean;
     lineShorthands?: boolean;
+    convertToZ?: boolean;
     curveSmoothShorthands?: boolean;
     floatPrecision?: number | false;
     transformPrecision?: number;
@@ -138,7 +139,7 @@ type DefaultPlugins = {
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
   removeComments: {
-    preservePatterns: Array<RegExp|string> | false
+    preservePatterns: Array<RegExp | string> | false;
   };
   removeDesc: {
     removeAny?: boolean;
