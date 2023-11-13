@@ -299,7 +299,12 @@ exports.fn = (root, params) => {
             );
 
             for (const child of selector.node.children) {
-              if (child.type === 'ClassSelector') {
+              if (
+                child.type === 'ClassSelector' &&
+                !selectors.some((selector) =>
+                  includesAttrSelector(selector.item, 'class', child.name, true)
+                )
+              ) {
                 classList.delete(child.name);
               }
             }

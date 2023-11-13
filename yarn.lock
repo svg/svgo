@@ -4568,6 +4568,7 @@ __metadata:
     commander: ^7.2.0
     css-select: ^5.1.0
     css-tree: ^2.2.1
+    css-what: ^6.1.0
     csso: 5.0.5
     del: ^6.0.0
     eslint: ^8.24.0
