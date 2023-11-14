@@ -318,9 +318,16 @@ exports.fn = (root, params) => {
             // ID
             const firstSubSelector = selector.node.children.first;
             if (
-              firstSubSelector != null &&
-              firstSubSelector.type === 'IdSelector' &&
-              selectedEl.attributes.id === firstSubSelector.name
+              firstSubSelector?.type === 'IdSelector' &&
+              selectedEl.attributes.id === firstSubSelector.name &&
+              !selectors.some((selector) =>
+                includesAttrSelector(
+                  selector.item,
+                  'id',
+                  firstSubSelector.name,
+                  true
+                )
+              )
             ) {
               delete selectedEl.attributes.id;
             }

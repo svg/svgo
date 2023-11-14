@@ -35,7 +35,7 @@ svgo one.svg two.svg -o one.min.svg two.min.svg
 Process a directory of files recursively with `-f`/`--folder`:
 
 ```sh
-svgo -f ./path/to/folder/with/svg/files -o ./path/to/folder/with/svg/output
+svgo -f path/to/directory_with_svgs -o path/to/output_directory
 ```
 
 Help for advanced usage:
@@ -48,7 +48,7 @@ svgo --help
 
 SVGO has a plugin architecture. You can read more about all plugins in [Plugins | SVGO Documentation](https://svgo.dev/docs/plugins/), and the default plugins in [Preset Default | SVGO Documentation](https://svgo.dev/docs/preset-default/).
 
-SVGO reads the configuration from `svgo.config.js` or the `--config {{path/to/config.js}}` command-line option. Some other parameters can be configured though command-line options too.
+SVGO reads the configuration from `svgo.config.js` or the `--config path/to/config.js` command-line option. Some other parameters can be configured though command-line options too.
 
 **`svgo.config.js`**
 ```js
@@ -88,7 +88,7 @@ module.exports = {
           // disable a default plugin
           removeViewBox: false,
 
-          // customize the options of a default plugin
+          // customize the params of a default plugin
           inlineStyles: {
             onlyMatchedOnce: false,
           }
