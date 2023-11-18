@@ -16,6 +16,12 @@ Removes XLink namespace prefixes and converts references to XLink attributes to 
 * Drop all other references to the XLink namespace.
 * Remove XLink namespace declarations.
 
+:::tip
+
+When using this plugin, it's recommended to put it toward the end of your pipeline. Other SVGO plugins may add the XLink namespace, and these won't be migrated if they're added after this plugin has already executed.
+
+:::
+
 In most cases this will remove all references to XLink, but if legacy elements that are deprecated or removed in SVG 2 are found, the references are preserved as those elements do not support the SVG 2 `href` attribute. You can set `includeLegacy` to `true` to apply the plugin in this case too.
 
 The following support `xlink:href` but not the SVG 2 `href` attribute:
@@ -26,7 +32,7 @@ The following support `xlink:href` but not the SVG 2 `href` attribute:
 * [`<glyphRef>`](https://developer.mozilla.org/docs/Web/SVG/Element/glyphRef)
 * [`<tref>`](https://developer.mozilla.org/docs/Web/SVG/Element/tref)
 
-It's recommended to use this plugin if you intend to inline SVGs into an HTML document, the `includeLegacy` can be safely used in this case too. HTML does not support explicit namespaces, so namespace prefixes are ignored by the browser anyway.
+It's recommended to use this plugin if you intend to inline SVGs into an HTML document, `includeLegacy` can be safely set to `true` in this case too. HTML does not support explicit namespaces, so namespace prefixes are ignored by the browser anyway.
 
 :::danger
 
