@@ -22,7 +22,6 @@ exports.fn = () => {
       enter: (node) => {
         if (node.name === 'svg') {
           delete node.attributes.xmlns;
-          delete node.attributes['xmlns:xlink'];
         }
       },
     },
