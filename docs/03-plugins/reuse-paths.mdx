@@ -10,6 +10,12 @@ It looks for `<path>` elements that have the same [`d`](https://developer.mozill
 
 If the path contains other attributes, such as `style` or `transform`, they will be preserved in the `<use>` element that supersedes it.
 
+:::tip
+
+If you only need SVG 2 or inline HTML compatibility, it's recommended to include the [Remove Xlink](/docs/plugins/remove-xlink/) plugin towards the end of your pipeline to convert references to `xlink:href` to the SVG 2 `href` attribute.
+
+:::
+
 ## Usage
 
 <PluginUsage/>
