@@ -685,8 +685,12 @@ function filters(
         (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
         (command === 'l' || command === 'h' || command === 'v')
       ) {
-        // @ts-ignore
-        if (pathBase[0] === item.coords[0] && pathBase[1] === item.coords[1]) {
+        if (
+          // @ts-ignore
+          Math.abs(pathBase[0] - item.coords[0]) < error &&
+          // @ts-ignore
+          Math.abs(pathBase[1] - item.coords[1]) < error
+        ) {
           command = 'z';
           data = [];
         }
@@ -839,9 +843,9 @@ function filters(
       params.removeUseless &&
       isSafeToUseZ &&
       // @ts-ignore
-      item.base[0] === item.coords[0] &&
+      Math.abs(item.base[0] - item.coords[0]) < error &&
       // @ts-ignore
-      item.base[1] === item.coords[1]
+      Math.abs(item.base[1] - item.coords[1]) < error
     )
       return false;
 
