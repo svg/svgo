@@ -1,0 +1,23 @@
+---
+title: Collapse Text
+svgo:
+  pluginId: collapseText
+  defaultPlugin: false
+---
+
+Finds `<text>` elements which contain a single child, of type `<tspan>` and collapses them by:
+- removing the `<tspan>` element
+- making all children of the `<tspan>` element children of the `<text>` element
+- copying all attributes of the `<tspan>` element to the `<text>` element
+
+The elements are not collapsed if any of the following are true:
+- The document contains a `<style>` element
+- Either the `<text>` or `<tspan>` element contains a style attribute
+
+## Usage
+
+<PluginUsage/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/collapseText.js

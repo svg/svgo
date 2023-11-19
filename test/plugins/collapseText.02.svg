@@ -1,0 +1,13 @@
+Collapse single <tspan> child of <text>, where single <tspan> has multiple children.
+
+===
+
+<svg width="210mm" height="297mm" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg">
+ <text x="56.571426" y="93.266411" fill="#0000ff" font-size="3.175px" stroke-width=".26458" xml:space="preserve"><tspan x="56.571426" y="93.266411" stroke-width=".26458">This is <tspan font-family="Arial" font-weight="bold">some</tspan> <tspan fill="#ff0000">text</tspan></tspan></text>
+</svg>
+
+@@@
+
+<svg width="210mm" height="297mm" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg">
+    <text x="56.571426" y="93.266411" fill="#0000ff" font-size="3.175px" stroke-width=".26458" xml:space="preserve">This is <tspan font-family="Arial" font-weight="bold">some</tspan> <tspan fill="#ff0000">text</tspan></text>
+</svg>

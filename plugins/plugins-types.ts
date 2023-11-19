@@ -25,6 +25,7 @@ type DefaultPlugins = {
     convertToPx?: boolean;
   };
   collapseGroups: void;
+  collapseText: void;
   convertColors: {
     currentColor?: boolean | string | RegExp;
     names2hex?: boolean;
@@ -127,13 +128,13 @@ type DefaultPlugins = {
      * Advanced optimizations
      */
     usage?:
-      | boolean
-      | {
-          force?: boolean;
-          ids?: boolean;
-          classes?: boolean;
-          tags?: boolean;
-        };
+    | boolean
+    | {
+      force?: boolean;
+      ids?: boolean;
+      classes?: boolean;
+      tags?: boolean;
+    };
   };
 
   moveElemsAttrsToGroup: void;
@@ -229,9 +230,9 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
   };
   prefixIds: {
     prefix?:
-      | boolean
-      | string
-      | ((node: XastElement, info: PluginInfo) => string);
+    | boolean
+    | string
+    | ((node: XastElement, info: PluginInfo) => string);
     delim?: string;
     prefixIds?: boolean;
     prefixClassNames?: boolean;
