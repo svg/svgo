@@ -137,7 +137,7 @@ const mth = {
 /**
  * @typedef {{
  *   convertToShorts: boolean,
- *   floatPrecision: number,
+ *   floatPrecision: import("./plugins-types").NumericAttributes | number,
  *   transformPrecision: number,
  *   matrixToTransform: boolean,
  *   shortTranslate: boolean,
@@ -157,7 +157,7 @@ const mth = {
  * @type {(transform: TransformItem, params: TransformParams) => Array<TransformItem>}
  */
 exports.matrixToTransform = (transform, params) => {
-  let floatPrecision = params.floatPrecision;
+  let floatPrecision = (typeof params.floatPrecision === "number" ? params.floatPrecision : typeof params.floatPrecision.default === "number" ? params.floatPrecision.default : 3);
   let data = transform.data;
   let transforms = [];
   let sx = Number(

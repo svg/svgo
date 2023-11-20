@@ -20,7 +20,7 @@ exports.description =
  */
 let roundData;
 /**
- * @type {number | false}
+ * @type {number}
  */
 let precision;
 /**
@@ -149,11 +149,8 @@ exports.fn = (root, params) => {
       enter: (node) => {
         if (pathElems.includes(node.name) && node.attributes.d != null) {
           const computedStyle = computeStyle(stylesheet, node);
-          precision = floatPrecision;
-          error =
-            precision !== false
-              ? +Math.pow(0.1, precision).toFixed(precision)
-              : 1e-2;
+          precision = typeof floatPrecision === "number" ? floatPrecision : typeof floatPrecision?.d === "number" ? floatPrecision.d : typeof floatPrecision?.default === "number" ? floatPrecision.default : 3
+          error = Number(Math.pow(0.1, precision).toFixed(precision));
           roundData = precision > 0 && precision < 20 ? strongRound : round;
           if (makeArcs) {
             arcThreshold = makeArcs.threshold;
