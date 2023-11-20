@@ -53,7 +53,7 @@ exports.fn = (_root, params) => {
       const matchNew = elem.match(/new/);
 
       // if attribute value matches regNumericValues
-      if (match) {        
+      if (match) {
         // round it to the fixed precision
         let num = Number(Number(match[1]).toFixed(precision));
         /**
@@ -106,7 +106,12 @@ exports.fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        const floatPrecisionFallback = typeof floatPrecision === "number" ? floatPrecision : typeof floatPrecision.default === "number" ? floatPrecision.default : 3
+        const floatPrecisionFallback =
+          typeof floatPrecision === 'number'
+            ? floatPrecision
+            : typeof floatPrecision.default === 'number'
+            ? floatPrecision.default
+            : 3;
         const validAttributes = [
           'points',
           'enable-background',
@@ -115,13 +120,19 @@ exports.fn = (_root, params) => {
           'dx',
           'dy',
           'x',
-          'y'
+          'y',
         ];
-        validAttributes.forEach(attribute => {
-          const precision = typeof floatPrecision[name] === "number" ? floatPrecision[name] : floatPrecisionFallback
+        validAttributes.forEach((attribute) => {
+          const precision =
+            typeof floatPrecision[attribute] === 'number'
+              ? floatPrecision[attribute]
+              : floatPrecisionFallback;
           if (node.attributes[attribute] != null) {
-            node.attributes[attribute] = roundValues(node.attributes[attribute], precision);
-          }          
+            node.attributes[attribute] = roundValues(
+              node.attributes[attribute],
+              precision
+            );
+          }
         });
       },
     },

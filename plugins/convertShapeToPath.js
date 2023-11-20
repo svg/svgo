@@ -26,7 +26,14 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 exports.fn = (root, params) => {
   const { convertArcs = false, floatPrecision } = params;
 
-  const precision = typeof floatPrecision === "number" ? floatPrecision : typeof floatPrecision?.d === "number" ? floatPrecision.d : typeof floatPrecision?.default === "number" ? floatPrecision.default : 3
+  const precision =
+    typeof floatPrecision === 'number'
+      ? floatPrecision
+      : typeof floatPrecision?.d === 'number'
+      ? floatPrecision.d
+      : typeof floatPrecision?.default === 'number'
+      ? floatPrecision.default
+      : 3;
 
   return {
     element: {

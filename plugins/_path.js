@@ -203,8 +203,15 @@ exports.js2path = function (path, data, params) {
     });
   }
 
-  let precision = typeof params.floatPrecision === "number" ? params.floatPrecision : typeof params.floatPrecision.d === "number" ? params.floatPrecision.d : typeof params.floatPrecision.default === "number" ? params.floatPrecision.default : 3;
-  
+  let precision =
+    typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.d === 'number'
+      ? params.floatPrecision.d
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3;
+
   path.attributes.d = stringifyPathData({
     pathData,
     precision,

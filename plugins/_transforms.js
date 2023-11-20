@@ -157,7 +157,12 @@ const mth = {
  * @type {(transform: TransformItem, params: TransformParams) => Array<TransformItem>}
  */
 exports.matrixToTransform = (transform, params) => {
-  let floatPrecision = (typeof params.floatPrecision === "number" ? params.floatPrecision : typeof params.floatPrecision.default === "number" ? params.floatPrecision.default : 3);
+  let floatPrecision =
+    typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3;
   let data = transform.data;
   let transforms = [];
   let sx = Number(

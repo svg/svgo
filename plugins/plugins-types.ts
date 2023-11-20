@@ -252,6 +252,16 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
   removeRasterImages: void;
   removeScriptElement: void;
   removeStyleElement: void;
+  removeXlink: {
+    /**
+     * By default this plugin ignores legacy elements that were deprecated or
+     * removed in SVG 2. Set to true to force performing operations on those
+     * too.
+     *
+     * @default false
+     */
+    includeLegacy: boolean
+  };
   removeXMLNS: void;
   reusePaths: void;
 };
