@@ -843,9 +843,9 @@ function filters(
       params.removeUseless &&
       isSafeToUseZ &&
       // @ts-ignore
-      Math.abs(item.base[0] - item.coords[0]) < error &&
+      Math.abs(item.base[0] - item.coords[0]) < (error / 16) &&
       // @ts-ignore
-      Math.abs(item.base[1] - item.coords[1]) < error
+      Math.abs(item.base[1] - item.coords[1]) < (error / 16)
     )
       return false;
 
