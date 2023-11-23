@@ -236,10 +236,6 @@ function optimizePart({
             )
           : 0);
       if (size < best.size) {
-        outputPath.forEach(
-          (item) =>
-            (item.args = item.args.map((a) => toPrecision(a, precision)))
-        );
         if (next)
           next.args = transformMove(next, output[output.length - 1].coords);
         best = {
