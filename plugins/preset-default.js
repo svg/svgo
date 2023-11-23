@@ -28,6 +28,7 @@ const moveElemsAttrsToGroup = require('./moveElemsAttrsToGroup.js');
 const moveGroupAttrsToElems = require('./moveGroupAttrsToElems.js');
 const collapseGroups = require('./collapseGroups.js');
 const convertPathData = require('./convertPathData.js');
+const optimizePathOrder = require('./optimizePathOrder.js');
 const convertTransform = require('./convertTransform.js');
 const removeEmptyAttrs = require('./removeEmptyAttrs.js');
 const removeEmptyContainers = require('./removeEmptyContainers.js');
@@ -67,6 +68,7 @@ const presetDefault = createPreset({
     moveGroupAttrsToElems,
     collapseGroups,
     convertPathData,
+    optimizePathOrder,
     convertTransform,
     removeEmptyAttrs,
     removeEmptyContainers,

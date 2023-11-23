@@ -138,6 +138,7 @@ type DefaultPlugins = {
 
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
+  optimizePathOrder: void;
   removeComments: {
     preservePatterns: Array<RegExp | string> | false;
   };
@@ -249,7 +250,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
      *
      * @default false
      */
-    includeLegacy: boolean
+    includeLegacy: boolean;
   };
   removeXMLNS: void;
   reusePaths: void;
