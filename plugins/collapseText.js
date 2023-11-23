@@ -10,12 +10,6 @@ exports.name = 'collapseText';
 exports.description = 'merges tspan into text parent if possible';
 
 /**
- * @type {Map<XastElement, XastElement>}
- */
-let tspansToCollapse;
-let deoptimized = false;
-
-/**
  * If <text> has a single child of type <tspan>, remove the <tspan> element and make it's children
  * children of <text>.
  *
@@ -25,6 +19,12 @@ let deoptimized = false;
  */
 
 exports.fn = () => {
+  /**
+   * @type {Map<XastElement, XastElement>}
+   */
+  let tspansToCollapse = new Map();
+  let deoptimized = false;
+
   return {
     element: {
       enter: (node, parentNode) => {
@@ -56,10 +56,6 @@ exports.fn = () => {
     },
 
     root: {
-      enter: () => {
-        deoptimized = false;
-        tspansToCollapse = new Map();
-      },
       exit: () => {
         if (deoptimized) {
           return;
