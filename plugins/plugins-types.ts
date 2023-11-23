@@ -138,7 +138,10 @@ type DefaultPlugins = {
 
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
-  optimizePathOrder: void;
+  optimizePathOrder: {
+    floatPrecision?: number;
+    noSpaceAfterFlags?: boolean;
+  };
   removeComments: {
     preservePatterns: Array<RegExp | string> | false;
   };

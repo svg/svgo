@@ -22,6 +22,7 @@ exports.description = 'Moves around instructions in paths to be optimal.';
  * @type {import('./plugins-types').Plugin<'optimizePathOrder'>}
  */
 exports.fn = (root, params) => {
+  const { floatPrecision: precision = 3, noSpaceAfterFlags } = params;
   const stylesheet = collectStylesheet(root);
   let deoptimized = false;
   return {
@@ -97,19 +98,21 @@ exports.fn = (root, params) => {
               const start = internalData[0].base;
               const end = internalData[internalData.length - 1].coords;
               pathTransformed.push(
-                ...optimizePart(
-                  internalData.map((item) => {
+                ...optimizePart({
+                  path: internalData.map((item) => {
                     return {
                       command: item.command,
                       base: item.base,
                       coords: item.coords,
                     };
                   }),
-                  part.data,
-                  unsafeToChangeStart ||
+                  baseline: part.data,
+                  unsafeToChangeStart:
+                    unsafeToChangeStart ||
                     start[0] != end[0] ||
-                    start[1] != end[1]
-                )
+                    start[1] != end[1],
+                  precision,
+                })
               );
               continue;
             }
@@ -117,23 +120,29 @@ exports.fn = (root, params) => {
           pathTransformed.push(...part.data);
         }
 
-        js2path(node, pathTransformed, {});
+        js2path(node, pathTransformed, {
+          floatPrecision: precision,
+          noSpaceAfterFlags,
+        });
       },
     },
   };
 };
 
 /**
- * @param {InternalPath[]} path
- * @param {PathDataItem[]} baseline
- * @param {boolean} unsafeToChangeStart
+ * @param {{
+ *   path: InternalPath[],
+ *   baseline: PathDataItem[],
+ *   unsafeToChangeStart: boolean,
+ *   precision: number | undefined
+ * }} param0
  */
-function optimizePart(path, baseline, unsafeToChangeStart) {
+function optimizePart({ path, baseline, unsafeToChangeStart, precision }) {
   const starts = unsafeToChangeStart
     ? [0]
     : Array.from({ length: path.length }, (_, i) => i);
   let best = {
-    size: stringifyPathData({ pathData: baseline }).length,
+    size: stringifyPathData({ pathData: baseline, precision }).length,
     data: baseline,
   };
   for (const start of starts) {
@@ -170,7 +179,10 @@ function optimizePart(path, baseline, unsafeToChangeStart) {
       }
 
       const outputPath = transformPath(output, !unsafeToChangeStart);
-      const size = stringifyPathData({ pathData: outputPath }).length;
+      const size = stringifyPathData({
+        pathData: outputPath,
+        precision,
+      }).length;
       if (size < best.size) {
         best = { size, data: outputPath };
       }
