@@ -1,6 +1,6 @@
 const { stringifyPathData } = require('../lib/path.js');
 const { computeStyle, collectStylesheet } = require('../lib/style.js');
-const { hasScripts } = require('../lib/svgo/tools.js');
+const { hasScripts, cleanupOutData } = require('../lib/svgo/tools.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
 
@@ -53,6 +53,10 @@ exports.fn = (root, params) => {
             computedStyle['stroke-linejoin']?.type !== 'static' ||
             computedStyle['stroke-linejoin'].value !== 'round'
           : false;
+        const unsafeToChangeDirection = computedStyle.fill
+          ? computedStyle['fill-rule']?.type !== 'static' ||
+            computedStyle['fill-rule'].value == 'nonzero'
+          : false;
 
         const path = /** @type {RealPath[]} */ (path2js(node));
 
@@ -89,7 +93,7 @@ exports.fn = (root, params) => {
          * @type {PathDataItem[]}
          */
         const pathTransformed = [];
-        for (const part of parts) {
+        for (const [i, part] of parts.entries()) {
           if (part.valid) {
             const internalData = part.data.filter(
               (item) => item.command != 'm' && item.command != 'M'
@@ -97,26 +101,32 @@ exports.fn = (root, params) => {
             if (internalData.length > 0) {
               const start = internalData[0].base;
               const end = internalData[internalData.length - 1].coords;
-              pathTransformed.push(
-                ...optimizePart({
-                  path: internalData.map((item) => {
-                    return {
-                      command: item.command,
-                      base: item.base,
-                      coords: item.coords,
-                    };
-                  }),
-                  baseline: part.data,
-                  unsafeToChangeStart:
-                    unsafeToChangeStart ||
-                    start[0] != end[0] ||
-                    start[1] != end[1],
-                  precision,
-                })
-              );
-              continue;
+              const next = parts[i + 1];
+
+              const result = optimizePart({
+                path: internalData.map((item) => {
+                  return {
+                    command: item.command,
+                    base: item.base,
+                    coords: item.coords,
+                  };
+                }),
+                unsafeToChangeStart:
+                  unsafeToChangeStart ||
+                  start[0] != end[0] ||
+                  start[1] != end[1],
+                unsafeToChangeDirection,
+                next: next?.data[0].command == 'm' ? next.data[0] : undefined,
+                baseline: part.data,
+                precision,
+              });
+              if (result.success) {
+                pathTransformed.push(...result.data);
+                continue;
+              }
             }
           }
+
           pathTransformed.push(...part.data);
         }
 
@@ -132,21 +142,33 @@ exports.fn = (root, params) => {
 /**
  * @param {{
  *   path: InternalPath[],
- *   baseline: PathDataItem[],
  *   unsafeToChangeStart: boolean,
- *   precision: number | undefined
+ *   unsafeToChangeDirection: boolean,
+ *   next: RealPath | undefined,
+ *   baseline: RealPath[],
+ *   precision: number
  * }} param0
  */
-function optimizePart({ path, baseline, unsafeToChangeStart, precision }) {
+function optimizePart({
+  path,
+  unsafeToChangeStart,
+  unsafeToChangeDirection,
+  next,
+  baseline,
+  precision,
+}) {
   const starts = unsafeToChangeStart
     ? [0]
     : Array.from({ length: path.length }, (_, i) => i);
   let best = {
-    size: stringifyPathData({ pathData: baseline, precision }).length,
+    success: false,
+    size:
+      stringifyPathData({ pathData: baseline, precision }).length +
+      (next ? estimateLength(next.args, precision) : 0),
     data: baseline,
   };
   for (const start of starts) {
-    for (const reverse of [false, true]) {
+    for (const reverse of unsafeToChangeDirection ? [false] : [false, true]) {
       const data = reverse
         ? path
             .slice(0, start)
@@ -178,76 +200,135 @@ function optimizePart({ path, baseline, unsafeToChangeStart, precision }) {
         });
       }
 
-      const outputPath = transformPath(output, !unsafeToChangeStart);
-      const size = stringifyPathData({
-        pathData: outputPath,
-        precision,
-      }).length;
+      const outputPath = transformPath(output, precision, !unsafeToChangeStart);
+      const size =
+        stringifyPathData({
+          pathData: outputPath,
+          precision,
+        }).length +
+        (next
+          ? estimateLength(
+              transformMove(next, output[output.length - 1].coords),
+              precision
+            )
+          : 0);
       if (size < best.size) {
-        best = { size, data: outputPath };
+        outputPath.forEach(
+          (item) =>
+            (item.args = item.args.map((a) => toPrecision(a, precision)))
+        );
+        if (next)
+          next.args = transformMove(next, output[output.length - 1].coords);
+        best = {
+          success: true,
+          size,
+          data: outputPath,
+        };
       }
     }
   }
-  return best.data;
+  return best;
 }
 
 /**
  * @param {InternalPath[]} path
+ * @param {number} precision
  * @param {boolean} canUseZ
  */
-function transformPath(path, canUseZ) {
+function transformPath(path, precision, canUseZ) {
   return path.reduce(
     (
-      /** @type {PathDataItem[]} */ acc,
+      /** @type {RealPath[]} */ acc,
       /** @type {InternalPath} */ command,
       /** @type {number} */ i
     ) => {
       const lastCommand = acc[acc.length - 1]?.command;
 
       if (command.command == 'M')
-        acc.push({ command: 'M', args: command.coords });
+        acc.push({
+          command: 'M',
+          args: command.coords,
+          base: command.base,
+          coords: command.coords,
+        });
       else if (command.command == 'L') {
         const relativeX = command.coords[0] - command.base[0];
         const relativeY = command.coords[1] - command.base[1];
         if (i == path.length - 1 && canUseZ) {
-          acc.push({ command: 'z', args: [] });
+          acc.push({
+            command: 'z',
+            args: [],
+            base: command.base,
+            coords: command.coords,
+          });
         } else if (command.base[1] == command.coords[1]) {
-          const isAbsoluteBetter =
-            command.coords[0].toString().length < relativeX.toString().length;
+          const absoluteLength = toPrecision(
+            command.coords[0],
+            precision
+          ).toString().length;
+          const relativeLength = toPrecision(relativeX, precision).toString()
+            .length;
           acc.push(
-            isAbsoluteBetter
-              ? { command: 'H', args: [command.coords[0]] }
-              : { command: 'h', args: [relativeX] }
+            absoluteLength < relativeLength
+              ? {
+                  command: 'H',
+                  args: [command.coords[0]],
+                  base: command.base,
+                  coords: command.coords,
+                }
+              : {
+                  command: 'h',
+                  args: [relativeX],
+                  base: command.base,
+                  coords: command.coords,
+                }
           );
         } else if (command.base[0] == command.coords[0]) {
-          const isAbsoluteBetter =
-            command.coords[1].toString().length < relativeY.toString().length;
+          const absoluteLength = toPrecision(
+            command.coords[1],
+            precision
+          ).toString().length;
+          const relativeLength = toPrecision(relativeY, precision).toString()
+            .length;
           acc.push(
-            isAbsoluteBetter
-              ? { command: 'V', args: [command.coords[1]] }
-              : { command: 'v', args: [relativeY] }
+            absoluteLength < relativeLength
+              ? {
+                  command: 'V',
+                  args: [command.coords[1]],
+                  base: command.base,
+                  coords: command.coords,
+                }
+              : {
+                  command: 'v',
+                  args: [relativeY],
+                  base: command.base,
+                  coords: command.coords,
+                }
           );
         } else {
           const absoluteLength =
-            command.coords[0].toString().length +
-              command.coords[1].toString().length +
-              (command.coords[1] < 0 ? 0 : 1) +
-              lastCommand ==
-            'L'
+            estimateLength(command.coords, precision) + lastCommand == 'L'
               ? 0
               : 1;
           const relativeLength =
-            relativeX.toString().length +
-              relativeY.toString().length +
-              (relativeY < 0 ? 0 : 1) +
-              lastCommand ==
+            estimateLength([relativeX, relativeY], precision) + lastCommand ==
             'l'
               ? 0
               : 1;
           acc.push(
             absoluteLength < relativeLength
-              ? { command: 'L', args: command.coords }
-              : { command: 'l', args: [relativeX, relativeY] }
+              ? {
+                  command: 'L',
+                  args: command.coords,
+                  base: command.base,
+                  coords: command.coords,
+                }
+              : {
+                  command: 'l',
+                  args: [relativeX, relativeY],
+                  base: command.base,
+                  coords: command.coords,
+                }
           );
         }
       }
@@ -255,4 +336,32 @@ function transformPath(path, canUseZ) {
     },
     []
   );
+}
+
+/**
+ * @param {RealPath} command
+ * @param {[number, number]} newBase
+ */
+function transformMove(command, newBase) {
+  return [command.coords[0] - newBase[0], command.coords[1] - newBase[1]];
+}
+
+/**
+ * @param {number} number
+ * @param {number} precision
+ */
+function toPrecision(number, precision) {
+  const factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+}
+
+/**
+ * @param {number[]} numbers
+ * @param {number} precision
+ */
+function estimateLength(numbers, precision) {
+  return cleanupOutData(
+    numbers.map((n) => toPrecision(n, precision)),
+    {}
+  ).length;
 }
