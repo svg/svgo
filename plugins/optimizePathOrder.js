@@ -10,8 +10,8 @@ exports.description = 'Moves around instructions in paths to be optimal.';
 /**
  * @typedef {import('../lib/types').PathDataCommand} PathDataCommand
  * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {{command: PathDataCommand, base: [number, number], coords: [number, number]}} InternalPath
- * @typedef {InternalPath & {args: number[]}} RealPath
+ * @typedef {{command: PathDataCommand, data?: {rx: number, ry: number, r: number, large: boolean, sweep: boolean}, base: [number, number], coords: [number, number]}} InternalPath
+ * @typedef {PathDataItem & {base: [number, number], coords: [number, number]}} RealPath
  */
 
 /**
@@ -78,6 +78,8 @@ exports.fn = (root, params) => {
             instruction.command != 'H' &&
             instruction.command != 'v' &&
             instruction.command != 'V' &&
+            instruction.command != 'a' &&
+            instruction.command != 'A' &&
             instruction.command != 'z' &&
             instruction.command != 'Z'
           ) {
@@ -104,13 +106,21 @@ exports.fn = (root, params) => {
               const next = parts[i + 1];
 
               const result = optimizePart({
-                path: internalData.map((item) => {
-                  return {
-                    command: item.command,
-                    base: item.base,
-                    coords: item.coords,
-                  };
-                }),
+                path: internalData.map((item) => ({
+                  command: item.command,
+                  data:
+                    item.command == 'a' || item.command == 'A'
+                      ? {
+                          rx: item.args[0],
+                          ry: item.args[1],
+                          r: item.args[2],
+                          large: Boolean(item.args[3]),
+                          sweep: Boolean(item.args[4]),
+                        }
+                      : undefined,
+                  base: item.base,
+                  coords: item.coords,
+                })),
                 unsafeToChangeStart:
                   unsafeToChangeStart ||
                   start[0] != end[0] ||
@@ -177,6 +187,10 @@ function optimizePart({
             .map((item) => {
               return {
                 command: item.command,
+                data: item.data && {
+                  ...item.data,
+                  sweep: !item.data.sweep,
+                },
                 base: item.coords,
                 coords: item.base,
               };
@@ -193,11 +207,20 @@ function optimizePart({
         coords: [data[0].base[0], data[0].base[1]],
       });
       for (const item of data) {
-        output.push({
-          command: 'L',
-          base: [item.base[0], item.base[1]],
-          coords: [item.coords[0], item.coords[1]],
-        });
+        if (item.command == 'a' || item.command == 'A') {
+          output.push({
+            command: 'A',
+            data: item.data,
+            base: item.base,
+            coords: item.coords,
+          });
+        } else {
+          output.push({
+            command: 'L',
+            base: item.base,
+            coords: item.coords,
+          });
+        }
       }
 
       const outputPath = transformPath(output, precision, !unsafeToChangeStart);
@@ -251,7 +274,41 @@ function transformPath(path, precision, canUseZ) {
           base: command.base,
           coords: command.coords,
         });
-      else if (command.command == 'L') {
+      else if (command.command == 'A') {
+        const data = /** @type {Exclude<InternalPath['data'], undefined>} */ (
+          command.data
+        );
+        const args = [
+          data.rx,
+          data.ry,
+          data.r,
+          data.large ? 1 : 0,
+          data.sweep ? 1 : 0,
+        ];
+        const relativeX = command.coords[0] - command.base[0];
+        const relativeY = command.coords[1] - command.base[1];
+        const absoluteLength =
+          estimateLength([...args, ...command.coords], precision) +
+            lastCommand ==
+          'A'
+            ? 0
+            : 1;
+        const relativeLength =
+          estimateLength([...args, relativeX, relativeY], precision) +
+            lastCommand ==
+          'a'
+            ? 0
+            : 1;
+        acc.push({
+          command: absoluteLength < relativeLength ? 'A' : 'a',
+          args:
+            absoluteLength < relativeLength
+              ? [...args, ...command.coords]
+              : [...args, relativeX, relativeY],
+          base: command.base,
+          coords: command.coords,
+        });
+      } else if (command.command == 'L') {
         const relativeX = command.coords[0] - command.base[0];
         const relativeY = command.coords[1] - command.base[1];
         if (i == path.length - 1 && canUseZ) {
@@ -268,21 +325,15 @@ function transformPath(path, precision, canUseZ) {
           ).toString().length;
           const relativeLength = toPrecision(relativeX, precision).toString()
             .length;
-          acc.push(
-            absoluteLength < relativeLength
-              ? {
-                  command: 'H',
-                  args: [command.coords[0]],
-                  base: command.base,
-                  coords: command.coords,
-                }
-              : {
-                  command: 'h',
-                  args: [relativeX],
-                  base: command.base,
-                  coords: command.coords,
-                }
-          );
+          acc.push({
+            command: absoluteLength < relativeLength ? 'H' : 'h',
+            args:
+              absoluteLength < relativeLength
+                ? [command.coords[0]]
+                : [relativeX],
+            base: command.base,
+            coords: command.coords,
+          });
         } else if (command.base[0] == command.coords[0]) {
           const absoluteLength = toPrecision(
             command.coords[1],
@@ -290,21 +341,15 @@ function transformPath(path, precision, canUseZ) {
           ).toString().length;
           const relativeLength = toPrecision(relativeY, precision).toString()
             .length;
-          acc.push(
-            absoluteLength < relativeLength
-              ? {
-                  command: 'V',
-                  args: [command.coords[1]],
-                  base: command.base,
-                  coords: command.coords,
-                }
-              : {
-                  command: 'v',
-                  args: [relativeY],
-                  base: command.base,
-                  coords: command.coords,
-                }
-          );
+          acc.push({
+            command: absoluteLength < relativeLength ? 'V' : 'v',
+            args:
+              absoluteLength < relativeLength
+                ? [command.coords[1]]
+                : [relativeY],
+            base: command.base,
+            coords: command.coords,
+          });
         } else {
           const absoluteLength =
             estimateLength(command.coords, precision) + lastCommand == 'L'
@@ -315,21 +360,15 @@ function transformPath(path, precision, canUseZ) {
             'l'
               ? 0
               : 1;
-          acc.push(
-            absoluteLength < relativeLength
-              ? {
-                  command: 'L',
-                  args: command.coords,
-                  base: command.base,
-                  coords: command.coords,
-                }
-              : {
-                  command: 'l',
-                  args: [relativeX, relativeY],
-                  base: command.base,
-                  coords: command.coords,
-                }
-          );
+          acc.push({
+            command: absoluteLength < relativeLength ? 'L' : 'l',
+            args:
+              absoluteLength < relativeLength
+                ? command.coords
+                : [relativeX, relativeY],
+            base: command.base,
+            coords: command.coords,
+          });
         }
       }
       return acc;
