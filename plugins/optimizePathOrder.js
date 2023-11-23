@@ -10,7 +10,7 @@ exports.description = 'Moves around instructions in paths to be optimal.';
 /**
  * @typedef {import('../lib/types').PathDataCommand} PathDataCommand
  * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {{command: PathDataCommand, data?: {rx: number, ry: number, r: number, large: boolean, sweep: boolean}, base: [number, number], coords: [number, number]}} InternalPath
+ * @typedef {{command: PathDataCommand, arc?: {rx: number, ry: number, r: number, large: boolean, sweep: boolean}, base: [number, number], coords: [number, number]}} InternalPath
  * @typedef {PathDataItem & {base: [number, number], coords: [number, number]}} RealPath
  */
 
@@ -108,7 +108,7 @@ exports.fn = (root, params) => {
               const result = optimizePart({
                 path: internalData.map((item) => ({
                   command: item.command,
-                  data:
+                  arc:
                     item.command == 'a' || item.command == 'A'
                       ? {
                           rx: item.args[0],
@@ -187,9 +187,9 @@ function optimizePart({
             .map((item) => {
               return {
                 command: item.command,
-                data: item.data && {
-                  ...item.data,
-                  sweep: !item.data.sweep,
+                arc: item.arc && {
+                  ...item.arc,
+                  sweep: !item.arc.sweep,
                 },
                 base: item.coords,
                 coords: item.base,
@@ -210,7 +210,7 @@ function optimizePart({
         if (item.command == 'a' || item.command == 'A') {
           output.push({
             command: 'A',
-            data: item.data,
+            arc: item.arc,
             base: item.base,
             coords: item.coords,
           });
@@ -275,9 +275,10 @@ function transformPath(path, precision, canUseZ) {
           coords: command.coords,
         });
       else if (command.command == 'A') {
-        const data = /** @type {Exclude<InternalPath['data'], undefined>} */ (
-          command.data
-        );
+        const data =
+          /** @type {{rx: number, ry: number, r: number, large: boolean, sweep: boolean}} */ (
+            command.arc
+          );
         const args = [
           data.rx,
           data.ry,
