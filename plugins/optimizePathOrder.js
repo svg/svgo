@@ -186,6 +186,7 @@ function optimizePart({
   };
   for (const start of starts) {
     for (const reverse of unsafeToChangeDirection ? [false] : [false, true]) {
+      if (start == 0 && !reverse) continue;
       const data = reverse
         ? path
             .slice(0, start)
