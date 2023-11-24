@@ -1,4 +1,3 @@
-const { stringifyPathData } = require('../lib/path.js');
 const { computeStyle, collectStylesheet } = require('../lib/style.js');
 const { hasScripts } = require('../lib/svgo/tools.js');
 const { pathElems } = require('./_collections.js');
@@ -180,7 +179,7 @@ function optimizePart({
   let best = {
     success: false,
     size:
-      stringifyPathData({ pathData: baseline, precision }).length +
+      estimatePathLength(baseline, precision, first) +
       (next ? estimateLength(next.args, precision) : 0),
     data: baseline,
   };
@@ -415,25 +414,31 @@ function estimatePathLength(data, precision, first) {
    * @type {{command: string, args: number[]}[]}
    */
   let combined = [];
-  for (const command of data) {
+  data.forEach((command, i) => {
     const last = combined[combined.length - 1];
     if (last) {
-      const commandless =
+      let commandless =
         (last.command == command.command &&
           last.command != 'M' &&
           last.command != 'm') ||
         (last.command == 'M' && command.command == 'L') ||
-        (last.command == 'm' && command.command == 'l') ||
-        (first &&
-          combined.length == 1 &&
-          (command.command == 'L' || command.command == 'l'));
+        (last.command == 'm' && command.command == 'l');
+      if (
+        first &&
+        i == 1 &&
+        (last.command == 'M' || last.command == 'm') &&
+        (command.command == 'L' || command.command == 'l')
+      ) {
+        commandless = true;
+        last.command = command.command == 'L' ? 'M' : 'm';
+      }
       if (commandless) {
         last.args = [...last.args, ...command.args];
-        continue;
+        return;
       }
     }
     combined.push({ command: command.command, args: command.args });
-  }
+  });
 
   let length = 0;
   for (const command of combined) {
