@@ -286,16 +286,10 @@ function transformPath(path, precision, canUseZ) {
         const relativeY = command.coords[1] - command.base[1];
         const absoluteLength =
           estimateLength([...args, ...command.coords], precision) +
-            lastCommand ==
-          'A'
-            ? 0
-            : 1;
+          (lastCommand == 'A' ? 0 : 1);
         const relativeLength =
           estimateLength([...args, relativeX, relativeY], precision) +
-            lastCommand ==
-          'a'
-            ? 0
-            : 1;
+          (lastCommand == 'a' ? 0 : 1);
         acc.push({
           command: absoluteLength < relativeLength ? 'A' : 'a',
           args:
@@ -349,14 +343,11 @@ function transformPath(path, precision, canUseZ) {
           });
         } else {
           const absoluteLength =
-            estimateLength(command.coords, precision) + lastCommand == 'L'
-              ? 0
-              : 1;
+            estimateLength(command.coords, precision) +
+            (lastCommand == 'L' ? 0 : 1);
           const relativeLength =
-            estimateLength([relativeX, relativeY], precision) + lastCommand ==
-            'l'
-              ? 0
-              : 1;
+            estimateLength([relativeX, relativeY], precision) +
+            (lastCommand == 'l' ? 0 : 1);
           acc.push({
             command: absoluteLength < relativeLength ? 'L' : 'l',
             args:
