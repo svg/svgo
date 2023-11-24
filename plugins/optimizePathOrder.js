@@ -9,7 +9,7 @@ exports.description = 'Moves around instructions in paths to be optimal.';
 /**
  * @typedef {import('../lib/types').PathDataCommand} PathDataCommand
  * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {{command: PathDataCommand, arc?: {rx: number, ry: number, r: number, large: boolean, sweep: boolean}, base: [number, number], coords: [number, number]}} InternalPath
+ * @typedef {{command: PathDataCommand, arc?: {rx: number, ry: number, r: number, large: boolean, sweep: boolean}, c?: {x1: number, y1: number, x2: number, y2: number}, q?: {x: number, y: number}, base: [number, number], coords: [number, number]}} InternalPath
  * @typedef {PathDataItem & {base: [number, number], coords: [number, number]}} RealPath
  */
 
@@ -83,6 +83,10 @@ exports.fn = (root, params) => {
             instruction.command != 'V' &&
             instruction.command != 'a' &&
             instruction.command != 'A' &&
+            instruction.command != 'C' &&
+            instruction.command != 'c' &&
+            instruction.command != 'Q' &&
+            instruction.command != 'q' &&
             instruction.command != 'z' &&
             instruction.command != 'Z'
           ) {
@@ -119,6 +123,34 @@ exports.fn = (root, params) => {
                           r: item.args[2],
                           large: Boolean(item.args[3]),
                           sweep: Boolean(item.args[4]),
+                        }
+                      : undefined,
+                  c:
+                    item.command == 'c'
+                      ? {
+                          x1: item.args[0] + item.base[0],
+                          y1: item.args[1] + item.base[1],
+                          x2: item.args[2] + item.base[0],
+                          y2: item.args[3] + item.base[1],
+                        }
+                      : item.command == 'C'
+                      ? {
+                          x1: item.args[0],
+                          y1: item.args[1],
+                          x2: item.args[2],
+                          y2: item.args[3],
+                        }
+                      : undefined,
+                  q:
+                    item.command == 'q'
+                      ? {
+                          x: item.args[0] + item.base[0],
+                          y: item.args[1] + item.base[1],
+                        }
+                      : item.command == 'Q'
+                      ? {
+                          x: item.args[0],
+                          y: item.args[1],
                         }
                       : undefined,
                   base: item.base,
@@ -198,6 +230,13 @@ function optimizePart({
                   ...item.arc,
                   sweep: !item.arc.sweep,
                 },
+                c: item.c && {
+                  x1: item.c.x2,
+                  y1: item.c.y2,
+                  x2: item.c.x1,
+                  y2: item.c.y1,
+                },
+                q: item.q,
                 base: item.coords,
                 coords: item.base,
               };
@@ -218,6 +257,20 @@ function optimizePart({
           output.push({
             command: 'A',
             arc: item.arc,
+            base: item.base,
+            coords: item.coords,
+          });
+        } else if (item.command == 'c' || item.command == 'C') {
+          output.push({
+            command: 'C',
+            c: item.c,
+            base: item.base,
+            coords: item.coords,
+          });
+        } else if (item.command == 'q' || item.command == 'Q') {
+          output.push({
+            command: 'Q',
+            q: item.q,
             base: item.base,
             coords: item.coords,
           });
@@ -266,14 +319,14 @@ function transformPath(path, precision, canUseZ) {
   for (const command of path) {
     const lastCommand = acc[acc.length - 1]?.command;
 
-    if (command.command == 'M')
+    if (command.command == 'M') {
       acc.push({
         command: 'M',
         args: command.coords,
         base: command.base,
         coords: command.coords,
       });
-    else if (command.command == 'A') {
+    } else if (command.command == 'A') {
       const data =
         /** @type {{rx: number, ry: number, r: number, large: boolean, sweep: boolean}} */ (
           command.arc
@@ -299,6 +352,41 @@ function transformPath(path, precision, canUseZ) {
           absoluteLength < relativeLength
             ? [...args, ...command.coords]
             : [...args, relativeX, relativeY],
+        base: command.base,
+        coords: command.coords,
+      });
+    } else if (command.command == 'C') {
+      const data =
+        /** @type {{x1: number, y1: number, x2: number, y2: number}} */ (
+          command.c
+        );
+      const args = [data.x1, data.y1, data.x2, data.y2, ...command.coords];
+      const argsRelative = args.map((a, i) =>
+        i % 2 == 0 ? a - command.base[0] : a - command.base[1]
+      );
+      const absoluteLength =
+        estimateLength(args, precision) + (lastCommand == 'C' ? 0 : 1);
+      const relativeLength =
+        estimateLength(argsRelative, precision) + (lastCommand == 'c' ? 0 : 1);
+      acc.push({
+        command: absoluteLength < relativeLength ? 'C' : 'c',
+        args: absoluteLength < relativeLength ? args : argsRelative,
+        base: command.base,
+        coords: command.coords,
+      });
+    } else if (command.command == 'Q') {
+      const data = /** @type {{x: number, y: number}} */ (command.q);
+      const args = [data.x, data.y, ...command.coords];
+      const argsRelative = args.map((a, i) =>
+        i % 2 == 0 ? a - command.base[0] : a - command.base[1]
+      );
+      const absoluteLength =
+        estimateLength(args, precision) + (lastCommand == 'Q' ? 0 : 1);
+      const relativeLength =
+        estimateLength(argsRelative, precision) + (lastCommand == 'q' ? 0 : 1);
+      acc.push({
+        command: absoluteLength < relativeLength ? 'Q' : 'q',
+        args: absoluteLength < relativeLength ? args : argsRelative,
         base: command.base,
         coords: command.coords,
       });
