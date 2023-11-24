@@ -255,12 +255,11 @@ function optimizePart({
  * @param {boolean} canUseZ
  */
 function transformPath(path, precision, canUseZ) {
-  return path.reduce(
-    (
-      /** @type {RealPath[]} */ acc,
-      /** @type {InternalPath} */ command,
-      /** @type {number} */ i
-    ) => {
+  /**
+   * @type {RealPath[]}
+   */
+  const acc = [];
+  for (const command of path) {
       const lastCommand = acc[acc.length - 1]?.command;
 
       if (command.command == 'M')
@@ -302,7 +301,7 @@ function transformPath(path, precision, canUseZ) {
       } else if (command.command == 'L') {
         const relativeX = command.coords[0] - command.base[0];
         const relativeY = command.coords[1] - command.base[1];
-        if (i == path.length - 1 && canUseZ) {
+      if (acc.length == path.length - 1 && canUseZ) {
           acc.push({
             command: 'z',
             args: [],
@@ -319,9 +318,7 @@ function transformPath(path, precision, canUseZ) {
           acc.push({
             command: absoluteLength < relativeLength ? 'H' : 'h',
             args:
-              absoluteLength < relativeLength
-                ? [command.coords[0]]
-                : [relativeX],
+            absoluteLength < relativeLength ? [command.coords[0]] : [relativeX],
             base: command.base,
             coords: command.coords,
           });
@@ -335,9 +332,7 @@ function transformPath(path, precision, canUseZ) {
           acc.push({
             command: absoluteLength < relativeLength ? 'V' : 'v',
             args:
-              absoluteLength < relativeLength
-                ? [command.coords[1]]
-                : [relativeY],
+            absoluteLength < relativeLength ? [command.coords[1]] : [relativeY],
             base: command.base,
             coords: command.coords,
           });
@@ -357,12 +352,10 @@ function transformPath(path, precision, canUseZ) {
             base: command.base,
             coords: command.coords,
           });
+      }
         }
       }
       return acc;
-    },
-    []
-  );
 }
 
 /**
