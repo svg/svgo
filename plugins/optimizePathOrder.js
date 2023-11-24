@@ -1,4 +1,4 @@
-const { stringifyPathData, stringifyArgs } = require('../lib/path.js');
+const { stringifyPathData } = require('../lib/path.js');
 const { computeStyle, collectStylesheet } = require('../lib/style.js');
 const { hasScripts } = require('../lib/svgo/tools.js');
 const { pathElems } = require('./_collections.js');
@@ -384,5 +384,22 @@ function toPrecision(number, precision) {
  * @param {number} precision
  */
 function estimateLength(numbers, precision) {
-  return stringifyArgs('L', numbers, precision).length;
+  let length = 0;
+  let last = undefined;
+  for (const number of numbers) {
+    const rounded = toPrecision(number, precision);
+    const string = rounded.toString();
+    length +=
+      string.length - (rounded != 0 && rounded > -1 && rounded < 1 ? 1 : 0);
+    if (last) {
+      if (
+        !(rounded < 0) &&
+        !(last.includes('.') && rounded > 0 && rounded < 1)
+      ) {
+        length += 1;
+      }
+    }
+    last = string;
+  }
+  return length;
 }
