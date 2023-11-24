@@ -1,6 +1,6 @@
-const { stringifyPathData } = require('../lib/path.js');
+const { stringifyPathData, stringifyArgs } = require('../lib/path.js');
 const { computeStyle, collectStylesheet } = require('../lib/style.js');
-const { hasScripts, cleanupOutData } = require('../lib/svgo/tools.js');
+const { hasScripts } = require('../lib/svgo/tools.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
 
@@ -260,102 +260,102 @@ function transformPath(path, precision, canUseZ) {
    */
   const acc = [];
   for (const command of path) {
-      const lastCommand = acc[acc.length - 1]?.command;
+    const lastCommand = acc[acc.length - 1]?.command;
 
-      if (command.command == 'M')
+    if (command.command == 'M')
+      acc.push({
+        command: 'M',
+        args: command.coords,
+        base: command.base,
+        coords: command.coords,
+      });
+    else if (command.command == 'A') {
+      const data =
+        /** @type {{rx: number, ry: number, r: number, large: boolean, sweep: boolean}} */ (
+          command.arc
+        );
+      const args = [
+        data.rx,
+        data.ry,
+        data.r,
+        data.large ? 1 : 0,
+        data.sweep ? 1 : 0,
+      ];
+      const relativeX = command.coords[0] - command.base[0];
+      const relativeY = command.coords[1] - command.base[1];
+      const absoluteLength =
+        estimateLength([...args, ...command.coords], precision) +
+        (lastCommand == 'A' ? 0 : 1);
+      const relativeLength =
+        estimateLength([...args, relativeX, relativeY], precision) +
+        (lastCommand == 'a' ? 0 : 1);
+      acc.push({
+        command: absoluteLength < relativeLength ? 'A' : 'a',
+        args:
+          absoluteLength < relativeLength
+            ? [...args, ...command.coords]
+            : [...args, relativeX, relativeY],
+        base: command.base,
+        coords: command.coords,
+      });
+    } else if (command.command == 'L') {
+      const relativeX = command.coords[0] - command.base[0];
+      const relativeY = command.coords[1] - command.base[1];
+      if (acc.length == path.length - 1 && canUseZ) {
         acc.push({
-          command: 'M',
-          args: command.coords,
+          command: 'z',
+          args: [],
           base: command.base,
           coords: command.coords,
         });
-      else if (command.command == 'A') {
-        const data =
-          /** @type {{rx: number, ry: number, r: number, large: boolean, sweep: boolean}} */ (
-            command.arc
-          );
-        const args = [
-          data.rx,
-          data.ry,
-          data.r,
-          data.large ? 1 : 0,
-          data.sweep ? 1 : 0,
-        ];
-        const relativeX = command.coords[0] - command.base[0];
-        const relativeY = command.coords[1] - command.base[1];
-        const absoluteLength =
-          estimateLength([...args, ...command.coords], precision) +
-          (lastCommand == 'A' ? 0 : 1);
-        const relativeLength =
-          estimateLength([...args, relativeX, relativeY], precision) +
-          (lastCommand == 'a' ? 0 : 1);
+      } else if (command.base[1] == command.coords[1]) {
+        const absoluteLength = toPrecision(
+          command.coords[0],
+          precision
+        ).toString().length;
+        const relativeLength = toPrecision(relativeX, precision).toString()
+          .length;
         acc.push({
-          command: absoluteLength < relativeLength ? 'A' : 'a',
+          command: absoluteLength < relativeLength ? 'H' : 'h',
+          args:
+            absoluteLength < relativeLength ? [command.coords[0]] : [relativeX],
+          base: command.base,
+          coords: command.coords,
+        });
+      } else if (command.base[0] == command.coords[0]) {
+        const absoluteLength = toPrecision(
+          command.coords[1],
+          precision
+        ).toString().length;
+        const relativeLength = toPrecision(relativeY, precision).toString()
+          .length;
+        acc.push({
+          command: absoluteLength < relativeLength ? 'V' : 'v',
+          args:
+            absoluteLength < relativeLength ? [command.coords[1]] : [relativeY],
+          base: command.base,
+          coords: command.coords,
+        });
+      } else {
+        const absoluteLength =
+          estimateLength(command.coords, precision) +
+          (lastCommand == 'L' ? 0 : 1);
+        const relativeLength =
+          estimateLength([relativeX, relativeY], precision) +
+          (lastCommand == 'l' ? 0 : 1);
+        acc.push({
+          command: absoluteLength < relativeLength ? 'L' : 'l',
           args:
             absoluteLength < relativeLength
-              ? [...args, ...command.coords]
-              : [...args, relativeX, relativeY],
+              ? command.coords
+              : [relativeX, relativeY],
           base: command.base,
           coords: command.coords,
         });
-      } else if (command.command == 'L') {
-        const relativeX = command.coords[0] - command.base[0];
-        const relativeY = command.coords[1] - command.base[1];
-      if (acc.length == path.length - 1 && canUseZ) {
-          acc.push({
-            command: 'z',
-            args: [],
-            base: command.base,
-            coords: command.coords,
-          });
-        } else if (command.base[1] == command.coords[1]) {
-          const absoluteLength = toPrecision(
-            command.coords[0],
-            precision
-          ).toString().length;
-          const relativeLength = toPrecision(relativeX, precision).toString()
-            .length;
-          acc.push({
-            command: absoluteLength < relativeLength ? 'H' : 'h',
-            args:
-            absoluteLength < relativeLength ? [command.coords[0]] : [relativeX],
-            base: command.base,
-            coords: command.coords,
-          });
-        } else if (command.base[0] == command.coords[0]) {
-          const absoluteLength = toPrecision(
-            command.coords[1],
-            precision
-          ).toString().length;
-          const relativeLength = toPrecision(relativeY, precision).toString()
-            .length;
-          acc.push({
-            command: absoluteLength < relativeLength ? 'V' : 'v',
-            args:
-            absoluteLength < relativeLength ? [command.coords[1]] : [relativeY],
-            base: command.base,
-            coords: command.coords,
-          });
-        } else {
-          const absoluteLength =
-            estimateLength(command.coords, precision) +
-            (lastCommand == 'L' ? 0 : 1);
-          const relativeLength =
-            estimateLength([relativeX, relativeY], precision) +
-            (lastCommand == 'l' ? 0 : 1);
-          acc.push({
-            command: absoluteLength < relativeLength ? 'L' : 'l',
-            args:
-              absoluteLength < relativeLength
-                ? command.coords
-                : [relativeX, relativeY],
-            base: command.base,
-            coords: command.coords,
-          });
       }
-        }
-      }
-      return acc;
+    }
+  }
+  return acc;
 }
 
 /**
@@ -380,8 +380,5 @@ function toPrecision(number, precision) {
  * @param {number} precision
  */
 function estimateLength(numbers, precision) {
-  return cleanupOutData(
-    numbers.map((n) => toPrecision(n, precision)),
-    {}
-  ).length;
+  return stringifyArgs('L', numbers, precision).length;
 }
