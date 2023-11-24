@@ -45,16 +45,20 @@ exports.fn = (root, params) => {
 
         const maybeHasStroke =
           computedStyle.stroke &&
-          (computedStyle.stroke.type === 'dynamic' ||
-            computedStyle.stroke.value !== 'none');
+          (computedStyle.stroke.type == 'dynamic' ||
+            computedStyle.stroke.value != 'none');
+        const maybeHasFill =
+          computedStyle.fill &&
+          (computedStyle.fill.type == 'dynamic' ||
+            computedStyle.fill.value != 'none');
         const unsafeToChangeStart = maybeHasStroke
-          ? computedStyle['stroke-linecap']?.type !== 'static' ||
-            computedStyle['stroke-linecap'].value !== 'round' ||
-            computedStyle['stroke-linejoin']?.type !== 'static' ||
-            computedStyle['stroke-linejoin'].value !== 'round'
+          ? computedStyle['stroke-linecap']?.type != 'static' ||
+            computedStyle['stroke-linecap'].value != 'round' ||
+            computedStyle['stroke-linejoin']?.type != 'static' ||
+            computedStyle['stroke-linejoin'].value != 'round'
           : false;
-        const unsafeToChangeDirection = computedStyle.fill
-          ? computedStyle['fill-rule']?.type !== 'static' ||
+        const unsafeToChangeDirection = maybeHasFill
+          ? computedStyle['fill-rule']?.type != 'static' ||
             computedStyle['fill-rule'].value == 'nonzero'
           : false;
 
