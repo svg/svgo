@@ -130,6 +130,7 @@ exports.fn = (root, params) => {
                   start[0] != end[0] ||
                   start[1] != end[1],
                 unsafeToChangeDirection,
+                first: i == 0,
                 next: next?.data[0].command == 'm' ? next.data[0] : undefined,
                 baseline: part.data,
                 precision,
@@ -158,6 +159,7 @@ exports.fn = (root, params) => {
  *   path: InternalPath[],
  *   unsafeToChangeStart: boolean,
  *   unsafeToChangeDirection: boolean,
+ *   first: boolean,
  *   next: RealPath | undefined,
  *   baseline: RealPath[],
  *   precision: number
@@ -167,6 +169,7 @@ function optimizePart({
   path,
   unsafeToChangeStart,
   unsafeToChangeDirection,
+  first,
   next,
   baseline,
   precision,
@@ -229,10 +232,7 @@ function optimizePart({
 
       const outputPath = transformPath(output, precision, !unsafeToChangeStart);
       const size =
-        stringifyPathData({
-          pathData: outputPath,
-          precision,
-        }).length +
+        estimatePathLength(outputPath, precision, first) +
         (next
           ? estimateLength(
               transformMove(next, output[output.length - 1].coords),
@@ -401,5 +401,43 @@ function estimateLength(numbers, precision) {
     }
     last = string;
   }
+  return length;
+}
+
+/**
+ * @param {PathDataItem[]} data
+ * @param {number} precision
+ * @param {boolean} first
+ */
+function estimatePathLength(data, precision, first) {
+  /**
+   * @type {{command: string, args: number[]}[]}
+   */
+  let combined = [];
+  for (const command of data) {
+    const last = combined[combined.length - 1];
+    if (last) {
+      const commandless =
+        (last.command == command.command &&
+          last.command != 'M' &&
+          last.command != 'm') ||
+        (last.command == 'M' && command.command == 'L') ||
+        (last.command == 'm' && command.command == 'l') ||
+        (first &&
+          combined.length == 1 &&
+          (command.command == 'L' || command.command == 'l'));
+      if (commandless) {
+        last.args = [...last.args, ...command.args];
+        continue;
+      }
+    }
+    combined.push({ command: command.command, args: command.args });
+  }
+
+  let length = 0;
+  for (const command of combined) {
+    length += 1 + estimateLength(command.args, precision);
+  }
+
   return length;
 }
