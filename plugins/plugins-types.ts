@@ -141,6 +141,7 @@ type DefaultPlugins = {
   optimizePathOrder: {
     floatPrecision?: number;
     noSpaceAfterFlags?: boolean;
+    polylineOnly?: boolean;
   };
   removeComments: {
     preservePatterns: Array<RegExp | string> | false;

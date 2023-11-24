@@ -21,7 +21,11 @@ exports.description = 'Moves around instructions in paths to be optimal.';
  * @type {import('./plugins-types').Plugin<'optimizePathOrder'>}
  */
 exports.fn = (root, params) => {
-  const { floatPrecision: precision = 3, noSpaceAfterFlags } = params;
+  const {
+    floatPrecision: precision = 3,
+    noSpaceAfterFlags = false,
+    polylineOnly = false,
+  } = params;
   const stylesheet = collectStylesheet(root);
   let deoptimized = false;
   return {
@@ -81,14 +85,16 @@ exports.fn = (root, params) => {
             instruction.command != 'H' &&
             instruction.command != 'v' &&
             instruction.command != 'V' &&
-            instruction.command != 'a' &&
-            instruction.command != 'A' &&
-            instruction.command != 'C' &&
-            instruction.command != 'c' &&
-            instruction.command != 'Q' &&
-            instruction.command != 'q' &&
             instruction.command != 'z' &&
-            instruction.command != 'Z'
+            instruction.command != 'Z' &&
+            (polylineOnly
+              ? true
+              : instruction.command != 'a' &&
+                instruction.command != 'A' &&
+                instruction.command != 'C' &&
+                instruction.command != 'c' &&
+                instruction.command != 'Q' &&
+                instruction.command != 'q')
           ) {
             part.valid = false;
           }
