@@ -211,9 +211,6 @@ function optimizePart({
   baseline,
   precision,
 }) {
-  const starts = unsafeToChangeStart
-    ? [0]
-    : Array.from({ length: path.length }, (_, i) => i);
   let best = {
     success: false,
     size:
@@ -221,62 +218,83 @@ function optimizePart({
       (next ? estimateLength(next.args, precision) : 0),
     data: baseline,
   };
-  for (const start of starts) {
-    for (const reverse of unsafeToChangeDirection ? [false] : [false, true]) {
-      if (start == 0 && !reverse) continue;
-      const data = reverse
-        ? path
-            .slice(0, start)
-            .reverse()
-            .concat(path.slice(start).reverse())
-            .map((item) => {
-              return {
-                command: item.command,
-                arc: item.arc && {
-                  ...item.arc,
-                  sweep: !item.arc.sweep,
-                },
-                c: item.c && {
-                  x1: item.c.x2,
-                  y1: item.c.y2,
-                  x2: item.c.x1,
-                  y2: item.c.y1,
-                },
-                q: item.q,
-                base: item.coords,
-                coords: item.base,
-              };
-            })
-        : path.slice(start).concat(path.slice(0, start));
+  for (const reverse of unsafeToChangeDirection ? [false] : [false, true]) {
+    const input = reverse
+      ? path
+          .map((item) => {
+            return {
+              command: item.command,
+              arc: item.arc && {
+                ...item.arc,
+                sweep: !item.arc.sweep,
+              },
+              c: item.c && {
+                x1: item.c.x2,
+                y1: item.c.y2,
+                x2: item.c.x1,
+                y2: item.c.y1,
+              },
+              q: item.q,
+              base: item.coords,
+              coords: item.base,
+            };
+          })
+          .reverse()
+      : path;
+    /**
+     * @type {RealPath[]}
+     */
+    const output = [];
+    let i = 0;
+    while (unsafeToChangeStart ? i == 0 : i < path.length) {
+      if (i == 0) {
+        output.push({
+          command: 'M',
+          args: input[0].base,
+          base: [0, 0],
+          coords: input[0].base,
+        });
+        for (const item of input) {
+          output.push(
+            transformCommand(
+              { ...item, command: getCommand(item) },
+              precision,
+              output[output.length - 1].command,
+              output.length == input.length && !unsafeToChangeStart
+            )
+          );
+        }
+      } else {
+        const previousItem = i == 1 ? input[input.length - 1] : input[i - 2];
+        const newItem = input[i - 1];
+        // Cycle start out and into end
+        output.splice(1, 1);
+        output[0] = {
+          command: 'M',
+          args: output[1].base,
+          base: [0, 0],
+          coords: output[1].base,
+        };
 
-      /**
-       * @type {RealPath[]}
-       */
-      const output = [];
-      output.push({
-        command: 'M',
-        args: data[0].base,
-        base: [0, 0],
-        coords: data[0].base,
-      });
-      for (const item of data) {
-        const command =
-          item.command == 'a' || item.command == 'A'
-            ? 'A'
-            : item.command == 'c' || item.command == 'C'
-            ? 'C'
-            : item.command == 'q' || item.command == 'Q'
-            ? 'Q'
-            : 'L';
+        output.pop();
         output.push(
           transformCommand(
-            { ...item, command: command },
+            { ...previousItem, command: getCommand(previousItem) },
             precision,
             output[output.length - 1].command,
-            output.length - 1 == data.length - 1 && !unsafeToChangeStart
+            false
+          )
+        );
+        output.push(
+          transformCommand(
+            { ...newItem, command: getCommand(newItem) },
+            precision,
+            output[output.length - 1].command,
+            !unsafeToChangeStart
           )
         );
       }
+      i++;
 
       const size =
         estimatePathLength(output, precision, first) +
@@ -292,12 +310,25 @@ function optimizePart({
         best = {
           success: true,
           size,
-          data: output,
+          data: [...output],
         };
       }
     }
   }
   return best;
+}
+
+/**
+ * @param {InternalPath} item
+ */
+function getCommand(item) {
+  return item.command == 'a' || item.command == 'A'
+    ? 'A'
+    : item.command == 'c' || item.command == 'C'
+    ? 'C'
+    : item.command == 'q' || item.command == 'Q'
+    ? 'Q'
+    : 'L';
 }
 
 /**
@@ -429,6 +460,7 @@ function transformCommand(command, precision, lastCommand, useZ) {
     }
   }
 }
+
 /**
  * @param {RealPath} command
  * @param {[number, number]} newBase
