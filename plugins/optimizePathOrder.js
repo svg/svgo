@@ -51,9 +51,9 @@ exports.fn = (root, params) => {
           (computedStyle.stroke.type == 'dynamic' ||
             computedStyle.stroke.value != 'none');
         const maybeHasFill =
-          computedStyle.fill &&
-          (computedStyle.fill.type == 'dynamic' ||
-            computedStyle.fill.value != 'none');
+          !computedStyle.fill ||
+          computedStyle.fill.type == 'dynamic' ||
+          computedStyle.fill.value != 'none';
         const unsafeToChangeStart = maybeHasStroke
           ? computedStyle['stroke-linecap']?.type != 'static' ||
             computedStyle['stroke-linecap'].value != 'round' ||
