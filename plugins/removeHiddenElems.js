@@ -1,6 +1,7 @@
 'use strict';
 
 /**
+ * @typedef {import('../lib/types').XastChild} XastChild
  * @typedef {import('../lib/types').XastElement} XastElement
  * @typedef {import('../lib/types').XastParent} XastParent
  */
@@ -66,11 +67,40 @@ exports.fn = (root, params) => {
    */
   const nonRenderedNodes = new Map();
 
+  /**
+   * IDs for removed hidden definitions.
+   *
+   * @type {Set<string>}
+   */
+  const removedDefIds = new Set();
+
+  /**
+   * @param {XastChild} node
+   * @param {XastParent} parentNode
+   */
+  function removeElement(node, parentNode) {
+    if (
+      node.type === 'element' &&
+      node.attributes.id != null &&
+      parentNode.type === 'element' &&
+      parentNode.name === 'defs'
+    ) {
+      removedDefIds.add(node.attributes.id);
+    }
+
+    detachNodeFromParent(node, parentNode);
+  }
+
   visit(root, {
     element: {
       enter: (node, parentNode) => {
         // transparent non-rendering elements still apply where referenced
         if (nonRendering.includes(node.name)) {
+          if (node.attributes.id == null) {
+            detachNodeFromParent(node, parentNode);
+            return visitSkip;
+          }
+
           nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
@@ -84,8 +114,7 @@ exports.fn = (root, params) => {
           computedStyle.opacity.type === 'static' &&
           computedStyle.opacity.value === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
-          return;
+          removeElement(node, parentNode);
         }
       },
     },
@@ -105,7 +134,7 @@ exports.fn = (root, params) => {
           // keep if any descendant enables visibility
           querySelector(node, '[visibility=visible]') == null
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -122,7 +151,7 @@ exports.fn = (root, params) => {
           // markers with display: none still rendered
           node.name !== 'marker'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -138,7 +167,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.r === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -154,7 +183,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.rx === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -170,7 +199,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.ry === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -186,7 +215,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.width === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -203,7 +232,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.height === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -218,7 +247,7 @@ exports.fn = (root, params) => {
           node.name === 'pattern' &&
           node.attributes.width === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -233,7 +262,7 @@ exports.fn = (root, params) => {
           node.name === 'pattern' &&
           node.attributes.height === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -248,7 +277,7 @@ exports.fn = (root, params) => {
           node.name === 'image' &&
           node.attributes.width === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -263,7 +292,7 @@ exports.fn = (root, params) => {
           node.name === 'image' &&
           node.attributes.height === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -274,12 +303,12 @@ exports.fn = (root, params) => {
         // <path d=""/>
         if (pathEmptyD && node.name === 'path') {
           if (node.attributes.d == null) {
-            detachNodeFromParent(node, parentNode);
+            removeElement(node, parentNode);
             return;
           }
           const pathData = parsePathData(node.attributes.d);
           if (pathData.length === 0) {
-            detachNodeFromParent(node, parentNode);
+            removeElement(node, parentNode);
             return;
           }
           // keep single point paths for markers
@@ -288,7 +317,7 @@ exports.fn = (root, params) => {
             computedStyle['marker-start'] == null &&
             computedStyle['marker-end'] == null
           ) {
-            detachNodeFromParent(node, parentNode);
+            removeElement(node, parentNode);
             return;
           }
           return;
@@ -304,7 +333,7 @@ exports.fn = (root, params) => {
           node.name === 'polyline' &&
           node.attributes.points == null
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -318,31 +347,47 @@ exports.fn = (root, params) => {
           node.name === 'polygon' &&
           node.attributes.points == null
         ) {
-          detachNodeFromParent(node, parentNode);
-          return;
+          removeElement(node, parentNode);
         }
       },
 
       exit: (node, parentNode) => {
-        if (node.name !== 'svg' || parentNode.type !== 'root') {
+        if (node.name === 'defs' && node.children.length === 0) {
+          removeElement(node, parentNode);
           return;
         }
-        for (const [
-          nonRenderedNode,
-          nonRenderedParent,
-        ] of nonRenderedNodes.entries()) {
-          if (nonRenderedNode.attributes.id == null) {
-            detachNodeFromParent(node, nonRenderedParent);
-            continue;
+
+        if (node.name === 'use') {
+          const referencesRemovedDef = Object.entries(node.attributes).some(
+            ([attrKey, attrValue]) =>
+              (attrKey === 'href' || attrKey.endsWith(':href')) &&
+              removedDefIds.has(
+                attrValue.slice(attrValue.indexOf('#') + 1).trim()
+              )
+          );
+
+          if (referencesRemovedDef) {
+            detachNodeFromParent(node, parentNode);
           }
 
-          const selector = referencesProps
-            .map((attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`)
-            .join(',');
+          return;
+        }
 
-          const element = querySelector(root, selector);
-          if (element == null) {
-            detachNodeFromParent(node, nonRenderedParent);
+        if (node.name === 'svg' && parentNode.type === 'root') {
+          for (const [
+            nonRenderedNode,
+            nonRenderedParent,
+          ] of nonRenderedNodes.entries()) {
+            const selector = referencesProps
+              .map(
+                (attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`
+              )
+              .join(',');
+
+            const element = querySelector(root, selector);
+            if (element == null) {
+              detachNodeFromParent(node, nonRenderedParent);
+            }
           }
         }
       },
