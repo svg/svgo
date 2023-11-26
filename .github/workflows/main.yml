@@ -38,8 +38,7 @@ jobs:
       - run: yarn install
       - run: yarn test-regression
   test:
-    name: Node.js ${{ matrix.node-version }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -48,6 +47,10 @@ jobs:
           - 18
           - 16
           - 14
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
