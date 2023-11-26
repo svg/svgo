@@ -27,6 +27,7 @@ import * as moveGroupAttrsToElems from './moveGroupAttrsToElems.js';
 import * as collapseGroups from './collapseGroups.js';
 import * as convertPathData from './convertPathData.js';
 import * as convertTransform from './convertTransform.js';
+import * as applyTransformsShapes from './applyTransformsShapes.js';
 import * as removeEmptyAttrs from './removeEmptyAttrs.js';
 import * as removeEmptyContainers from './removeEmptyContainers.js';
 import * as mergePaths from './mergePaths.js';
@@ -66,6 +67,7 @@ const presetDefault = createPreset({
     moveGroupAttrsToElems,
     collapseGroups,
     convertPathData,
+    applyTransformsShapes,
     convertTransform,
     removeEmptyAttrs,
     removeEmptyContainers,

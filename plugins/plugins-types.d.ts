@@ -5,6 +5,10 @@ import type {
 } from '../lib/types.js';
 
 type DefaultPlugins = {
+  applyTransformsShapes: {
+    floatPrecision?: number;
+    leadingZero?: boolean;
+  };
   cleanupAttrs: {
     newlines?: boolean;
     trim?: boolean;
