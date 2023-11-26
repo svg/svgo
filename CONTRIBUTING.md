@@ -55,7 +55,7 @@ You should read our [Plugin Architecture](https://svgo.dev/docs/plugins-api/) do
 
 SVGO plugins can optionally have parameters. These can be consumed by the plugin to tailor the behavior.
 
-As types are managed through TypeScript definition files and JSDocs, you must define the parameter types in [`plugins/plugin-types.ts`](./plugins/plugins-types.ts) for built-in plugins. Then you'll have code completion and type checking as you'd expect while editing the plugin if your code editor supports that.
+As types are managed through TypeScript definition files and JSDocs, you must define the parameter types in [`plugins/plugin-types.d.ts`](https://github.com/svg/svgo/blob/main/plugins/plugins-types.d.ts) for built-in plugins. Then you'll have code completion and type checking as you'd expect while editing the plugin if your code editor supports that.
 
 ## Documentation
 
