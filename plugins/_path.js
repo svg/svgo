@@ -173,7 +173,7 @@ const convertRelativeToAbsolute = (data) => {
 };
 
 /**
- * @typedef {{ floatPrecision?: number, noSpaceAfterFlags?: boolean }} Js2PathParams
+ * @typedef {{ floatPrecision?: any, noSpaceAfterFlags?: boolean }} Js2PathParams
  */
 
 /**
@@ -203,9 +203,18 @@ exports.js2path = function (path, data, params) {
     });
   }
 
+  let precision =
+    typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.d === 'number'
+      ? params.floatPrecision.d
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3;
+
   path.attributes.d = stringifyPathData({
     pathData,
-    precision: params.floatPrecision,
+    precision,
     disableSpaceAfterFlags: params.noSpaceAfterFlags,
   });
 };

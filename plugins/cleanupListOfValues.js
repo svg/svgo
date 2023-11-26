@@ -43,9 +43,9 @@ exports.fn = (_root, params) => {
   } = params;
 
   /**
-   * @type {(lists: string) => string}
+   * @type {(lists: string, precision: number) => string}
    */
-  const roundValues = (lists) => {
+  const roundValues = (lists, precision) => {
     const roundedList = [];
 
     for (const elem of lists.split(regSeparator)) {
@@ -55,7 +55,7 @@ exports.fn = (_root, params) => {
       // if attribute value matches regNumericValues
       if (match) {
         // round it to the fixed precision
-        let num = Number(Number(match[1]).toFixed(floatPrecision));
+        let num = Number(Number(match[1]).toFixed(precision));
         /**
          * @type {any}
          */
@@ -68,7 +68,7 @@ exports.fn = (_root, params) => {
         // convert absolute values to pixels
         if (convertToPx && units && units in absoluteLengths) {
           const pxNum = Number(
-            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision)
+            (absoluteLengths[units] * Number(match[1])).toFixed(precision)
           );
 
           if (pxNum.toString().length < match[0].length) {
@@ -106,41 +106,34 @@ exports.fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (node.attributes.points != null) {
-          node.attributes.points = roundValues(node.attributes.points);
-        }
-
-        if (node.attributes['enable-background'] != null) {
-          node.attributes['enable-background'] = roundValues(
-            node.attributes['enable-background']
-          );
-        }
-
-        if (node.attributes.viewBox != null) {
-          node.attributes.viewBox = roundValues(node.attributes.viewBox);
-        }
-
-        if (node.attributes['stroke-dasharray'] != null) {
-          node.attributes['stroke-dasharray'] = roundValues(
-            node.attributes['stroke-dasharray']
-          );
-        }
-
-        if (node.attributes.dx != null) {
-          node.attributes.dx = roundValues(node.attributes.dx);
-        }
-
-        if (node.attributes.dy != null) {
-          node.attributes.dy = roundValues(node.attributes.dy);
-        }
-
-        if (node.attributes.x != null) {
-          node.attributes.x = roundValues(node.attributes.x);
-        }
-
-        if (node.attributes.y != null) {
-          node.attributes.y = roundValues(node.attributes.y);
-        }
+        const floatPrecisionFallback =
+          typeof floatPrecision === 'number'
+            ? floatPrecision
+            : typeof floatPrecision.default === 'number'
+            ? floatPrecision.default
+            : 3;
+        const validAttributes = [
+          'points',
+          'enable-background',
+          'viewBox',
+          'stroke-dasharray',
+          'dx',
+          'dy',
+          'x',
+          'y',
+        ];
+        validAttributes.forEach((attribute) => {
+          const precision =
+            typeof floatPrecision[attribute] === 'number'
+              ? floatPrecision[attribute]
+              : floatPrecisionFallback;
+          if (node.attributes[attribute] != null) {
+            node.attributes[attribute] = roundValues(
+              node.attributes[attribute],
+              precision
+            );
+          }
+        });
       },
     },
   };

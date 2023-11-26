@@ -4,6 +4,17 @@ import type {
   XastElement,
 } from '../lib/types';
 
+export type NumericAttributes = {
+  default?: number
+  x?: number
+  y?: number
+  d?: number
+  dx?: number
+  dy?: number
+  viewBox?: number
+  'stroke-width'?: number
+}
+
 type DefaultPlugins = {
   cleanupAttrs: {
     newlines?: boolean;
@@ -19,7 +30,7 @@ type DefaultPlugins = {
     force?: boolean;
   };
   cleanupNumericValues: {
-    floatPrecision?: number;
+    floatPrecision?: NumericAttributes | number;
     leadingZero?: boolean;
     defaultPx?: boolean;
     convertToPx?: boolean;
@@ -44,7 +55,7 @@ type DefaultPlugins = {
     lineShorthands?: boolean;
     convertToZ?: boolean;
     curveSmoothShorthands?: boolean;
-    floatPrecision?: number | false;
+    floatPrecision?: NumericAttributes | number;
     transformPrecision?: number;
     removeUseless?: boolean;
     collapseRepeated?: boolean;
@@ -56,12 +67,12 @@ type DefaultPlugins = {
   };
   convertShapeToPath: {
     convertArcs?: boolean;
-    floatPrecision?: number;
+    floatPrecision?: NumericAttributes | number;
   };
   convertTransform: {
     convertToShorts?: boolean;
     degPrecision?: number;
-    floatPrecision?: number;
+    floatPrecision?: NumericAttributes | number;
     transformPrecision?: number;
     matrixToTransform?: boolean;
     shortTranslate?: boolean;
@@ -99,7 +110,7 @@ type DefaultPlugins = {
   };
   mergePaths: {
     force?: boolean;
-    floatPrecision?: number;
+    floatPrecision?: NumericAttributes | number;
     noSpaceAfterFlags?: boolean;
   };
 
@@ -206,7 +217,7 @@ type PresetDefaultOverrides = {
 
 export type BuiltinsWithOptionalParams = DefaultPlugins & {
   'preset-default': {
-    floatPrecision?: number;
+    floatPrecision?: NumericAttributes | number;
     /**
      * All default plugins can be customized or disabled here
      * for example
@@ -218,7 +229,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
     overrides?: PresetDefaultOverrides;
   };
   cleanupListOfValues: {
-    floatPrecision?: number;
+    floatPrecision?: NumericAttributes | number;
     leadingZero?: boolean;
     defaultPx?: boolean;
     convertToPx?: boolean;

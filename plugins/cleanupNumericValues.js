@@ -35,6 +35,13 @@ exports.fn = (_root, params) => {
     convertToPx = true,
   } = params;
 
+  const floatPrecisionFallback =
+    typeof floatPrecision === 'number'
+      ? floatPrecision
+      : typeof floatPrecision.default === 'number'
+      ? floatPrecision.default
+      : 3;
+
   return {
     element: {
       enter: (node) => {
@@ -45,7 +52,16 @@ exports.fn = (_root, params) => {
               const num = Number(value);
               return Number.isNaN(num)
                 ? value
-                : Number(num.toFixed(floatPrecision));
+                : // if floatPrecision.viewBox is defined use it, else fallback
+                  Number(
+                    num.toFixed(
+                      typeof floatPrecision === 'number'
+                        ? floatPrecision
+                        : typeof floatPrecision.viewBox === 'number'
+                        ? floatPrecision.viewBox
+                        : floatPrecisionFallback
+                    )
+                  );
             })
             .join(' ');
         }
@@ -60,8 +76,15 @@ exports.fn = (_root, params) => {
 
           // if attribute value matches regNumericValues
           if (match) {
+            // eg, if floatPrecision['stroke-width'] is defined use it, else fallback
+            const _floatPrecision =
+              typeof floatPrecision[name] === 'number'
+                ? floatPrecision[name]
+                : floatPrecisionFallback;
+            // const _floatPrecision = typeof floatPrecision === "number" ? floatPrecision : typeof floatPrecision[name] === "number" ? floatPrecision[name] : floatPrecisionFallback
+
             // round it to the fixed precision
-            let num = Number(Number(match[1]).toFixed(floatPrecision));
+            let num = Number(Number(match[1]).toFixed(_floatPrecision));
             /**
              * @type {any}
              */
@@ -75,7 +98,7 @@ exports.fn = (_root, params) => {
             if (convertToPx && units !== '' && units in absoluteLengths) {
               const pxNum = Number(
                 (absoluteLengths[units] * Number(match[1])).toFixed(
-                  floatPrecision
+                  _floatPrecision
                 )
               );
               if (pxNum.toString().length < match[0].length) {

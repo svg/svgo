@@ -1,6 +1,6 @@
 {
   "packageManager": "yarn@2.4.3",
-  "name": "svgo",
+  "name": "@paul-browne/svgo",
   "version": "3.0.4",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "license": "MIT",
@@ -14,32 +14,12 @@
   "bugs": {
     "url": "https://github.com/svg/svgo/issues"
   },
-  "author": {
-    "name": "Kir Belevich",
-    "email": "kir@belevi.ch",
-    "url": "https://github.com/deepsweet"
-  },
+  "author": "Kir Belevich <kir@belevi.ch> (https://github.com/deepsweet)",
   "contributors": [
-    {
-      "name": "Sergey Belov",
-      "email": "peimei@ya.ru",
-      "url": "https://github.com/arikon"
-    },
-    {
-      "name": "Lev Solntsev",
-      "email": "lev.sun@ya.ru",
-      "url": "https://github.com/GreLI"
-    },
-    {
-      "name": "Bogdan Chadkin",
-      "email": "trysound@yandex.ru",
-      "url": "https://github.com/TrySound"
-    },
-    {
-      "name": "Seth Falco",
-      "email": "seth@falco.fun",
-      "url": "https://falco.fun/"
-    }
+    "Sergey Belov <peimei@ya.ru> (https://github.com/arikon)",
+    "Lev Solntsev <lev.sun@ya.ru> (https://github.com/GreLI)",
+    "Bogdan Chadkin <trysound@yandex.ru> (https://github.com/TrySound)",
+    "Seth Falco <seth@falco.fun> (https://falco.fun/)"
   ],
   "repository": {
     "type": "git",
@@ -50,7 +30,9 @@
     "url": "https://opencollective.com/svgo"
   },
   "main": "./lib/svgo-node.js",
-  "bin": "./bin/svgo",
+  "bin": {
+    "svgo": "bin/svgo"
+  },
   "types": "./lib/svgo.d.ts",
   "files": [
     "bin",
@@ -137,5 +119,10 @@
     "rollup-plugin-terser": "^7.0.2",
     "tar-stream": "^3.1.6",
     "typescript": "^4.8.4"
+  },
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
   }
 }

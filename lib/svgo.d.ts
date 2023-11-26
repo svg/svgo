@@ -2,6 +2,7 @@ import type { StringifyOptions, DataUri, Plugin as PluginFn } from './types';
 import type {
   BuiltinsWithOptionalParams,
   BuiltinsWithRequiredParams,
+  NumericAttributes
 } from '../plugins/plugins-types';
 
 type CustomPlugin = {
@@ -31,7 +32,7 @@ export type Config = {
   /** Pass over SVGs multiple times to ensure all optimizations are applied. */
   multipass?: boolean;
   /** Precision of floating point numbers. Will be passed to each plugin that suppors this param. */
-  floatPrecision?: number;
+  floatPrecision?: number | NumericAttributes;
   /**
    * Plugins configuration
    * ['preset-default'] is default

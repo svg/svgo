@@ -80,7 +80,7 @@ exports.fn = (_root, params) => {
  * @typedef {{
  *   convertToShorts: boolean,
  *   degPrecision?: number,
- *   floatPrecision: number,
+ *   floatPrecision: import('./plugins-types').NumericAttributes | number,
  *   transformPrecision: number,
  *   matrixToTransform: boolean,
  *   shortTranslate: boolean,
@@ -164,7 +164,14 @@ const definePrecision = (data, { ...newParams }) => {
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
-      Math.min(newParams.floatPrecision, significantDigits - 2)
+      Math.min(
+        typeof newParams.floatPrecision === 'number'
+          ? newParams.floatPrecision
+          : typeof newParams.floatPrecision.default === 'number'
+          ? newParams.floatPrecision.default
+          : 3,
+        significantDigits - 2
+      )
     );
   }
   return newParams;
@@ -177,7 +184,11 @@ const degRound = (data, params) => {
   if (
     params.degPrecision != null &&
     params.degPrecision >= 1 &&
-    params.floatPrecision < 20
+    (typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3) < 20
   ) {
     return smartRound(params.degPrecision, data);
   } else {
@@ -188,8 +199,26 @@ const degRound = (data, params) => {
  * @type {(data: Array<number>, params: TransformParams) => Array<number>}
  */
 const floatRound = (data, params) => {
-  if (params.floatPrecision >= 1 && params.floatPrecision < 20) {
-    return smartRound(params.floatPrecision, data);
+  if (
+    (typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3) >= 1 &&
+    (typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3) < 20
+  ) {
+    return smartRound(
+      typeof params.floatPrecision === 'number'
+        ? params.floatPrecision
+        : typeof params.floatPrecision?.default === 'number'
+        ? params.floatPrecision.default
+        : 3,
+      data
+    );
   } else {
     return round(data);
   }
@@ -199,7 +228,14 @@ const floatRound = (data, params) => {
  * @type {(data: Array<number>, params: TransformParams) => Array<number>}
  */
 const transformRound = (data, params) => {
-  if (params.transformPrecision >= 1 && params.floatPrecision < 20) {
+  if (
+    params.transformPrecision >= 1 &&
+    (typeof params.floatPrecision === 'number'
+      ? params.floatPrecision
+      : typeof params.floatPrecision?.default === 'number'
+      ? params.floatPrecision.default
+      : 3) < 20
+  ) {
     return smartRound(params.transformPrecision, data);
   } else {
     return round(data);
