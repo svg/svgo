@@ -69,20 +69,20 @@ exports.fn = (root, params) => {
 
   /**
    * IDs for removed hidden definitions.
-   * 
+   *
    * @type {Set<string>}
    */
   const removedDefIds = new Set();
 
   /**
-   * @param {XastChild} node 
-   * @param {XastParent} parentNode 
+   * @param {XastChild} node
+   * @param {XastParent} parentNode
    */
   function removeElement(node, parentNode) {
     if (
       node.type === 'element' &&
       node.attributes.id != null &&
-      parentNode.type === 'element' && 
+      parentNode.type === 'element' &&
       parentNode.name === 'defs'
     ) {
       removedDefIds.add(node.attributes.id);
@@ -352,24 +352,25 @@ exports.fn = (root, params) => {
       },
 
       exit: (node, parentNode) => {
-        if (
-          node.name === 'defs' &&
-          node.children.length === 0
-        ) {
+        if (node.name === 'defs' && node.children.length === 0) {
           removeElement(node, parentNode);
           return;
         }
-      
+
         if (node.name === 'use') {
           const referencesRemovedDef = Object.entries(node.attributes).some(
             ([attrKey, attrValue]) =>
               (attrKey === 'href' || attrKey.endsWith(':href')) &&
-              removedDefIds.has(attrValue.slice(attrValue.indexOf('#') + 1).trim())
+              removedDefIds.has(
+                attrValue.slice(attrValue.indexOf('#') + 1).trim()
+              )
           );
 
           if (referencesRemovedDef) {
             detachNodeFromParent(node, parentNode);
           }
+
+          return;
         }
 
         if (node.name === 'svg' && parentNode.type === 'root') {
@@ -378,9 +379,11 @@ exports.fn = (root, params) => {
             nonRenderedParent,
           ] of nonRenderedNodes.entries()) {
             const selector = referencesProps
-              .map((attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`)
+              .map(
+                (attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`
+              )
               .join(',');
-  
+
             const element = querySelector(root, selector);
             if (element == null) {
               detachNodeFromParent(node, nonRenderedParent);
