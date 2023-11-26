@@ -166,7 +166,8 @@ exports.fn = (root, params) => {
                   unsafeToChangeStart ||
                   start[0] != end[0] ||
                   start[1] != end[1],
-                unsafeToChangeDirection,
+                unsafeToChangeDirection:
+                  parts.length < 2 ? false : unsafeToChangeDirection,
                 first: i == 0,
                 next: next?.data[0].command == 'm' ? next.data[0] : undefined,
                 baseline: part.data,
