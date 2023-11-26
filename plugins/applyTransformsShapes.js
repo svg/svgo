@@ -53,7 +53,7 @@ exports.fn = (root, params) => {
           computedStyle.stroke && computedStyle.stroke.value !== 'none';
         const strokeWidth = Number(
           computedStyle['stroke-width']?.value ||
-            attrsGroupsDefaults.presentation['stroke-width']
+            (hasStroke && attrsGroupsDefaults.presentation['stroke-width'])
         );
 
         const isSimilar =
@@ -81,7 +81,7 @@ exports.fn = (root, params) => {
           const r = Number(node.attributes.r || '0');
 
           const newCenter = transformAbsolutePoint(matrix.data, cx, cy);
-          if (hasStroke) {
+          if (strokeWidth) {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
               factor,
@@ -102,7 +102,7 @@ exports.fn = (root, params) => {
           delete node.attributes.transform;
         } else if (node.name == 'ellipse') {
           if (!isLinear) return;
-          if (hasStroke && !isSimilar) return;
+          if (strokeWidth && !isSimilar) return;
 
           const cx = Number(node.attributes.cx || '0');
           const cy = Number(node.attributes.cy || '0');
@@ -112,7 +112,7 @@ exports.fn = (root, params) => {
           const newCenter = transformAbsolutePoint(matrix.data, cx, cy);
           const [newRx, newRy] = transformSize(matrix.data, rx, ry);
 
-          if (hasStroke) {
+          if (strokeWidth) {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
               factor,
@@ -134,7 +134,7 @@ exports.fn = (root, params) => {
           delete node.attributes.transform;
         } else if (node.name == 'rect') {
           if (!isLinear) return;
-          if (hasStroke && !isSimilar) return;
+          if (strokeWidth && !isSimilar) return;
 
           const x = Number(node.attributes.x || '0');
           const y = Number(node.attributes.y || '0');
@@ -156,7 +156,7 @@ exports.fn = (root, params) => {
           const [newW, newH] = transformSize(matrix.data, width, height);
           const [newRx, newRy] = transformSize(matrix.data, rx, ry);
 
-          if (hasStroke) {
+          if (strokeWidth) {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
               factor,
