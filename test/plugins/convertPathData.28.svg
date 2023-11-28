@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+    <path d="M6 32.845 6 14.766 6 32.845"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+    <path d="M6 32.845V14.766z"/>
+</svg>
