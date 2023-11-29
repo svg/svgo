@@ -1,0 +1,32 @@
+---
+title: Remove XML Declaration
+svgo:
+  pluginId: removeXMLProcInst
+  defaultPlugin: true
+---
+
+Removes the [XML declaration](https://developer.mozilla.org/docs/Web/XML/XML_introduction#xml_declaration) from the document.
+
+The SVG language is based on XML, and is XML compatible, so editors often include an XML declaration.
+
+An XML declaration is the line at the top of an XML file to indicate document meta-data, like encoding and which version of the XML specifications it adheres to.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+```
+
+The XML declaration is optional in [XML 1.0](https://www.w3.org/TR/REC-xml/#sec-prolog-dtd), but mandatory in the [XML 1.1](https://www.w3.org/TR/2006/REC-xml11-20060816/#sec-prolog-dtd). If the XML declaration is omitted, the document is assumed to follow the XML 1.0 specifications, which won't impact SVG documents.
+
+It can be safely removed without impacting compatibility.
+
+## Usage
+
+<PluginUsage/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/removeXMLProcInst.js

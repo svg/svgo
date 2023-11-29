@@ -1,0 +1,34 @@
+---
+title: Remove Description
+svgo:
+  pluginId: removeDesc
+  defaultPlugin: true
+  parameters:
+    removeAny:
+      description: By default, this plugin only removes descriptions that are either empty or contain editor attribution. Enabling this removes the <code>&lt;desc&gt;</code> element indiscriminately. 
+      type: boolean
+      default: false
+---
+
+Removes the [`<desc>`](https://developer.mozilla.org/docs/Web/SVG/Element/desc) element from the document in one of the following conditions:
+
+* The `<desc>` element is empty.
+* The `<desc>` element appears to only contain editor attribution.
+
+This plugin does not remove the `<desc>` indiscriminately by default, as it is a crucial aspect of accessibility for users of assistive technologies.
+
+## Usage
+
+<PluginUsage/>
+
+### Parameters
+
+<PluginParams/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/removeDesc.js

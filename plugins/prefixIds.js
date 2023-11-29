@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
+ * @typedef {import('../lib/types').XastElement} XastElement
+ */
+
 const csstree = require('css-tree');
 const { referencesProps } = require('./_collections.js');
 
@@ -41,29 +46,73 @@ const unquote = (string) => {
 };
 
 /**
- * prefix an ID
- * @type {(prefix: string, name: string) => string}
+ * Prefix the given string, unless it already starts with the generated prefix.
+ *
+ * @param {(id: string) => string} prefixGenerator Function to generate a prefix.
+ * @param {string} body An arbitrary string.
+ * @returns {string} The given string with a prefix prepended to it.
  */
-const prefixId = (prefix, value) => {
-  if (value.startsWith(prefix)) {
-    return value;
+const prefixId = (prefixGenerator, body) => {
+  const prefix = prefixGenerator(body);
+  if (body.startsWith(prefix)) {
+    return body;
   }
-  return prefix + value;
+  return prefix + body;
 };
 
 /**
- * prefix an #ID
- * @type {(prefix: string, name: string) => string | null}
+ * Insert the prefix in a reference string. A reference string is already
+ * prefixed with #, so the prefix is inserted after the first character.
+ *
+ * @param {(id: string) => string} prefixGenerator Function to generate a prefix.
+ * @param {string} reference An arbitrary string, should start with "#".
+ * @returns {?string} The given string with a prefix inserted, or null if the string did not start with "#".
  */
-const prefixReference = (prefix, value) => {
-  if (value.startsWith('#')) {
-    return '#' + prefixId(prefix, value.slice(1));
+const prefixReference = (prefixGenerator, reference) => {
+  if (reference.startsWith('#')) {
+    return '#' + prefixId(prefixGenerator, reference.slice(1));
   }
   return null;
 };
 
-/** @type {(value: any) => any} */
-const toAny = (value) => value;
+/**
+ * Generates a prefix for the given string.
+ *
+ * @param {string} body An arbitrary string.
+ * @param {XastElement} node XML node that the identifier belongs to.
+ * @param {PluginInfo} info
+ * @param {((node: XastElement, info: PluginInfo) => string)|string|boolean|undefined} prefixGenerator Some way of obtaining a prefix.
+ * @param {string} delim Content to insert between the prefix and original value.
+ * @param {Map<string, string>} history Map of previously generated prefixes to IDs.
+ * @returns {string} A generated prefix.
+ */
+const generatePrefix = (body, node, info, prefixGenerator, delim, history) => {
+  if (typeof prefixGenerator === 'function') {
+    let prefix = history.get(body);
+
+    if (prefix != null) {
+      return prefix;
+    }
+
+    prefix = prefixGenerator(node, info) + delim;
+    history.set(body, prefix);
+    return prefix;
+  }
+
+  if (typeof prefixGenerator === 'string') {
+    return prefixGenerator + delim;
+  }
+
+  if (prefixGenerator === false) {
+    return '';
+  }
+
+  if (info.path != null && info.path.length > 0) {
+    return escapeIdentifierName(getBasename(info.path)) + delim;
+  }
+
+  return 'prefix' + delim;
+};
 
 /**
  * Prefixes identifiers
@@ -73,25 +122,25 @@ const toAny = (value) => value;
  * @type {import('./plugins-types').Plugin<'prefixIds'>}
  */
 exports.fn = (_root, params, info) => {
-  const { delim = '__', prefixIds = true, prefixClassNames = true } = params;
+  const {
+    delim = '__',
+    prefix,
+    prefixIds = true,
+    prefixClassNames = true,
+  } = params;
+
+  /** @type {Map<string, string>} */
+  const prefixMap = new Map();
 
   return {
     element: {
       enter: (node) => {
         /**
-         * prefix, from file name or option
-         * @type {string}
+         * @param {string} id A node identifier or class.
+         * @returns {string} Given string with a prefix inserted, or null if the string did not start with "#".
          */
-        let prefix = 'prefix' + delim;
-        if (typeof params.prefix === 'function') {
-          prefix = params.prefix(node, info) + delim;
-        } else if (typeof params.prefix === 'string') {
-          prefix = params.prefix + delim;
-        } else if (params.prefix === false) {
-          prefix = '';
-        } else if (info.path != null && info.path.length > 0) {
-          prefix = escapeIdentifierName(getBasename(info.path)) + delim;
-        }
+        const prefixGenerator = (id) =>
+          generatePrefix(id, node, info, prefix, delim, prefixMap);
 
         // prefix id/class selectors and url() references in styles
         if (node.name === 'style') {
@@ -109,7 +158,7 @@ exports.fn = (_root, params, info) => {
             cssText = node.children[0].value;
           }
           /**
-           * @type {null | csstree.CssNode}
+           * @type {?csstree.CssNode}
            */
           let cssAst = null;
           try {
@@ -127,18 +176,21 @@ exports.fn = (_root, params, info) => {
               (prefixIds && node.type === 'IdSelector') ||
               (prefixClassNames && node.type === 'ClassSelector')
             ) {
-              node.name = prefixId(prefix, node.name);
+              node.name = prefixId(prefixGenerator, node.name);
               return;
             }
             // url(...) references
             // csstree v2 changed this type
-            if (node.type === 'Url' && toAny(node.value).length > 0) {
+            // @ts-ignore
+            if (node.type === 'Url' && node.value.length > 0) {
               const prefixed = prefixReference(
-                prefix,
-                unquote(toAny(node.value))
+                prefixGenerator,
+                // @ts-ignore
+                unquote(node.value)
               );
               if (prefixed != null) {
-                toAny(node).value = prefixed;
+                // @ts-ignore
+                node.value = prefixed;
               }
             }
           });
@@ -159,7 +211,7 @@ exports.fn = (_root, params, info) => {
           node.attributes.id != null &&
           node.attributes.id.length !== 0
         ) {
-          node.attributes.id = prefixId(prefix, node.attributes.id);
+          node.attributes.id = prefixId(prefixGenerator, node.attributes.id);
         }
 
         // prefix a class attribute value
@@ -170,7 +222,7 @@ exports.fn = (_root, params, info) => {
         ) {
           node.attributes.class = node.attributes.class
             .split(/\s+/)
-            .map((name) => prefixId(prefix, name))
+            .map((name) => prefixId(prefixGenerator, name))
             .join(' ');
         }
 
@@ -181,7 +233,10 @@ exports.fn = (_root, params, info) => {
             node.attributes[name] != null &&
             node.attributes[name].length !== 0
           ) {
-            const prefixed = prefixReference(prefix, node.attributes[name]);
+            const prefixed = prefixReference(
+              prefixGenerator,
+              node.attributes[name]
+            );
             if (prefixed != null) {
               node.attributes[name] = prefixed;
             }
@@ -197,7 +252,7 @@ exports.fn = (_root, params, info) => {
             node.attributes[name] = node.attributes[name].replace(
               /url\((.*?)\)/gi,
               (match, url) => {
-                const prefixed = prefixReference(prefix, url);
+                const prefixed = prefixReference(prefixGenerator, url);
                 if (prefixed == null) {
                   return match;
                 }
@@ -216,7 +271,7 @@ exports.fn = (_root, params, info) => {
             const parts = node.attributes[name].split(/\s*;\s+/).map((val) => {
               if (val.endsWith('.end') || val.endsWith('.start')) {
                 const [id, postfix] = val.split('.');
-                return `${prefixId(prefix, id)}.${postfix}`;
+                return `${prefixId(prefixGenerator, id)}.${postfix}`;
               }
               return val;
             });

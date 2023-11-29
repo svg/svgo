@@ -1,0 +1,39 @@
+---
+title: Sort Defs Children
+svgo:
+  pluginId: sortDefsChildren
+  defaultPlugin: true
+---
+
+Sorts all children in the `<defs>` element. This does not reduce the size of the SVG, but _may_ improve how compression algorithms perform on it.
+
+To group similar nodes together, elements are sorted by the following attributes:
+
+* Frequency
+* Element name length
+* Element name
+
+Here is a demonstration of SVGs that have been gzipped by [NGINX](https://nginx.org/en/docs/http/ngx_http_gzip_module.html) using the default compression level of 1.
+
+| SVG | Unsorted ¹ | Sorted ² | Reduced (%) |
+|---|---|---|---|
+| [Arch Linux Logo](https://archlinux.org/art/) | 2.61 kB | 2.61 kB | 0 kB (0%) |
+| [Blobs](https://gitlab.gnome.org/GNOME/gnome-backgrounds/-/blob/main/backgrounds/blobs-d.svg) | 13.89 kB | 13.88 kB | 0.01 kB (0.1%) |
+| [Isometric Madness](https://inkscape.org/~Denis_Kuznetsky/%E2%98%85isometric-madness) | 123.87 kB | 120.09 kB | 3.78 kB (3.1%) |
+| [tldr-pages Banner](https://github.com/tldr-pages/tldr/blob/main/images/banner.svg) | 791 B | 786 B | 5 B (0.6%) |
+| [Wikipedia Logo](https://en.wikipedia.org/wiki/File:Wikipedia-logo-v2.svg) | 53.96 kB | 53.87 kB | 0.09 kB (0.2%) |
+
+¹ Uses the default plugins preset excluding `sortAttr` and `sortDefsChildren`.  
+² Uses the default plugins preset as-is.
+
+## Usage
+
+<PluginUsage/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/sortDefsChildren.js

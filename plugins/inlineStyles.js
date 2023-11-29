@@ -1,14 +1,13 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').Specificity} Specificity
  * @typedef {import('../lib/types').XastElement} XastElement
  * @typedef {import('../lib/types').XastParent} XastParent
  */
 
 const csstree = require('css-tree');
 const {
-  // @ts-ignore not defined in @types/csso
+  // @ts-ignore internal api
   syntax: { specificity },
 } = require('csso');
 const {
@@ -16,54 +15,17 @@ const {
   querySelectorAll,
   detachNodeFromParent,
 } = require('../lib/xast.js');
+const { compareSpecificity, includesAttrSelector } = require('../lib/style');
+const { attrsGroups } = require('./_collections');
 
 exports.name = 'inlineStyles';
 exports.description = 'inline styles (additional options)';
 
 /**
- * Compares two selector specificities.
- * extracted from https://github.com/keeganstreet/specificity/blob/main/specificity.js#L211
- *
- * @type {(a: Specificity, b: Specificity) => number}
- */
-const compareSpecificity = (a, b) => {
-  for (var i = 0; i < 4; i += 1) {
-    if (a[i] < b[i]) {
-      return -1;
-    } else if (a[i] > b[i]) {
-      return 1;
-    }
-  }
-  return 0;
-};
-
-/**
- * @type {(value: any) => any}
- */
-const toAny = (value) => value;
-
-/**
- * Moves + merges styles from style elements to element styles
- *
- * Options
- *   onlyMatchedOnce (default: true)
- *     inline only selectors that match once
- *
- *   removeMatchedSelectors (default: true)
- *     clean up matched selectors,
- *     leave selectors that hadn't matched
- *
- *   useMqs (default: ['', 'screen'])
- *     what media queries to be used
- *     empty string element for styles outside media queries
- *
- *   usePseudos (default: [''])
- *     what pseudo-classes/-elements to be used
- *     empty string element for all non-pseudo-classes and/or -elements
- *
- * @author strarsis <strarsis@gmail.com>
+ * Merges styles from style nodes into inline styles.
  *
  * @type {import('./plugins-types').Plugin<'inlineStyles'>}
+ * @author strarsis <strarsis@gmail.com>
  */
 exports.fn = (root, params) => {
   const {
@@ -90,15 +52,12 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // skip <foreignObject /> content
         if (node.name === 'foreignObject') {
           return visitSkip;
         }
-        // collect only non-empty <style /> elements
         if (node.name !== 'style' || node.children.length === 0) {
           return;
         }
-        // values other than the empty string or text/css are not used
         if (
           node.attributes.type != null &&
           node.attributes.type !== '' &&
@@ -106,16 +65,14 @@ exports.fn = (root, params) => {
         ) {
           return;
         }
-        // parse css in style element
-        let cssText = '';
-        for (const child of node.children) {
-          if (child.type === 'text' || child.type === 'cdata') {
-            cssText += child.value;
-          }
-        }
-        /**
-         * @type {null | csstree.CssNode}
-         */
+
+        const cssText = node.children
+          .filter((child) => child.type === 'text' || child.type === 'cdata')
+          // @ts-ignore
+          .map((child) => child.value)
+          .join('');
+
+        /** @type {?csstree.CssNode} */
         let cssAst = null;
         try {
           cssAst = csstree.parse(cssText, {
@@ -140,14 +97,14 @@ exports.fn = (root, params) => {
             }
 
             // skip media queries not included into useMqs param
-            let mq = '';
+            let mediaQuery = '';
             if (atrule != null) {
-              mq = atrule.name;
+              mediaQuery = atrule.name;
               if (atrule.prelude != null) {
-                mq += ` ${csstree.generate(atrule.prelude)}`;
+                mediaQuery += ` ${csstree.generate(atrule.prelude)}`;
               }
             }
-            if (useMqs.includes(mq) === false) {
+            if (!useMqs.includes(mediaQuery)) {
               return;
             }
 
@@ -176,7 +133,8 @@ exports.fn = (root, params) => {
                 pseudos.map((pseudo) => pseudo.item.data)
               ),
             });
-            if (usePseudos.includes(pseudoSelectors) === false) {
+
+            if (!usePseudos.includes(pseudoSelectors)) {
               return;
             }
 
@@ -198,8 +156,8 @@ exports.fn = (root, params) => {
         if (styles.length === 0) {
           return;
         }
-        // stable sort selectors
-        const sortedSelectors = [...selectors]
+        const sortedSelectors = selectors
+          .slice()
           .sort((a, b) => {
             const aSpecificity = specificity(a.item.data);
             const bSpecificity = specificity(b.item.data);
@@ -210,9 +168,7 @@ exports.fn = (root, params) => {
         for (const selector of sortedSelectors) {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
-          /**
-           * @type {Array<XastElement>}
-           */
+          /** @type {Array<XastElement>} */
           const matchedElements = [];
           try {
             for (const node of querySelectorAll(root, selectorText)) {
@@ -237,9 +193,7 @@ exports.fn = (root, params) => {
           // apply <style/> to matched elements
           for (const selectedEl of matchedElements) {
             const styleDeclarationList = csstree.parse(
-              selectedEl.attributes.style == null
-                ? ''
-                : selectedEl.attributes.style,
+              selectedEl.attributes.style ?? '',
               {
                 context: 'declarationList',
                 parseValue: false,
@@ -249,10 +203,18 @@ exports.fn = (root, params) => {
               continue;
             }
             const styleDeclarationItems = new Map();
+
+            /** @type {csstree.ListItem<csstree.CssNode>} */
+            let firstListItem;
+
             csstree.walk(styleDeclarationList, {
               visit: 'Declaration',
               enter(node, item) {
-                styleDeclarationItems.set(node.property, item);
+                if (firstListItem == null) {
+                  firstListItem = item;
+                }
+
+                styleDeclarationItems.set(node.property.toLowerCase(), item);
               },
             });
             // merge declarations
@@ -263,13 +225,25 @@ exports.fn = (root, params) => {
                 // no inline styles, external styles,                                    external styles used
                 // inline styles,    external styles same   priority as inline styles,   inline   styles used
                 // inline styles,    external styles higher priority than inline styles, external styles used
-                const matchedItem = styleDeclarationItems.get(
-                  ruleDeclaration.property
-                );
+                const property = ruleDeclaration.property;
+
+                if (
+                  attrsGroups.presentation.includes(property) &&
+                  !selectors.some((selector) =>
+                    includesAttrSelector(selector.item, property)
+                  )
+                ) {
+                  delete selectedEl.attributes[property];
+                }
+
+                const matchedItem = styleDeclarationItems.get(property);
                 const ruleDeclarationItem =
                   styleDeclarationList.children.createItem(ruleDeclaration);
                 if (matchedItem == null) {
-                  styleDeclarationList.children.append(ruleDeclarationItem);
+                  styleDeclarationList.children.insert(
+                    ruleDeclarationItem,
+                    firstListItem
+                  );
                 } else if (
                   matchedItem.data.important !== true &&
                   ruleDeclaration.important === true
@@ -278,15 +252,15 @@ exports.fn = (root, params) => {
                     matchedItem,
                     ruleDeclarationItem
                   );
-                  styleDeclarationItems.set(
-                    ruleDeclaration.property,
-                    ruleDeclarationItem
-                  );
+                  styleDeclarationItems.set(property, ruleDeclarationItem);
                 }
               },
             });
-            selectedEl.attributes.style =
-              csstree.generate(styleDeclarationList);
+
+            const newStyles = csstree.generate(styleDeclarationList);
+            if (newStyles.length !== 0) {
+              selectedEl.attributes.style = newStyles;
+            }
           }
 
           if (
@@ -301,7 +275,7 @@ exports.fn = (root, params) => {
         }
 
         // no further processing required
-        if (removeMatchedSelectors === false) {
+        if (!removeMatchedSelectors) {
           return;
         }
 
@@ -323,17 +297,18 @@ exports.fn = (root, params) => {
                 ? null
                 : selectedEl.attributes.class.split(' ')
             );
-            /**
-             * csstree v2 changed this type
-             * @type {csstree.CssNode}
-             */
-            const firstSubSelector = toAny(selector.node.children.first);
-            if (
-              firstSubSelector != null &&
-              firstSubSelector.type === 'ClassSelector'
-            ) {
-              classList.delete(firstSubSelector.name);
+
+            for (const child of selector.node.children) {
+              if (
+                child.type === 'ClassSelector' &&
+                !selectors.some((selector) =>
+                  includesAttrSelector(selector.item, 'class', child.name, true)
+                )
+              ) {
+                classList.delete(child.name);
+              }
             }
+
             if (classList.size === 0) {
               delete selectedEl.attributes.class;
             } else {
@@ -341,13 +316,20 @@ exports.fn = (root, params) => {
             }
 
             // ID
+            const firstSubSelector = selector.node.children.first;
             if (
-              firstSubSelector != null &&
-              firstSubSelector.type === 'IdSelector'
+              firstSubSelector?.type === 'IdSelector' &&
+              selectedEl.attributes.id === firstSubSelector.name &&
+              !selectors.some((selector) =>
+                includesAttrSelector(
+                  selector.item,
+                  'id',
+                  firstSubSelector.name,
+                  true
+                )
+              )
             ) {
-              if (selectedEl.attributes.id === firstSubSelector.name) {
-                delete selectedEl.attributes.id;
-              }
+              delete selectedEl.attributes.id;
             }
           }
         }
@@ -360,8 +342,7 @@ exports.fn = (root, params) => {
               if (
                 node.type === 'Rule' &&
                 node.prelude.type === 'SelectorList' &&
-                // csstree v2 changed this type
-                toAny(node.prelude.children.isEmpty)
+                node.prelude.children.isEmpty
               ) {
                 list.remove(item);
               }
@@ -369,7 +350,7 @@ exports.fn = (root, params) => {
           });
 
           // csstree v2 changed this type
-          if (toAny(style.cssAst.children.isEmpty)) {
+          if (style.cssAst.children.isEmpty) {
             // remove emtpy style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {

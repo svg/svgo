@@ -22,7 +22,7 @@ exports.transform2js = (transformString) => {
   const transforms = [];
   // current transform context
   /**
-   * @type {null | TransformItem}
+   * @type {?TransformItem}
    */
   let current = null;
   // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']

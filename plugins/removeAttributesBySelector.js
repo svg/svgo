@@ -69,7 +69,7 @@ exports.description =
  *   ↓
  * <rect x="0" y="0" width="100" height="100"/>
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors|MDN CSS Selectors
+ * @link https://developer.mozilla.org/docs/Web/CSS/CSS_Selectors|MDN CSS Selectors
  *
  * @author Bradley Mease
  *

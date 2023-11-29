@@ -335,18 +335,12 @@ const removeUseless = (transforms) => {
  * @type {(transformJS: Array<TransformItem>, params: TransformParams) => string}
  */
 const js2transform = (transformJS, params) => {
-  var transformString = '';
-
-  // collect output value string
-  transformJS.forEach((transform) => {
-    roundTransform(transform, params);
-    transformString +=
-      (transformString && ' ') +
-      transform.name +
-      '(' +
-      cleanupOutData(transform.data, params) +
-      ')';
-  });
+  const transformString = transformJS
+    .map((transform) => {
+      roundTransform(transform, params);
+      return `${transform.name}(${cleanupOutData(transform.data, params)})`;
+    })
+    .join('');
 
   return transformString;
 };

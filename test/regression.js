@@ -26,29 +26,20 @@ const runTests = async ({ list }) => {
   console.info('Start browser...');
   const processFile = async (page, name) => {
     if (
-      // hard to detect the end of animation
+      // animated
       name.startsWith('w3c-svg-11-test-suite/svg/animate-') ||
-      // breaks because of optimisation despite of script
-      name === 'w3c-svg-11-test-suite/svg/interact-pointer-04-f.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/filters-light-04-f.svg' ||
+      name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // messed gradients
       name === 'w3c-svg-11-test-suite/svg/pservers-grad-18-b.svg' ||
-      // animated filter
-      name === 'w3c-svg-11-test-suite/svg/filters-light-04-f.svg' ||
-      // animated filter
-      name === 'w3c-svg-11-test-suite/svg/filters-composite-05-f.svg' ||
       // removing wrapping <g> breaks :first-child pseudo-class
       name === 'w3c-svg-11-test-suite/svg/styling-pres-04-f.svg' ||
-      // messed case insensitivity while inlining styles
-      name === 'w3c-svg-11-test-suite/svg/styling-css-10-f.svg' ||
       // rect is converted to path which matches wrong styles
       name === 'w3c-svg-11-test-suite/svg/styling-css-08-f.svg' ||
-      // external image
-      name === 'w3c-svg-11-test-suite/svg/struct-image-02-b.svg' ||
-      // complex selectors are messed becase of converting shapes to paths
+      // complex selectors are messed because of converting shapes to paths
       name === 'w3c-svg-11-test-suite/svg/struct-use-10-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/struct-use-11-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/styling-css-01-b.svg' ||
-      name === 'w3c-svg-11-test-suite/svg/styling-css-03-b.svg' ||
       name === 'w3c-svg-11-test-suite/svg/styling-css-04-f.svg' ||
       // strange artifact breaks inconsistently  breaks regression tests
       name === 'w3c-svg-11-test-suite/svg/filters-conv-05-f.svg'

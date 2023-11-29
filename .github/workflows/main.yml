@@ -1,7 +1,7 @@
 name: CI
 env:
   FORCE_COLOR: 2
-  NODE: 18
+  NODE: 20
 on:
   push:
     branches:
@@ -9,12 +9,16 @@ on:
   pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE }}
@@ -26,26 +30,30 @@ jobs:
     name: Test regressions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
       - run: yarn install
       - run: yarn test-regression
   test:
-    name: Node.js ${{ matrix.node-version }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
     strategy:
       fail-fast: false
       matrix:
         node-version:
+          - 20
           - 18
           - 16
           - 14
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn

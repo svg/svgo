@@ -46,6 +46,7 @@ let arcTolerance;
  *   },
  *   straightCurves: boolean,
  *   lineShorthands: boolean,
+ *   convertToZ: boolean,
  *   curveSmoothShorthands: boolean,
  *   floatPrecision: number | false,
  *   transformPrecision: number,
@@ -95,6 +96,7 @@ exports.fn = (root, params) => {
     },
     straightCurves = true,
     lineShorthands = true,
+    convertToZ = true,
     curveSmoothShorthands = true,
     floatPrecision = 3,
     transformPrecision = 5,
@@ -116,6 +118,7 @@ exports.fn = (root, params) => {
     makeArcs,
     straightCurves,
     lineShorthands,
+    convertToZ,
     curveSmoothShorthands,
     floatPrecision,
     transformPrecision,
@@ -167,6 +170,12 @@ exports.fn = (root, params) => {
             (computedStyle['stroke-linecap'].type === 'dynamic' ||
               computedStyle['stroke-linecap'].value !== 'butt');
           const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
+          const isSafeToUseZ = maybeHasStroke
+            ? computedStyle['stroke-linecap']?.type === 'static' &&
+              computedStyle['stroke-linecap'].value === 'round' &&
+              computedStyle['stroke-linejoin']?.type === 'static' &&
+              computedStyle['stroke-linejoin'].value === 'round'
+            : true;
 
           var data = path2js(node);
 
@@ -175,6 +184,7 @@ exports.fn = (root, params) => {
             convertToRelative(data);
 
             data = filters(data, newParams, {
+              isSafeToUseZ,
               maybeHasStrokeAndLinecap,
               hasMarkerMid,
             });
@@ -371,10 +381,14 @@ const convertToRelative = (pathData) => {
  * @type {(
  *   path: PathDataItem[],
  *   params: InternalParams,
- *   aux: { maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
+ *   aux: { isSafeToUseZ: boolean, maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }
  * ) => PathDataItem[]}
  */
-function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
+function filters(
+  path,
+  params,
+  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid }
+) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
     pathBase = [0, 0],
@@ -664,6 +678,24 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
         }
       }
 
+      // convert going home to z
+      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
+      if (
+        params.convertToZ &&
+        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
+        (command === 'l' || command === 'h' || command === 'v')
+      ) {
+        if (
+          // @ts-ignore
+          Math.abs(pathBase[0] - item.coords[0]) < error &&
+          // @ts-ignore
+          Math.abs(pathBase[1] - item.coords[1]) < error
+        ) {
+          command = 'z';
+          data = [];
+        }
+      }
+
       // collapse repeated commands
       // h 20 h 30 -> h 50
       if (
@@ -796,17 +828,25 @@ function filters(path, params, { maybeHasStrokeAndLinecap, hasMarkerMid }) {
 
       item.command = command;
       item.args = data;
-
-      prev = item;
     } else {
       // z resets coordinates
       relSubpoint[0] = pathBase[0];
       relSubpoint[1] = pathBase[1];
       // @ts-ignore
       if (prev.command === 'Z' || prev.command === 'z') return false;
-      prev = item;
     }
+    if (
+      (command === 'Z' || command === 'z') &&
+      params.removeUseless &&
+      isSafeToUseZ &&
+      // @ts-ignore
+      Math.abs(item.base[0] - item.coords[0]) < error / 10 &&
+      // @ts-ignore
+      Math.abs(item.base[1] - item.coords[1]) < error / 10
+    )
+      return false;
 
+    prev = item;
     return true;
   });
 

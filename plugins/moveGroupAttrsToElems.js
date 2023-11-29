@@ -1,6 +1,7 @@
 'use strict';
 
 const { pathElems, referencesProps } = require('./_collections.js');
+const { includesUrlReference } = require('../lib/svgo/tools.js');
 
 exports.name = 'moveGroupAttrsToElems';
 exports.description = 'moves some group attributes to the content elements';
@@ -36,7 +37,7 @@ exports.fn = () => {
           node.attributes.transform != null &&
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && value.includes('url(')
+              referencesProps.includes(name) && includesUrlReference(value)
           ) === false &&
           node.children.every(
             (child) =>

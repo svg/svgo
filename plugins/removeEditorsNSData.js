@@ -30,7 +30,7 @@ exports.fn = (_root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // collect namespace aliases from svg element
+        // collect namespace prefixes from svg element
         if (node.name === 'svg') {
           for (const [name, value] of Object.entries(node.attributes)) {
             if (name.startsWith('xmlns:') && namespaces.includes(value)) {

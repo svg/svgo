@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please report security issues to `trysound@yandex.ru`
+Please report security vulnerabilities to [trysound@yandex.ru](mailto:trysound@yandex.ru).

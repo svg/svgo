@@ -19,7 +19,7 @@ exports.description = 'merge multiple style elements into one';
  */
 exports.fn = () => {
   /**
-   * @type {null | XastElement}
+   * @type {?XastElement}
    */
   let firstStyleElement = null;
   let collectedStyles = '';

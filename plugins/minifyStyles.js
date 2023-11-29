@@ -2,27 +2,48 @@
 
 /**
  * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types').XastParent} XastParent
  */
 
 const csso = require('csso');
+const { detachNodeFromParent } = require('../lib/xast');
+const { hasScripts } = require('../lib/svgo/tools');
 
 exports.name = 'minifyStyles';
-exports.description =
-  'minifies styles and removes unused styles based on usage data';
+exports.description = 'minifies styles and removes unused styles';
 
 /**
- * Minifies styles (<style> element + style attribute) using CSSO
+ * Minifies styles (<style> element + style attribute) using CSSO.
  *
  * @author strarsis <strarsis@gmail.com>
- *
  * @type {import('./plugins-types').Plugin<'minifyStyles'>}
  */
 exports.fn = (_root, { usage, ...params }) => {
+  /** @type {Map<XastElement, XastParent>} */
+  const styleElements = new Map();
+
+  /** @type {Array<XastElement>} */
+  const elementsWithStyleAttributes = [];
+
+  /** @type {Set<string>} */
+  const tagsUsage = new Set();
+
+  /** @type {Set<string>} */
+  const idsUsage = new Set();
+
+  /** @type {Set<string>} */
+  const classesUsage = new Set();
+
   let enableTagsUsage = true;
   let enableIdsUsage = true;
   let enableClassesUsage = true;
-  // force to use usage data even if it unsafe (document contains <script> or on* attributes)
+
+  /**
+   * Force to use usage data even if it unsafe. For example, the document
+   * contains scripts or in attributes..
+   */
   let forceUsageDeoptimized = false;
+
   if (typeof usage === 'boolean') {
     enableTagsUsage = usage;
     enableIdsUsage = usage;
@@ -33,40 +54,17 @@ exports.fn = (_root, { usage, ...params }) => {
     enableClassesUsage = usage.classes == null ? true : usage.classes;
     forceUsageDeoptimized = usage.force == null ? false : usage.force;
   }
-  /**
-   * @type {Array<XastElement>}
-   */
-  const styleElements = [];
-  /**
-   * @type {Array<XastElement>}
-   */
-  const elementsWithStyleAttributes = [];
+
   let deoptimized = false;
-  /**
-   * @type {Set<string>}
-   */
-  const tagsUsage = new Set();
-  /**
-   * @type {Set<string>}
-   */
-  const idsUsage = new Set();
-  /**
-   * @type {Set<string>}
-   */
-  const classesUsage = new Set();
 
   return {
     element: {
-      enter: (node) => {
+      enter: (node, parentNode) => {
         // detect deoptimisations
-        if (node.name === 'script') {
+        if (hasScripts(node)) {
           deoptimized = true;
         }
-        for (const name of Object.keys(node.attributes)) {
-          if (name.startsWith('on')) {
-            deoptimized = true;
-          }
-        }
+
         // collect tags, ids and classes usage
         tagsUsage.add(node.name);
         if (node.attributes.id != null) {
@@ -79,7 +77,7 @@ exports.fn = (_root, { usage, ...params }) => {
         }
         // collect style elements or elements with style attribute
         if (node.name === 'style' && node.children.length !== 0) {
-          styleElements.push(node);
+          styleElements.set(node, parentNode);
         } else if (node.attributes.style != null) {
           elementsWithStyleAttributes.push(node);
         }
@@ -88,40 +86,44 @@ exports.fn = (_root, { usage, ...params }) => {
 
     root: {
       exit: () => {
-        /**
-         * @type {csso.Usage}
-         */
+        /** @type {csso.Usage} */
         const cssoUsage = {};
-        if (deoptimized === false || forceUsageDeoptimized === true) {
-          if (enableTagsUsage && tagsUsage.size !== 0) {
+        if (!deoptimized || forceUsageDeoptimized) {
+          if (enableTagsUsage) {
             cssoUsage.tags = Array.from(tagsUsage);
           }
-          if (enableIdsUsage && idsUsage.size !== 0) {
+          if (enableIdsUsage) {
             cssoUsage.ids = Array.from(idsUsage);
           }
-          if (enableClassesUsage && classesUsage.size !== 0) {
+          if (enableClassesUsage) {
             cssoUsage.classes = Array.from(classesUsage);
           }
         }
         // minify style elements
-        for (const node of styleElements) {
+        for (const [styleNode, styleNodeParent] of styleElements.entries()) {
           if (
-            node.children[0].type === 'text' ||
-            node.children[0].type === 'cdata'
+            styleNode.children[0].type === 'text' ||
+            styleNode.children[0].type === 'cdata'
           ) {
-            const cssText = node.children[0].value;
+            const cssText = styleNode.children[0].value;
             const minified = csso.minify(cssText, {
               ...params,
               usage: cssoUsage,
             }).css;
+
+            if (minified.length === 0) {
+              detachNodeFromParent(styleNode, styleNodeParent);
+              continue;
+            }
+
             // preserve cdata if necessary
             // TODO split cdata -> text optimisation into separate plugin
             if (cssText.indexOf('>') >= 0 || cssText.indexOf('<') >= 0) {
-              node.children[0].type = 'cdata';
-              node.children[0].value = minified;
+              styleNode.children[0].type = 'cdata';
+              styleNode.children[0].value = minified;
             } else {
-              node.children[0].type = 'text';
-              node.children[0].value = minified;
+              styleNode.children[0].type = 'text';
+              styleNode.children[0].value = minified;
             }
           }
         }
