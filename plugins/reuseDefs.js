@@ -13,7 +13,7 @@ exports.description =
   'Find duplicated def elements, delete them' +
   ' and replace references by the id left';
 
-const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/;
+const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/g;
 const regReferencesHref = /^#(.+?)$/;
 const regReferencesBegin = /(\D+)\./;
 
@@ -62,28 +62,28 @@ exports.fn = () => {
         // collect all references
         for (const [name, value] of Object.entries(node.attributes)) {
           /**
-           * @type {null | string}
+           * @type {string[]}
            */
-          let id = null;
+          let ids = [];
           if (referencesProps.includes(name)) {
-            const match = value.match(regReferencesUrl);
-            if (match != null) {
-              id = match[2]; // url() reference
+            const matches = value.matchAll(regReferencesUrl);
+            for (const match of matches) {
+              ids.push(match[2]); // url() reference
             }
           }
           if (name === 'href' || name.endsWith(':href')) {
             const match = value.match(regReferencesHref);
             if (match != null) {
-              id = match[1]; // href reference
+              ids.push(match[1]); // href reference
             }
           }
           if (name === 'begin') {
             const match = value.match(regReferencesBegin);
             if (match != null) {
-              id = match[1]; // href reference
+              ids.push(match[1]); // begin reference
             }
           }
-          if (id != null) {
+          for (const id of ids) {
             let refs = referencesById.get(id);
             if (refs == null) {
               refs = [];
