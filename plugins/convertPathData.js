@@ -828,15 +828,12 @@ function filters(
 
       item.command = command;
       item.args = data;
-
-      prev = item;
     } else {
       // z resets coordinates
       relSubpoint[0] = pathBase[0];
       relSubpoint[1] = pathBase[1];
       // @ts-ignore
       if (prev.command === 'Z' || prev.command === 'z') return false;
-      prev = item;
     }
     if (
       (command === 'Z' || command === 'z') &&
@@ -849,6 +846,7 @@ function filters(
     )
       return false;
 
+    prev = item;
     return true;
   });
 
