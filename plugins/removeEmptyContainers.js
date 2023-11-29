@@ -49,6 +49,9 @@ exports.fn = () => {
         if (node.name === 'mask' && node.attributes.id != null) {
           return;
         }
+        if (parentNode.type === 'element' && parentNode.name === 'switch') {
+          return;
+        }
         detachNodeFromParent(node, parentNode);
       },
     },
