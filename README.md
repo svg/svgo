@@ -13,10 +13,13 @@ SVG files, especially those exported from various editors, usually contain a lot
 ## Installation
 
 Via npm:
+
 ```sh
 npm -g install svgo
 ```
+
 Via yarn:
+
 ```sh
 yarn global add svgo
 ```
@@ -24,14 +27,21 @@ yarn global add svgo
 ## CLI usage
 
 Processing single files:
+
 ```sh
 svgo one.svg two.svg -o one.min.svg two.min.svg
 ```
+
 Processing directory of svg files, recursively using `-f`, `--folder`:
+
 ```sh
+
 svgo -f ./path/to/folder/with/svg/files -o ./path/to/folder/with/svg/output
+
 ```
+
 Help for advanced usage:
+
 ```sh
 svgo --help
 ```
@@ -145,6 +155,7 @@ const config = await loadConfig();
 ```
 
 You can also specify a relative or absolute path and customize the current working directory.
+
 ```js
 const config = await loadConfig(configFile, cwd);
 ```
@@ -217,7 +228,7 @@ const config = await loadConfig(configFile, cwd);
 
 | Method | Reference |
 | ------ | --------- |
-| Web app | [SVGOMG](https://jakearchibald.github.io/svgomg/) |
+| Web app | [SVGOMFG](https://omfg.svg.beauty) |
 | GitHub Action | [SVGO Action](https://github.com/marketplace/actions/svgo-action) |
 | Grunt task | [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin) |
 | Gulp task | [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin) |
