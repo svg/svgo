@@ -1,37 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-  <circle cx="12" cy="12" r="0" fill="currentColor">
-    <animate id="svgSpinnersPulseMultiple0" fill="freeze" attributeName="r" begin="0;svgSpinnersPulseMultiple2.end"
-      calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="0;11" />
-    <animate fill="freeze" attributeName="opacity" begin="0;svgSpinnersPulseMultiple2.end" calcMode="spline" dur="1.2s"
-      keySplines=".52,.6,.25,.99" values="1;0" />
+Properly rename IDs, by matching them properly (exclude semicolons, include numbers)
+See https://github.com/svg/svgo/issues/1775
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <circle cx="12" cy="12">
+    <animate id="thing1" fill="freeze" attributeName="r" begin="0;thing2.end" dur="1.2s" values="0;11"/>
   </circle>
-  <circle cx="12" cy="12" r="0" fill="currentColor">
-    <animate id="svgSpinnersPulseMultiple1" fill="freeze" attributeName="r" begin="svgSpinnersPulseMultiple0.begin+0.2s"
-      calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="0;11" />
-    <animate fill="freeze" attributeName="opacity" begin="svgSpinnersPulseMultiple0.begin+0.2s" calcMode="spline"
-      dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0" />
-  </circle>
-  <circle cx="12" cy="12" r="0" fill="currentColor">
-    <animate id="svgSpinnersPulseMultiple2" fill="freeze" attributeName="r" begin="svgSpinnersPulseMultiple0.begin+0.4s"
-      calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="0;11" />
-    <animate fill="freeze" attributeName="opacity" begin="svgSpinnersPulseMultiple0.begin+0.4s" calcMode="spline"
-      dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0" />
+  <circle cx="12" cy="12">
+    <animate id="thing2" fill="freeze" attributeName="r" begin="thing1.begin+0.2s" dur="1.2s" values="0;11"/>
   </circle>
 </svg>
 
 @@@
 
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-    <circle cx="12" cy="12" r="0" fill="currentColor">
-        <animate id="b" fill="freeze" attributeName="r" begin="0;a.end" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="0;11"/>
-        <animate fill="freeze" attributeName="opacity" begin="0;a.end" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <circle cx="12" cy="12">
+        <animate id="b" fill="freeze" attributeName="r" begin="0;a.end" dur="1.2s" values="0;11"/>
     </circle>
-    <circle cx="12" cy="12" r="0" fill="currentColor">
-        <animate fill="freeze" attributeName="r" begin="b.begin+0.2s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="0;11"/>
-        <animate fill="freeze" attributeName="opacity" begin="b.begin+0.2s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0"/>
-    </circle>
-    <circle cx="12" cy="12" r="0" fill="currentColor">
-        <animate id="a" fill="freeze" attributeName="r" begin="b.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="0;11"/>
-        <animate fill="freeze" attributeName="opacity" begin="b.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0"/>
+    <circle cx="12" cy="12">
+        <animate id="a" fill="freeze" attributeName="r" begin="b.begin+0.2s" dur="1.2s" values="0;11"/>
     </circle>
 </svg>
