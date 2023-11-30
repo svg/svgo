@@ -13,7 +13,7 @@ exports.description = 'removes unused IDs and minifies used';
 
 const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/g;
 const regReferencesHref = /^#(.+?)$/;
-const regReferencesBegin = /(\D+)\./;
+const regReferencesBegin = /(\w+)\.[a-zA-Z]/;
 const generateIdChars = [
   'a',
   'b',
