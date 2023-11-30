@@ -299,7 +299,12 @@ exports.fn = (root, params) => {
             );
 
             for (const child of selector.node.children) {
-              if (child.type === 'ClassSelector') {
+              if (
+                child.type === 'ClassSelector' &&
+                !selectors.some((selector) =>
+                  includesAttrSelector(selector.item, 'class', child.name, true)
+                )
+              ) {
                 classList.delete(child.name);
               }
             }
@@ -313,9 +318,16 @@ exports.fn = (root, params) => {
             // ID
             const firstSubSelector = selector.node.children.first;
             if (
-              firstSubSelector != null &&
-              firstSubSelector.type === 'IdSelector' &&
-              selectedEl.attributes.id === firstSubSelector.name
+              firstSubSelector?.type === 'IdSelector' &&
+              selectedEl.attributes.id === firstSubSelector.name &&
+              !selectors.some((selector) =>
+                includesAttrSelector(
+                  selector.item,
+                  'id',
+                  firstSubSelector.name,
+                  true
+                )
+              )
             ) {
               delete selectedEl.attributes.id;
             }

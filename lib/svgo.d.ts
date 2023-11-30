@@ -63,4 +63,7 @@ export declare function loadConfig(
   configFile: string,
   cwd?: string
 ): Promise<Config>;
-export declare function loadConfig(): Promise<Config | null>;
+export declare function loadConfig(
+  configFile?: null,
+  cwd?: string
+): Promise<Config | null>;

@@ -40,7 +40,6 @@ const runTests = async ({ list }) => {
       name === 'w3c-svg-11-test-suite/svg/struct-use-10-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/struct-use-11-f.svg' ||
       name === 'w3c-svg-11-test-suite/svg/styling-css-01-b.svg' ||
-      name === 'w3c-svg-11-test-suite/svg/styling-css-03-b.svg' ||
       name === 'w3c-svg-11-test-suite/svg/styling-css-04-f.svg' ||
       // strange artifact breaks inconsistently  breaks regression tests
       name === 'w3c-svg-11-test-suite/svg/filters-conv-05-f.svg'
