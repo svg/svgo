@@ -1,0 +1,24 @@
+Pseudo-classes that can be evaluated during optimization but don't match any
+nodes should do nothing, and especially shouldn't crash.
+
+See: https://github.com/svg/svgo/issues/1859
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <style>
+    path:not([fill=red]) {
+      stroke: purple;
+    }
+  </style>
+  <path fill="red" d="M5 5H10"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <style>
+        path:not([fill=red]){stroke:purple}
+    </style>
+    <path fill="red" d="M5 5H10"/>
+</svg>
