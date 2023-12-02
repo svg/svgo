@@ -1,0 +1,20 @@
+Do not collapse if <textPath> present.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="210mm" height="297mm" viewBox="0 0 210 297">
+    <path id="a" fill="none" stroke="#000" stroke-opacity="1" stroke-width=".265" d="M21.788 147.927s129.197-188.062 144.868-1.53"/>
+    <text xml:space="preserve" fill="none" stroke="#000" stroke-width=".265" font-family="Sans" font-size="6.35">
+        <textPath xlink:href="#a"><tspan fill="#f40b0b" font-size="11.289" font-weight="400">this is a test</tspan></textPath>
+    </text>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="210mm" height="297mm" viewBox="0 0 210 297">
+    <path id="a" fill="none" stroke="#000" stroke-opacity="1" stroke-width=".265" d="M21.788 147.927s129.197-188.062 144.868-1.53"/>
+    <text xml:space="preserve" fill="none" stroke="#000" stroke-width=".265" font-family="Sans" font-size="6.35">
+        <textPath xlink:href="#a"><tspan fill="#f40b0b" font-size="11.289" font-weight="400">this is a test</tspan></textPath>
+    </text>
+</svg>

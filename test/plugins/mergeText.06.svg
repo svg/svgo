@@ -1,0 +1,18 @@
+Do not collapse if styles are present.
+
+===
+
+<svg version="1.1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <text x="64" y="64" fill="none" font-family="Arial" font-size="8px" letter-spacing=".5px"
+        stroke="#000000" xml:space="preserve"><tspan  x="64" y="64">this is a test</tspan></text>
+		<style>tspan { stroke:red;}</style>
+</svg>
+
+@@@
+
+<svg version="1.1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <text x="64" y="64" fill="none" font-family="Arial" font-size="8px" letter-spacing=".5px" stroke="#000000" xml:space="preserve"><tspan x="64" y="64">this is a test</tspan></text>
+    <style>
+        tspan { stroke:red;}
+    </style>
+</svg>

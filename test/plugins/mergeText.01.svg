@@ -1,0 +1,18 @@
+Combine adjacent<text> elements.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="297mm" viewBox="0 0 210 297">
+    <text xml:space="preserve" x="45.869" y="38.606" fill="red" stroke-width=".265" font-family="Sans" font-size="6.35">
+        <tspan x="45.869" y="38.606">Part one</tspan>
+    </text>
+    <text xml:space="preserve" x="87.151" y="89.826" fill="red" stroke-width=".265" font-family="Sans" font-size="6.35">
+        <tspan x="87.151" y="89.826">Part two</tspan>
+    </text>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="297mm" viewBox="0 0 210 297">
+    <text xml:space="preserve" fill="red" stroke-width=".265" font-family="Sans" font-size="6.35"><tspan x="45.869" y="38.606">Part one</tspan><tspan x="87.151" y="89.826">Part two</tspan></text>
+</svg>
