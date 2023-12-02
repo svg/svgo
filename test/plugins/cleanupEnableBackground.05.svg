@@ -1,0 +1,16 @@
+Should apply to inline styles as well, removing the style attribute if it all
+declarations are removed.
+
+See: https://github.com/svg/svgo/issues/1740
+
+===
+
+<svg height="100" width="100" style="enable-background:new 0 0 100 100">
+  <circle cx="50" cy="50" r="40" stroke="#000" stroke-width="3" fill="red"/>
+</svg>
+
+@@@
+
+<svg height="100" width="100">
+    <circle cx="50" cy="50" r="40" stroke="#000" stroke-width="3" fill="red"/>
+</svg>
