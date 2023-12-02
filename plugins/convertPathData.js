@@ -678,24 +678,6 @@ function filters(
         }
       }
 
-      // convert going home to z
-      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
-      if (
-        params.convertToZ &&
-        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
-        (command === 'l' || command === 'h' || command === 'v')
-      ) {
-        if (
-          // @ts-ignore
-          Math.abs(pathBase[0] - item.coords[0]) < error &&
-          // @ts-ignore
-          Math.abs(pathBase[1] - item.coords[1]) < error
-        ) {
-          command = 'z';
-          data = [];
-        }
-      }
-
       // collapse repeated commands
       // h 20 h 30 -> h 50
       if (
@@ -826,6 +808,24 @@ function filters(
         }
       }
 
+      // convert going home to z
+      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
+      if (
+        params.convertToZ &&
+        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
+        (command === 'l' || command === 'h' || command === 'v')
+      ) {
+        if (
+          // @ts-ignore
+          Math.abs(pathBase[0] - item.coords[0]) < error &&
+          // @ts-ignore
+          Math.abs(pathBase[1] - item.coords[1]) < error
+        ) {
+          command = 'z';
+          data = [];
+        }
+      }
+
       item.command = command;
       item.args = data;
     } else {
@@ -870,7 +870,8 @@ function convertToMixed(path, params) {
 
     var command = item.command,
       data = item.args,
-      adata = data.slice();
+      adata = data.slice(),
+      rdata = data.slice();
 
     if (
       command === 'm' ||
@@ -898,9 +899,10 @@ function convertToMixed(path, params) {
     }
 
     roundData(adata);
+    roundData(rdata);
 
     var absoluteDataStr = cleanupOutData(adata, params),
-      relativeDataStr = cleanupOutData(data, params);
+      relativeDataStr = cleanupOutData(rdata, params);
 
     // Convert to absolute coordinates if it's shorter or forceAbsolutePath is true.
     // v-20 -> V0
