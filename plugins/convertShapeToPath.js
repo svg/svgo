@@ -139,7 +139,7 @@ exports.fn = (root, params) => {
           delete node.attributes.r;
         }
 
-        // optionally covert ellipse
+        // optionally convert ellipse
         if (node.name === 'ellipse' && convertArcs) {
           const ecx = Number(node.attributes.cx || '0');
           const ecy = Number(node.attributes.cy || '0');

@@ -468,7 +468,7 @@ Some goodness from pull-requests.
 * plugins/convertPathData: do not remove very first M from the path data (fix [#24](https://github.com/svg/svgo/issues/24))
 * plugins/convertPathData: optimize path data in &lt;glyph&gt; and &lt;missing-glyph&gt; (close [#20](https://github.com/svg/svgo/issues/20))
 * plugins/convertTransform: add patternTransform attribute to the process (close [#15](https://github.com/svg/svgo/issues/15))
-* plugins/convertTransform: Firefox: removing extra space in front of negative number is alowed only in path data, but not in transform (fix [#12](https://github.com/svg/svgo/issues/12))
+* plugins/convertTransform: Firefox: removing extra space in front of negative number is allowed only in path data, but not in transform (fix [#12](https://github.com/svg/svgo/issues/12))
 * plugins/removeXMLProcInst: remove only 'xml' but not 'xml-stylesheet' (fix [#21](https://github.com/svg/svgo/issues/15))
 * plugins/collapseGroups: merge split-level transforms (fix [#13](https://github.com/svg/svgo/issues/13))
 * jsdoc corrections

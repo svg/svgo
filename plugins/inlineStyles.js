@@ -370,7 +370,7 @@ exports.fn = (root, params) => {
 
           // csstree v2 changed this type
           if (style.cssAst.children.isEmpty) {
-            // remove emtpy style element
+            // remove empty style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {
             // update style element if any styles left

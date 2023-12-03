@@ -63,7 +63,7 @@ exports.fn = () => {
           return;
         }
 
-        // move group attibutes to the single child element
+        // move group attributes to the single child element
         if (
           Object.keys(node.attributes).length !== 0 &&
           node.children.length === 1

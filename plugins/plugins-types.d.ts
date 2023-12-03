@@ -110,7 +110,7 @@ type DefaultPlugins = {
      */
     restructure?: boolean;
     /**
-     * Enables merging of @media rules with the same media query by splitted by other rules.
+     * Enables merging of @media rules with the same media query split by other rules.
      * The optimisation is unsafe in general, but should work fine in most cases. Use it on your own risk.
      * @default false
      */

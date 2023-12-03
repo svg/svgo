@@ -30,7 +30,7 @@ export type Config = {
   path?: string;
   /** Pass over SVGs multiple times to ensure all optimizations are applied. */
   multipass?: boolean;
-  /** Precision of floating point numbers. Will be passed to each plugin that suppors this param. */
+  /** Precision of floating point numbers. Will be passed to each plugin that supports this param. */
   floatPrecision?: number;
   /**
    * Plugins configuration
