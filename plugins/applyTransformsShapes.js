@@ -173,12 +173,16 @@ exports.fn = (root, params) => {
           node.attributes.y = stringifyNumber(cornerY, factor, leadingZero);
           node.attributes.width = stringifyNumber(newW, factor, leadingZero);
           node.attributes.height = stringifyNumber(newH, factor, leadingZero);
-          if (newRx != undefined)
+          if (newRx < 1 / factor && newRy < 1 / factor) {
+            delete node.attributes.rx;
+            delete node.attributes.ry;
+          } else if (Math.abs(newRx - newRy) < 1 / factor) {
             node.attributes.rx = stringifyNumber(newRx, factor, leadingZero);
-          else delete node.attributes.rx;
-          if (newRy != undefined && Math.abs(newRx - newRy) > 1 / factor)
+            delete node.attributes.ry;
+          } else {
+            node.attributes.rx = stringifyNumber(newRx, factor, leadingZero);
             node.attributes.ry = stringifyNumber(newRy, factor, leadingZero);
-          else delete node.attributes.ry;
+          }
           delete node.attributes.transform;
         } else if (node.name == 'image') {
           if (!isTranslation) return;

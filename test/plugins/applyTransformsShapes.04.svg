@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <image xlink:href="image.png" transform="translate(40 40)"/>
+    <image xlink:href="image.png" transform="scale(2 1)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <image xlink:href="image.png" x="40" y="40"/>
+    <image xlink:href="image.png" transform="scale(2 1)"/>
+</svg>

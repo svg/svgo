@@ -1,0 +1,19 @@
+<svg>
+    <circle cx="5" cy="5" r="5" transform="matrix(2 0 0 -2 0 10)"/>
+    <circle cx="10" cy="10" r="5" transform="rotate(45 0 0)"/>
+    <circle cx="5" cy="10" r="5" transform="scale(2 1)"/>
+    <circle cx="5" cy="5" r="5" stroke="#000" transform="matrix(2 0 0 -2 0 10)"/>
+    <circle cx="10" cy="10" r="5" stroke="#000" transform="rotate(45 0 0)"/>
+    <circle cx="5" cy="10" r="5" stroke="#000" transform="scale(2 1)"/>
+</svg>
+
+@@@
+
+<svg>
+    <circle cx="10" cy="0" r="10"/>
+    <circle cx="0" cy="14.142" r="5"/>
+    <circle cx="5" cy="10" r="5" transform="scale(2 1)"/>
+    <circle cx="10" cy="0" r="10" stroke="#000" stroke-width="2"/>
+    <circle cx="0" cy="14.142" r="5" stroke="#000" stroke-width="1"/>
+    <circle cx="5" cy="10" r="5" stroke="#000" transform="scale(2 1)"/>
+</svg>
