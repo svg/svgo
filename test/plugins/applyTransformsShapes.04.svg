@@ -1,11 +1,11 @@
 <svg>
-    <image xlink:href="image.png" transform="translate(40 40)"/>
-    <image xlink:href="image.png" transform="scale(2 1)"/>
+    <image href="image.png" transform="translate(40 40)"/>
+    <image href="image.png" transform="scale(2 1)"/>
 </svg>
 
 @@@
 
 <svg>
-    <image xlink:href="image.png" x="40" y="40"/>
-    <image xlink:href="image.png" transform="scale(2 1)"/>
+    <image href="image.png" x="40" y="40"/>
+    <image href="image.png" transform="scale(2 1)"/>
 </svg>
