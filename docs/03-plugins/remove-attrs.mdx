@@ -8,7 +8,7 @@ svgo:
       default: null
     elemSeparator:
       description: The pattern syntax used by this plugin is <code>element:attribute:value</code>, this changes the delimiter from <code>:</code> to another string.
-      default: ":"
+      default: ':'
     preserveCurrentColor:
       description: If to ignore the attribute if it's set to <code>currentColor</code>.
       default: false
@@ -18,24 +18,24 @@ Remove attributes from elements matching a custom syntax.
 
 The format accepted is `[ element* : attribute* : value* ]`, where:
 
-* `element`: A regular expression matching element names. An asterisk or omission matches all elements.
-* `attribute`: A regular expression matching attribute names.
-* `value`: A regular expresison matching attribute values. An asterisk or omission matches all values.
+- `element`: A regular expression matching element names. An asterisk or omission matches all elements.
+- `attribute`: A regular expression matching attribute names.
+- `value`: A regular expresison matching attribute values. An asterisk or omission matches all values.
 
 For example, `path:fill` matches all `fill` attributes in `<path>` elements.
 
 ## Usage
 
-<PluginUsage/>
+<PluginUsage />
 
 ### Parameters
 
-<PluginParams/>
+<PluginParams />
 
 ## Demo
 
-<PluginDemo/>
+<PluginDemo />
 
 ## Implementation
 
-* https://github.com/svg/svgo/blob/main/plugins/removeAttrs.js
+- https://github.com/svg/svgo/blob/main/plugins/removeAttrs.js
