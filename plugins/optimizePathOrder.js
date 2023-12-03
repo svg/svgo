@@ -66,6 +66,14 @@ exports.fn = (root, params) => {
           : false;
 
         const path = /** @type {RealPath[]} */ (path2js(node));
+        if (path[0] && !path[0].coords) {
+          console.warn(
+            'optimizePathOrder is enabled, but data from convertPathData is not present. ' +
+              'If you want to use optimizePathOrder, enable convertPathData and put optimizePathOrder after it. ' +
+              'If you do not want to use optimizePathOrder, disable it.'
+          );
+          return;
+        }
 
         const parts = [];
         let part = { valid: true, data: /** @type {RealPath[]} */ ([]) };
