@@ -1,0 +1,27 @@
+---
+title: Remove Deprecated Attributes
+svgo:
+  pluginId: removeDeprecatedAttrs
+  defaultPlugin: true
+  parameters:
+    removeAny:
+      description: By default, this plugin only removes safe deprecated attributes that do not change the rendered image. Enabling this will remove all deprecated attributes which may impact rendering.
+      type: boolean
+      default: false
+---
+
+Removes deprecated attributes from elements in the document.
+
+This plugin does not remove attributes from the deprecated XLink namespace. To remove them, use the [Remove XLink](/docs/plugins/remove-xlink/) plugin.
+
+## Usage
+
+<PluginUsage />
+
+## Demo
+
+<PluginDemo />
+
+## Implementation
+
+- https://github.com/svg/svgo/blob/main/plugins/removeDeprecatedAttrs.js

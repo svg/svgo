@@ -143,6 +143,9 @@ type DefaultPlugins = {
   removeComments: {
     preservePatterns: Array<RegExp | string> | false;
   };
+  removeDeprecatedAttrs: {
+    removeUnsafe?: boolean;
+  };
   removeDesc: {
     removeAny?: boolean;
   };
