@@ -6,7 +6,7 @@ const { transformsMultiply, transform2js } = require('./_transforms.js');
 exports.name = 'applyTransformsShapes';
 exports.description = 'Applies transforms to some shapes.';
 
-const APPLICABLE_SHAPES = ['circle', 'ellipse', 'rect'];
+const APPLICABLE_SHAPES = ['circle', 'ellipse', 'rect', 'image'];
 
 /**
  * @typedef {number[]} Matrix
@@ -32,9 +32,9 @@ exports.fn = (root, params) => {
 
         const computedStyle = computeStyle(stylesheet, node);
         const transformStyle = computedStyle.transform;
-        if (!transformStyle) return;
         if (
-          transformStyle.type === 'static' &&
+          !transformStyle ||
+          transformStyle.type !== 'static' ||
           transformStyle.value !== node.attributes.transform
         ) {
           return;
@@ -70,6 +70,11 @@ exports.fn = (root, params) => {
             matrix.data[1] != 0 &&
             matrix.data[2] != 0 &&
             matrix.data[3] == 0);
+        const isTranslation =
+          matrix.data[0] == 1 &&
+          matrix.data[1] == 0 &&
+          matrix.data[2] == 0 &&
+          matrix.data[3] == 1;
         const scale = Math.sqrt(
           matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]
         );
@@ -173,6 +178,16 @@ exports.fn = (root, params) => {
           if (newRy != undefined && Math.abs(newRx - newRy) > 1 / factor)
             node.attributes.ry = stringifyNumber(newRy, factor, leadingZero);
           else delete node.attributes.ry;
+          delete node.attributes.transform;
+        } else if (node.name == 'image') {
+          if (!isTranslation) return;
+
+          const x = Number(node.attributes.x || '0');
+          const y = Number(node.attributes.y || '0');
+          const corner = transformAbsolutePoint(matrix.data, x, y);
+
+          node.attributes.x = stringifyNumber(corner[0], factor, leadingZero);
+          node.attributes.y = stringifyNumber(corner[1], factor, leadingZero);
           delete node.attributes.transform;
         }
       },
