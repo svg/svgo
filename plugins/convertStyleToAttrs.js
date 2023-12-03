@@ -19,7 +19,7 @@ const rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)"; // string 
 const rQuotes = '"(?:[^"\\n\\r\\\\]|' + rEscape + ')*?(?:"|$)'; // string in double quotes: "smth"
 const rQuotedString = new RegExp('^' + g(rSingleQuotes, rQuotes) + '$');
 // Parentheses, E.g.: url(data:image/png;base64,iVBO...).
-// ':' and ';' inside of it should be threated as is. (Just like in strings.)
+// ':' and ';' inside of it should be treated as is. (Just like in strings.)
 const rParenthesis =
   '\\(' + g('[^\'"()\\\\]+', rEscape, rSingleQuotes, rQuotes) + '*?' + '\\)';
 // The value. It can have strings and parentheses (see above). Fallbacks to anything in case of unexpected input.

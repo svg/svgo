@@ -12,7 +12,7 @@ SVG files, especially those exported from vector editors, usually contain a lot 
 
 ## Installation
 
-You can install SVGO globablly through npm, yarn, or pnpm. Alternatively, drop the global flag (`global`/`-g`) to use it in your Node.js project.
+You can install SVGO globally through npm, yarn, or pnpm. Alternatively, drop the global flag (`global`/`-g`) to use it in your Node.js project.
 
 ```sh
 # npm

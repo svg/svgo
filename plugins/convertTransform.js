@@ -131,7 +131,7 @@ const convertTransform = (item, attrName, params) => {
  * Defines precision to work with certain parts.
  * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
  * floatPrecision - for translate including two last matrix and rotate parameters,
- * degPrecision - for rotate and skew. By default it's equal to (rougly)
+ * degPrecision - for rotate and skew. By default it's equal to (roughly)
  * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
  *
  * @type {(data: Array<TransformItem>, params: TransformParams) => TransformParams}
@@ -294,7 +294,7 @@ const convertToShorts = (transforms, params) => {
 /**
  * Remove useless transforms.
  *
- * @type {(trasforms: Array<TransformItem>) => Array<TransformItem>}
+ * @type {(transforms: Array<TransformItem>) => Array<TransformItem>}
  */
 const removeUseless = (transforms) => {
   return transforms.filter((transform) => {

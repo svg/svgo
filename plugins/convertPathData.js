@@ -593,7 +593,7 @@ function filters(
         }
       }
 
-      // Rounding relative coordinates, taking in account accummulating error
+      // Rounding relative coordinates, taking in account accumulating error
       // to get closer to absolute coordinates. Sum of rounded value remains same:
       // l .25 3 .25 2 .25 3 .25 2 -> l .3 3 .2 2 .3 3 .2 2
       if (precision !== false) {
@@ -975,7 +975,7 @@ function getIntersection(coords) {
     c2 = coords[4] * coords[7] - coords[5] * coords[6], // x1 * y2 - x2 * y1
     denom = a1 * b2 - a2 * b1;
 
-  if (!denom) return; // parallel lines havn't an intersection
+  if (!denom) return; // parallel lines haven't an intersection
 
   /**
    * @type {Point}
