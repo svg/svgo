@@ -31,17 +31,18 @@ exports.fn = (root, params) => {
         }
 
         const computedStyle = computeStyle(stylesheet, node);
-        const transformStyle = computedStyle.transform;
-        if (
-          !transformStyle ||
-          transformStyle.type !== 'static' ||
-          transformStyle.value !== node.attributes.transform
-        ) {
-          return;
-        }
+        if (computedStyle.filter) return;
         if (
           computedStyle.stroke?.type === 'dynamic' ||
           computedStyle['stroke-width']?.type === 'dynamic'
+        ) {
+          return;
+        }
+
+        const transformStyle = computedStyle.transform;
+        if (
+          transformStyle?.type !== 'static' ||
+          transformStyle.value !== node.attributes.transform
         ) {
           return;
         }
