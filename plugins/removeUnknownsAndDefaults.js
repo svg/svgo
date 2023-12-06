@@ -99,6 +99,7 @@ exports.fn = (root, params) => {
     unknownContent = true,
     unknownAttrs = true,
     defaultAttrs = true,
+    defaultMarkupDeclarations = true,
     uselessOverrides = true,
     keepDataAttrs = true,
     keepAriaAttrs = true,
@@ -107,6 +108,13 @@ exports.fn = (root, params) => {
   const stylesheet = collectStylesheet(root);
 
   return {
+    instruction: {
+      enter: (node) => {
+        if (defaultMarkupDeclarations) {
+          node.value = node.value.replace(/\s*standalone\s*=\s*(["'])no\1/, '');
+        }
+      },
+    },
     element: {
       enter: (node, parentNode) => {
         // skip namespaced elements
