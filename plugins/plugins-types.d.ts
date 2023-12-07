@@ -14,8 +14,8 @@ type DefaultPlugins = {
   cleanupIds: {
     remove?: boolean;
     minify?: boolean;
-    preserve?: Array<string>;
-    preservePrefixes?: Array<string>;
+    preserve?: string[];
+    preservePrefixes?: string[];
     force?: boolean;
   };
   cleanupNumericValues: {
@@ -146,7 +146,7 @@ type DefaultPlugins = {
   };
   removeDoctype: void;
   removeEditorsNSData: {
-    additionalNamespaces?: Array<string>;
+    additionalNamespaces?: string[];
   };
   removeEmptyAttrs: void;
   removeEmptyContainers: void;
@@ -179,6 +179,12 @@ type DefaultPlugins = {
     unknownContent?: boolean;
     unknownAttrs?: boolean;
     defaultAttrs?: boolean;
+    /**
+     * If to remove XML declarations that are assigned their default value. XML
+     * declarations are the properties in the `<?xml … ?>` block at the top of
+     * the document.
+     */
+    defaultMarkupDeclarations?: boolean;
     uselessOverrides?: boolean;
     keepDataAttrs?: boolean;
     keepAriaAttrs?: boolean;
@@ -194,7 +200,7 @@ type DefaultPlugins = {
   removeViewBox: void;
   removeXMLProcInst: void;
   sortAttrs: {
-    order?: Array<string>;
+    order?: string[];
     xmlnsOrder?: 'front' | 'alphabetical';
   };
   sortDefsChildren: void;
@@ -262,17 +268,17 @@ export type BuiltinsWithRequiredParams = {
   };
   addClassesToSVGElement: {
     className?: string;
-    classNames?: Array<string>;
+    classNames?: string[];
   };
   removeAttributesBySelector: any;
   removeAttrs: {
     elemSeparator?: string;
     preserveCurrentColor?: boolean;
-    attrs: string | Array<string>;
+    attrs: string | string[];
   };
   removeElementsByAttr: {
-    id?: string | Array<string>;
-    class?: string | Array<string>;
+    id?: string | string[];
+    class?: string | string[];
   };
 };
 
