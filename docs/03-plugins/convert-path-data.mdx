@@ -30,6 +30,9 @@ svgo:
     transformPrecision:
       description: Number of decimal places to round to, using conventional rounding rules.
       default: 5
+    smartArcRounding:
+      description: Round the radius of circular arcs more when the effective change (measured with the sagitta) is under the error.
+      default: true
     removeUseless:
       description: Remove redundant path commands that don't draw anything.
       default: true

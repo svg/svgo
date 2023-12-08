@@ -1,0 +1,13 @@
+Should round radius considering the sagitta
+
+===
+
+<svg>
+    <path d="m 0 0 a 10.567 10.567 0 0 0 1 0"/>
+</svg>
+
+@@@
+
+<svg>
+    <path d="M0 0a11 11 0 0 0 1 0"/>
+</svg>

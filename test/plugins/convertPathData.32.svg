@@ -1,0 +1,13 @@
+Should convert arc to line
+
+===
+
+<svg>
+    <path d="m 0 0 a 10000 10000 0 0 0 1 0"/>
+</svg>
+
+@@@
+
+<svg>
+    <path d="M0 0h1"/>
+</svg>

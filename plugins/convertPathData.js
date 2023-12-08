@@ -50,6 +50,7 @@ let arcTolerance;
  *   curveSmoothShorthands: boolean,
  *   floatPrecision: number | false,
  *   transformPrecision: number,
+ *   smartArcRounding: boolean,
  *   removeUseless: boolean,
  *   collapseRepeated: boolean,
  *   utilizeAbsolute: boolean,
@@ -100,6 +101,7 @@ exports.fn = (root, params) => {
     curveSmoothShorthands = true,
     floatPrecision = 3,
     transformPrecision = 5,
+    smartArcRounding = true,
     removeUseless = true,
     collapseRepeated = true,
     utilizeAbsolute = true,
@@ -122,6 +124,7 @@ exports.fn = (root, params) => {
     curveSmoothShorthands,
     floatPrecision,
     transformPrecision,
+    smartArcRounding,
     removeUseless,
     collapseRepeated,
     utilizeAbsolute,
@@ -404,6 +407,8 @@ function filters(
       var sdata = data,
         circle;
 
+      const sagitta = command === 'a' ? calculateSagitta(data) : undefined;
+
       if (command === 's') {
         sdata = [0, 0].concat(data);
 
@@ -638,6 +643,28 @@ function filters(
         }
       }
 
+      // round arc radius more accurately
+      // eg m 0 0 a 1234.567 1234.567 0 0 1 10 0 -> m 0 0 a 1235 1235 0 0 1 10 0
+      if (
+        params.smartArcRounding &&
+        command === 'a' &&
+        sagitta !== undefined &&
+        precision
+      ) {
+        for (let precisionNew = precision; precisionNew >= 0; precisionNew--) {
+          const radius = toFixed(data[0], precisionNew);
+          const sagittaNew = /** @type {number} */ (
+            calculateSagitta([radius, radius].concat(data.slice(2)))
+          );
+          if (Math.abs(sagitta - sagittaNew) < error) {
+            data[0] = radius;
+            data[1] = radius;
+          } else {
+            break;
+          }
+        }
+      }
+
       // convert straight curves into lines segments
       if (params.straightCurves) {
         if (
@@ -660,7 +687,12 @@ function filters(
         ) {
           command = 'l';
           data = data.slice(-2);
-        } else if (command === 'a' && (data[0] === 0 || data[1] === 0)) {
+        } else if (
+          command === 'a' &&
+          (data[0] === 0 ||
+            data[1] === 0 ||
+            (sagitta !== undefined && sagitta < error))
+        ) {
           command = 'l';
           data = data.slice(-2);
         }
@@ -1062,6 +1094,21 @@ function isCurveStraightLine(data) {
   }
 
   return true;
+}
+
+/**
+ * Calculates the sagitta of an arc if possible.
+ *
+ * @type {(data: number[]) => number | undefined}
+ */
+function calculateSagitta(data) {
+  const rx = data[0],
+    ry = data[1],
+    distance = Math.sqrt(Math.pow(data[5], 2) + Math.pow(data[6], 2));
+  if (Math.abs(rx - ry) > error) return undefined;
+  if (distance / 2 > rx) return undefined;
+  if (data[3] == 1) return undefined;
+  return rx - Math.sqrt(Math.pow(rx, 2) - 0.25 * Math.pow(distance, 2));
 }
 
 /**
