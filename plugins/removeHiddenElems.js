@@ -75,6 +75,11 @@ exports.fn = (root, params) => {
   const removedDefIds = new Set();
 
   /**
+   * @type {Map<string, Array<{node: XastElement, parentNode: XastParent }>>}
+   */
+  const referencesById = new Map();
+
+  /**
    * @param {XastChild} node
    * @param {XastParent} parentNode
    */
@@ -104,6 +109,23 @@ exports.fn = (root, params) => {
           nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
+
+        if (node.name == 'use') {
+          const reference = Object.keys(node.attributes).find(
+            (attr) => attr === 'href' || attr.endsWith('href')
+          );
+          const referenceValue = reference && node.attributes[reference];
+          const referenceId = referenceValue && referenceValue.slice(1);
+          if (referenceId) {
+            let refs = referencesById.get(referenceId);
+            if (!refs) {
+              refs = [];
+              referencesById.set(referenceId, refs);
+            }
+            refs.push({ node, parentNode });
+          }
+        }
+
         const computedStyle = computeStyle(stylesheet, node);
         // opacity="0"
         //
@@ -356,38 +378,32 @@ exports.fn = (root, params) => {
           removeElement(node, parentNode);
           return;
         }
-
-        if (node.name === 'use') {
-          const referencesRemovedDef = Object.entries(node.attributes).some(
-            ([attrKey, attrValue]) =>
-              (attrKey === 'href' || attrKey.endsWith(':href')) &&
-              removedDefIds.has(
-                attrValue.slice(attrValue.indexOf('#') + 1).trim()
-              )
-          );
-
-          if (referencesRemovedDef) {
-            detachNodeFromParent(node, parentNode);
+      },
+    },
+    root: {
+      exit: () => {
+        // Remove uses of deleted definitions
+        for (const id of removedDefIds) {
+          const refs = referencesById.get(id);
+          if (refs) {
+            for (const { node, parentNode } of refs) {
+              detachNodeFromParent(node, parentNode);
+            }
           }
-
-          return;
         }
 
-        if (node.name === 'svg' && parentNode.type === 'root') {
-          for (const [
-            nonRenderedNode,
-            nonRenderedParent,
-          ] of nonRenderedNodes.entries()) {
-            const selector = referencesProps
-              .map(
-                (attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`
-              )
-              .join(',');
+        // Remove definitions that are unused
+        for (const [
+          nonRenderedNode,
+          nonRenderedParent,
+        ] of nonRenderedNodes.entries()) {
+          const selector = referencesProps
+            .map((attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`)
+            .join(',');
 
-            const element = querySelector(root, selector);
-            if (element == null) {
-              detachNodeFromParent(node, nonRenderedParent);
-            }
+          const element = querySelector(root, selector);
+          if (element == null) {
+            detachNodeFromParent(nonRenderedNode, nonRenderedParent);
           }
         }
       },
