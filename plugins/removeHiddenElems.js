@@ -143,19 +143,16 @@ exports.fn = (root, params) => {
           return;
         }
 
-        // Store uses so that they can be removed if broken
-        // and used to determine if a definition is unused
-        if (node.name == 'use') {
-          const reference = Object.keys(node.attributes).find(
-            (attr) => attr === 'href' || attr.endsWith('href')
-          );
-          const referenceValue = reference && node.attributes[reference];
-          const referenceId = referenceValue && referenceValue.slice(1);
-          if (referenceId) {
-            let refs = referencesById.get(referenceId);
+        if (node.name === 'use') {
+          for (const attr of Object.keys(node.attributes)) {
+            if (attr !== 'href' && !attr.endsWith(':href')) continue;
+            const value = node.attributes[attr];
+            const id = value.slice(1);
+
+            let refs = referencesById.get(id);
             if (!refs) {
               refs = [];
-              referencesById.set(referenceId, refs);
+              referencesById.set(id, refs);
             }
             refs.push({ node, parentNode });
           }
