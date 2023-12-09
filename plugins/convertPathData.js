@@ -742,8 +742,8 @@ function filters(
             prev.command !== 'c' &&
             // @ts-ignore
             prev.command !== 's' &&
-            data[0] < error &&
-            data[1] < error
+            Math.abs(data[0]) < error &&
+            Math.abs(data[1]) < error
           ) {
             command = 's';
             data = data.slice(2);
