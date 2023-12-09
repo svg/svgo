@@ -81,13 +81,6 @@ exports.fn = (root, params) => {
   const allDefs = new Map();
 
   /**
-   * Defs that may have had their children removed.
-   *
-   * @type {Set<XastParent>}
-   */
-  const affectedDefs = new Set();
-
-  /**
    * @type {Map<string, Array<{node: XastElement, parentNode: XastParent }>>}
    */
   const referencesById = new Map();
@@ -103,16 +96,12 @@ exports.fn = (root, params) => {
    */
   function removeElement(node, parentNode) {
     if (
+      node.type === 'element' &&
+      node.attributes.id != null &&
       parentNode.type === 'element' &&
       parentNode.name === 'defs'
     ) {
-      affectedDefs.add(parentNode)
-      if (
-        node.type === 'element' &&
-        node.attributes.id != null
-      ) {
-        removedDefIds.add(node.attributes.id);
-      }
+      removedDefIds.add(node.attributes.id);
     }
 
     detachNodeFromParent(node, parentNode);
@@ -438,10 +427,9 @@ exports.fn = (root, params) => {
         }
 
         // Remove empty defs
-        for (const node of affectedDefs) {
+        for (const [node, parentNode] of allDefs.entries()) {
           if (node.children.length === 0) {
-            const parentNode = allDefs.get(node);
-            detachNodeFromParent(node, parentNode)
+            detachNodeFromParent(node, parentNode);
           }
         }
       },
