@@ -3,12 +3,8 @@ env:
   FORCE_COLOR: 2
   NODE: 20
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  - push
+  - pull_request
 
 permissions:
   contents: read
