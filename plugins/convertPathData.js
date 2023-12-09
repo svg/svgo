@@ -715,9 +715,9 @@ function filters(
             // @ts-ignore
             prev.command === 'c' &&
             // @ts-ignore
-            data[0] === -(prev.args[2] - prev.args[4]) &&
+            Math.abs(data[0] - -(prev.args[2] - prev.args[4])) < error &&
             // @ts-ignore
-            data[1] === -(prev.args[3] - prev.args[5])
+            Math.abs(data[1] - -(prev.args[3] - prev.args[5])) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -728,9 +728,9 @@ function filters(
             // @ts-ignore
             prev.command === 's' &&
             // @ts-ignore
-            data[0] === -(prev.args[0] - prev.args[2]) &&
+            Math.abs(data[0] - -(prev.args[0] - prev.args[2])) < error &&
             // @ts-ignore
-            data[1] === -(prev.args[1] - prev.args[3])
+            Math.abs(data[1] - -(prev.args[1] - prev.args[3])) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -742,8 +742,8 @@ function filters(
             prev.command !== 'c' &&
             // @ts-ignore
             prev.command !== 's' &&
-            data[0] === 0 &&
-            data[1] === 0
+            data[0] < error &&
+            data[1] < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -757,9 +757,9 @@ function filters(
             // @ts-ignore
             prev.command === 'q' &&
             // @ts-ignore
-            data[0] === prev.args[2] - prev.args[0] &&
+            Math.abs(data[0] - (prev.args[2] - prev.args[0])) < error &&
             // @ts-ignore
-            data[1] === prev.args[3] - prev.args[1]
+            Math.abs(data[1] - (prev.args[3] - prev.args[1])) < error
           ) {
             command = 't';
             data = data.slice(2);
@@ -770,9 +770,9 @@ function filters(
             // @ts-ignore
             prev.command === 't' &&
             // @ts-ignore
-            data[2] === prev.args[0] &&
+            Math.abs(data[2] - prev.args[0]) < error &&
             // @ts-ignore
-            data[3] === prev.args[1]
+            Math.abs(data[3] - prev.args[1]) < error
           ) {
             command = 't';
             data = data.slice(2);
