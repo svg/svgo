@@ -81,7 +81,7 @@ exports.fn = (root, params) => {
   const allDefs = new Map();
 
   /**
-   * @type {Map<string, Array<{node: XastElement, parentNode: XastParent }>>}
+   * @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>}
    */
   const referencesById = new Map();
 
@@ -396,7 +396,6 @@ exports.fn = (root, params) => {
     },
     root: {
       exit: () => {
-        // Remove uses of deleted definitions
         for (const id of removedDefIds) {
           const refs = referencesById.get(id);
           if (refs) {
@@ -406,7 +405,6 @@ exports.fn = (root, params) => {
           }
         }
 
-        // Remove definitions that are unused
         if (!deoptimized) {
           for (const [
             nonRenderedNode,
@@ -425,7 +423,6 @@ exports.fn = (root, params) => {
           }
         }
 
-        // Remove empty defs
         for (const [node, parentNode] of allDefs.entries()) {
           if (node.children.length === 0) {
             detachNodeFromParent(node, parentNode);
