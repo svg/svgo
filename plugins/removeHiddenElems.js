@@ -15,6 +15,7 @@ const {
 } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
+const { hasScripts } = require('../lib/svgo/tools.js');
 
 const nonRendering = elemsGroups.nonRendering;
 
@@ -80,6 +81,11 @@ exports.fn = (root, params) => {
   const referencesById = new Map();
 
   /**
+   * If styles are present, we can't be sure if a definition is unused or not
+   */
+  let deoptimized = false;
+
+  /**
    * @param {XastChild} node
    * @param {XastParent} parentNode
    */
@@ -110,22 +116,6 @@ exports.fn = (root, params) => {
           return visitSkip;
         }
 
-        if (node.name == 'use') {
-          const reference = Object.keys(node.attributes).find(
-            (attr) => attr === 'href' || attr.endsWith('href')
-          );
-          const referenceValue = reference && node.attributes[reference];
-          const referenceId = referenceValue && referenceValue.slice(1);
-          if (referenceId) {
-            let refs = referencesById.get(referenceId);
-            if (!refs) {
-              refs = [];
-              referencesById.set(referenceId, refs);
-            }
-            refs.push({ node, parentNode });
-          }
-        }
-
         const computedStyle = computeStyle(stylesheet, node);
         // opacity="0"
         //
@@ -145,6 +135,32 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
+        if (
+          (node.name === 'style' && node.children.length !== 0) ||
+          hasScripts(node)
+        ) {
+          deoptimized = true;
+          return;
+        }
+
+        // Store uses so that they can be removed if broken
+        // and used to determine if a definition is unused
+        if (node.name == 'use') {
+          const reference = Object.keys(node.attributes).find(
+            (attr) => attr === 'href' || attr.endsWith('href')
+          );
+          const referenceValue = reference && node.attributes[reference];
+          const referenceId = referenceValue && referenceValue.slice(1);
+          if (referenceId) {
+            let refs = referencesById.get(referenceId);
+            if (!refs) {
+              refs = [];
+              referencesById.set(referenceId, refs);
+            }
+            refs.push({ node, parentNode });
+          }
+        }
+
         // Removes hidden elements
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
         const computedStyle = computeStyle(stylesheet, node);
@@ -393,17 +409,21 @@ exports.fn = (root, params) => {
         }
 
         // Remove definitions that are unused
-        for (const [
-          nonRenderedNode,
-          nonRenderedParent,
-        ] of nonRenderedNodes.entries()) {
-          const selector = referencesProps
-            .map((attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`)
-            .join(',');
+        if (!deoptimized) {
+          for (const [
+            nonRenderedNode,
+            nonRenderedParent,
+          ] of nonRenderedNodes.entries()) {
+            const id = nonRenderedNode.attributes.id;
+            const selector = referencesProps
+              .map((attr) => `[${attr}="url(#${id})"]`)
+              .concat(`[href="#${id}"]`, `[xlink\\:href="#${id}"]`)
+              .join(',');
 
-          const element = querySelector(root, selector);
-          if (element == null) {
-            detachNodeFromParent(nonRenderedNode, nonRenderedParent);
+            const element = querySelector(root, selector);
+            if (element == null) {
+              detachNodeFromParent(nonRenderedNode, nonRenderedParent);
+            }
           }
         }
       },
