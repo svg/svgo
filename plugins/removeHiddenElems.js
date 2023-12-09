@@ -76,6 +76,18 @@ exports.fn = (root, params) => {
   const removedDefIds = new Set();
 
   /**
+   * @type {Map<XastElement, XastParent>}
+   */
+  const allDefs = new Map();
+
+  /**
+   * Defs that may have had their children removed.
+   *
+   * @type {Set<XastParent>}
+   */
+  const affectedDefs = new Set();
+
+  /**
    * @type {Map<string, Array<{node: XastElement, parentNode: XastParent }>>}
    */
   const referencesById = new Map();
@@ -91,12 +103,16 @@ exports.fn = (root, params) => {
    */
   function removeElement(node, parentNode) {
     if (
-      node.type === 'element' &&
-      node.attributes.id != null &&
       parentNode.type === 'element' &&
       parentNode.name === 'defs'
     ) {
-      removedDefIds.add(node.attributes.id);
+      affectedDefs.add(parentNode)
+      if (
+        node.type === 'element' &&
+        node.attributes.id != null
+      ) {
+        removedDefIds.add(node.attributes.id);
+      }
     }
 
     detachNodeFromParent(node, parentNode);
@@ -141,6 +157,10 @@ exports.fn = (root, params) => {
         ) {
           deoptimized = true;
           return;
+        }
+
+        if (node.name === 'defs') {
+          allDefs.set(node, parentNode);
         }
 
         if (node.name === 'use') {
@@ -385,13 +405,6 @@ exports.fn = (root, params) => {
           removeElement(node, parentNode);
         }
       },
-
-      exit: (node, parentNode) => {
-        if (node.name === 'defs' && node.children.length === 0) {
-          removeElement(node, parentNode);
-          return;
-        }
-      },
     },
     root: {
       exit: () => {
@@ -421,6 +434,14 @@ exports.fn = (root, params) => {
             if (element == null) {
               detachNodeFromParent(nonRenderedNode, nonRenderedParent);
             }
+          }
+        }
+
+        // Remove empty defs
+        for (const node of affectedDefs) {
+          if (node.children.length === 0) {
+            const parentNode = allDefs.get(node);
+            detachNodeFromParent(node, parentNode)
           }
         }
       },
