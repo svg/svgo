@@ -120,7 +120,6 @@ exports.fn = (root, params) => {
           nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
-
         const computedStyle = computeStyle(stylesheet, node);
         // opacity="0"
         //
