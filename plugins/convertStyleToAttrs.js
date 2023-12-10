@@ -93,7 +93,6 @@ exports.fn = (_root, params) => {
           );
 
           regDeclarationBlock.lastIndex = 0;
-          // eslint-disable-next-line no-cond-assign
           for (var rule; (rule = regDeclarationBlock.exec(styleValue)); ) {
             if (!keepImportant || !rule[3]) {
               styles.push([rule[1], rule[2]]);
