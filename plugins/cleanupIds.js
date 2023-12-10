@@ -5,15 +5,11 @@
  */
 
 const { visitSkip } = require('../lib/xast.js');
-const { hasScripts } = require('../lib/svgo/tools');
-const { referencesProps } = require('./_collections.js');
+const { hasScripts, findReferences } = require('../lib/svgo/tools');
 
 exports.name = 'cleanupIds';
 exports.description = 'removes unused IDs and minifies used';
 
-const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/g;
-const regReferencesHref = /^#(.+?)$/;
-const regReferencesBegin = /(\w+)\.[a-zA-Z]/;
 const generateIdChars = [
   'a',
   'b',
@@ -191,35 +187,12 @@ exports.fn = (_root, params) => {
               nodeById.set(id, node);
             }
           } else {
-            // collect all references
-            /**
-             * @type {string[]}
-             */
-            let ids = [];
-            if (referencesProps.includes(name)) {
-              const matches = value.matchAll(regReferencesUrl);
-              for (const match of matches) {
-                ids.push(match[2]); // url() reference
-              }
-            }
-            if (name === 'href' || name.endsWith(':href')) {
-              const match = value.match(regReferencesHref);
-              if (match != null) {
-                ids.push(match[1]); // href reference
-              }
-            }
-            if (name === 'begin') {
-              const match = value.match(regReferencesBegin);
-              if (match != null) {
-                ids.push(match[1]); // href reference
-              }
-            }
+            const ids = findReferences(name, value);
             for (const id of ids) {
-              const decodedId = decodeURI(id);
-              let refs = referencesById.get(decodedId);
+              let refs = referencesById.get(id);
               if (refs == null) {
                 refs = [];
-                referencesById.set(decodedId, refs);
+                referencesById.set(id, refs);
               }
               refs.push({ element: node, name });
             }

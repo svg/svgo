@@ -237,8 +237,8 @@ exports.fn = (_root, params, info) => {
             node.attributes[name].length !== 0
           ) {
             node.attributes[name] = node.attributes[name].replace(
-              /url\((.*?)\)/gi,
-              (match, url) => {
+              /\burl\((["'])?(#.+?)\1\)/gi,
+              (match, _, url) => {
                 const prefixed = prefixReference(prefixGenerator, url);
                 if (prefixed == null) {
                   return match;

@@ -6,7 +6,7 @@
  * @typedef {import('../lib/types').XastParent} XastParent
  */
 
-const { elemsGroups, referencesProps } = require('./_collections.js');
+const { elemsGroups } = require('./_collections.js');
 const {
   visit,
   visitSkip,
@@ -15,7 +15,7 @@ const {
 } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
-const { hasScripts } = require('../lib/svgo/tools.js');
+const { hasScripts, findReferences } = require('../lib/svgo/tools.js');
 
 const nonRendering = elemsGroups.nonRendering;
 
@@ -79,6 +79,9 @@ exports.fn = (root, params) => {
    * @type {Map<XastElement, XastParent>}
    */
   const allDefs = new Map();
+
+  /** @type {Set<string>} */
+  const allReferences = new Set();
 
   /**
    * @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>}
@@ -363,7 +366,6 @@ exports.fn = (root, params) => {
             removeElement(node, parentNode);
             return;
           }
-          return;
         }
 
         // Polyline with empty points
@@ -391,6 +393,15 @@ exports.fn = (root, params) => {
           node.attributes.points == null
         ) {
           removeElement(node, parentNode);
+          return;
+        }
+
+        for (const [name, value] of Object.entries(node.attributes)) {
+          const ids = findReferences(name, value);
+
+          for (const id of ids) {
+            allReferences.add(id);
+          }
         }
       },
     },
@@ -411,13 +422,8 @@ exports.fn = (root, params) => {
             nonRenderedParent,
           ] of nonRenderedNodes.entries()) {
             const id = nonRenderedNode.attributes.id;
-            const selector = referencesProps
-              .map((attr) => `[${attr}="url(#${id})"]`)
-              .concat(`[href="#${id}"]`, `[xlink\\:href="#${id}"]`)
-              .join(',');
 
-            const element = querySelector(root, selector);
-            if (element == null) {
+            if (!allReferences.has(id)) {
               detachNodeFromParent(nonRenderedNode, nonRenderedParent);
             }
           }
