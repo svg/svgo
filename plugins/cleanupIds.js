@@ -215,10 +215,11 @@ exports.fn = (_root, params) => {
               }
             }
             for (const id of ids) {
-              let refs = referencesById.get(id);
+              const decodedId = decodeURI(id);
+              let refs = referencesById.get(decodedId);
               if (refs == null) {
                 refs = [];
-                referencesById.set(id, refs);
+                referencesById.set(decodedId, refs);
               }
               refs.push({ element: node, name });
             }
@@ -261,7 +262,7 @@ exports.fn = (_root, params) => {
                 if (value.includes('#')) {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(
-                    `#${id}`,
+                    `#${encodeURI(id)}`,
                     `#${currentIdString}`
                   );
                 } else {
