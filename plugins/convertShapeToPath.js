@@ -33,30 +33,81 @@ exports.fn = (root, params) => {
         if (
           node.name === 'rect' &&
           node.attributes.width != null &&
-          node.attributes.height != null &&
-          node.attributes.rx == null &&
-          node.attributes.ry == null
+          node.attributes.height != null
         ) {
           const x = Number(node.attributes.x || '0');
           const y = Number(node.attributes.y || '0');
           const width = Number(node.attributes.width);
           const height = Number(node.attributes.height);
+
+          // In accordance with https://svgwg.org/svg2-draft/geometry.html:
+          // `rx` and `ry` must be at minimum zero and the maximum must be 50% of width/height.
+          const _rx = Number(node.attributes.rx || node.attributes.ry || '0');
+          const rx = Math.min(width * 0.5, Math.max(0, _rx));
+          const _ry = Number(node.attributes.ry || node.attributes.rx || '0');
+          const ry = Math.min(height * 0.5, Math.max(0, _ry));
+
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
-          if (Number.isNaN(x - y + width - height)) return;
-          /**
-           * @type {Array<PathDataItem>}
-           */
-          const pathData = [
-            { command: 'M', args: [x, y] },
-            { command: 'H', args: [x + width] },
-            { command: 'V', args: [y + height] },
-            { command: 'H', args: [x] },
-            { command: 'z', args: [] },
-          ];
+          if (Number.isNaN(x - y + width - height + rx - ry)) return;
+
+          if (rx === 0 && ry === 0) {
+            /**
+             * @type {Array<PathDataItem>}
+             */
+            const pathData = [
+              { command: 'M', args: [x, y] },
+              { command: 'H', args: [x + width] },
+              { command: 'V', args: [y + height] },
+              { command: 'H', args: [x] },
+              { command: 'z', args: [] },
+            ];
+            node.attributes.d = stringifyPathData({ pathData, precision });
+          } else if (!convertArcs) {
+            return;
+          } else {
+            const fullX = x + width;
+            const fullY = y + height;
+
+            /**
+             * @type {Array<PathDataItem>}
+             */
+            const pathData = [
+              { command: 'M', args: [fullX - rx, y] },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, fullX, y + ry],
+              },
+              {
+                command: 'L',
+                args: [fullX, fullY - ry],
+              },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, fullX - rx, fullY],
+              },
+              { command: 'L', args: [x + rx, fullY] },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, x, fullY - ry],
+              },
+              { command: 'L', args: [x, y + ry] },
+              {
+                command: 'A',
+                args: [rx, ry, 0, 0, 1, x + rx, y],
+              },
+              {
+                command: 'z',
+                args: [],
+              },
+            ];
+            node.attributes.d = stringifyPathData({ pathData, precision });
+          }
+
           node.name = 'path';
-          node.attributes.d = stringifyPathData({ pathData, precision });
+          delete node.attributes.rx;
+          delete node.attributes.ry;
           delete node.attributes.x;
           delete node.attributes.y;
           delete node.attributes.width;
