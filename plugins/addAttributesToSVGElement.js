@@ -76,7 +76,7 @@ exports.fn = (root, params) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

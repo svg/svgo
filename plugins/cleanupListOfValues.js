@@ -15,7 +15,7 @@ const absoluteLengths = {
   in: 96,
   pt: 4 / 3,
   pc: 16,
-  px: 1,
+  px: 1
 };
 
 /**
@@ -39,7 +39,7 @@ exports.fn = (_root, params) => {
     floatPrecision = 3,
     leadingZero = true,
     defaultPx = true,
-    convertToPx = true,
+    convertToPx = true
   } = params;
 
   /**
@@ -68,7 +68,7 @@ exports.fn = (_root, params) => {
         // convert absolute values to pixels
         if (convertToPx && units && units in absoluteLengths) {
           const pxNum = Number(
-            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision),
+            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision)
           );
 
           if (pxNum.toString().length < match[0].length) {
@@ -112,7 +112,7 @@ exports.fn = (_root, params) => {
 
         if (node.attributes['enable-background'] != null) {
           node.attributes['enable-background'] = roundValues(
-            node.attributes['enable-background'],
+            node.attributes['enable-background']
           );
         }
 
@@ -122,7 +122,7 @@ exports.fn = (_root, params) => {
 
         if (node.attributes['stroke-dasharray'] != null) {
           node.attributes['stroke-dasharray'] = roundValues(
-            node.attributes['stroke-dasharray'],
+            node.attributes['stroke-dasharray']
           );
         }
 
@@ -141,7 +141,7 @@ exports.fn = (_root, params) => {
         if (node.attributes.y != null) {
           node.attributes.y = roundValues(node.attributes.y);
         }
-      },
-    },
+      }
+    }
   };
 };

@@ -37,8 +37,8 @@ exports.fn = (root) => {
         if (node.name === 'style') {
           deoptimizedWithStyles = true;
         }
-      },
-    },
+      }
+    }
   });
 
   return {
@@ -122,7 +122,7 @@ exports.fn = (root) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

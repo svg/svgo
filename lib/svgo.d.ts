@@ -1,7 +1,7 @@
 import type { StringifyOptions, DataUri, Plugin as PluginFn } from './types';
 import type {
   BuiltinsWithOptionalParams,
-  BuiltinsWithRequiredParams,
+  BuiltinsWithRequiredParams
 } from '../plugins/plugins-types';
 
 type CustomPlugin = {
@@ -61,9 +61,9 @@ export declare function optimize(input: string, config?: Config): Output;
  */
 export declare function loadConfig(
   configFile: string,
-  cwd?: string,
+  cwd?: string
 ): Promise<Config>;
 export declare function loadConfig(
   configFile?: null,
-  cwd?: string,
+  cwd?: string
 ): Promise<Config | null>;

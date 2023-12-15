@@ -57,7 +57,7 @@ exports.fn = () => {
           // ensure that the dimensions are 4 values separated by space
           const m =
             /^(-?\d*\.?\d+) (-?\d*\.?\d+) (\d*\.?\d+) (\d*\.?\d+)$/.exec(
-              viewBox,
+              viewBox
             );
           if (m == null) {
             return;
@@ -74,7 +74,7 @@ exports.fn = () => {
             right: left + width,
             bottom: top + height,
             width,
-            height,
+            height
           };
         }
 
@@ -123,14 +123,14 @@ exports.fn = () => {
             { command: 'h', args: [width] },
             { command: 'v', args: [height] },
             { command: 'H', args: [left] },
-            { command: 'z', args: [] },
+            { command: 'z', args: [] }
           ];
 
           if (intersects(viewBoxPathData, pathData) === false) {
             detachNodeFromParent(node, parentNode);
           }
         }
-      },
-    },
+      }
+    }
   };
 };

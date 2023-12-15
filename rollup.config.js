@@ -6,7 +6,7 @@ export default {
   input: './lib/svgo.js',
   output: {
     file: './dist/svgo.browser.js',
-    format: 'esm',
+    format: 'esm'
   },
   onwarn(warning) {
     throw Error(warning.toString());
@@ -19,7 +19,7 @@ export default {
     terser({
       compress: false,
       mangle: false,
-      format: { comments: false },
-    }),
-  ],
+      format: { comments: false }
+    })
+  ]
 };

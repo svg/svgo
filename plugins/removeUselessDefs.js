@@ -34,7 +34,7 @@ exports.fn = () => {
           for (const usefulNode of usefulNodes) {
             Object.defineProperty(usefulNode, 'parentNode', {
               writable: true,
-              value: node,
+              value: node
             });
           }
           node.children = usefulNodes;
@@ -44,8 +44,8 @@ exports.fn = () => {
         ) {
           detachNodeFromParent(node, parentNode);
         }
-      },
-    },
+      }
+    }
   };
 };
 

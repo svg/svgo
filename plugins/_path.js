@@ -199,14 +199,14 @@ exports.js2path = function (path, data, params) {
     }
     pathData.push({
       command: item.command,
-      args: item.args,
+      args: item.args
     });
   }
 
   path.attributes.d = stringifyPathData({
     pathData,
     precision: params.floatPrecision,
-    disableSpaceAfterFlags: params.noSpaceAfterFlags,
+    disableSpaceAfterFlags: params.noSpaceAfterFlags
   });
 };
 
@@ -269,7 +269,7 @@ exports.intersects = function (path1, path2) {
       while (true) {
         if (iterations-- == 0) {
           console.error(
-            'Error: infinite loop while processing mergePaths plugin.',
+            'Error: infinite loop while processing mergePaths plugin.'
           );
           return true; // true is the safe value that means “do nothing with paths”
         }
@@ -511,7 +511,7 @@ function gatherPoints(pathData) {
         ) {
           ctrlPoint = [
             basePoint[0] + prevCtrlPoint[0],
-            basePoint[1] + prevCtrlPoint[1],
+            basePoint[1] + prevCtrlPoint[1]
           ];
           addPoint(subPath, ctrlPoint);
           prevCtrlPoint = [data[0] - ctrlPoint[0], data[1] - ctrlPoint[1]];
@@ -523,16 +523,16 @@ function gatherPoints(pathData) {
           // Approximate quibic Bezier curve with middle points between control points
           addPoint(subPath, [
             0.5 * (basePoint[0] + data[0]),
-            0.5 * (basePoint[1] + data[1]),
+            0.5 * (basePoint[1] + data[1])
           ]);
         }
         addPoint(subPath, [
           0.5 * (data[0] + data[2]),
-          0.5 * (data[1] + data[3]),
+          0.5 * (data[1] + data[3])
         ]);
         addPoint(subPath, [
           0.5 * (data[2] + data[4]),
-          0.5 * (data[3] + data[5]),
+          0.5 * (data[3] + data[5])
         ]);
         prevCtrlPoint = [data[4] - data[2], data[5] - data[3]]; // Save control point for shorthand
         break;
@@ -545,22 +545,22 @@ function gatherPoints(pathData) {
         ) {
           addPoint(subPath, [
             basePoint[0] + 0.5 * prevCtrlPoint[0],
-            basePoint[1] + 0.5 * prevCtrlPoint[1],
+            basePoint[1] + 0.5 * prevCtrlPoint[1]
           ]);
           ctrlPoint = [
             basePoint[0] + prevCtrlPoint[0],
-            basePoint[1] + prevCtrlPoint[1],
+            basePoint[1] + prevCtrlPoint[1]
           ];
         }
         if (ctrlPoint != null) {
           addPoint(subPath, [
             0.5 * (ctrlPoint[0] + data[0]),
-            0.5 * (ctrlPoint[1] + data[1]),
+            0.5 * (ctrlPoint[1] + data[1])
           ]);
         }
         addPoint(subPath, [
           0.5 * (data[0] + data[2]),
-          0.5 * (data[1] + data[3]),
+          0.5 * (data[1] + data[3])
         ]);
         prevCtrlPoint = [data[2] - data[0], data[3] - data[1]];
         break;
@@ -578,16 +578,16 @@ function gatherPoints(pathData) {
             if (basePoint != null) {
               addPoint(subPath, [
                 0.5 * (basePoint[0] + cData[0]),
-                0.5 * (basePoint[1] + cData[1]),
+                0.5 * (basePoint[1] + cData[1])
               ]);
             }
             addPoint(subPath, [
               0.5 * (cData[0] + cData[2]),
-              0.5 * (cData[1] + cData[3]),
+              0.5 * (cData[1] + cData[3])
             ]);
             addPoint(subPath, [
               0.5 * (cData[2] + cData[4]),
-              0.5 * (cData[3] + cData[5]),
+              0.5 * (cData[3] + cData[5])
             ]);
             if (curves.length) addPoint(subPath, (basePoint = cData.slice(-2)));
           }
@@ -663,7 +663,7 @@ function convexHull(points) {
     minX: 0, // by sorting
     maxX: lower.length,
     minY: bottom,
-    maxY: (lower.length + top) % hullList.length,
+    maxY: (lower.length + top) % hullList.length
   };
 
   return hull;
@@ -703,7 +703,7 @@ const a2c = (
   sweep_flag,
   x2,
   y2,
-  recursive,
+  recursive
 ) => {
   // for more information of where this Math came from visit:
   // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
@@ -744,8 +744,8 @@ const a2c = (
       (large_arc_flag == sweep_flag ? -1 : 1) *
       Math.sqrt(
         Math.abs(
-          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x),
-        ),
+          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x)
+        )
       );
     var cx = (k * rx * y) / ry + (x1 + x2) / 2;
     var cy = (k * -ry * x) / rx + (y1 + y2) / 2;
@@ -780,7 +780,7 @@ const a2c = (
       f2,
       f2old,
       cx,
-      cy,
+      cy
     ]);
   }
   df = f2 - f1;
@@ -797,7 +797,7 @@ const a2c = (
       x2 + hx * s2 - x1,
       y2 - hy * c2 - y1,
       x2 - x1,
-      y2 - y1,
+      y2 - y1
     ];
   if (recursive) {
     return m.concat(res);

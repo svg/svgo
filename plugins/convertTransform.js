@@ -8,7 +8,7 @@ const { cleanupOutData } = require('../lib/svgo/tools.js');
 const {
   transform2js,
   transformsMultiply,
-  matrixToTransform,
+  matrixToTransform
 } = require('./_transforms.js');
 
 exports.name = 'convertTransform';
@@ -40,7 +40,7 @@ exports.fn = (_root, params) => {
     removeUseless = true,
     collapseIntoOne = true,
     leadingZero = true,
-    negativeExtraSpace = false,
+    negativeExtraSpace = false
   } = params;
   const newParams = {
     convertToShorts,
@@ -54,7 +54,7 @@ exports.fn = (_root, params) => {
     removeUseless,
     collapseIntoOne,
     leadingZero,
-    negativeExtraSpace,
+    negativeExtraSpace
   };
   return {
     element: {
@@ -71,8 +71,8 @@ exports.fn = (_root, params) => {
         if (node.attributes.patternTransform != null) {
           convertTransform(node, 'patternTransform', newParams);
         }
-      },
-    },
+      }
+    }
   };
 };
 
@@ -151,20 +151,20 @@ const definePrecision = (data, { ...newParams }) => {
     newParams.transformPrecision = Math.min(
       newParams.transformPrecision,
       Math.max.apply(Math, matrixData.map(floatDigits)) ||
-        newParams.transformPrecision,
+        newParams.transformPrecision
     );
     significantDigits = Math.max.apply(
       Math,
       matrixData.map(
-        (n) => n.toString().replace(/\D+/g, '').length, // Number of digits in a number. 123.45 → 5
-      ),
+        (n) => n.toString().replace(/\D+/g, '').length // Number of digits in a number. 123.45 → 5
+      )
     );
   }
   // No sense in angle precision more then number of significant digits in matrix.
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
-      Math.min(newParams.floatPrecision, significantDigits - 2),
+      Math.min(newParams.floatPrecision, significantDigits - 2)
     );
   }
   return newParams;
@@ -279,8 +279,8 @@ const convertToShorts = (transforms, params) => {
         data: [
           transforms[i - 1].data[0],
           transforms[i - 2].data[0],
-          transforms[i - 2].data[1],
-        ],
+          transforms[i - 2].data[1]
+        ]
       });
 
       // splice compensation
@@ -356,7 +356,7 @@ const roundTransform = (transform, params) => {
     case 'rotate':
       transform.data = [
         ...degRound(transform.data.slice(0, 1), params),
-        ...floatRound(transform.data.slice(1), params),
+        ...floatRound(transform.data.slice(1), params)
       ];
       break;
     case 'skewX':
@@ -369,7 +369,7 @@ const roundTransform = (transform, params) => {
     case 'matrix':
       transform.data = [
         ...transformRound(transform.data.slice(0, 4), params),
-        ...floatRound(transform.data.slice(4), params),
+        ...floatRound(transform.data.slice(4), params)
       ];
       break;
   }

@@ -8,7 +8,7 @@ exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
 const rComma = '\\s*,\\s*';
 const regRGB = new RegExp(
-  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$',
+  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'
 );
 const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
 
@@ -69,7 +69,7 @@ exports.fn = (_root, params) => {
     names2hex = true,
     rgb2hex = true,
     shorthex = true,
-    shortname = true,
+    shortname = true
   } = params;
 
   return {
@@ -138,7 +138,7 @@ exports.fn = (_root, params) => {
             node.attributes[name] = val;
           }
         }
-      },
-    },
+      }
+    }
   };
 };

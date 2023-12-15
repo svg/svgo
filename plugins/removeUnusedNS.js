@@ -53,7 +53,7 @@ exports.fn = () => {
             delete node.attributes[`xmlns:${name}`];
           }
         }
-      },
-    },
+      }
+    }
   };
 };

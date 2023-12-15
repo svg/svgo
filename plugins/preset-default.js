@@ -75,8 +75,8 @@ const presetDefault = createPreset({
     sortAttrs,
     sortDefsChildren,
     removeTitle,
-    removeDesc,
-  ],
+    removeDesc
+  ]
 });
 
 module.exports = presetDefault;

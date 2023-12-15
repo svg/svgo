@@ -62,7 +62,7 @@ const generateIdChars = [
   'W',
   'X',
   'Y',
-  'Z',
+  'Z'
 ];
 const maxIdIndex = generateIdChars.length - 1;
 
@@ -129,10 +129,10 @@ exports.fn = (_root, params) => {
     minify = true,
     preserve = [],
     preservePrefixes = [],
-    force = false,
+    force = false
   } = params;
   const preserveIds = new Set(
-    Array.isArray(preserve) ? preserve : preserve ? [preserve] : [],
+    Array.isArray(preserve) ? preserve : preserve ? [preserve] : []
   );
   const preserveIdPrefixes = Array.isArray(preservePrefixes)
     ? preservePrefixes
@@ -198,7 +198,7 @@ exports.fn = (_root, params) => {
             }
           }
         }
-      },
+      }
     },
 
     root: {
@@ -236,13 +236,13 @@ exports.fn = (_root, params) => {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(
                     `#${encodeURI(id)}`,
-                    `#${currentIdString}`,
+                    `#${currentIdString}`
                   );
                 } else {
                   // replace id in begin attribute
                   element.attributes[name] = value.replace(
                     `${id}.`,
-                    `${currentIdString}.`,
+                    `${currentIdString}.`
                   );
                 }
               }
@@ -259,7 +259,7 @@ exports.fn = (_root, params) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

@@ -59,7 +59,7 @@ module.exports = {
   datauri: 'base64', // 'base64'|'enc'|'unenc'
   js2svg: {
     indent: 4, // number
-    pretty: false, // boolean
+    pretty: false // boolean
   },
   plugins: [
     'preset-default', // built-in plugins enabled by default
@@ -69,10 +69,10 @@ module.exports = {
     {
       name: 'prefixIds',
       params: {
-        prefix: 'uwu',
-      },
-    },
-  ],
+        prefix: 'uwu'
+      }
+    }
+  ]
 };
 ```
 
@@ -94,12 +94,12 @@ module.exports = {
 
           // customize the params of a default plugin
           inlineStyles: {
-            onlyMatchedOnce: false,
-          },
-        },
-      },
-    },
-  ],
+            onlyMatchedOnce: false
+          }
+        }
+      }
+    }
+  ]
 };
 ```
 
@@ -123,11 +123,11 @@ module.exports = {
     {
       name: 'customPlugin',
       params: {
-        paramName: 'paramValue',
+        paramName: 'paramValue'
       },
-      fn: (ast, params, info) => {},
-    },
-  ],
+      fn: (ast, params, info) => {}
+    }
+  ]
 };
 ```
 
@@ -144,7 +144,7 @@ const { optimize } = require('svgo');
 
 const result = optimize(svgString, {
   path: 'path-to.svg', // recommended
-  multipass: true, // all other config fields are available here
+  multipass: true // all other config fields are available here
 });
 
 const optimizedSvgString = result.data;

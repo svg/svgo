@@ -12,7 +12,7 @@ A minimal plugin looks like this:
 export const myPlugin = {
   name: 'myPlugin',
   description: 'A plugin that does nothing.',
-  fn: () => {},
+  fn: () => {}
 };
 ```
 
@@ -22,7 +22,7 @@ It currently does nothing, but can still be referenced in your `svgo.config.js`:
 import { myPlugin } from './myPlugin.js';
 
 export default {
-  plugins: [myPlugin],
+  plugins: [myPlugin]
 };
 ```
 
@@ -38,34 +38,34 @@ const myPlugin = {
     return {
       root: {
         enter: (node) => {},
-        exit: (node) => {},
+        exit: (node) => {}
       },
       element: {
         enter: (node, parentNode) => {},
-        exit: (node, parentNode) => {},
+        exit: (node, parentNode) => {}
       },
       doctype: {
         enter: (node, parentNode) => {},
-        exit: (node, parentNode) => {},
+        exit: (node, parentNode) => {}
       },
       instruction: {
         enter: (node, parentNode) => {},
-        exit: (node, parentNode) => {},
+        exit: (node, parentNode) => {}
       },
       comment: {
         enter: (node, parentNode) => {},
-        exit: (node, parentNode) => {},
+        exit: (node, parentNode) => {}
       },
       cdata: {
         enter: (node, parentNode) => {},
-        exit: (node, parentNode) => {},
+        exit: (node, parentNode) => {}
       },
       text: {
         enter: (node, parentNode) => {},
-        exit: (node, parentNode) => {},
-      },
+        exit: (node, parentNode) => {}
+      }
     };
-  },
+  }
 };
 ```
 
@@ -88,10 +88,10 @@ const myPlugin = {
           }
 
           node.attributes.fill = 'pink';
-        },
-      },
+        }
+      }
     };
-  },
+  }
 };
 ```
 
@@ -110,11 +110,11 @@ const removeNoAttributes = {
           }
 
           parentNode.children = parentNode.children.filter(
-            (child) => child !== node,
+            (child) => child !== node
           );
-        },
-      },
+        }
+      }
     };
-  },
+  }
 };
 ```

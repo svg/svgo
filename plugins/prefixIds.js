@@ -125,7 +125,7 @@ exports.fn = (_root, params, info) => {
     delim = '__',
     prefix,
     prefixIds = true,
-    prefixClassNames = true,
+    prefixClassNames = true
   } = params;
 
   /** @type {Map<string, string>} */
@@ -159,7 +159,7 @@ exports.fn = (_root, params, info) => {
             try {
               cssAst = csstree.parse(cssText, {
                 parseValue: true,
-                parseCustomProperty: false,
+                parseCustomProperty: false
               });
             } catch {
               return;
@@ -178,7 +178,7 @@ exports.fn = (_root, params, info) => {
                 const prefixed = prefixReference(
                   prefixGenerator,
                   // @ts-ignore
-                  unquote(node.value),
+                  unquote(node.value)
                 );
                 if (prefixed != null) {
                   // @ts-ignore
@@ -222,7 +222,7 @@ exports.fn = (_root, params, info) => {
           ) {
             const prefixed = prefixReference(
               prefixGenerator,
-              node.attributes[name],
+              node.attributes[name]
             );
             if (prefixed != null) {
               node.attributes[name] = prefixed;
@@ -244,7 +244,7 @@ exports.fn = (_root, params, info) => {
                   return match;
                 }
                 return `url(${prefixed})`;
-              },
+              }
             );
           }
         }
@@ -265,7 +265,7 @@ exports.fn = (_root, params, info) => {
             node.attributes[name] = parts.join('; ');
           }
         }
-      },
-    },
+      }
+    }
   };
 };

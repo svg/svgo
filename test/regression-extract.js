@@ -31,7 +31,7 @@ const extractTarGz = async (url, baseDir, include) => {
           await pipeline(
             stream,
             zlib.createGunzip(),
-            fs.createWriteStream(file),
+            fs.createWriteStream(file)
           );
         }
       }
@@ -52,7 +52,7 @@ const extractTarGz = async (url, baseDir, include) => {
     await extractTarGz(
       'https://www.w3.org/Graphics/SVG/Test/20110816/archives/W3C_SVG_11_TestSuite.tar.gz',
       path.join(__dirname, 'regression-fixtures', 'w3c-svg-11-test-suite'),
-      /^svg\//,
+      /^svg\//
     );
   } catch (error) {
     console.error(error);

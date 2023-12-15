@@ -1,7 +1,7 @@
 import type {
   Plugin as PluginDef,
   PluginInfo,
-  XastElement,
+  XastElement
 } from '../lib/types';
 
 type DefaultPlugins = {

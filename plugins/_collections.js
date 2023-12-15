@@ -11,7 +11,7 @@ exports.elemsGroups = {
     'animateColor',
     'animateMotion',
     'animateTransform',
-    'set',
+    'set'
   ],
   descriptive: ['desc', 'metadata', 'title'],
   shape: ['circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect'],
@@ -22,7 +22,7 @@ exports.elemsGroups = {
     'radialGradient',
     'meshGradient',
     'pattern',
-    'hatch',
+    'hatch'
   ],
   nonRendering: [
     'linearGradient',
@@ -33,7 +33,7 @@ exports.elemsGroups = {
     'marker',
     'symbol',
     'filter',
-    'solidColor',
+    'solidColor'
   ],
   container: [
     'a',
@@ -46,7 +46,7 @@ exports.elemsGroups = {
     'svg',
     'switch',
     'symbol',
-    'foreignObject',
+    'foreignObject'
   ],
   textContent: [
     'altGlyph',
@@ -57,7 +57,7 @@ exports.elemsGroups = {
     'textPath',
     'text',
     'tref',
-    'tspan',
+    'tspan'
   ],
   textContentChild: ['altGlyph', 'textPath', 'tref', 'tspan'],
   lightSource: [
@@ -65,7 +65,7 @@ exports.elemsGroups = {
     'feSpecularLighting',
     'feDistantLight',
     'fePointLight',
-    'feSpotLight',
+    'feSpotLight'
   ],
   filterPrimitive: [
     'feBlend',
@@ -89,8 +89,8 @@ exports.elemsGroups = {
     'feOffset',
     'feSpecularLighting',
     'feTile',
-    'feTurbulence',
-  ],
+    'feTurbulence'
+  ]
 };
 
 /**
@@ -120,7 +120,7 @@ exports.attrsGroups = {
     'restart',
     'repeatCount',
     'repeatDur',
-    'fill',
+    'fill'
   ],
   animationValue: [
     'calcMode',
@@ -129,12 +129,12 @@ exports.attrsGroups = {
     'keySplines',
     'from',
     'to',
-    'by',
+    'by'
   ],
   conditionalProcessing: [
     'requiredFeatures',
     'requiredExtensions',
-    'systemLanguage',
+    'systemLanguage'
   ],
   core: ['id', 'tabindex', 'xml:base', 'xml:lang', 'xml:space'],
   graphicalEvent: [
@@ -147,7 +147,7 @@ exports.attrsGroups = {
     'onmouseover',
     'onmousemove',
     'onmouseout',
-    'onload',
+    'onload'
   ],
   presentation: [
     'alignment-baseline',
@@ -212,7 +212,7 @@ exports.attrsGroups = {
     'vector-effect',
     'visibility',
     'word-spacing',
-    'writing-mode',
+    'writing-mode'
   ],
   xlink: [
     'xlink:href',
@@ -221,7 +221,7 @@ exports.attrsGroups = {
     'xlink:type',
     'xlink:role',
     'xlink:arcrole',
-    'xlink:title',
+    'xlink:title'
   ],
   documentEvent: [
     'onabort',
@@ -229,7 +229,7 @@ exports.attrsGroups = {
     'onresize',
     'onscroll',
     'onunload',
-    'onzoom',
+    'onzoom'
   ],
   documentElementEvent: ['oncopy', 'oncut', 'onpaste'],
   globalEvent: [
@@ -288,7 +288,7 @@ exports.attrsGroups = {
     'ontimeupdate',
     'ontoggle',
     'onvolumechange',
-    'onwaiting',
+    'onwaiting'
   ],
   filterPrimitive: ['x', 'y', 'width', 'height', 'result'],
   transferFunction: [
@@ -298,8 +298,8 @@ exports.attrsGroups = {
     'intercept',
     'amplitude',
     'exponent',
-    'offset',
-  ],
+    'offset'
+  ]
 };
 
 /**
@@ -358,15 +358,15 @@ exports.attrsGroupsDefaults = {
     'unicode-bidi': 'normal',
     'dominant-baseline': 'auto',
     'alignment-baseline': 'baseline',
-    'baseline-shift': 'baseline',
+    'baseline-shift': 'baseline'
   },
   transferFunction: {
     slope: '1',
     intercept: '0',
     amplitude: '1',
     exponent: '1',
-    offset: '0',
-  },
+    offset: '0'
+  }
 };
 
 /**
@@ -386,24 +386,24 @@ exports.elems = {
       'core',
       'graphicalEvent',
       'presentation',
-      'xlink',
+      'xlink'
     ],
     attrs: [
       'class',
       'style',
       'externalResourcesRequired',
       'transform',
-      'target',
+      'target'
     ],
     defaults: {
-      target: '_self',
+      target: '_self'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -425,8 +425,8 @@ exports.elems = {
       'text',
       'view',
       // not spec compliant
-      'tspan',
-    ],
+      'tspan'
+    ]
   },
   altGlyph: {
     attrsGroups: [
@@ -434,7 +434,7 @@ exports.elems = {
       'core',
       'graphicalEvent',
       'presentation',
-      'xlink',
+      'xlink'
     ],
     attrs: [
       'class',
@@ -446,16 +446,16 @@ exports.elems = {
       'dy',
       'glyphRef',
       'format',
-      'rotate',
-    ],
+      'rotate'
+    ]
   },
   altGlyphDef: {
     attrsGroups: ['core'],
-    content: ['glyphRef'],
+    content: ['glyphRef']
   },
   altGlyphItem: {
     attrsGroups: ['core'],
-    content: ['glyphRef', 'altGlyphItem'],
+    content: ['glyphRef', 'altGlyphItem']
   },
   animate: {
     attrsGroups: [
@@ -467,10 +467,10 @@ exports.elems = {
       'animationTiming',
       'animationValue',
       'presentation',
-      'xlink',
+      'xlink'
     ],
     attrs: ['externalResourcesRequired'],
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   animateColor: {
     attrsGroups: [
@@ -482,10 +482,10 @@ exports.elems = {
       'animationTiming',
       'animationValue',
       'animationAddition',
-      'presentation',
+      'presentation'
     ],
     attrs: ['externalResourcesRequired'],
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   animateMotion: {
     attrsGroups: [
@@ -495,20 +495,20 @@ exports.elems = {
       'xlink',
       'animationTiming',
       'animationValue',
-      'animationAddition',
+      'animationAddition'
     ],
     attrs: [
       'externalResourcesRequired',
       'path',
       'keyPoints',
       'rotate',
-      'origin',
+      'origin'
     ],
     defaults: {
-      rotate: '0',
+      rotate: '0'
     },
     contentGroups: ['descriptive'],
-    content: ['mpath'],
+    content: ['mpath']
   },
   animateTransform: {
     attrsGroups: [
@@ -519,17 +519,17 @@ exports.elems = {
       'animationAttributeTarget',
       'animationTiming',
       'animationValue',
-      'animationAddition',
+      'animationAddition'
     ],
     attrs: ['externalResourcesRequired', 'type'],
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   circle: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -538,13 +538,13 @@ exports.elems = {
       'transform',
       'cx',
       'cy',
-      'r',
+      'r'
     ],
     defaults: {
       cx: '0',
-      cy: '0',
+      cy: '0'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   clipPath: {
     attrsGroups: ['conditionalProcessing', 'core', 'presentation'],
@@ -553,38 +553,38 @@ exports.elems = {
       'style',
       'externalResourcesRequired',
       'transform',
-      'clipPathUnits',
+      'clipPathUnits'
     ],
     defaults: {
-      clipPathUnits: 'userSpaceOnUse',
+      clipPathUnits: 'userSpaceOnUse'
     },
     contentGroups: ['animation', 'descriptive', 'shape'],
-    content: ['text', 'use'],
+    content: ['text', 'use']
   },
   'color-profile': {
     attrsGroups: ['core', 'xlink'],
     attrs: ['local', 'name', 'rendering-intent'],
     defaults: {
       name: 'sRGB',
-      'rendering-intent': 'auto',
+      'rendering-intent': 'auto'
     },
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   cursor: {
     attrsGroups: ['core', 'conditionalProcessing', 'xlink'],
     attrs: ['externalResourcesRequired', 'x', 'y'],
     defaults: {
       x: '0',
-      y: '0',
+      y: '0'
     },
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   defs: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: ['class', 'style', 'externalResourcesRequired', 'transform'],
     contentGroups: [
@@ -592,7 +592,7 @@ exports.elems = {
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -612,19 +612,19 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   desc: {
     attrsGroups: ['core'],
-    attrs: ['class', 'style'],
+    attrs: ['class', 'style']
   },
   ellipse: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -634,13 +634,13 @@ exports.elems = {
       'cx',
       'cy',
       'rx',
-      'ry',
+      'ry'
     ],
     defaults: {
       cx: '0',
-      cy: '0',
+      cy: '0'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   feBlend: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -651,25 +651,25 @@ exports.elems = {
       // then this filter primitive will use SourceGraphic as its input'
       'in',
       'in2',
-      'mode',
+      'mode'
     ],
     defaults: {
-      mode: 'normal',
+      mode: 'normal'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feColorMatrix: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style', 'in', 'type', 'values'],
     defaults: {
-      type: 'matrix',
+      type: 'matrix'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feComponentTransfer: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style', 'in'],
-    content: ['feFuncA', 'feFuncB', 'feFuncG', 'feFuncR'],
+    content: ['feFuncA', 'feFuncB', 'feFuncG', 'feFuncR']
   },
   feComposite: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -679,9 +679,9 @@ exports.elems = {
       k1: '0',
       k2: '0',
       k3: '0',
-      k4: '0',
+      k4: '0'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feConvolveMatrix: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -703,15 +703,15 @@ exports.elems = {
       // TODO: kernelUnitLength - 'The first number is the <dx> value. The second number
       // is the <dy> value. If the <dy> value is not specified, it defaults to the same value as <dx>'
       'kernelUnitLength',
-      'preserveAlpha',
+      'preserveAlpha'
     ],
     defaults: {
       order: '3',
       bias: '0',
       edgeMode: 'duplicate',
-      preserveAlpha: 'false',
+      preserveAlpha: 'false'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feDiffuseLighting: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -721,19 +721,19 @@ exports.elems = {
       'in',
       'surfaceScale',
       'diffuseConstant',
-      'kernelUnitLength',
+      'kernelUnitLength'
     ],
     defaults: {
       surfaceScale: '1',
-      diffuseConstant: '1',
+      diffuseConstant: '1'
     },
     contentGroups: ['descriptive'],
     content: [
       // TODO: 'exactly one light source element, in any order'
       'feDistantLight',
       'fePointLight',
-      'feSpotLight',
-    ],
+      'feSpotLight'
+    ]
   },
   feDisplacementMap: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -744,52 +744,52 @@ exports.elems = {
       'in2',
       'scale',
       'xChannelSelector',
-      'yChannelSelector',
+      'yChannelSelector'
     ],
     defaults: {
       scale: '0',
       xChannelSelector: 'A',
-      yChannelSelector: 'A',
+      yChannelSelector: 'A'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feDistantLight: {
     attrsGroups: ['core'],
     attrs: ['azimuth', 'elevation'],
     defaults: {
       azimuth: '0',
-      elevation: '0',
+      elevation: '0'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feFlood: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style'],
-    content: ['animate', 'animateColor', 'set'],
+    content: ['animate', 'animateColor', 'set']
   },
   feFuncA: {
     attrsGroups: ['core', 'transferFunction'],
-    content: ['set', 'animate'],
+    content: ['set', 'animate']
   },
   feFuncB: {
     attrsGroups: ['core', 'transferFunction'],
-    content: ['set', 'animate'],
+    content: ['set', 'animate']
   },
   feFuncG: {
     attrsGroups: ['core', 'transferFunction'],
-    content: ['set', 'animate'],
+    content: ['set', 'animate']
   },
   feFuncR: {
     attrsGroups: ['core', 'transferFunction'],
-    content: ['set', 'animate'],
+    content: ['set', 'animate']
   },
   feGaussianBlur: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style', 'in', 'stdDeviation'],
     defaults: {
-      stdDeviation: '0',
+      stdDeviation: '0'
     },
-    content: ['set', 'animate'],
+    content: ['set', 'animate']
   },
   feImage: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive', 'xlink'],
@@ -799,40 +799,40 @@ exports.elems = {
       'externalResourcesRequired',
       'preserveAspectRatio',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
-      preserveAspectRatio: 'xMidYMid meet',
+      preserveAspectRatio: 'xMidYMid meet'
     },
-    content: ['animate', 'animateTransform', 'set'],
+    content: ['animate', 'animateTransform', 'set']
   },
   feMerge: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style'],
-    content: ['feMergeNode'],
+    content: ['feMergeNode']
   },
   feMergeNode: {
     attrsGroups: ['core'],
     attrs: ['in'],
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feMorphology: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style', 'in', 'operator', 'radius'],
     defaults: {
       operator: 'erode',
-      radius: '0',
+      radius: '0'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feOffset: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style', 'in', 'dx', 'dy'],
     defaults: {
       dx: '0',
-      dy: '0',
+      dy: '0'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   fePointLight: {
     attrsGroups: ['core'],
@@ -840,9 +840,9 @@ exports.elems = {
     defaults: {
       x: '0',
       y: '0',
-      z: '0',
+      z: '0'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feSpecularLighting: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -853,18 +853,18 @@ exports.elems = {
       'surfaceScale',
       'specularConstant',
       'specularExponent',
-      'kernelUnitLength',
+      'kernelUnitLength'
     ],
     defaults: {
       surfaceScale: '1',
       specularConstant: '1',
-      specularExponent: '1',
+      specularExponent: '1'
     },
     contentGroups: [
       'descriptive',
       // TODO: exactly one 'light source element'
-      'lightSource',
-    ],
+      'lightSource'
+    ]
   },
   feSpotLight: {
     attrsGroups: ['core'],
@@ -876,7 +876,7 @@ exports.elems = {
       'pointsAtY',
       'pointsAtZ',
       'specularExponent',
-      'limitingConeAngle',
+      'limitingConeAngle'
     ],
     defaults: {
       x: '0',
@@ -885,14 +885,14 @@ exports.elems = {
       pointsAtX: '0',
       pointsAtY: '0',
       pointsAtZ: '0',
-      specularExponent: '1',
+      specularExponent: '1'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feTile: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
     attrs: ['class', 'style', 'in'],
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   feTurbulence: {
     attrsGroups: ['core', 'presentation', 'filterPrimitive'],
@@ -903,16 +903,16 @@ exports.elems = {
       'numOctaves',
       'seed',
       'stitchTiles',
-      'type',
+      'type'
     ],
     defaults: {
       baseFrequency: '0',
       numOctaves: '1',
       seed: '0',
       stitchTiles: 'noStitch',
-      type: 'turbulence',
+      type: 'turbulence'
     },
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   filter: {
     attrsGroups: ['core', 'presentation', 'xlink'],
@@ -928,17 +928,17 @@ exports.elems = {
       'filterUnits',
       'primitiveUnits',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
       primitiveUnits: 'userSpaceOnUse',
       x: '-10%',
       y: '-10%',
       width: '120%',
-      height: '120%',
+      height: '120%'
     },
     contentGroups: ['descriptive', 'filterPrimitive'],
-    content: ['animate', 'set'],
+    content: ['animate', 'set']
   },
   font: {
     attrsGroups: ['core', 'presentation'],
@@ -951,14 +951,14 @@ exports.elems = {
       'horiz-adv-x',
       'vert-origin-x',
       'vert-origin-y',
-      'vert-adv-y',
+      'vert-adv-y'
     ],
     defaults: {
       'horiz-origin-x': '0',
-      'horiz-origin-y': '0',
+      'horiz-origin-y': '0'
     },
     contentGroups: ['descriptive'],
-    content: ['font-face', 'glyph', 'hkern', 'missing-glyph', 'vkern'],
+    content: ['font-face', 'glyph', 'hkern', 'missing-glyph', 'vkern']
   },
   'font-face': {
     attrsGroups: ['core'],
@@ -995,7 +995,7 @@ exports.elems = {
       'strikethrough-position',
       'strikethrough-thickness',
       'overline-position',
-      'overline-thickness',
+      'overline-thickness'
     ],
     defaults: {
       'font-style': 'all',
@@ -1005,38 +1005,38 @@ exports.elems = {
       'unicode-range': 'U+0-10FFFF',
       'units-per-em': '1000',
       'panose-1': '0 0 0 0 0 0 0 0 0 0',
-      slope: '0',
+      slope: '0'
     },
     contentGroups: ['descriptive'],
     content: [
       // TODO: "at most one 'font-face-src' element"
-      'font-face-src',
-    ],
+      'font-face-src'
+    ]
   },
   // TODO: empty content
   'font-face-format': {
     attrsGroups: ['core'],
-    attrs: ['string'],
+    attrs: ['string']
   },
   'font-face-name': {
     attrsGroups: ['core'],
-    attrs: ['name'],
+    attrs: ['name']
   },
   'font-face-src': {
     attrsGroups: ['core'],
-    content: ['font-face-name', 'font-face-uri'],
+    content: ['font-face-name', 'font-face-uri']
   },
   'font-face-uri': {
     attrsGroups: ['core', 'xlink'],
     attrs: ['href', 'xlink:href'],
-    content: ['font-face-format'],
+    content: ['font-face-format']
   },
   foreignObject: {
     attrsGroups: [
       'core',
       'conditionalProcessing',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1046,19 +1046,19 @@ exports.elems = {
       'x',
       'y',
       'width',
-      'height',
+      'height'
     ],
     defaults: {
       x: '0',
-      y: '0',
-    },
+      y: '0'
+    }
   },
   g: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: ['class', 'style', 'externalResourcesRequired', 'transform'],
     contentGroups: [
@@ -1066,7 +1066,7 @@ exports.elems = {
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1086,8 +1086,8 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   glyph: {
     attrsGroups: ['core', 'presentation'],
@@ -1103,17 +1103,17 @@ exports.elems = {
       'glyph-name',
       'orientation',
       'arabic-form',
-      'lang',
+      'lang'
     ],
     defaults: {
-      'arabic-form': 'initial',
+      'arabic-form': 'initial'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1133,8 +1133,8 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   glyphRef: {
     attrsGroups: ['core', 'presentation'],
@@ -1145,14 +1145,14 @@ exports.elems = {
       'horiz-adv-x',
       'vert-origin-x',
       'vert-origin-y',
-      'vert-adv-y',
+      'vert-adv-y'
     ],
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1172,8 +1172,8 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   hatch: {
     attrsGroups: ['core', 'presentation', 'xlink'],
@@ -1186,7 +1186,7 @@ exports.elems = {
       'rotate',
       'hatchUnits',
       'hatchContentUnits',
-      'transform',
+      'transform'
     ],
     defaults: {
       hatchUnits: 'objectBoundingBox',
@@ -1194,22 +1194,22 @@ exports.elems = {
       x: '0',
       y: '0',
       pitch: '0',
-      rotate: '0',
+      rotate: '0'
     },
     contentGroups: ['animation', 'descriptive'],
-    content: ['hatchPath'],
+    content: ['hatchPath']
   },
   hatchPath: {
     attrsGroups: ['core', 'presentation', 'xlink'],
     attrs: ['class', 'style', 'd', 'offset'],
     defaults: {
-      offset: '0',
+      offset: '0'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   hkern: {
     attrsGroups: ['core'],
-    attrs: ['u1', 'g1', 'u2', 'g2', 'k'],
+    attrs: ['u1', 'g1', 'u2', 'g2', 'k']
   },
   image: {
     attrsGroups: [
@@ -1217,7 +1217,7 @@ exports.elems = {
       'conditionalProcessing',
       'graphicalEvent',
       'xlink',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1230,21 +1230,21 @@ exports.elems = {
       'width',
       'height',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
       x: '0',
       y: '0',
-      preserveAspectRatio: 'xMidYMid meet',
+      preserveAspectRatio: 'xMidYMid meet'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   line: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1254,15 +1254,15 @@ exports.elems = {
       'x1',
       'y1',
       'x2',
-      'y2',
+      'y2'
     ],
     defaults: {
       x1: '0',
       y1: '0',
       x2: '0',
-      y2: '0',
+      y2: '0'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   linearGradient: {
     attrsGroups: ['core', 'presentation', 'xlink'],
@@ -1278,17 +1278,17 @@ exports.elems = {
       'gradientTransform',
       'spreadMethod',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
       x1: '0',
       y1: '0',
       x2: '100%',
       y2: '0',
-      spreadMethod: 'pad',
+      spreadMethod: 'pad'
     },
     contentGroups: ['descriptive'],
-    content: ['animate', 'animateTransform', 'set', 'stop'],
+    content: ['animate', 'animateTransform', 'set', 'stop']
   },
   marker: {
     attrsGroups: ['core', 'presentation'],
@@ -1303,21 +1303,21 @@ exports.elems = {
       'markerUnits',
       'markerWidth',
       'markerHeight',
-      'orient',
+      'orient'
     ],
     defaults: {
       markerUnits: 'strokeWidth',
       refX: '0',
       refY: '0',
       markerWidth: '3',
-      markerHeight: '3',
+      markerHeight: '3'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1337,8 +1337,8 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   mask: {
     attrsGroups: ['conditionalProcessing', 'core', 'presentation'],
@@ -1352,7 +1352,7 @@ exports.elems = {
       'height',
       'mask-type',
       'maskUnits',
-      'maskContentUnits',
+      'maskContentUnits'
     ],
     defaults: {
       maskUnits: 'objectBoundingBox',
@@ -1360,14 +1360,14 @@ exports.elems = {
       x: '-10%',
       y: '-10%',
       width: '120%',
-      height: '120%',
+      height: '120%'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1387,11 +1387,11 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   metadata: {
-    attrsGroups: ['core'],
+    attrsGroups: ['core']
   },
   'missing-glyph': {
     attrsGroups: ['core', 'presentation'],
@@ -1402,14 +1402,14 @@ exports.elems = {
       'horiz-adv-x',
       'vert-origin-x',
       'vert-origin-y',
-      'vert-adv-y',
+      'vert-adv-y'
     ],
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1429,20 +1429,20 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   mpath: {
     attrsGroups: ['core', 'xlink'],
     attrs: ['externalResourcesRequired', 'href', 'xlink:href'],
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   path: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1450,9 +1450,9 @@ exports.elems = {
       'externalResourcesRequired',
       'transform',
       'd',
-      'pathLength',
+      'pathLength'
     ],
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   pattern: {
     attrsGroups: ['conditionalProcessing', 'core', 'presentation', 'xlink'],
@@ -1470,7 +1470,7 @@ exports.elems = {
       'patternContentUnits',
       'patternTransform',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
       patternUnits: 'objectBoundingBox',
@@ -1479,14 +1479,14 @@ exports.elems = {
       y: '0',
       width: '0',
       height: '0',
-      preserveAspectRatio: 'xMidYMid meet',
+      preserveAspectRatio: 'xMidYMid meet'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'paintServer',
       'shape',
-      'structural',
+      'structural'
     ],
     content: [
       'a',
@@ -1506,40 +1506,40 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   polygon: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
       'style',
       'externalResourcesRequired',
       'transform',
-      'points',
+      'points'
     ],
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   polyline: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
       'style',
       'externalResourcesRequired',
       'transform',
-      'points',
+      'points'
     ],
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   radialGradient: {
     attrsGroups: ['core', 'presentation', 'xlink'],
@@ -1557,41 +1557,41 @@ exports.elems = {
       'gradientTransform',
       'spreadMethod',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
       gradientUnits: 'objectBoundingBox',
       cx: '50%',
       cy: '50%',
-      r: '50%',
+      r: '50%'
     },
     contentGroups: ['descriptive'],
-    content: ['animate', 'animateTransform', 'set', 'stop'],
+    content: ['animate', 'animateTransform', 'set', 'stop']
   },
   meshGradient: {
     attrsGroups: ['core', 'presentation', 'xlink'],
     attrs: ['class', 'style', 'x', 'y', 'gradientUnits', 'transform'],
     contentGroups: ['descriptive', 'paintServer', 'animation'],
-    content: ['meshRow'],
+    content: ['meshRow']
   },
   meshRow: {
     attrsGroups: ['core', 'presentation'],
     attrs: ['class', 'style'],
     contentGroups: ['descriptive'],
-    content: ['meshPatch'],
+    content: ['meshPatch']
   },
   meshPatch: {
     attrsGroups: ['core', 'presentation'],
     attrs: ['class', 'style'],
     contentGroups: ['descriptive'],
-    content: ['stop'],
+    content: ['stop']
   },
   rect: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1603,17 +1603,17 @@ exports.elems = {
       'width',
       'height',
       'rx',
-      'ry',
+      'ry'
     ],
     defaults: {
       x: '0',
-      y: '0',
+      y: '0'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   script: {
     attrsGroups: ['core', 'xlink'],
-    attrs: ['externalResourcesRequired', 'type', 'href', 'xlink:href'],
+    attrs: ['externalResourcesRequired', 'type', 'href', 'xlink:href']
   },
   set: {
     attrsGroups: [
@@ -1622,27 +1622,27 @@ exports.elems = {
       'animation',
       'xlink',
       'animationAttributeTarget',
-      'animationTiming',
+      'animationTiming'
     ],
     attrs: ['externalResourcesRequired', 'to'],
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   solidColor: {
     attrsGroups: ['core', 'presentation'],
     attrs: ['class', 'style'],
-    contentGroups: ['paintServer'],
+    contentGroups: ['paintServer']
   },
   stop: {
     attrsGroups: ['core', 'presentation'],
     attrs: ['class', 'style', 'offset', 'path'],
-    content: ['animate', 'animateColor', 'set'],
+    content: ['animate', 'animateColor', 'set']
   },
   style: {
     attrsGroups: ['core'],
     attrs: ['type', 'media', 'title'],
     defaults: {
-      type: 'text/css',
-    },
+      type: 'text/css'
+    }
   },
   svg: {
     attrsGroups: [
@@ -1650,7 +1650,7 @@ exports.elems = {
       'core',
       'documentEvent',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1665,7 +1665,7 @@ exports.elems = {
       'version',
       'baseProfile',
       'contentScriptType',
-      'contentStyleType',
+      'contentStyleType'
     ],
     defaults: {
       x: '0',
@@ -1677,14 +1677,14 @@ exports.elems = {
       version: '1.1',
       baseProfile: 'none',
       contentScriptType: 'application/ecmascript',
-      contentStyleType: 'text/css',
+      contentStyleType: 'text/css'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1704,15 +1704,15 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   switch: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: ['class', 'style', 'externalResourcesRequired', 'transform'],
     contentGroups: ['animation', 'descriptive', 'shape'],
@@ -1724,8 +1724,8 @@ exports.elems = {
       'svg',
       'switch',
       'text',
-      'use',
-    ],
+      'use'
+    ]
   },
   symbol: {
     attrsGroups: ['core', 'graphicalEvent', 'presentation'],
@@ -1736,18 +1736,18 @@ exports.elems = {
       'preserveAspectRatio',
       'viewBox',
       'refX',
-      'refY',
+      'refY'
     ],
     defaults: {
       refX: '0',
-      refY: '0',
+      refY: '0'
     },
     contentGroups: [
       'animation',
       'descriptive',
       'shape',
       'structural',
-      'paintServer',
+      'paintServer'
     ],
     content: [
       'a',
@@ -1767,15 +1767,15 @@ exports.elems = {
       'style',
       'switch',
       'text',
-      'view',
-    ],
+      'view'
+    ]
   },
   text: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1788,15 +1788,15 @@ exports.elems = {
       'dx',
       'dy',
       'rotate',
-      'textLength',
+      'textLength'
     ],
     defaults: {
       x: '0',
       y: '0',
-      lengthAdjust: 'spacing',
+      lengthAdjust: 'spacing'
     },
     contentGroups: ['animation', 'descriptive', 'textContentChild'],
-    content: ['a'],
+    content: ['a']
   },
   textPath: {
     attrsGroups: [
@@ -1804,7 +1804,7 @@ exports.elems = {
       'core',
       'graphicalEvent',
       'presentation',
-      'xlink',
+      'xlink'
     ],
     attrs: [
       'class',
@@ -1815,12 +1815,12 @@ exports.elems = {
       'startOffset',
       'method',
       'spacing',
-      'd',
+      'd'
     ],
     defaults: {
       startOffset: '0',
       method: 'align',
-      spacing: 'exact',
+      spacing: 'exact'
     },
     contentGroups: ['descriptive'],
     content: [
@@ -1830,12 +1830,12 @@ exports.elems = {
       'animateColor',
       'set',
       'tref',
-      'tspan',
-    ],
+      'tspan'
+    ]
   },
   title: {
     attrsGroups: ['core'],
-    attrs: ['class', 'style'],
+    attrs: ['class', 'style']
   },
   tref: {
     attrsGroups: [
@@ -1843,24 +1843,24 @@ exports.elems = {
       'core',
       'graphicalEvent',
       'presentation',
-      'xlink',
+      'xlink'
     ],
     attrs: [
       'class',
       'style',
       'externalResourcesRequired',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     contentGroups: ['descriptive'],
-    content: ['animate', 'animateColor', 'set'],
+    content: ['animate', 'animateColor', 'set']
   },
   tspan: {
     attrsGroups: [
       'conditionalProcessing',
       'core',
       'graphicalEvent',
-      'presentation',
+      'presentation'
     ],
     attrs: [
       'class',
@@ -1872,7 +1872,7 @@ exports.elems = {
       'dy',
       'rotate',
       'textLength',
-      'lengthAdjust',
+      'lengthAdjust'
     ],
     contentGroups: ['descriptive'],
     content: [
@@ -1882,8 +1882,8 @@ exports.elems = {
       'animateColor',
       'set',
       'tref',
-      'tspan',
-    ],
+      'tspan'
+    ]
   },
   use: {
     attrsGroups: [
@@ -1891,7 +1891,7 @@ exports.elems = {
       'conditionalProcessing',
       'graphicalEvent',
       'presentation',
-      'xlink',
+      'xlink'
     ],
     attrs: [
       'class',
@@ -1903,13 +1903,13 @@ exports.elems = {
       'width',
       'height',
       'href',
-      'xlink:href',
+      'xlink:href'
     ],
     defaults: {
       x: '0',
-      y: '0',
+      y: '0'
     },
-    contentGroups: ['animation', 'descriptive'],
+    contentGroups: ['animation', 'descriptive']
   },
   view: {
     attrsGroups: ['core'],
@@ -1918,14 +1918,14 @@ exports.elems = {
       'viewBox',
       'preserveAspectRatio',
       'zoomAndPan',
-      'viewTarget',
+      'viewTarget'
     ],
-    contentGroups: ['descriptive'],
+    contentGroups: ['descriptive']
   },
   vkern: {
     attrsGroups: ['core'],
-    attrs: ['u1', 'g1', 'u2', 'g2', 'k'],
-  },
+    attrs: ['u1', 'g1', 'u2', 'g2', 'k']
+  }
 };
 
 // https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
@@ -1951,7 +1951,7 @@ exports.editorNamespaces = [
   'http://creativecommons.org/ns#',
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
   'http://www.serif.com/',
-  'http://www.vector.evaxdesign.sk',
+  'http://www.vector.evaxdesign.sk'
 ];
 
 /**
@@ -1967,7 +1967,7 @@ exports.referencesProps = [
   'marker-end',
   'mask',
   'stroke',
-  'style',
+  'style'
 ];
 
 /**
@@ -2018,7 +2018,7 @@ exports.inheritableAttrs = [
   'transform',
   'visibility',
   'word-spacing',
-  'writing-mode',
+  'writing-mode'
 ];
 
 exports.presentationNonInheritableGroupAttrs = [
@@ -2029,7 +2029,7 @@ exports.presentationNonInheritableGroupAttrs = [
   'opacity',
   'text-decoration',
   'transform',
-  'unicode-bidi',
+  'unicode-bidi'
 ];
 
 /**
@@ -2185,7 +2185,7 @@ exports.colorsNames = {
   white: '#fff',
   whitesmoke: '#f5f5f5',
   yellow: '#ff0',
-  yellowgreen: '#9acd32',
+  yellowgreen: '#9acd32'
 };
 
 /**
@@ -2223,7 +2223,7 @@ exports.colorsShortNames = {
   '#008080': 'teal',
   '#ff6347': 'tomato',
   '#ee82ee': 'violet',
-  '#f5deb3': 'wheat',
+  '#f5deb3': 'wheat'
 };
 
 /**
@@ -2235,7 +2235,7 @@ exports.colorsProps = [
   'stroke',
   'stop-color',
   'flood-color',
-  'lighting-color',
+  'lighting-color'
 ];
 
 /** @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes */
@@ -2258,7 +2258,7 @@ exports.pseudoClasses = {
     'out-of-range',
     'required',
     'optional',
-    'user-invalid',
+    'user-invalid'
   ],
   linguistic: ['dir', 'lang'],
   location: [
@@ -2268,7 +2268,7 @@ exports.pseudoClasses = {
     'local-link',
     'target',
     'target-within',
-    'scope',
+    'scope'
   ],
   resourceState: ['playing', 'paused'],
   timeDimensional: ['current', 'past', 'future'],
@@ -2284,8 +2284,8 @@ exports.pseudoClasses = {
     'nth-last-of-type',
     'first-of-type',
     'last-of-type',
-    'only-of-type',
+    'only-of-type'
   ],
   userAction: ['hover', 'active', 'focus', 'focus-visible', 'focus-within'],
-  functional: ['is', 'not', 'where', 'has'],
+  functional: ['is', 'not', 'where', 'has']
 };

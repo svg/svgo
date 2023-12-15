@@ -18,7 +18,7 @@ exports.fn = (root, params) => {
   const {
     force = false,
     floatPrecision,
-    noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
+    noSpaceAfterFlags = false // a20 60 45 0 1 30 20 → a20 60 45 0130 20
   } = params;
   const stylesheet = collectStylesheet(root);
 
@@ -84,7 +84,7 @@ exports.fn = (root, params) => {
           ) {
             js2path(prevChild, prevPathJS.concat(curPathJS), {
               floatPrecision,
-              noSpaceAfterFlags,
+              noSpaceAfterFlags
             });
             detachNodeFromParent(child, node);
             continue;
@@ -92,7 +92,7 @@ exports.fn = (root, params) => {
 
           prevChild = child;
         }
-      },
-    },
+      }
+    }
   };
 };

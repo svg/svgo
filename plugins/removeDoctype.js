@@ -34,7 +34,7 @@ exports.fn = () => {
     doctype: {
       enter: (node, parentNode) => {
         detachNodeFromParent(node, parentNode);
-      },
-    },
+      }
+    }
   };
 };

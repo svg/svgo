@@ -3,7 +3,7 @@
 const {
   inheritableAttrs,
   attrsGroups,
-  presentationNonInheritableGroupAttrs,
+  presentationNonInheritableGroupAttrs
 } = require('./_collections');
 
 exports.name = 'removeNonInheritableGroupAttrs';
@@ -32,7 +32,7 @@ exports.fn = () => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

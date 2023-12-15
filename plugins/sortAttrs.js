@@ -29,9 +29,9 @@ exports.fn = (_root, params) => {
       'stroke',
       'marker',
       'd',
-      'points',
+      'points'
     ],
-    xmlnsOrder = 'front',
+    xmlnsOrder = 'front'
   } = params;
 
   /**
@@ -102,7 +102,7 @@ exports.fn = (_root, params) => {
           sortedAttributes[name] = value;
         }
         node.attributes = sortedAttributes;
-      },
-    },
+      }
+    }
   };
 };

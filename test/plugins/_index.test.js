@@ -28,7 +28,7 @@ describe('plugins tests', function () {
           const [original, should, params] = test.split(/\s*@@@\s*/);
           const plugin = {
             name,
-            params: params ? JSON.parse(params) : {},
+            params: params ? JSON.parse(params) : {}
           };
           let lastResultData = original;
           // test plugins idempotence
@@ -38,7 +38,7 @@ describe('plugins tests', function () {
             const result = optimize(lastResultData, {
               path: file,
               plugins: [plugin],
-              js2svg: { pretty: true },
+              js2svg: { pretty: true }
             });
             lastResultData = result.data;
             expect(result.error).not.toEqual(expect.anything());

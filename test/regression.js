@@ -54,12 +54,12 @@ const runTests = async ({ list }) => {
     await page.setViewportSize({ width, height });
     const originalBuffer = await page.screenshot({
       omitBackground: true,
-      clip: { x: 0, y: 0, width, height },
+      clip: { x: 0, y: 0, width, height }
     });
     await page.goto(`http://localhost:5000/optimized/${name}`);
     const optimizedBuffer = await page.screenshot({
       omitBackground: true,
-      clip: { x: 0, y: 0, width, height },
+      clip: { x: 0, y: 0, width, height }
     });
     const originalPng = PNG.sync.read(originalBuffer);
     const optimizedPng = PNG.sync.read(optimizedBuffer);
@@ -69,7 +69,7 @@ const runTests = async ({ list }) => {
       optimizedPng.data,
       diff.data,
       width,
-      height,
+      height
     );
     // ignore small aliasing issues
     if (matched <= 4) {
@@ -82,7 +82,7 @@ const runTests = async ({ list }) => {
         const file = path.join(
           __dirname,
           'regression-diffs',
-          `${name}.diff.png`,
+          `${name}.diff.png`
         );
         await fs.promises.mkdir(path.dirname(file), { recursive: true });
         await fs.promises.writeFile(file, PNG.sync.write(diff));
@@ -99,7 +99,7 @@ const runTests = async ({ list }) => {
         await processFile(page, name);
       }
       await page.close();
-    }),
+    })
   );
   await browser.close();
   console.info(`Skipped: ${skipped}`);

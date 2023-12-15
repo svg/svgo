@@ -19,7 +19,7 @@ exports.fn = (root, params) => {
   const {
     stroke: removeStroke = true,
     fill: removeFill = true,
-    removeNone = false,
+    removeNone = false
   } = params;
 
   // style and script elements deoptimise this plugin
@@ -30,8 +30,8 @@ exports.fn = (root, params) => {
         if (node.name === 'style' || hasScripts(node)) {
           hasStyleOrScript = true;
         }
-      },
-    },
+      }
+    }
   });
   if (hasStyleOrScript) {
     return null;
@@ -133,7 +133,7 @@ exports.fn = (root, params) => {
             detachNodeFromParent(node, parentNode);
           }
         }
-      },
-    },
+      }
+    }
   };
 };

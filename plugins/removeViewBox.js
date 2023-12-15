@@ -43,7 +43,7 @@ exports.fn = () => {
             delete node.attributes.viewBox;
           }
         }
-      },
-    },
+      }
+    }
   };
 };

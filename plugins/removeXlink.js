@@ -21,7 +21,7 @@ const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
  */
 const SHOW_TO_TARGET = {
   new: '_blank',
-  replace: '_self',
+  replace: '_self'
 };
 
 /**
@@ -37,7 +37,7 @@ const LEGACY_ELEMENTS = [
   'filter',
   'font-face-uri',
   'glyphRef',
-  'tref',
+  'tref'
 ];
 
 /**
@@ -136,7 +136,7 @@ exports.fn = (_, params) => {
           const attr = titleAttrs[i];
           const value = node.attributes[attr];
           const hasTitle = node.children.filter(
-            (child) => child.type === 'element' && child.name === 'title',
+            (child) => child.type === 'element' && child.name === 'title'
           );
 
           if (hasTitle.length > 0) {
@@ -152,14 +152,14 @@ exports.fn = (_, params) => {
             children: [
               {
                 type: 'text',
-                value,
-              },
-            ],
+                value
+              }
+            ]
           };
 
           Object.defineProperty(titleTag, 'parentNode', {
             writable: true,
-            value: node,
+            value: node
           });
 
           node.children.unshift(titleTag);
@@ -220,7 +220,7 @@ exports.fn = (_, params) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

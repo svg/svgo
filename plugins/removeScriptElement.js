@@ -12,7 +12,7 @@ const eventAttrs = [
   ...attrsGroups.documentEvent,
   ...attrsGroups.documentElementEvent,
   ...attrsGroups.globalEvent,
-  ...attrsGroups.graphicalEvent,
+  ...attrsGroups.graphicalEvent
 ];
 
 /**
@@ -59,12 +59,12 @@ exports.fn = () => {
             for (const child of node.children) {
               Object.defineProperty(child, 'parentNode', {
                 writable: true,
-                value: parentNode,
+                value: parentNode
               });
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

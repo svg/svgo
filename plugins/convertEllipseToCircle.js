@@ -31,7 +31,7 @@ exports.fn = () => {
             node.attributes.r = radius;
           }
         }
-      },
-    },
+      }
+    }
   };
 };

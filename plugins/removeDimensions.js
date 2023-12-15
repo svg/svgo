@@ -37,7 +37,7 @@ exports.fn = () => {
             delete node.attributes.height;
           }
         }
-      },
-    },
+      }
+    }
   };
 };

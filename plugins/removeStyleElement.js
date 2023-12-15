@@ -21,7 +21,7 @@ exports.fn = () => {
         if (node.name === 'style') {
           detachNodeFromParent(node, parentNode);
         }
-      },
-    },
+      }
+    }
   };
 };

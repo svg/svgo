@@ -22,7 +22,7 @@ describe('svgo', () => {
     const [original, expected] = await parseFixture('test.svg');
     const result = optimize(original, {
       plugins: [],
-      js2svg: { pretty: true, indent: 2 },
+      js2svg: { pretty: true, indent: 2 }
     });
     expect(normalize(result.data)).toEqual(expected);
   });
@@ -40,7 +40,7 @@ describe('svgo', () => {
     const result = optimize(original, {
       input: 'file',
       path: 'input.svg',
-      js2svg: { pretty: true },
+      js2svg: { pretty: true }
     });
     expect(normalize(result.data)).toEqual(expected);
   });
@@ -49,7 +49,7 @@ describe('svgo', () => {
     const result = optimize(original, {
       path: 'input.svg',
       plugins: [],
-      js2svg: { pretty: true },
+      js2svg: { pretty: true }
     });
     expect(normalize(result.data)).toEqual(expected);
   });
@@ -57,7 +57,7 @@ describe('svgo', () => {
     const [original, expected] = await parseFixture('whitespaces.svg');
     const result = optimize(original, {
       path: 'input.svg',
-      js2svg: { pretty: true },
+      js2svg: { pretty: true }
     });
     expect(normalize(result.data)).toEqual(expected);
   });
@@ -65,14 +65,14 @@ describe('svgo', () => {
     const [original, expected] = await parseFixture('keyframe-selectors.svg');
     const result = optimize(original, {
       path: 'input.svg',
-      js2svg: { pretty: true },
+      js2svg: { pretty: true }
     });
     expect(normalize(result.data)).toEqual(expected);
   });
   it('should not trim whitespace at start and end of pre element', async () => {
     const [original, expected] = await parseFixture('pre-element.svg');
     const result = optimize(original, {
-      path: 'input.svg',
+      path: 'input.svg'
     });
     expect(normalize(result.data)).toEqual(expected);
   });
@@ -80,7 +80,7 @@ describe('svgo', () => {
     const [original, expected] = await parseFixture('pre-element-pretty.svg');
     const result = optimize(original, {
       path: 'input.svg',
-      js2svg: { pretty: true },
+      js2svg: { pretty: true }
     });
     expect(normalize(result.data)).toEqual(expected);
   });

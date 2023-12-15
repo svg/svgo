@@ -10,7 +10,7 @@ const svgFolderPath = path.resolve(__dirname, 'testSvg');
 const svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively');
 const svgFiles = [
   path.resolve(__dirname, 'testSvg/test.svg'),
-  path.resolve(__dirname, 'testSvg/test.1.svg'),
+  path.resolve(__dirname, 'testSvg/test.1.svg')
 ];
 const tempFolder = 'temp';
 const noop = () => {};
@@ -60,7 +60,7 @@ describe('coa', function () {
           (checkIsDir(path.join(folderPath, name))
             ? calcFolderSvgWeight(path.join(folderPath, name))
             : 0),
-        0,
+        0
       );
   }
 
@@ -71,7 +71,7 @@ describe('coa', function () {
       svgFolderPath,
       '--output',
       tempFolder,
-      '--quiet',
+      '--quiet'
     ]);
     const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
     expect(optimizedWeight).toBeGreaterThan(0);
@@ -86,7 +86,7 @@ describe('coa', function () {
       '--output',
       tempFolder,
       '--quiet',
-      '--recursive',
+      '--recursive'
     ]);
     const optimizedWeight = calcFolderSvgWeight(svgFolderPathRecursively);
     expect(optimizedWeight).toBeGreaterThan(0);
@@ -100,7 +100,7 @@ describe('coa', function () {
       ...svgFiles,
       '--output',
       tempFolder,
-      '--quiet',
+      '--quiet'
     ]);
     const optimizedWeight = calcFolderSvgWeight(tempFolder);
     expect(optimizedWeight).toBeGreaterThan(0);
@@ -115,7 +115,7 @@ describe('coa', function () {
       svgFolderPath,
       '--output',
       tempFolder,
-      '--quiet',
+      '--quiet'
     ]);
     let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
@@ -128,7 +128,7 @@ describe('coa', function () {
         '--input',
         svgFolderPath + 'temp',
         '--output',
-        tempFolder,
+        tempFolder
       ]);
     } catch (error) {
       restoreConsoleError();
@@ -154,7 +154,7 @@ describe('coa', function () {
         await runProgram([
           '--folder',
           path.resolve(__dirname, 'testFolderWithNoSvg'),
-          '--quiet',
+          '--quiet'
         ]);
       } catch (error) {
         expect(error.message).toMatch(/No SVG files have been found/);

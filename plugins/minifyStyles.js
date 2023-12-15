@@ -81,7 +81,7 @@ exports.fn = (_root, { usage, ...params }) => {
         } else if (node.attributes.style != null) {
           elementsWithStyleAttributes.push(node);
         }
-      },
+      }
     },
 
     root: {
@@ -108,7 +108,7 @@ exports.fn = (_root, { usage, ...params }) => {
             const cssText = styleNode.children[0].value;
             const minified = csso.minify(cssText, {
               ...params,
-              usage: cssoUsage,
+              usage: cssoUsage
             }).css;
 
             if (minified.length === 0) {
@@ -132,10 +132,10 @@ exports.fn = (_root, { usage, ...params }) => {
           // style attribute
           const elemStyle = node.attributes.style;
           node.attributes.style = csso.minifyBlock(elemStyle, {
-            ...params,
+            ...params
           }).css;
         }
-      },
-    },
+      }
+    }
   };
 };

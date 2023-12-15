@@ -53,7 +53,7 @@ exports.fn = (root, params) => {
             { command: 'H', args: [x + width] },
             { command: 'V', args: [y + height] },
             { command: 'H', args: [x] },
-            { command: 'z', args: [] },
+            { command: 'z', args: [] }
           ];
           node.name = 'path';
           node.attributes.d = stringifyPathData({ pathData, precision });
@@ -75,7 +75,7 @@ exports.fn = (root, params) => {
            */
           const pathData = [
             { command: 'M', args: [x1, y1] },
-            { command: 'L', args: [x2, y2] },
+            { command: 'L', args: [x2, y2] }
           ];
           node.name = 'path';
           node.attributes.d = stringifyPathData({ pathData, precision });
@@ -91,7 +91,7 @@ exports.fn = (root, params) => {
           node.attributes.points != null
         ) {
           const coords = (node.attributes.points.match(regNumber) || []).map(
-            Number,
+            Number
           );
           if (coords.length < 4) {
             detachNodeFromParent(node, parentNode);
@@ -104,7 +104,7 @@ exports.fn = (root, params) => {
           for (let i = 0; i < coords.length; i += 2) {
             pathData.push({
               command: i === 0 ? 'M' : 'L',
-              args: coords.slice(i, i + 2),
+              args: coords.slice(i, i + 2)
             });
           }
           if (node.name === 'polygon') {
@@ -130,7 +130,7 @@ exports.fn = (root, params) => {
             { command: 'M', args: [cx, cy - r] },
             { command: 'A', args: [r, r, 0, 1, 0, cx, cy + r] },
             { command: 'A', args: [r, r, 0, 1, 0, cx, cy - r] },
-            { command: 'z', args: [] },
+            { command: 'z', args: [] }
           ];
           node.name = 'path';
           node.attributes.d = stringifyPathData({ pathData, precision });
@@ -155,7 +155,7 @@ exports.fn = (root, params) => {
             { command: 'M', args: [ecx, ecy - ry] },
             { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy + ry] },
             { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy - ry] },
-            { command: 'z', args: [] },
+            { command: 'z', args: [] }
           ];
           node.name = 'path';
           node.attributes.d = stringifyPathData({ pathData, precision });
@@ -164,7 +164,7 @@ exports.fn = (root, params) => {
           delete node.attributes.rx;
           delete node.attributes.ry;
         }
-      },
-    },
+      }
+    }
   };
 };

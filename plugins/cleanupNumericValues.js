@@ -16,7 +16,7 @@ const absoluteLengths = {
   in: 96,
   pt: 4 / 3,
   pc: 16,
-  px: 1,
+  px: 1
 };
 
 /**
@@ -32,7 +32,7 @@ exports.fn = (_root, params) => {
     floatPrecision = 3,
     leadingZero = true,
     defaultPx = true,
-    convertToPx = true,
+    convertToPx = true
   } = params;
 
   return {
@@ -75,8 +75,8 @@ exports.fn = (_root, params) => {
             if (convertToPx && units !== '' && units in absoluteLengths) {
               const pxNum = Number(
                 (absoluteLengths[units] * Number(match[1])).toFixed(
-                  floatPrecision,
-                ),
+                  floatPrecision
+                )
               );
               if (pxNum.toString().length < match[0].length) {
                 num = pxNum;
@@ -100,7 +100,7 @@ exports.fn = (_root, params) => {
             node.attributes[name] = str + units;
           }
         }
-      },
-    },
+      }
+    }
   };
 };

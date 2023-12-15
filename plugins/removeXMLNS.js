@@ -23,7 +23,7 @@ exports.fn = () => {
         if (node.name === 'svg') {
           delete node.attributes.xmlns;
         }
-      },
-    },
+      }
+    }
   };
 };

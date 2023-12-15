@@ -34,7 +34,7 @@ test('shows plugins when flag specified', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', '--show-plugins'],
-    { cwd: __dirname },
+    { cwd: __dirname }
   );
   const stdout = await waitStdout(proc);
   expect(stdout).toMatch(/Currently available plugins:/);
@@ -42,7 +42,7 @@ test('shows plugins when flag specified', async () => {
 
 test('accepts svg as input stream', async () => {
   const proc = spawn('node', ['../../bin/svgo', '--no-color', '-'], {
-    cwd: __dirname,
+    cwd: __dirname
   });
   proc.stdin.write('<svg><title>stdin</title></svg>');
   proc.stdin.end();
@@ -55,7 +55,7 @@ test('accepts svg as string', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', '--string', input],
-    { cwd: __dirname },
+    { cwd: __dirname }
   );
   const stdout = await waitStdout(proc);
   expect(stdout).toEqual('<svg/>');
@@ -65,12 +65,12 @@ test('accepts svg as filename', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', 'single.svg', '-o', 'output/single.svg'],
-    { cwd: __dirname },
+    { cwd: __dirname }
   );
   await waitClose(proc);
   const output = fs.readFileSync(
     path.join(__dirname, 'output/single.svg'),
-    'utf-8',
+    'utf-8'
   );
   expect(output).toEqual('<svg/>');
 });
@@ -79,7 +79,7 @@ test('output as stream when "-" is specified', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', 'single.svg', '-o', '-'],
-    { cwd: __dirname },
+    { cwd: __dirname }
   );
   const stdout = await waitStdout(proc);
   expect(stdout).toEqual('<svg/>');
@@ -87,7 +87,7 @@ test('output as stream when "-" is specified', async () => {
 
 test('should exit with 1 code on syntax error', async () => {
   const proc = spawn('node', ['../../bin/svgo', '--no-color', 'invalid.svg'], {
-    cwd: __dirname,
+    cwd: __dirname
   });
   const [code, stderr] = await Promise.all([
     new Promise((resolve) => {
@@ -99,7 +99,7 @@ test('should exit with 1 code on syntax error', async () => {
       proc.stderr.on('data', (error) => {
         resolve(error.toString());
       });
-    }),
+    })
   ]);
   expect(code).toEqual(1);
   expect(stderr)

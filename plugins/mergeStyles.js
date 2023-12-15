@@ -88,11 +88,11 @@ exports.fn = () => {
           // TODO remove legacy parentNode in v4
           Object.defineProperty(child, 'parentNode', {
             writable: true,
-            value: firstStyleElement,
+            value: firstStyleElement
           });
           firstStyleElement.children = [child];
         }
-      },
-    },
+      }
+    }
   };
 };

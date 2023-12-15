@@ -7,7 +7,7 @@ const {
   attrsGroups,
   elemsGroups,
   attrsGroupsDefaults,
-  presentationNonInheritableGroupAttrs,
+  presentationNonInheritableGroupAttrs
 } = require('./_collections');
 
 exports.name = 'removeUnknownsAndDefaults';
@@ -103,7 +103,7 @@ exports.fn = (root, params) => {
     uselessOverrides = true,
     keepDataAttrs = true,
     keepAriaAttrs = true,
-    keepRoleAttr = false,
+    keepRoleAttr = false
   } = params;
   const stylesheet = collectStylesheet(root);
 
@@ -113,7 +113,7 @@ exports.fn = (root, params) => {
         if (defaultMarkupDeclarations) {
           node.value = node.value.replace(/\s*standalone\s*=\s*(["'])no\1/, '');
         }
-      },
+      }
     },
     element: {
       enter: (node, parentNode) => {
@@ -129,7 +129,7 @@ exports.fn = (root, params) => {
         // remove unknown element's content
         if (unknownContent && parentNode.type === 'element') {
           const allowedChildren = allowedChildrenPerElement.get(
-            parentNode.name,
+            parentNode.name
           );
           if (allowedChildren == null || allowedChildren.size === 0) {
             // remove unknown elements
@@ -206,7 +206,7 @@ exports.fn = (root, params) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

@@ -92,7 +92,7 @@ exports.fn = (root, params) => {
     applyTransformsStroked = true,
     makeArcs = {
       threshold: 2.5, // coefficient of rounding error
-      tolerance: 0.5, // percentage of radius
+      tolerance: 0.5 // percentage of radius
     },
     straightCurves = true,
     lineShorthands = true,
@@ -106,7 +106,7 @@ exports.fn = (root, params) => {
     leadingZero = true,
     negativeExtraSpace = true,
     noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
-    forceAbsolutePath = false,
+    forceAbsolutePath = false
   } = params;
 
   /**
@@ -128,7 +128,7 @@ exports.fn = (root, params) => {
     leadingZero,
     negativeExtraSpace,
     noSpaceAfterFlags,
-    forceAbsolutePath,
+    forceAbsolutePath
   };
 
   // invoke applyTransforms plugin
@@ -138,8 +138,8 @@ exports.fn = (root, params) => {
       // @ts-ignore
       applyTransforms(root, {
         transformPrecision,
-        applyTransformsStroked,
-      }),
+        applyTransformsStroked
+      })
     );
   }
 
@@ -186,7 +186,7 @@ exports.fn = (root, params) => {
             data = filters(data, newParams, {
               isSafeToUseZ,
               maybeHasStrokeAndLinecap,
-              hasMarkerMid,
+              hasMarkerMid
             });
 
             if (utilizeAbsolute) {
@@ -197,8 +197,8 @@ exports.fn = (root, params) => {
             js2path(node, data, newParams);
           }
         }
-      },
-    },
+      }
+    }
   };
 };
 
@@ -387,7 +387,7 @@ const convertToRelative = (pathData) => {
 function filters(
   path,
   params,
-  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid },
+  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid }
 ) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
@@ -434,7 +434,7 @@ function filters(
             // @ts-ignore
             coords: item.coords.slice(),
             // @ts-ignore
-            base: item.base,
+            base: item.base
           },
           /**
            * @type {PathDataItem[]}
@@ -446,7 +446,7 @@ function filters(
            */
           relCenter = [
             circle.center[0] - sdata[4],
-            circle.center[1] - sdata[5],
+            circle.center[1] - sdata[5]
           ],
           relCircle = { center: relCenter, radius: circle.radius },
           arcCurves = [item],
@@ -477,9 +477,9 @@ function filters(
           var prevAngle = findArcAngle(prevData, {
             center: [
               prevData[4] + circle.center[0],
-              prevData[5] + circle.center[1],
+              prevData[5] + circle.center[1]
             ],
-            radius: circle.radius,
+            radius: circle.radius
           });
           angle += prevAngle;
           if (angle > Math.PI) arc.args[3] = 1;
@@ -496,7 +496,7 @@ function filters(
           if (next.command == 's') {
             nextLonghand = makeLonghand(
               { command: 's', args: next.args.slice() },
-              path[j - 1].args,
+              path[j - 1].args
             );
             nextData = nextLonghand.args;
             nextLonghand.args = nextData.slice(0, 2);
@@ -524,7 +524,7 @@ function filters(
                 // @ts-ignore
                 arc.base[0] + arc.args[5],
                 // @ts-ignore
-                arc.base[1] + arc.args[6],
+                arc.base[1] + arc.args[6]
               ];
               arc = {
                 command: 'a',
@@ -537,12 +537,12 @@ function filters(
                   // @ts-ignore
                   next.coords[0] - arc.coords[0],
                   // @ts-ignore
-                  next.coords[1] - arc.coords[1],
+                  next.coords[1] - arc.coords[1]
                 ],
                 // @ts-ignore
                 coords: next.coords,
                 // @ts-ignore
-                base: arc.coords,
+                base: arc.coords
               };
               output.push(arc);
               j++;
@@ -582,7 +582,7 @@ function filters(
             path.splice.apply(
               path,
               // @ts-ignore
-              [index + 1, arcCurves.length - 1 - hasPrev].concat(output),
+              [index + 1, arcCurves.length - 1 - hasPrev].concat(output)
             );
           }
           if (!arc) return false;
@@ -947,7 +947,7 @@ function isConvex(data) {
     data[0],
     data[1],
     data[4],
-    data[5],
+    data[5]
   ]);
 
   return (
@@ -1078,7 +1078,7 @@ function makeLonghand(item, data) {
   }
   item.args.unshift(
     data[data.length - 2] - data[data.length - 4],
-    data[data.length - 1] - data[data.length - 3],
+    data[data.length - 1] - data[data.length - 3]
   );
   return item;
 }
@@ -1109,7 +1109,7 @@ function getCubicBezierPoint(curve, t) {
 
   return [
     3 * sqrMt * t * curve[0] + 3 * mt * sqrT * curve[2] + cubT * curve[4],
-    3 * sqrMt * t * curve[1] + 3 * mt * sqrT * curve[3] + cubT * curve[5],
+    3 * sqrMt * t * curve[1] + 3 * mt * sqrT * curve[3] + cubT * curve[5]
   ];
 }
 
@@ -1131,7 +1131,7 @@ function findCircle(curve) {
       m2[0],
       m2[1],
       m2[0] + (m2[1] - midPoint[1]),
-      m2[1] - (m2[0] - midPoint[0]),
+      m2[1] - (m2[0] - midPoint[0])
     ]),
     radius = center && getDistance([0, 0], center),
     // @ts-ignore
@@ -1145,7 +1145,7 @@ function findCircle(curve) {
       return (
         Math.abs(
           // @ts-ignore
-          getDistance(getCubicBezierPoint(curve, point), center) - radius,
+          getDistance(getCubicBezierPoint(curve, point), center) - radius
         ) <= tolerance
       );
     })
@@ -1163,14 +1163,14 @@ function findCircle(curve) {
 function isArc(curve, circle) {
   var tolerance = Math.min(
     arcThreshold * error,
-    (arcTolerance * circle.radius) / 100,
+    (arcTolerance * circle.radius) / 100
   );
 
   return [0, 1 / 4, 1 / 2, 3 / 4, 1].every(function (point) {
     return (
       Math.abs(
         getDistance(getCubicBezierPoint(curve, point), circle.center) -
-          circle.radius,
+          circle.radius
       ) <= tolerance
     );
   });
@@ -1185,7 +1185,7 @@ function isArc(curve, circle) {
 function isArcPrev(curve, circle) {
   return isArc(curve, {
     center: [circle.center[0] + curve[4], circle.center[1] + curve[5]],
-    radius: circle.radius,
+    radius: circle.radius
   });
 }
 
@@ -1202,7 +1202,7 @@ function findArcAngle(curve, relCircle) {
     y2 = curve[5] - relCircle.center[1];
 
   return Math.acos(
-    (x1 * x2 + y1 * y2) / Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2)),
+    (x1 * x2 + y1 * y2) / Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
   );
 }
 

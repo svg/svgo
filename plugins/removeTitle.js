@@ -21,7 +21,7 @@ exports.fn = () => {
         if (node.name === 'title') {
           detachNodeFromParent(node, parentNode);
         }
-      },
-    },
+      }
+    }
   };
 };

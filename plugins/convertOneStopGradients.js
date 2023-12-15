@@ -9,7 +9,7 @@ const { attrsGroupsDefaults, colorsProps } = require('./_collections');
 const {
   detachNodeFromParent,
   querySelectorAll,
-  querySelector,
+  querySelector
 } = require('../lib/xast');
 const { computeStyle, collectStylesheet } = require('../lib/style');
 
@@ -128,7 +128,7 @@ exports.fn = (root) => {
 
         const styledElements = querySelectorAll(
           root,
-          `[style*=${selectorVal}]`,
+          `[style*=${selectorVal}]`
         );
         for (const element of styledElements) {
           if (element.type !== 'element') {
@@ -137,7 +137,7 @@ exports.fn = (root) => {
 
           element.attributes.style = element.attributes.style.replace(
             selectorVal,
-            color || attrsGroupsDefaults.presentation['stop-color'],
+            color || attrsGroupsDefaults.presentation['stop-color']
           );
         }
       },
@@ -162,7 +162,7 @@ exports.fn = (root) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

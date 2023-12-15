@@ -58,7 +58,7 @@ exports.fn = (_root, params) => {
             detachNodeFromParent(node, parentNode);
           }
         }
-      },
-    },
+      }
+    }
   };
 };

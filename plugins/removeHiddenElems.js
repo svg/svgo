@@ -11,7 +11,7 @@ const {
   visit,
   visitSkip,
   querySelector,
-  detachNodeFromParent,
+  detachNodeFromParent
 } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
@@ -56,7 +56,7 @@ exports.fn = (root, params) => {
     imageHeight0 = true,
     pathEmptyD = true,
     polylineEmptyPoints = true,
-    polygonEmptyPoints = true,
+    polygonEmptyPoints = true
   } = params;
   const stylesheet = collectStylesheet(root);
 
@@ -135,8 +135,8 @@ exports.fn = (root, params) => {
         ) {
           removeElement(node, parentNode);
         }
-      },
-    },
+      }
+    }
   });
 
   return {
@@ -403,7 +403,7 @@ exports.fn = (root, params) => {
             allReferences.add(id);
           }
         }
-      },
+      }
     },
     root: {
       exit: () => {
@@ -419,7 +419,7 @@ exports.fn = (root, params) => {
         if (!deoptimized) {
           for (const [
             nonRenderedNode,
-            nonRenderedParent,
+            nonRenderedParent
           ] of nonRenderedNodes.entries()) {
             const id = nonRenderedNode.attributes.id;
 
@@ -434,7 +434,7 @@ exports.fn = (root, params) => {
             detachNodeFromParent(node, parentNode);
           }
         }
-      },
-    },
+      }
+    }
   };
 };

@@ -67,7 +67,7 @@ exports.transformsMultiply = (transforms) => {
   const matrixTransform = {
     name: 'matrix',
     data:
-      matrixData.length > 0 ? matrixData.reduce(multiplyTransformMatrices) : [],
+      matrixData.length > 0 ? matrixData.reduce(multiplyTransformMatrices) : []
   };
   return matrixTransform;
 };
@@ -130,7 +130,7 @@ const mth = {
    */
   atan: (val, floatPrecision) => {
     return Number(mth.deg(Math.atan(val)).toFixed(floatPrecision));
-  },
+  }
 };
 
 /**
@@ -160,12 +160,12 @@ exports.matrixToTransform = (transform, params) => {
   let data = transform.data;
   let transforms = [];
   let sx = Number(
-    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision),
+    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision)
   );
   let sy = Number(
     ((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(
-      params.transformPrecision,
-    ),
+      params.transformPrecision
+    )
   );
   let colsSum = data[0] * data[2] + data[1] * data[3];
   let rowsSum = data[0] * data[1] + data[2] * data[3];
@@ -175,7 +175,7 @@ exports.matrixToTransform = (transform, params) => {
   if (data[4] || data[5]) {
     transforms.push({
       name: 'translate',
-      data: data.slice(4, data[5] ? 6 : 5),
+      data: data.slice(4, data[5] ? 6 : 5)
     });
   }
 
@@ -183,14 +183,14 @@ exports.matrixToTransform = (transform, params) => {
   if (!data[1] && data[2]) {
     transforms.push({
       name: 'skewX',
-      data: [mth.atan(data[2] / sy, floatPrecision)],
+      data: [mth.atan(data[2] / sy, floatPrecision)]
     });
 
     // [sx, sx·tan(a), 0, sy, 0, 0] → skewY(a)·scale(sx, sy)
   } else if (data[1] && !data[2]) {
     transforms.push({
       name: 'skewY',
-      data: [mth.atan(data[1] / data[0], floatPrecision)],
+      data: [mth.atan(data[1] / data[0], floatPrecision)]
     });
     sx = data[0];
     sy = data[3];
@@ -206,7 +206,7 @@ exports.matrixToTransform = (transform, params) => {
     var angle = Math.min(Math.max(-1, data[0] / sx), 1),
       rotate = [
         mth.acos(angle, floatPrecision) *
-          ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1),
+          ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1)
       ];
 
     if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
@@ -214,7 +214,7 @@ exports.matrixToTransform = (transform, params) => {
     if (rowsSum && colsSum)
       transforms.push({
         name: 'skewX',
-        data: [mth.atan(colsSum / (sx * sx), floatPrecision)],
+        data: [mth.atan(colsSum / (sx * sx), floatPrecision)]
       });
 
     // rotate(a, cx, cy) can consume translate() within optional arguments cx, cy (rotation point)
@@ -239,7 +239,7 @@ exports.matrixToTransform = (transform, params) => {
   if ((scaleBefore && (sx != 1 || sy != 1)) || !transforms.length)
     transforms.push({
       name: 'scale',
-      data: sx == sy ? [sx] : [sx, sy],
+      data: sx == sy ? [sx] : [sx, sy]
     });
 
   return transforms;
@@ -266,7 +266,7 @@ const transformToMatrix = (transform) => {
         0,
         transform.data[1] || transform.data[0],
         0,
-        0,
+        0
       ];
     case 'rotate':
       // [cos(a), sin(a), -sin(a), cos(a), x, y]
@@ -280,7 +280,7 @@ const transformToMatrix = (transform) => {
         -sin,
         cos,
         (1 - cos) * cx + sin * cy,
-        (1 - cos) * cy - sin * cx,
+        (1 - cos) * cy - sin * cx
       ];
     case 'skewX':
       // [1, 0, tan(a), 1, 0, 0]
@@ -373,6 +373,6 @@ const multiplyTransformMatrices = (a, b) => {
     a[0] * b[2] + a[2] * b[3],
     a[1] * b[2] + a[3] * b[3],
     a[0] * b[4] + a[2] * b[5] + a[4],
-    a[1] * b[4] + a[3] * b[5] + a[5],
+    a[1] * b[4] + a[3] * b[5] + a[5]
   ];
 };

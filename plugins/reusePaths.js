@@ -92,12 +92,12 @@ exports.fn = (root) => {
               type: 'element',
               name: 'defs',
               attributes: {},
-              children: [],
+              children: []
             };
             // TODO remove legacy parentNode in v4
             Object.defineProperty(defsTag, 'parentNode', {
               writable: true,
-              value: node,
+              value: node
             });
           }
 
@@ -109,7 +109,7 @@ exports.fn = (root) => {
                 type: 'element',
                 name: 'path',
                 attributes: {},
-                children: [],
+                children: []
               };
 
               for (const attr of ['fill', 'stroke', 'd']) {
@@ -123,7 +123,7 @@ exports.fn = (root) => {
                 originalId == null ||
                 hrefs.has(originalId) ||
                 stylesheet.rules.some(
-                  (rule) => rule.selector === `#${originalId}`,
+                  (rule) => rule.selector === `#${originalId}`
                 )
               ) {
                 reusablePath.attributes.id = 'reuse-' + index++;
@@ -134,7 +134,7 @@ exports.fn = (root) => {
               // TODO remove legacy parentNode in v4
               Object.defineProperty(reusablePath, 'parentNode', {
                 writable: true,
-                value: defsTag,
+                value: defsTag
               });
               defsTag.children.push(reusablePath);
               // convert paths to <use>
@@ -189,7 +189,7 @@ exports.fn = (root) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

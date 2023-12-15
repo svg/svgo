@@ -145,7 +145,7 @@ exports.fn = (root, params) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

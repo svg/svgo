@@ -25,7 +25,7 @@ exports.fn = () => {
             delete node.attributes[name];
           }
         }
-      },
-    },
+      }
+    }
   };
 };

@@ -22,7 +22,7 @@ exports.fn = () => {
         if (node.name === 'xml') {
           detachNodeFromParent(node, parentNode);
         }
-      },
-    },
+      }
+    }
   };
 };

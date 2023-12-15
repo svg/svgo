@@ -53,7 +53,7 @@ exports.fn = () => {
           return;
         }
         detachNodeFromParent(node, parentNode);
-      },
-    },
+      }
+    }
   };
 };

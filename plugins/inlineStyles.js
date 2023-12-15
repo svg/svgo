@@ -8,12 +8,12 @@
 const csstree = require('css-tree');
 const {
   // @ts-ignore internal api
-  syntax: { specificity },
+  syntax: { specificity }
 } = require('csso');
 const {
   visitSkip,
   querySelectorAll,
-  detachNodeFromParent,
+  detachNodeFromParent
 } = require('../lib/xast.js');
 const { compareSpecificity, includesAttrSelector } = require('../lib/style');
 const { attrsGroups, pseudoClasses } = require('./_collections');
@@ -33,7 +33,7 @@ exports.description = 'inline styles (additional options)';
  */
 const preservedPseudos = [
   ...pseudoClasses.functional,
-  ...pseudoClasses.treeStructural,
+  ...pseudoClasses.treeStructural
 ];
 
 /**
@@ -47,7 +47,7 @@ exports.fn = (root, params) => {
     onlyMatchedOnce = true,
     removeMatchedSelectors = true,
     useMqs = ['', 'screen'],
-    usePseudos = [''],
+    usePseudos = ['']
   } = params;
 
   /**
@@ -92,7 +92,7 @@ exports.fn = (root, params) => {
         try {
           cssAst = csstree.parse(cssText, {
             parseValue: false,
-            parseCustomProperty: false,
+            parseCustomProperty: false
           });
         } catch {
           return;
@@ -142,17 +142,17 @@ exports.fn = (root, params) => {
                       ) {
                         pseudos.push({
                           item: grandchildItem,
-                          list: grandchildList,
+                          list: grandchildList
                         });
                       }
-                    },
+                    }
                   );
 
                   const pseudoSelectors = csstree.generate({
                     type: 'Selector',
                     children: new csstree.List().fromArray(
-                      pseudos.map((pseudo) => pseudo.item.data),
-                    ),
+                      pseudos.map((pseudo) => pseudo.item.data)
+                    )
                   });
 
                   if (usePseudos.includes(pseudoSelectors)) {
@@ -165,9 +165,9 @@ exports.fn = (root, params) => {
                 }
               });
             }
-          },
+          }
         });
-      },
+      }
     },
 
     root: {
@@ -215,8 +215,8 @@ exports.fn = (root, params) => {
               selectedEl.attributes.style ?? '',
               {
                 context: 'declarationList',
-                parseValue: false,
-              },
+                parseValue: false
+              }
             );
             if (styleDeclarationList.type !== 'DeclarationList') {
               continue;
@@ -234,7 +234,7 @@ exports.fn = (root, params) => {
                 }
 
                 styleDeclarationItems.set(node.property.toLowerCase(), item);
-              },
+              }
             });
             // merge declarations
             csstree.walk(selector.rule, {
@@ -249,7 +249,7 @@ exports.fn = (root, params) => {
                 if (
                   attrsGroups.presentation.includes(property) &&
                   !selectors.some((selector) =>
-                    includesAttrSelector(selector.item, property),
+                    includesAttrSelector(selector.item, property)
                   )
                 ) {
                   delete selectedEl.attributes[property];
@@ -261,7 +261,7 @@ exports.fn = (root, params) => {
                 if (matchedItem == null) {
                   styleDeclarationList.children.insert(
                     ruleDeclarationItem,
-                    firstListItem,
+                    firstListItem
                   );
                 } else if (
                   matchedItem.data.important !== true &&
@@ -269,11 +269,11 @@ exports.fn = (root, params) => {
                 ) {
                   styleDeclarationList.children.replace(
                     matchedItem,
-                    ruleDeclarationItem,
+                    ruleDeclarationItem
                   );
                   styleDeclarationItems.set(property, ruleDeclarationItem);
                 }
-              },
+              }
             });
 
             const newStyles = csstree.generate(styleDeclarationList);
@@ -314,19 +314,14 @@ exports.fn = (root, params) => {
             const classList = new Set(
               selectedEl.attributes.class == null
                 ? null
-                : selectedEl.attributes.class.split(' '),
+                : selectedEl.attributes.class.split(' ')
             );
 
             for (const child of selector.node.children) {
               if (
                 child.type === 'ClassSelector' &&
                 !selectors.some((selector) =>
-                  includesAttrSelector(
-                    selector.item,
-                    'class',
-                    child.name,
-                    true,
-                  ),
+                  includesAttrSelector(selector.item, 'class', child.name, true)
                 )
               ) {
                 classList.delete(child.name);
@@ -349,8 +344,8 @@ exports.fn = (root, params) => {
                   selector.item,
                   'id',
                   firstSubSelector.name,
-                  true,
-                ),
+                  true
+                )
               )
             ) {
               delete selectedEl.attributes.id;
@@ -370,7 +365,7 @@ exports.fn = (root, params) => {
               ) {
                 list.remove(item);
               }
-            },
+            }
           });
 
           // csstree v2 changed this type
@@ -385,7 +380,7 @@ exports.fn = (root, params) => {
             }
           }
         }
-      },
-    },
+      }
+    }
   };
 };

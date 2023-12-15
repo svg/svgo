@@ -30,8 +30,8 @@ exports.fn = (root) => {
         if (node.name === 'filter') {
           hasFilter = true;
         }
-      },
-    },
+      }
+    }
   });
 
   return {
@@ -44,7 +44,7 @@ exports.fn = (root) => {
 
         if (node.attributes.style != null) {
           newStyle = csstree.parse(node.attributes.style, {
-            context: 'declarationList',
+            context: 'declarationList'
           });
 
           if (newStyle.type === 'DeclarationList') {
@@ -99,7 +99,7 @@ exports.fn = (root) => {
             attrValue,
             node.name,
             node.attributes.width,
-            node.attributes.height,
+            node.attributes.height
           );
 
           if (attrCleaned) {
@@ -114,20 +114,20 @@ exports.fn = (root) => {
           ) {
             const styleValue = csstree.generate(
               // @ts-ignore
-              enableBackgroundDeclaration.data.value,
+              enableBackgroundDeclaration.data.value
             );
             const styleCleaned = cleanupValue(
               styleValue,
               node.name,
               node.attributes.width,
-              node.attributes.height,
+              node.attributes.height
             );
 
             if (styleCleaned) {
               // @ts-ignore
               enableBackgroundDeclaration.data.value = {
                 type: 'Raw',
-                value: styleCleaned,
+                value: styleCleaned
               };
             } else {
               newStyle.children.remove(enableBackgroundDeclaration);
@@ -142,8 +142,8 @@ exports.fn = (root) => {
             node.attributes.style = csstree.generate(newStyle);
           }
         }
-      },
-    },
+      }
+    }
   };
 };
 
