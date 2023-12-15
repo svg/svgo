@@ -8,7 +8,7 @@ exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
 const rComma = '\\s*,\\s*';
 const regRGB = new RegExp(
-  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'
+  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$',
 );
 const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
 

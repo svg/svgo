@@ -31,7 +31,7 @@ const rValue =
     rSingleQuotes,
     rQuotes,
     rParenthesis,
-    '[^;]*?'
+    '[^;]*?',
   ) +
   '*?' +
   ')';
@@ -42,12 +42,12 @@ const rImportant = '(\\s*!important(?![-(\\w]))?';
 // Final RegExp to parse CSS declarations.
 const regDeclarationBlock = new RegExp(
   rAttr + ':' + rValue + rImportant + rDeclEnd,
-  'ig'
+  'ig',
 );
 // Comments expression. Honors escape sequences and strings.
 const regStripComments = new RegExp(
   g(rEscape, rSingleQuotes, rQuotes, '/\\*[^]*?\\*/'),
-  'ig'
+  'ig',
 );
 
 /**
@@ -87,9 +87,9 @@ exports.fn = (_root, params) => {
               return match[0] == '/'
                 ? ''
                 : match[0] == '\\' && /[-g-z]/i.test(match[1])
-                ? match[1]
-                : match;
-            }
+                  ? match[1]
+                  : match;
+            },
           );
 
           regDeclarationBlock.lastIndex = 0;

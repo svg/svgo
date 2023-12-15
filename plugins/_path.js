@@ -269,7 +269,7 @@ exports.intersects = function (path1, path2) {
       while (true) {
         if (iterations-- == 0) {
           console.error(
-            'Error: infinite loop while processing mergePaths plugin.'
+            'Error: infinite loop while processing mergePaths plugin.',
           );
           return true; // true is the safe value that means “do nothing with paths”
         }
@@ -303,8 +303,8 @@ exports.intersects = function (path1, path2) {
             ? polygon.maxY
             : polygon.maxX
           : direction[0] < 0
-          ? polygon.minX
-          : polygon.minY,
+            ? polygon.minX
+            : polygon.minY,
       max = -Infinity,
       value;
     while ((value = dot(polygon.list[index], direction)) > max) {
@@ -703,7 +703,7 @@ const a2c = (
   sweep_flag,
   x2,
   y2,
-  recursive
+  recursive,
 ) => {
   // for more information of where this Math came from visit:
   // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
@@ -744,8 +744,8 @@ const a2c = (
       (large_arc_flag == sweep_flag ? -1 : 1) *
       Math.sqrt(
         Math.abs(
-          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x)
-        )
+          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x),
+        ),
       );
     var cx = (k * rx * y) / ry + (x1 + x2) / 2;
     var cy = (k * -ry * x) / rx + (y1 + y2) / 2;

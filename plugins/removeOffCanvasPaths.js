@@ -57,7 +57,7 @@ exports.fn = () => {
           // ensure that the dimensions are 4 values separated by space
           const m =
             /^(-?\d*\.?\d+) (-?\d*\.?\d+) (\d*\.?\d+) (\d*\.?\d+)$/.exec(
-              viewBox
+              viewBox,
             );
           if (m == null) {
             return;

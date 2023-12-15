@@ -91,7 +91,7 @@ exports.fn = (root, params) => {
           node.attributes.points != null
         ) {
           const coords = (node.attributes.points.match(regNumber) || []).map(
-            Number
+            Number,
           );
           if (coords.length < 4) {
             detachNodeFromParent(node, parentNode);

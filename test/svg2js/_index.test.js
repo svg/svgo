@@ -76,7 +76,7 @@ describe('svg2js', function () {
         expect(root.children[3]).toEqual(
           expect.objectContaining({
             name: 'svg',
-          })
+          }),
         );
       });
     });

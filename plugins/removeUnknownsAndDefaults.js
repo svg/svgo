@@ -129,7 +129,7 @@ exports.fn = (root, params) => {
         // remove unknown element's content
         if (unknownContent && parentNode.type === 'element') {
           const allowedChildren = allowedChildrenPerElement.get(
-            parentNode.name
+            parentNode.name,
           );
           if (allowedChildren == null || allowedChildren.size === 0) {
             // remove unknown elements

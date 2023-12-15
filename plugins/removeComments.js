@@ -31,7 +31,7 @@ exports.fn = (_root, params) => {
         if (preservePatterns) {
           if (!Array.isArray(preservePatterns)) {
             throw Error(
-              `Expected array in removeComments preservePatterns parameter but received ${preservePatterns}`
+              `Expected array in removeComments preservePatterns parameter but received ${preservePatterns}`,
             );
           }
 
