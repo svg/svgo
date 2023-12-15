@@ -123,7 +123,7 @@ exports.fn = (root) => {
                 originalId == null ||
                 hrefs.has(originalId) ||
                 stylesheet.rules.some(
-                  (rule) => rule.selector === `#${originalId}`
+                  (rule) => rule.selector === `#${originalId}`,
                 )
               ) {
                 reusablePath.attributes.id = 'reuse-' + index++;

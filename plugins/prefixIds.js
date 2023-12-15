@@ -178,7 +178,7 @@ exports.fn = (_root, params, info) => {
                 const prefixed = prefixReference(
                   prefixGenerator,
                   // @ts-ignore
-                  unquote(node.value)
+                  unquote(node.value),
                 );
                 if (prefixed != null) {
                   // @ts-ignore
@@ -222,7 +222,7 @@ exports.fn = (_root, params, info) => {
           ) {
             const prefixed = prefixReference(
               prefixGenerator,
-              node.attributes[name]
+              node.attributes[name],
             );
             if (prefixed != null) {
               node.attributes[name] = prefixed;
@@ -244,7 +244,7 @@ exports.fn = (_root, params, info) => {
                   return match;
                 }
                 return `url(${prefixed})`;
-              }
+              },
             );
           }
         }

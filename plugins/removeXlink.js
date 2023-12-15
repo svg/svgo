@@ -136,7 +136,7 @@ exports.fn = (_, params) => {
           const attr = titleAttrs[i];
           const value = node.attributes[attr];
           const hasTitle = node.children.filter(
-            (child) => child.type === 'element' && child.name === 'title'
+            (child) => child.type === 'element' && child.name === 'title',
           );
 
           if (hasTitle.length > 0) {

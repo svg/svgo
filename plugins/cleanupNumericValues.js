@@ -75,8 +75,8 @@ exports.fn = (_root, params) => {
             if (convertToPx && units !== '' && units in absoluteLengths) {
               const pxNum = Number(
                 (absoluteLengths[units] * Number(match[1])).toFixed(
-                  floatPrecision
-                )
+                  floatPrecision,
+                ),
               );
               if (pxNum.toString().length < match[0].length) {
                 num = pxNum;

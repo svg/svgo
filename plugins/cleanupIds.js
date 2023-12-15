@@ -132,13 +132,13 @@ exports.fn = (_root, params) => {
     force = false,
   } = params;
   const preserveIds = new Set(
-    Array.isArray(preserve) ? preserve : preserve ? [preserve] : []
+    Array.isArray(preserve) ? preserve : preserve ? [preserve] : [],
   );
   const preserveIdPrefixes = Array.isArray(preservePrefixes)
     ? preservePrefixes
     : preservePrefixes
-    ? [preservePrefixes]
-    : [];
+      ? [preservePrefixes]
+      : [];
   /**
    * @type {Map<string, XastElement>}
    */
@@ -236,13 +236,13 @@ exports.fn = (_root, params) => {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(
                     `#${encodeURI(id)}`,
-                    `#${currentIdString}`
+                    `#${currentIdString}`,
                   );
                 } else {
                   // replace id in begin attribute
                   element.attributes[name] = value.replace(
                     `${id}.`,
-                    `${currentIdString}.`
+                    `${currentIdString}.`,
                   );
                 }
               }

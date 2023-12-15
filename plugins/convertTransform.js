@@ -151,20 +151,20 @@ const definePrecision = (data, { ...newParams }) => {
     newParams.transformPrecision = Math.min(
       newParams.transformPrecision,
       Math.max.apply(Math, matrixData.map(floatDigits)) ||
-        newParams.transformPrecision
+        newParams.transformPrecision,
     );
     significantDigits = Math.max.apply(
       Math,
       matrixData.map(
-        (n) => n.toString().replace(/\D+/g, '').length // Number of digits in a number. 123.45 → 5
-      )
+        (n) => n.toString().replace(/\D+/g, '').length, // Number of digits in a number. 123.45 → 5
+      ),
     );
   }
   // No sense in angle precision more then number of significant digits in matrix.
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
-      Math.min(newParams.floatPrecision, significantDigits - 2)
+      Math.min(newParams.floatPrecision, significantDigits - 2),
     );
   }
   return newParams;
