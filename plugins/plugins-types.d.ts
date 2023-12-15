@@ -255,7 +255,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
      *
      * @default false
      */
-    includeLegacy: boolean
+    includeLegacy: boolean;
   };
   removeXMLNS: void;
   reusePaths: void;

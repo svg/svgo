@@ -6,9 +6,9 @@ If you've found a bug with SVGO, [create an issue](https://github.com/svg/svgo/i
 
 Your issue should ideally contain:
 
-* A concise description of the bug.
-* How you were using SVGO, the version of the tool, and any configuration or command-line options.
-* The SVG that was effected, or a [Minimal, Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example).
+- A concise description of the bug.
+- How you were using SVGO, the version of the tool, and any configuration or command-line options.
+- The SVG that was effected, or a [Minimal, Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example).
 
 If you haven't found a bug, but need help using SVGO in your project, please consider asking on [Stack Overflow](https://stackoverflow.com/questions/tagged/svgo) with the `[svgo]` tag, you may get help faster there. You can still create an issue if the confusion stemmed from a lack of documentation.
 
@@ -20,8 +20,8 @@ See: [SECURITY.md](./SECURITY.md)
 
 ### Requirements
 
-* [Git](https://git-scm.com/)
-* [Node.js 14](https://nodejs.org/) or later
+- [Git](https://git-scm.com/)
+- [Node.js 14](https://nodejs.org/) or later
 
 ### Getting Started
 
