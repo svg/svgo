@@ -37,7 +37,6 @@ exports.transform2js = (transformString) => {
         // else if item is data
       } else {
         // then split it into [10, 50] and collect as context.data
-        // eslint-disable-next-line no-cond-assign
         while ((num = regNumericValues.exec(item))) {
           num = Number(num);
           if (current != null) {

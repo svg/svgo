@@ -267,7 +267,6 @@ exports.intersects = function (path1, path2) {
       var iterations = 1e4; // infinite loop protection, 10 000 iterations is more than enough
       // eslint-disable-next-line no-constant-condition
       while (true) {
-        // eslint-disable-next-line no-constant-condition
         if (iterations-- == 0) {
           console.error(
             'Error: infinite loop while processing mergePaths plugin.'

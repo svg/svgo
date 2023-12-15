@@ -89,10 +89,19 @@
     "overrides": [
       {
         "files": [
-          "rollup.config.js"
+          "rollup.config.js",
+          "**/*.mjs"
         ],
         "parserOptions": {
           "sourceType": "module"
+        }
+      },
+      {
+        "files": [
+          "**/*.cjs"
+        ],
+        "parserOptions": {
+          "sourceType": "commonjs"
         }
       },
       {
