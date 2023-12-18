@@ -397,8 +397,13 @@ function filters(
     relSubpoint = [0, 0],
     pathBase = [0, 0],
     prev = {};
+  /** @type {Point | undefined} */
+  let qControlPoint;
 
   path = path.filter(function (item, index, path) {
+    const qPoint = qControlPoint;
+    qControlPoint = undefined;
+
     let command = item.command;
     let data = item.args;
     let next = path[index + 1];
@@ -795,14 +800,24 @@ function filters(
           // t + q → t + t
           else if (
             // @ts-ignore
-            prev.command === 't' &&
-            // @ts-ignore
-            Math.abs(data[2] - prev.args[0]) < error &&
-            // @ts-ignore
-            Math.abs(data[3] - prev.args[1]) < error
+            prev.command === 't'
           ) {
-            command = 't';
-            data = data.slice(2);
+            // @ts-ignore
+            const predictedControlPoint = reflectPoint(qPoint, item.base);
+            const realControlPoint = [
+              // @ts-ignore
+              data[0] + item.base[0],
+              // @ts-ignore
+              data[1] + item.base[1],
+            ];
+            if (
+              Math.abs(predictedControlPoint[0] - realControlPoint[0]) <
+                error &&
+              Math.abs(predictedControlPoint[1] - realControlPoint[1]) < error
+            ) {
+              command = 't';
+              data = data.slice(2);
+            }
           }
         }
       }
@@ -873,6 +888,18 @@ function filters(
     )
       return false;
 
+    if (command === 'q') {
+      // @ts-ignore
+      qControlPoint = [data[0] + item.base[0], data[1] + item.base[1]];
+    } else if (command === 't') {
+      if (qPoint) {
+        // @ts-ignore
+        qControlPoint = reflectPoint(qPoint, item.base);
+      } else {
+        // @ts-ignore
+        qControlPoint = item.coords;
+      }
+    }
     prev = item;
     return true;
   });
@@ -1136,6 +1163,17 @@ function makeLonghand(item, data) {
 
 function getDistance(point1, point2) {
   return Math.hypot(point1[0] - point2[0], point1[1] - point2[1]);
+}
+
+/**
+ * Reflects point across another point
+ *
+ * @param {Point} input
+ * @param {Point} base
+ * @returns {Point}
+ */
+function reflectPoint(input, base) {
+  return [2 * base[0] - input[0], 2 * base[1] - input[1]];
 }
 
 /**
