@@ -677,14 +677,14 @@ function filters(
         const x2 =
           // @ts-ignore
           1.5 * (item.base[0] + data[2]) - 0.5 * (item.base[0] + data[4]);
-        if (Math.abs(x1 - x2) < error * 2) {
+        if (Math.abs(x1 - x2) < error * 4) {
           const y1 =
             // @ts-ignore
             1.5 * (item.base[1] + data[1]) - 0.5 * item.base[1];
           const y2 =
             // @ts-ignore
             1.5 * (item.base[1] + data[3]) - 0.5 * (item.base[1] + data[5]);
-          if (Math.abs(y1 - y2) < error * 2) {
+          if (Math.abs(y1 - y2) < error * 4) {
             const newData = data.slice();
             newData.splice(
               0,
