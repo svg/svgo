@@ -46,8 +46,8 @@ exports.fn = (root, params) => {
     params.class == null
       ? []
       : Array.isArray(params.class)
-      ? params.class
-      : [params.class];
+        ? params.class
+        : [params.class];
   return {
     element: {
       enter: (node, parentNode) => {

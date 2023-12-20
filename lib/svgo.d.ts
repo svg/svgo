@@ -30,7 +30,7 @@ export type Config = {
   path?: string;
   /** Pass over SVGs multiple times to ensure all optimizations are applied. */
   multipass?: boolean;
-  /** Precision of floating point numbers. Will be passed to each plugin that suppors this param. */
+  /** Precision of floating point numbers. Will be passed to each plugin that supports this param. */
   floatPrecision?: number;
   /**
    * Plugins configuration
@@ -61,9 +61,9 @@ export declare function optimize(input: string, config?: Config): Output;
  */
 export declare function loadConfig(
   configFile: string,
-  cwd?: string
+  cwd?: string,
 ): Promise<Config>;
 export declare function loadConfig(
   configFile?: null,
-  cwd?: string
+  cwd?: string,
 ): Promise<Config | null>;

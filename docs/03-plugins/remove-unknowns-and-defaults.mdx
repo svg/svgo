@@ -13,6 +13,9 @@ svgo:
     defaultAttrs:
       description: If to remove attributes that are assigned their default value anyway.
       default: true
+    defaultMarkupDeclarations:
+      description: If to remove XML declarations that are assigned their default value. XML declarations are the properties in the <code>&lt;?xml … ?&gt;</code> block at the top of the document.
+      default: true
     uselessOverrides:
       description: If to remove attributes that are being if the same value is being inherited by it's parent element anyway.
       default: true
@@ -29,18 +32,20 @@ svgo:
 
 Removes unknown elements and attributes, as well as attributes that are set to their default value.
 
+This can also remove defaults from the XML declaration if present in the document, namely [`standalone`](https://www.w3.org/TR/REC-xml/#sec-rmd) if it's set to `no`.
+
 ## Usage
 
-<PluginUsage/>
+<PluginUsage />
 
 ### Parameters
 
-<PluginParams/>
+<PluginParams />
 
 ## Demo
 
-<PluginDemo/>
+<PluginDemo />
 
 ## Implementation
 
-* https://github.com/svg/svgo/blob/main/plugins/removeUnknownsAndDefaults.js
+- https://github.com/svg/svgo/blob/main/plugins/removeUnknownsAndDefaults.js

@@ -7,13 +7,12 @@ svgo:
 
 Cleans up [`enable-background`](https://developer.mozilla.org/docs/Web/SVG/Attribute/enable-background), unless the document uses [`<filter>`](https://developer.mozilla.org/docs/Web/SVG/Element/filter) elements.
 
-Only cleans up attribute values and inline-styles, but does not effect stylesheets in [`<style>`](https://developer.mozilla.org/docs/Web/SVG/Element/style) nodes.
+Only cleans up attribute values and inline-styles, but does not affect stylesheets in [`<style>`](https://developer.mozilla.org/docs/Web/SVG/Element/style) nodes.
 
 This plugin will:
 
-* Drop `enable-background` when the width and height values match the width and height of the `<svg>` node.
-* Replace the value with `new` when the width and height values match the width and height of a `<mask>` or `<pattern>` node.
-
+- Drop `enable-background` when the width and height values match the width and height of the `<svg>` node.
+- Replace the value with `new` when the width and height values match the width and height of a `<mask>` or `<pattern>` node.
 
 :::info
 
@@ -23,12 +22,12 @@ Some browsers don't support `enable-background`, so it's best to avoid the attri
 
 ## Usage
 
-<PluginUsage/>
+<PluginUsage />
 
 ## Demo
 
-<PluginDemo/>
+<PluginDemo />
 
 ## Implementation
 
-* https://github.com/svg/svgo/blob/main/plugins/cleanupEnableBackground.js
+- https://github.com/svg/svgo/blob/main/plugins/cleanupEnableBackground.js

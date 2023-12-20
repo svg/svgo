@@ -99,7 +99,7 @@ exports.fn = (root) => {
             attrValue,
             node.name,
             node.attributes.width,
-            node.attributes.height
+            node.attributes.height,
           );
 
           if (attrCleaned) {
@@ -114,13 +114,13 @@ exports.fn = (root) => {
           ) {
             const styleValue = csstree.generate(
               // @ts-ignore
-              enableBackgroundDeclaration.data.value
+              enableBackgroundDeclaration.data.value,
             );
             const styleCleaned = cleanupValue(
               styleValue,
               node.name,
               node.attributes.width,
-              node.attributes.height
+              node.attributes.height,
             );
 
             if (styleCleaned) {

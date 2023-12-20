@@ -131,7 +131,7 @@ const convertTransform = (item, attrName, params) => {
  * Defines precision to work with certain parts.
  * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
  * floatPrecision - for translate including two last matrix and rotate parameters,
- * degPrecision - for rotate and skew. By default it's equal to (rougly)
+ * degPrecision - for rotate and skew. By default it's equal to (roughly)
  * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
  *
  * @type {(data: Array<TransformItem>, params: TransformParams) => TransformParams}
@@ -151,20 +151,20 @@ const definePrecision = (data, { ...newParams }) => {
     newParams.transformPrecision = Math.min(
       newParams.transformPrecision,
       Math.max.apply(Math, matrixData.map(floatDigits)) ||
-        newParams.transformPrecision
+        newParams.transformPrecision,
     );
     significantDigits = Math.max.apply(
       Math,
       matrixData.map(
-        (n) => n.toString().replace(/\D+/g, '').length // Number of digits in a number. 123.45 → 5
-      )
+        (n) => n.toString().replace(/\D+/g, '').length, // Number of digits in a number. 123.45 → 5
+      ),
     );
   }
   // No sense in angle precision more then number of significant digits in matrix.
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
-      Math.min(newParams.floatPrecision, significantDigits - 2)
+      Math.min(newParams.floatPrecision, significantDigits - 2),
     );
   }
   return newParams;
@@ -294,7 +294,7 @@ const convertToShorts = (transforms, params) => {
 /**
  * Remove useless transforms.
  *
- * @type {(trasforms: Array<TransformItem>) => Array<TransformItem>}
+ * @type {(transforms: Array<TransformItem>) => Array<TransformItem>}
  */
 const removeUseless = (transforms) => {
   return transforms.filter((transform) => {

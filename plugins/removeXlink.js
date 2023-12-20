@@ -72,7 +72,7 @@ exports.fn = (_, params) => {
   const xlinkPrefixes = [];
 
   /**
-   * Namespace prefixes that exist in {@link xlinkPrefixes} but were overriden
+   * Namespace prefixes that exist in {@link xlinkPrefixes} but were overridden
    * in a child element to point to another namespace, and so is not treated as
    * an XLink attribute.
    *
@@ -136,7 +136,7 @@ exports.fn = (_, params) => {
           const attr = titleAttrs[i];
           const value = node.attributes[attr];
           const hasTitle = node.children.filter(
-            (child) => child.type === 'element' && child.name === 'title'
+            (child) => child.type === 'element' && child.name === 'title',
           );
 
           if (hasTitle.length > 0) {
