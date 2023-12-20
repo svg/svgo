@@ -70,7 +70,7 @@ exports.fn = (root, params) => {
           console.warn(
             'optimizePathOrder is enabled, but data from convertPathData is not present. ' +
               'If you want to use optimizePathOrder, enable convertPathData and put optimizePathOrder after it. ' +
-              'If you do not want to use optimizePathOrder, disable it.'
+              'If you do not want to use optimizePathOrder, disable it.',
           );
           return;
         }
@@ -119,7 +119,7 @@ exports.fn = (root, params) => {
         for (const [i, part] of parts.entries()) {
           if (part.valid) {
             const internalData = part.data.filter(
-              (item) => item.command != 'm' && item.command != 'M'
+              (item) => item.command != 'm' && item.command != 'M',
             );
             if (internalData.length > 0) {
               const start = internalData[0].base;
@@ -148,13 +148,13 @@ exports.fn = (root, params) => {
                           y2: item.args[3] + item.base[1],
                         }
                       : item.command == 'C'
-                      ? {
-                          x1: item.args[0],
-                          y1: item.args[1],
-                          x2: item.args[2],
-                          y2: item.args[3],
-                        }
-                      : undefined,
+                        ? {
+                            x1: item.args[0],
+                            y1: item.args[1],
+                            x2: item.args[2],
+                            y2: item.args[3],
+                          }
+                        : undefined,
                   q:
                     item.command == 'q'
                       ? {
@@ -162,11 +162,11 @@ exports.fn = (root, params) => {
                           y: item.args[1] + item.base[1],
                         }
                       : item.command == 'Q'
-                      ? {
-                          x: item.args[0],
-                          y: item.args[1],
-                        }
-                      : undefined,
+                        ? {
+                            x: item.args[0],
+                            y: item.args[1],
+                          }
+                        : undefined,
                   base: item.base,
                   coords: item.coords,
                 })),
@@ -269,8 +269,8 @@ function optimizePart({
               { ...item, command: getCommand(item) },
               precision,
               output[output.length - 1].command,
-              output.length == input.length && !unsafeToChangeStart
-            )
+              output.length == input.length && !unsafeToChangeStart,
+            ),
           );
         }
       } else {
@@ -291,16 +291,16 @@ function optimizePart({
             { ...previousItem, command: getCommand(previousItem) },
             precision,
             output[output.length - 1].command,
-            false
-          )
+            false,
+          ),
         );
         output.push(
           transformCommand(
             { ...newItem, command: getCommand(newItem) },
             precision,
             output[output.length - 1].command,
-            !unsafeToChangeStart
-          )
+            !unsafeToChangeStart,
+          ),
         );
       }
       i++;
@@ -310,7 +310,7 @@ function optimizePart({
         (next
           ? estimateLength(
               transformMove(next, output[output.length - 1].coords),
-              precision
+              precision,
             )
           : 0);
       if (size < best.size) {
@@ -334,10 +334,10 @@ function getCommand(item) {
   return item.command == 'a' || item.command == 'A'
     ? 'A'
     : item.command == 'c' || item.command == 'C'
-    ? 'C'
-    : item.command == 'q' || item.command == 'Q'
-    ? 'Q'
-    : 'L';
+      ? 'C'
+      : item.command == 'q' || item.command == 'Q'
+        ? 'Q'
+        : 'L';
 }
 
 /**
@@ -384,7 +384,7 @@ function transformCommand(command, precision, lastCommand, useZ) {
       );
     const args = [data.x1, data.y1, data.x2, data.y2, ...command.coords];
     const argsRelative = args.map((a, i) =>
-      i % 2 == 0 ? a - command.base[0] : a - command.base[1]
+      i % 2 == 0 ? a - command.base[0] : a - command.base[1],
     );
     const absoluteLength =
       estimateLength(args, precision) + (lastCommand == 'C' ? 0 : 1);
@@ -400,7 +400,7 @@ function transformCommand(command, precision, lastCommand, useZ) {
     const data = /** @type {{x: number, y: number}} */ (command.q);
     const args = [data.x, data.y, ...command.coords];
     const argsRelative = args.map((a, i) =>
-      i % 2 == 0 ? a - command.base[0] : a - command.base[1]
+      i % 2 == 0 ? a - command.base[0] : a - command.base[1],
     );
     const absoluteLength =
       estimateLength(args, precision) + (lastCommand == 'Q' ? 0 : 1);
@@ -425,7 +425,7 @@ function transformCommand(command, precision, lastCommand, useZ) {
     } else if (command.base[1] == command.coords[1]) {
       const absoluteLength = toPrecision(
         command.coords[0],
-        precision
+        precision,
       ).toString().length;
       const relativeLength = toPrecision(relativeX, precision).toString()
         .length;
@@ -439,7 +439,7 @@ function transformCommand(command, precision, lastCommand, useZ) {
     } else if (command.base[0] == command.coords[0]) {
       const absoluteLength = toPrecision(
         command.coords[1],
-        precision
+        precision,
       ).toString().length;
       const relativeLength = toPrecision(relativeY, precision).toString()
         .length;

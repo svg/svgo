@@ -7,7 +7,7 @@ test('should rotate paths properly', () => {
   expect(
     optimize(svg, {
       plugins: ['convertPathData', 'optimizePathOrder'],
-    }).data
+    }).data,
   ).toEqual(`<svg><path d="M0 0h10v10z"/></svg>`);
 });
 test('should reverse paths properly', () => {
@@ -15,6 +15,6 @@ test('should reverse paths properly', () => {
   expect(
     optimize(svg, {
       plugins: ['convertPathData', 'optimizePathOrder'],
-    }).data
+    }).data,
   ).toEqual(`<svg><path d="M8 12h8v2H8z"/></svg>`);
 });
