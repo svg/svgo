@@ -1,0 +1,13 @@
+Should convert C to Q
+
+===
+
+<svg>
+    <path d="m 0 12 C 4 4 8 4 12 12"/>
+</svg>
+
+@@@
+
+<svg>
+    <path d="M0 12q6-12 12 0"/>
+</svg>
