@@ -15,6 +15,9 @@ svgo:
     straightCurves:
       description: If to convert curve commands that are effectively straight lines to line commands.
       default: true
+    convertToQ:
+      description: If to convert cubic beziers to quadratic beziers when they effectively are.
+      default: true
     lineShorthands:
       description: If to convert regular lines to an explicit horizontal or vertical line where possible.
       default: true

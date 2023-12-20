@@ -45,6 +45,7 @@ let arcTolerance;
  *     tolerance: number,
  *   },
  *   straightCurves: boolean,
+ *   convertToQ: boolean,
  *   lineShorthands: boolean,
  *   convertToZ: boolean,
  *   curveSmoothShorthands: boolean,
@@ -95,6 +96,7 @@ exports.fn = (root, params) => {
       tolerance: 0.5, // percentage of radius
     },
     straightCurves = true,
+    convertToQ = true,
     lineShorthands = true,
     convertToZ = true,
     curveSmoothShorthands = true,
@@ -117,6 +119,7 @@ exports.fn = (root, params) => {
     applyTransformsStroked,
     makeArcs,
     straightCurves,
+    convertToQ,
     lineShorthands,
     convertToZ,
     curveSmoothShorthands,
@@ -662,6 +665,35 @@ function filters(
         } else if (command === 'a' && (data[0] === 0 || data[1] === 0)) {
           command = 'l';
           data = data.slice(-2);
+        }
+      }
+
+      // degree-lower c to q when possible
+      // m 0 12 C 4 4 8 4 12 12 → M 0 12 Q 6 0 12 12
+      if (params.convertToQ && command == 'c') {
+        const x1 =
+          // @ts-ignore
+          1.5 * (item.base[0] + data[0]) - 0.5 * item.base[0];
+        const x2 =
+          // @ts-ignore
+          1.5 * (item.base[0] + data[2]) - 0.5 * (item.base[0] + data[4]);
+        if (Math.abs(x1 - x2) < error) {
+          const y1 =
+            // @ts-ignore
+            1.5 * (item.base[1] + data[1]) - 0.5 * item.base[1];
+          const y2 =
+            // @ts-ignore
+            1.5 * (item.base[1] + data[3]) - 0.5 * (item.base[1] + data[5]);
+          if (Math.abs(y1 - y2) < error) {
+            command = 'q';
+            // @ts-ignore
+            data[0] = (x1 + x2) / 2 - item.base[0];
+            // @ts-ignore
+            data[1] = (y1 + y2) / 2 - item.base[1];
+            data.splice(2, 2);
+
+            if (next && next.command == 's') makeLonghand(next, data); // fix up next curve
+          }
         }
       }
 
