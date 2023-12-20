@@ -7,7 +7,7 @@
 
 <svg xmlns="http://www.w3.org/2000/svg">
     <path d="M0 9V6a6 6 0 1 1 12 3"/>
-    <path d="M13 7q0-5-4-5C5 2 5 4 5 7"/>
+    <path d="M13 7q0-5-4-5-5 0-4 5"/>
 </svg>
 
 @@@
