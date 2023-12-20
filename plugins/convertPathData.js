@@ -677,22 +677,31 @@ function filters(
         const x2 =
           // @ts-ignore
           1.5 * (item.base[0] + data[2]) - 0.5 * (item.base[0] + data[4]);
-        if (Math.abs(x1 - x2) < error) {
+        if (Math.abs(x1 - x2) < error * 2) {
           const y1 =
             // @ts-ignore
             1.5 * (item.base[1] + data[1]) - 0.5 * item.base[1];
           const y2 =
             // @ts-ignore
             1.5 * (item.base[1] + data[3]) - 0.5 * (item.base[1] + data[5]);
-          if (Math.abs(y1 - y2) < error) {
-            command = 'q';
-            // @ts-ignore
-            data[0] = (x1 + x2) / 2 - item.base[0];
-            // @ts-ignore
-            data[1] = (y1 + y2) / 2 - item.base[1];
-            data.splice(2, 2);
-
-            if (next && next.command == 's') makeLonghand(next, data); // fix up next curve
+          if (Math.abs(y1 - y2) < error * 2) {
+            const newData = data.slice();
+            newData.splice(
+              0,
+              4,
+              // @ts-ignore
+              (x1 + x2) / 2 - item.base[0],
+              // @ts-ignore
+              (y1 + y2) / 2 - item.base[1],
+            );
+            roundData(newData);
+            const originalLength = cleanupOutData(data, params).length,
+              newLength = cleanupOutData(newData, params).length;
+            if (newLength < originalLength) {
+              command = 'q';
+              data = newData;
+              if (next && next.command == 's') makeLonghand(next, data); // fix up next curve
+            }
           }
         }
       }
