@@ -48,13 +48,13 @@ exports.fn = (root, params) => {
         }
 
         const matrix = transformsMultiply(
-          transform2js(node.attributes.transform)
+          transform2js(node.attributes.transform),
         );
         const hasStroke =
           computedStyle.stroke && computedStyle.stroke.value !== 'none';
         const strokeWidth = Number(
           computedStyle['stroke-width']?.value ||
-            (hasStroke && attrsGroupsDefaults.presentation['stroke-width'])
+            (hasStroke && attrsGroupsDefaults.presentation['stroke-width']),
         );
 
         const isSimilar =
@@ -77,7 +77,7 @@ exports.fn = (root, params) => {
           matrix.data[2] == 0 &&
           matrix.data[3] == 1;
         const scale = Math.sqrt(
-          matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]
+          matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1],
         );
         if (node.name == 'circle') {
           if (!isSimilar) return;
@@ -91,18 +91,18 @@ exports.fn = (root, params) => {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
               factor,
-              leadingZero
+              leadingZero,
             );
           }
           node.attributes.cx = stringifyNumber(
             newCenter[0],
             factor,
-            leadingZero
+            leadingZero,
           );
           node.attributes.cy = stringifyNumber(
             newCenter[1],
             factor,
-            leadingZero
+            leadingZero,
           );
           node.attributes.r = stringifyNumber(r * scale, factor, leadingZero);
           delete node.attributes.transform;
@@ -122,18 +122,18 @@ exports.fn = (root, params) => {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
               factor,
-              leadingZero
+              leadingZero,
             );
           }
           node.attributes.cx = stringifyNumber(
             newCenter[0],
             factor,
-            leadingZero
+            leadingZero,
           );
           node.attributes.cy = stringifyNumber(
             newCenter[1],
             factor,
-            leadingZero
+            leadingZero,
           );
           node.attributes.rx = stringifyNumber(newRx, factor, leadingZero);
           node.attributes.ry = stringifyNumber(newRy, factor, leadingZero);
@@ -155,7 +155,7 @@ exports.fn = (root, params) => {
           const cornerB = transformAbsolutePoint(
             matrix.data,
             x + width,
-            y + height
+            y + height,
           );
           const cornerX = Math.min(cornerA[0], cornerB[0]);
           const cornerY = Math.min(cornerA[1], cornerB[1]);
@@ -166,7 +166,7 @@ exports.fn = (root, params) => {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
               factor,
-              leadingZero
+              leadingZero,
             );
           }
           node.attributes.x = stringifyNumber(cornerX, factor, leadingZero);
