@@ -79,32 +79,26 @@ exports.fn = (root) => {
         }
 
         /**
-         * find common attributes in group children
-         * @type {Map<string, string>}
+         * attributes in group children
+         * @type {Map<string, string[]>}
          */
-        const commonAttributes = new Map();
-        let initial = true;
+        const attributes = new Map();
         let everyChildIsPath = true;
         for (const child of children) {
           if (pathElems.includes(child.name) === false) {
             everyChildIsPath = false;
           }
-          if (initial) {
-            initial = false;
-            // collect all inheritable attributes from first child element
-            for (const [name, value] of Object.entries(child.attributes)) {
-              // consider only inheritable attributes
-              if (inheritableAttrs.includes(name)) {
-                commonAttributes.set(name, value);
-              }
+          // collect all inheritable attributes from first child element
+          for (const [name, value] of Object.entries(child.attributes)) {
+            // consider only inheritable attributes
+            if (!inheritableAttrs.includes(name)) continue;
+
+            let list = attributes.get(name);
+            if (!list) {
+              list = [];
+              attributes.set(name, list);
             }
-          } else {
-            // exclude uncommon attributes from initial list
-            for (const [name, value] of commonAttributes) {
-              if (child.attributes[name] !== value) {
-                commonAttributes.delete(name);
-              }
-            }
+            list.push(value);
           }
         }
 
@@ -113,33 +107,96 @@ exports.fn = (root) => {
           node.attributes['clip-path'] != null ||
           node.attributes.mask != null
         ) {
-          commonAttributes.delete('transform');
+          attributes.delete('transform');
         }
 
         // preserve transform when all children are paths
         // so the transform could be applied to path data by other plugins
         if (everyChildIsPath) {
-          commonAttributes.delete('transform');
+          attributes.delete('transform');
         }
 
         // add common children attributes to group
-        for (const [name, value] of commonAttributes) {
+        for (const [name, values] of attributes) {
+          if (values.includes('inherit')) continue;
+
           if (name === 'transform') {
+            const value = values[0];
+            if (values.length != children.length) continue;
+            if (values.some((v) => v !== value)) continue;
             if (node.attributes.transform != null) {
               node.attributes.transform = `${node.attributes.transform} ${value}`;
             } else {
               node.attributes.transform = value;
             }
-          } else {
-            node.attributes[name] = value;
+            for (const child of children) {
+              delete child.attributes.transform;
+            }
+            continue;
           }
-        }
+          if (
+            (name === 'fill' || name === 'stroke') &&
+            values.some((v) => v.includes('url'))
+          )
+            continue;
 
-        // delete common attributes from children
-        for (const child of children) {
-          for (const [name] of commonAttributes) {
-            delete child.attributes[name];
+          const unsetValues = children.length - values.length;
+          const defaultV = node.attributes[name];
+          const assignmentCost = name.length + 4;
+          if (unsetValues && !defaultV) continue;
+
+          /**
+           * @type {Map<string, {chars: number, count: number}>}
+           */
+          const counts = new Map();
+          values.forEach((v) => {
+            let count = counts.get(v);
+            if (!count) {
+              count = {
+                chars: 0,
+                count: 0,
+              };
+              counts.set(v, count);
+            }
+            count.chars += v.length + assignmentCost;
+            count.count++;
+          });
+          if (unsetValues) {
+            let count = counts.get(defaultV);
+            if (!count) {
+              count = {
+                chars: 0,
+                count: 0,
+              };
+              counts.set(defaultV, count);
+            }
+            count.chars += unsetValues * (defaultV.length + assignmentCost);
+            count.count += unsetValues;
           }
+
+          const [preferred, preferredInfo] = Array.from(
+            counts.entries(),
+          ).reduce((a, b) => (a[1].chars > b[1].chars ? a : b));
+          if (preferredInfo.count === 1) {
+            children.forEach(
+              (c) =>
+                (c.attributes[name] =
+                  c.attributes[name] || defaultV || preferred),
+            );
+            delete node.attributes[name];
+            continue;
+          }
+          if (preferred === defaultV) continue;
+
+          children.forEach((c) => {
+            if (!c.attributes[name]) {
+              c.attributes[name] = defaultV;
+            }
+            if (c.attributes[name] === preferred) {
+              delete c.attributes[name];
+            }
+          });
+          node.attributes[name] = preferred;
         }
       },
     },
