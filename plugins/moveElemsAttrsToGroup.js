@@ -44,14 +44,37 @@ exports.fn = (root) => {
   return {
     element: {
       exit: (node) => {
-        // process only groups with more than 1 children
-        if (node.name !== 'g' || node.children.length <= 1) {
-          return;
-        }
-
         // deoptimize the plugin when style elements are present
         // selectors may rely on id, classes or tag names
         if (deoptimizedWithStyles) {
+          return;
+        }
+
+        const children = node.children.filter(
+          /**
+           * @type {(c: import('../lib/types.js').XastChild) => c is import('../lib/types.js').XastElement}
+           */ (c) => c.type === 'element',
+        );
+
+        // process only groups with more than 1 children
+        if (node.name !== 'g' || children.length <= 1) {
+          if (
+            children.length > 0 &&
+            (node.name === 'g' || node.name === 'svg')
+          ) {
+            // remove attributes that all children override
+            for (const a of Object.keys(node.attributes)) {
+              if (!inheritableAttrs.includes(a)) continue;
+              if (a === 'transform') continue;
+              const isOverriden = children.every(
+                (child) =>
+                  child.attributes[a] && child.attributes[a] !== 'inherit',
+              );
+              if (isOverriden) {
+                delete node.attributes[a];
+              }
+            }
+          }
           return;
         }
 
@@ -62,26 +85,24 @@ exports.fn = (root) => {
         const commonAttributes = new Map();
         let initial = true;
         let everyChildIsPath = true;
-        for (const child of node.children) {
-          if (child.type === 'element') {
-            if (pathElems.includes(child.name) === false) {
-              everyChildIsPath = false;
-            }
-            if (initial) {
-              initial = false;
-              // collect all inheritable attributes from first child element
-              for (const [name, value] of Object.entries(child.attributes)) {
-                // consider only inheritable attributes
-                if (inheritableAttrs.includes(name)) {
-                  commonAttributes.set(name, value);
-                }
+        for (const child of children) {
+          if (pathElems.includes(child.name) === false) {
+            everyChildIsPath = false;
+          }
+          if (initial) {
+            initial = false;
+            // collect all inheritable attributes from first child element
+            for (const [name, value] of Object.entries(child.attributes)) {
+              // consider only inheritable attributes
+              if (inheritableAttrs.includes(name)) {
+                commonAttributes.set(name, value);
               }
-            } else {
-              // exclude uncommon attributes from initial list
-              for (const [name, value] of commonAttributes) {
-                if (child.attributes[name] !== value) {
-                  commonAttributes.delete(name);
-                }
+            }
+          } else {
+            // exclude uncommon attributes from initial list
+            for (const [name, value] of commonAttributes) {
+              if (child.attributes[name] !== value) {
+                commonAttributes.delete(name);
               }
             }
           }
@@ -115,11 +136,9 @@ exports.fn = (root) => {
         }
 
         // delete common attributes from children
-        for (const child of node.children) {
-          if (child.type === 'element') {
-            for (const [name] of commonAttributes) {
-              delete child.attributes[name];
-            }
+        for (const child of children) {
+          for (const [name] of commonAttributes) {
+            delete child.attributes[name];
           }
         }
       },
