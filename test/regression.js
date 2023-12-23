@@ -3,26 +3,17 @@
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const os = require('os');
 const { chromium } = require('playwright');
 const { PNG } = require('pngjs');
 const pixelmatch = require('pixelmatch');
 const { optimize } = require('../lib/svgo.js');
 
-const chunkInto = (array, chunksCount) => {
-  // take upper bound to include tail
-  const chunkSize = Math.ceil(array.length / chunksCount);
-  const result = [];
-  for (let i = 0; i < chunksCount; i += 1) {
-    const offset = i * chunkSize;
-    result.push(array.slice(offset, offset + chunkSize));
-  }
-  return result;
-};
-
 const runTests = async ({ list }) => {
   let skipped = 0;
   let mismatched = 0;
   let passed = 0;
+  list.reverse();
   console.info('Start browser...');
   const processFile = async (page, name) => {
     if (
@@ -48,8 +39,6 @@ const runTests = async ({ list }) => {
       skipped += 1;
       return;
     }
-    const width = 960;
-    const height = 720;
     await page.goto(`http://localhost:5000/original/${name}`);
     await page.setViewportSize({ width, height });
     const originalBuffer = await page.screenshot({
@@ -89,17 +78,19 @@ const runTests = async ({ list }) => {
       }
     }
   };
+  const worker = async () => {
+    let item;
+    const page = await context.newPage();
+    while ((item = list.pop())) {
+      await processFile(page, item);
+    }
+    await page.close();
+  };
+
   const browser = await chromium.launch();
   const context = await browser.newContext({ javaScriptEnabled: false });
-  const chunks = chunkInto(list, 8);
   await Promise.all(
-    chunks.map(async (chunk) => {
-      const page = await context.newPage();
-      for (const name of chunk) {
-        await processFile(page, name);
-      }
-      await page.close();
-    }),
+    Array.from(new Array(os.cpus().length * 2), () => worker()),
   );
   await browser.close();
   console.info(`Skipped: ${skipped}`);
@@ -124,57 +115,48 @@ const readdirRecursive = async (absolute, relative = '') => {
   return result;
 };
 
+const width = 960;
+const height = 720;
 (async () => {
   try {
     const start = process.hrtime.bigint();
     const fixturesDir = path.join(__dirname, 'regression-fixtures');
     const list = await readdirRecursive(fixturesDir);
-    const originalFiles = new Map();
-    const optimizedFiles = new Map();
-    // read original and optimize
-    let failed = 0;
-    for (const name of list) {
-      try {
-        const file = path.join(fixturesDir, name);
-        const original = await fs.promises.readFile(file, 'utf-8');
-        const result = optimize(original, { path: name, floatPrecision: 4 });
-        if (result.error) {
-          console.error(result.error);
-          console.error(`File: ${name}`);
-          failed += 1;
-        } else {
-          originalFiles.set(name, original);
-          optimizedFiles.set(name, result.data);
-        }
-      } catch (error) {
-        console.error(error);
-        console.error(`File: ${name}`);
-        failed += 1;
-      }
-    }
-    if (failed !== 0) {
-      throw Error(`Failed to optimize ${failed} cases`);
-    }
     // setup server
-    const server = http.createServer((req, res) => {
+    const server = http.createServer(async (req, res) => {
+      const name = req.url.slice(req.url.indexOf('/', 1));
+      let file;
+      try {
+        file = await fs.promises.readFile(
+          path.join(fixturesDir, name),
+          'utf-8',
+        );
+      } catch (error) {
+        res.statusCode = 404;
+        res.end();
+        return;
+      }
+
       if (req.url.startsWith('/original/')) {
-        const name = req.url.slice('/original/'.length);
-        if (originalFiles.has(name)) {
-          res.setHeader('Content-Type', 'image/svg+xml');
-          res.end(originalFiles.get(name));
-          return;
-        }
+        res.setHeader('Content-Type', 'image/svg+xml');
+        res.end(file);
+        return;
       }
       if (req.url.startsWith('/optimized/')) {
-        const name = req.url.slice('/optimized/'.length);
-        if (optimizedFiles.has(name)) {
-          res.setHeader('Content-Type', 'image/svg+xml');
-          res.end(optimizedFiles.get(name));
-          return;
+        const optimized = optimize(file, {
+          path: name,
+          floatPrecision: 4,
+        });
+        if (optimized.error) {
+          throw new Error(`Failed to optimize ${name}`, {
+            cause: optimized.error,
+          });
         }
+        res.setHeader('Content-Type', 'image/svg+xml');
+        res.end(optimized.data);
+        return;
       }
-      res.statusCode = 404;
-      res.end();
+      throw new Error(`unknown path ${req.url}`);
     });
     await new Promise((resolve) => {
       server.listen(5000, resolve);
