@@ -124,7 +124,7 @@ const height = 720;
     const list = await readdirRecursive(fixturesDir);
     // setup server
     const server = http.createServer(async (req, res) => {
-      const name = req.url.slice(req.url.indexOf("/", 1));
+      const name = req.url.slice(req.url.indexOf('/', 1));
       const file = await fs.promises.readFile(
         path.join(fixturesDir, name),
         'utf-8',
