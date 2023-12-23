@@ -125,17 +125,10 @@ const height = 720;
     // setup server
     const server = http.createServer(async (req, res) => {
       const name = req.url.slice(req.url.indexOf("/", 1));
-      let file;
-      try {
-        file = await fs.promises.readFile(
-          path.join(fixturesDir, name),
-          'utf-8',
-        );
-      } catch (error) {
-        res.statusCode = 404;
-        res.end();
-        return;
-      }
+      const file = await fs.promises.readFile(
+        path.join(fixturesDir, name),
+        'utf-8',
+      );
 
       if (req.url.startsWith('/original/')) {
         res.setHeader('Content-Type', 'image/svg+xml');
