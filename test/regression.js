@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const os = require('os');
 const { chromium } = require('playwright');
 const { PNG } = require('pngjs');
 const pixelmatch = require('pixelmatch');
@@ -12,6 +13,7 @@ const runTests = async ({ list }) => {
   let skipped = 0;
   let mismatched = 0;
   let passed = 0;
+  list.reverse();
   console.info('Start browser...');
   const processFile = async (page, name) => {
     if (
@@ -79,7 +81,7 @@ const runTests = async ({ list }) => {
   const worker = async () => {
     let item;
     const page = await context.newPage();
-    while ((item = list.shift())) {
+    while ((item = list.pop())) {
       await processFile(page, item);
     }
     await page.close();
@@ -87,16 +89,9 @@ const runTests = async ({ list }) => {
 
   const browser = await chromium.launch();
   const context = await browser.newContext({ javaScriptEnabled: false });
-  await Promise.all([
-    worker(),
-    worker(),
-    worker(),
-    worker(),
-    worker(),
-    worker(),
-    worker(),
-    worker(),
-  ]);
+  await Promise.all(
+    Array.from(new Array(os.cpus().length * 2), () => worker()),
+  );
   await browser.close();
   console.info(`Skipped: ${skipped}`);
   console.info(`Mismatched: ${mismatched}`);
@@ -129,23 +124,17 @@ const height = 720;
     const list = await readdirRecursive(fixturesDir);
     // setup server
     const server = http.createServer(async (req, res) => {
-      const name = req.url.startsWith('/original/')
-        ? req.url.slice('/original/'.length)
-        : req.url.startsWith('/optimized/')
-          ? req.url.slice('/optimized/'.length)
-          : undefined;
+      const name = req.url.split('/')[2];
       let file;
-      if (name) {
-        try {
-          file = await fs.promises.readFile(
-            path.join(fixturesDir, name),
-            'utf-8',
-          );
-        } catch (error) {
-          res.statusCode = 404;
-          res.end();
-          return;
-        }
+      try {
+        file = await fs.promises.readFile(
+          path.join(fixturesDir, name),
+          'utf-8',
+        );
+      } catch (error) {
+        res.statusCode = 404;
+        res.end();
+        return;
       }
 
       if (req.url.startsWith('/original/')) {
