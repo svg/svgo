@@ -124,7 +124,7 @@ const height = 720;
     const list = await readdirRecursive(fixturesDir);
     // setup server
     const server = http.createServer(async (req, res) => {
-      const name = req.url.split('/')[2];
+      const name = req.url.slice(req.url.indexOf("/", 1));
       let file;
       try {
         file = await fs.promises.readFile(
@@ -156,8 +156,7 @@ const height = 720;
         res.end(optimized.data);
         return;
       }
-      res.statusCode = 404;
-      res.end();
+      throw new Error(`unknown path ${req.url}`);
     });
     await new Promise((resolve) => {
       server.listen(5000, resolve);
