@@ -14,41 +14,41 @@ If you aren't using SVGO directly, like through [SVGR](https://github.com/gregbe
 
 The following plugins are included in `preset-default`, in the order that they're executed:
 
-* [Remove Doctype](/docs/plugins/remove-doctype/)
-* [Remove XML Declaration](/docs/plugins/remove-xml-proc-inst/)
-* [Remove Comments](/docs/plugins/remove-comments/)
-* [Remove Metadata](/docs/plugins/remove-metadata/)
-* [Remove Editor Namespace Data](/docs/plugins/remove-editors-ns-data/)
-* [Cleanup Attributes](/docs/plugins/cleanup-attrs/)
-* [Merge Styles](/docs/plugins/merge-styles/)
-* [Inline Styles](/docs/plugins/inline-styles/)
-* [Minify Styles](/docs/plugins/minify-styles/)
-* [Cleanup IDs](/docs/plugins/cleanup-ids/)
-* [Remove Useless Defs](/docs/plugins/remove-useless-defs/)
-* [Cleanup Numeric Values](/docs/plugins/cleanup-numeric-values/)
-* [Convert Colors](/docs/plugins/convert-colors/)
-* [Remove Unknowns and Defaults](/docs/plugins/remove-unknowns-and-defaults/)
-* [Remove Non-inheritable Group Attributes](/docs/plugins/remove-non-inheritable-group-attrs/)
-* [Remove Useless Stroke and Fill](/docs/plugins/remove-useless-stroke-and-fill/)
-* [Remove ViewBox](/docs/plugins/remove-viewbox/)
-* [Cleanup Enable Background](/docs/plugins/cleanup-enable-background/)
-* [Remove Hidden Elements](/docs/plugins/remove-hidden-elems/)
-* [Remove Empty Text](/docs/plugins/remove-empty-text/)
-* [Convert Shape to Path](/docs/plugins/convert-shape-to-path/)
-* [Convert Ellipse to Circle](/docs/plugins/convert-ellipse-to-circle/)
-* [Move Element Attributes to Group](/docs/plugins/move-elems-attrs-to-group/)
-* [Move Group Attributes to Element](/docs/plugins/move-group-attrs-to-elem/)
-* [Collapse Groups](/docs/plugins/collapse-groups/)
-* [Convert Path Data](/docs/plugins/convert-path-data/)
-* [Convert Transform](/docs/plugins/convert-transform/)
-* [Remove Empty Attributes](/docs/plugins/remove-empty-attrs/)
-* [Remove Empty Containers](/docs/plugins/remove-empty-containers/)
-* [Remove Unused Namespaces](/docs/plugins/remove-unused-namespaces/)
-* [Merge Paths](/docs/plugins/merge-paths/)
-* [Sort Attributes](/docs/plugins/sort-attrs/)
-* [Sort Defs Children](/docs/plugins/sort-defs-children/)
-* [Remove Title](/docs/plugins/remove-title/)
-* [Remove Description](/docs/plugins/remove-desc/)
+- [Remove Doctype](/docs/plugins/remove-doctype/)
+- [Remove XML Declaration](/docs/plugins/remove-xml-proc-inst/)
+- [Remove Comments](/docs/plugins/remove-comments/)
+- [Remove Metadata](/docs/plugins/remove-metadata/)
+- [Remove Editor Namespace Data](/docs/plugins/remove-editors-ns-data/)
+- [Cleanup Attributes](/docs/plugins/cleanup-attrs/)
+- [Merge Styles](/docs/plugins/merge-styles/)
+- [Inline Styles](/docs/plugins/inline-styles/)
+- [Minify Styles](/docs/plugins/minify-styles/)
+- [Cleanup IDs](/docs/plugins/cleanup-ids/)
+- [Remove Useless Defs](/docs/plugins/remove-useless-defs/)
+- [Cleanup Numeric Values](/docs/plugins/cleanup-numeric-values/)
+- [Convert Colors](/docs/plugins/convert-colors/)
+- [Remove Unknowns and Defaults](/docs/plugins/remove-unknowns-and-defaults/)
+- [Remove Non-inheritable Group Attributes](/docs/plugins/remove-non-inheritable-group-attrs/)
+- [Remove Useless Stroke and Fill](/docs/plugins/remove-useless-stroke-and-fill/)
+- [Remove ViewBox](/docs/plugins/remove-viewbox/)
+- [Cleanup Enable Background](/docs/plugins/cleanup-enable-background/)
+- [Remove Hidden Elements](/docs/plugins/remove-hidden-elems/)
+- [Remove Empty Text](/docs/plugins/remove-empty-text/)
+- [Convert Shape to Path](/docs/plugins/convert-shape-to-path/)
+- [Convert Ellipse to Circle](/docs/plugins/convert-ellipse-to-circle/)
+- [Move Element Attributes to Group](/docs/plugins/move-elems-attrs-to-group/)
+- [Move Group Attributes to Element](/docs/plugins/move-group-attrs-to-elem/)
+- [Collapse Groups](/docs/plugins/collapse-groups/)
+- [Convert Path Data](/docs/plugins/convert-path-data/)
+- [Convert Transform](/docs/plugins/convert-transform/)
+- [Remove Empty Attributes](/docs/plugins/remove-empty-attrs/)
+- [Remove Empty Containers](/docs/plugins/remove-empty-containers/)
+- [Remove Unused Namespaces](/docs/plugins/remove-unused-namespaces/)
+- [Merge Paths](/docs/plugins/merge-paths/)
+- [Sort Attributes](/docs/plugins/sort-attrs/)
+- [Sort Defs Children](/docs/plugins/sort-defs-children/)
+- [Remove Title](/docs/plugins/remove-title/)
+- [Remove Description](/docs/plugins/remove-desc/)
 
 ## Disable a Plugin
 
@@ -63,15 +63,15 @@ module.exports = {
       name: 'preset-default',
       params: {
         overrides: {
-          removeViewBox: false
-        }
-      }
-    }
-  ]
+          removeViewBox: false,
+        },
+      },
+    },
+  ],
 };
 ```
 
-Alternatively, you can also drop `default-preset` entirely, and configure your own plugin pipeline from scratch, with only the desireable plugins:
+Alternatively, you can also drop `default-preset` entirely, and configure your own plugin pipeline from scratch, with only the desirable plugins:
 
 ```js
 module.exports = {
@@ -80,7 +80,7 @@ module.exports = {
     'removeXMLProcInst',
     'minifyStyles',
     'sortAttrs',
-    'sortDefsChildren'
-  ]
+    'sortDefsChildren',
+  ],
 };
 ```

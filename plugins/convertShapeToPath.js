@@ -91,7 +91,7 @@ exports.fn = (root, params) => {
           node.attributes.points != null
         ) {
           const coords = (node.attributes.points.match(regNumber) || []).map(
-            Number
+            Number,
           );
           if (coords.length < 4) {
             detachNodeFromParent(node, parentNode);
@@ -139,7 +139,7 @@ exports.fn = (root, params) => {
           delete node.attributes.r;
         }
 
-        // optionally covert ellipse
+        // optionally convert ellipse
         if (node.name === 'ellipse' && convertArcs) {
           const ecx = Number(node.attributes.cx || '0');
           const ecy = Number(node.attributes.cy || '0');

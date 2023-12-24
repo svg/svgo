@@ -10,11 +10,11 @@ svgo:
 
 Removes XLink namespace prefixes and converts references to XLink attributes to the native SVG equivalent by performing the following operations:
 
-* Convert `*:href` to [`href`](https://developer.mozilla.org/docs/Web/SVG/Attribute/href).
-* Convert `*:show` to [`target`](https://developer.mozilla.org/docs/Web/SVG/Attribute/target).
-* Convert `*:title` to [`<title>`](https://developer.mozilla.org/docs/Web/SVG/Element/title).
-* Drop all other references to the XLink namespace.
-* Remove XLink namespace declarations.
+- Convert `*:href` to [`href`](https://developer.mozilla.org/docs/Web/SVG/Attribute/href).
+- Convert `*:show` to [`target`](https://developer.mozilla.org/docs/Web/SVG/Attribute/target).
+- Convert `*:title` to [`<title>`](https://developer.mozilla.org/docs/Web/SVG/Element/title).
+- Drop all other references to the XLink namespace.
+- Remove XLink namespace declarations.
 
 :::tip
 
@@ -26,11 +26,11 @@ In most cases this will remove all references to XLink, but if legacy elements t
 
 The following support `xlink:href` but not the SVG 2 `href` attribute:
 
-* [`<cursor>`](https://developer.mozilla.org/docs/Web/SVG/Element/cursor)
-* [`<filter>`](https://developer.mozilla.org/docs/Web/SVG/Element/filter)
-* [`<font-face-uri>`](https://developer.mozilla.org/docs/Web/SVG/Element/font-face-uri)
-* [`<glyphRef>`](https://developer.mozilla.org/docs/Web/SVG/Element/glyphRef)
-* [`<tref>`](https://developer.mozilla.org/docs/Web/SVG/Element/tref)
+- [`<cursor>`](https://developer.mozilla.org/docs/Web/SVG/Element/cursor)
+- [`<filter>`](https://developer.mozilla.org/docs/Web/SVG/Element/filter)
+- [`<font-face-uri>`](https://developer.mozilla.org/docs/Web/SVG/Element/font-face-uri)
+- [`<glyphRef>`](https://developer.mozilla.org/docs/Web/SVG/Element/glyphRef)
+- [`<tref>`](https://developer.mozilla.org/docs/Web/SVG/Element/tref)
 
 It's recommended to use this plugin if you intend to inline SVGs into an HTML document, `includeLegacy` can be safely set to `true` in this case too. HTML does not support explicit namespaces, so namespace prefixes are ignored by the browser anyway.
 
@@ -42,16 +42,16 @@ This replaces XLink with features that are only supported in the SVGO 2 spec, an
 
 ## Usage
 
-<PluginUsage/>
+<PluginUsage />
 
 ### Parameters
 
-<PluginParams/>
+<PluginParams />
 
 ## Demo
 
-<PluginDemo/>
+<PluginDemo />
 
 ## Implementation
 
-* https://github.com/svg/svgo/blob/main/plugins/removeXlink.js
+- https://github.com/svg/svgo/blob/main/plugins/removeXlink.js

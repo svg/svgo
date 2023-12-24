@@ -145,13 +145,13 @@ exports.fn = (root, params) => {
                           list: grandchildList,
                         });
                       }
-                    }
+                    },
                   );
 
                   const pseudoSelectors = csstree.generate({
                     type: 'Selector',
                     children: new csstree.List().fromArray(
-                      pseudos.map((pseudo) => pseudo.item.data)
+                      pseudos.map((pseudo) => pseudo.item.data),
                     ),
                   });
 
@@ -216,7 +216,7 @@ exports.fn = (root, params) => {
               {
                 context: 'declarationList',
                 parseValue: false,
-              }
+              },
             );
             if (styleDeclarationList.type !== 'DeclarationList') {
               continue;
@@ -249,7 +249,7 @@ exports.fn = (root, params) => {
                 if (
                   attrsGroups.presentation.includes(property) &&
                   !selectors.some((selector) =>
-                    includesAttrSelector(selector.item, property)
+                    includesAttrSelector(selector.item, property),
                   )
                 ) {
                   delete selectedEl.attributes[property];
@@ -261,7 +261,7 @@ exports.fn = (root, params) => {
                 if (matchedItem == null) {
                   styleDeclarationList.children.insert(
                     ruleDeclarationItem,
-                    firstListItem
+                    firstListItem,
                   );
                 } else if (
                   matchedItem.data.important !== true &&
@@ -269,7 +269,7 @@ exports.fn = (root, params) => {
                 ) {
                   styleDeclarationList.children.replace(
                     matchedItem,
-                    ruleDeclarationItem
+                    ruleDeclarationItem,
                   );
                   styleDeclarationItems.set(property, ruleDeclarationItem);
                 }
@@ -314,14 +314,19 @@ exports.fn = (root, params) => {
             const classList = new Set(
               selectedEl.attributes.class == null
                 ? null
-                : selectedEl.attributes.class.split(' ')
+                : selectedEl.attributes.class.split(' '),
             );
 
             for (const child of selector.node.children) {
               if (
                 child.type === 'ClassSelector' &&
                 !selectors.some((selector) =>
-                  includesAttrSelector(selector.item, 'class', child.name, true)
+                  includesAttrSelector(
+                    selector.item,
+                    'class',
+                    child.name,
+                    true,
+                  ),
                 )
               ) {
                 classList.delete(child.name);
@@ -344,8 +349,8 @@ exports.fn = (root, params) => {
                   selector.item,
                   'id',
                   firstSubSelector.name,
-                  true
-                )
+                  true,
+                ),
               )
             ) {
               delete selectedEl.attributes.id;
@@ -370,7 +375,7 @@ exports.fn = (root, params) => {
 
           // csstree v2 changed this type
           if (style.cssAst.children.isEmpty) {
-            // remove emtpy style element
+            // remove empty style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {
             // update style element if any styles left

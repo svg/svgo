@@ -139,7 +139,7 @@ exports.fn = (root, params) => {
       applyTransforms(root, {
         transformPrecision,
         applyTransformsStroked,
-      })
+      }),
     );
   }
 
@@ -387,7 +387,7 @@ const convertToRelative = (pathData) => {
 function filters(
   path,
   params,
-  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid }
+  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid },
 ) {
   var stringify = data2Path.bind(null, params),
     relSubpoint = [0, 0],
@@ -496,7 +496,7 @@ function filters(
           if (next.command == 's') {
             nextLonghand = makeLonghand(
               { command: 's', args: next.args.slice() },
-              path[j - 1].args
+              path[j - 1].args,
             );
             nextData = nextLonghand.args;
             nextLonghand.args = nextData.slice(0, 2);
@@ -582,7 +582,7 @@ function filters(
             path.splice.apply(
               path,
               // @ts-ignore
-              [index + 1, arcCurves.length - 1 - hasPrev].concat(output)
+              [index + 1, arcCurves.length - 1 - hasPrev].concat(output),
             );
           }
           if (!arc) return false;
@@ -593,7 +593,7 @@ function filters(
         }
       }
 
-      // Rounding relative coordinates, taking in account accummulating error
+      // Rounding relative coordinates, taking in account accumulating error
       // to get closer to absolute coordinates. Sum of rounded value remains same:
       // l .25 3 .25 2 .25 3 .25 2 -> l .3 3 .2 2 .3 3 .2 2
       if (precision !== false) {
@@ -975,7 +975,7 @@ function getIntersection(coords) {
     c2 = coords[4] * coords[7] - coords[5] * coords[6], // x1 * y2 - x2 * y1
     denom = a1 * b2 - a2 * b1;
 
-  if (!denom) return; // parallel lines havn't an intersection
+  if (!denom) return; // parallel lines haven't an intersection
 
   /**
    * @type {Point}
@@ -1078,7 +1078,7 @@ function makeLonghand(item, data) {
   }
   item.args.unshift(
     data[data.length - 2] - data[data.length - 4],
-    data[data.length - 1] - data[data.length - 3]
+    data[data.length - 1] - data[data.length - 3],
   );
   return item;
 }
@@ -1145,7 +1145,7 @@ function findCircle(curve) {
       return (
         Math.abs(
           // @ts-ignore
-          getDistance(getCubicBezierPoint(curve, point), center) - radius
+          getDistance(getCubicBezierPoint(curve, point), center) - radius,
         ) <= tolerance
       );
     })
@@ -1163,14 +1163,14 @@ function findCircle(curve) {
 function isArc(curve, circle) {
   var tolerance = Math.min(
     arcThreshold * error,
-    (arcTolerance * circle.radius) / 100
+    (arcTolerance * circle.radius) / 100,
   );
 
   return [0, 1 / 4, 1 / 2, 3 / 4, 1].every(function (point) {
     return (
       Math.abs(
         getDistance(getCubicBezierPoint(curve, point), circle.center) -
-          circle.radius
+          circle.radius,
       ) <= tolerance
     );
   });
@@ -1202,7 +1202,7 @@ function findArcAngle(curve, relCircle) {
     y2 = curve[5] - relCircle.center[1];
 
   return Math.acos(
-    (x1 * x2 + y1 * y2) / Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2))
+    (x1 * x2 + y1 * y2) / Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2)),
   );
 }
 

@@ -14,8 +14,8 @@ type DefaultPlugins = {
   cleanupIds: {
     remove?: boolean;
     minify?: boolean;
-    preserve?: Array<string>;
-    preservePrefixes?: Array<string>;
+    preserve?: string[];
+    preservePrefixes?: string[];
     force?: boolean;
   };
   cleanupNumericValues: {
@@ -110,7 +110,7 @@ type DefaultPlugins = {
      */
     restructure?: boolean;
     /**
-     * Enables merging of @media rules with the same media query by splitted by other rules.
+     * Enables merging of @media rules with the same media query split by other rules.
      * The optimisation is unsafe in general, but should work fine in most cases. Use it on your own risk.
      * @default false
      */
@@ -147,7 +147,7 @@ type DefaultPlugins = {
   };
   removeDoctype: void;
   removeEditorsNSData: {
-    additionalNamespaces?: Array<string>;
+    additionalNamespaces?: string[];
   };
   removeEmptyAttrs: void;
   removeEmptyContainers: void;
@@ -180,6 +180,12 @@ type DefaultPlugins = {
     unknownContent?: boolean;
     unknownAttrs?: boolean;
     defaultAttrs?: boolean;
+    /**
+     * If to remove XML declarations that are assigned their default value. XML
+     * declarations are the properties in the `<?xml … ?>` block at the top of
+     * the document.
+     */
+    defaultMarkupDeclarations?: boolean;
     uselessOverrides?: boolean;
     keepDataAttrs?: boolean;
     keepAriaAttrs?: boolean;
@@ -195,7 +201,7 @@ type DefaultPlugins = {
   removeViewBox: void;
   removeXMLProcInst: void;
   sortAttrs: {
-    order?: Array<string>;
+    order?: string[];
     xmlnsOrder?: 'front' | 'alphabetical';
   };
   sortDefsChildren: void;
@@ -250,7 +256,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
      *
      * @default false
      */
-    includeLegacy: boolean
+    includeLegacy: boolean;
   };
   removeXMLNS: void;
   reusePaths: void;
@@ -263,17 +269,17 @@ export type BuiltinsWithRequiredParams = {
   };
   addClassesToSVGElement: {
     className?: string;
-    classNames?: Array<string>;
+    classNames?: string[];
   };
   removeAttributesBySelector: any;
   removeAttrs: {
     elemSeparator?: string;
     preserveCurrentColor?: boolean;
-    attrs: string | Array<string>;
+    attrs: string | string[];
   };
   removeElementsByAttr: {
-    id?: string | Array<string>;
-    class?: string | Array<string>;
+    id?: string | string[];
+    class?: string | string[];
   };
 };
 

@@ -37,7 +37,6 @@ exports.transform2js = (transformString) => {
         // else if item is data
       } else {
         // then split it into [10, 50] and collect as context.data
-        // eslint-disable-next-line no-cond-assign
         while ((num = regNumericValues.exec(item))) {
           num = Number(num);
           if (current != null) {
@@ -161,12 +160,12 @@ exports.matrixToTransform = (transform, params) => {
   let data = transform.data;
   let transforms = [];
   let sx = Number(
-    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision)
+    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision),
   );
   let sy = Number(
     ((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(
-      params.transformPrecision
-    )
+      params.transformPrecision,
+    ),
   );
   let colsSum = data[0] * data[2] + data[1] * data[3];
   let rowsSum = data[0] * data[1] + data[2] * data[3];
