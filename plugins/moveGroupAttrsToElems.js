@@ -37,7 +37,7 @@ exports.fn = () => {
           node.attributes.transform != null &&
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && includesUrlReference(value),
+              referencesProps.has(name) && includesUrlReference(value),
           ) === false &&
           node.children.every(
             (child) =>

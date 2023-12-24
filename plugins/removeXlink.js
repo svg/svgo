@@ -28,17 +28,17 @@ const SHOW_TO_TARGET = {
  * Elements that use xlink:href, but were deprecated in SVG 2 and therefore
  * don't support the SVG 2 href attribute.
  *
- * @type {string[]}
+ * @type {Set<string>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/href
  */
-const LEGACY_ELEMENTS = [
+const LEGACY_ELEMENTS = new Set([
   'cursor',
   'filter',
   'font-face-uri',
   'glyphRef',
   'tref',
-];
+]);
 
 /**
  * @param {XastElement} node
@@ -170,7 +170,7 @@ exports.fn = (_, params) => {
 
         if (
           hrefAttrs.length > 0 &&
-          LEGACY_ELEMENTS.includes(node.name) &&
+          LEGACY_ELEMENTS.has(node.name) &&
           !includeLegacy
         ) {
           hrefAttrs
