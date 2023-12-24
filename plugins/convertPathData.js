@@ -147,7 +147,7 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (pathElems.includes(node.name) && node.attributes.d != null) {
+        if (pathElems.has(node.name) && node.attributes.d != null) {
           const computedStyle = computeStyle(stylesheet, node);
           precision = floatPrecision;
           error =

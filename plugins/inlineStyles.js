@@ -247,7 +247,7 @@ exports.fn = (root, params) => {
                 const property = ruleDeclaration.property;
 
                 if (
-                  attrsGroups.presentation.includes(property) &&
+                  attrsGroups.presentation.has(property) &&
                   !selectors.some((selector) =>
                     includesAttrSelector(selector.item, property),
                   )

@@ -19,7 +19,7 @@ exports.description = 'removes editors namespaces, elements and attributes';
  * @type {import('./plugins-types').Plugin<'removeEditorsNSData'>}
  */
 exports.fn = (_root, params) => {
-  let namespaces = editorNamespaces;
+  let namespaces = [...editorNamespaces];
   if (Array.isArray(params.additionalNamespaces)) {
     namespaces = [...editorNamespaces, ...params.additionalNamespaces];
   }

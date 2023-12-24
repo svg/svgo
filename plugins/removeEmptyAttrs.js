@@ -20,7 +20,7 @@ exports.fn = () => {
           if (
             value === '' &&
             // empty conditional processing attributes prevents elements from rendering
-            attrsGroups.conditionalProcessing.includes(name) === false
+            !attrsGroups.conditionalProcessing.has(name)
           ) {
             delete node.attributes[name];
           }
