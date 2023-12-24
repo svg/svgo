@@ -46,7 +46,7 @@ exports.fn = (root, params) => {
           // TODO: Calculate sizes from % and non-px units if possible.
           if (Number.isNaN(x - y + width - height)) return;
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [x, y] },
@@ -71,7 +71,7 @@ exports.fn = (root, params) => {
           const y2 = Number(node.attributes.y2 || '0');
           if (Number.isNaN(x1 - y1 + x2 - y2)) return;
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [x1, y1] },
@@ -98,7 +98,7 @@ exports.fn = (root, params) => {
             return;
           }
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [];
           for (let i = 0; i < coords.length; i += 2) {
@@ -124,7 +124,7 @@ exports.fn = (root, params) => {
             return;
           }
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [cx, cy - r] },
@@ -149,7 +149,7 @@ exports.fn = (root, params) => {
             return;
           }
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [ecx, ecy - ry] },

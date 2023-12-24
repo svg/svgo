@@ -19,8 +19,8 @@ const {
 const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
 
 /**
- * @typedef {Array<PathDataItem>} PathData
- * @typedef {Array<number>} Matrix
+ * @typedef {PathDataItem[]} PathData
+ * @typedef {number[]} Matrix
  */
 
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;

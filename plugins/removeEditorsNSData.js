@@ -24,7 +24,7 @@ exports.fn = (_root, params) => {
     namespaces = [...editorNamespaces, ...params.additionalNamespaces];
   }
   /**
-   * @type {Array<string>}
+   * @type {string[]}
    */
   const prefixes = [];
   return {

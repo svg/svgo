@@ -31,7 +31,7 @@ export type XastElement = {
   type: 'element';
   name: string;
   attributes: Record<string, string>;
-  children: Array<XastChild>;
+  children: XastChild[];
 };
 
 export type XastChild =
@@ -44,7 +44,7 @@ export type XastChild =
 
 export type XastRoot = {
   type: 'root';
-  children: Array<XastChild>;
+  children: XastChild[];
 };
 
 export type XastParent = XastRoot | XastElement;
@@ -123,11 +123,11 @@ export type StylesheetRule = {
   dynamic: boolean;
   selector: string;
   specificity: Specificity;
-  declarations: Array<StylesheetDeclaration>;
+  declarations: StylesheetDeclaration[];
 };
 
 export type Stylesheet = {
-  rules: Array<StylesheetRule>;
+  rules: StylesheetRule[];
   parents: Map<XastElement, XastParent>;
 };
 
@@ -168,7 +168,7 @@ export type PathDataCommand =
 
 export type PathDataItem = {
   command: PathDataCommand;
-  args: Array<number>;
+  args: number[];
 };
 
 export type DataUri = 'base64' | 'enc' | 'unenc';

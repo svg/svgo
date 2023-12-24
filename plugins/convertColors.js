@@ -22,7 +22,7 @@ const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
  *
  * @author Jed Schmidt
  *
- * @type {(rgb: Array<number>) => string}
+ * @type {(rgb: number[]) => string}
  */
 const convertRgbToHex = ([r, g, b]) => {
   // combine the octets into a 32-bit integer as: [1][r][g][b]
