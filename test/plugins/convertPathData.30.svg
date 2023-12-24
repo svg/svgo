@@ -1,0 +1,13 @@
+Should use relative instead of absolute here. (Checking for proper rounding of relative data)
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+    <path d="M 6 6 h 0.1 h 0.2"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+    <path d="M6 6h.3"/>
+</svg>
