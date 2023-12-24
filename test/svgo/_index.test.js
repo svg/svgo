@@ -36,7 +36,7 @@ describe('svgo', () => {
     expect(result.data).toEqual('<svg/>');
   });
   it('should preserve style specificity over attributes', async () => {
-    const [original, expected] = await parseFixture('style-specifity.svg');
+    const [original, expected] = await parseFixture('style-specificity.svg');
     const result = optimize(original, {
       path: 'input.svg',
       js2svg: { pretty: true },
