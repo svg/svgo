@@ -136,7 +136,7 @@ type DefaultPlugins = {
         };
   };
 
-  mergeText:void;
+  mergeText: void;
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
   removeComments: {
