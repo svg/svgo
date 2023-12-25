@@ -1,0 +1,15 @@
+---
+title: Merge Text
+svgo:
+  pluginId: mergeText
+---
+
+Merge adjacent `<text>` elements and remove `<tspan>` when it is the only child of a `<text>` element.
+
+If the SVG contains any `<style>` elements, it will not be modified.
+
+`<text>` or `<tspan>` elements which have non-inheritable attributes other than `x` or `y` will not be modified.
+
+## Implementation
+
+- https://github.com/svg/svgo/blob/main/plugins/mergeText.js
