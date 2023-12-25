@@ -42,13 +42,14 @@ const runTests = async (list) => {
     await page.goto(`http://localhost:5000/optimized/${name}`);
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
+    const writeDiffs = process.env.NO_DIFF == null;
+    const diff = writeDiffs && new PNG({ width, height });
     const originalPng = PNG.sync.read(originalBuffer);
     const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
-    const diff = new PNG({ width, height });
     const matched = pixelmatch(
       originalPng.data,
       optimizedPng.data,
-      diff.data,
+      diff ? diff.data : null,
       width,
       height,
     );
@@ -59,7 +60,7 @@ const runTests = async (list) => {
     } else {
       mismatched++;
       console.error(`${name} is mismatched`);
-      if (process.env.NO_DIFF == null) {
+      if (diff) {
         const file = path.join(
           __dirname,
           'regression-diffs',
@@ -73,7 +74,6 @@ const runTests = async (list) => {
   const worker = async () => {
     let item;
     const page = await context.newPage();
-    await page.setViewportSize({ width, height });
     while ((item = list.pop())) {
       await processFile(page, item);
     }
@@ -81,7 +81,10 @@ const runTests = async (list) => {
   };
 
   const browser = await chromium.launch();
-  const context = await browser.newContext({ javaScriptEnabled: false });
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width, height },
+  });
   await Promise.all(
     Array.from(new Array(os.cpus().length * 2), () => worker()),
   );
