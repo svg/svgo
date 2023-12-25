@@ -1,26 +1,24 @@
-'use strict';
-
 /**
- * @typedef {import('../lib/types').XastChild} XastChild
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
  */
 
-const { elemsGroups } = require('./_collections.js');
-const {
+import { elemsGroups } from './_collections.js';
+import {
   visit,
   visitSkip,
   querySelector,
   detachNodeFromParent,
-} = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { parsePathData } = require('../lib/path.js');
-const { hasScripts, findReferences } = require('../lib/svgo/tools.js');
+} from '../lib/xast.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { parsePathData } from '../lib/path.js';
+import { hasScripts, findReferences } from '../lib/svgo/tools.js';
 
 const nonRendering = elemsGroups.nonRendering;
 
-exports.name = 'removeHiddenElems';
-exports.description =
+export const name = 'removeHiddenElems';
+export const description =
   'removes hidden elements (zero sized, with absent attributes)';
 
 /**
@@ -38,9 +36,9 @@ exports.description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeHiddenElems'>}
+ * @type {import('./plugins-types.js').Plugin<'removeHiddenElems'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     isHidden = true,
     displayNone = true,

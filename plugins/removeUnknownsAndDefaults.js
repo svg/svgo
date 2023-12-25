@@ -1,17 +1,15 @@
-'use strict';
-
-const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const {
+import {
   elems,
   attrsGroups,
   elemsGroups,
   attrsGroupsDefaults,
   presentationNonInheritableGroupAttrs,
-} = require('./_collections');
+} from './_collections.js';
+import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-exports.name = 'removeUnknownsAndDefaults';
-exports.description =
+export const name = 'removeUnknownsAndDefaults';
+export const description =
   'removes unknown elements content and attributes, removes attrs with default values';
 
 // resolve all groups references
@@ -92,9 +90,9 @@ for (const [name, config] of Object.entries(elems)) {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeUnknownsAndDefaults'>}
+ * @type {import('./plugins-types.js').Plugin<'removeUnknownsAndDefaults'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     unknownContent = true,
     unknownAttrs = true,

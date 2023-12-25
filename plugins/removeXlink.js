@@ -1,13 +1,11 @@
-'use strict';
-
-const { elems } = require('./_collections');
+import { elems } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-exports.name = 'removeXlink';
-exports.description =
+export const name = 'removeXlink';
+export const description =
   'remove xlink namespace and replaces attributes with the SVG 2 equivalent where applicable';
 
 /** URI indicating the Xlink namespace. */
@@ -58,10 +56,10 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  *
  * The XLink namespace is deprecated in SVG 2.
  *
- * @type {import('./plugins-types').Plugin<'removeXlink'>}
+ * @type {import('./plugins-types.js').Plugin<'removeXlink'>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
  */
-exports.fn = (_, params) => {
+export const fn = (_, params) => {
   const { includeLegacy } = params;
 
   /**

@@ -1,6 +1,4 @@
-'use strict';
-
-const { matrixToTransform } = require('../../plugins/_transforms');
+import { matrixToTransform } from '../../plugins/_transforms.js';
 
 /**
  * @typedef {import('../../plugins/_transforms').TransformParams} TransformParams

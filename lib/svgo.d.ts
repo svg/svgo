@@ -1,12 +1,12 @@
-import type { StringifyOptions, DataUri, Plugin as PluginFn } from './types';
+import type { StringifyOptions, DataUri, Plugin } from './types.js';
 import type {
   BuiltinsWithOptionalParams,
   BuiltinsWithRequiredParams,
-} from '../plugins/plugins-types';
+} from '../plugins/plugins-types.js';
 
 type CustomPlugin = {
   name: string;
-  fn: PluginFn<void>;
+  fn: Plugin<void>;
 };
 
 type PluginConfig =

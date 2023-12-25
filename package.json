@@ -4,6 +4,7 @@
   "version": "3.2.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "license": "MIT",
+  "type": "module",
   "keywords": [
     "svgo",
     "svg",
@@ -50,7 +51,7 @@
     "url": "https://opencollective.com/svgo"
   },
   "main": "./lib/svgo-node.js",
-  "bin": "./bin/svgo",
+  "bin": "./bin/svgo.js",
   "types": "./lib/svgo.d.ts",
   "files": [
     "bin",

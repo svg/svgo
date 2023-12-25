@@ -1,12 +1,13 @@
-'use strict';
-
 /**
  * @typedef {import('child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams
  */
 
-const fs = require('fs');
-const path = require('path');
-const { spawn } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @type {(proc: ChildProcessWithoutNullStreams) => Promise<string>}

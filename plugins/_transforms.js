@@ -1,6 +1,4 @@
-'use strict';
-
-const { toFixed } = require('../lib/svgo/tools');
+import { toFixed } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {{ name: string, data: number[] }} TransformItem
@@ -38,7 +36,7 @@ const regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  * @param {string} transformString
  * @returns {TransformItem[]} Object representation of transform, or an empty array if it was malformed.
  */
-exports.transform2js = (transformString) => {
+export const transform2js = (transformString) => {
   /** @type {TransformItem[]} */
   const transforms = [];
   /** @type {?TransformItem} */
@@ -69,14 +67,13 @@ exports.transform2js = (transformString) => {
     ? []
     : transforms;
 };
-
 /**
  * Multiply transforms into one.
  *
  * @param {TransformItem[]} transforms
  * @returns {TransformItem}
  */
-exports.transformsMultiply = (transforms) => {
+export const transformsMultiply = (transforms) => {
   const matrixData = transforms.map((transform) => {
     if (transform.name === 'matrix') {
       return transform.data;
@@ -173,7 +170,7 @@ const mth = {
  * @returns {TransformItem[]}
  * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  */
-exports.matrixToTransform = (transform, params) => {
+export const matrixToTransform = (transform, params) => {
   const floatPrecision = params.floatPrecision;
   const data = transform.data;
   const transforms = [];
@@ -337,7 +334,7 @@ const transformToMatrix = (transform) => {
  *   transform: number[]
  * ) => number[]}
  */
-exports.transformArc = (cursor, arc, transform) => {
+export const transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
   const y = arc[6] - cursor[1];
   let a = arc[0];

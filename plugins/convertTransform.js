@@ -1,20 +1,19 @@
-'use strict';
-
-/**
- * @typedef {import('../lib/types').XastChild} XastChild
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
- */
-
-const { cleanupOutData, toFixed } = require('../lib/svgo/tools.js');
-const {
+import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
+import {
   transform2js,
   transformsMultiply,
   matrixToTransform,
-} = require('./_transforms.js');
+} from './_transforms.js';
 
-exports.name = 'convertTransform';
-exports.description = 'collapses multiple transformations and optimizes it';
+/**
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
+
+export const name = 'convertTransform';
+export const description =
+  'collapses multiple transformations and optimizes it';
 
 /**
  * Convert matrices to the short aliases,
@@ -26,9 +25,9 @@ exports.description = 'collapses multiple transformations and optimizes it';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertTransform'>}
+ * @type {import('./plugins-types.js').Plugin<'convertTransform'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     convertToShorts = true,
     // degPrecision = 3, // transformPrecision (or matrix precision) - 2 by default

@@ -1,31 +1,29 @@
-'use strict';
-
-/**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
- */
-
-const { attrsGroupsDefaults, colorsProps } = require('./_collections');
-const {
+import { attrsGroupsDefaults, colorsProps } from './_collections.js';
+import {
   detachNodeFromParent,
   querySelectorAll,
   querySelector,
-} = require('../lib/xast');
-const { computeStyle, collectStylesheet } = require('../lib/style');
+} from '../lib/xast.js';
+import { computeStyle, collectStylesheet } from '../lib/style.js';
 
-exports.name = 'convertOneStopGradients';
-exports.description =
+/**
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
+
+export const name = 'convertOneStopGradients';
+export const description =
   'converts one-stop (single color) gradients to a plain color';
 
 /**
  * Converts one-stop (single color) gradients to a plain color.
  *
  * @author Seth Falco <seth@falco.fun>
- * @type {import('./plugins-types').Plugin<'convertOneStopGradients'>}
+ * @type {import('./plugins-types.js').Plugin<'convertOneStopGradients'>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/linearGradient
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/radialGradient
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
   /**

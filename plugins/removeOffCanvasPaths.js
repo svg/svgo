@@ -1,15 +1,13 @@
-'use strict';
-
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
-const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const { parsePathData } = require('../lib/path.js');
-const { intersects } = require('./_path.js');
+import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { parsePathData } from '../lib/path.js';
+import { intersects } from './_path.js';
 
-exports.name = 'removeOffCanvasPaths';
-exports.description =
+export const name = 'removeOffCanvasPaths';
+export const description =
   'removes elements that are drawn outside of the viewbox (disabled by default)';
 
 /**
@@ -17,9 +15,9 @@ exports.description =
  *
  * @author JoshyPHP
  *
- * @type {import('./plugins-types').Plugin<'removeOffCanvasPaths'>}
+ * @type {import('./plugins-types.js').Plugin<'removeOffCanvasPaths'>}
  */
-exports.fn = () => {
+export const fn = () => {
   /**
    * @type {?{
    *   top: number,

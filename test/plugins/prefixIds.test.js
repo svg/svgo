@@ -1,6 +1,4 @@
-'use strict';
-
-const { optimize } = require('../../lib/svgo.js');
+import { optimize } from '../../lib/svgo.js';
 
 test('should extract prefix from path basename', () => {
   const svg = `<svg id="my-id"></svg>`;

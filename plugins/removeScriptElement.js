@@ -1,10 +1,8 @@
-'use strict';
+import { attrsGroups } from './_collections.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-const { attrsGroups } = require('./_collections.js');
-
-exports.name = 'removeScriptElement';
-exports.description = 'removes scripts (disabled by default)';
+export const name = 'removeScriptElement';
+export const description = 'removes scripts (disabled by default)';
 
 /** Union of all event attributes. */
 const eventAttrs = [
@@ -21,9 +19,9 @@ const eventAttrs = [
  * https://www.w3.org/TR/SVG11/script.html
  *
  * @author Patrick Klingemann
- * @type {import('./plugins-types').Plugin<'removeScriptElement'>}
+ * @type {import('./plugins-types.js').Plugin<'removeScriptElement'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {

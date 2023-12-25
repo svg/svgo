@@ -1,13 +1,11 @@
-'use strict';
-
-const {
+import {
   inheritableAttrs,
   attrsGroups,
   presentationNonInheritableGroupAttrs,
-} = require('./_collections');
+} from './_collections.js';
 
-exports.name = 'removeNonInheritableGroupAttrs';
-exports.description =
+export const name = 'removeNonInheritableGroupAttrs';
+export const description =
   'removes non-inheritable group’s presentational attributes';
 
 /**
@@ -15,9 +13,9 @@ exports.description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeNonInheritableGroupAttrs'>}
+ * @type {import('./plugins-types.js').Plugin<'removeNonInheritableGroupAttrs'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {

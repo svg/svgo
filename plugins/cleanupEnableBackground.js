@@ -1,10 +1,8 @@
-'use strict';
+import * as csstree from 'css-tree';
+import { visit } from '../lib/xast.js';
 
-const csstree = require('css-tree');
-const { visit } = require('../lib/xast.js');
-
-exports.name = 'cleanupEnableBackground';
-exports.description =
+export const name = 'cleanupEnableBackground';
+export const description =
   'remove or cleanup enable-background attribute when possible';
 
 const regEnableBackground =
@@ -19,9 +17,9 @@ const regEnableBackground =
  *             ⬇
  * <svg width="100" height="50">
  * @author Kir Belevich
- * @type {import('./plugins-types').Plugin<'cleanupEnableBackground'>}
+ * @type {import('./plugins-types.js').Plugin<'cleanupEnableBackground'>}
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   let hasFilter = false;
 
   visit(root, {

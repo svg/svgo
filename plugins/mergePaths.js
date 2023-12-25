@@ -1,25 +1,23 @@
-'use strict';
-
 /**
- * @typedef {import("../lib/types").PathDataItem} PathDataItem
- * @typedef {import('../lib/types').XastChild} XastChild
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import("../lib/types.js").PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { path2js, js2path, intersects } = require('./_path.js');
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { path2js, js2path, intersects } from './_path.js';
 
-exports.name = 'mergePaths';
-exports.description = 'merges multiple paths in one if possible';
+export const name = 'mergePaths';
+export const description = 'merges multiple paths in one if possible';
 
 /**
  * Merge multiple Paths into one.
  *
  * @author Kir Belevich, Lev Solntsev
  *
- * @type {import('./plugins-types').Plugin<'mergePaths'>}
+ * @type {import('./plugins-types.js').Plugin<'mergePaths'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     force = false,
     floatPrecision,

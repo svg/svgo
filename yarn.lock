@@ -4468,7 +4468,7 @@ __metadata:
     tar-stream: ^3.1.6
     typescript: ^5.3.3
   bin:
-    svgo: ./bin/svgo
+    svgo: ./bin/svgo.js
   languageName: unknown
   linkType: soft
 

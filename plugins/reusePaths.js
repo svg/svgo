@@ -1,16 +1,14 @@
-'use strict';
-
-const { collectStylesheet } = require('../lib/style');
-const { detachNodeFromParent, querySelectorAll } = require('../lib/xast');
+import { collectStylesheet } from '../lib/style.js';
+import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
- * @typedef {import('../lib/types').XastNode} XastNode
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ * @typedef {import('../lib/types.js').XastNode} XastNode
  */
 
-exports.name = 'reusePaths';
-exports.description =
+export const name = 'reusePaths';
+export const description =
   'Finds <path> elements with the same d, fill, and ' +
   'stroke, and converts them to <use> elements ' +
   'referencing a single <path> def.';
@@ -21,9 +19,9 @@ exports.description =
  *
  * @author Jacob Howcroft
  *
- * @type {import('./plugins-types').Plugin<'reusePaths'>}
+ * @type {import('./plugins-types.js').Plugin<'reusePaths'>}
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
   /**

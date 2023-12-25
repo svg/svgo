@@ -1,18 +1,19 @@
-'use strict';
-
 /**
  * @typedef {import('playwright').Page} Page
  * @typedef {import('playwright').PageScreenshotOptions} PageScreenshotOptions
  */
 
-const fs = require('node:fs/promises');
-const http = require('http');
-const os = require('os');
-const path = require('path');
-const pixelmatch = require('pixelmatch');
-const { chromium } = require('playwright');
-const { PNG } = require('pngjs');
-const { optimize } = require('../lib/svgo.js');
+import fs from 'node:fs/promises';
+import http from 'http';
+import os from 'os';
+import path from 'path';
+import pixelmatch from 'pixelmatch';
+import { chromium } from 'playwright';
+import { PNG } from 'pngjs';
+import { fileURLToPath } from 'url';
+import { optimize } from '../lib/svgo.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const width = 960;
 const height = 720;
