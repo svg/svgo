@@ -1,6 +1,9 @@
 'use strict';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
+/**
+ * @typedef {import('../lib/types').XastChild} XastChild
+ */
+
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { path2js, js2path, intersects } = require('./_path.js');
 
@@ -25,12 +28,18 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        let prevChild = null;
+        if (node.children.length <= 1) {
+          return;
+        }
 
-        for (const child of node.children) {
-          // skip if previous element is not path or contains animation elements
+        /** @type {XastChild[]} */
+        const elementsToRemove = [];
+        let prevChild = node.children[0];
+
+        for (let i = 1; i < node.children.length; i++) {
+          const child = node.children[i];
+
           if (
-            prevChild == null ||
             prevChild.type !== 'element' ||
             prevChild.name !== 'path' ||
             prevChild.children.length !== 0 ||
@@ -40,7 +49,6 @@ exports.fn = (root, params) => {
             continue;
           }
 
-          // skip if element is not path or contains animation elements
           if (
             child.type !== 'element' ||
             child.name !== 'path' ||
@@ -51,7 +59,6 @@ exports.fn = (root, params) => {
             continue;
           }
 
-          // preserve paths with markers
           const computedStyle = computeStyle(stylesheet, child);
           if (
             computedStyle['marker-start'] ||
@@ -62,36 +69,45 @@ exports.fn = (root, params) => {
             continue;
           }
 
-          const prevChildAttrs = Object.keys(prevChild.attributes);
           const childAttrs = Object.keys(child.attributes);
-          let attributesAreEqual = prevChildAttrs.length === childAttrs.length;
-          for (const name of childAttrs) {
-            if (name !== 'd') {
-              if (
-                prevChild.attributes[name] == null ||
-                prevChild.attributes[name] !== child.attributes[name]
-              ) {
-                attributesAreEqual = false;
-              }
-            }
+          if (childAttrs.length !== Object.keys(prevChild.attributes).length) {
+            prevChild = child;
+            continue;
           }
+
+          const areAttrsEqual = childAttrs.some((attr) => {
+            return (
+              attr !== 'd' &&
+              prevChild.type === 'element' &&
+              prevChild.attributes[attr] !== child.attributes[attr]
+            );
+          });
+
+          if (areAttrsEqual) {
+            prevChild = child;
+            continue;
+          }
+
           const prevPathJS = path2js(prevChild);
           const curPathJS = path2js(child);
 
-          if (
-            attributesAreEqual &&
-            (force || !intersects(prevPathJS, curPathJS))
-          ) {
-            js2path(prevChild, prevPathJS.concat(curPathJS), {
+          if (force || !intersects(prevPathJS, curPathJS)) {
+            prevPathJS.push(...curPathJS);
+            js2path(prevChild, prevPathJS, {
               floatPrecision,
               noSpaceAfterFlags,
             });
-            detachNodeFromParent(child, node);
+
+            elementsToRemove.push(child);
             continue;
           }
 
           prevChild = child;
         }
+
+        node.children = node.children.filter(
+          (child) => !elementsToRemove.includes(child),
+        );
       },
     },
   };
