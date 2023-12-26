@@ -2,12 +2,12 @@ Should convert arc to line
 
 ===
 
-<svg>
-    <path d="m 0 0 a 10000 10000 0 0 0 1 0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+    <path d="m 1 1 a 10000 10000 0 0 0 8 0" stroke="black"/>
 </svg>
 
 @@@
 
-<svg>
-    <path d="M0 0h1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+    <path d="M1 1h8" stroke="black"/>
 </svg>

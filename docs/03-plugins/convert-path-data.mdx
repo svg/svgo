@@ -31,7 +31,7 @@ svgo:
       description: Number of decimal places to round to, using conventional rounding rules.
       default: 5
     smartArcRounding:
-      description: Round the radius of circular arcs more when the effective change (measured with the sagitta) is under the error.
+      description: Round the radius of circular arcs when the effective change is under the error. The effective change is determined using the <a href="https://wikipedia.org/wiki/Sagitta_(geometry)" target="_blank">sagitta</a> of the arc.
       default: true
     removeUseless:
       description: Remove redundant path commands that don't draw anything.
