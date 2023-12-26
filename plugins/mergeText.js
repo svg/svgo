@@ -157,7 +157,7 @@ function getMergeData(textEl) {
           tspanData[k] = v;
           break;
         default:
-          if (!inheritableAttrs.includes(k)) {
+          if (!inheritableAttrs.has(k)) {
             // Don't transform if <tspan> has unrecognized attributes.
             return;
           }
