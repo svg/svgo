@@ -197,7 +197,7 @@ exports.fn = (root, params) => {
           if (uselessOverrides && node.attributes.id == null) {
             const style = computedParentStyle?.[name];
             if (
-              presentationNonInheritableGroupAttrs.includes(name) === false &&
+              presentationNonInheritableGroupAttrs.has(name) === false &&
               style != null &&
               style.type === 'static' &&
               style.value === value

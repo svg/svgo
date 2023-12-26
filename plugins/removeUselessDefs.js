@@ -39,7 +39,7 @@ exports.fn = () => {
           }
           node.children = usefulNodes;
         } else if (
-          elemsGroups.nonRendering.includes(node.name) &&
+          elemsGroups.nonRendering.has(node.name) &&
           node.attributes.id == null
         ) {
           detachNodeFromParent(node, parentNode);

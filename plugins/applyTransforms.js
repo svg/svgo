@@ -57,7 +57,7 @@ const applyTransforms = (root, params) => {
           node.attributes.style != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && includesUrlReference(value),
+              referencesProps.has(name) && includesUrlReference(value),
           )
         ) {
           return;

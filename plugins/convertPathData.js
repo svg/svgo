@@ -147,14 +147,15 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (pathElems.includes(node.name) && node.attributes.d != null) {
+        if (pathElems.has(node.name) && node.attributes.d != null) {
           const computedStyle = computeStyle(stylesheet, node);
           precision = floatPrecision;
           error =
             precision !== false
               ? +Math.pow(0.1, precision).toFixed(precision)
               : 1e-2;
-          roundData = precision > 0 && precision < 20 ? strongRound : round;
+          roundData =
+            precision && precision > 0 && precision < 20 ? strongRound : round;
           if (makeArcs) {
             arcThreshold = makeArcs.threshold;
             arcTolerance = makeArcs.tolerance;
@@ -678,24 +679,6 @@ function filters(
         }
       }
 
-      // convert going home to z
-      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
-      if (
-        params.convertToZ &&
-        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
-        (command === 'l' || command === 'h' || command === 'v')
-      ) {
-        if (
-          // @ts-ignore
-          Math.abs(pathBase[0] - item.coords[0]) < error &&
-          // @ts-ignore
-          Math.abs(pathBase[1] - item.coords[1]) < error
-        ) {
-          command = 'z';
-          data = [];
-        }
-      }
-
       // collapse repeated commands
       // h 20 h 30 -> h 50
       if (
@@ -733,9 +716,9 @@ function filters(
             // @ts-ignore
             prev.command === 'c' &&
             // @ts-ignore
-            data[0] === -(prev.args[2] - prev.args[4]) &&
+            Math.abs(data[0] - -(prev.args[2] - prev.args[4])) < error &&
             // @ts-ignore
-            data[1] === -(prev.args[3] - prev.args[5])
+            Math.abs(data[1] - -(prev.args[3] - prev.args[5])) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -746,9 +729,9 @@ function filters(
             // @ts-ignore
             prev.command === 's' &&
             // @ts-ignore
-            data[0] === -(prev.args[0] - prev.args[2]) &&
+            Math.abs(data[0] - -(prev.args[0] - prev.args[2])) < error &&
             // @ts-ignore
-            data[1] === -(prev.args[1] - prev.args[3])
+            Math.abs(data[1] - -(prev.args[1] - prev.args[3])) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -760,8 +743,8 @@ function filters(
             prev.command !== 'c' &&
             // @ts-ignore
             prev.command !== 's' &&
-            data[0] === 0 &&
-            data[1] === 0
+            Math.abs(data[0]) < error &&
+            Math.abs(data[1]) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -775,9 +758,9 @@ function filters(
             // @ts-ignore
             prev.command === 'q' &&
             // @ts-ignore
-            data[0] === prev.args[2] - prev.args[0] &&
+            Math.abs(data[0] - (prev.args[2] - prev.args[0])) < error &&
             // @ts-ignore
-            data[1] === prev.args[3] - prev.args[1]
+            Math.abs(data[1] - (prev.args[3] - prev.args[1])) < error
           ) {
             command = 't';
             data = data.slice(2);
@@ -788,9 +771,9 @@ function filters(
             // @ts-ignore
             prev.command === 't' &&
             // @ts-ignore
-            data[2] === prev.args[0] &&
+            Math.abs(data[2] - prev.args[0]) < error &&
             // @ts-ignore
-            data[3] === prev.args[1]
+            Math.abs(data[3] - prev.args[1]) < error
           ) {
             command = 't';
             data = data.slice(2);
@@ -823,6 +806,24 @@ function filters(
           // @ts-ignore
           path[index] = prev;
           return false;
+        }
+      }
+
+      // convert going home to z
+      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
+      if (
+        params.convertToZ &&
+        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
+        (command === 'l' || command === 'h' || command === 'v')
+      ) {
+        if (
+          // @ts-ignore
+          Math.abs(pathBase[0] - item.coords[0]) < error &&
+          // @ts-ignore
+          Math.abs(pathBase[1] - item.coords[1]) < error
+        ) {
+          command = 'z';
+          data = [];
         }
       }
 
@@ -870,7 +871,8 @@ function convertToMixed(path, params) {
 
     var command = item.command,
       data = item.args,
-      adata = data.slice();
+      adata = data.slice(),
+      rdata = data.slice();
 
     if (
       command === 'm' ||
@@ -898,9 +900,10 @@ function convertToMixed(path, params) {
     }
 
     roundData(adata);
+    roundData(rdata);
 
     var absoluteDataStr = cleanupOutData(adata, params),
-      relativeDataStr = cleanupOutData(data, params);
+      relativeDataStr = cleanupOutData(rdata, params);
 
     // Convert to absolute coordinates if it's shorter or forceAbsolutePath is true.
     // v-20 -> V0

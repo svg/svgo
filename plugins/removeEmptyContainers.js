@@ -28,7 +28,7 @@ exports.fn = () => {
         // remove only empty non-svg containers
         if (
           node.name === 'svg' ||
-          elemsGroups.container.includes(node.name) === false ||
+          !elemsGroups.container.has(node.name) ||
           node.children.length !== 0
         ) {
           return;
