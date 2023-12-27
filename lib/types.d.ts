@@ -111,7 +111,7 @@ export type Plugin<Params> = (
   info: PluginInfo,
 ) => null | Visitor;
 
-export type Specificity = [number, number, number, number];
+export type Specificity = [number, number, number];
 
 export type StylesheetDeclaration = {
   name: string;

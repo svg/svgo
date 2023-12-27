@@ -7,7 +7,6 @@
 
 const csstree = require('css-tree');
 const {
-  // @ts-ignore internal api
   syntax: { specificity },
 } = require('csso');
 const {
