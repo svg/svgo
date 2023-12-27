@@ -23,7 +23,7 @@ exports.fn = () => {
       enter: (node, parentNode) => {
         if (node.name === 'defs') {
           /**
-           * @type {Array<XastElement>}
+           * @type {XastElement[]}
            */
           const usefulNodes = [];
           collectUsefulNodes(node, usefulNodes);
@@ -50,7 +50,7 @@ exports.fn = () => {
 };
 
 /**
- * @type {(node: XastElement, usefulNodes: Array<XastElement>) => void}
+ * @type {(node: XastElement, usefulNodes: XastElement[]) => void}
  */
 const collectUsefulNodes = (node, usefulNodes) => {
   for (const child of node.children) {
