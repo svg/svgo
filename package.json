@@ -81,7 +81,7 @@
     "@trysound/sax": "0.2.0",
     "commander": "^7.2.0",
     "css-select": "^5.1.0",
-    "css-tree": "^2.2.1",
+    "css-tree": "^2.3.1",
     "css-what": "^6.1.0",
     "csso": "^5.0.5",
     "picocolors": "^1.0.0"
@@ -89,7 +89,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
-    "@types/css-tree": "^2.0.0",
+    "@types/css-tree": "^2.3.4",
     "@types/csso": "^5.0.4",
     "@types/jest": "^29.5.5",
     "del": "^6.0.0",
