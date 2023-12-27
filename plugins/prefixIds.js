@@ -173,15 +173,12 @@ exports.fn = (_root, params, info) => {
                 node.name = prefixId(prefixGenerator, node.name);
                 return;
               }
-              // @ts-ignore csstree v2 changed this type
               if (node.type === 'Url' && node.value.length > 0) {
                 const prefixed = prefixReference(
                   prefixGenerator,
-                  // @ts-ignore
                   unquote(node.value),
                 );
                 if (prefixed != null) {
-                  // @ts-ignore
                   node.value = prefixed;
                 }
               }
