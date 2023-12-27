@@ -41,9 +41,9 @@ describe('plugins tests', function () {
               js2svg: { pretty: true },
             });
             lastResultData = result.data;
-            expect(result.error).not.toEqual(expect.anything());
+            expect(result.error).not.toStrictEqual(expect.anything());
             //FIXME: results.data has a '\n' at the end while it should not
-            expect(normalize(result.data)).toEqual(should);
+            expect(normalize(result.data)).toStrictEqual(should);
           }
         });
       });
