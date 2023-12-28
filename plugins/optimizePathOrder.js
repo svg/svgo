@@ -34,7 +34,7 @@ exports.fn = (root, params) => {
         if (hasScripts(node)) {
           deoptimized = true;
         }
-        if (!pathElems.includes(node.name) || !node.attributes.d || deoptimized)
+        if (!pathElems.has(node.name) || !node.attributes.d || deoptimized)
           return;
 
         const computedStyle = computeStyle(stylesheet, node);
