@@ -1,13 +1,13 @@
-Should use relative instead of absolute here. (Checking for proper rounding of relative data)
+Should have no commands here. (Checking for removing useless before trying to convert to z)
 
 ===
 
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-    <path d="M 6 6 h 0.1 h 0.2"/>
+    <path d="M 6 6 h 0.0005"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-    <path d="M6 6h.3"/>
+    <path d="M6 6"/>
 </svg>

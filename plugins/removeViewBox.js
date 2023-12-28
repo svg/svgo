@@ -3,7 +3,7 @@
 exports.name = 'removeViewBox';
 exports.description = 'removes viewBox attribute when possible';
 
-const viewBoxElems = ['svg', 'pattern', 'symbol'];
+const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
 
 /**
  * Remove viewBox attr which coincides with a width/height box.
@@ -24,7 +24,7 @@ exports.fn = () => {
     element: {
       enter: (node, parentNode) => {
         if (
-          viewBoxElems.includes(node.name) &&
+          viewBoxElems.has(node.name) &&
           node.attributes.viewBox != null &&
           node.attributes.width != null &&
           node.attributes.height != null

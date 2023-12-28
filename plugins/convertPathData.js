@@ -51,6 +51,7 @@ let arcTolerance;
  *   curveSmoothShorthands: boolean,
  *   floatPrecision: number | false,
  *   transformPrecision: number,
+ *   smartArcRounding: boolean,
  *   removeUseless: boolean,
  *   collapseRepeated: boolean,
  *   utilizeAbsolute: boolean,
@@ -102,6 +103,7 @@ exports.fn = (root, params) => {
     curveSmoothShorthands = true,
     floatPrecision = 3,
     transformPrecision = 5,
+    smartArcRounding = true,
     removeUseless = true,
     collapseRepeated = true,
     utilizeAbsolute = true,
@@ -125,6 +127,7 @@ exports.fn = (root, params) => {
     curveSmoothShorthands,
     floatPrecision,
     transformPrecision,
+    smartArcRounding,
     removeUseless,
     collapseRepeated,
     utilizeAbsolute,
@@ -150,14 +153,15 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (pathElems.includes(node.name) && node.attributes.d != null) {
+        if (pathElems.has(node.name) && node.attributes.d != null) {
           const computedStyle = computeStyle(stylesheet, node);
           precision = floatPrecision;
           error =
             precision !== false
               ? +Math.pow(0.1, precision).toFixed(precision)
               : 1e-2;
-          roundData = precision > 0 && precision < 20 ? strongRound : round;
+          roundData =
+            precision && precision > 0 && precision < 20 ? strongRound : round;
           if (makeArcs) {
             arcThreshold = makeArcs.threshold;
             arcTolerance = makeArcs.tolerance;
@@ -396,8 +400,13 @@ function filters(
     relSubpoint = [0, 0],
     pathBase = [0, 0],
     prev = {};
+  /** @type {Point | undefined} */
+  let qControlPoint;
 
   path = path.filter(function (item, index, path) {
+    const qPoint = qControlPoint;
+    qControlPoint = undefined;
+
     let command = item.command;
     let data = item.args;
     let next = path[index + 1];
@@ -640,6 +649,24 @@ function filters(
         }
       }
 
+      // round arc radius more accurately
+      // eg m 0 0 a 1234.567 1234.567 0 0 1 10 0 -> m 0 0 a 1235 1235 0 0 1 10 0
+      const sagitta = command === 'a' ? calculateSagitta(data) : undefined;
+      if (params.smartArcRounding && sagitta !== undefined && precision) {
+        for (let precisionNew = precision; precisionNew >= 0; precisionNew--) {
+          const radius = toFixed(data[0], precisionNew);
+          const sagittaNew = /** @type {number} */ (
+            calculateSagitta([radius, radius, ...data.slice(2)])
+          );
+          if (Math.abs(sagitta - sagittaNew) < error) {
+            data[0] = radius;
+            data[1] = radius;
+          } else {
+            break;
+          }
+        }
+      }
+
       // convert straight curves into lines segments
       if (params.straightCurves) {
         if (
@@ -662,7 +689,12 @@ function filters(
         ) {
           command = 'l';
           data = data.slice(-2);
-        } else if (command === 'a' && (data[0] === 0 || data[1] === 0)) {
+        } else if (
+          command === 'a' &&
+          (data[0] === 0 ||
+            data[1] === 0 ||
+            (sagitta !== undefined && sagitta < error))
+        ) {
           command = 'l';
           data = data.slice(-2);
         }
@@ -719,24 +751,6 @@ function filters(
         }
       }
 
-      // convert going home to z
-      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
-      if (
-        params.convertToZ &&
-        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
-        (command === 'l' || command === 'h' || command === 'v')
-      ) {
-        if (
-          // @ts-ignore
-          Math.abs(pathBase[0] - item.coords[0]) < error &&
-          // @ts-ignore
-          Math.abs(pathBase[1] - item.coords[1]) < error
-        ) {
-          command = 'z';
-          data = [];
-        }
-      }
-
       // collapse repeated commands
       // h 20 h 30 -> h 50
       if (
@@ -774,9 +788,9 @@ function filters(
             // @ts-ignore
             prev.command === 'c' &&
             // @ts-ignore
-            data[0] === -(prev.args[2] - prev.args[4]) &&
+            Math.abs(data[0] - -(prev.args[2] - prev.args[4])) < error &&
             // @ts-ignore
-            data[1] === -(prev.args[3] - prev.args[5])
+            Math.abs(data[1] - -(prev.args[3] - prev.args[5])) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -787,9 +801,9 @@ function filters(
             // @ts-ignore
             prev.command === 's' &&
             // @ts-ignore
-            data[0] === -(prev.args[0] - prev.args[2]) &&
+            Math.abs(data[0] - -(prev.args[0] - prev.args[2])) < error &&
             // @ts-ignore
-            data[1] === -(prev.args[1] - prev.args[3])
+            Math.abs(data[1] - -(prev.args[1] - prev.args[3])) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -801,8 +815,8 @@ function filters(
             prev.command !== 'c' &&
             // @ts-ignore
             prev.command !== 's' &&
-            data[0] === 0 &&
-            data[1] === 0
+            Math.abs(data[0]) < error &&
+            Math.abs(data[1]) < error
           ) {
             command = 's';
             data = data.slice(2);
@@ -816,9 +830,9 @@ function filters(
             // @ts-ignore
             prev.command === 'q' &&
             // @ts-ignore
-            data[0] === prev.args[2] - prev.args[0] &&
+            Math.abs(data[0] - (prev.args[2] - prev.args[0])) < error &&
             // @ts-ignore
-            data[1] === prev.args[3] - prev.args[1]
+            Math.abs(data[1] - (prev.args[3] - prev.args[1])) < error
           ) {
             command = 't';
             data = data.slice(2);
@@ -827,14 +841,24 @@ function filters(
           // t + q → t + t
           else if (
             // @ts-ignore
-            prev.command === 't' &&
-            // @ts-ignore
-            data[2] === prev.args[0] &&
-            // @ts-ignore
-            data[3] === prev.args[1]
+            prev.command === 't'
           ) {
-            command = 't';
-            data = data.slice(2);
+            // @ts-ignore
+            const predictedControlPoint = reflectPoint(qPoint, item.base);
+            const realControlPoint = [
+              // @ts-ignore
+              data[0] + item.base[0],
+              // @ts-ignore
+              data[1] + item.base[1],
+            ];
+            if (
+              Math.abs(predictedControlPoint[0] - realControlPoint[0]) <
+                error &&
+              Math.abs(predictedControlPoint[1] - realControlPoint[1]) < error
+            ) {
+              command = 't';
+              data = data.slice(2);
+            }
           }
         }
       }
@@ -867,6 +891,24 @@ function filters(
         }
       }
 
+      // convert going home to z
+      // m 0 0 h 5 v 5 l -5 -5 -> m 0 0 h 5 v 5 z
+      if (
+        params.convertToZ &&
+        (isSafeToUseZ || next?.command === 'Z' || next?.command === 'z') &&
+        (command === 'l' || command === 'h' || command === 'v')
+      ) {
+        if (
+          // @ts-ignore
+          Math.abs(pathBase[0] - item.coords[0]) < error &&
+          // @ts-ignore
+          Math.abs(pathBase[1] - item.coords[1]) < error
+        ) {
+          command = 'z';
+          data = [];
+        }
+      }
+
       item.command = command;
       item.args = data;
     } else {
@@ -887,6 +929,18 @@ function filters(
     )
       return false;
 
+    if (command === 'q') {
+      // @ts-ignore
+      qControlPoint = [data[0] + item.base[0], data[1] + item.base[1]];
+    } else if (command === 't') {
+      if (qPoint) {
+        // @ts-ignore
+        qControlPoint = reflectPoint(qPoint, item.base);
+      } else {
+        // @ts-ignore
+        qControlPoint = item.coords;
+      }
+    }
     prev = item;
     return true;
   });
@@ -911,7 +965,8 @@ function convertToMixed(path, params) {
 
     var command = item.command,
       data = item.args,
-      adata = data.slice();
+      adata = data.slice(),
+      rdata = data.slice();
 
     if (
       command === 'm' ||
@@ -939,9 +994,10 @@ function convertToMixed(path, params) {
     }
 
     roundData(adata);
+    roundData(rdata);
 
     var absoluteDataStr = cleanupOutData(adata, params),
-      relativeDataStr = cleanupOutData(data, params);
+      relativeDataStr = cleanupOutData(rdata, params);
 
     // Convert to absolute coordinates if it's shorter or forceAbsolutePath is true.
     // v-20 -> V0
@@ -1103,6 +1159,22 @@ function isCurveStraightLine(data) {
 }
 
 /**
+ * Calculates the sagitta of an arc if possible.
+ *
+ * @type {(data: number[]) => number | undefined}
+ * @see https://wikipedia.org/wiki/Sagitta_(geometry)#Formulas
+ */
+function calculateSagitta(data) {
+  if (data[3] === 1) return undefined;
+
+  const [rx, ry] = data;
+  if (Math.abs(rx - ry) > error) return undefined;
+  const chord = Math.sqrt(data[5] ** 2 + data[6] ** 2);
+  if (chord > rx * 2) return undefined;
+  return rx - Math.sqrt(rx ** 2 - 0.25 * chord ** 2);
+}
+
+/**
  * Converts next curve from shorthand to full form using the current curve data.
  *
  * @type {(item: PathDataItem, data: number[]) => PathDataItem}
@@ -1132,6 +1204,17 @@ function makeLonghand(item, data) {
 
 function getDistance(point1, point2) {
   return Math.hypot(point1[0] - point2[0], point1[1] - point2[1]);
+}
+
+/**
+ * Reflects point across another point
+ *
+ * @param {Point} input
+ * @param {Point} base
+ * @returns {Point}
+ */
+function reflectPoint(input, base) {
+  return [2 * base[0] - input[0], 2 * base[1] - input[1]];
 }
 
 /**

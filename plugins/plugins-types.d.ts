@@ -47,6 +47,7 @@ type DefaultPlugins = {
     curveSmoothShorthands?: boolean;
     floatPrecision?: number | false;
     transformPrecision?: number;
+    smartArcRounding?: boolean;
     removeUseless?: boolean;
     collapseRepeated?: boolean;
     utilizeAbsolute?: boolean;

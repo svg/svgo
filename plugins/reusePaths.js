@@ -27,7 +27,7 @@ exports.fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
   /**
-   * @type {Map<string, Array<XastElement>>}
+   * @type {Map<string, XastElement[]>}
    */
   const paths = new Map();
 

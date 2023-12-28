@@ -7,7 +7,6 @@
 
 const csstree = require('css-tree');
 const {
-  // @ts-ignore internal api
   syntax: { specificity },
 } = require('csso');
 const {
@@ -51,16 +50,16 @@ exports.fn = (root, params) => {
   } = params;
 
   /**
-   * @type {Array<{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }>}
+   * @type {{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }[]}
    */
   const styles = [];
   /**
-   * @type {Array<{
+   * @type {{
    *   node: csstree.Selector,
    *   item: csstree.ListItem<csstree.CssNode>,
    *   rule: csstree.Rule,
-   *   matchedElements?: Array<XastElement>
-   * }>}
+   *   matchedElements?: XastElement[]
+   * }[]}
    */
   let selectors = [];
 
@@ -123,10 +122,10 @@ exports.fn = (root, params) => {
               node.prelude.children.forEach((childNode, item) => {
                 if (childNode.type === 'Selector') {
                   /**
-                   * @type {Array<{
+                   * @type {{
                    *   item: csstree.ListItem<csstree.CssNode>,
                    *   list: csstree.List<csstree.CssNode>
-                   * }>}
+                   * }[]}
                    */
                   const pseudos = [];
 
@@ -187,7 +186,7 @@ exports.fn = (root, params) => {
         for (const selector of sortedSelectors) {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
-          /** @type {Array<XastElement>} */
+          /** @type {XastElement[]} */
           const matchedElements = [];
           try {
             for (const node of querySelectorAll(root, selectorText)) {
@@ -247,7 +246,7 @@ exports.fn = (root, params) => {
                 const property = ruleDeclaration.property;
 
                 if (
-                  attrsGroups.presentation.includes(property) &&
+                  attrsGroups.presentation.has(property) &&
                   !selectors.some((selector) =>
                     includesAttrSelector(selector.item, property),
                   )

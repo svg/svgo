@@ -46,7 +46,7 @@ exports.fn = (root, params) => {
         if (node.attributes.id != null) {
           return visitSkip;
         }
-        if (elemsGroups.shape.includes(node.name) == false) {
+        if (!elemsGroups.shape.has(node.name)) {
           return;
         }
         const computedStyle = computeStyle(stylesheet, node);

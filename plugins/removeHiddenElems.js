@@ -114,7 +114,7 @@ exports.fn = (root, params) => {
     element: {
       enter: (node, parentNode) => {
         // transparent non-rendering elements still apply where referenced
-        if (nonRendering.includes(node.name)) {
+        if (nonRendering.has(node.name)) {
           if (node.attributes.id == null) {
             detachNodeFromParent(node, parentNode);
             return visitSkip;

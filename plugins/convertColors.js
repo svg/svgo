@@ -22,7 +22,7 @@ const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
  *
  * @author Jed Schmidt
  *
- * @type {(rgb: Array<number>) => string}
+ * @type {(rgb: number[]) => string}
  */
 const convertRgbToHex = ([r, g, b]) => {
   // combine the octets into a 32-bit integer as: [1][r][g][b]
@@ -76,7 +76,7 @@ exports.fn = (_root, params) => {
     element: {
       enter: (node) => {
         for (const [name, value] of Object.entries(node.attributes)) {
-          if (collections.colorsProps.includes(name)) {
+          if (collections.colorsProps.has(name)) {
             let val = value;
 
             // convert colors to currentColor
