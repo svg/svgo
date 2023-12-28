@@ -206,7 +206,7 @@ exports.fn = (root, params) => {
         // Shapes that aren't rendered in any way
         if (
           noColor &&
-          elemsGroups.shape.includes(node.name) &&
+          elemsGroups.shape.has(node.name) &&
           computedStyle.fill &&
           computedStyle.fill.type === 'static' &&
           computedStyle.fill.value === 'none' &&
