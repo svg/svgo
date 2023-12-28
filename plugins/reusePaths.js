@@ -27,7 +27,7 @@ exports.fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
   /**
-   * @type {Map<string, Array<XastElement>>}
+   * @type {Map<string, XastElement[]>}
    */
   const paths = new Map();
 
@@ -123,7 +123,7 @@ exports.fn = (root) => {
                 originalId == null ||
                 hrefs.has(originalId) ||
                 stylesheet.rules.some(
-                  (rule) => rule.selector === `#${originalId}`
+                  (rule) => rule.selector === `#${originalId}`,
                 )
               ) {
                 reusablePath.attributes.id = 'reuse-' + index++;

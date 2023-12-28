@@ -37,13 +37,13 @@ exports.fn = () => {
           node.attributes.transform != null &&
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && includesUrlReference(value)
+              referencesProps.has(name) && includesUrlReference(value),
           ) === false &&
           node.children.every(
             (child) =>
               child.type === 'element' &&
               pathElemsWithGroupsAndText.includes(child.name) &&
-              child.attributes.id == null
+              child.attributes.id == null,
           )
         ) {
           for (const child of node.children) {

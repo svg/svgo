@@ -19,8 +19,8 @@ const {
 const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
 
 /**
- * @typedef {Array<PathDataItem>} PathData
- * @typedef {Array<number>} Matrix
+ * @typedef {PathDataItem[]} PathData
+ * @typedef {number[]} Matrix
  */
 
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
@@ -57,7 +57,7 @@ const applyTransforms = (root, params) => {
           node.attributes.style != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && includesUrlReference(value)
+              referencesProps.has(name) && includesUrlReference(value),
           )
         ) {
           return;
@@ -75,7 +75,7 @@ const applyTransforms = (root, params) => {
         }
 
         const matrix = transformsMultiply(
-          transform2js(node.attributes.transform)
+          transform2js(node.attributes.transform),
         );
 
         const stroke =
@@ -98,8 +98,8 @@ const applyTransforms = (root, params) => {
 
         const scale = Number(
           Math.sqrt(
-            matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]
-          ).toFixed(transformPrecision)
+            matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1],
+          ).toFixed(transformPrecision),
         );
 
         if (stroke && stroke != 'none') {
@@ -125,7 +125,7 @@ const applyTransforms = (root, params) => {
               )
                 .trim()
                 .replace(regNumericValues, (num) =>
-                  removeLeadingZero(Number(num) * scale)
+                  removeLeadingZero(Number(num) * scale),
                 );
 
               if (node.attributes['stroke-dashoffset'] != null) {
@@ -134,7 +134,7 @@ const applyTransforms = (root, params) => {
                 ]
                   .trim()
                   .replace(regNumericValues, (num) =>
-                    removeLeadingZero(Number(num) * scale)
+                    removeLeadingZero(Number(num) * scale),
                   );
               }
 
@@ -144,7 +144,7 @@ const applyTransforms = (root, params) => {
                 ]
                   .trim()
                   .replace(regNumericValues, (num) =>
-                    removeLeadingZero(Number(num) * scale)
+                    removeLeadingZero(Number(num) * scale),
                   );
               }
             }

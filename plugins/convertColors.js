@@ -8,7 +8,7 @@ exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
 const rComma = '\\s*,\\s*';
 const regRGB = new RegExp(
-  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'
+  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$',
 );
 const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
 
@@ -22,7 +22,7 @@ const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
  *
  * @author Jed Schmidt
  *
- * @type {(rgb: Array<number>) => string}
+ * @type {(rgb: number[]) => string}
  */
 const convertRgbToHex = ([r, g, b]) => {
   // combine the octets into a 32-bit integer as: [1][r][g][b]
@@ -76,7 +76,7 @@ exports.fn = (_root, params) => {
     element: {
       enter: (node) => {
         for (const [name, value] of Object.entries(node.attributes)) {
-          if (collections.colorsProps.includes(name)) {
+          if (collections.colorsProps.has(name)) {
             let val = value;
 
             // convert colors to currentColor

@@ -17,7 +17,7 @@ exports.description = 'prefix IDs';
  */
 const getBasename = (path) => {
   // extract everything after latest slash or backslash
-  const matched = path.match(/[/\\]?([^/\\]+)$/);
+  const matched = /[/\\]?([^/\\]+)$/.exec(path);
   if (matched) {
     return matched[1];
   }
@@ -118,7 +118,6 @@ const generatePrefix = (body, node, info, prefixGenerator, delim, history) => {
  * Prefixes identifiers
  *
  * @author strarsis <strarsis@gmail.com>
- *
  * @type {import('./plugins-types').Plugin<'prefixIds'>}
  */
 exports.fn = (_root, params, info) => {
@@ -149,60 +148,45 @@ exports.fn = (_root, params, info) => {
             return;
           }
 
-          // parse styles
-          let cssText = '';
-          if (
-            node.children[0].type === 'text' ||
-            node.children[0].type === 'cdata'
-          ) {
-            cssText = node.children[0].value;
-          }
-          /**
-           * @type {?csstree.CssNode}
-           */
-          let cssAst = null;
-          try {
-            cssAst = csstree.parse(cssText, {
-              parseValue: true,
-              parseCustomProperty: false,
-            });
-          } catch {
-            return;
-          }
+          for (const child of node.children) {
+            if (child.type !== 'text' && child.type !== 'cdata') {
+              continue;
+            }
 
-          csstree.walk(cssAst, (node) => {
-            // #ID, .class selectors
-            if (
-              (prefixIds && node.type === 'IdSelector') ||
-              (prefixClassNames && node.type === 'ClassSelector')
-            ) {
-              node.name = prefixId(prefixGenerator, node.name);
+            const cssText = child.value;
+            /** @type {?csstree.CssNode} */
+            let cssAst = null;
+            try {
+              cssAst = csstree.parse(cssText, {
+                parseValue: true,
+                parseCustomProperty: false,
+              });
+            } catch {
               return;
             }
-            // url(...) references
-            // csstree v2 changed this type
-            // @ts-ignore
-            if (node.type === 'Url' && node.value.length > 0) {
-              const prefixed = prefixReference(
-                prefixGenerator,
-                // @ts-ignore
-                unquote(node.value)
-              );
-              if (prefixed != null) {
-                // @ts-ignore
-                node.value = prefixed;
-              }
-            }
-          });
 
-          // update styles
-          if (
-            node.children[0].type === 'text' ||
-            node.children[0].type === 'cdata'
-          ) {
-            node.children[0].value = csstree.generate(cssAst);
+            csstree.walk(cssAst, (node) => {
+              if (
+                (prefixIds && node.type === 'IdSelector') ||
+                (prefixClassNames && node.type === 'ClassSelector')
+              ) {
+                node.name = prefixId(prefixGenerator, node.name);
+                return;
+              }
+              if (node.type === 'Url' && node.value.length > 0) {
+                const prefixed = prefixReference(
+                  prefixGenerator,
+                  unquote(node.value),
+                );
+                if (prefixed != null) {
+                  node.value = prefixed;
+                }
+              }
+            });
+
+            child.value = csstree.generate(cssAst);
+            return;
           }
-          return;
         }
 
         // prefix an ID attribute value
@@ -235,7 +219,7 @@ exports.fn = (_root, params, info) => {
           ) {
             const prefixed = prefixReference(
               prefixGenerator,
-              node.attributes[name]
+              node.attributes[name],
             );
             if (prefixed != null) {
               node.attributes[name] = prefixed;
@@ -243,21 +227,21 @@ exports.fn = (_root, params, info) => {
           }
         }
 
-        // prefix an URL attribute value
+        // prefix a URL attribute value
         for (const name of referencesProps) {
           if (
             node.attributes[name] != null &&
             node.attributes[name].length !== 0
           ) {
             node.attributes[name] = node.attributes[name].replace(
-              /url\((.*?)\)/gi,
-              (match, url) => {
+              /\burl\((["'])?(#.+?)\1\)/gi,
+              (match, _, url) => {
                 const prefixed = prefixReference(prefixGenerator, url);
                 if (prefixed == null) {
                   return match;
                 }
                 return `url(${prefixed})`;
-              }
+              },
             );
           }
         }

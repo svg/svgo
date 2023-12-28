@@ -64,7 +64,7 @@ exports.fn = (root) => {
         let everyChildIsPath = true;
         for (const child of node.children) {
           if (child.type === 'element') {
-            if (pathElems.includes(child.name) === false) {
+            if (!pathElems.has(child.name)) {
               everyChildIsPath = false;
             }
             if (initial) {
@@ -72,7 +72,7 @@ exports.fn = (root) => {
               // collect all inheritable attributes from first child element
               for (const [name, value] of Object.entries(child.attributes)) {
                 // consider only inheritable attributes
-                if (inheritableAttrs.includes(name)) {
+                if (inheritableAttrs.has(name)) {
                   commonAttributes.set(name, value);
                 }
               }

@@ -104,7 +104,7 @@ exports.fn = (root) => {
 
         const selectorVal = `url(#${node.attributes.id})`;
 
-        const selector = colorsProps
+        const selector = [...colorsProps]
           .map((attr) => `[${attr}="${selectorVal}"]`)
           .join(',');
         const elements = querySelectorAll(root, selector);
@@ -128,7 +128,7 @@ exports.fn = (root) => {
 
         const styledElements = querySelectorAll(
           root,
-          `[style*=${selectorVal}]`
+          `[style*=${selectorVal}]`,
         );
         for (const element of styledElements) {
           if (element.type !== 'element') {
@@ -137,7 +137,7 @@ exports.fn = (root) => {
 
           element.attributes.style = element.attributes.style.replace(
             selectorVal,
-            color || attrsGroupsDefaults.presentation['stop-color']
+            color || attrsGroupsDefaults.presentation['stop-color'],
           );
         }
       },

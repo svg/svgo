@@ -57,7 +57,7 @@ exports.fn = () => {
           // ensure that the dimensions are 4 values separated by space
           const m =
             /^(-?\d*\.?\d+) (-?\d*\.?\d+) (\d*\.?\d+) (\d*\.?\d+)$/.exec(
-              viewBox
+              viewBox,
             );
           if (m == null) {
             return;
@@ -116,7 +116,7 @@ exports.fn = () => {
 
           const { left, top, width, height } = viewBoxData;
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const viewBoxPathData = [
             { command: 'M', args: [left, top] },

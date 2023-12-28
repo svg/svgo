@@ -22,15 +22,15 @@ exports.fn = (root, params) => {
       enter: (node) => {
         for (const name of Object.keys(node.attributes)) {
           if (newlines) {
-            // new line which requires a space instead of themselve
+            // new line which requires a space instead of themself
             node.attributes[name] = node.attributes[name].replace(
               regNewlinesNeedSpace,
-              (match, p1, p2) => p1 + ' ' + p2
+              (match, p1, p2) => p1 + ' ' + p2,
             );
             // simple new line
             node.attributes[name] = node.attributes[name].replace(
               regNewlines,
-              ''
+              '',
             );
           }
           if (trim) {
@@ -39,7 +39,7 @@ exports.fn = (root, params) => {
           if (spaces) {
             node.attributes[name] = node.attributes[name].replace(
               regSpaces,
-              ' '
+              ' ',
             );
           }
         }

@@ -94,7 +94,7 @@ exports.fn = (_root, params) => {
  */
 
 /**
- * @typedef {{ name: string, data: Array<number> }} TransformItem
+ * @typedef {{ name: string, data: number[] }} TransformItem
  */
 
 /**
@@ -131,10 +131,10 @@ const convertTransform = (item, attrName, params) => {
  * Defines precision to work with certain parts.
  * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
  * floatPrecision - for translate including two last matrix and rotate parameters,
- * degPrecision - for rotate and skew. By default it's equal to (rougly)
+ * degPrecision - for rotate and skew. By default it's equal to (roughly)
  * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
  *
- * @type {(data: Array<TransformItem>, params: TransformParams) => TransformParams}
+ * @type {(data: TransformItem[], params: TransformParams) => TransformParams}
  *
  * clone params so it don't affect other elements transformations.
  */
@@ -151,27 +151,27 @@ const definePrecision = (data, { ...newParams }) => {
     newParams.transformPrecision = Math.min(
       newParams.transformPrecision,
       Math.max.apply(Math, matrixData.map(floatDigits)) ||
-        newParams.transformPrecision
+        newParams.transformPrecision,
     );
     significantDigits = Math.max.apply(
       Math,
       matrixData.map(
-        (n) => n.toString().replace(/\D+/g, '').length // Number of digits in a number. 123.45 → 5
-      )
+        (n) => n.toString().replace(/\D+/g, '').length, // Number of digits in a number. 123.45 → 5
+      ),
     );
   }
   // No sense in angle precision more then number of significant digits in matrix.
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
-      Math.min(newParams.floatPrecision, significantDigits - 2)
+      Math.min(newParams.floatPrecision, significantDigits - 2),
     );
   }
   return newParams;
 };
 
 /**
- * @type {(data: Array<number>, params: TransformParams) => Array<number>}
+ * @type {(data: number[], params: TransformParams) => number[]}
  */
 const degRound = (data, params) => {
   if (
@@ -185,7 +185,7 @@ const degRound = (data, params) => {
   }
 };
 /**
- * @type {(data: Array<number>, params: TransformParams) => Array<number>}
+ * @type {(data: number[], params: TransformParams) => number[]}
  */
 const floatRound = (data, params) => {
   if (params.floatPrecision >= 1 && params.floatPrecision < 20) {
@@ -196,7 +196,7 @@ const floatRound = (data, params) => {
 };
 
 /**
- * @type {(data: Array<number>, params: TransformParams) => Array<number>}
+ * @type {(data: number[], params: TransformParams) => number[]}
  */
 const transformRound = (data, params) => {
   if (params.transformPrecision >= 1 && params.floatPrecision < 20) {
@@ -219,7 +219,7 @@ const floatDigits = (n) => {
 /**
  * Convert transforms to the shorthand alternatives.
  *
- * @type {(transforms: Array<TransformItem>, params: TransformParams) => Array<TransformItem>}
+ * @type {(transforms: TransformItem[], params: TransformParams) => TransformItem[]}
  */
 const convertToShorts = (transforms, params) => {
   for (var i = 0; i < transforms.length; i++) {
@@ -294,7 +294,7 @@ const convertToShorts = (transforms, params) => {
 /**
  * Remove useless transforms.
  *
- * @type {(trasforms: Array<TransformItem>) => Array<TransformItem>}
+ * @type {(transforms: TransformItem[]) => TransformItem[]}
  */
 const removeUseless = (transforms) => {
   return transforms.filter((transform) => {
@@ -332,7 +332,7 @@ const removeUseless = (transforms) => {
 /**
  * Convert transforms JS representation to string.
  *
- * @type {(transformJS: Array<TransformItem>, params: TransformParams) => string}
+ * @type {(transformJS: TransformItem[], params: TransformParams) => string}
  */
 const js2transform = (transformJS, params) => {
   const transformString = transformJS
@@ -379,7 +379,7 @@ const roundTransform = (transform, params) => {
 /**
  * Rounds numbers in array.
  *
- * @type {(data: Array<number>) => Array<number>}
+ * @type {(data: number[]) => number[]}
  */
 const round = (data) => {
   return data.map(Math.round);
@@ -390,7 +390,7 @@ const round = (data) => {
  * in transforms keeping a specified number of decimals.
  * Smart rounds values like 2.349 to 2.35.
  *
- * @type {(precision: number, data: Array<number>) => Array<number>}
+ * @type {(precision: number, data: number[]) => number[]}
  */
 const smartRound = (precision, data) => {
   for (

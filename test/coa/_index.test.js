@@ -60,7 +60,7 @@ describe('coa', function () {
           (checkIsDir(path.join(folderPath, name))
             ? calcFolderSvgWeight(path.join(folderPath, name))
             : 0),
-        0
+        0,
       );
   }
 

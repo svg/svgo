@@ -30,6 +30,9 @@ svgo:
     transformPrecision:
       description: Number of decimal places to round to, using conventional rounding rules.
       default: 5
+    smartArcRounding:
+      description: Round the radius of circular arcs when the effective change is under the error. The effective change is determined using the <a href="https://wikipedia.org/wiki/Sagitta_(geometry)" target="_blank">sagitta</a> of the arc.
+      default: true
     removeUseless:
       description: Remove redundant path commands that don't draw anything.
       default: true
@@ -42,7 +45,7 @@ svgo:
     negativeExtraSpace:
       default: true
     forceAbsolutePath:
-      description: If to always convert to absolute coordinates, even if it adds more bytes. 
+      description: If to always convert to absolute coordinates, even if it adds more bytes.
       default: false
 ---
 
@@ -56,26 +59,26 @@ You can get more context on path commands on [MDN Web Docs](https://developer.mo
 
 This plugin uses multiple techniques to either reduce the number of instructions or reduce the attribute length:
 
-* Convert between relative or absolute coordinates, whichever is shortest.
-* Convert between commands. For example, a bézier curve that behaves like a straight line might as well use a line instruction.
-* Remove redundant commands. For example, a command that moves to the current position can be removed.
-* Trim redundant delimiters and leading zeros.
-* Round numeric values using conventional rounding rules.
+- Convert between relative or absolute coordinates, whichever is shortest.
+- Convert between commands. For example, a bézier curve that behaves like a straight line might as well use a line instruction.
+- Remove redundant commands. For example, a command that moves to the current position can be removed.
+- Trim redundant delimiters and leading zeros.
+- Round numeric values using conventional rounding rules.
 
 You can read more about the plugins capabilities by going through the individual parameters.
 
 ## Usage
 
-<PluginUsage/>
+<PluginUsage />
 
 ### Parameters
 
-<PluginParams/>
+<PluginParams />
 
 ## Demo
 
-<PluginDemo/>
+<PluginDemo />
 
 ## Implementation
 
-* https://github.com/svg/svgo/blob/main/plugins/convertPathData.js
+- https://github.com/svg/svgo/blob/main/plugins/convertPathData.js

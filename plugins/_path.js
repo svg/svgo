@@ -15,13 +15,13 @@ var prevCtrlPoint;
 /**
  * Convert path string to JS representation.
  *
- * @type {(path: XastElement) => Array<PathDataItem>}
+ * @type {(path: XastElement) => PathDataItem[]}
  */
 const path2js = (path) => {
   // @ts-ignore legacy
   if (path.pathJS) return path.pathJS;
   /**
-   * @type {Array<PathDataItem>}
+   * @type {PathDataItem[]}
    */
   const pathData = []; // JS representation of the path data
   const newPathData = parsePathData(path.attributes.d);
@@ -41,12 +41,12 @@ exports.path2js = path2js;
 /**
  * Convert relative Path data to absolute.
  *
- * @type {(data: Array<PathDataItem>) => Array<PathDataItem>}
+ * @type {(data: PathDataItem[]) => PathDataItem[]}
  *
  */
 const convertRelativeToAbsolute = (data) => {
   /**
-   * @type {Array<PathDataItem>}
+   * @type {PathDataItem[]}
    */
   const newData = [];
   let start = [0, 0];
@@ -179,7 +179,7 @@ const convertRelativeToAbsolute = (data) => {
 /**
  * Convert path array to string.
  *
- * @type {(path: XastElement, data: Array<PathDataItem>, params: Js2PathParams) => void}
+ * @type {(path: XastElement, data: PathDataItem[], params: Js2PathParams) => void}
  */
 exports.js2path = function (path, data, params) {
   // @ts-ignore legacy
@@ -211,7 +211,7 @@ exports.js2path = function (path, data, params) {
 };
 
 /**
- * @type {(dest: Array<number>, source: Array<number>) => Array<number>}
+ * @type {(dest: number[], source: number[]) => number[]}
  */
 function set(dest, source) {
   dest[0] = source[source.length - 2];
@@ -224,7 +224,7 @@ function set(dest, source) {
  * collision using Gilbert-Johnson-Keerthi distance algorithm
  * https://web.archive.org/web/20180822200027/http://entropyinteractive.com/2011/04/gjk-algorithm/
  *
- * @type {(path1: Array<PathDataItem>, path2: Array<PathDataItem>) => boolean}
+ * @type {(path1: PathDataItem[], path2: PathDataItem[]) => boolean}
  */
 exports.intersects = function (path1, path2) {
   // Collect points of every subpath.
@@ -267,10 +267,9 @@ exports.intersects = function (path1, path2) {
       var iterations = 1e4; // infinite loop protection, 10 000 iterations is more than enough
       // eslint-disable-next-line no-constant-condition
       while (true) {
-        // eslint-disable-next-line no-constant-condition
         if (iterations-- == 0) {
           console.error(
-            'Error: infinite loop while processing mergePaths plugin.'
+            'Error: infinite loop while processing mergePaths plugin.',
           );
           return true; // true is the safe value that means “do nothing with paths”
         }
@@ -285,7 +284,7 @@ exports.intersects = function (path1, path2) {
   });
 
   /**
-   * @type {(a: Point, b: Point, direction: Array<number>) => Array<number>}
+   * @type {(a: Point, b: Point, direction: number[]) => number[]}
    */
   function getSupport(a, b, direction) {
     return sub(supportPoint(a, direction), supportPoint(b, minus(direction)));
@@ -295,7 +294,7 @@ exports.intersects = function (path1, path2) {
   // Thanks to knowledge of min/max x and y coordinates we can choose a quadrant to search in.
   // Since we're working on convex hull, the dot product is increasing until we find the farthest point.
   /**
-   * @type {(polygon: Point, direction: Array<number>) => Array<number>}
+   * @type {(polygon: Point, direction: number[]) => number[]}
    */
   function supportPoint(polygon, direction) {
     var index =
@@ -304,8 +303,8 @@ exports.intersects = function (path1, path2) {
             ? polygon.maxY
             : polygon.maxX
           : direction[0] < 0
-          ? polygon.minX
-          : polygon.minY,
+            ? polygon.minX
+            : polygon.minY,
       max = -Infinity,
       value;
     while ((value = dot(polygon.list[index], direction)) > max) {
@@ -317,7 +316,7 @@ exports.intersects = function (path1, path2) {
 };
 
 /**
- * @type {(simplex: Array<Array<number>>, direction: Array<number>) => boolean}
+ * @type {(simplex: number[][], direction: number[]) => boolean}
  */
 function processSimplex(simplex, direction) {
   // we only need to handle to 1-simplex and 2-simplex
@@ -374,28 +373,28 @@ function processSimplex(simplex, direction) {
 }
 
 /**
- * @type {(v: Array<number>) => Array<number>}
+ * @type {(v: number[]) => number[]}
  */
 function minus(v) {
   return [-v[0], -v[1]];
 }
 
 /**
- * @type {(v1: Array<number>, v2: Array<number>) => Array<number>}
+ * @type {(v1: number[], v2: number[]) => number[]}
  */
 function sub(v1, v2) {
   return [v1[0] - v2[0], v1[1] - v2[1]];
 }
 
 /**
- * @type {(v1: Array<number>, v2: Array<number>) => number}
+ * @type {(v1: number[], v2: number[]) => number}
  */
 function dot(v1, v2) {
   return v1[0] * v2[0] + v1[1] * v2[1];
 }
 
 /**
- * @type {(v1: Array<number>, v2: Array<number>) => Array<number>}
+ * @type {(v1: number[], v2: number[]) => number[]}
  */
 function orth(v, from) {
   var o = [-v[1], v[0]];
@@ -404,7 +403,7 @@ function orth(v, from) {
 
 /**
  * @typedef {{
- *   list: Array<Array<number>>,
+ *   list: number[][],
  *   minX: number,
  *   minY: number,
  *   maxX: number,
@@ -414,7 +413,7 @@ function orth(v, from) {
 
 /**
  * @typedef {{
- *   list: Array<Point>,
+ *   list: Point[],
  *   minX: number,
  *   minY: number,
  *   maxX: number,
@@ -423,7 +422,7 @@ function orth(v, from) {
  */
 
 /**
- * @type {(pathData: Array<PathDataItem>) => Points}
+ * @type {(pathData: PathDataItem[]) => Points}
  */
 function gatherPoints(pathData) {
   /**
@@ -433,7 +432,7 @@ function gatherPoints(pathData) {
 
   // Writes data about the extreme points on each axle
   /**
-   * @type {(path: Point, point: Array<number>) => void}
+   * @type {(path: Point, point: number[]) => void}
    */
   const addPoint = (path, point) => {
     if (!path.list.length || point[1] > path.list[path.maxY][1]) {
@@ -671,7 +670,7 @@ function convexHull(points) {
 }
 
 /**
- * @type {(o: Array<number>, a: Array<number>, b: Array<number>) => number}
+ * @type {(o: number[], a: number[], b: number[]) => number}
  */
 function cross(o, a, b) {
   return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
@@ -691,8 +690,8 @@ function cross(o, a, b) {
  *  sweep_flag: number,
  *  x2: number,
  *  y2: number,
- *  recursive: Array<number>
- * ) => Array<number>}
+ *  recursive: number[]
+ * ) => number[]}
  */
 const a2c = (
   x1,
@@ -704,14 +703,14 @@ const a2c = (
   sweep_flag,
   x2,
   y2,
-  recursive
+  recursive,
 ) => {
   // for more information of where this Math came from visit:
   // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
   const _120 = (Math.PI * 120) / 180;
   const rad = (Math.PI / 180) * (+angle || 0);
   /**
-   * @type {Array<number>}
+   * @type {number[]}
    */
   let res = [];
   /**
@@ -745,8 +744,8 @@ const a2c = (
       (large_arc_flag == sweep_flag ? -1 : 1) *
       Math.sqrt(
         Math.abs(
-          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x)
-        )
+          (rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x),
+        ),
       );
     var cx = (k * rx * y) / ry + (x1 + x2) / 2;
     var cy = (k * -ry * x) / rx + (y1 + y2) / 2;

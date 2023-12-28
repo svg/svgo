@@ -5,15 +5,11 @@
  */
 
 const { visitSkip } = require('../lib/xast.js');
-const { hasScripts } = require('../lib/svgo/tools');
-const { referencesProps } = require('./_collections.js');
+const { hasScripts, findReferences } = require('../lib/svgo/tools');
 
 exports.name = 'cleanupIds';
 exports.description = 'removes unused IDs and minifies used';
 
-const regReferencesUrl = /\burl\((["'])?#(.+?)\1\)/g;
-const regReferencesHref = /^#(.+?)$/;
-const regReferencesBegin = /(\D+)\./;
 const generateIdChars = [
   'a',
   'b',
@@ -73,7 +69,7 @@ const maxIdIndex = generateIdChars.length - 1;
 /**
  * Check if an ID starts with any one of a list of strings.
  *
- * @type {(string: string, prefixes: Array<string>) => boolean}
+ * @type {(string: string, prefixes: string[]) => boolean}
  */
 const hasStringPrefix = (string, prefixes) => {
   for (const prefix of prefixes) {
@@ -113,7 +109,7 @@ const generateId = (currentId) => {
 /**
  * Get string from generated ID array.
  *
- * @type {(arr: Array<number>) => string}
+ * @type {(arr: number[]) => string}
  */
 const getIdString = (arr) => {
   return arr.map((i) => generateIdChars[i]).join('');
@@ -136,19 +132,19 @@ exports.fn = (_root, params) => {
     force = false,
   } = params;
   const preserveIds = new Set(
-    Array.isArray(preserve) ? preserve : preserve ? [preserve] : []
+    Array.isArray(preserve) ? preserve : preserve ? [preserve] : [],
   );
   const preserveIdPrefixes = Array.isArray(preservePrefixes)
     ? preservePrefixes
     : preservePrefixes
-    ? [preservePrefixes]
-    : [];
+      ? [preservePrefixes]
+      : [];
   /**
    * @type {Map<string, XastElement>}
    */
   const nodeById = new Map();
   /**
-   * @type {Map<string, Array<{element: XastElement, name: string }>>}
+   * @type {Map<string, {element: XastElement, name: string }[]>}
    */
   const referencesById = new Map();
   let deoptimized = false;
@@ -191,29 +187,7 @@ exports.fn = (_root, params) => {
               nodeById.set(id, node);
             }
           } else {
-            // collect all references
-            /**
-             * @type {string[]}
-             */
-            let ids = [];
-            if (referencesProps.includes(name)) {
-              const matches = value.matchAll(regReferencesUrl);
-              for (const match of matches) {
-                ids.push(match[2]); // url() reference
-              }
-            }
-            if (name === 'href' || name.endsWith(':href')) {
-              const match = value.match(regReferencesHref);
-              if (match != null) {
-                ids.push(match[1]); // href reference
-              }
-            }
-            if (name === 'begin') {
-              const match = value.match(regReferencesBegin);
-              if (match != null) {
-                ids.push(match[1]); // href reference
-              }
-            }
+            const ids = findReferences(name, value);
             for (const id of ids) {
               let refs = referencesById.get(id);
               if (refs == null) {
@@ -261,14 +235,14 @@ exports.fn = (_root, params) => {
                 if (value.includes('#')) {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(
-                    `#${id}`,
-                    `#${currentIdString}`
+                    `#${encodeURI(id)}`,
+                    `#${currentIdString}`,
                   );
                 } else {
                   // replace id in begin attribute
                   element.attributes[name] = value.replace(
                     `${id}.`,
-                    `${currentIdString}.`
+                    `${currentIdString}.`,
                   );
                 }
               }

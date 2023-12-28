@@ -6,18 +6,18 @@ const regTransformSplit =
 const regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
- * @typedef {{ name: string, data: Array<number> }} TransformItem
+ * @typedef {{ name: string, data: number[] }} TransformItem
  */
 
 /**
  * Convert transform string to JS representation.
  *
- * @type {(transformString: string) => Array<TransformItem>}
+ * @type {(transformString: string) => TransformItem[]}
  */
 exports.transform2js = (transformString) => {
   // JS representation of the transform data
   /**
-   * @type {Array<TransformItem>}
+   * @type {TransformItem[]}
    */
   const transforms = [];
   // current transform context
@@ -37,7 +37,6 @@ exports.transform2js = (transformString) => {
         // else if item is data
       } else {
         // then split it into [10, 50] and collect as context.data
-        // eslint-disable-next-line no-cond-assign
         while ((num = regNumericValues.exec(item))) {
           num = Number(num);
           if (current != null) {
@@ -54,7 +53,7 @@ exports.transform2js = (transformString) => {
 /**
  * Multiply transforms into one.
  *
- * @type {(transforms: Array<TransformItem>) => TransformItem}
+ * @type {(transforms: TransformItem[]) => TransformItem}
  */
 exports.transformsMultiply = (transforms) => {
   // convert transforms objects to the matrices
@@ -154,19 +153,19 @@ const mth = {
  * Decompose matrix into simple transforms. See
  * https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  *
- * @type {(transform: TransformItem, params: TransformParams) => Array<TransformItem>}
+ * @type {(transform: TransformItem, params: TransformParams) => TransformItem[]}
  */
 exports.matrixToTransform = (transform, params) => {
   let floatPrecision = params.floatPrecision;
   let data = transform.data;
   let transforms = [];
   let sx = Number(
-    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision)
+    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision),
   );
   let sy = Number(
     ((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(
-      params.transformPrecision
-    )
+      params.transformPrecision,
+    ),
   );
   let colsSum = data[0] * data[2] + data[1] * data[3];
   let rowsSum = data[0] * data[1] + data[2] * data[3];
@@ -249,7 +248,7 @@ exports.matrixToTransform = (transform, params) => {
 /**
  * Convert transform to the matrix data.
  *
- * @type {(transform: TransformItem) => Array<number> }
+ * @type {(transform: TransformItem) => number[] }
  */
 const transformToMatrix = (transform) => {
   if (transform.name === 'matrix') {
@@ -302,9 +301,9 @@ const transformToMatrix = (transform) => {
  *
  * @type {(
  *   cursor: [x: number, y: number],
- *   arc: Array<number>,
- *   transform: Array<number>
- * ) => Array<number>}
+ *   arc: number[],
+ *   transform: number[]
+ * ) => number[]}
  */
 exports.transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
@@ -365,7 +364,7 @@ exports.transformArc = (cursor, arc, transform) => {
 /**
  * Multiply transformation matrices.
  *
- * @type {(a: Array<number>, b: Array<number>) => Array<number>}
+ * @type {(a: number[], b: number[]) => number[]}
  */
 const multiplyTransformMatrices = (a, b) => {
   return [

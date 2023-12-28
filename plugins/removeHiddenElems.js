@@ -6,7 +6,7 @@
  * @typedef {import('../lib/types').XastParent} XastParent
  */
 
-const { elemsGroups, referencesProps } = require('./_collections.js');
+const { elemsGroups } = require('./_collections.js');
 const {
   visit,
   visitSkip,
@@ -15,6 +15,7 @@ const {
 } = require('../lib/xast.js');
 const { collectStylesheet, computeStyle } = require('../lib/style.js');
 const { parsePathData } = require('../lib/path.js');
+const { hasScripts, findReferences } = require('../lib/svgo/tools.js');
 
 const nonRendering = elemsGroups.nonRendering;
 
@@ -75,6 +76,24 @@ exports.fn = (root, params) => {
   const removedDefIds = new Set();
 
   /**
+   * @type {Map<XastElement, XastParent>}
+   */
+  const allDefs = new Map();
+
+  /** @type {Set<string>} */
+  const allReferences = new Set();
+
+  /**
+   * @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>}
+   */
+  const referencesById = new Map();
+
+  /**
+   * If styles are present, we can't be sure if a definition is unused or not
+   */
+  let deoptimized = false;
+
+  /**
    * @param {XastChild} node
    * @param {XastParent} parentNode
    */
@@ -95,7 +114,7 @@ exports.fn = (root, params) => {
     element: {
       enter: (node, parentNode) => {
         // transparent non-rendering elements still apply where referenced
-        if (nonRendering.includes(node.name)) {
+        if (nonRendering.has(node.name)) {
           if (node.attributes.id == null) {
             detachNodeFromParent(node, parentNode);
             return visitSkip;
@@ -123,6 +142,33 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
+        if (
+          (node.name === 'style' && node.children.length !== 0) ||
+          hasScripts(node)
+        ) {
+          deoptimized = true;
+          return;
+        }
+
+        if (node.name === 'defs') {
+          allDefs.set(node, parentNode);
+        }
+
+        if (node.name === 'use') {
+          for (const attr of Object.keys(node.attributes)) {
+            if (attr !== 'href' && !attr.endsWith(':href')) continue;
+            const value = node.attributes[attr];
+            const id = value.slice(1);
+
+            let refs = referencesById.get(id);
+            if (!refs) {
+              refs = [];
+              referencesById.set(id, refs);
+            }
+            refs.push({ node, parentNode });
+          }
+        }
+
         // Removes hidden elements
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
         const computedStyle = computeStyle(stylesheet, node);
@@ -320,7 +366,6 @@ exports.fn = (root, params) => {
             removeElement(node, parentNode);
             return;
           }
-          return;
         }
 
         // Polyline with empty points
@@ -348,46 +393,45 @@ exports.fn = (root, params) => {
           node.attributes.points == null
         ) {
           removeElement(node, parentNode);
+          return;
+        }
+
+        for (const [name, value] of Object.entries(node.attributes)) {
+          const ids = findReferences(name, value);
+
+          for (const id of ids) {
+            allReferences.add(id);
+          }
         }
       },
-
-      exit: (node, parentNode) => {
-        if (node.name === 'defs' && node.children.length === 0) {
-          removeElement(node, parentNode);
-          return;
-        }
-
-        if (node.name === 'use') {
-          const referencesRemovedDef = Object.entries(node.attributes).some(
-            ([attrKey, attrValue]) =>
-              (attrKey === 'href' || attrKey.endsWith(':href')) &&
-              removedDefIds.has(
-                attrValue.slice(attrValue.indexOf('#') + 1).trim()
-              )
-          );
-
-          if (referencesRemovedDef) {
-            detachNodeFromParent(node, parentNode);
+    },
+    root: {
+      exit: () => {
+        for (const id of removedDefIds) {
+          const refs = referencesById.get(id);
+          if (refs) {
+            for (const { node, parentNode } of refs) {
+              detachNodeFromParent(node, parentNode);
+            }
           }
-
-          return;
         }
 
-        if (node.name === 'svg' && parentNode.type === 'root') {
+        if (!deoptimized) {
           for (const [
             nonRenderedNode,
             nonRenderedParent,
           ] of nonRenderedNodes.entries()) {
-            const selector = referencesProps
-              .map(
-                (attr) => `[${attr}="url(#${nonRenderedNode.attributes.id})"]`
-              )
-              .join(',');
+            const id = nonRenderedNode.attributes.id;
 
-            const element = querySelector(root, selector);
-            if (element == null) {
-              detachNodeFromParent(node, nonRenderedParent);
+            if (!allReferences.has(id)) {
+              detachNodeFromParent(nonRenderedNode, nonRenderedParent);
             }
+          }
+        }
+
+        for (const [node, parentNode] of allDefs.entries()) {
+          if (node.children.length === 0) {
+            detachNodeFromParent(node, parentNode);
           }
         }
       },

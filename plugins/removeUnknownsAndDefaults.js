@@ -99,6 +99,7 @@ exports.fn = (root, params) => {
     unknownContent = true,
     unknownAttrs = true,
     defaultAttrs = true,
+    defaultMarkupDeclarations = true,
     uselessOverrides = true,
     keepDataAttrs = true,
     keepAriaAttrs = true,
@@ -107,6 +108,13 @@ exports.fn = (root, params) => {
   const stylesheet = collectStylesheet(root);
 
   return {
+    instruction: {
+      enter: (node) => {
+        if (defaultMarkupDeclarations) {
+          node.value = node.value.replace(/\s*standalone\s*=\s*(["'])no\1/, '');
+        }
+      },
+    },
     element: {
       enter: (node, parentNode) => {
         // skip namespaced elements
@@ -121,7 +129,7 @@ exports.fn = (root, params) => {
         // remove unknown element's content
         if (unknownContent && parentNode.type === 'element') {
           const allowedChildren = allowedChildrenPerElement.get(
-            parentNode.name
+            parentNode.name,
           );
           if (allowedChildren == null || allowedChildren.size === 0) {
             // remove unknown elements
@@ -189,7 +197,7 @@ exports.fn = (root, params) => {
           if (uselessOverrides && node.attributes.id == null) {
             const style = computedParentStyle?.[name];
             if (
-              presentationNonInheritableGroupAttrs.includes(name) === false &&
+              presentationNonInheritableGroupAttrs.has(name) === false &&
               style != null &&
               style.type === 'static' &&
               style.value === value

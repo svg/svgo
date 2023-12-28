@@ -7,7 +7,6 @@
 
 const csstree = require('css-tree');
 const {
-  // @ts-ignore internal api
   syntax: { specificity },
 } = require('csso');
 const {
@@ -16,10 +15,25 @@ const {
   detachNodeFromParent,
 } = require('../lib/xast.js');
 const { compareSpecificity, includesAttrSelector } = require('../lib/style');
-const { attrsGroups } = require('./_collections');
+const { attrsGroups, pseudoClasses } = require('./_collections');
 
 exports.name = 'inlineStyles';
 exports.description = 'inline styles (additional options)';
+
+/**
+ * Some pseudo-classes can only be calculated by clients, like :visited,
+ * :future, or :hover, but there are other pseudo-classes that we can evaluate
+ * during optimization.
+ *
+ * The list of pseudo-classes that we can evaluate during optimization, and so
+ * shouldn't be toggled conditionally through the `usePseudos` parameter.
+ *
+ * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
+ */
+const preservedPseudos = [
+  ...pseudoClasses.functional,
+  ...pseudoClasses.treeStructural,
+];
 
 /**
  * Merges styles from style nodes into inline styles.
@@ -36,16 +50,16 @@ exports.fn = (root, params) => {
   } = params;
 
   /**
-   * @type {Array<{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }>}
+   * @type {{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }[]}
    */
   const styles = [];
   /**
-   * @type {Array<{
+   * @type {{
    *   node: csstree.Selector,
    *   item: csstree.ListItem<csstree.CssNode>,
    *   rule: csstree.Rule,
-   *   matchedElements?: Array<XastElement>
-   * }>}
+   *   matchedElements?: XastElement[]
+   * }[]}
    */
   let selectors = [];
 
@@ -88,13 +102,9 @@ exports.fn = (root, params) => {
 
         // collect selectors
         csstree.walk(cssAst, {
-          visit: 'Selector',
-          enter(node, item) {
+          visit: 'Rule',
+          enter(node) {
             const atrule = this.atrule;
-            const rule = this.rule;
-            if (rule == null) {
-              return;
-            }
 
             // skip media queries not included into useMqs param
             let mediaQuery = '';
@@ -108,44 +118,52 @@ exports.fn = (root, params) => {
               return;
             }
 
-            /**
-             * @type {Array<{
-             *   item: csstree.ListItem<csstree.CssNode>,
-             *   list: csstree.List<csstree.CssNode>
-             * }>}
-             */
-            const pseudos = [];
-            if (node.type === 'Selector') {
-              node.children.forEach((childNode, childItem, childList) => {
-                if (
-                  childNode.type === 'PseudoClassSelector' ||
-                  childNode.type === 'PseudoElementSelector'
-                ) {
-                  pseudos.push({ item: childItem, list: childList });
+            if (node.prelude.type === 'SelectorList') {
+              node.prelude.children.forEach((childNode, item) => {
+                if (childNode.type === 'Selector') {
+                  /**
+                   * @type {{
+                   *   item: csstree.ListItem<csstree.CssNode>,
+                   *   list: csstree.List<csstree.CssNode>
+                   * }[]}
+                   */
+                  const pseudos = [];
+
+                  childNode.children.forEach(
+                    (grandchildNode, grandchildItem, grandchildList) => {
+                      const isPseudo =
+                        grandchildNode.type === 'PseudoClassSelector' ||
+                        grandchildNode.type === 'PseudoElementSelector';
+
+                      if (
+                        isPseudo &&
+                        !preservedPseudos.includes(grandchildNode.name)
+                      ) {
+                        pseudos.push({
+                          item: grandchildItem,
+                          list: grandchildList,
+                        });
+                      }
+                    },
+                  );
+
+                  const pseudoSelectors = csstree.generate({
+                    type: 'Selector',
+                    children: new csstree.List().fromArray(
+                      pseudos.map((pseudo) => pseudo.item.data),
+                    ),
+                  });
+
+                  if (usePseudos.includes(pseudoSelectors)) {
+                    for (const pseudo of pseudos) {
+                      pseudo.list.remove(pseudo.item);
+                    }
+                  }
+
+                  selectors.push({ node: childNode, rule: node, item: item });
                 }
               });
             }
-
-            // skip pseudo classes and pseudo elements not includes into usePseudos param
-            const pseudoSelectors = csstree.generate({
-              type: 'Selector',
-              children: new csstree.List().fromArray(
-                pseudos.map((pseudo) => pseudo.item.data)
-              ),
-            });
-
-            if (!usePseudos.includes(pseudoSelectors)) {
-              return;
-            }
-
-            // remove pseudo classes and elements to allow querySelector match elements
-            // TODO this is not very accurate since some pseudo classes like first-child
-            // are used for selection
-            for (const pseudo of pseudos) {
-              pseudo.list.remove(pseudo.item);
-            }
-
-            selectors.push({ node, item, rule });
           },
         });
       },
@@ -168,7 +186,7 @@ exports.fn = (root, params) => {
         for (const selector of sortedSelectors) {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
-          /** @type {Array<XastElement>} */
+          /** @type {XastElement[]} */
           const matchedElements = [];
           try {
             for (const node of querySelectorAll(root, selectorText)) {
@@ -197,7 +215,7 @@ exports.fn = (root, params) => {
               {
                 context: 'declarationList',
                 parseValue: false,
-              }
+              },
             );
             if (styleDeclarationList.type !== 'DeclarationList') {
               continue;
@@ -228,9 +246,9 @@ exports.fn = (root, params) => {
                 const property = ruleDeclaration.property;
 
                 if (
-                  attrsGroups.presentation.includes(property) &&
+                  attrsGroups.presentation.has(property) &&
                   !selectors.some((selector) =>
-                    includesAttrSelector(selector.item, property)
+                    includesAttrSelector(selector.item, property),
                   )
                 ) {
                   delete selectedEl.attributes[property];
@@ -242,7 +260,7 @@ exports.fn = (root, params) => {
                 if (matchedItem == null) {
                   styleDeclarationList.children.insert(
                     ruleDeclarationItem,
-                    firstListItem
+                    firstListItem,
                   );
                 } else if (
                   matchedItem.data.important !== true &&
@@ -250,7 +268,7 @@ exports.fn = (root, params) => {
                 ) {
                   styleDeclarationList.children.replace(
                     matchedItem,
-                    ruleDeclarationItem
+                    ruleDeclarationItem,
                   );
                   styleDeclarationItems.set(property, ruleDeclarationItem);
                 }
@@ -295,14 +313,19 @@ exports.fn = (root, params) => {
             const classList = new Set(
               selectedEl.attributes.class == null
                 ? null
-                : selectedEl.attributes.class.split(' ')
+                : selectedEl.attributes.class.split(' '),
             );
 
             for (const child of selector.node.children) {
               if (
                 child.type === 'ClassSelector' &&
                 !selectors.some((selector) =>
-                  includesAttrSelector(selector.item, 'class', child.name, true)
+                  includesAttrSelector(
+                    selector.item,
+                    'class',
+                    child.name,
+                    true,
+                  ),
                 )
               ) {
                 classList.delete(child.name);
@@ -325,8 +348,8 @@ exports.fn = (root, params) => {
                   selector.item,
                   'id',
                   firstSubSelector.name,
-                  true
-                )
+                  true,
+                ),
               )
             ) {
               delete selectedEl.attributes.id;
@@ -351,7 +374,7 @@ exports.fn = (root, params) => {
 
           // csstree v2 changed this type
           if (style.cssAst.children.isEmpty) {
-            // remove emtpy style element
+            // remove empty style element
             detachNodeFromParent(style.node, style.parentNode);
           } else {
             // update style element if any styles left

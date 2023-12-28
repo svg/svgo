@@ -15,7 +15,7 @@ exports.description = 'collapses useless groups';
 const hasAnimatedAttr = (node, name) => {
   if (node.type === 'element') {
     if (
-      elemsGroups.animation.includes(node.name) &&
+      elemsGroups.animation.has(node.name) &&
       node.attributes.attributeName === name
     ) {
       return true;
@@ -63,7 +63,7 @@ exports.fn = () => {
           return;
         }
 
-        // move group attibutes to the single child element
+        // move group attributes to the single child element
         if (
           Object.keys(node.attributes).length !== 0 &&
           node.children.length === 1
@@ -95,7 +95,7 @@ exports.fn = () => {
               } else if (firstChild.attributes[name] === 'inherit') {
                 firstChild.attributes[name] = value;
               } else if (
-                inheritableAttrs.includes(name) === false &&
+                inheritableAttrs.has(name) === false &&
                 firstChild.attributes[name] !== value
               ) {
                 return;
@@ -112,7 +112,7 @@ exports.fn = () => {
           for (const child of node.children) {
             if (
               child.type === 'element' &&
-              elemsGroups.animation.includes(child.name)
+              elemsGroups.animation.has(child.name)
             ) {
               return;
             }

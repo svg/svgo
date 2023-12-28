@@ -28,17 +28,16 @@ describe('svgo', () => {
   });
   it('should handle plugins order properly', async () => {
     const [original, expected] = await parseFixture('plugins-order.svg');
-    const result = optimize(original, { input: 'file', path: 'input.svg' });
+    const result = optimize(original, { path: 'input.svg' });
     expect(normalize(result.data)).toEqual(expected);
   });
   it('should handle empty svg tag', async () => {
-    const result = optimize('<svg />', { input: 'file', path: 'input.svg' });
+    const result = optimize('<svg />', { path: 'input.svg' });
     expect(result.data).toEqual('<svg/>');
   });
-  it('should preserve style specifity over attributes', async () => {
-    const [original, expected] = await parseFixture('style-specifity.svg');
+  it('should preserve style specificity over attributes', async () => {
+    const [original, expected] = await parseFixture('style-specificity.svg');
     const result = optimize(original, {
-      input: 'file',
       path: 'input.svg',
       js2svg: { pretty: true },
     });

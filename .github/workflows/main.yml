@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
@@ -31,11 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
       - run: yarn install
+      - run: yarn playwright install --with-deps chromium
       - run: yarn test-regression
   test:
     name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
@@ -53,10 +54,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
       - run: yarn install
+      - run: yarn playwright install --with-deps chromium
       - run: yarn test
       - run: yarn test-browser

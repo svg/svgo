@@ -28,17 +28,17 @@ const SHOW_TO_TARGET = {
  * Elements that use xlink:href, but were deprecated in SVG 2 and therefore
  * don't support the SVG 2 href attribute.
  *
- * @type {string[]}
+ * @type {Set<string>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/href
  */
-const LEGACY_ELEMENTS = [
+const LEGACY_ELEMENTS = new Set([
   'cursor',
   'filter',
   'font-face-uri',
   'glyphRef',
   'tref',
-];
+]);
 
 /**
  * @param {XastElement} node
@@ -72,7 +72,7 @@ exports.fn = (_, params) => {
   const xlinkPrefixes = [];
 
   /**
-   * Namespace prefixes that exist in {@link xlinkPrefixes} but were overriden
+   * Namespace prefixes that exist in {@link xlinkPrefixes} but were overridden
    * in a child element to point to another namespace, and so is not treated as
    * an XLink attribute.
    *
@@ -136,7 +136,7 @@ exports.fn = (_, params) => {
           const attr = titleAttrs[i];
           const value = node.attributes[attr];
           const hasTitle = node.children.filter(
-            (child) => child.type === 'element' && child.name === 'title'
+            (child) => child.type === 'element' && child.name === 'title',
           );
 
           if (hasTitle.length > 0) {
@@ -170,7 +170,7 @@ exports.fn = (_, params) => {
 
         if (
           hrefAttrs.length > 0 &&
-          LEGACY_ELEMENTS.includes(node.name) &&
+          LEGACY_ELEMENTS.has(node.name) &&
           !includeLegacy
         ) {
           hrefAttrs
