@@ -1,11 +1,10 @@
-Change the default to be shorter
+Remove G attributes which are overridden
 
 ===
 
 <svg>
     <g fill="red">
-        <path/>
-        <rect fill="blue"/>
+        <rect fill="green"/>
         <circle fill="blue"/>
     </g>
 </svg>
@@ -13,9 +12,8 @@ Change the default to be shorter
 @@@
 
 <svg>
-    <g fill="blue">
-        <path fill="red"/>
-        <rect/>
-        <circle/>
+    <g>
+        <rect fill="green"/>
+        <circle fill="blue"/>
     </g>
 </svg>

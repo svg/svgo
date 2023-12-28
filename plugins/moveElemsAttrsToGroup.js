@@ -178,11 +178,9 @@ exports.fn = (root) => {
             counts.entries(),
           ).reduce((a, b) => (a[1].chars > b[1].chars ? a : b));
           if (preferredInfo.count === 1) {
-            children.forEach(
-              (c) =>
-                (c.attributes[name] =
-                  c.attributes[name] || defaultV || preferred),
-            );
+            children.forEach((c) => {
+              if (!c.attributes[name]) c.attributes[name] = defaultV;
+            });
             delete node.attributes[name];
             continue;
           }
