@@ -124,15 +124,11 @@ describe('coa', function () {
   it('should throw error when stated in input folder does not exist', async () => {
     replaceConsoleError();
     try {
-      await runProgram([
-        '--input',
-        svgFolderPath + 'temp',
-        '--output',
-        tempFolder,
-      ]);
-    } catch (error) {
+      await expect(
+        runProgram(['--input', svgFolderPath + 'temp', '--output', tempFolder]),
+      ).rejects.toThrow(/no such file or directory/);
+    } finally {
       restoreConsoleError();
-      expect(error.message).toMatch(/no such file or directory/);
     }
   });
 
@@ -142,23 +138,19 @@ describe('coa', function () {
       if (!fs.existsSync(emptyFolderPath)) {
         fs.mkdirSync(emptyFolderPath);
       }
-      try {
-        await runProgram(['--folder', emptyFolderPath, '--quiet']);
-      } catch (error) {
-        expect(error.message).toMatch(/No SVG files/);
-      }
+      await expect(
+        runProgram(['--folder', emptyFolderPath, '--quiet']),
+      ).rejects.toThrow(/No SVG files/);
     });
 
     it('should show message when folder does not consists any svg files', async () => {
-      try {
-        await runProgram([
+      await expect(
+        runProgram([
           '--folder',
           path.resolve(__dirname, 'testFolderWithNoSvg'),
           '--quiet',
-        ]);
-      } catch (error) {
-        expect(error.message).toMatch(/No SVG files have been found/);
-      }
+        ]),
+      ).rejects.toThrow(/No SVG files have been found/);
     });
   });
 });
