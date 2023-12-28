@@ -9,15 +9,15 @@
     "strict": true,
     "resolveJsonModule": true
   },
-  "include": ["lib/**/*.js", "plugins/**/*", "test/cli/**/*"],
+  "include": ["bin/svgo.js", "lib/**/*.js", "plugins/**/*", "test/cli/**/*"],
   "exclude": [
-    "lib/svgo-node.js",
-    "lib/svgo-node.test.js",
     "lib/svgo.js",
     "lib/builtin.js",
     "lib/svgo.test.js",
-    "lib/svgo/**/*.js",
-    "plugins/plugins.js",
+    "lib/svgo/css-select-adapter.d.ts",
+    "lib/svgo/css-select-adapter.js",
+    "lib/svgo/plugins.js",
+    "lib/svgo/tools.js",
     "plugins/preset-default.js"
   ]
 }
