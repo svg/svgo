@@ -19,8 +19,8 @@ const {
 const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
 
 /**
- * @typedef {Array<PathDataItem>} PathData
- * @typedef {Array<number>} Matrix
+ * @typedef {PathDataItem[]} PathData
+ * @typedef {number[]} Matrix
  */
 
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
@@ -57,7 +57,7 @@ const applyTransforms = (root, params) => {
           node.attributes.style != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && includesUrlReference(value),
+              referencesProps.has(name) && includesUrlReference(value),
           )
         ) {
           return;

@@ -36,6 +36,7 @@ jobs:
           node-version: ${{ env.NODE }}
           cache: yarn
       - run: yarn install
+      - run: yarn playwright install --with-deps chromium
       - run: yarn test-regression
   test:
     name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
@@ -58,5 +59,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
       - run: yarn install
+      - run: yarn playwright install --with-deps chromium
       - run: yarn test
       - run: yarn test-browser

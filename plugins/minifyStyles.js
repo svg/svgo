@@ -22,7 +22,7 @@ exports.fn = (_root, { usage, ...params }) => {
   /** @type {Map<XastElement, XastParent>} */
   const styleElements = new Map();
 
-  /** @type {Array<XastElement>} */
+  /** @type {XastElement[]} */
   const elementsWithStyleAttributes = [];
 
   /** @type {Set<string>} */

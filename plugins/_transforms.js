@@ -6,18 +6,18 @@ const regTransformSplit =
 const regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
- * @typedef {{ name: string, data: Array<number> }} TransformItem
+ * @typedef {{ name: string, data: number[] }} TransformItem
  */
 
 /**
  * Convert transform string to JS representation.
  *
- * @type {(transformString: string) => Array<TransformItem>}
+ * @type {(transformString: string) => TransformItem[]}
  */
 exports.transform2js = (transformString) => {
   // JS representation of the transform data
   /**
-   * @type {Array<TransformItem>}
+   * @type {TransformItem[]}
    */
   const transforms = [];
   // current transform context
@@ -53,7 +53,7 @@ exports.transform2js = (transformString) => {
 /**
  * Multiply transforms into one.
  *
- * @type {(transforms: Array<TransformItem>) => TransformItem}
+ * @type {(transforms: TransformItem[]) => TransformItem}
  */
 exports.transformsMultiply = (transforms) => {
   // convert transforms objects to the matrices
@@ -153,7 +153,7 @@ const mth = {
  * Decompose matrix into simple transforms. See
  * https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  *
- * @type {(transform: TransformItem, params: TransformParams) => Array<TransformItem>}
+ * @type {(transform: TransformItem, params: TransformParams) => TransformItem[]}
  */
 exports.matrixToTransform = (transform, params) => {
   let floatPrecision = params.floatPrecision;
@@ -248,7 +248,7 @@ exports.matrixToTransform = (transform, params) => {
 /**
  * Convert transform to the matrix data.
  *
- * @type {(transform: TransformItem) => Array<number> }
+ * @type {(transform: TransformItem) => number[] }
  */
 const transformToMatrix = (transform) => {
   if (transform.name === 'matrix') {
@@ -301,9 +301,9 @@ const transformToMatrix = (transform) => {
  *
  * @type {(
  *   cursor: [x: number, y: number],
- *   arc: Array<number>,
- *   transform: Array<number>
- * ) => Array<number>}
+ *   arc: number[],
+ *   transform: number[]
+ * ) => number[]}
  */
 exports.transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
@@ -364,7 +364,7 @@ exports.transformArc = (cursor, arc, transform) => {
 /**
  * Multiply transformation matrices.
  *
- * @type {(a: Array<number>, b: Array<number>) => Array<number>}
+ * @type {(a: number[], b: number[]) => number[]}
  */
 const multiplyTransformMatrices = (a, b) => {
   return [
