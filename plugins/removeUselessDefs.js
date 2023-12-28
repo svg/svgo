@@ -23,7 +23,7 @@ exports.fn = () => {
       enter: (node, parentNode) => {
         if (node.name === 'defs') {
           /**
-           * @type {Array<XastElement>}
+           * @type {XastElement[]}
            */
           const usefulNodes = [];
           collectUsefulNodes(node, usefulNodes);
@@ -39,7 +39,7 @@ exports.fn = () => {
           }
           node.children = usefulNodes;
         } else if (
-          elemsGroups.nonRendering.includes(node.name) &&
+          elemsGroups.nonRendering.has(node.name) &&
           node.attributes.id == null
         ) {
           detachNodeFromParent(node, parentNode);
@@ -50,7 +50,7 @@ exports.fn = () => {
 };
 
 /**
- * @type {(node: XastElement, usefulNodes: Array<XastElement>) => void}
+ * @type {(node: XastElement, usefulNodes: XastElement[]) => void}
  */
 const collectUsefulNodes = (node, usefulNodes) => {
   for (const child of node.children) {

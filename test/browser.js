@@ -1,6 +1,6 @@
-const fs = require('fs');
-const http = require('http');
 const assert = require('assert');
+const fs = require('node:fs/promises');
+const http = require('http');
 const { chromium } = require('playwright');
 
 const fixture = `<svg xmlns="http://www.w3.org/2000/svg">
@@ -33,14 +33,14 @@ globalThis.result = result.data;
 </script>
 `;
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   if (req.url === '/') {
     res.setHeader('Content-Type', 'text/html');
     res.end(content);
   }
   if (req.url === '/svgo.browser.js') {
     res.setHeader('Content-Type', 'application/javascript');
-    res.end(fs.readFileSync('./dist/svgo.browser.js'));
+    res.end(await fs.readFile('./dist/svgo.browser.js'));
   }
   res.end();
 });

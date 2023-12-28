@@ -64,7 +64,7 @@ exports.fn = (root) => {
           ) {
             // remove attributes that all children override
             for (const a of Object.keys(node.attributes)) {
-              if (!inheritableAttrs.includes(a)) continue;
+              if (!inheritableAttrs.has(a)) continue;
               if (a === 'transform') continue;
               const isOverriden = children.every(
                 (child) =>
@@ -85,13 +85,13 @@ exports.fn = (root) => {
         const attributes = new Map();
         let everyChildIsPath = true;
         for (const child of children) {
-          if (pathElems.includes(child.name) === false) {
+          if (!pathElems.has(child.name)) {
             everyChildIsPath = false;
           }
           // collect all inheritable attributes from first child element
           for (const [name, value] of Object.entries(child.attributes)) {
             // consider only inheritable attributes
-            if (!inheritableAttrs.includes(name)) continue;
+            if (!inheritableAttrs.has(name)) continue;
 
             let list = attributes.get(name);
             if (!list) {

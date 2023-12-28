@@ -24,9 +24,9 @@ exports.fn = () => {
         if (node.name === 'g') {
           for (const name of Object.keys(node.attributes)) {
             if (
-              attrsGroups.presentation.includes(name) === true &&
-              inheritableAttrs.includes(name) === false &&
-              presentationNonInheritableGroupAttrs.includes(name) === false
+              attrsGroups.presentation.has(name) &&
+              !inheritableAttrs.has(name) &&
+              !presentationNonInheritableGroupAttrs.has(name)
             ) {
               delete node.attributes[name];
             }

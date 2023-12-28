@@ -69,7 +69,7 @@ const maxIdIndex = generateIdChars.length - 1;
 /**
  * Check if an ID starts with any one of a list of strings.
  *
- * @type {(string: string, prefixes: Array<string>) => boolean}
+ * @type {(string: string, prefixes: string[]) => boolean}
  */
 const hasStringPrefix = (string, prefixes) => {
   for (const prefix of prefixes) {
@@ -109,7 +109,7 @@ const generateId = (currentId) => {
 /**
  * Get string from generated ID array.
  *
- * @type {(arr: Array<number>) => string}
+ * @type {(arr: number[]) => string}
  */
 const getIdString = (arr) => {
   return arr.map((i) => generateIdChars[i]).join('');
@@ -144,7 +144,7 @@ exports.fn = (_root, params) => {
    */
   const nodeById = new Map();
   /**
-   * @type {Map<string, Array<{element: XastElement, name: string }>>}
+   * @type {Map<string, {element: XastElement, name: string }[]>}
    */
   const referencesById = new Map();
   let deoptimized = false;

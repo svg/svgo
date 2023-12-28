@@ -109,7 +109,7 @@ exports.fn = (_root, params) => {
                   val = val.slice(1, -1);
                 }
 
-                if (stylingProps.includes(prop)) {
+                if (stylingProps.has(prop)) {
                   newAttributes[prop] = val;
 
                   return false;
