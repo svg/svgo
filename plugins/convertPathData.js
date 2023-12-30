@@ -9,7 +9,7 @@ const { visit } = require('../lib/xast.js');
 const { pathElems } = require('./_collections.js');
 const { path2js, js2path } = require('./_path.js');
 const { applyTransforms } = require('./applyTransforms.js');
-const { cleanupOutData } = require('../lib/svgo/tools');
+const { cleanupOutData, toFixed } = require('../lib/svgo/tools');
 
 exports.name = 'convertPathData';
 exports.description =
@@ -1002,16 +1002,6 @@ function getIntersection(coords) {
   ) {
     return cross;
   }
-}
-
-/**
- * Does the same as `Number.prototype.toFixed` but without casting
- * the return value to a string.
- * @type {(num: number, precision: number) => number}
- */
-function toFixed(num, precision) {
-  const pow = 10 ** precision;
-  return Math.round(num * pow) / pow;
 }
 
 /**

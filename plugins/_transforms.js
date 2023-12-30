@@ -1,5 +1,7 @@
 'use strict';
 
+const { toFixed } = require('../lib/svgo/tools');
+
 const regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/;
 const regTransformSplit =
   /\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/;
@@ -199,8 +201,21 @@ exports.matrixToTransform = (transform, params) => {
     // [sx·cos(a), sy·sin(a), sx·-sin(a), sy·cos(a), x, y] → scale(sx, sy)·rotate(a[, cx, cy]) (if !scaleBefore)
   } else if (!colsSum || (sx == 1 && sy == 1) || !scaleBefore) {
     if (!scaleBefore) {
-      sx = (data[0] < 0 ? -1 : 1) * Math.hypot(data[0], data[2]);
-      sy = (data[3] < 0 ? -1 : 1) * Math.hypot(data[1], data[3]);
+      sx = Math.hypot(data[0], data[2]);
+      sy = Math.hypot(data[1], data[3]);
+
+      if (toFixed(data[0], params.transformPrecision) < 0) {
+        sx = -sx;
+      }
+
+      if (
+        data[3] < 0 ||
+        (Math.sign(data[1]) === Math.sign(data[2]) &&
+          toFixed(data[3], params.transformPrecision) === 0)
+      ) {
+        sy = -sy;
+      }
+      
       transforms.push({ name: 'scale', data: [sx, sy] });
     }
     var angle = Math.min(Math.max(-1, data[0] / sx), 1),
