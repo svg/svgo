@@ -1,4 +1,4 @@
-Correctly optimize transform scales negative sx and sy.
+Correctly optimize transform with same sign non-zero shears and.
 
 ===
 

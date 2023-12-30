@@ -482,7 +482,7 @@ function filters(
         // check if next curves are fitting the arc
         for (
           var j = index;
-          (next = path[++j]) && 'cs'.includes(next.command);
+          (next = path[++j]) && (next.command === 'c' || next.command === 's');
 
         ) {
           var nextData = next.args;
