@@ -56,7 +56,6 @@ const runTests = async (list) => {
     );
     // ignore small aliasing issues
     if (matched <= 4) {
-      console.info(`${name} is passed`);
       passed++;
     } else {
       mismatched++;
