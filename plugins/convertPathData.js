@@ -722,9 +722,9 @@ function filters(
               0,
               4,
               // @ts-ignore
-              (x1 + x2) - item.base[0],
+              x1 + x2 - item.base[0],
               // @ts-ignore
-              (y1 + y2) - item.base[1],
+              y1 + y2 - item.base[1],
             );
             roundData(newData);
             const originalLength = cleanupOutData(data, params).length,
