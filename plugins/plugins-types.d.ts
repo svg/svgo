@@ -41,6 +41,7 @@ type DefaultPlugins = {
       tolerance: number;
     };
     straightCurves?: boolean;
+    convertToQ?: boolean;
     lineShorthands?: boolean;
     convertToZ?: boolean;
     curveSmoothShorthands?: boolean;
