@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <radialGradient id="paint" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(37.7048 87.4609) rotate(-120.894) scale(42.9093 25.2148)">
+            <stop stop-color="#FF010F"/>
+            <stop offset="0.389459" stop-color="#FF0503"/>
+            <stop offset="0.608025" stop-color="#F31D00"/>
+        </radialGradient>
+        <radialGradient id="paintTwo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(37.7048 87.4609) rotate(-120.894) scale(42.9093 25.2148)">
+            <stop stop-color="#FF010F"/>
+            <stop offset="0.389459" stop-color="#FF0503"/>
+            <stop offset="0.608025" stop-color="#F31D00"/>
+        </radialGradient>
+    </defs>
+    <path d="M29.3568 91.3641L30.09 90.8113L30.4059 91.4995L30.09 92.4809L30.9361 92.1199L30.7105 93.1239L30.9361 94.0377L30.1464 94.3197L29.3568 94.0377L28.9281 93.4849L28.2174 93.1239L29.3568 91.3641Z" fill="url(#paint)"/>
+    <path d="M24.4946 88.8372L25.0474 88.4874L25.7243 89.1192L24.7203 89.2997L24.4946 88.8372Z" fill="url(#paintTwo)"/>
+    <use xlink:href="#paint"/>
+    <use xlink:href="#paintTwo"/>
+    <animateMotion xlink:href="#crochet" dur="0.1s" begin="paint.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+    <animateMotion xlink:href="#crochet" dur="0.5s" begin="paintTwo.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <radialGradient id="paint" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(37.7048 87.4609) rotate(-120.894) scale(42.9093 25.2148)">
+            <stop stop-color="#FF010F"/>
+            <stop offset="0.389459" stop-color="#FF0503"/>
+            <stop offset="0.608025" stop-color="#F31D00"/>
+        </radialGradient>
+    </defs>
+    <path d="M29.3568 91.3641L30.09 90.8113L30.4059 91.4995L30.09 92.4809L30.9361 92.1199L30.7105 93.1239L30.9361 94.0377L30.1464 94.3197L29.3568 94.0377L28.9281 93.4849L28.2174 93.1239L29.3568 91.3641Z" fill="url(#paint)"/>
+    <path d="M24.4946 88.8372L25.0474 88.4874L25.7243 89.1192L24.7203 89.2997L24.4946 88.8372Z" fill="url(#paint)"/>
+    <use xlink:href="#paint"/>
+    <use xlink:href="#paint"/>
+    <animateMotion xlink:href="#crochet" dur="0.1s" begin="paint.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+    <animateMotion xlink:href="#crochet" dur="0.5s" begin="paint.mouseover" fill="freeze" path="m 0,0 0,-21"/>
+</svg>

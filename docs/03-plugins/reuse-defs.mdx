@@ -1,0 +1,22 @@
+---
+title: Reuse Defs
+svgo:
+  pluginId: reuseDefs
+---
+
+
+It looks for `<defs>` children that have same [`attributes`](https://developer.mozilla.org/docs/Web/SVG/Attribute) values and children, remove the duplicated one and replace references of the removed element.
+
+:::
+
+## Usage
+
+<PluginUsage/>
+
+## Demo
+
+<PluginDemo/>
+
+## Implementation
+
+* https://github.com/svg/svgo/blob/main/plugins/reuseDefs.js
