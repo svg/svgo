@@ -18,7 +18,6 @@ const convertColors = require('./convertColors.js');
 const removeUnknownsAndDefaults = require('./removeUnknownsAndDefaults.js');
 const removeNonInheritableGroupAttrs = require('./removeNonInheritableGroupAttrs.js');
 const removeUselessStrokeAndFill = require('./removeUselessStrokeAndFill.js');
-const removeViewBox = require('./removeViewBox.js');
 const cleanupEnableBackground = require('./cleanupEnableBackground.js');
 const removeHiddenElems = require('./removeHiddenElems.js');
 const removeEmptyText = require('./removeEmptyText.js');
@@ -57,7 +56,6 @@ const presetDefault = createPreset({
     removeUnknownsAndDefaults,
     removeNonInheritableGroupAttrs,
     removeUselessStrokeAndFill,
-    removeViewBox,
     cleanupEnableBackground,
     removeHiddenElems,
     removeEmptyText,
