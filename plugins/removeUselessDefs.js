@@ -21,7 +21,11 @@ exports.fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {
-        if (node.name === 'defs') {
+        if (
+          node.name === 'defs' ||
+          (elemsGroups.nonRendering.has(node.name) &&
+            node.attributes.id == null)
+        ) {
           /**
            * @type {XastElement[]}
            */
@@ -38,11 +42,6 @@ exports.fn = () => {
             });
           }
           node.children = usefulNodes;
-        } else if (
-          elemsGroups.nonRendering.has(node.name) &&
-          node.attributes.id == null
-        ) {
-          detachNodeFromParent(node, parentNode);
         }
       },
     },
