@@ -1,4 +1,4 @@
-Don't remove used symbols.
+Don't remove non-rendering elements if children have IDs. 
 
 ===
 
