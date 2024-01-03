@@ -94,6 +94,23 @@ exports.fn = (root, params) => {
   let deoptimized = false;
 
   /**
+   * Nodes can't be removed if they or any of their children have an id attribute that is referenced.
+   * @param {XastElement} node
+   * @returns boolean
+   */
+  function canRemoveNonRenderingNode(node) {
+    if (allReferences.has(node.attributes.id)) {
+      return false;
+    }
+    for (const child of node.children) {
+      if (child.type === 'element' && !canRemoveNonRenderingNode(child)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * @param {XastChild} node
    * @param {XastParent} parentNode
    */
@@ -114,13 +131,7 @@ exports.fn = (root, params) => {
     element: {
       enter: (node, parentNode) => {
         // transparent non-rendering elements still apply where referenced
-        if (nonRendering.has(node.name)) {
-          if (node.attributes.id == null) {
-            detachNodeFromParent(node, parentNode);
-            return visitSkip;
-          }
-
-          nonRenderedNodes.set(node, parentNode);
+        if (nonRendering.has(node.name) || node.name === 'defs') {
           return visitSkip;
         }
         const computedStyle = computeStyle(stylesheet, node);
@@ -421,16 +432,14 @@ exports.fn = (root, params) => {
             nonRenderedNode,
             nonRenderedParent,
           ] of nonRenderedNodes.entries()) {
-            const id = nonRenderedNode.attributes.id;
-
-            if (!allReferences.has(id)) {
+            if (canRemoveNonRenderingNode(nonRenderedNode)) {
               detachNodeFromParent(nonRenderedNode, nonRenderedParent);
             }
           }
         }
 
         for (const [node, parentNode] of allDefs.entries()) {
-          if (node.children.length === 0) {
+          if (canRemoveNonRenderingNode(node)) {
             detachNodeFromParent(node, parentNode);
           }
         }
