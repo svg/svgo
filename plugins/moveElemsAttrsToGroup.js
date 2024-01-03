@@ -1,10 +1,9 @@
-'use strict';
+import { visit } from '../lib/xast.js';
+import { inheritableAttrs, pathElems } from './_collections.js';
 
-const { visit } = require('../lib/xast.js');
-const { inheritableAttrs, pathElems } = require('./_collections.js');
-
-exports.name = 'moveElemsAttrsToGroup';
-exports.description = 'Move common attributes of group children to the group';
+export const name = 'moveElemsAttrsToGroup';
+export const description =
+  'Move common attributes of group children to the group';
 
 /**
  * Move common attributes of group children to the group
@@ -26,9 +25,9 @@ exports.description = 'Move common attributes of group children to the group';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'moveElemsAttrsToGroup'>}
+ * @type {import('./plugins-types.js').Plugin<'moveElemsAttrsToGroup'>}
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   // find if any style element is present
   let deoptimizedWithStyles = false;
   visit(root, {

@@ -1,10 +1,8 @@
-'use strict';
+import { elemsGroups } from './_collections.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-const { elemsGroups } = require('./_collections.js');
-
-exports.name = 'removeEmptyContainers';
-exports.description = 'removes empty container elements';
+export const name = 'removeEmptyContainers';
+export const description = 'removes empty container elements';
 
 /**
  * Remove empty containers.
@@ -19,9 +17,9 @@ exports.description = 'removes empty container elements';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeEmptyContainers'>}
+ * @type {import('./plugins-types.js').Plugin<'removeEmptyContainers'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       exit: (node, parentNode) => {

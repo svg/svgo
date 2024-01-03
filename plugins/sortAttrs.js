@@ -1,16 +1,14 @@
-'use strict';
-
-exports.name = 'sortAttrs';
-exports.description = 'Sort element attributes for better compression';
+export const name = 'sortAttrs';
+export const description = 'Sort element attributes for better compression';
 
 /**
  * Sort element attributes for better compression
  *
  * @author Nikolay Frantsev
  *
- * @type {import('./plugins-types').Plugin<'sortAttrs'>}
+ * @type {import('./plugins-types.js').Plugin<'sortAttrs'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     order = [
       'id',

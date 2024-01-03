@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'removeViewBox';
-exports.description = 'removes viewBox attribute when possible';
+export const name = 'removeViewBox';
+export const description = 'removes viewBox attribute when possible';
 
 const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
 
@@ -17,9 +15,9 @@ const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeViewBox'>}
+ * @type {import('./plugins-types.js').Plugin<'removeViewBox'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {

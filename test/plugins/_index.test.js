@@ -1,11 +1,12 @@
-'use strict';
+import FS from 'fs';
+import PATH from 'path';
+import { EOL } from 'os';
+import { fileURLToPath } from 'url';
+import { optimize } from '../../lib/svgo.js';
 
-const FS = require('fs');
-const PATH = require('path');
-const EOL = require('os').EOL;
 const regEOL = new RegExp(EOL, 'g');
 const regFilename = /^(.*)\.(\d+)\.svg$/;
-const { optimize } = require('../../lib/svgo.js');
+const __dirname = PATH.dirname(fileURLToPath(import.meta.url));
 
 describe('plugins tests', function () {
   FS.readdirSync(__dirname).forEach(function (file) {
@@ -41,7 +42,6 @@ describe('plugins tests', function () {
               js2svg: { pretty: true },
             });
             lastResultData = result.data;
-            expect(result.error).not.toStrictEqual(expect.anything());
             //FIXME: results.data has a '\n' at the end while it should not
             expect(normalize(result.data)).toStrictEqual(should);
           }

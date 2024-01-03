@@ -1,6 +1,7 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": 2021,
+    "sourceType": "module"
   },
   "env": {
     "node": true,
@@ -8,12 +9,6 @@
   },
   "extends": ["eslint:recommended"],
   "overrides": [
-    {
-      "files": ["rollup.config.js", "**/*.mjs"],
-      "parserOptions": {
-        "sourceType": "module"
-      }
-    },
     {
       "files": ["**/*.cjs"],
       "parserOptions": {

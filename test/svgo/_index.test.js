@@ -1,9 +1,10 @@
-'use strict';
+import fs from 'fs';
+import path from 'path';
+import { EOL } from 'os';
+import { fileURLToPath } from 'url';
+import { optimize } from '../../lib/svgo.js';
 
-const fs = require('fs');
-const path = require('path');
-const { EOL } = require('os');
-const { optimize } = require('../../lib/svgo.js');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const regEOL = new RegExp(EOL, 'g');
 

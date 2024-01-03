@@ -1,24 +1,22 @@
-'use strict';
-
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
  */
 
-const csso = require('csso');
-const { detachNodeFromParent } = require('../lib/xast');
-const { hasScripts } = require('../lib/svgo/tools');
+import * as csso from 'csso';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { hasScripts } from '../lib/svgo/tools.js';
 
-exports.name = 'minifyStyles';
-exports.description = 'minifies styles and removes unused styles';
+export const name = 'minifyStyles';
+export const description = 'minifies styles and removes unused styles';
 
 /**
  * Minifies styles (<style> element + style attribute) using CSSO.
  *
  * @author strarsis <strarsis@gmail.com>
- * @type {import('./plugins-types').Plugin<'minifyStyles'>}
+ * @type {import('./plugins-types.js').Plugin<'minifyStyles'>}
  */
-exports.fn = (_root, { usage, ...params }) => {
+export const fn = (_root, { usage, ...params }) => {
   /** @type {Map<XastElement, XastParent>} */
   const styleElements = new Map();
 

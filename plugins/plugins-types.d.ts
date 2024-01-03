@@ -2,7 +2,7 @@ import type {
   Plugin as PluginDef,
   PluginInfo,
   XastElement,
-} from '../lib/types';
+} from '../lib/types.js';
 
 type DefaultPlugins = {
   cleanupAttrs: {

@@ -1,23 +1,21 @@
-'use strict';
+import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastChild} XastChild
  */
 
-const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'mergeStyles';
-exports.description = 'merge multiple style elements into one';
+export const name = 'mergeStyles';
+export const description = 'merge multiple style elements into one';
 
 /**
  * Merge multiple style elements into one.
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('./plugins-types').Plugin<'mergeStyles'>}
+ * @type {import('./plugins-types.js').Plugin<'mergeStyles'>}
  */
-exports.fn = () => {
+export const fn = () => {
   /**
    * @type {?XastElement}
    */

@@ -1,8 +1,9 @@
-'use strict';
+import FS from 'fs';
+import PATH from 'path';
+import { fileURLToPath } from 'url';
+import { parseSvg } from '../../lib/parser.js';
 
-const FS = require('fs');
-const PATH = require('path');
-const { parseSvg } = require('../../lib/parser.js');
+const __dirname = PATH.dirname(fileURLToPath(import.meta.url));
 
 describe('svg2js', function () {
   describe('working svg', function () {

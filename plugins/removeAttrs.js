@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'removeAttrs';
-exports.description = 'removes specified attributes';
+export const name = 'removeAttrs';
+export const description = 'removes specified attributes';
 
 const DEFAULT_SEPARATOR = ':';
 const ENOATTRS = `Warning: The plugin "removeAttrs" requires the "attrs" parameter.
@@ -81,9 +79,9 @@ plugins: [
  *
  * @author Benny Schudel
  *
- * @type {import('./plugins-types').Plugin<'removeAttrs'>}
+ * @type {import('./plugins-types.js').Plugin<'removeAttrs'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   if (typeof params.attrs == 'undefined') {
     console.warn(ENOATTRS);
     return null;

@@ -1,10 +1,11 @@
-'use strict';
+import fs from 'fs';
+import path from 'path';
+import del from 'del';
+import { Command } from 'commander';
+import { fileURLToPath } from 'url';
+import svgo, { checkIsDir } from '../../lib/svgo/coa.js';
 
-const fs = require('fs');
-const path = require('path');
-const del = require('del');
-const { Command } = require('commander');
-const svgo = require('../../lib/svgo/coa.js');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const svgFolderPath = path.resolve(__dirname, 'testSvg');
 const svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively');
@@ -14,8 +15,6 @@ const svgFiles = [
 ];
 const tempFolder = 'temp';
 const noop = () => {};
-
-const { checkIsDir } = svgo;
 
 function runProgram(args) {
   const program = new Command();

@@ -1,14 +1,12 @@
-'use strict';
+import { visitSkip } from '../lib/xast.js';
+import { hasScripts, findReferences } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-const { visitSkip } = require('../lib/xast.js');
-const { hasScripts, findReferences } = require('../lib/svgo/tools');
-
-exports.name = 'cleanupIds';
-exports.description = 'removes unused IDs and minifies used';
+export const name = 'cleanupIds';
+export const description = 'removes unused IDs and minifies used';
 
 const generateIdChars = [
   'a',
@@ -121,9 +119,9 @@ const getIdString = (arr) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'cleanupIds'>}
+ * @type {import('./plugins-types.js').Plugin<'cleanupIds'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     remove = true,
     minify = true,

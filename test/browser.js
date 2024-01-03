@@ -1,7 +1,7 @@
-const assert = require('assert');
-const fs = require('node:fs/promises');
-const http = require('http');
-const { chromium } = require('playwright');
+import assert from 'assert';
+import fs from 'node:fs/promises';
+import http from 'http';
+import { chromium } from 'playwright';
 
 const fixture = `<svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">

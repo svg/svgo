@@ -1,18 +1,16 @@
-'use strict';
+import { path2js, js2path } from './_path.js';
+import { pathElems } from './_collections.js';
+import { applyTransforms } from './applyTransforms.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { visit } from '../lib/xast.js';
+import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib//types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { visit } = require('../lib/xast.js');
-const { pathElems } = require('./_collections.js');
-const { path2js, js2path } = require('./_path.js');
-const { applyTransforms } = require('./applyTransforms.js');
-const { cleanupOutData, toFixed } = require('../lib/svgo/tools');
-
-exports.name = 'convertPathData';
-exports.description =
+export const name = 'convertPathData';
+export const description =
   'optimizes path data: writes in shorter form, applies transformations';
 
 /** @type {(data: number[]) => number[]} */
@@ -75,9 +73,9 @@ let arcTolerance;
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertPathData'>}
+ * @type {import('./plugins-types.js').Plugin<'convertPathData'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     // TODO convert to separate plugin in v3
     applyTransforms: _applyTransforms = true,

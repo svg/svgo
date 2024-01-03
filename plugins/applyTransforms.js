@@ -1,22 +1,18 @@
-'use strict';
-
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const {
+import { path2js } from './_path.js';
+import {
   transformsMultiply,
   transform2js,
   transformArc,
-} = require('./_transforms.js');
-const { path2js } = require('./_path.js');
-const {
-  removeLeadingZero,
-  includesUrlReference,
-} = require('../lib/svgo/tools.js');
-const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
+} from './_transforms.js';
+import { referencesProps, attrsGroupsDefaults } from './_collections.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+
+import { removeLeadingZero, includesUrlReference } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {PathDataItem[]} PathData
@@ -28,12 +24,12 @@ const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 /**
  * Apply transformation(s) to the Path data.
  *
- * @type {import('../lib/types').Plugin<{
+ * @type {import('../lib/types.js').Plugin<{
  *   transformPrecision: number,
  *   applyTransformsStroked: boolean,
  * }>}
  */
-const applyTransforms = (root, params) => {
+export const applyTransforms = (root, params) => {
   const stylesheet = collectStylesheet(root);
   return {
     element: {
@@ -160,7 +156,6 @@ const applyTransforms = (root, params) => {
     },
   };
 };
-exports.applyTransforms = applyTransforms;
 
 /**
  * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
