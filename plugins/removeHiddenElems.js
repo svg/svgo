@@ -131,7 +131,8 @@ exports.fn = (root, params) => {
     element: {
       enter: (node, parentNode) => {
         // transparent non-rendering elements still apply where referenced
-        if (nonRendering.has(node.name) || node.name === 'defs') {
+        if (nonRendering.has(node.name)) {
+          nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
         const computedStyle = computeStyle(stylesheet, node);
@@ -439,7 +440,7 @@ exports.fn = (root, params) => {
         }
 
         for (const [node, parentNode] of allDefs.entries()) {
-          if (canRemoveNonRenderingNode(node)) {
+          if (node.children.length === 0) {
             detachNodeFromParent(node, parentNode);
           }
         }
