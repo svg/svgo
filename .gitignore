@@ -13,4 +13,5 @@ test/regression-diffs
 test/cli/output
 coverage
 .DS_Store
+.vscode
 *.log
