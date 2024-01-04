@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url';
 import { optimize } from '../../lib/svgo.js';
 
 const regEOL = new RegExp(EOL, 'g');
+const regFilename = /^(.*)\.(\d+)\.svg\.txt?$/;
 const __dirname = PATH.dirname(fileURLToPath(import.meta.url));
-const regFilename = /^(.*)\.(\d+)\.svg(\.txt)?$/;
 
 describe('plugins tests', function () {
   FS.readdirSync(__dirname).forEach(function (file) {

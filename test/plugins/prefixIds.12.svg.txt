@@ -15,6 +15,6 @@ into multiple nodes due to XML comments.
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
     <style>
 <!--uwu-->
-        #prefixIds_12_svg__a{}
+        #prefixIds_12_svg_txt__a{}
     </style>
 </svg>
