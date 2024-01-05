@@ -1,11 +1,39 @@
 import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastNode} XastNode
  */
 
 export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
+
+/**
+ * @param {XastElement} node
+ * @param {XastElement} firstChild
+ * @returns boolean
+ */
+function canMoveAttributesToSingleChild(node, firstChild) {
+  for (const [name, value] of Object.entries(node.attributes)) {
+    // avoid copying to not conflict with animated attribute
+    if (hasAnimatedAttr(firstChild, name)) {
+      return false;
+    }
+    if (firstChild.attributes[name] == null) {
+      continue;
+    } else if (name === 'transform') {
+      continue;
+    } else if (firstChild.attributes[name] === 'inherit') {
+      continue;
+    } else if (
+      inheritableAttrs.has(name) === false &&
+      firstChild.attributes[name] !== value
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
 
 /**
  * @type {(node: XastNode, name: string) => boolean}
@@ -80,11 +108,10 @@ export const fn = () => {
                 node.attributes.transform == null &&
                 firstChild.attributes.transform == null))
           ) {
+            if (!canMoveAttributesToSingleChild(node, firstChild)) {
+              return;
+            }
             for (const [name, value] of Object.entries(node.attributes)) {
-              // avoid copying to not conflict with animated attribute
-              if (hasAnimatedAttr(firstChild, name)) {
-                return;
-              }
               if (firstChild.attributes[name] == null) {
                 firstChild.attributes[name] = value;
               } else if (name === 'transform') {
@@ -92,11 +119,6 @@ export const fn = () => {
                   value + ' ' + firstChild.attributes[name];
               } else if (firstChild.attributes[name] === 'inherit') {
                 firstChild.attributes[name] = value;
-              } else if (
-                inheritableAttrs.has(name) === false &&
-                firstChild.attributes[name] !== value
-              ) {
-                return;
               }
               delete node.attributes[name];
             }
