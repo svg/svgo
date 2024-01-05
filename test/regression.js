@@ -4,6 +4,7 @@
  */
 
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import http from 'http';
 import os from 'os';
 import path from 'path';
@@ -18,11 +19,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const width = 960;
 const height = 720;
 
+const FILE_PATTERN = new RegExp('media-flash');
+// const FILE_PATTERN = new RegExp('.*');
+let configFileName;
+const DEFAULT_CONFIG = {
+  floatPrecision: 4,
+};
+const CONFIG = configFileName ? readConfigFile(configFileName) : DEFAULT_CONFIG;
+
+const stats = {};
+
 /** @type {PageScreenshotOptions} */
 const screenshotOptions = {
   omitBackground: true,
   clip: { x: 0, y: 0, width, height },
   animations: 'disabled',
+  timeout: 80000,
 };
 
 /**
@@ -38,9 +50,15 @@ const runTests = async (list) => {
    * @param {string} name
    */
   const processFile = async (page, name) => {
-    await page.goto(`http://localhost:5000/original/${name}`);
+    const fileStats = {};
+    stats[name.replaceAll('\\', '/')] = fileStats;
+    await page.goto(`http://localhost:5000/original/${name}`, {
+      timeout: 80000,
+    });
     const originalBuffer = await page.screenshot(screenshotOptions);
-    await page.goto(`http://localhost:5000/optimized/${name}`);
+    await page.goto(`http://localhost:5000/optimized/${name}`, {
+      timeout: 80000,
+    });
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
     const writeDiffs = process.env.NO_DIFF == null;
@@ -58,9 +76,11 @@ const runTests = async (list) => {
     if (matched <= 4) {
       console.info(`${name} is passed`);
       passed++;
+      fileStats.result = 'pass';
     } else {
       mismatched++;
       console.error(`${name} is mismatched`);
+      fileStats.result = 'mismatch';
       if (diff) {
         const file = path.join(
           __dirname,
@@ -76,6 +96,9 @@ const runTests = async (list) => {
     let item;
     const page = await context.newPage();
     while ((item = list.pop())) {
+      if (!FILE_PATTERN.test(item)) {
+        continue;
+      }
       await processFile(page, item);
     }
     await page.close();
@@ -95,6 +118,12 @@ const runTests = async (list) => {
   return mismatched === 0;
 };
 
+function readConfigFile(fileName) {
+  const data = fsSync.readFileSync(fileName);
+  const json = JSON.parse(data);
+  return json;
+}
+
 (async () => {
   try {
     const start = process.hrtime.bigint();
@@ -102,6 +131,7 @@ const runTests = async (list) => {
     const filesPromise = fs.readdir(fixturesDir, { recursive: true });
     const server = http.createServer(async (req, res) => {
       const name = req.url.slice(req.url.indexOf('/', 1));
+      const statsName = name.substring(1);
       let file;
       try {
         file = await fs.readFile(path.join(fixturesDir, name), 'utf-8');
@@ -112,14 +142,15 @@ const runTests = async (list) => {
       }
 
       if (req.url.startsWith('/original/')) {
+        stats[statsName].lengthOrig = file.length;
         res.setHeader('Content-Type', 'image/svg+xml');
         res.end(file);
         return;
       }
       if (req.url.startsWith('/optimized/')) {
-        const optimized = optimize(file, {
-          floatPrecision: 4,
-        });
+        const optimized = optimize(file, CONFIG);
+        stats[statsName].lengthOpt = optimized.data.length;
+
         res.setHeader('Content-Type', 'image/svg+xml');
         res.end(optimized.data);
         return;
@@ -134,6 +165,28 @@ const runTests = async (list) => {
     server.close();
     const end = process.hrtime.bigint();
     const diff = (end - start) / BigInt(1e6);
+
+    // Write statistics.
+    const statArray = [
+      ['Name', 'Result', 'Orig Len', 'Opt Len', 'Reduction'].join('\t'),
+    ];
+    let totalReduction = 0;
+    for (const name of Object.keys(stats).sort()) {
+      const fileStats = stats[name];
+      const orig = fileStats.lengthOrig;
+      const opt = fileStats.lengthOpt;
+      const reduction = orig - opt;
+      totalReduction += reduction;
+      statArray.push([name, fileStats.result, orig, opt, reduction].join('\t'));
+    }
+    const statsFileName = `tmp/regression-stats-${new Date()
+      .toISOString()
+      .replaceAll(':', '')
+      .substring(0, 17)}.tsv`;
+    await fs.mkdir(path.dirname(statsFileName), { recursive: true });
+    await fs.writeFile(statsFileName, statArray.join('\n'));
+
+    console.info(`Total reduction ${totalReduction} bytes`);
     if (passed) {
       console.info(`Regression tests successfully completed in ${diff}ms`);
     } else {

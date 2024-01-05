@@ -11,6 +11,7 @@ dist
 test/regression-fixtures
 test/regression-diffs
 test/cli/output
+tmp
 coverage
 .DS_Store
 .vscode
