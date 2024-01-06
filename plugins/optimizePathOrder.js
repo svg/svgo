@@ -491,15 +491,12 @@ function estimateLength(numbers, precision) {
     const string = rounded.toString();
     length +=
       string.length - (rounded != 0 && rounded > -1 && rounded < 1 ? 1 : 0);
-    if (last) {
-      if (
-        !(rounded < 0) &&
-        !(last.includes('.') && rounded > 0 && rounded < 1)
-      ) {
+    if (last !== undefined) {
+      if (!(rounded < 0) && !(last % 1 && rounded > 0 && rounded < 1)) {
         length += 1;
       }
     }
-    last = string;
+    last = rounded;
   }
   return length;
 }
