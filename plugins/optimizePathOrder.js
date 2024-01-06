@@ -1,5 +1,5 @@
 import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { hasScripts } from '../lib/svgo/tools.js';
+import { hasScripts, toFixed } from '../lib/svgo/tools.js';
 import { pathElems } from './_collections.js';
 import { js2path, path2js } from './_path.js';
 
@@ -81,8 +81,8 @@ export const fn = (root, params) => {
         for (const instruction of path) {
           if (instruction.command == 'M' || instruction.command == 'm') {
             if (part.data.length > 0) {
-              parts.push(part);
               someValid = someValid || part.valid;
+              parts.push(part);
               part = { valid: true, data: [] };
             }
           }
@@ -111,8 +111,8 @@ export const fn = (root, params) => {
           part.data.push(instruction);
         }
         if (part.data.length > 0) {
-          parts.push(part);
           someValid = someValid || part.valid;
+          parts.push(part);
         }
         if (!someValid) return;
 
@@ -430,12 +430,9 @@ function transformCommand(command, precision, lastCommand, useZ) {
         coords: command.coords,
       };
     } else if (command.base[1] == command.coords[1]) {
-      const absoluteLength = toPrecision(
-        command.coords[0],
-        precision,
-      ).toString().length;
-      const relativeLength = toPrecision(relativeX, precision).toString()
+      const absoluteLength = toFixed(command.coords[0], precision).toString()
         .length;
+      const relativeLength = toFixed(relativeX, precision).toString().length;
       return {
         command: absoluteLength < relativeLength ? 'H' : 'h',
         args:
@@ -444,12 +441,9 @@ function transformCommand(command, precision, lastCommand, useZ) {
         coords: command.coords,
       };
     } else if (command.base[0] == command.coords[0]) {
-      const absoluteLength = toPrecision(
-        command.coords[1],
-        precision,
-      ).toString().length;
-      const relativeLength = toPrecision(relativeY, precision).toString()
+      const absoluteLength = toFixed(command.coords[1], precision).toString()
         .length;
+      const relativeLength = toFixed(relativeY, precision).toString().length;
       return {
         command: absoluteLength < relativeLength ? 'V' : 'v',
         args:
@@ -486,15 +480,6 @@ function transformMove(command, newBase) {
 }
 
 /**
- * @param {number} number
- * @param {number} precision
- */
-function toPrecision(number, precision) {
-  const factor = Math.pow(10, precision);
-  return Math.round(number * factor) / factor;
-}
-
-/**
  * @param {number[]} numbers
  * @param {number} precision
  */
@@ -502,7 +487,7 @@ function estimateLength(numbers, precision) {
   let length = 0;
   let last = undefined;
   for (const number of numbers) {
-    const rounded = toPrecision(number, precision);
+    const rounded = toFixed(number, precision);
     const string = rounded.toString();
     length +=
       string.length - (rounded != 0 && rounded > -1 && rounded < 1 ? 1 : 0);

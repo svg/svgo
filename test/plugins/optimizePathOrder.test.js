@@ -1,6 +1,4 @@
-'use strict';
-
-const { optimize } = require('../../lib/svgo.js');
+import { optimize } from '../../lib/svgo.js';
 
 test('should rotate paths properly', () => {
   const svg = `<svg><path d="m 10 0 v 10 l -10 -10 z"/></svg>`;
