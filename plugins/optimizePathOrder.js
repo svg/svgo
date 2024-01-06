@@ -510,40 +510,41 @@ function estimateLength(numbers, precision) {
  * @param {boolean} first
  */
 function estimatePathLength(data, precision, first) {
-  /**
-   * @type {{command: string, args: number[]}[]}
-   */
-  let combined = [];
-  data.forEach((command, i) => {
-    const last = combined[combined.length - 1];
-    if (last) {
-      let commandless =
-        (last.command == command.command &&
-          last.command != 'M' &&
-          last.command != 'm') ||
-        (last.command == 'M' && command.command == 'L') ||
-        (last.command == 'm' && command.command == 'l');
-      if (
-        first &&
-        i == 1 &&
-        (last.command == 'M' || last.command == 'm') &&
-        (command.command == 'L' || command.command == 'l')
-      ) {
-        commandless = true;
-        last.command = command.command == 'L' ? 'M' : 'm';
-      }
-      if (commandless) {
-        last.args = [...last.args, ...command.args];
-        return;
-      }
-    }
-    combined.push({ command: command.command, args: command.args });
-  });
-
+  let i = 0;
   let length = 0;
-  for (const command of combined) {
-    length += 1 + estimateLength(command.args, precision);
-  }
+  while (i < data.length) {
+    let { command, args } = data[i];
+    const isVeryFirst = i == 0 && first;
 
+    let joined = false;
+    do {
+      const next = data[i + 1];
+      if (!next) break;
+
+      joined = false;
+      if (command == 'M') {
+        if (next.command == 'L') joined = true;
+      } else if (command == 'm') {
+        if (next.command == 'l') joined = true;
+      } else {
+        if (next.command == command) joined = true;
+      }
+      if (
+        isVeryFirst &&
+        (command == 'M' || command == 'm') &&
+        (next.command == 'L' || next.command == 'l')
+      ) {
+        joined = true;
+      }
+
+      if (joined) {
+        args = [...args, ...next.args];
+        i++;
+      }
+    } while (joined);
+
+    length += 1 + estimateLength(args, precision);
+    i++;
+  }
   return length;
 }
