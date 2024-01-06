@@ -1,8 +1,9 @@
-'use strict';
+import FS from 'fs';
+import PATH from 'path';
+import { fileURLToPath } from 'url';
+import { parseSvg } from '../../lib/parser.js';
 
-const FS = require('fs');
-const PATH = require('path');
-const { parseSvg } = require('../../lib/parser.js');
+const __dirname = PATH.dirname(fileURLToPath(import.meta.url));
 
 describe('svg2js', function () {
   describe('working svg', function () {
@@ -22,7 +23,7 @@ describe('svg2js', function () {
 
     describe('root', function () {
       it('should exist', function () {
-        expect(root).toEqual(expect.anything());
+        expect(root).toStrictEqual(expect.anything());
       });
 
       it('should be an instance of Object', function () {
@@ -45,7 +46,7 @@ describe('svg2js', function () {
     });
 
     it('the first node should be instruction', () => {
-      expect(root.children[0]).toEqual({
+      expect(root.children[0]).toStrictEqual({
         type: 'instruction',
         name: 'xml',
         value: 'version="1.0" encoding="utf-8"',
@@ -53,7 +54,7 @@ describe('svg2js', function () {
     });
 
     it('the second node should be comment', () => {
-      expect(root.children[1]).toEqual({
+      expect(root.children[1]).toStrictEqual({
         type: 'comment',
         value:
           'Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)',
@@ -61,7 +62,7 @@ describe('svg2js', function () {
     });
 
     it('the third node should be doctype', () => {
-      expect(root.children[2]).toEqual({
+      expect(root.children[2]).toStrictEqual({
         type: 'doctype',
         name: 'svg',
         data: {
@@ -73,7 +74,7 @@ describe('svg2js', function () {
 
     describe('name', function () {
       it('should have property name: "svg"', function () {
-        expect(root.children[3]).toEqual(
+        expect(root.children[3]).toStrictEqual(
           expect.objectContaining({
             name: 'svg',
           }),
@@ -83,7 +84,7 @@ describe('svg2js', function () {
 
     describe('children', function () {
       it('should exist', function () {
-        expect(root.children[3].children).toEqual(expect.anything());
+        expect(root.children[3].children).toStrictEqual(expect.anything());
       });
 
       it('should be an instance of Array', function () {
@@ -98,7 +99,7 @@ describe('svg2js', function () {
     describe('text nodes', function () {
       it('should contain preserved whitespace', function () {
         const textNode = root.children[3].children[1].children[0].children[1];
-        expect(textNode.children[0].value).toEqual('  test  ');
+        expect(textNode.children[0].value).toBe('  test  ');
       });
     });
   });

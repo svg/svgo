@@ -1,2 +1,2 @@
-require('unknown-module');
-module.exports = {};
+import 'unknown-module';
+export default {};

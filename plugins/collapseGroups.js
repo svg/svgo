@@ -1,13 +1,11 @@
-'use strict';
+import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types').XastNode} XastNode
+ * @typedef {import('../lib/types.js').XastNode} XastNode
  */
 
-const { inheritableAttrs, elemsGroups } = require('./_collections.js');
-
-exports.name = 'collapseGroups';
-exports.description = 'collapses useless groups';
+export const name = 'collapseGroups';
+export const description = 'collapses useless groups';
 
 /**
  * @type {(node: XastNode, name: string) => boolean}
@@ -49,9 +47,9 @@ const hasAnimatedAttr = (node, name) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'collapseGroups'>}
+ * @type {import('./plugins-types.js').Plugin<'collapseGroups'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       exit: (node, parentNode) => {

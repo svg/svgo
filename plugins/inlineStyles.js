@@ -1,24 +1,20 @@
-'use strict';
-
-/**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
- */
-
-const csstree = require('css-tree');
-const {
-  syntax: { specificity },
-} = require('csso');
-const {
+import * as csstree from 'css-tree';
+import { syntax } from 'csso';
+import { attrsGroups, pseudoClasses } from './_collections.js';
+import {
   visitSkip,
   querySelectorAll,
   detachNodeFromParent,
-} = require('../lib/xast.js');
-const { compareSpecificity, includesAttrSelector } = require('../lib/style');
-const { attrsGroups, pseudoClasses } = require('./_collections');
+} from '../lib/xast.js';
+import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 
-exports.name = 'inlineStyles';
-exports.description = 'inline styles (additional options)';
+/**
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
+
+export const name = 'inlineStyles';
+export const description = 'inline styles (additional options)';
 
 /**
  * Some pseudo-classes can only be calculated by clients, like :visited,
@@ -38,10 +34,10 @@ const preservedPseudos = [
 /**
  * Merges styles from style nodes into inline styles.
  *
- * @type {import('./plugins-types').Plugin<'inlineStyles'>}
+ * @type {import('./plugins-types.js').Plugin<'inlineStyles'>}
  * @author strarsis <strarsis@gmail.com>
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     onlyMatchedOnce = true,
     removeMatchedSelectors = true,
@@ -177,8 +173,8 @@ exports.fn = (root, params) => {
         const sortedSelectors = selectors
           .slice()
           .sort((a, b) => {
-            const aSpecificity = specificity(a.item.data);
-            const bSpecificity = specificity(b.item.data);
+            const aSpecificity = syntax.specificity(a.item.data);
+            const bSpecificity = syntax.specificity(b.item.data);
             return compareSpecificity(aSpecificity, bSpecificity);
           })
           .reverse();

@@ -1,9 +1,7 @@
-'use strict';
+import { attrsGroups } from './_collections.js';
 
-const { attrsGroups } = require('./_collections');
-
-exports.name = 'convertStyleToAttrs';
-exports.description = 'converts style to attributes';
+export const name = 'convertStyleToAttrs';
+export const description = 'converts style to attributes';
 
 /**
  * @type {(...args: string[]) => string}
@@ -65,9 +63,9 @@ const regStripComments = new RegExp(
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertStyleToAttrs'>}
+ * @type {import('./plugins-types.js').Plugin<'convertStyleToAttrs'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const { keepImportant = false } = params;
   return {
     element: {

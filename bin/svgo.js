@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const colors = require('picocolors');
-const { program } = require('commander');
-const makeProgram = require('../lib/svgo/coa');
+import colors from 'picocolors';
+import { program } from 'commander';
+import makeProgram from '../lib/svgo/coa.js';
 makeProgram(program);
 program.parseAsync(process.argv).catch((error) => {
   console.error(colors.red(error.stack));

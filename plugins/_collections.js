@@ -1,11 +1,9 @@
-'use strict';
-
 // https://www.w3.org/TR/SVG11/intro.html#Definitions
 
 /**
  * @type {Record<string, Set<string>>}
  */
-exports.elemsGroups = {
+export const elemsGroups = {
   animation: new Set([
     'animate',
     'animateColor',
@@ -107,19 +105,15 @@ exports.elemsGroups = {
  *
  * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
  */
-exports.textElems = new Set([
-  ...exports.elemsGroups.textContent,
-  'pre',
-  'title',
-]);
+export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
 
-exports.pathElems = new Set(['glyph', 'missing-glyph', 'path']);
+export const pathElems = new Set(['glyph', 'missing-glyph', 'path']);
 
 /**
  * @type {Record<string, Set<string>>}
  * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
  */
-exports.attrsGroups = {
+export const attrsGroups = {
   animationAddition: new Set(['additive', 'accumulate']),
   animationAttributeTarget: new Set(['attributeType', 'attributeName']),
   animationEvent: new Set(['onbegin', 'onend', 'onrepeat', 'onload']),
@@ -317,7 +311,7 @@ exports.attrsGroups = {
 /**
  * @type {Record<string, Record<string, string>>}
  */
-exports.attrsGroupsDefaults = {
+export const attrsGroupsDefaults = {
   core: { 'xml:space': 'default' },
   presentation: {
     clip: 'auto',
@@ -391,7 +385,7 @@ exports.attrsGroupsDefaults = {
  * }>}
  * @see https://www.w3.org/TR/SVG11/eltindex.html
  */
-exports.elems = {
+export const elems = {
   a: {
     attrsGroups: new Set([
       'conditionalProcessing',
@@ -1971,7 +1965,7 @@ exports.elems = {
 };
 
 // https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
-exports.editorNamespaces = new Set([
+export const editorNamespaces = new Set([
   'http://creativecommons.org/ns#',
   'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
   'http://ns.adobe.com/AdobeIllustrator/10.0/',
@@ -1999,7 +1993,7 @@ exports.editorNamespaces = new Set([
 /**
  * @see https://www.w3.org/TR/SVG11/linking.html#processingIRI
  */
-exports.referencesProps = new Set([
+export const referencesProps = new Set([
   'clip-path',
   'color-profile',
   'fill',
@@ -2015,7 +2009,7 @@ exports.referencesProps = new Set([
 /**
  * @see https://www.w3.org/TR/SVG11/propidx.html
  */
-exports.inheritableAttrs = new Set([
+export const inheritableAttrs = new Set([
   'clip-rule',
   'color-interpolation-filters',
   'color-interpolation',
@@ -2063,7 +2057,7 @@ exports.inheritableAttrs = new Set([
   'writing-mode',
 ]);
 
-exports.presentationNonInheritableGroupAttrs = new Set([
+export const presentationNonInheritableGroupAttrs = new Set([
   'clip-path',
   'display',
   'filter',
@@ -2079,7 +2073,7 @@ exports.presentationNonInheritableGroupAttrs = new Set([
  *
  * @type {Record<string, string>}
  */
-exports.colorsNames = {
+export const colorsNames = {
   aliceblue: '#f0f8ff',
   antiquewhite: '#faebd7',
   aqua: '#0ff',
@@ -2233,7 +2227,7 @@ exports.colorsNames = {
 /**
  * @type {Record<string, string>}
  */
-exports.colorsShortNames = {
+export const colorsShortNames = {
   '#f0ffff': 'azure',
   '#f5f5dc': 'beige',
   '#ffe4c4': 'bisque',
@@ -2271,7 +2265,7 @@ exports.colorsShortNames = {
 /**
  * @see https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
  */
-exports.colorsProps = new Set([
+export const colorsProps = new Set([
   'color',
   'fill',
   'flood-color',
@@ -2281,7 +2275,7 @@ exports.colorsProps = new Set([
 ]);
 
 /** @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes */
-exports.pseudoClasses = {
+export const pseudoClasses = {
   displayState: new Set(['fullscreen', 'modal', 'picture-in-picture']),
   input: new Set([
     'autofill',

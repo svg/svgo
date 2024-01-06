@@ -54,7 +54,7 @@ SVGO reads the configuration from `svgo.config.js` or the `--config path/to/conf
 **`svgo.config.js`**
 
 ```js
-module.exports = {
+export default {
   multipass: false, // boolean
   datauri: 'base64', // 'base64'|'enc'|'unenc'
   js2svg: {
@@ -83,7 +83,7 @@ Instead of configuring SVGO from scratch, you can tweak the default preset to su
 **`svgo.config.js`**
 
 ```js
-module.exports = {
+export default {
   plugins: [
     {
       name: 'preset-default',
@@ -112,9 +112,9 @@ You can also specify custom plugins:
 **`svgo.config.js`**
 
 ```js
-const importedPlugin = require('./imported-plugin');
+import importedPlugin from './imported-plugin';
 
-module.exports = {
+export default {
   plugins: [
     // plugin imported from another JavaScript file
     importedPlugin,
@@ -140,7 +140,7 @@ SVGO provides a few low level utilities.
 The core of SVGO is `optimize` function.
 
 ```js
-const { optimize } = require('svgo');
+import { optimize } from 'svgo';
 
 const result = optimize(svgString, {
   path: 'path-to.svg', // recommended
@@ -155,7 +155,7 @@ const optimizedSvgString = result.data;
 If you write a tool on top of SVGO you may want to resolve the `svgo.config.js` file.
 
 ```js
-const { loadConfig } = require('svgo');
+import { loadConfig } from 'svgo';
 
 const config = await loadConfig();
 ```

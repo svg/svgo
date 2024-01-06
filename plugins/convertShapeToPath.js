@@ -1,14 +1,12 @@
-'use strict';
+import { stringifyPathData } from '../lib/path.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
-const { stringifyPathData } = require('../lib/path.js');
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'convertShapeToPath';
-exports.description = 'converts basic shapes to more compact path form';
+export const name = 'convertShapeToPath';
+export const description = 'converts basic shapes to more compact path form';
 
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
@@ -21,9 +19,9 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types').Plugin<'convertShapeToPath'>}
+ * @type {import('./plugins-types.js').Plugin<'convertShapeToPath'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { convertArcs = false, floatPrecision: precision } = params;
 
   return {

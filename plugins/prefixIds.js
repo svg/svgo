@@ -1,15 +1,13 @@
-'use strict';
+import * as csstree from 'css-tree';
+import { referencesProps } from './_collections.js';
 
 /**
  * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-const csstree = require('css-tree');
-const { referencesProps } = require('./_collections.js');
-
-exports.name = 'prefixIds';
-exports.description = 'prefix IDs';
+export const name = 'prefixIds';
+export const description = 'prefix IDs';
 
 /**
  * extract basename from path
@@ -118,9 +116,9 @@ const generatePrefix = (body, node, info, prefixGenerator, delim, history) => {
  * Prefixes identifiers
  *
  * @author strarsis <strarsis@gmail.com>
- * @type {import('./plugins-types').Plugin<'prefixIds'>}
+ * @type {import('./plugins-types.js').Plugin<'prefixIds'>}
  */
-exports.fn = (_root, params, info) => {
+export const fn = (_root, params, info) => {
   const {
     delim = '__',
     prefix,

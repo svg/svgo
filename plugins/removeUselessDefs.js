@@ -1,27 +1,29 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { elemsGroups } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-const { elemsGroups } = require('./_collections.js');
-
-exports.name = 'removeUselessDefs';
-exports.description = 'removes elements in <defs> without id';
+export const name = 'removeUselessDefs';
+export const description = 'removes elements in <defs> without id';
 
 /**
  * Removes content of defs and properties that aren't rendered directly without ids.
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types').Plugin<'removeUselessDefs'>}
+ * @type {import('./plugins-types.js').Plugin<'removeUselessDefs'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {
-        if (node.name === 'defs') {
+        if (
+          node.name === 'defs' ||
+          (elemsGroups.nonRendering.has(node.name) &&
+            node.attributes.id == null)
+        ) {
           /**
            * @type {XastElement[]}
            */
@@ -38,11 +40,6 @@ exports.fn = () => {
             });
           }
           node.children = usefulNodes;
-        } else if (
-          elemsGroups.nonRendering.has(node.name) &&
-          node.attributes.id == null
-        ) {
-          detachNodeFromParent(node, parentNode);
         }
       },
     },

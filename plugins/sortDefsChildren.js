@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'sortDefsChildren';
-exports.description = 'Sorts children of <defs> to improve compression';
+export const name = 'sortDefsChildren';
+export const description = 'Sorts children of <defs> to improve compression';
 
 /**
  * Sorts children of defs in order to improve compression.
@@ -9,9 +7,9 @@ exports.description = 'Sorts children of <defs> to improve compression';
  *
  * @author David Leston
  *
- * @type {import('./plugins-types').Plugin<'sortDefsChildren'>}
+ * @type {import('./plugins-types.js').Plugin<'sortDefsChildren'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {

@@ -47,7 +47,6 @@ jobs:
           - 20
           - 18
           - 16
-          - 14
         os:
           - ubuntu-latest
           - windows-latest
@@ -61,4 +60,4 @@ jobs:
       - run: yarn install
       - run: yarn playwright install --with-deps chromium
       - run: yarn test
-      - run: yarn test-browser
+      - run: yarn test-bundles

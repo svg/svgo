@@ -1,9 +1,7 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeDesc';
-exports.description = 'removes <desc>';
+export const name = 'removeDesc';
+export const description = 'removes <desc>';
 
 const standardDescs = /^(Created with|Created using)/;
 
@@ -16,9 +14,9 @@ const standardDescs = /^(Created with|Created using)/;
  *
  * @author Daniel Wabyick
  *
- * @type {import('./plugins-types').Plugin<'removeDesc'>}
+ * @type {import('./plugins-types.js').Plugin<'removeDesc'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { removeAny = false } = params;
   return {
     element: {

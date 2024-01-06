@@ -1,9 +1,10 @@
 {
   "packageManager": "yarn@2.4.3",
   "name": "svgo",
-  "version": "3.1.0",
+  "version": "3.3.0",
   "description": "Nodejs-based tool for optimizing SVG vector graphics files",
   "license": "MIT",
+  "type": "module",
   "keywords": [
     "svgo",
     "svg",
@@ -50,8 +51,12 @@
     "url": "https://opencollective.com/svgo"
   },
   "main": "./lib/svgo-node.js",
-  "bin": "./bin/svgo",
+  "bin": "./bin/svgo.js",
   "types": "./lib/svgo.d.ts",
+  "exports": {
+    "require": "./dist/svgo-node.cjs",
+    "default": "./lib/svgo-node.js"
+  },
   "files": [
     "bin",
     "lib",
@@ -67,10 +72,11 @@
     "lint": "eslint --ignore-path .gitignore . && prettier --check . --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write . --ignore-path .gitignore",
     "typecheck": "tsc",
-    "test-browser": "rollup -c && node ./test/browser.js",
+    "generate-bundles": "rollup -c",
+    "test-bundles": "yarn generate-bundles && node ./test/svgo.cjs && node ./test/browser.js",
     "test-regression": "node ./test/regression-extract.js && NO_DIFF=1 node ./test/regression.js",
-    "prepublishOnly": "rm -rf dist && rollup -c",
-    "qa": "yarn lint && yarn typecheck && yarn test && yarn test-browser && yarn test-regression"
+    "prepublishOnly": "rm -rf dist && yarn generate-bundles",
+    "qa": "yarn lint && yarn typecheck && yarn test && yarn test-bundles && yarn test-regression"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
@@ -87,8 +93,9 @@
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-node-resolve": "^14.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "@types/css-tree": "^2.3.4",
     "@types/csso": "^5.0.4",
     "@types/jest": "^29.5.5",
@@ -100,8 +107,7 @@
     "playwright": "^1.40.1",
     "pngjs": "^7.0.0",
     "prettier": "^3.1.1",
-    "rollup": "^2.79.1",
-    "rollup-plugin-terser": "^7.0.2",
+    "rollup": "^4.9.2",
     "tar-stream": "^3.1.6",
     "typescript": "^5.3.3"
   }

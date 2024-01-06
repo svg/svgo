@@ -1,39 +1,27 @@
-'use strict';
+import { path2js, js2path } from './_path.js';
+import { pathElems } from './_collections.js';
+import { applyTransforms } from './applyTransforms.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { visit } from '../lib/xast.js';
+import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib//types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { visit } = require('../lib/xast.js');
-const { pathElems } = require('./_collections.js');
-const { path2js, js2path } = require('./_path.js');
-const { applyTransforms } = require('./applyTransforms.js');
-const { cleanupOutData } = require('../lib/svgo/tools');
-
-exports.name = 'convertPathData';
-exports.description =
+export const name = 'convertPathData';
+export const description =
   'optimizes path data: writes in shorter form, applies transformations';
 
-/**
- * @type {(data: number[]) => number[]}
- */
+/** @type {(data: number[]) => number[]} */
 let roundData;
-/**
- * @type {number | false}
- */
+/** @type {number | false} */
 let precision;
-/**
- * @type {number}
- */
+/** @type {number} */
 let error;
-/**
- * @type {number}
- */
+/** @type {number} */
 let arcThreshold;
-/**
- * @type {number}
- */
+/** @type {number} */
 let arcTolerance;
 
 /**
@@ -45,6 +33,7 @@ let arcTolerance;
  *     tolerance: number,
  *   },
  *   straightCurves: boolean,
+ *   convertToQ: boolean,
  *   lineShorthands: boolean,
  *   convertToZ: boolean,
  *   curveSmoothShorthands: boolean,
@@ -84,9 +73,9 @@ let arcTolerance;
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertPathData'>}
+ * @type {import('./plugins-types.js').Plugin<'convertPathData'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     // TODO convert to separate plugin in v3
     applyTransforms: _applyTransforms = true,
@@ -96,6 +85,7 @@ exports.fn = (root, params) => {
       tolerance: 0.5, // percentage of radius
     },
     straightCurves = true,
+    convertToQ = true,
     lineShorthands = true,
     convertToZ = true,
     curveSmoothShorthands = true,
@@ -119,6 +109,7 @@ exports.fn = (root, params) => {
     applyTransformsStroked,
     makeArcs,
     straightCurves,
+    convertToQ,
     lineShorthands,
     convertToZ,
     curveSmoothShorthands,
@@ -393,16 +384,17 @@ function filters(
   params,
   { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid },
 ) {
-  var stringify = data2Path.bind(null, params),
-    relSubpoint = [0, 0],
-    pathBase = [0, 0],
-    prev = {};
+  const stringify = data2Path.bind(null, params);
+  const relSubpoint = [0, 0];
+  const pathBase = [0, 0];
+  /** @type {any} */
+  let prev = {};
   /** @type {Point | undefined} */
-  let qControlPoint;
+  let prevQControlPoint;
 
   path = path.filter(function (item, index, path) {
-    const qPoint = qControlPoint;
-    qControlPoint = undefined;
+    const qControlPoint = prevQControlPoint;
+    prevQControlPoint = undefined;
 
     let command = item.command;
     let data = item.args;
@@ -415,9 +407,8 @@ function filters(
       if (command === 's') {
         sdata = [0, 0].concat(data);
 
-        // @ts-ignore
-        var pdata = prev.args,
-          n = pdata.length;
+        const pdata = prev.args;
+        const n = pdata.length;
 
         // (-x, -y) of the prev tangent point relative to the current point
         sdata[0] = pdata[n - 2] - pdata[n - 4];
@@ -464,16 +455,11 @@ function filters(
           nextLonghand;
 
         if (
-          // @ts-ignore
           (prev.command == 'c' &&
-            // @ts-ignore
             isConvex(prev.args) &&
-            // @ts-ignore
             isArcPrev(prev.args, circle)) ||
-          // @ts-ignore
           (prev.command == 'a' && prev.sdata && isArcPrev(prev.sdata, circle))
         ) {
-          // @ts-ignore
           arcCurves.unshift(prev);
           // @ts-ignore
           arc.base = prev.base;
@@ -481,7 +467,6 @@ function filters(
           arc.args[5] = arc.coords[0] - arc.base[0];
           // @ts-ignore
           arc.args[6] = arc.coords[1] - arc.base[1];
-          // @ts-ignore
           var prevData = prev.command == 'a' ? prev.sdata : prev.args;
           var prevAngle = findArcAngle(prevData, {
             center: [
@@ -498,7 +483,7 @@ function filters(
         // check if next curves are fitting the arc
         for (
           var j = index;
-          (next = path[++j]) && ~'cs'.indexOf(next.command);
+          (next = path[++j]) && (next.command === 'c' || next.command === 's');
 
         ) {
           var nextData = next.args;
@@ -574,7 +559,6 @@ function filters(
             relSubpoint[0] += prevArc.args[5] - prev.args[prev.args.length - 2];
             // @ts-ignore
             relSubpoint[1] += prevArc.args[6] - prev.args[prev.args.length - 1];
-            // @ts-ignore
             prev.command = 'a';
             // @ts-ignore
             prev.args = prevArc.args;
@@ -588,11 +572,7 @@ function filters(
             item.sdata = sdata.slice(); // preserve curve data for future checks
           } else if (arcCurves.length - 1 - hasPrev > 0) {
             // filter out consumed next items
-            path.splice.apply(
-              path,
-              // @ts-ignore
-              [index + 1, arcCurves.length - 1 - hasPrev].concat(output),
-            );
+            path.splice(index + 1, arcCurves.length - 1 - hasPrev, ...output);
           }
           if (!arc) return false;
           command = 'a';
@@ -679,9 +659,7 @@ function filters(
           data = data.slice(-2);
         } else if (
           command === 't' &&
-          // @ts-ignore
           prev.command !== 'q' &&
-          // @ts-ignore
           prev.command !== 't'
         ) {
           command = 'l';
@@ -694,6 +672,44 @@ function filters(
         ) {
           command = 'l';
           data = data.slice(-2);
+        }
+      }
+
+      // degree-lower c to q when possible
+      // m 0 12 C 4 4 8 4 12 12 → M 0 12 Q 6 0 12 12
+      if (params.convertToQ && command == 'c') {
+        const x1 =
+          // @ts-ignore
+          0.75 * (item.base[0] + data[0]) - 0.25 * item.base[0];
+        const x2 =
+          // @ts-ignore
+          0.75 * (item.base[0] + data[2]) - 0.25 * (item.base[0] + data[4]);
+        if (Math.abs(x1 - x2) < error * 2) {
+          const y1 =
+            // @ts-ignore
+            0.75 * (item.base[1] + data[1]) - 0.25 * item.base[1];
+          const y2 =
+            // @ts-ignore
+            0.75 * (item.base[1] + data[3]) - 0.25 * (item.base[1] + data[5]);
+          if (Math.abs(y1 - y2) < error * 2) {
+            const newData = data.slice();
+            newData.splice(
+              0,
+              4,
+              // @ts-ignore
+              x1 + x2 - item.base[0],
+              // @ts-ignore
+              y1 + y2 - item.base[1],
+            );
+            roundData(newData);
+            const originalLength = cleanupOutData(data, params).length,
+              newLength = cleanupOutData(newData, params).length;
+            if (newLength < originalLength) {
+              command = 'q';
+              data = newData;
+              if (next && next.command == 's') makeLonghand(next, data); // fix up next curve
+            }
+          }
         }
       }
 
@@ -716,39 +732,29 @@ function filters(
         params.collapseRepeated &&
         hasMarkerMid === false &&
         (command === 'm' || command === 'h' || command === 'v') &&
-        // @ts-ignore
         prev.command &&
-        // @ts-ignore
         command == prev.command.toLowerCase() &&
         ((command != 'h' && command != 'v') ||
-          // @ts-ignore
           prev.args[0] >= 0 == data[0] >= 0)
       ) {
-        // @ts-ignore
         prev.args[0] += data[0];
         if (command != 'h' && command != 'v') {
-          // @ts-ignore
           prev.args[1] += data[1];
         }
         // @ts-ignore
         prev.coords = item.coords;
-        // @ts-ignore
         path[index] = prev;
         return false;
       }
 
       // convert curves into smooth shorthands
-      // @ts-ignore
       if (params.curveSmoothShorthands && prev.command) {
         // curveto
         if (command === 'c') {
           // c + c → c + s
           if (
-            // @ts-ignore
             prev.command === 'c' &&
-            // @ts-ignore
             Math.abs(data[0] - -(prev.args[2] - prev.args[4])) < error &&
-            // @ts-ignore
             Math.abs(data[1] - -(prev.args[3] - prev.args[5])) < error
           ) {
             command = 's';
@@ -757,11 +763,8 @@ function filters(
 
           // s + c → s + s
           else if (
-            // @ts-ignore
             prev.command === 's' &&
-            // @ts-ignore
             Math.abs(data[0] - -(prev.args[0] - prev.args[2])) < error &&
-            // @ts-ignore
             Math.abs(data[1] - -(prev.args[1] - prev.args[3])) < error
           ) {
             command = 's';
@@ -770,9 +773,7 @@ function filters(
 
           // [^cs] + c → [^cs] + s
           else if (
-            // @ts-ignore
             prev.command !== 'c' &&
-            // @ts-ignore
             prev.command !== 's' &&
             Math.abs(data[0]) < error &&
             Math.abs(data[1]) < error
@@ -786,11 +787,8 @@ function filters(
         else if (command === 'q') {
           // q + q → q + t
           if (
-            // @ts-ignore
             prev.command === 'q' &&
-            // @ts-ignore
             Math.abs(data[0] - (prev.args[2] - prev.args[0])) < error &&
-            // @ts-ignore
             Math.abs(data[1] - (prev.args[3] - prev.args[1])) < error
           ) {
             command = 't';
@@ -798,12 +796,13 @@ function filters(
           }
 
           // t + q → t + t
-          else if (
-            // @ts-ignore
-            prev.command === 't'
-          ) {
-            // @ts-ignore
-            const predictedControlPoint = reflectPoint(qPoint, item.base);
+          else if (prev.command === 't') {
+            const predictedControlPoint = reflectPoint(
+              // @ts-ignore
+              qControlPoint,
+              // @ts-ignore
+              item.base,
+            );
             const realControlPoint = [
               // @ts-ignore
               data[0] + item.base[0],
@@ -837,14 +836,12 @@ function filters(
             return i === 0;
           })
         ) {
-          // @ts-ignore
           path[index] = prev;
           return false;
         }
 
         // a 25,25 -30 0,1 0,0
         if (command === 'a' && data[5] === 0 && data[6] === 0) {
-          // @ts-ignore
           path[index] = prev;
           return false;
         }
@@ -874,7 +871,6 @@ function filters(
       // z resets coordinates
       relSubpoint[0] = pathBase[0];
       relSubpoint[1] = pathBase[1];
-      // @ts-ignore
       if (prev.command === 'Z' || prev.command === 'z') return false;
     }
     if (
@@ -890,14 +886,14 @@ function filters(
 
     if (command === 'q') {
       // @ts-ignore
-      qControlPoint = [data[0] + item.base[0], data[1] + item.base[1]];
+      prevQControlPoint = [data[0] + item.base[0], data[1] + item.base[1]];
     } else if (command === 't') {
-      if (qPoint) {
+      if (qControlPoint) {
         // @ts-ignore
-        qControlPoint = reflectPoint(qPoint, item.base);
+        prevQControlPoint = reflectPoint(qControlPoint, item.base);
       } else {
         // @ts-ignore
-        qControlPoint = item.coords;
+        prevQControlPoint = item.coords;
       }
     }
     prev = item;
@@ -971,8 +967,9 @@ function convertToMixed(path, params) {
           prev.command.charCodeAt(0) > 96 &&
           absoluteDataStr.length == relativeDataStr.length - 1 &&
           (data[0] < 0 ||
-            // @ts-ignore
-            (/^0\./.test(data[0]) && prev.args[prev.args.length - 1] % 1))
+            (Math.floor(data[0]) === 0 &&
+              !Number.isInteger(data[0]) &&
+              prev.args[prev.args.length - 1] % 1))
         ))
     ) {
       // @ts-ignore
@@ -981,7 +978,6 @@ function convertToMixed(path, params) {
     }
 
     prev = item;
-
     return true;
   });
 
@@ -1048,16 +1044,6 @@ function getIntersection(coords) {
 }
 
 /**
- * Does the same as `Number.prototype.toFixed` but without casting
- * the return value to a string.
- * @type {(num: number, precision: number) => number}
- */
-function toFixed(num, precision) {
-  const pow = 10 ** precision;
-  return Math.round(num * pow) / pow;
-}
-
-/**
  * Decrease accuracy of floating-point numbers
  * in path data keeping a specified number of decimals.
  * Smart rounds values like 2.3491 to 2.35 instead of 2.349.
@@ -1098,7 +1084,6 @@ function round(data) {
  *
  * @type {(data: number[]) => boolean}
  */
-
 function isCurveStraightLine(data) {
   // Get line equation a·x + b·y + c = 0 coefficients a, b (c = 0) by start and end points.
   var i = data.length - 2,
@@ -1125,7 +1110,6 @@ function isCurveStraightLine(data) {
  */
 function calculateSagitta(data) {
   if (data[3] === 1) return undefined;
-
   const [rx, ry] = data;
   if (Math.abs(rx - ry) > error) return undefined;
   const chord = Math.sqrt(data[5] ** 2 + data[6] ** 2);
@@ -1138,7 +1122,6 @@ function calculateSagitta(data) {
  *
  * @type {(item: PathDataItem, data: number[]) => PathDataItem}
  */
-
 function makeLonghand(item, data) {
   switch (item.command) {
     case 's':
@@ -1160,20 +1143,19 @@ function makeLonghand(item, data) {
  *
  * @type {(point1: Point, point2: Point) => number}
  */
-
 function getDistance(point1, point2) {
-  return Math.hypot(point1[0] - point2[0], point1[1] - point2[1]);
+  return Math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2);
 }
 
 /**
- * Reflects point across another point
+ * Reflects point across another point.
  *
- * @param {Point} input
+ * @param {Point} controlPoint
  * @param {Point} base
  * @returns {Point}
  */
-function reflectPoint(input, base) {
-  return [2 * base[0] - input[0], 2 * base[1] - input[1]];
+function reflectPoint(controlPoint, base) {
+  return [2 * base[0] - controlPoint[0], 2 * base[1] - controlPoint[1]];
 }
 
 /**
@@ -1183,7 +1165,6 @@ function reflectPoint(input, base) {
  *
  * @type {(curve: number[], t: number) => Point}
  */
-
 function getCubicBezierPoint(curve, t) {
   var sqrT = t * t,
     cubT = sqrT * t,
@@ -1201,7 +1182,6 @@ function getCubicBezierPoint(curve, t) {
  *
  * @type {(curve: number[]) => undefined | Circle}
  */
-
 function findCircle(curve) {
   var midPoint = getCubicBezierPoint(curve, 1 / 2),
     m1 = [midPoint[0] / 2, midPoint[1] / 2],
@@ -1242,7 +1222,6 @@ function findCircle(curve) {
  *
  * @type {(curve: number[], circle: Circle) => boolean}
  */
-
 function isArc(curve, circle) {
   var tolerance = Math.min(
     arcThreshold * error,
@@ -1264,7 +1243,6 @@ function isArc(curve, circle) {
  *
  * @type {(curve: number[], circle: Circle) => boolean}
  */
-
 function isArcPrev(curve, circle) {
   return isArc(curve, {
     center: [circle.center[0] + curve[4], circle.center[1] + curve[5]],
@@ -1277,7 +1255,6 @@ function isArcPrev(curve, circle) {
 
  * @type {(curve: number[], relCircle: Circle) => number}
  */
-
 function findArcAngle(curve, relCircle) {
   var x1 = -relCircle.center[0],
     y1 = -relCircle.center[1],
@@ -1294,7 +1271,6 @@ function findArcAngle(curve, relCircle) {
  *
  * @type {(params: InternalParams, pathData: PathDataItem[]) => string}
  */
-
 function data2Path(params, pathData) {
   return pathData.reduce(function (pathString, item) {
     var strData = '';

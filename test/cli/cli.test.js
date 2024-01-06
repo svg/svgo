@@ -1,12 +1,13 @@
-'use strict';
-
 /**
  * @typedef {import('child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams
  */
 
-const fs = require('fs');
-const path = require('path');
-const { spawn } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @type {(proc: ChildProcessWithoutNullStreams) => Promise<string>}
@@ -47,7 +48,7 @@ test('accepts svg as input stream', async () => {
   proc.stdin.write('<svg><title>stdin</title></svg>');
   proc.stdin.end();
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>');
+  expect(stdout).toBe('<svg/>');
 });
 
 test('accepts svg as string', async () => {
@@ -58,7 +59,7 @@ test('accepts svg as string', async () => {
     { cwd: __dirname },
   );
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>');
+  expect(stdout).toBe('<svg/>');
 });
 
 test('accepts svg as filename', async () => {
@@ -72,7 +73,7 @@ test('accepts svg as filename', async () => {
     path.join(__dirname, 'output/single.svg'),
     'utf-8',
   );
-  expect(output).toEqual('<svg/>');
+  expect(output).toBe('<svg/>');
 });
 
 test('output as stream when "-" is specified', async () => {
@@ -82,7 +83,7 @@ test('output as stream when "-" is specified', async () => {
     { cwd: __dirname },
   );
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>');
+  expect(stdout).toBe('<svg/>');
 });
 
 test('should exit with 1 code on syntax error', async () => {
@@ -101,9 +102,9 @@ test('should exit with 1 code on syntax error', async () => {
       });
     }),
   ]);
-  expect(code).toEqual(1);
+  expect(code).toBe(1);
   expect(stderr)
-    .toEqual(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
+    .toBe(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
 
   1 | <svg>
 > 2 |   <rect x="0" y="0" width=10" height="20" />

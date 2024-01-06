@@ -1,18 +1,19 @@
-'use strict';
-
-/**
- * @typedef {import('../lib/types').XastElement} XastElement
- */
-
-const { cleanupOutData } = require('../lib/svgo/tools.js');
-const {
+import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
+import {
   transform2js,
   transformsMultiply,
   matrixToTransform,
-} = require('./_transforms.js');
+} from './_transforms.js';
 
-exports.name = 'convertTransform';
-exports.description = 'collapses multiple transformations and optimizes it';
+/**
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
+
+export const name = 'convertTransform';
+export const description =
+  'collapses multiple transformations and optimizes it';
 
 /**
  * Convert matrices to the short aliases,
@@ -24,9 +25,9 @@ exports.description = 'collapses multiple transformations and optimizes it';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertTransform'>}
+ * @type {import('./plugins-types.js').Plugin<'convertTransform'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     convertToShorts = true,
     // degPrecision = 3, // transformPrecision (or matrix precision) - 2 by default
@@ -59,15 +60,14 @@ exports.fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        // transform
         if (node.attributes.transform != null) {
           convertTransform(node, 'transform', newParams);
         }
-        // gradientTransform
+
         if (node.attributes.gradientTransform != null) {
           convertTransform(node, 'gradientTransform', newParams);
         }
-        // patternTransform
+
         if (node.attributes.patternTransform != null) {
           convertTransform(node, 'patternTransform', newParams);
         }
@@ -98,9 +98,9 @@ exports.fn = (_root, params) => {
  */
 
 /**
- * Main function.
- *
- * @type {(item: XastElement, attrName: string, params: TransformParams) => void}
+ * @param {XastElement} item
+ * @param {string} attrName
+ * @param {TransformParams} params
  */
 const convertTransform = (item, attrName, params) => {
   let data = transform2js(item.attributes[attrName]);
@@ -145,7 +145,7 @@ const definePrecision = (data, { ...newParams }) => {
       matrixData.push(...item.data.slice(0, 4));
     }
   }
-  let significantDigits = newParams.transformPrecision;
+  let numberOfDigits = newParams.transformPrecision;
   // Limit transform precision with matrix one. Calculating with larger precision doesn't add any value.
   if (matrixData.length) {
     newParams.transformPrecision = Math.min(
@@ -153,7 +153,7 @@ const definePrecision = (data, { ...newParams }) => {
       Math.max.apply(Math, matrixData.map(floatDigits)) ||
         newParams.transformPrecision,
     );
-    significantDigits = Math.max.apply(
+    numberOfDigits = Math.max.apply(
       Math,
       matrixData.map(
         (n) => n.toString().replace(/\D+/g, '').length, // Number of digits in a number. 123.45 → 5
@@ -164,7 +164,7 @@ const definePrecision = (data, { ...newParams }) => {
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
-      Math.min(newParams.floatPrecision, significantDigits - 2),
+      Math.min(newParams.floatPrecision, numberOfDigits - 2),
     );
   }
   return newParams;
@@ -219,11 +219,13 @@ const floatDigits = (n) => {
 /**
  * Convert transforms to the shorthand alternatives.
  *
- * @type {(transforms: TransformItem[], params: TransformParams) => TransformItem[]}
+ * @param {TransformItem[]} transforms
+ * @param {TransformParams} params
+ * @returns {TransformItem[]}
  */
 const convertToShorts = (transforms, params) => {
   for (var i = 0; i < transforms.length; i++) {
-    var transform = transforms[i];
+    let transform = transforms[i];
 
     // convert matrix to the short aliases
     if (params.matrixToTransform && transform.name === 'matrix') {
@@ -267,8 +269,7 @@ const convertToShorts = (transforms, params) => {
     // translate(cx cy) rotate(a) translate(-cx -cy) → rotate(a cx cy)
     if (
       params.shortRotate &&
-      transforms[i - 2] &&
-      transforms[i - 2].name === 'translate' &&
+      transforms[i - 2]?.name === 'translate' &&
       transforms[i - 1].name === 'rotate' &&
       transforms[i].name === 'translate' &&
       transforms[i - 2].data[0] === -transforms[i].data[0] &&
@@ -332,7 +333,9 @@ const removeUseless = (transforms) => {
 /**
  * Convert transforms JS representation to string.
  *
- * @type {(transformJS: TransformItem[], params: TransformParams) => string}
+ * @param {TransformItem[]} transformJS
+ * @param {TransformParams} params
+ * @returns {string}
  */
 const js2transform = (transformJS, params) => {
   const transformString = transformJS
@@ -390,7 +393,9 @@ const round = (data) => {
  * in transforms keeping a specified number of decimals.
  * Smart rounds values like 2.349 to 2.35.
  *
- * @type {(precision: number, data: number[]) => number[]}
+ * @param {number} precision
+ * @param {number[]} data
+ * @returns {number[]}
  */
 const smartRound = (precision, data) => {
   for (
@@ -399,7 +404,7 @@ const smartRound = (precision, data) => {
     i--;
 
   ) {
-    if (Number(data[i].toFixed(precision)) !== data[i]) {
+    if (toFixed(data[i], precision) !== data[i]) {
       var rounded = +data[i].toFixed(precision - 1);
       data[i] =
         +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance
@@ -407,5 +412,6 @@ const smartRound = (precision, data) => {
           : rounded;
     }
   }
+
   return data;
 };
