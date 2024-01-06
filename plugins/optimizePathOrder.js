@@ -1,14 +1,14 @@
-const { computeStyle, collectStylesheet } = require('../lib/style.js');
-const { hasScripts } = require('../lib/svgo/tools.js');
-const { pathElems } = require('./_collections.js');
-const { path2js, js2path } = require('./_path.js');
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { hasScripts } from '../lib/svgo/tools.js';
+import { pathElems } from './_collections.js';
+import { js2path, path2js } from './_path.js';
 
-exports.name = 'optimizePathOrder';
-exports.description = 'Moves around instructions in paths to be optimal.';
+export const name = 'optimizePathOrder';
+export const description = 'Moves around instructions in paths to be optimal.';
 
 /**
- * @typedef {import('../lib/types').PathDataCommand} PathDataCommand
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').PathDataCommand} PathDataCommand
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  * @typedef {{command: PathDataCommand, arc?: {rx: number, ry: number, r: number, large: boolean, sweep: boolean}, c?: {x1: number, y1: number, x2: number, y2: number}, q?: {x: number, y: number}, base: [number, number], coords: [number, number]}} InternalPath
  * @typedef {PathDataItem & {base: [number, number], coords: [number, number]}} RealPath
  */
@@ -18,9 +18,9 @@ exports.description = 'Moves around instructions in paths to be optimal.';
  *
  * @author Kendell R
  *
- * @type {import('./plugins-types').Plugin<'optimizePathOrder'>}
+ * @type {import('./plugins-types.js').Plugin<'optimizePathOrder'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     floatPrecision: precision = 3,
     noSpaceAfterFlags = false,
@@ -77,10 +77,12 @@ exports.fn = (root, params) => {
 
         const parts = [];
         let part = { valid: true, data: /** @type {RealPath[]} */ ([]) };
+        let someValid = false;
         for (const instruction of path) {
           if (instruction.command == 'M' || instruction.command == 'm') {
             if (part.data.length > 0) {
               parts.push(part);
+              someValid = someValid || part.valid;
               part = { valid: true, data: [] };
             }
           }
@@ -110,12 +112,15 @@ exports.fn = (root, params) => {
         }
         if (part.data.length > 0) {
           parts.push(part);
+          someValid = someValid || part.valid;
         }
+        if (!someValid) return;
 
         /**
          * @type {PathDataItem[]}
          */
         const pathTransformed = [];
+        let someTransformed = false;
         for (const [i, part] of parts.entries()) {
           if (part.valid) {
             const internalData = part.data.filter(
@@ -183,6 +188,7 @@ exports.fn = (root, params) => {
               });
               if (result.success) {
                 pathTransformed.push(...result.data);
+                someTransformed = true;
                 continue;
               }
             }
@@ -191,6 +197,7 @@ exports.fn = (root, params) => {
           pathTransformed.push(...part.data);
         }
 
+        if (!someTransformed) return;
         js2path(node, pathTransformed, {
           floatPrecision: precision,
           noSpaceAfterFlags,
