@@ -394,7 +394,6 @@ function filters(
 
   path = path.filter(function (item, index, path) {
     const qControlPoint = prevQControlPoint;
-    prevQControlPoint = undefined;
 
     let command = item.command;
     let data = item.args;
@@ -895,6 +894,8 @@ function filters(
         // @ts-ignore
         prevQControlPoint = item.coords;
       }
+    } else {
+      prevQControlPoint = undefined;
     }
     prev = item;
     return true;
