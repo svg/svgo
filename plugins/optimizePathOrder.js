@@ -227,6 +227,8 @@ function optimizePart({
   baseline,
   precision,
 }) {
+  if (unsafeToChangeDirection && unsafeToChangeStart) return { success: false };
+
   let best = {
     success: false,
     size:
