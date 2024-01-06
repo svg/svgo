@@ -1,43 +1,18 @@
 Don't collapse group with a single child unless all attributes can be moved to the child.
+See issue #1928 for context.
 
 ===
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <defs>
-        <linearGradient xlink:href="#a" id="c" x1="3.97" x2="3.97" y1=".348" y2="4.34" gradientUnits="userSpaceOnUse"/>
-    </defs>
-    <filter id="b">
-        <feGaussianBlur stdDeviation="1"/>
-    </filter>
-    <symbol viewBox="-9.5 -7 19 14">
-        <g style="filter:url(#b)">
-            <linearGradient id="a" x1="3.97" x2="3.97" y1="2.425" y2="7.55" gradientUnits="userSpaceOnUse">
-                <stop offset="1" style="stop-color:#fff"/>
-            </linearGradient>
-        </g>
-    </symbol>
-    <g transform="matrix(0 -1.2285 -1.2285 0 112.337 268.327)" style="filter:url(#b)">
-        <path d="M.84.348H7.1V5.8H3.344z" style="fill:url(#c)"/>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(20,30)" style="fill: red">
+        <rect width="20" height="20" style="fill: blue"/>
     </g>
 </svg>
 
 @@@
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <defs>
-        <linearGradient xlink:href="#a" id="c" x1="3.97" x2="3.97" y1=".348" y2="4.34" gradientUnits="userSpaceOnUse"/>
-    </defs>
-    <filter id="b">
-        <feGaussianBlur stdDeviation="1"/>
-    </filter>
-    <symbol viewBox="-9.5 -7 19 14">
-        <g style="filter:url(#b)">
-            <linearGradient id="a" x1="3.97" x2="3.97" y1="2.425" y2="7.55" gradientUnits="userSpaceOnUse">
-                <stop offset="1" style="stop-color:#fff"/>
-            </linearGradient>
-        </g>
-    </symbol>
-    <g transform="matrix(0 -1.2285 -1.2285 0 112.337 268.327)" style="filter:url(#b)">
-        <path d="M.84.348H7.1V5.8H3.344z" style="fill:url(#c)"/>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(20,30)" style="fill: red">
+        <rect width="20" height="20" style="fill: blue"/>
     </g>
 </svg>
