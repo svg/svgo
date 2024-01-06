@@ -19,8 +19,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const width = 960;
 const height = 720;
 
-const FILE_PATTERN = new RegExp('media-flash');
-// const FILE_PATTERN = new RegExp('.*');
+const FILE_PATTERN = new RegExp('.*');
 let configFileName;
 const DEFAULT_CONFIG = {
   floatPrecision: 4,
