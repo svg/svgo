@@ -1,4 +1,5 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
+import { includesUrlReference } from '../lib/svgo/tools.js';
 
 export const name = 'convertColors';
 export const description =
@@ -67,6 +68,7 @@ export const fn = (_root, params) => {
     currentColor = false,
     names2hex = true,
     rgb2hex = true,
+    convertCase = 'lower',
     shorthex = true,
     shortname = true,
   } = params;
@@ -89,7 +91,7 @@ export const fn = (_root, params) => {
                 matched = val !== 'none';
               }
               if (matched) {
-                val = 'currentColor';
+                val = 'currentcolor';
               }
             }
 
@@ -118,9 +120,17 @@ export const fn = (_root, params) => {
               }
             }
 
+            if (convertCase && !includesUrlReference(val)) {
+              if (convertCase === 'lower') {
+                val = val.toLowerCase();
+              } else if (convertCase === 'upper') {
+                val = val.toUpperCase();
+              }
+            }
+
             // convert long hex to short hex
             if (shorthex) {
-              let match = val.match(regHEX);
+              let match = regHEX.exec(val);
               if (match != null) {
                 val = '#' + match[0][1] + match[0][3] + match[0][5];
               }

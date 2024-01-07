@@ -29,6 +29,7 @@ type DefaultPlugins = {
     currentColor?: boolean | string | RegExp;
     names2hex?: boolean;
     rgb2hex?: boolean;
+    convertCase?: false | 'lower' | 'upper';
     shorthex?: boolean;
     shortname?: boolean;
   };
