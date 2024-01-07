@@ -9,33 +9,6 @@ export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
 
 /**
- * @param {XastElement} node
- * @param {XastElement} firstChild
- * @returns boolean
- */
-function canMoveAttributesToSingleChild(node, firstChild) {
-  for (const [name, value] of Object.entries(node.attributes)) {
-    // avoid copying to not conflict with animated attribute
-    if (hasAnimatedAttr(firstChild, name)) {
-      return false;
-    }
-    if (firstChild.attributes[name] == null) {
-      continue;
-    } else if (name === 'transform') {
-      continue;
-    } else if (firstChild.attributes[name] === 'inherit') {
-      continue;
-    } else if (
-      inheritableAttrs.has(name) === false &&
-      firstChild.attributes[name] !== value
-    ) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/**
  * @type {(node: XastNode, name: string) => boolean}
  */
 const hasAnimatedAttr = (node, name) => {
@@ -108,20 +81,30 @@ export const fn = () => {
                 node.attributes.transform == null &&
                 firstChild.attributes.transform == null))
           ) {
-            if (!canMoveAttributesToSingleChild(node, firstChild)) {
-              return;
-            }
+            const newChildElemAttrs = { ...firstChild.attributes };
+
             for (const [name, value] of Object.entries(node.attributes)) {
-              if (firstChild.attributes[name] == null) {
-                firstChild.attributes[name] = value;
-              } else if (name === 'transform') {
-                firstChild.attributes[name] =
-                  value + ' ' + firstChild.attributes[name];
-              } else if (firstChild.attributes[name] === 'inherit') {
-                firstChild.attributes[name] = value;
+              // avoid copying to not conflict with animated attribute
+              if (hasAnimatedAttr(firstChild, name)) {
+                return;
               }
-              delete node.attributes[name];
+
+              if (newChildElemAttrs[name] == null) {
+                newChildElemAttrs[name] = value;
+              } else if (name === 'transform') {
+                newChildElemAttrs[name] = value + ' ' + newChildElemAttrs[name];
+              } else if (newChildElemAttrs[name] === 'inherit') {
+                newChildElemAttrs[name] = value;
+              } else if (
+                !inheritableAttrs.has(name) &&
+                newChildElemAttrs[name] !== value
+              ) {
+                return;
+              }
             }
+
+            node.attributes = {};
+            firstChild.attributes = newChildElemAttrs;
           }
         }
 
