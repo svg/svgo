@@ -86,8 +86,9 @@ export const fn = (root) => {
           }
         }
 
-        // preserve transform on children when group has clip-path or mask
+        // preserve transform on children when group has filter or clip-path or mask
         if (
+          node.attributes['filter'] != null ||
           node.attributes['clip-path'] != null ||
           node.attributes.mask != null
         ) {

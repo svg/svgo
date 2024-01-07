@@ -1,0 +1,47 @@
+Don't move transform if there is a filter attribute on group.
+
+===
+
+<svg width="320" height="320" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter1_i_18_3767)">
+        <rect x="19.087" y="12.7969" width="14" height="6" rx="3" transform="rotate(31.3889 19.087 12.7969)" fill="#DE773D"/>
+        <rect x="19.087" y="12.7969" width="14" height="6" rx="3" transform="rotate(31.3889 19.087 12.7969)" fill="url(#paint8_radial_18_3767)"/>
+    </g>
+    <defs>
+        <filter id="filter1_i_18_3767" x="17.085" y="13.7699" width="12.9801" height="10.3176" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+            <feOffset dx="0.15" dy="-0.15"/>
+            <feGaussianBlur stdDeviation="0.5"/>
+            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+        </filter>
+        <radialGradient id="paint8_radial_18_3767" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28.5912 19.9011) rotate(-84.3783) scale(5.08751 7.13795)">
+            <stop offset="0.175294" stop-color="#983C50"/>
+            <stop offset="1" stop-color="#983C50" stop-opacity="0"/>
+        </radialGradient>
+    </defs>
+</svg>
+
+@@@
+
+<svg width="320" height="320" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter1_i_18_3767)">
+        <rect x="19.087" y="12.7969" width="14" height="6" rx="3" transform="rotate(31.3889 19.087 12.7969)" fill="#DE773D"/>
+        <rect x="19.087" y="12.7969" width="14" height="6" rx="3" transform="rotate(31.3889 19.087 12.7969)" fill="url(#paint8_radial_18_3767)"/>
+    </g>
+    <defs>
+        <filter id="filter1_i_18_3767" x="17.085" y="13.7699" width="12.9801" height="10.3176" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+            <feOffset dx="0.15" dy="-0.15"/>
+            <feGaussianBlur stdDeviation="0.5"/>
+            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+        </filter>
+        <radialGradient id="paint8_radial_18_3767" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28.5912 19.9011) rotate(-84.3783) scale(5.08751 7.13795)">
+            <stop offset="0.175294" stop-color="#983C50"/>
+            <stop offset="1" stop-color="#983C50" stop-opacity="0"/>
+        </radialGradient>
+    </defs>
+</svg>
