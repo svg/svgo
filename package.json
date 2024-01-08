@@ -96,7 +96,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/css-tree": "^2.3.4",
+    "@types/css-tree": "^2.3.5",
     "@types/csso": "^5.0.4",
     "@types/jest": "^29.5.5",
     "del": "^6.0.0",

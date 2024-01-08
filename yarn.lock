@@ -1091,10 +1091,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/css-tree@npm:*, @types/css-tree@npm:^2.3.4":
+"@types/css-tree@npm:*":
   version: 2.3.4
   resolution: "@types/css-tree@npm:2.3.4"
   checksum: b06173d3ae048b74e7030cceae01d3d6e5589f7348e8e4b907427f91baeda76807bbde8c5be4c41e22b952268b46edcba7ab96e16efedb2d0b37ce2bf90d1835
+  languageName: node
+  linkType: hard
+
+"@types/css-tree@npm:^2.3.5":
+  version: 2.3.5
+  resolution: "@types/css-tree@npm:2.3.5"
+  checksum: 0334d28a0fc313c237e172ca78687ed400aebf3ae4e2cb548e104de96f9c4f04a53ad162188c7f458f731c2f215439c0a3321ea20f71e1a6f76cf8f5865f8cda
   languageName: node
   linkType: hard
 
@@ -4611,7 +4618,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^15.2.3
     "@rollup/plugin-terser": ^0.4.4
     "@trysound/sax": 0.2.0
-    "@types/css-tree": ^2.3.4
+    "@types/css-tree": ^2.3.5
     "@types/csso": ^5.0.4
     "@types/jest": ^29.5.5
     commander: ^7.2.0
