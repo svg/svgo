@@ -32,12 +32,12 @@ describe('should correctly simplify transforms', () => {
 
     expect(matrixToTransform(matrix, params)).toStrictEqual([
       {
-        name: 'scale',
-        data: [99, 1],
-      },
-      {
         name: 'rotate',
         data: [-90],
+      },
+      {
+        name: 'scale',
+        data: [1, 99],
       },
     ]);
   });
@@ -50,12 +50,12 @@ describe('should correctly simplify transforms', () => {
 
     expect(matrixToTransform(matrix, params)).toStrictEqual([
       {
-        name: 'scale',
-        data: [1, -1],
+        name: 'rotate',
+        data: [90],
       },
       {
-        name: 'rotate',
-        data: [-90],
+        name: 'scale',
+        data: [1, -1],
       },
     ]);
   });

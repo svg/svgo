@@ -229,7 +229,7 @@ const convertToShorts = (transforms, params) => {
 
     // convert matrix to the short aliases
     if (params.matrixToTransform && transform.name === 'matrix') {
-      var decomposed = matrixToTransform(transform, params);
+      var decomposed = matrixToTransform(transform);
       if (
         js2transform(decomposed, params).length <=
         js2transform([transform], params).length

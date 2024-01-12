@@ -164,114 +164,105 @@ const mth = {
 
 /**
  * Decompose matrix into simple transforms.
- *
  * @param {TransformItem} transform
- * @param {TransformParams} params
  * @returns {TransformItem[]}
- * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ * @see {https} ://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  */
-export const matrixToTransform = (transform, params) => {
-  const floatPrecision = params.floatPrecision;
+export const matrixToTransform = (transform) => {
+  //   const floatPrecision = params.floatPrecision;
   const data = transform.data;
+
+  // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
+  const a = data[0];
+  const b = data[1];
+  const c = data[2];
+  const d = data[3];
+  const e = data[4];
+  const f = data[5];
+  const delta = a * d - b * c;
+  if (delta === 0) {
+    return [transform];
+  }
+  const r = Math.hypot(a, b);
+  if (r === 0) {
+    return [transform];
+  }
+  const angle_cos = a / r;
   const transforms = [];
 
   // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
-  if (data[4] || data[5]) {
+  if (e || f) {
     transforms.push({
       name: 'translate',
-      data: data.slice(4, data[5] ? 6 : 5),
+      data: e === f ? [e] : [e, f],
     });
   }
 
-  let sx = toFixed(Math.hypot(data[0], data[1]), params.transformPrecision);
-  let sy = toFixed(
-    (data[0] * data[3] - data[1] * data[2]) / sx,
-    params.transformPrecision,
-  );
-  const colsSum = data[0] * data[2] + data[1] * data[3];
-  const rowsSum = data[0] * data[1] + data[2] * data[3];
-  const scaleBefore = rowsSum !== 0 || sx === sy;
+  let invertScale = false;
+  if (angle_cos === -1) {
+    // 180 degree angle; leave off the rotate, but invert the scaling.
+    invertScale = true;
+  } else if (angle_cos !== 1) {
+    const degrees = mth.deg(Math.acos(angle_cos));
+    transforms.push({
+      name: 'rotate',
+      data: [b < 0 ? -degrees : degrees],
+    });
+  }
 
-  // [sx, 0, tan(a)·sy, sy, 0, 0] → skewX(a)·scale(sx, sy)
-  if (!data[1] && data[2]) {
+  // If there is a translation and a rotation, merge them.
+  if (transforms.length === 2) {
+    // From https://www.w3.org/TR/SVG11/coords.html#TransformAttribute:
+    // We have translate(tx,ty) rotate(a). This is equivalent to [cos(a) sin(a) -sin(a) cos(a) tx ty].
+    //
+    // rotate(a,cx,cy) is equivalent to translate(cx, cy) rotate(a) translate(-cx, -cy).
+    // Multiplying the right side gives the matrix
+    //   [cos(a) sin(a) -sin(a) cos(a)
+    //   -cx * cos(a) + cy * sin(a) + cx
+    //   -cx * sin(a) - cy * cos(a) + cy
+    // ]
+    //
+    // We need cx and cy such that
+    //   tx = -cx * cos(a) + cy * sin(a) + cx
+    //   ty = -cx * sin(a) - cy * cos(a) + cy
+    //
+    // Solving these for cx and cy gives
+    //   cy = (d * ty + e * tx)/(d^2 + e^2)
+    //   cx = (tx - e * cy) / d
+    // where d = 1 - cos(a) and e = sin(a)
+
+    transforms.shift();
+    const rotate = transforms[0].data;
+    const a = (rotate[0] * Math.PI) / 180;
+    const d = 1 - Math.cos(a);
+    const e = Math.sin(a);
+    const d2_plus_e2 = d * d + e * e;
+    const tx = data[4];
+    const ty = data[5];
+    const cy = (d * ty + e * tx) / d2_plus_e2;
+    const cx = (tx - e * cy) / d;
+    rotate.push(cx, cy);
+  }
+
+  const sx = invertScale ? -r : r;
+  const sy = delta / sx;
+  if (sx !== 1 || sy !== 1) {
+    transforms.push({ name: 'scale', data: sx === sy ? [sx] : [sx, sy] });
+  }
+
+  const ac_plus_bd = a * c + b * d;
+  if (ac_plus_bd) {
     transforms.push({
       name: 'skewX',
-      data: [mth.atan(data[2] / sy, floatPrecision)],
-    });
-
-    // [sx, sx·tan(a), 0, sy, 0, 0] → skewY(a)·scale(sx, sy)
-  } else if (data[1] && !data[2]) {
-    transforms.push({
-      name: 'skewY',
-      data: [mth.atan(data[1] / data[0], floatPrecision)],
-    });
-    sx = data[0];
-    sy = data[3];
-
-    // [sx·cos(a), sx·sin(a), sy·-sin(a), sy·cos(a), x, y] → rotate(a[, cx, cy])·(scale or skewX) or
-    // [sx·cos(a), sy·sin(a), sx·-sin(a), sy·cos(a), x, y] → scale(sx, sy)·rotate(a[, cx, cy]) (if !scaleBefore)
-  } else if (!colsSum || (sx === 1 && sy === 1) || !scaleBefore) {
-    if (!scaleBefore) {
-      sx = Math.hypot(data[0], data[2]);
-      sy = Math.hypot(data[1], data[3]);
-
-      if (toFixed(data[0], params.transformPrecision) < 0) {
-        sx = -sx;
-      }
-
-      if (
-        data[3] < 0 ||
-        (Math.sign(data[1]) === Math.sign(data[2]) &&
-          toFixed(data[3], params.transformPrecision) === 0)
-      ) {
-        sy = -sy;
-      }
-
-      transforms.push({ name: 'scale', data: [sx, sy] });
-    }
-    const angle = Math.min(Math.max(-1, data[0] / sx), 1);
-    const rotate = [
-      mth.acos(angle, floatPrecision) *
-        ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1),
-    ];
-
-    if (rotate[0]) {
-      transforms.push({ name: 'rotate', data: rotate });
-    }
-
-    if (rowsSum && colsSum)
-      transforms.push({
-        name: 'skewX',
-        data: [mth.atan(colsSum / (sx * sx), floatPrecision)],
-      });
-
-    // rotate(a, cx, cy) can consume translate() within optional arguments cx, cy (rotation point)
-    if (rotate[0] && (data[4] || data[5])) {
-      transforms.shift();
-      const oneOverCos = 1 - data[0] / sx;
-      const sin = data[1] / (scaleBefore ? sx : sy);
-      const x = data[4] * (scaleBefore ? 1 : sy);
-      const y = data[5] * (scaleBefore ? 1 : sx);
-      const denom = (oneOverCos ** 2 + sin ** 2) * (scaleBefore ? 1 : sx * sy);
-      rotate.push(
-        (oneOverCos * x - sin * y) / denom,
-        (oneOverCos * y + sin * x) / denom,
-      );
-    }
-
-    // Too many transformations, return original matrix if it isn't just a scale/translate
-  } else if (data[1] || data[2]) {
-    return [transform];
-  }
-
-  if ((scaleBefore && (sx != 1 || sy != 1)) || !transforms.length) {
-    transforms.push({
-      name: 'scale',
-      data: sx == sy ? [sx] : [sx, sy],
+      data: [mth.deg(Math.atan(ac_plus_bd / (a * a + b * b)))],
     });
   }
 
-  return transforms;
+  if (transforms.length) {
+    return transforms;
+  }
+
+  return [transform];
 };
 
 /**
