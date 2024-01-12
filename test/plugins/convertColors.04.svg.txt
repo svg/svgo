@@ -11,12 +11,12 @@
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g color="currentColor"/>
-    <g color="currentColor"/>
+    <g color="currentcolor"/>
+    <g color="currentcolor"/>
     <g color="none"/>
-    <path fill="currentColor"/>
-    <path fill="currentColor"/>
-    <path fill="currentColor"/>
+    <path fill="currentcolor"/>
+    <path fill="currentcolor"/>
+    <path fill="currentcolor"/>
     <path fill="none"/>
 </svg>
 

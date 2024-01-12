@@ -122,14 +122,11 @@ export const fn = (root, params) => {
           if (list[0].test(node.name)) {
             // loop attributes
             for (const [name, value] of Object.entries(node.attributes)) {
+              const isCurrentColor = value.toLowerCase() === 'currentcolor';
               const isFillCurrentColor =
-                preserveCurrentColor &&
-                name == 'fill' &&
-                value == 'currentColor';
+                preserveCurrentColor && name == 'fill' && isCurrentColor;
               const isStrokeCurrentColor =
-                preserveCurrentColor &&
-                name == 'stroke' &&
-                value == 'currentColor';
+                preserveCurrentColor && name == 'stroke' && isCurrentColor;
               if (
                 !isFillCurrentColor &&
                 !isStrokeCurrentColor &&

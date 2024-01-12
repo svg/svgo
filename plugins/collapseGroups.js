@@ -1,6 +1,7 @@
 import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastNode} XastNode
  */
 
@@ -80,26 +81,30 @@ export const fn = () => {
                 node.attributes.transform == null &&
                 firstChild.attributes.transform == null))
           ) {
+            const newChildElemAttrs = { ...firstChild.attributes };
+
             for (const [name, value] of Object.entries(node.attributes)) {
               // avoid copying to not conflict with animated attribute
               if (hasAnimatedAttr(firstChild, name)) {
                 return;
               }
-              if (firstChild.attributes[name] == null) {
-                firstChild.attributes[name] = value;
+
+              if (newChildElemAttrs[name] == null) {
+                newChildElemAttrs[name] = value;
               } else if (name === 'transform') {
-                firstChild.attributes[name] =
-                  value + ' ' + firstChild.attributes[name];
-              } else if (firstChild.attributes[name] === 'inherit') {
-                firstChild.attributes[name] = value;
+                newChildElemAttrs[name] = value + ' ' + newChildElemAttrs[name];
+              } else if (newChildElemAttrs[name] === 'inherit') {
+                newChildElemAttrs[name] = value;
               } else if (
-                inheritableAttrs.has(name) === false &&
-                firstChild.attributes[name] !== value
+                !inheritableAttrs.has(name) &&
+                newChildElemAttrs[name] !== value
               ) {
                 return;
               }
-              delete node.attributes[name];
             }
+
+            node.attributes = {};
+            firstChild.attributes = newChildElemAttrs;
           }
         }
 
