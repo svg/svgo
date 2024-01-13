@@ -166,10 +166,9 @@ const mth = {
  * Decompose matrix into simple transforms.
  * @param {TransformItem} transform
  * @returns {TransformItem[]}
- * @see {https} ://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  */
 export const matrixToTransform = (transform) => {
-  //   const floatPrecision = params.floatPrecision;
   const data = transform.data;
 
   // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
