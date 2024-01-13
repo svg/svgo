@@ -194,7 +194,7 @@ export const matrixToTransform = (transform) => {
   if (e || f) {
     transforms.push({
       name: 'translate',
-      data: e === f ? [e] : [e, f],
+      data: f ? [e, f] : [e],
     });
   }
 
