@@ -186,7 +186,7 @@ export const matrixToTransform = (transform) => {
   if (r === 0) {
     return [transform];
   }
-  const angle_cos = a / r;
+  const cosOfRotationAngle = a / r;
   const transforms = [];
 
   // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
@@ -198,14 +198,18 @@ export const matrixToTransform = (transform) => {
   }
 
   let invertScale = false;
-  if (angle_cos === -1) {
+  let rotationAngleRads = 0;
+  if (cosOfRotationAngle === -1) {
     // 180 degree angle; leave off the rotate, but invert the scaling.
     invertScale = true;
-  } else if (angle_cos !== 1) {
-    const degrees = mth.deg(Math.acos(angle_cos));
+  } else if (cosOfRotationAngle !== 1) {
+    rotationAngleRads = Math.acos(cosOfRotationAngle);
+    if (b < 0) {
+      rotationAngleRads = -rotationAngleRads;
+    }
     transforms.push({
       name: 'rotate',
-      data: [b < 0 ? -degrees : degrees],
+      data: [mth.deg(rotationAngleRads)],
     });
   }
 
@@ -232,13 +236,11 @@ export const matrixToTransform = (transform) => {
 
     transforms.shift();
     const rotate = transforms[0].data;
-    const a = (rotate[0] * Math.PI) / 180;
-    const d = 1 - Math.cos(a);
-    const e = Math.sin(a);
-    const d2_plus_e2 = d * d + e * e;
+    const d = 1 - cosOfRotationAngle;
+    const e = Math.sin(rotationAngleRads);
     const tx = data[4];
     const ty = data[5];
-    const cy = (d * ty + e * tx) / d2_plus_e2;
+    const cy = (d * ty + e * tx) / (d * d + e * e);
     const cx = (tx - e * cy) / d;
     rotate.push(cx, cy);
   }
@@ -257,11 +259,7 @@ export const matrixToTransform = (transform) => {
     });
   }
 
-  if (transforms.length) {
-    return transforms;
-  }
-
-  return [transform];
+  return transforms.length ? transforms : [transform];
 };
 
 /**
