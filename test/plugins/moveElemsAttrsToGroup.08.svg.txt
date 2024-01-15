@@ -2,30 +2,28 @@ Don't move transform if there is a filter attribute on group.
 
 ===
 
-<svg width="320" height="320" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g filter="url(#a2)">
-        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12)" fill="#DE773D"/>
-        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12)" fill="blue"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
     <defs>
-        <filter id="a2" x="17.085" y="13.7699" width="12.9801" height="10.3176" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-            <feGaussianBlur stdDeviation="0.5"/>
+        <filter id="a" x="17" y="13" width="12" height="10" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation=".01"/>
         </filter>
     </defs>
+    <g filter="url(#a)">
+        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12.79)"/>
+        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12.79)"/>
+    </g>
 </svg>
 
 @@@
 
-<svg width="320" height="320" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g filter="url(#a2)">
-        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12)" fill="#DE773D"/>
-        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12)" fill="blue"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
     <defs>
-        <filter id="a2" x="17.085" y="13.7699" width="12.9801" height="10.3176" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-            <feGaussianBlur stdDeviation="0.5"/>
+        <filter id="a" x="17" y="13" width="12" height="10" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation=".01"/>
         </filter>
     </defs>
+    <g filter="url(#a)">
+        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12.79)"/>
+        <rect x="19" y="12" width="14" height="6" rx="3" transform="rotate(31 19 12.79)"/>
+    </g>
 </svg>
