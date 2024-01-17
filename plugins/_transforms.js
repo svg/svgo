@@ -1,4 +1,5 @@
 import { toFixed } from '../lib/svgo/tools.js';
+import { roundTransform } from './convertTransform.js';
 
 /**
  * @typedef {{ name: string, data: number[] }} TransformItem
@@ -163,13 +164,12 @@ const mth = {
 };
 
 /**
- * Decompose matrix into simple transforms.
- * @param {TransformItem} transform
- * @returns {TransformItem[]}
+ * @param {TransformItem} matrix
+ * @returns {TransformItem[]|undefined}
  * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  */
-export const matrixToTransform = (transform) => {
-  const data = transform.data;
+const decompose = (matrix) => {
+  const data = matrix.data;
 
   // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
   const a = data[0];
@@ -180,86 +180,105 @@ export const matrixToTransform = (transform) => {
   const f = data[5];
   const delta = a * d - b * c;
   if (delta === 0) {
-    return [transform];
+    return;
   }
   const r = Math.hypot(a, b);
   if (r === 0) {
-    return [transform];
+    return;
   }
+
+  const decomposition = [];
   const cosOfRotationAngle = a / r;
-  const transforms = [];
 
   // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
   if (e || f) {
-    transforms.push({
+    decomposition.push({
       name: 'translate',
-      data: f ? [e, f] : [e],
+      data: [e, f],
     });
   }
 
-  let invertScale = false;
-  let rotationAngleRads = 0;
-  if (cosOfRotationAngle === -1) {
-    // 180 degree angle; leave off the rotate, but invert the scaling.
-    invertScale = true;
-  } else if (cosOfRotationAngle !== 1) {
-    rotationAngleRads = Math.acos(cosOfRotationAngle);
-    if (b < 0) {
-      rotationAngleRads = -rotationAngleRads;
-    }
-    transforms.push({
+  if (cosOfRotationAngle !== 1) {
+    const rotationAngleRads = Math.acos(cosOfRotationAngle);
+    decomposition.push({
       name: 'rotate',
-      data: [mth.deg(rotationAngleRads)],
+      data: [mth.deg(b < 0 ? -rotationAngleRads : rotationAngleRads), 0, 0],
     });
   }
 
-  // If there is a translation and a rotation, merge them.
-  if (transforms.length === 2) {
-    // From https://www.w3.org/TR/SVG11/coords.html#TransformAttribute:
-    // We have translate(tx,ty) rotate(a). This is equivalent to [cos(a) sin(a) -sin(a) cos(a) tx ty].
-    //
-    // rotate(a,cx,cy) is equivalent to translate(cx, cy) rotate(a) translate(-cx, -cy).
-    // Multiplying the right side gives the matrix
-    //   [cos(a) sin(a) -sin(a) cos(a)
-    //   -cx * cos(a) + cy * sin(a) + cx
-    //   -cx * sin(a) - cy * cos(a) + cy
-    // ]
-    //
-    // We need cx and cy such that
-    //   tx = -cx * cos(a) + cy * sin(a) + cx
-    //   ty = -cx * sin(a) - cy * cos(a) + cy
-    //
-    // Solving these for cx and cy gives
-    //   cy = (d * ty + e * tx)/(d^2 + e^2)
-    //   cx = (tx - e * cy) / d
-    // where d = 1 - cos(a) and e = sin(a)
-
-    transforms.shift();
-    const rotate = transforms[0].data;
-    const d = 1 - cosOfRotationAngle;
-    const e = Math.sin(rotationAngleRads);
-    const tx = data[4];
-    const ty = data[5];
-    const cy = (d * ty + e * tx) / (d * d + e * e);
-    const cx = (tx - e * cy) / d;
-    rotate.push(cx, cy);
-  }
-
-  const sx = invertScale ? -r : r;
+  const sx = r;
   const sy = delta / sx;
   if (sx !== 1 || sy !== 1) {
-    transforms.push({ name: 'scale', data: sx === sy ? [sx] : [sx, sy] });
+    decomposition.push({ name: 'scale', data: [sx, sy] });
   }
 
   const ac_plus_bd = a * c + b * d;
   if (ac_plus_bd) {
-    transforms.push({
+    decomposition.push({
       name: 'skewX',
       data: [mth.deg(Math.atan(ac_plus_bd / (a * a + b * b)))],
     });
   }
 
-  return transforms.length ? transforms : [transform];
+  return decomposition;
+};
+
+/**
+ * Decompose matrix into simple transforms and optimize.
+ * @param {TransformItem} origMatrix
+ * @param {TransformParams} params
+ * @returns {TransformItem[]}
+ */
+export const matrixToTransform = (origMatrix, params) => {
+  const decomposed = decompose(origMatrix);
+
+  if (decomposed === undefined) {
+    return [origMatrix];
+  }
+
+  // Make a copy of the decomposed matrix, and round all data.
+  const rounded = decomposed.map((a) => {
+    return { ...a };
+  });
+  rounded.map((transform) => {
+    roundTransform(transform, params);
+  });
+  console.log(decomposed);
+  console.log(rounded);
+
+  return rounded;
+
+  // If there is a translation and a rotation, merge them.
+  //   if (transforms.length === 2) {
+  //     // From https://www.w3.org/TR/SVG11/coords.html#TransformAttribute:
+  //     // We have translate(tx,ty) rotate(a). This is equivalent to [cos(a) sin(a) -sin(a) cos(a) tx ty].
+  //     //
+  //     // rotate(a,cx,cy) is equivalent to translate(cx, cy) rotate(a) translate(-cx, -cy).
+  //     // Multiplying the right side gives the matrix
+  //     //   [cos(a) sin(a) -sin(a) cos(a)
+  //     //   -cx * cos(a) + cy * sin(a) + cx
+  //     //   -cx * sin(a) - cy * cos(a) + cy
+  //     // ]
+  //     //
+  //     // We need cx and cy such that
+  //     //   tx = -cx * cos(a) + cy * sin(a) + cx
+  //     //   ty = -cx * sin(a) - cy * cos(a) + cy
+  //     //
+  //     // Solving these for cx and cy gives
+  //     //   cy = (d * ty + e * tx)/(d^2 + e^2)
+  //     //   cx = (tx - e * cy) / d
+  //     // where d = 1 - cos(a) and e = sin(a)
+
+  //     transforms.shift();
+  //     const rotate = transforms[0].data;
+  //     const d = 1 - cosOfRotationAngle;
+  //     const e = Math.sin(rotationAngleRads);
+  //     const tx = data[4];
+  //     const ty = data[5];
+  //     const cy = (d * ty + e * tx) / (d * d + e * e);
+  //     const cx = (tx - e * cy) / d;
+  //     rotate.push(cx, cy);
+  //   }
 };
 
 /**

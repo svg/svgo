@@ -229,7 +229,7 @@ const convertToShorts = (transforms, params) => {
 
     // convert matrix to the short aliases
     if (params.matrixToTransform && transform.name === 'matrix') {
-      var decomposed = matrixToTransform(transform);
+      var decomposed = matrixToTransform(transform, params);
       if (
         js2transform(decomposed, params).length <=
         js2transform([transform], params).length
@@ -351,7 +351,7 @@ const js2transform = (transformJS, params) => {
 /**
  * @type {(transform: TransformItem, params: TransformParams) => TransformItem}
  */
-const roundTransform = (transform, params) => {
+export const roundTransform = (transform, params) => {
   switch (transform.name) {
     case 'translate':
       transform.data = floatRound(transform.data, params);
