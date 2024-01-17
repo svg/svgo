@@ -93,9 +93,9 @@ export const applyTransforms = (root, params) => {
         }
 
         const scale = Number(
-          Math.sqrt(
-            matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1],
-          ).toFixed(transformPrecision),
+          Math.hypot(matrix.data[0], matrix.data[1]).toFixed(
+            transformPrecision,
+          ),
         );
 
         if (stroke && stroke != 'none') {
