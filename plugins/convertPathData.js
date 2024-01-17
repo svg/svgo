@@ -1113,7 +1113,7 @@ function calculateSagitta(data) {
   if (data[3] === 1) return undefined;
   const [rx, ry] = data;
   if (Math.abs(rx - ry) > error) return undefined;
-  const chord = Math.sqrt(data[5] ** 2 + data[6] ** 2);
+  const chord = Math.hypot(data[5], data[6]);
   if (chord > rx * 2) return undefined;
   return rx - Math.sqrt(rx ** 2 - 0.25 * chord ** 2);
 }
@@ -1145,7 +1145,7 @@ function makeLonghand(item, data) {
  * @type {(point1: Point, point2: Point) => number}
  */
 function getDistance(point1, point2) {
-  return Math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2);
+  return Math.hypot(point1[0] - point2[0], point1[1] - point2[1]);
 }
 
 /**
