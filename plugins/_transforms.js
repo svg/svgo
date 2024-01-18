@@ -280,15 +280,15 @@ const optimize = (roundedTransforms, rawTransforms) => {
               const next = roundedTransforms[index + 1];
               if (next && next.name === 'scale') {
                 invertScale = true;
-                continue;
+              } else {
+                // Otherwise replace the rotate with a scale(-1).
+                optimizedTransforms.push({
+                  name: 'scale',
+                  data: [-1],
+                });
               }
-              // Otherwise replace the rotate with a scale(-1).
-              optimizedTransforms.push({
-                name: 'scale',
-                data: [-1],
-              });
             }
-            break;
+            continue;
         }
         optimizedTransforms.push({
           name: 'rotate',
@@ -317,10 +317,12 @@ const optimize = (roundedTransforms, rawTransforms) => {
       case 'translate':
         {
           // If the next item is a rotate(a,0,0), merge the translate and rotate.
+          // If the rotation angle is 180, assume it will be optimized out, and don't do the merge.
           const next = roundedTransforms[index + 1];
           if (
             next &&
             next.name === 'rotate' &&
+            next.data[0] !== 180 &&
             next.data[1] === 0 &&
             next.data[2] === 0
           ) {
