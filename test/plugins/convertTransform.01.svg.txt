@@ -24,7 +24,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
     <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
     <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.777 -252.28)"/>
+    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.776 -252.28)"/>
     <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)scale(2)"/>
     <rect x="0" y="0" width="10" height="20" transform="matrix(.707 -.707 1.414 0 255.03 111.21)"/>
     <rect x="0" y="0" width="10" height="20" transform="matrix(1.414 0 .707 .707 255.03 111.21)"/>

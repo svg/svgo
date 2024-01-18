@@ -224,11 +224,47 @@ const decompose = (matrix) => {
 };
 
 /**
+ * Convert translate(tx,ty)rotate(a) to rotate(a,cx,cy).
+ * @param {number} tx
+ * @param {number} ty
+ * @param {number} a
+ * @returns {TransformItem}
+ */
+const mergeTranslateAndRotate = (tx, ty, a) => {
+  // From https://www.w3.org/TR/SVG11/coords.html#TransformAttribute:
+  // We have translate(tx,ty) rotate(a). This is equivalent to [cos(a) sin(a) -sin(a) cos(a) tx ty].
+  //
+  // rotate(a,cx,cy) is equivalent to translate(cx, cy) rotate(a) translate(-cx, -cy).
+  // Multiplying the right side gives the matrix
+  //   [cos(a) sin(a) -sin(a) cos(a)
+  //   -cx * cos(a) + cy * sin(a) + cx
+  //   -cx * sin(a) - cy * cos(a) + cy
+  // ]
+  //
+  // We need cx and cy such that
+  //   tx = -cx * cos(a) + cy * sin(a) + cx
+  //   ty = -cx * sin(a) - cy * cos(a) + cy
+  //
+  // Solving these for cx and cy gives
+  //   cy = (d * ty + e * tx)/(d^2 + e^2)
+  //   cx = (tx - e * cy) / d
+  // where d = 1 - cos(a) and e = sin(a)
+
+  const rotationAngleRads = mth.rad(a);
+  const d = 1 - Math.cos(rotationAngleRads);
+  const e = Math.sin(rotationAngleRads);
+  const cy = (d * ty + e * tx) / (d * d + e * e);
+  const cx = (tx - e * cy) / d;
+  return { name: 'rotate', data: [a, cx, cy] };
+};
+
+/**
  * Optimize matrix of simple transforms.
  * @param {TransformItem[]} roundedTransforms
+ * @param {TransformItem[]} rawTransforms
  * @returns {TransformItem[]}
  */
-const optimize = (roundedTransforms) => {
+const optimize = (roundedTransforms, rawTransforms) => {
   const optimizedTransforms = [];
   let invertScale = false;
 
@@ -278,9 +314,32 @@ const optimize = (roundedTransforms) => {
         });
         break;
 
-      case 'transform':
+      case 'translate':
+        {
+          // If the next item is a rotate(a,0,0), merge the translate and rotate.
+          const next = roundedTransforms[index + 1];
+          if (
+            next &&
+            next.name === 'rotate' &&
+            next.data[1] === 0 &&
+            next.data[2] === 0
+          ) {
+            // Use the un-rounded data to do the merge.
+            const data = rawTransforms[index].data;
+            optimizedTransforms.push(
+              mergeTranslateAndRotate(
+                data[0],
+                data[1],
+                rawTransforms[index + 1].data[0],
+              ),
+            );
+            // Skip over the rotate.
+            index++;
+            continue;
+          }
+        }
         optimizedTransforms.push({
-          name: 'transform',
+          name: 'translate',
           data: data.slice(0, data[1] ? 2 : 1),
         });
         break;
@@ -314,41 +373,9 @@ export const matrixToTransform = (origMatrix, params) => {
     roundTransform(transform, params);
   });
 
-  const optimized = optimize(roundedTransforms);
+  const optimized = optimize(roundedTransforms, decomposed);
 
   return optimized;
-
-  // If there is a translation and a rotation, merge them.
-  //   if (transforms.length === 2) {
-  //     // From https://www.w3.org/TR/SVG11/coords.html#TransformAttribute:
-  //     // We have translate(tx,ty) rotate(a). This is equivalent to [cos(a) sin(a) -sin(a) cos(a) tx ty].
-  //     //
-  //     // rotate(a,cx,cy) is equivalent to translate(cx, cy) rotate(a) translate(-cx, -cy).
-  //     // Multiplying the right side gives the matrix
-  //     //   [cos(a) sin(a) -sin(a) cos(a)
-  //     //   -cx * cos(a) + cy * sin(a) + cx
-  //     //   -cx * sin(a) - cy * cos(a) + cy
-  //     // ]
-  //     //
-  //     // We need cx and cy such that
-  //     //   tx = -cx * cos(a) + cy * sin(a) + cx
-  //     //   ty = -cx * sin(a) - cy * cos(a) + cy
-  //     //
-  //     // Solving these for cx and cy gives
-  //     //   cy = (d * ty + e * tx)/(d^2 + e^2)
-  //     //   cx = (tx - e * cy) / d
-  //     // where d = 1 - cos(a) and e = sin(a)
-
-  //     transforms.shift();
-  //     const rotate = transforms[0].data;
-  //     const d = 1 - cosOfRotationAngle;
-  //     const e = Math.sin(rotationAngleRads);
-  //     const tx = data[4];
-  //     const ty = data[5];
-  //     const cy = (d * ty + e * tx) / (d * d + e * e);
-  //     const cx = (tx - e * cy) / d;
-  //     rotate.push(cx, cy);
-  //   }
 };
 
 /**
