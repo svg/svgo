@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { optimize } from '../../lib/svgo.js';
 
 const regEOL = new RegExp(EOL, 'g');
-const regFilename = /^(convertTransform)\.(\d+)\.svg\.txt$/;
+const regFilename = /^(.*)\.(\d+)\.svg\.txt$/;
 const __dirname = PATH.dirname(fileURLToPath(import.meta.url));
 
 describe('plugins tests', function () {

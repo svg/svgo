@@ -265,11 +265,34 @@ const mergeTranslateAndRotate = (tx, ty, a) => {
  * @returns {TransformItem[]}
  */
 const optimize = (roundedTransforms, rawTransforms) => {
+  /**
+   * @param {TransformItem} t
+   * @returns {Boolean}
+   */
+  function isIdentityTransform(t) {
+    switch (t.name) {
+      case 'rotate':
+      case 'skewX':
+      case 'skewY':
+        return t.data[0] === 0;
+      case 'scale':
+        return t.data[0] === 1 && t.data[1] === 1;
+      case 'translate':
+        return t.data[0] === 0 && t.data[1] === 0;
+    }
+    return false;
+  }
+
   const optimizedTransforms = [];
   let invertScale = false;
 
   for (let index = 0; index < roundedTransforms.length; index++) {
     const roundedTransform = roundedTransforms[index];
+
+    // Don't include any identity transforms.
+    if (isIdentityTransform(roundedTransform)) {
+      continue;
+    }
     const data = roundedTransform.data;
     switch (roundedTransform.name) {
       case 'rotate':
@@ -362,7 +385,6 @@ const optimize = (roundedTransforms, rawTransforms) => {
  */
 export const matrixToTransform = (origMatrix, params) => {
   const decomposed = decompose(origMatrix);
-
   if (decomposed === undefined) {
     return [origMatrix];
   }
