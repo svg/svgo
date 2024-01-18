@@ -224,6 +224,76 @@ const decompose = (matrix) => {
 };
 
 /**
+ * Optimize matrix of simple transforms.
+ * @param {TransformItem[]} roundedTransforms
+ * @returns {TransformItem[]}
+ */
+const optimize = (roundedTransforms) => {
+  const optimizedTransforms = [];
+  let invertScale = false;
+
+  for (let index = 0; index < roundedTransforms.length; index++) {
+    const roundedTransform = roundedTransforms[index];
+    const data = roundedTransform.data;
+    switch (roundedTransform.name) {
+      case 'rotate':
+        switch (data[0]) {
+          case 180:
+            {
+              // If the next element is a scale, invert it, and don't add the rotate to the optimized array.
+              const next = roundedTransforms[index + 1];
+              if (next && next.name === 'scale') {
+                invertScale = true;
+                continue;
+              }
+              // Otherwise replace the rotate with a scale(-1).
+              optimizedTransforms.push({
+                name: 'scale',
+                data: [-1],
+              });
+            }
+            break;
+        }
+        optimizedTransforms.push({
+          name: 'rotate',
+          data: data.slice(0, data[1] || data[2] ? 3 : 1),
+        });
+        break;
+
+      case 'scale':
+        {
+          const scaleData = data.slice(0, data[0] === data[1] ? 1 : 2);
+          optimizedTransforms.push({
+            name: 'scale',
+            data: invertScale ? scaleData.map((v) => -v) : scaleData,
+          });
+          invertScale = false;
+        }
+        break;
+
+      case 'skewX':
+        optimizedTransforms.push({
+          name: 'skewX',
+          data: [data[0]],
+        });
+        break;
+
+      case 'transform':
+        optimizedTransforms.push({
+          name: 'transform',
+          data: data.slice(0, data[1] ? 2 : 1),
+        });
+        break;
+    }
+  }
+
+  // If everything was optimized out, reture identity transform scale(1).
+  return optimizedTransforms.length
+    ? optimizedTransforms
+    : [{ name: 'scale', data: [1] }];
+};
+
+/**
  * Decompose matrix into simple transforms and optimize.
  * @param {TransformItem} origMatrix
  * @param {TransformParams} params
@@ -237,16 +307,16 @@ export const matrixToTransform = (origMatrix, params) => {
   }
 
   // Make a copy of the decomposed matrix, and round all data.
-  const rounded = decomposed.map((a) => {
+  const roundedTransforms = decomposed.map((a) => {
     return { ...a };
   });
-  rounded.map((transform) => {
+  roundedTransforms.map((transform) => {
     roundTransform(transform, params);
   });
-  console.log(decomposed);
-  console.log(rounded);
 
-  return rounded;
+  const optimized = optimize(roundedTransforms);
+
+  return optimized;
 
   // If there is a translation and a rotation, merge them.
   //   if (transforms.length === 2) {
