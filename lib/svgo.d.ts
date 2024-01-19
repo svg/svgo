@@ -4,9 +4,10 @@ import type {
   BuiltinsWithRequiredParams,
 } from '../plugins/plugins-types.js';
 
-type CustomPlugin = {
+type CustomPlugin<T = any> = {
   name: string;
-  fn: Plugin<void>;
+  fn: Plugin<T>;
+  params?: T;
 };
 
 type PluginConfig =
