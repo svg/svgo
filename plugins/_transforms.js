@@ -1,10 +1,10 @@
 import { toFixed } from '../lib/svgo/tools.js';
-import { roundTransform } from './convertTransform.js';
 
 /**
  * @typedef {{ name: string, data: number[] }} TransformItem
  * @typedef {{
  *   convertToShorts: boolean,
+ *   degPrecision?: number,
  *   floatPrecision: number,
  *   transformPrecision: number,
  *   matrixToTransform: boolean,
@@ -259,30 +259,30 @@ const mergeTranslateAndRotate = (tx, ty, a) => {
 };
 
 /**
+ * @param {TransformItem} t
+ * @returns {Boolean}
+ */
+const isIdentityTransform = (t) => {
+  switch (t.name) {
+    case 'rotate':
+    case 'skewX':
+    case 'skewY':
+      return t.data[0] === 0;
+    case 'scale':
+      return t.data[0] === 1 && t.data[1] === 1;
+    case 'translate':
+      return t.data[0] === 0 && t.data[1] === 0;
+  }
+  return false;
+};
+
+/**
  * Optimize matrix of simple transforms.
  * @param {TransformItem[]} roundedTransforms
  * @param {TransformItem[]} rawTransforms
  * @returns {TransformItem[]}
  */
 const optimize = (roundedTransforms, rawTransforms) => {
-  /**
-   * @param {TransformItem} t
-   * @returns {Boolean}
-   */
-  function isIdentityTransform(t) {
-    switch (t.name) {
-      case 'rotate':
-      case 'skewX':
-      case 'skewY':
-        return t.data[0] === 0;
-      case 'scale':
-        return t.data[0] === 1 && t.data[1] === 1;
-      case 'translate':
-        return t.data[0] === 0 && t.data[1] === 0;
-    }
-    return false;
-  }
-
   const optimizedTransforms = [];
   let invertScale = false;
 
@@ -532,4 +532,108 @@ const multiplyTransformMatrices = (a, b) => {
     a[0] * b[4] + a[2] * b[5] + a[4],
     a[1] * b[4] + a[3] * b[5] + a[5],
   ];
+};
+
+/**
+ * @type {(transform: TransformItem, params: TransformParams) => TransformItem}
+ */
+export const roundTransform = (transform, params) => {
+  switch (transform.name) {
+    case 'translate':
+      transform.data = floatRound(transform.data, params);
+      break;
+    case 'rotate':
+      transform.data = [
+        ...degRound(transform.data.slice(0, 1), params),
+        ...floatRound(transform.data.slice(1), params),
+      ];
+      break;
+    case 'skewX':
+    case 'skewY':
+      transform.data = degRound(transform.data, params);
+      break;
+    case 'scale':
+      transform.data = transformRound(transform.data, params);
+      break;
+    case 'matrix':
+      transform.data = [
+        ...transformRound(transform.data.slice(0, 4), params),
+        ...floatRound(transform.data.slice(4), params),
+      ];
+      break;
+  }
+  return transform;
+};
+
+/**
+ * @type {(data: number[], params: TransformParams) => number[]}
+ */
+const degRound = (data, params) => {
+  if (
+    params.degPrecision != null &&
+    params.degPrecision >= 1 &&
+    params.floatPrecision < 20
+  ) {
+    return smartRound(params.degPrecision, data);
+  } else {
+    return round(data);
+  }
+};
+/**
+ * @type {(data: number[], params: TransformParams) => number[]}
+ */
+const floatRound = (data, params) => {
+  if (params.floatPrecision >= 1 && params.floatPrecision < 20) {
+    return smartRound(params.floatPrecision, data);
+  } else {
+    return round(data);
+  }
+};
+
+/**
+ * @type {(data: number[], params: TransformParams) => number[]}
+ */
+const transformRound = (data, params) => {
+  if (params.transformPrecision >= 1 && params.floatPrecision < 20) {
+    return smartRound(params.transformPrecision, data);
+  } else {
+    return round(data);
+  }
+};
+
+/**
+ * Rounds numbers in array.
+ *
+ * @type {(data: number[]) => number[]}
+ */
+const round = (data) => {
+  return data.map(Math.round);
+};
+
+/**
+ * Decrease accuracy of floating-point numbers
+ * in transforms keeping a specified number of decimals.
+ * Smart rounds values like 2.349 to 2.35.
+ *
+ * @param {number} precision
+ * @param {number[]} data
+ * @returns {number[]}
+ */
+const smartRound = (precision, data) => {
+  for (
+    var i = data.length,
+      tolerance = +Math.pow(0.1, precision).toFixed(precision);
+    i--;
+
+  ) {
+    if (toFixed(data[i], precision) !== data[i]) {
+      var rounded = +data[i].toFixed(precision - 1);
+      data[i] =
+        +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance
+          ? +data[i].toFixed(precision)
+          : rounded;
+    }
+  }
+
+  return data;
 };
