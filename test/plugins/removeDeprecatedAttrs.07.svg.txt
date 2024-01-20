@@ -1,0 +1,17 @@
+Removes unsafe xml:lang attribute when lang attribute doesn't exist with removeUnsafe param.
+
+===
+
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <text xml:lang="en-US">English text</text>
+</svg>
+
+@@@
+
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <text>English text</text>
+</svg>
+
+@@@
+
+{ "removeUnsafe": true }

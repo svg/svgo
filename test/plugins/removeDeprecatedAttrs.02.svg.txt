@@ -1,0 +1,13 @@
+Does not remove unsafe deprecated viewTarget attribute from view node by default.
+
+===
+
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <view id="one" viewBox="0 0 100 100" viewTarget=""/>
+</svg>
+
+@@@
+
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <view id="one" viewBox="0 0 100 100" viewTarget=""/>
+</svg>

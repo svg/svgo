@@ -376,10 +376,34 @@ export const attrsGroupsDefaults = {
 };
 
 /**
+ * @type {Record<string, { safe?: Set<string>, unsafe?: Set<string> }>}
+ * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
+ */
+export const attrsGroupsDeprecated = {
+  animationAttributeTarget: { unsafe: new Set(['attributeType']) },
+  conditionalProcessing: { unsafe: new Set(['requiredFeatures']) },
+  core: { unsafe: new Set(['xml:base', 'xml:lang', 'xml:space']) },
+  presentation: {
+    unsafe: new Set([
+      'clip',
+      'color-profile',
+      'enable-background',
+      'glyph-orientation-horizontal',
+      'glyph-orientation-vertical',
+      'kerning',
+    ]),
+  },
+};
+
+/**
  * @type {Record<string, {
  *   attrsGroups: Set<string>,
  *   attrs?: Set<string>,
  *   defaults?: Record<string, string>,
+ *   deprecated?: {
+ *     safe?: Set<string>,
+ *     unsafe?: Set<string>,
+ *   },
  *   contentGroups?: Set<string>,
  *   content?: Set<string>,
  * }>}
@@ -574,6 +598,7 @@ export const elems = {
       name: 'sRGB',
       'rendering-intent': 'auto',
     },
+    deprecated: { unsafe: new Set(['name']) },
     contentGroups: new Set(['descriptive']),
   },
   cursor: {
@@ -958,6 +983,7 @@ export const elems = {
       width: '120%',
       height: '120%',
     },
+    deprecated: { unsafe: new Set(['filterRes']) },
     contentGroups: new Set(['descriptive', 'filterPrimitive']),
     content: new Set(['animate', 'set']),
   },
@@ -977,6 +1003,15 @@ export const elems = {
     defaults: {
       'horiz-origin-x': '0',
       'horiz-origin-y': '0',
+    },
+    deprecated: {
+      unsafe: new Set([
+        'horiz-origin-x',
+        'horiz-origin-y',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
     },
     contentGroups: new Set(['descriptive']),
     content: new Set(['font-face', 'glyph', 'hkern', 'missing-glyph', 'vkern']),
@@ -1028,6 +1063,31 @@ export const elems = {
       'panose-1': '0 0 0 0 0 0 0 0 0 0',
       slope: '0',
     },
+    deprecated: {
+      unsafe: new Set([
+        'accent-height',
+        'alphabetic',
+        'ascent',
+        'bbox',
+        'cap-height',
+        'descent',
+        'hanging',
+        'ideographic',
+        'mathematical',
+        'panose-1',
+        'slope',
+        'stemh',
+        'stemv',
+        'unicode-range',
+        'units-per-em',
+        'v-alphabetic',
+        'v-hanging',
+        'v-ideographic',
+        'v-mathematical',
+        'widths',
+        'x-height',
+      ]),
+    },
     contentGroups: new Set(['descriptive']),
     content: new Set([
       // TODO: "at most one 'font-face-src' element"
@@ -1038,10 +1098,12 @@ export const elems = {
   'font-face-format': {
     attrsGroups: new Set(['core']),
     attrs: new Set(['string']),
+    deprecated: { unsafe: new Set(['string']) },
   },
   'font-face-name': {
     attrsGroups: new Set(['core']),
     attrs: new Set(['name']),
+    deprecated: { unsafe: new Set(['name']) },
   },
   'font-face-src': {
     attrsGroups: new Set(['core']),
@@ -1134,6 +1196,18 @@ export const elems = {
     defaults: {
       'arabic-form': 'initial',
     },
+    deprecated: {
+      unsafe: new Set([
+        'arabic-form',
+        'glyph-name',
+        'horiz-adv-x',
+        'orientation',
+        'unicode',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1173,6 +1247,14 @@ export const elems = {
       'vert-origin-x',
       'vert-origin-y',
     ]),
+    deprecated: {
+      unsafe: new Set([
+        'horiz-adv-x',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1236,6 +1318,7 @@ export const elems = {
   hkern: {
     attrsGroups: new Set(['core']),
     attrs: new Set(['u1', 'g1', 'u2', 'g2', 'k']),
+    deprecated: { unsafe: new Set(['g1', 'g2', 'k', 'u1', 'u2']) },
   },
   image: {
     attrsGroups: new Set([
@@ -1430,6 +1513,14 @@ export const elems = {
       'vert-origin-x',
       'vert-origin-y',
     ]),
+    deprecated: {
+      unsafe: new Set([
+        'horiz-adv-x',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1710,6 +1801,15 @@ export const elems = {
       contentScriptType: 'application/ecmascript',
       contentStyleType: 'text/css',
     },
+    deprecated: {
+      safe: new Set(['version']),
+      unsafe: new Set([
+        'baseProfile',
+        'contentScriptType',
+        'contentStyleType',
+        'zoomAndPan',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1956,11 +2056,13 @@ export const elems = {
       'viewTarget',
       'zoomAndPan',
     ]),
+    deprecated: { unsafe: new Set(['viewTarget', 'zoomAndPan']) },
     contentGroups: new Set(['descriptive']),
   },
   vkern: {
     attrsGroups: new Set(['core']),
     attrs: new Set(['u1', 'g1', 'u2', 'g2', 'k']),
+    deprecated: { unsafe: new Set(['g1', 'g2', 'k', 'u1', 'u2']) },
   },
 };
 

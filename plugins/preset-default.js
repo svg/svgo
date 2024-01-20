@@ -2,6 +2,7 @@ import { createPreset } from '../lib/svgo/plugins.js';
 import * as removeDoctype from './removeDoctype.js';
 import * as removeXMLProcInst from './removeXMLProcInst.js';
 import * as removeComments from './removeComments.js';
+import * as removeDeprecatedAttrs from './removeDeprecatedAttrs.js';
 import * as removeMetadata from './removeMetadata.js';
 import * as removeEditorsNSData from './removeEditorsNSData.js';
 import * as cleanupAttrs from './cleanupAttrs.js';
@@ -41,6 +42,7 @@ const presetDefault = createPreset({
     removeDoctype,
     removeXMLProcInst,
     removeComments,
+    removeDeprecatedAttrs,
     removeMetadata,
     removeEditorsNSData,
     cleanupAttrs,
