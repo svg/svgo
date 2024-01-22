@@ -15,3 +15,4 @@ coverage
 .DS_Store
 .vscode
 *.log
+.*.sw?
