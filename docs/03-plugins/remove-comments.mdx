@@ -3,11 +3,6 @@ title: Remove Comments
 svgo:
   pluginId: removeComments
   defaultPlugin: true
-  parameters:
-    preservePatterns:
-      description: An array of regular expressions (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp" target="_blank">RegExp</a> or string). If the comment matches any of these, including partial matches, the comment is preserved. Set to <code>false</code> to disable this behavior and remove comments indiscriminately.
-      default:
-        - '^!'
 ---
 
 Removes XML comments from the document.

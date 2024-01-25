@@ -1,12 +1,27 @@
 import { elems } from './_collections.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
 export const name = 'removeXlink';
 export const description =
   'remove xlink namespace and replaces attributes with the SVG 2 equivalent where applicable';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    includeLegacy: {
+      title: 'Include Legacy',
+      description:
+        "If to update references to XLink in elements that don't support the SVG 2 href attribute, like `<filter>` and `<tref>`.",
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 /** URI indicating the Xlink namespace. */
 const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';

@@ -1,5 +1,6 @@
 export const name = 'removeViewBox';
 export const description = 'removes viewBox attribute when possible';
+export const schema = null;
 
 const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
 

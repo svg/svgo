@@ -2,11 +2,57 @@ import { visitSkip } from '../lib/xast.js';
 import { hasScripts, findReferences } from '../lib/svgo/tools.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
 export const name = 'cleanupIds';
 export const description = 'removes unused IDs and minifies used';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    remove: {
+      title: 'Remove',
+      description: 'If to remove all unreferenced IDs.',
+      type: 'boolean',
+      default: true,
+    },
+    minify: {
+      title: 'Minify',
+      description: 'If to minify referenced IDs.',
+      type: 'boolean',
+      default: true,
+    },
+    preserve: {
+      title: 'Preserve',
+      description: 'Elements with one of these IDs will be ignored.',
+      type: 'boolean',
+      default: [],
+      items: {
+        type: 'string',
+      },
+    },
+    preservePrefixes: {
+      title: 'Preserve Prefixes',
+      description:
+        'Elements with an ID that starts with one of these prefixes will be ignored.',
+      type: 'array',
+      default: [],
+      items: {
+        type: 'string',
+      },
+    },
+    force: {
+      title: 'Force',
+      description:
+        'This plugin normally does nothing if a `<script>` or `<style>` element is found. Setting this to true will bypass that behavior, which may result in destructive changes.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 const generateIdChars = [
   'a',

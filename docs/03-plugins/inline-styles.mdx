@@ -3,17 +3,6 @@ title: Inline Styles
 svgo:
   pluginId: inlineStyles
   defaultPlugin: true
-  parameters:
-    onlyMatchedOnce:
-      description: If to only inline styles if the selector matches one element.
-      default: true
-    removeMatchedSelectors:
-      description: If to remove the selector and styles from the stylesheet while inlining the styles. This does not remove selectors that did not match any elements.
-      default: true
-    useMqs:
-      description: An array of media query conditions to use, such as <code>screen</code>. An empty string signifies all selectors outside of a media query.
-    usePseudos:
-      description: What pseudo-classes and pseudo-elements to use. An empty string signifies all non-pseudo-classes and non-pseudo-elements.
 ---
 
 Merges styles from `<style>` elements to the `style` attribute of matching elements.

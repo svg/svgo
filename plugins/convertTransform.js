@@ -6,6 +6,7 @@ import {
 } from './_transforms.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').XastChild} XastChild
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastParent} XastParent
@@ -14,6 +15,79 @@ import {
 export const name = 'convertTransform';
 export const description =
   'collapses multiple transformations and optimizes it';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    convertToShorts: {
+      title: 'Convert to Shorts',
+      description: 'Convert transforms to their shorthand alternatives.',
+      type: 'boolean',
+      default: true,
+    },
+    degPrecision: {
+      title: 'Degrees Precision',
+      description:
+        'Number of decimal places to round degrees values to, using conventional rounding rules. Used for `rotate` and `skew`.',
+    },
+    floatPrecision: {
+      title: 'Float Precision',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+      default: 3,
+    },
+    transformPrecision: {
+      title: 'Transform Precision',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+      default: 5,
+    },
+    matrixToTransform: {
+      title: 'Matrix Transform',
+      description:
+        'If decompose matrices into simple transforms. See [Decomposition of 2D-transform matrices](https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html) for more context.',
+      type: 'boolean',
+      default: true,
+    },
+    shortTranslate: {
+      title: 'Short Translate',
+      description:
+        'If to shorten references to `translate` with redundant parameters to omit them. i.e. `translate(10 0)` → `translate(10)`',
+      type: 'boolean',
+      default: true,
+    },
+    shortScale: {
+      title: 'Short Scale',
+      description:
+        'If to shorten references to `scale` with redundant parameters to omit them. i.e. `scale(2 2)` → `scale(2)`',
+      type: 'boolean',
+      default: true,
+    },
+    shortRotate: {
+      title: 'Short Rotate',
+      description:
+        'If to shorten references to `rotate` with redundant parameters to omit them. i.e. `translate(cx cy) rotate(a) translate(-cx -cy)` → `rotate(a cx cy)`',
+      type: 'boolean',
+      default: true,
+    },
+    removeUseless: {
+      title: 'Remove Useless',
+      description:
+        'If to remove redundant transforms like `translate(0)`, `skewX(0)`, or `skewY(0)`.',
+      type: 'boolean',
+      default: true,
+    },
+    collapseIntoOne: {
+      title: 'Collapse Into One',
+      description: 'If to multiply transforms into one.',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 /**
  * Convert matrices to the short aliases,

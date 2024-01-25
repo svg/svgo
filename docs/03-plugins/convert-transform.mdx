@@ -3,36 +3,6 @@ title: Convert Transform
 svgo:
   pluginId: convertTransform
   defaultPlugin: true
-  parameters:
-    convertToShorts:
-      description: Convert transforms to their shorthand alternatives.
-      default: true
-    degPrecision:
-      description: Number of decimal places to round degrees values to, using conventional rounding rules. Used for <code>rotate</code> and <code>skew</code>.
-    floatPrecision:
-      description: Number of decimal places to round to, using conventional rounding rules.
-      default: 3
-    transformPrecision:
-      description: Number of decimal places to round to, using conventional rounding rules.
-      default: 5
-    matrixToTransform:
-      description: If decompose matrices into simple transforms. See <a href="https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html" target="_blank">Decomposition of 2D-transform matrices</a> for more context.
-      default: true
-    shortTranslate:
-      description: If to shorten references to <code>translate</code> with redundant parameters to omit them. i.e. <code>translate(10 0)</code> → <code>translate(10)</code>
-      default: true
-    shortScale:
-      description: If to shorten references to <code>scale</code> with redundant parameters to omit them. i.e. <code>scale(2 2)</code> → <code>scale(2)</code>
-      default: true
-    shortRotate:
-      description: If to shorten references to <code>rotate</code> with redundant parameters to omit them. i.e. <code>translate(cx cy) rotate(a) translate(-cx -cy)</code> → <code>rotate(a cx cy)</code>
-      default: true
-    removeUseless:
-      description: If to remove redundant transforms like <code>translate(0)</code>, <code>skewX(0)</code>, or <code>skewY(0)</code>.
-      default: true
-    collapseIntoOne:
-      description: If to multiply transforms into one.
-      default: true
 ---
 
 Collapse multiple transforms into one, convert matrices to the short aliases, and much more.

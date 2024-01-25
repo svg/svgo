@@ -9,12 +9,44 @@ import {
 import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastParent} XastParent
  */
 
 export const name = 'inlineStyles';
 export const description = 'inline styles (additional options)';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    onlyMatchedOnce: {
+      title: 'Only Matched Once',
+      description:
+        'If to only inline styles if the selector matches one element.',
+      type: 'boolean',
+      default: true,
+    },
+    removeMatchedSelectors: {
+      title: 'Remove Matched Selectors',
+      description:
+        'If to remove the selector and styles from the stylesheet while inlining the styles. This does not remove selectors that did not match any elements.',
+      type: 'boolean',
+      default: true,
+    },
+    useMqs: {
+      title: 'Use Media Queries',
+      description:
+        'An array of media query conditions to use, such as `screen`. An empty string signifies all selectors outside of a media query.',
+    },
+    usePseudos: {
+      title: 'Use Pseudo-Classes/Elements',
+      description:
+        'What pseudo-classes and pseudo-elements to use. An empty string signifies all non-pseudo-classes and non-pseudo-elements.',
+    },
+  },
+};
 
 /**
  * Some pseudo-classes can only be calculated by clients, like :visited,

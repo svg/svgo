@@ -1,5 +1,51 @@
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'sortAttrs';
 export const description = 'Sort element attributes for better compression';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    order: {
+      title: 'Order',
+      description:
+        'An array of attribute keys to order by. Attributes not found in the array are sorted alphabetically.',
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      default: [
+        'id',
+        'width',
+        'height',
+        'x',
+        'x1',
+        'x2',
+        'y',
+        'y1',
+        'y2',
+        'cx',
+        'cy',
+        'r',
+        'fill',
+        'stroke',
+        'marker',
+        'd',
+        'points',
+      ],
+    },
+    xmlnsOrder: {
+      title: 'XML Namespace Order',
+      description:
+        "Set to `'front'` if XML namespaces should be placed in front of all other attributes.",
+      enum: ['front', null],
+      default: 'front',
+    },
+  },
+};
 
 /**
  * Sort element attributes for better compression

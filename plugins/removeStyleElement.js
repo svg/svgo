@@ -2,6 +2,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeStyleElement';
 export const description = 'removes <style> element (disabled by default)';
+export const schema = null;
 
 /**
  * Remove <style>.

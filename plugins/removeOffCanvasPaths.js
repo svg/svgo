@@ -1,14 +1,15 @@
-/**
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- */
-
 import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 import { parsePathData } from '../lib/path.js';
 import { intersects } from './_path.js';
 
+/**
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
+ */
+
 export const name = 'removeOffCanvasPaths';
 export const description =
   'removes elements that are drawn outside of the viewbox (disabled by default)';
+export const schema = null;
 
 /**
  * Remove elements that are drawn outside of the viewbox.

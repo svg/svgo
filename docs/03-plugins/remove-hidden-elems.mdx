@@ -3,52 +3,6 @@ title: Remove Hidden Elements
 svgo:
   pluginId: removeHiddenElems
   defaultPlugin: true
-  parameters:
-    isHidden:
-      description: Removes elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/visibility" target="_blank"><code>visibility</code></a> is <code>hidden</code>, unless a child element has <code>visibility</code> set to <code>visible</code>.
-      default: true
-    displayNone:
-      description: Removes elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/display" target="_blank"><code>display</code></a> is <code>none</code>.
-      default: true
-    opacity0:
-      description: Removes element where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/opacity" target="_blank"><code>opacity</code></a> is <code>0</code>.
-      default: true
-    circleR0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/circle" target="_blank"><code>&lt;circle&gt;</code></a> elements with a <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/r" target="_blank">radius</a> of <code>0</code>.
-      default: true
-    ellipseRX0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/ellipse" target="_blank"><code>&lt;ellipse&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/rx" target="_blank"><code>rx</code></a> is <code>0</code>.
-      default: true
-    ellipseRY0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/ellipse" target="_blank"><code>&lt;ellipse&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/ry" target="_blank"><code>ry</code></a> is <code>0</code>.
-      default: true
-    rectWidth0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/rect" target="_blank"><code>&lt;rect&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/width" target="_blank"><code>width</code></a> is <code>0</code>.
-      default: true
-    rectHeight0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/rect" target="_blank"><code>&lt;rect&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/height" target="_blank"><code>height</code></a> is <code>0</code>.
-      default: true
-    patternWidth0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/pattern" target="_blank"><code>&lt;pattern&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/width" target="_blank"><code>width</code></a> is <code>0</code>.
-      default: true
-    patternHeight0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/pattern" target="_blank"><code>&lt;pattern&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/width" target="_blank"><code>height</code></a> is <code>0</code>.
-      default: true
-    imageWidth0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/image" target="_blank"><code>&lt;image&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/width" target="_blank"><code>width</code></a> is <code>0</code>.
-      default: true
-    imageHeight0:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/image" target="_blank"><code>&lt;image&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/width" target="_blank"><code>height</code></a> is <code>0</code>.
-      default: true
-    pathEmptyD:
-      description: Remove <a href="https://developer.mozilla.org/docs/Web/SVG/Element/path" target="_blank"><code>&lt;path&gt;</code></a> elements where <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/d" target="_blank"><code>d</code></a> is not set or empty. Does not apply for single point paths associated with a <a href="https://developer.mozilla.org/docs/Web/SVG/Element/marker" target="_blank"><code>marker</code></a>.
-      default: true
-    polylineEmptyPoints:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/polyline" target="_blank"><code>&lt;polyline&gt;</code></a> elements with no <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/points" target="_blank">points</a> defined.
-      default: true
-    polygonEmptyPoints:
-      description: Removes <a href="https://developer.mozilla.org/docs/Web/SVG/Element/polygon" target="_blank"><code>&lt;polygon&gt;</code></a> elements with no <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/points" target="_blank">points</a> defined.
-      default: true
 ---
 
 Remove hidden or invisible elements from the document. This can be elements with 0 width and height defined, or elements that were just hidden with CSS.

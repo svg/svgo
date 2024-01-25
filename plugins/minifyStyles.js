@@ -1,14 +1,28 @@
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- */
-
 import * as csso from 'csso';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
+
 export const name = 'minifyStyles';
 export const description = 'minifies styles and removes unused styles';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    usage: {
+      title: 'Usage',
+      description:
+        'If to collect usage data such as tags, classes, and IDs to pass to CSSO. This is an object with four properties, which are each configured with a boolean, <code>tags</code>, <code>ids</code>, <code>classes</code>, and <code>force</code>. By default, if a script is found this does not pass usage data to CSSO, but this can be overridden with <code>force</code>, which may yield destructive changes.',
+      type: 'object',
+    },
+  },
+};
 
 /**
  * Minifies styles (<style> element + style attribute) using CSSO.

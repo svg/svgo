@@ -3,30 +3,6 @@ title: Sort Attributes
 svgo:
   pluginId: sortAttrs
   defaultPlugin: true
-  parameters:
-    order:
-      description: An array of attribute keys to order by. Attributes not found in the array are sorted alphabetically.
-      default:
-        - 'id'
-        - 'width'
-        - 'height'
-        - 'x'
-        - 'x1'
-        - 'x2'
-        - 'y'
-        - 'y1'
-        - 'y2'
-        - 'cx'
-        - 'cy'
-        - 'r'
-        - 'fill'
-        - 'stroke'
-        - 'marker'
-        - 'd'
-        - 'points'
-    xmlnsOrder:
-      description: Set to <code>'front'</code> if XML namespaces should be placed infront of all other attributes.
-      default: 'front'
 ---
 
 Sorts attributes in all elements in the document. This does not reduce the size of the SVG, but improves readability and _may_ improve how compression algorithms perform on it.

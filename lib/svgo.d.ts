@@ -8,6 +8,15 @@ type CustomPlugin<T = any> = {
   name: string;
   fn: Plugin<T>;
   params?: T;
+
+  /**
+   * JSON Schema that describes the accepted parameters and their constraints.
+   * See to `null` to explicitly declare that the plugin does not accepted
+   * parameters.
+   *
+   * @see https://json-schema.org/
+   */
+  schema?: unknown;
 };
 
 type PluginConfig =

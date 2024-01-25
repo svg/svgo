@@ -2,6 +2,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeMetadata';
 export const description = 'removes <metadata>';
+export const schema = null;
 
 /**
  * Remove <metadata>.

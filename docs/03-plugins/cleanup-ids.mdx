@@ -2,22 +2,6 @@
 title: Cleanup IDs
 svgo:
   pluginId: cleanupIds
-  parameters:
-    remove:
-      description: If to remove all unreferenced IDs.
-      default: true
-    minify:
-      description: If to minify referenced IDs.
-      default: true
-    preserve:
-      description: Elements with one of these IDs will be ignored.
-      default: []
-    preservePrefixes:
-      description: Elements with an ID that starts with one of these prefixes will be ignored.
-      default: []
-    force:
-      description: This plugin normally does nothing if a <code>&lt;script&gt;</code> or <code>&lt;style&gt;</code> element is found. Setting this to true will bypass that behaviour, which may result in destructive changes.
-      default: false
   defaultPlugin: true
 ---
 

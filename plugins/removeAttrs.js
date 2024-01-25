@@ -1,6 +1,37 @@
 export const name = 'removeAttrs';
 export const description = 'removes specified attributes';
 
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    attrs: {
+      title: 'Attributes',
+      description: 'A selector that matches attributes.',
+      type: ['string', 'null'],
+      default: null,
+    },
+    elemSeparator: {
+      title: 'Element Separator',
+      description:
+        'The pattern syntax used by this plugin is `element:attribute:value`, this changes the delimiter from `:` to another string',
+      type: 'string',
+      default: ':',
+    },
+    preserveCurrentColor: {
+      title: 'Preserve Current Color',
+      description:
+        "If to ignore the attribute when it's set to `currentcolor`.",
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
+
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 const DEFAULT_SEPARATOR = ':';
 const ENOATTRS = `Warning: The plugin "removeAttrs" requires the "attrs" parameter.
 It should have a pattern to remove, otherwise the plugin is a noop.

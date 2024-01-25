@@ -2,13 +2,28 @@ import * as csswhat from 'css-what';
 import { attrsGroupsDeprecated, elems } from './_collections.js';
 import { collectStylesheet } from '../lib/style.js';
 
-export const name = 'removeDeprecatedAttrs';
-export const description = 'removes deprecated attributes';
-
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {{ safe?: Set<string>; unsafe?: Set<string> }} DeprecatedAttrs
  * @typedef {import('../lib/types.js').XastElement} XastElement
  */
+
+export const name = 'removeDeprecatedAttrs';
+export const description = 'removes deprecated attributes';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    removeAny: {
+      title: 'Remove Any',
+      description:
+        'By default, this plugin only removes safe deprecated attributes that do not change the rendered image. Enabling this will remove all deprecated attributes which may impact rendering.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 /**
  * @param {import('../lib/types.js').Stylesheet} stylesheet

@@ -4,6 +4,7 @@ import { visit } from '../lib/xast.js';
 export const name = 'cleanupEnableBackground';
 export const description =
   'remove or cleanup enable-background attribute when possible';
+export const schema = null;
 
 const regEnableBackground =
   /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/;

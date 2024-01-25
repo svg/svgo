@@ -1,7 +1,25 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeDesc';
 export const description = 'removes <desc>';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    removeAny: {
+      title: 'Remove Any',
+      description:
+        'By default, this plugin only removes descriptions that are either empty or contain editor attribution. Enabling this removes the `<desc>` element indiscriminately.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 const standardDescs = /^(Created with|Created using)/;
 

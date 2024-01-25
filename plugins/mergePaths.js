@@ -1,14 +1,40 @@
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { path2js, js2path, intersects } from './_path.js';
+
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import("../lib/types.js").PathDataItem} PathDataItem
  * @typedef {import('../lib/types.js').XastChild} XastChild
  * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { path2js, js2path, intersects } from './_path.js';
-
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    force: {
+      title: 'Float',
+      type: 'boolean',
+      default: false,
+    },
+    floatPrecision: {
+      title: 'Float Precision',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+    },
+    noSpaceAfterFlags: {
+      title: 'No Space After Flags',
+      description:
+        'If to omit spaces after flags. Flags are values that can only be `0` or `1` and are used by some path commands, namely [`A` and `a`](https://developer.mozilla.org/docs/Web/SVG/Attribute/d#elliptical_arc_curve).',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 /**
  * Merge multiple Paths into one.

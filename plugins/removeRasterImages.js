@@ -2,6 +2,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeRasterImages';
 export const description = 'removes raster images (disabled by default)';
+export const schema = null;
 
 /**
  * Remove raster images references in <image>.

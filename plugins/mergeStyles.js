@@ -7,6 +7,7 @@ import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'mergeStyles';
 export const description = 'merge multiple style elements into one';
+export const schema = null;
 
 /**
  * Merge multiple style elements into one.

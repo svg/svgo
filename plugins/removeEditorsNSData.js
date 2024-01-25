@@ -1,9 +1,30 @@
 import { editorNamespaces } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeEditorsNSData';
 export const description =
   'removes editors namespaces, elements and attributes';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    additionalNamespaces: {
+      title: 'Additional Namespaces',
+      description:
+        'If you want to remove additional XML namespaces, you can provide them in a list.',
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      default: [],
+    },
+  },
+};
 
 /**
  * Remove editors namespaces, elements and attributes.
