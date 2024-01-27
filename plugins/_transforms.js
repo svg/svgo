@@ -1,4 +1,4 @@
-import { toFixed } from '../lib/svgo/tools.js';
+import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {{ name: string, data: number[] }} TransformItem
@@ -165,10 +165,28 @@ const mth = {
 
 /**
  * @param {TransformItem} matrix
+ * @returns {TransformItem[][]}
+ */
+const getDecompositions = (matrix) => {
+  const decompositions = [];
+  const qrab = decomposeQRAB(matrix);
+  const qrcd = decomposeQRCD(matrix);
+
+  if (qrab) {
+    decompositions.push(qrab);
+  }
+  if (qrcd) {
+    decompositions.push(qrcd);
+  }
+  return decompositions;
+};
+
+/**
+ * @param {TransformItem} matrix
  * @returns {TransformItem[]|undefined}
  * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
  */
-const decompose = (matrix) => {
+const decomposeQRAB = (matrix) => {
   const data = matrix.data;
 
   // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
@@ -183,6 +201,7 @@ const decompose = (matrix) => {
     return;
   }
   const r = Math.hypot(a, b);
+
   if (r === 0) {
     return;
   }
@@ -217,6 +236,62 @@ const decompose = (matrix) => {
     decomposition.push({
       name: 'skewX',
       data: [mth.deg(Math.atan(ac_plus_bd / (a * a + b * b)))],
+    });
+  }
+
+  return decomposition;
+};
+
+/**
+ * @param {TransformItem} matrix
+ * @returns {TransformItem[]|undefined}
+ * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ */
+const decomposeQRCD = (matrix) => {
+  const data = matrix.data;
+
+  // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
+  const a = data[0];
+  const b = data[1];
+  const c = data[2];
+  const d = data[3];
+  const e = data[4];
+  const f = data[5];
+  const delta = a * d - b * c;
+  if (delta === 0) {
+    return;
+  }
+  const s = Math.hypot(c, d);
+  if (s === 0) {
+    return;
+  }
+
+  const decomposition = [];
+
+  if (e || f) {
+    decomposition.push({
+      name: 'translate',
+      data: [e, f],
+    });
+  }
+
+  const rotationAngleRads = Math.PI / 2 - (d < 0 ? -1 : 1) * Math.acos(-c / s);
+  decomposition.push({
+    name: 'rotate',
+    data: [mth.deg(rotationAngleRads), 0, 0],
+  });
+
+  const sx = delta / s;
+  const sy = s;
+  if (sx !== 1 || sy !== 1) {
+    decomposition.push({ name: 'scale', data: [sx, sy] });
+  }
+
+  const ac_plus_bd = a * c + b * d;
+  if (ac_plus_bd) {
+    decomposition.push({
+      name: 'skewY',
+      data: [mth.deg(Math.atan(ac_plus_bd / (c * c + d * d)))],
     });
   }
 
@@ -331,8 +406,9 @@ const optimize = (roundedTransforms, rawTransforms) => {
         break;
 
       case 'skewX':
+      case 'skewY':
         optimizedTransforms.push({
-          name: 'skewX',
+          name: roundedTransform.name,
           data: [data[0]],
         });
         break;
@@ -346,6 +422,7 @@ const optimize = (roundedTransforms, rawTransforms) => {
             next &&
             next.name === 'rotate' &&
             next.data[0] !== 180 &&
+            next.data[0] !== 0 &&
             next.data[1] === 0 &&
             next.data[2] === 0
           ) {
@@ -384,22 +461,29 @@ const optimize = (roundedTransforms, rawTransforms) => {
  * @returns {TransformItem[]}
  */
 export const matrixToTransform = (origMatrix, params) => {
-  const decomposed = decompose(origMatrix);
-  if (decomposed === undefined) {
-    return [origMatrix];
+  const decomposed = getDecompositions(origMatrix);
+
+  let shortest;
+  let shortestLen = Number.MAX_VALUE;
+
+  for (const decomposition of decomposed) {
+    // Make a copy of the decomposed matrix, and round all data.
+    const roundedTransforms = decomposition.map((a) => {
+      return { ...a };
+    });
+    roundedTransforms.map((transform) => {
+      roundTransform(transform, params);
+    });
+
+    const optimized = optimize(roundedTransforms, decomposition);
+    const len = js2transform(optimized, params).length;
+    if (len < shortestLen) {
+      shortest = optimized;
+      shortestLen = len;
+    }
   }
 
-  // Make a copy of the decomposed matrix, and round all data.
-  const roundedTransforms = decomposed.map((a) => {
-    return { ...a };
-  });
-  roundedTransforms.map((transform) => {
-    roundTransform(transform, params);
-  });
-
-  const optimized = optimize(roundedTransforms, decomposed);
-
-  return optimized;
+  return shortest ? shortest : [origMatrix];
 };
 
 /**
@@ -579,6 +663,7 @@ const degRound = (data, params) => {
     return round(data);
   }
 };
+
 /**
  * @type {(data: number[], params: TransformParams) => number[]}
  */
@@ -636,4 +721,22 @@ const smartRound = (precision, data) => {
   }
 
   return data;
+};
+
+/**
+ * Convert transforms JS representation to string.
+ *
+ * @param {TransformItem[]} transformJS
+ * @param {TransformParams} params
+ * @returns {string}
+ */
+const js2transform = (transformJS, params) => {
+  const transformString = transformJS
+    .map((transform) => {
+      roundTransform(transform, params);
+      return `${transform.name}(${cleanupOutData(transform.data, params)})`;
+    })
+    .join('');
+
+  return transformString;
 };
