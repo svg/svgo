@@ -143,6 +143,10 @@ export const fn = (root, params) => {
           computedStyle.opacity.type === 'static' &&
           computedStyle.opacity.value === '0'
         ) {
+          if (node.name === 'path') {
+            nonRenderedNodes.set(node, parentNode);
+            return visitSkip;
+          }
           removeElement(node, parentNode);
         }
       },
