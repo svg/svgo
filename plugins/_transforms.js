@@ -730,7 +730,7 @@ const smartRound = (precision, data) => {
  * @param {TransformParams} params
  * @returns {string}
  */
-const js2transform = (transformJS, params) => {
+export const js2transform = (transformJS, params) => {
   const transformString = transformJS
     .map((transform) => {
       roundTransform(transform, params);

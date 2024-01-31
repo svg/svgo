@@ -1,5 +1,5 @@
-import { cleanupOutData } from '../lib/svgo/tools.js';
 import {
+  js2transform,
   transform2js,
   transformsMultiply,
   matrixToTransform,
@@ -293,22 +293,4 @@ const removeUseless = (transforms) => {
 
     return true;
   });
-};
-
-/**
- * Convert transforms JS representation to string.
- *
- * @param {TransformItem[]} transformJS
- * @param {TransformParams} params
- * @returns {string}
- */
-const js2transform = (transformJS, params) => {
-  const transformString = transformJS
-    .map((transform) => {
-      roundTransform(transform, params);
-      return `${transform.name}(${cleanupOutData(transform.data, params)})`;
-    })
-    .join('');
-
-  return transformString;
 };
