@@ -359,7 +359,6 @@ const isIdentityTransform = (t) => {
  */
 const optimize = (roundedTransforms, rawTransforms) => {
   const optimizedTransforms = [];
-  let invertScale = false;
 
   for (let index = 0; index < roundedTransforms.length; index++) {
     const roundedTransform = roundedTransforms[index];
@@ -373,11 +372,15 @@ const optimize = (roundedTransforms, rawTransforms) => {
       case 'rotate':
         switch (data[0]) {
           case 180:
+          case -180:
             {
               // If the next element is a scale, invert it, and don't add the rotate to the optimized array.
               const next = roundedTransforms[index + 1];
               if (next && next.name === 'scale') {
-                invertScale = true;
+                optimizedTransforms.push(
+                  createScaleTransform(next.data.map((v) => -v)),
+                );
+                index++;
               } else {
                 // Otherwise replace the rotate with a scale(-1).
                 optimizedTransforms.push({
@@ -395,14 +398,7 @@ const optimize = (roundedTransforms, rawTransforms) => {
         break;
 
       case 'scale':
-        {
-          const scaleData = data.slice(0, data[0] === data[1] ? 1 : 2);
-          optimizedTransforms.push({
-            name: 'scale',
-            data: invertScale ? scaleData.map((v) => -v) : scaleData,
-          });
-          invertScale = false;
-        }
+        optimizedTransforms.push(createScaleTransform(data));
         break;
 
       case 'skewX':
@@ -416,12 +412,13 @@ const optimize = (roundedTransforms, rawTransforms) => {
       case 'translate':
         {
           // If the next item is a rotate(a,0,0), merge the translate and rotate.
-          // If the rotation angle is 180, assume it will be optimized out, and don't do the merge.
+          // If the rotation angle is +/-180, assume it will be optimized out, and don't do the merge.
           const next = roundedTransforms[index + 1];
           if (
             next &&
             next.name === 'rotate' &&
             next.data[0] !== 180 &&
+            next.data[0] !== -180 &&
             next.data[0] !== 0 &&
             next.data[1] === 0 &&
             next.data[2] === 0
@@ -452,6 +449,18 @@ const optimize = (roundedTransforms, rawTransforms) => {
   return optimizedTransforms.length
     ? optimizedTransforms
     : [{ name: 'scale', data: [1] }];
+};
+
+/**
+ * @param {number[]} data
+ * @returns {TransformItem}
+ */
+const createScaleTransform = (data) => {
+  const scaleData = data.slice(0, data[0] === data[1] ? 1 : 2);
+  return {
+    name: 'scale',
+    data: scaleData,
+  };
 };
 
 /**
