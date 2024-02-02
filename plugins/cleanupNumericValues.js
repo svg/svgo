@@ -1,4 +1,4 @@
-import { removeLeadingZero } from '../lib/svgo/tools.js';
+import { removeLeadingZero, toFixed } from '../lib/svgo/tools.js';
 
 export const name = 'cleanupNumericValues';
 export const description =
@@ -43,7 +43,7 @@ export const fn = (_root, params) => {
               const num = Number(value);
               return Number.isNaN(num)
                 ? value
-                : Number(num.toFixed(floatPrecision));
+                : toFixed(num, floatPrecision);
             })
             .join(' ');
         }
@@ -59,7 +59,7 @@ export const fn = (_root, params) => {
           // if attribute value matches regNumericValues
           if (match) {
             // round it to the fixed precision
-            let num = Number(Number(match[1]).toFixed(floatPrecision));
+            let num = toFixed(Number(match[1]), floatPrecision);
             /**
              * @type {any}
              */
@@ -71,11 +71,8 @@ export const fn = (_root, params) => {
 
             // convert absolute values to pixels
             if (convertToPx && units !== '' && units in absoluteLengths) {
-              const pxNum = Number(
-                (absoluteLengths[units] * Number(match[1])).toFixed(
-                  floatPrecision,
-                ),
-              );
+              const pxNum = toFixed(absoluteLengths[units] * Number(match[1]),
+                floatPrecision);
               if (pxNum.toString().length < match[0].length) {
                 num = pxNum;
                 units = 'px';
