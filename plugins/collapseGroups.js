@@ -1,3 +1,4 @@
+import { parseStyleDeclarations } from '../lib/style.js';
 import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
@@ -68,11 +69,16 @@ export const fn = () => {
           node.children.length === 1
         ) {
           const firstChild = node.children[0];
+          let nodeHasFilter = node.attributes.filter ? true : false;
+          if (!nodeHasFilter && node.attributes.style) {
+            const styles = parseStyleDeclarations(node.attributes.style);
+            nodeHasFilter = styles.some((e) => e.name === 'filter');
+          }
           // TODO untangle this mess
           if (
             firstChild.type === 'element' &&
             firstChild.attributes.id == null &&
-            node.attributes.filter == null &&
+            !nodeHasFilter &&
             (node.attributes.class == null ||
               firstChild.attributes.class == null) &&
             ((node.attributes['clip-path'] == null &&
