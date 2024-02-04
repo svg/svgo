@@ -190,12 +190,7 @@ const decomposeQRAB = (matrix) => {
   const data = matrix.data;
 
   // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
-  const a = data[0];
-  const b = data[1];
-  const c = data[2];
-  const d = data[3];
-  const e = data[4];
-  const f = data[5];
+  const [ a, b, c, d, e, f ] = data;
   const delta = a * d - b * c;
   if (delta === 0) {
     return;
