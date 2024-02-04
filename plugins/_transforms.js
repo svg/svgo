@@ -184,13 +184,12 @@ const getDecompositions = (matrix) => {
 /**
  * @param {TransformItem} matrix
  * @returns {TransformItem[]|undefined}
- * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ * @see {@link https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html} Where applicable, variables are named in accordance with this document.
  */
 const decomposeQRAB = (matrix) => {
   const data = matrix.data;
 
-  // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
-  const [ a, b, c, d, e, f ] = data;
+  const [a, b, c, d, e, f] = data;
   const delta = a * d - b * c;
   if (delta === 0) {
     return;
@@ -240,13 +239,12 @@ const decomposeQRAB = (matrix) => {
 /**
  * @param {TransformItem} matrix
  * @returns {TransformItem[]|undefined}
- * @see https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
+ * @see {@link https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html} Where applicable, variables are named in accordance with this document.
  */
 const decomposeQRCD = (matrix) => {
   const data = matrix.data;
 
-  // Where applicable, variables are named in accordance with the frederic-wang document referenced above.
-  const [ a, b, c, d, e, f ] = data;
+  const [a, b, c, d, e, f] = data;
   const delta = a * d - b * c;
   if (delta === 0) {
     return;

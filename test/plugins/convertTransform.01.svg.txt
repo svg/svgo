@@ -1,43 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(1 0 0 1 50 90),matrix(0.707 -0.707 0.707 0.707 0 0) ,matrix(1 0 0 1 130 160)"/>
-    <rect x="0" y="0" width="10" height="20" transform="translate(50 90) , rotate(-45)   translate(130 160)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21) scale(2)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21) skewX(45)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix( 0.707 -0.707 0.707 0.707 255.03 111.21 ) skewY( 45 )"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(1 0 1 1 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(1.25,0,0,-1.25,0,56.26) scale(1,-1)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(1.25,0,0,-1.25,0,56.26) matrix(0.1325312,0,0,-0.1325312,-31.207631,89.011662)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(1 0 0 -1 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(-1 0 0 1 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0 1-1 0 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0-1 1 0 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0.707 -0.707 -0.707 -0.707 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(-0.707 0.707 0.707 0.707 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(-0.707 0.707 -0.707 -0.707 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(0.707 0.707 -0.707 0.707 0 0)"/>
-    <rect x="0" y="0" width="10" height="20" transform="matrix(.647 -.647 -.6443 -.6443 0 0)"/>
+    <rect width="10" height="20" transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21)"/>
+    <rect width="10" height="20" transform="matrix(1 0 0 1 50 90),matrix(0.707 -0.707 0.707 0.707 0 0) ,matrix(1 0 0 1 130 160)"/>
+    <rect width="10" height="20" transform="translate(50 90) , rotate(-45)   translate(130 160)"/>
+    <rect width="10" height="20" transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21) scale(2)"/>
+    <rect width="10" height="20" transform="matrix(0.707 -0.707 0.707 0.707 255.03 111.21) skewX(45)"/>
+    <rect width="10" height="20" transform="matrix( 0.707 -0.707 0.707 0.707 255.03 111.21 ) skewY( 45 )"/>
+    <rect width="10" height="20" transform="matrix(1 0 1 1 0 0)"/>
+    <rect width="10" height="20" transform="matrix(1.25,0,0,-1.25,0,56.26) scale(1,-1)"/>
+    <rect width="10" height="20" transform="matrix(1.25,0,0,-1.25,0,56.26) matrix(0.1325312,0,0,-0.1325312,-31.207631,89.011662)"/>
+    <rect width="10" height="20" transform="matrix(1 0 0 -1 0 0)"/>
+    <rect width="10" height="20" transform="matrix(-1 0 0 1 0 0)"/>
+    <rect width="10" height="20" transform="matrix(0 1-1 0 0 0)"/>
+    <rect width="10" height="20" transform="matrix(0-1 1 0 0 0)"/>
+    <rect width="10" height="20" transform="matrix(0.707 -0.707 -0.707 -0.707 0 0)"/>
+    <rect width="10" height="20" transform="matrix(-0.707 0.707 0.707 0.707 0 0)"/>
+    <rect width="10" height="20" transform="matrix(-0.707 0.707 -0.707 -0.707 0 0)"/>
+    <rect width="10" height="20" transform="matrix(0.707 0.707 -0.707 0.707 0 0)"/>
+    <rect width="10" height="20" transform="matrix(.647 -.647 -.6443 -.6443 0 0)"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.776 -252.28)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)scale(2)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)skewX(45)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45 261.757 -252.243)skewY(45)"/>
-    <rect x="0" y="0" width="10" height="20" transform="skewX(45)"/>
-    <rect x="0" y="0" width="10" height="20" transform="translate(0 56.26)scale(1.25)"/>
-    <rect x="0" y="0" width="10" height="20" transform="translate(-39.01 -55.005)scale(.16566)"/>
-    <rect x="0" y="0" width="10" height="20" transform="scale(1 -1)"/>
-    <rect x="0" y="0" width="10" height="20" transform="scale(-1 1)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(90)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-90)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45)scale(1 -1)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(135)scale(1 -1)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(135)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(45)"/>
-    <rect x="0" y="0" width="10" height="20" transform="rotate(-45)scale(.915 -.9112)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.776 -252.28)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)scale(2)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)skewX(45)"/>
+    <rect width="10" height="20" transform="rotate(-45 261.757 -252.243)skewY(45)"/>
+    <rect width="10" height="20" transform="skewX(45)"/>
+    <rect width="10" height="20" transform="translate(0 56.26)scale(1.25)"/>
+    <rect width="10" height="20" transform="translate(-39.01 -55.005)scale(.16566)"/>
+    <rect width="10" height="20" transform="scale(1 -1)"/>
+    <rect width="10" height="20" transform="scale(-1 1)"/>
+    <rect width="10" height="20" transform="rotate(90)"/>
+    <rect width="10" height="20" transform="rotate(-90)"/>
+    <rect width="10" height="20" transform="rotate(-45)scale(1 -1)"/>
+    <rect width="10" height="20" transform="rotate(135)scale(1 -1)"/>
+    <rect width="10" height="20" transform="rotate(135)"/>
+    <rect width="10" height="20" transform="rotate(45)"/>
+    <rect width="10" height="20" transform="rotate(-45)scale(.915 -.9112)"/>
 </svg>
