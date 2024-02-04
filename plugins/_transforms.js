@@ -480,7 +480,7 @@ export const matrixToTransform = (origMatrix, params) => {
     }
   }
 
-  return shortest ? shortest : [origMatrix];
+  return shortest ?? [origMatrix];
 };
 
 /**
