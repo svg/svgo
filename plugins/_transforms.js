@@ -464,12 +464,14 @@ export const matrixToTransform = (origMatrix, params) => {
   let shortestLen = Number.MAX_VALUE;
 
   for (const decomposition of decomposed) {
-    // Make a copy of the decomposed matrix, and round all data.
-    const roundedTransforms = decomposition.map((a) => {
-      return { ...a };
-    });
-    roundedTransforms.map((transform) => {
-      roundTransform(transform, params);
+    // Make a copy of the decomposed matrix, and round all data. We need to keep the original decomposition,
+    // at full precision, to perform some optimizations.
+    const roundedTransforms = decomposition.map((transformItem) => {
+      const transformCopy = {
+        name: transformItem.name,
+        data: [...transformItem.data],
+      };
+      return roundTransform(transformCopy, params);
     });
 
     const optimized = optimize(roundedTransforms, decomposition);
