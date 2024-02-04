@@ -3,14 +3,14 @@ Test to make sure rotate(180) inverts scale(1).
 ===
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-    <rect x="20" y="30" width="40" height="50" fill="green" transform="matrix(-1,-4.371139e-8,4.371139e-8,-1,139.2007,136.8)"/>
+    <rect x="20" y="30" width="40" height="50" transform="matrix(-1,-4.371139e-8,4.371139e-8,-1,139.2007,136.8)"/>
 </svg>
 
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-    <rect x="20" y="30" width="40" height="50" fill="green" transform="translate(139.2007 136.8)scale(-1)"/>
+    <rect x="20" y="30" width="40" height="50" transform="translate(139.2007 136.8)scale(-1)"/>
 </svg>
 
 @@@
