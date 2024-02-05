@@ -476,6 +476,7 @@ export const fn = (root, params) => {
             ] of nonRenderedNodes.entries()) {
               if (canRemoveNonRenderingNode(nonRenderedNode)) {
                 detachNodeFromParent(nonRenderedNode, nonRenderedParent);
+                nonRenderedNodes.delete(nonRenderedNode);
 
                 // For any elements referenced by the just-deleted node and its children, remove the node from the list of referencing nodes.
                 const deletedReferenceNodes =
