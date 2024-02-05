@@ -1,0 +1,15 @@
+Test with 180 degree rotation, translation, and no scaling in matrix. Matrix not changed,
+since it is shorter than translate(5,7)scale(-1).
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="-100 -100 100 100">
+    <rect x="0" y="0" width="10" height="20" transform="matrix(-1,0,0,-1,5,7)"/>
+</svg>
+
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="-100 -100 100 100">
+    <rect x="0" y="0" width="10" height="20" transform="matrix(-1 0 0 -1 5 7)"/>
+</svg>
