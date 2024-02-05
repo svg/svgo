@@ -115,20 +115,17 @@ export const fn = (root, params) => {
   /**
    * Retrieve information about all IDs referenced by an element and its children.
    * @param {XastElement} node
-   * @returns {Array<{node:XastElement,refId:string}>}
+   * @returns {XastElement[]}
    */
-  function getIdsReferencedByBranch(node) {
+  function getNodesReferencedByBranch(node) {
     const allIds = [];
     const thisNodeIds = referencedIdsByNode.get(node);
     if (thisNodeIds) {
-      const refs = thisNodeIds.map((e) => {
-        return { node: node, refId: e };
-      });
-      allIds.push(...refs);
+      allIds.push(node);
     }
     for (const child of node.children) {
       if (child.type === 'element') {
-        allIds.push(...getIdsReferencedByBranch(child));
+        allIds.push(...getNodesReferencedByBranch(child));
       }
     }
     return allIds;
@@ -480,15 +477,19 @@ export const fn = (root, params) => {
               if (canRemoveNonRenderingNode(nonRenderedNode)) {
                 detachNodeFromParent(nonRenderedNode, nonRenderedParent);
 
-                // For any elements referenced by the just-deleted node, remove the node from the list of referencing nodes.
-                const referencedIds = getIdsReferencedByBranch(nonRenderedNode);
-                if (referencedIds) {
-                  for (const refInfo of referencedIds) {
-                    const refs = allReferences.get(refInfo.refId);
-                    if (refs) {
-                      refs.delete(refInfo.node);
-                      if (refs.size === 0) {
-                        tryAgain = true;
+                // For any elements referenced by the just-deleted node and its children, remove the node from the list of referencing nodes.
+                const deletedReferenceNodes =
+                  getNodesReferencedByBranch(nonRenderedNode);
+                for (const deletedNode of deletedReferenceNodes) {
+                  const referencedIds = referencedIdsByNode.get(deletedNode);
+                  if (referencedIds) {
+                    for (const id of referencedIds) {
+                      const referencingNodes = allReferences.get(id);
+                      if (referencingNodes) {
+                        referencingNodes.delete(deletedNode);
+                        if (referencingNodes.size === 0) {
+                          tryAgain = true;
+                        }
                       }
                     }
                   }
