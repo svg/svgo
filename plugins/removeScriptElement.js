@@ -3,6 +3,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeScriptElement';
 export const description = 'removes scripts (disabled by default)';
+export const schema = null;
 
 /** Union of all event attributes. */
 const eventAttrs = [

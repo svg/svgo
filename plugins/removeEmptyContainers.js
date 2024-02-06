@@ -3,6 +3,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeEmptyContainers';
 export const description = 'removes empty container elements';
+export const schema = null;
 
 /**
  * Remove empty containers.

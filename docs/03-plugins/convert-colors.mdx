@@ -3,25 +3,6 @@ title: Convert Colors
 svgo:
   pluginId: convertColors
   defaultPlugin: true
-  parameters:
-    currentColor:
-      description: If to convert all instances of a color to <code>currentcolor</code>. This means to inherit the active foreground color, for example in HTML5 this would be the <a href="https://developer.mozilla.org/docs/Web/CSS/color" target="_blank"><code>color</code></a> property in CSS.
-      default: false
-    names2hex:
-      description: If to convert color names to the hex equivalent.
-      default: true
-    rgb2hex:
-      description: If to convert RGB colors to the hex equivalent, ignores RGBA.
-      default: true
-    convertCase:
-      description: Convert all color values to either upper or lower case by setting this to <code>'upper'</code>  or <code>'lower'</code> respectively to improve compression. Set to <code>false</code> to disable this behavior.
-      default: 'lower'
-    shorthex:
-      description: If to convert 6 character hex colors to the 3 character equivalent where possible.
-      default: true
-    shortname:
-      description: If to convert hex colors to the color name, if the color name is shorter then the hex equivalent.
-      default: true
 ---
 
 Converts color references to the shortest equivalent.

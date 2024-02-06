@@ -7,6 +7,7 @@ import {
 export const name = 'removeNonInheritableGroupAttrs';
 export const description =
   'removes non-inheritable group’s presentational attributes';
+export const schema = null;
 
 /**
  * Remove non-inheritable group's "presentation" attributes.

@@ -2,11 +2,6 @@
 title: Add Attributes to Elements
 svgo:
   pluginId: addAttributesToSVGElement
-  parameters:
-    attributes:
-      description: Attributes to add to the <code>&lt;svg&gt;</code> element. If key/value pairs are passed, the attributes and added with the paired value. If an array is passed, attributes are added with no key associated with them.
-      default: null
-    attribute:
 ---
 
 Adds attributes to the outer most [`<svg>`](https://developer.mozilla.org/docs/Web/SVG/Element/svg) element in the document. This is not an optimization and will increase the size of SVG documents.

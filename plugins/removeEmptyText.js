@@ -1,7 +1,39 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeEmptyText';
 export const description = 'removes empty <text> elements';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    text: {
+      title: 'Remove <text>',
+      description:
+        'If to remove empty [`<text>`](https://developer.mozilla.org/docs/Web/SVG/Element/text) elements.',
+      type: 'boolean',
+      default: true,
+    },
+    tspan: {
+      title: 'Remove <tspan>',
+      description:
+        'If to remove empty [`<tspan>`](https://developer.mozilla.org/docs/Web/SVG/Element/tspan) elements.',
+      type: 'boolean',
+      default: true,
+    },
+    tref: {
+      title: 'Remove <tref>',
+      description:
+        'If to remove empty [`<tref>`](https://developer.mozilla.org/docs/Web/SVG/Element/tref) elements.',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 /**
  * Remove empty Text elements.

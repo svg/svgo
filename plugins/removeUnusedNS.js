@@ -1,5 +1,6 @@
 export const name = 'removeUnusedNS';
 export const description = 'removes unused namespaces declaration';
+export const schema = null;
 
 /**
  * Remove unused namespaces declaration from svg element

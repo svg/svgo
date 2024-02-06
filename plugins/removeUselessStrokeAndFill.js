@@ -3,8 +3,38 @@ import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 import { elemsGroups } from './_collections.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeUselessStrokeAndFill';
 export const description = 'removes useless stroke and fill attributes';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    stroke: {
+      title: 'Remove Stroke',
+      description: 'If to remove redundant strokes.',
+      type: 'boolean',
+      default: true,
+    },
+    fill: {
+      title: 'Remove Fill',
+      description: 'If to remove redundant fills.',
+      type: 'boolean',
+      default: true,
+    },
+    removeNone: {
+      title: 'Remove none',
+      description:
+        'If to remove elements where both the `fill` and `stroke` attributes are `none`.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 /**
  * Remove useless stroke and fill attrs.

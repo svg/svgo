@@ -1,9 +1,3 @@
-/**
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- */
-
 import { elemsGroups } from './_collections.js';
 import {
   visit,
@@ -15,11 +9,130 @@ import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { parsePathData } from '../lib/path.js';
 import { hasScripts, findReferences } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
+
 const nonRendering = elemsGroups.nonRendering;
 
 export const name = 'removeHiddenElems';
 export const description =
   'removes hidden elements (zero sized, with absent attributes)';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    isHidden: {
+      title: 'Is Hidden',
+      description:
+        'Removes elements where [`visibility`](https://developer.mozilla.org/docs/Web/SVG/Attribute/visibility) is `hidden`, unless a child element has `visibility` set to `visible`.',
+      type: 'boolean',
+      default: true,
+    },
+    displayNone: {
+      title: 'Display None',
+      description:
+        'Removes elements where [`display`](https://developer.mozilla.org/docs/Web/SVG/Attribute/display) is `none`.',
+      type: 'boolean',
+      default: true,
+    },
+    opacity0: {
+      title: 'Opacity 0',
+      description:
+        'Removes element where [`opacity`](https://developer.mozilla.org/docs/Web/SVG/Attribute/opacity) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    circleR0: {
+      title: 'Circle [r=0]',
+      description:
+        'Removes [`<circle>`](https://developer.mozilla.org/docs/Web/SVG/Element/circle) elements with a [radius](https://developer.mozilla.org/docs/Web/SVG/Attribute/r) of `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    ellipseRX0: {
+      title: 'Ellipse [rx=0]',
+      description:
+        'Removes [`<ellipse>`](https://developer.mozilla.org/docs/Web/SVG/Element/ellipse) elements where [`rx`](https://developer.mozilla.org/docs/Web/SVG/Attribute/rx) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    ellipseRY0: {
+      title: 'Ellipse [ry=0]',
+      description:
+        'Removes [`<ellipse>`](https://developer.mozilla.org/docs/Web/SVG/Element/ellipse) elements where [`ry`](https://developer.mozilla.org/docs/Web/SVG/Attribute/ry) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    rectWidth0: {
+      title: 'Rect [width=0]',
+      description:
+        'Removes [`<rect>`](https://developer.mozilla.org/docs/Web/SVG/Element/rect) elements where [`width`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    rectHeight0: {
+      title: 'Rect [height=0]',
+      description:
+        'Removes [`<rect>`](https://developer.mozilla.org/docs/Web/SVG/Element/rect) elements where [`height`](https://developer.mozilla.org/docs/Web/SVG/Attribute/height) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    patternWidth0: {
+      title: 'Pattern [width=0]',
+      description:
+        'Removes [`<pattern>`](https://developer.mozilla.org/docs/Web/SVG/Element/pattern) elements where [`width`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    patternHeight0: {
+      title: 'Pattern [height=0]',
+      description:
+        'Removes [`<pattern>`](https://developer.mozilla.org/docs/Web/SVG/Element/pattern) elements where [`height`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    imageWidth0: {
+      title: 'Image [width=0]',
+      description:
+        'Removes [`<image>`](https://developer.mozilla.org/docs/Web/SVG/Element/image) elements where [`width`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    imageHeight0: {
+      title: 'Image [height=0]',
+      description:
+        'Removes [`<image>`](https://developer.mozilla.org/docs/Web/SVG/Element/image) elements where [`height`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) is `0`.',
+      type: 'boolean',
+      default: true,
+    },
+    pathEmptyD: {
+      title: 'Path Empty d',
+      description:
+        'Remove [`<path>`](https://developer.mozilla.org/docs/Web/SVG/Element/path) elements where [`d`](https://developer.mozilla.org/docs/Web/SVG/Attribute/d) is not set or empty. Does not apply for single point paths associated with a [`marker`](https://developer.mozilla.org/docs/Web/SVG/Element/marker).',
+      type: 'boolean',
+      default: true,
+    },
+    polylineEmptyPoints: {
+      title: 'Polyline Empty Points',
+      description:
+        'Removes [`<polyline>`](https://developer.mozilla.org/docs/Web/SVG/Element/polyline) elements with no [points](https://developer.mozilla.org/docs/Web/SVG/Attribute/points) defined.',
+      type: 'boolean',
+      default: true,
+    },
+    polygonEmptyPoints: {
+      title: 'Polygon Empty Points',
+      description:
+        'Removes [`<polygon>`](https://developer.mozilla.org/docs/Web/SVG/Element/polygon) elements with no [points](https://developer.mozilla.org/docs/Web/SVG/Attribute/points) defined.',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 /**
  * Remove hidden elements with disabled rendering:

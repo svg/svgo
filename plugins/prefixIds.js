@@ -2,12 +2,43 @@ import * as csstree from 'css-tree';
 import { referencesProps } from './_collections.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
  * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
 export const name = 'prefixIds';
 export const description = 'prefix IDs';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    delim: {
+      title: 'Delimiter',
+      description: 'Content to insert between the prefix and original value.',
+      type: 'string',
+      default: '__',
+    },
+    prefix: {
+      title: 'Prefix',
+      description: 'Either a string or a function that resolves to a string.',
+      type: ['string', 'object'],
+    },
+    prefixIds: {
+      title: 'Prefix IDs',
+      description: 'If to prefix `id` attributes.',
+      type: 'boolean',
+      default: true,
+    },
+    prefixClassNames: {
+      title: 'Prefix Classes',
+      description: 'If to prefix classes in the `class` attribute.',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 /**
  * extract basename from path

@@ -6,12 +6,123 @@ import { visit } from '../lib/xast.js';
 import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
 export const name = 'convertPathData';
 export const description =
   'optimizes path data: writes in shorter form, applies transformations';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    applyTransforms: {
+      title: 'Apply Transforms',
+      description: 'If to apply transforms.',
+      type: 'boolean',
+      default: true,
+    },
+    applyTransformsStroked: {
+      title: 'Apply Transforms Stroked',
+      description: 'If to apply transforms to paths with a stroke.',
+      type: 'boolean',
+      default: true,
+    },
+    makeArcs: {
+      title: 'Make Arcs',
+      description:
+        'If to convert from curves to arcs when possible. This is an object with two properties, `threshold` and `tolerance`.',
+    },
+    straightCurves: {
+      title: 'Straight Curves',
+      description:
+        'If to convert curve commands that are effectively straight lines to line commands.',
+      type: 'boolean',
+      default: true,
+    },
+    convertToQ: {
+      title: 'Convert to Q',
+      description:
+        'If to convert cubic beziers to quadratic beziers when they effectively are.',
+      type: 'boolean',
+      default: true,
+    },
+    lineShorthands: {
+      title: 'Line Shorthands',
+      description:
+        'If to convert regular lines to an explicit horizontal or vertical line where possible.',
+      type: 'boolean',
+      default: true,
+    },
+    convertToZ: {
+      title: 'Convert to Z',
+      description: 'If to convert lines that go to the start to a `z` command.',
+      type: 'boolean',
+      default: true,
+    },
+    curveSmoothShorthands: {
+      title: 'Curve Smooth Shorthands',
+      description: 'If to convert curves to smooth curves where possible.',
+      type: 'boolean',
+      default: true,
+    },
+    floatPrecision: {
+      title: 'Float Precision',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+      default: 3,
+    },
+    transformPrecision: {
+      title: 'Transform Precision',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+      default: 5,
+    },
+    smartArcRounding: {
+      title: 'Smart Arc Rounding',
+      description:
+        'Round the radius of circular arcs when the effective change is under the error. The effective change is determined using the [sagitta](https://wikipedia.org/wiki/Sagitta_(geometry)) of the arc.',
+      type: 'boolean',
+      default: true,
+    },
+    removeUseless: {
+      title: 'Remove Useless',
+      description: "Remove redundant path commands that don't draw anything.",
+      type: 'boolean',
+      default: true,
+    },
+    collapseRepeated: {
+      title: 'Collapse Repeated',
+      description:
+        'Collapse repeated commands when they can be merged into one.',
+      type: 'boolean',
+      default: true,
+    },
+    utilizeAbsolute: {
+      title: 'Utilize Absolute',
+      description:
+        'If to convert between absolute or relative coordinates, whichever is shortest.',
+      type: 'boolean',
+      default: true,
+    },
+    negativeExtraSpace: {
+      title: 'Negative Extra Space',
+      type: 'boolean',
+      default: true,
+    },
+    forceAbsolutePath: {
+      title: 'Force Absolute Path',
+      description:
+        'If to always convert to absolute coordinates, even if it adds more bytes.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 /** @type {(data: number[]) => number[]} */
 let roundData;

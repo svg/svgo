@@ -1,8 +1,37 @@
 import { querySelectorAll } from '../lib/xast.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeAttributesBySelector';
 export const description =
   'removes attributes of elements that match a css selector';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  required: ['selectors'],
+  properties: {
+    selectors: {
+      title: 'Selectors',
+      description:
+        'An array of objects with two properties, `selector`, and `attributes`, which represent a CSS selector and the attributes to remove respectively.',
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          selector: {
+            type: 'string',
+          },
+          attributes: {
+            type: 'attributes',
+          },
+        },
+      },
+    },
+  },
+};
 
 /**
  * Removes attributes of elements that match a css selector.

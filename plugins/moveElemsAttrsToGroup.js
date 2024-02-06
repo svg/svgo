@@ -4,6 +4,7 @@ import { inheritableAttrs, pathElems } from './_collections.js';
 export const name = 'moveElemsAttrsToGroup';
 export const description =
   'Move common attributes of group children to the group';
+export const schema = null;
 
 /**
  * Move common attributes of group children to the group

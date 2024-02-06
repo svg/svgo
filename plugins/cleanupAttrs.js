@@ -1,6 +1,37 @@
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'cleanupAttrs';
 export const description =
   'cleanups attributes from newlines, trailing and repeating spaces';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    newlines: {
+      title: 'New Lines',
+      description: 'Replace instances of a newline with a single whitespace.',
+      type: 'boolean',
+      default: true,
+    },
+    trim: {
+      title: 'Trim',
+      description:
+        'Trim whitespace characters from the start and end of attribute values.',
+      type: 'boolean',
+      default: true,
+    },
+    spaces: {
+      title: 'Spaces',
+      description:
+        'Replace all instances of 2 or more whitespace characters with a single whitespace.',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 const regNewlinesNeedSpace = /(\S)\r?\n(\S)/g;
 const regNewlines = /\r?\n/g;

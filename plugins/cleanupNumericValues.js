@@ -1,8 +1,45 @@
 import { removeLeadingZero } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'cleanupNumericValues';
 export const description =
   'rounds numeric values to the fixed precision, removes default ‘px’ units';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    floatPrecision: {
+      title: 'Remove',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+      default: 3,
+    },
+    leadingZero: {
+      title: 'Remove',
+      description: 'If to trim leading zeros.',
+      type: 'boolean',
+      default: true,
+    },
+    defaultPx: {
+      title: 'Remove',
+      description:
+        "If to remove the units when it's `px`, as this is the default if not specified.",
+      type: 'boolean',
+      default: true,
+    },
+    convertToPx: {
+      title: 'Remove',
+      description: 'If to convert absolute units like `cm` and `in` to `px`',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 const regNumericValues =
   /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;

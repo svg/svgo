@@ -7,6 +7,7 @@ import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
+export const schema = null;
 
 /**
  * @type {(node: XastNode, name: string) => boolean}

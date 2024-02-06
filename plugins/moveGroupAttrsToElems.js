@@ -4,6 +4,7 @@ import { includesUrlReference } from '../lib/svgo/tools.js';
 export const name = 'moveGroupAttrsToElems';
 export const description =
   'moves some group attributes to the content elements';
+export const schema = null;
 
 const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
 

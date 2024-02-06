@@ -1,5 +1,28 @@
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'addAttributesToSVGElement';
 export const description = 'adds attributes to an outer <svg> element';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  required: ['attributes'],
+  properties: {
+    attributes: {
+      title: 'Attributes',
+      description:
+        'Attributes to add to the `<svg>` element. If key/value pairs are passed, the attributes are added with the paired value. If an array is passed, attributes are added with no key associated with them.',
+      type: 'array',
+      default: undefined,
+      minItems: 1,
+      items: {
+        type: 'string',
+      },
+    },
+  },
+};
 
 var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
 It should have a list of "attributes" or one "attribute".

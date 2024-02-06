@@ -1,9 +1,61 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'convertColors';
 export const description =
   'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    currentColor: {
+      title: 'Current Color',
+      description:
+        'If to convert all instances of a color to `currentcolor`. This means to inherit the active foreground color, for example in HTML5 this would be the [`color`](https://developer.mozilla.org/docs/Web/CSS/color) property in CSS.',
+      type: 'boolean',
+      default: false,
+    },
+    names2hex: {
+      title: 'Names → Hex',
+      description: 'If to convert color names to the hex equivalent.',
+      type: 'boolean',
+      default: true,
+    },
+    rgb2hex: {
+      title: 'RGB → Hex',
+      description:
+        'If to convert RGB colors to the hex equivalent, ignores RGBA.',
+      type: 'boolean',
+      default: true,
+    },
+    convertCase: {
+      title: 'Convert Case',
+      description:
+        "Convert all color values to either upper or lower case by setting this to `'upper'`  or `'lower'` respectively to improve compression. Set to `false` to disable this behavior.",
+      enum: ['upper', 'lower', false],
+      default: 'lower',
+    },
+    shorthex: {
+      title: 'Short Hex',
+      description:
+        'If to convert 6 character hex colors to the 3 character equivalent where possible.',
+      type: 'boolean',
+      default: true,
+    },
+    shortname: {
+      title: 'Short Name',
+      description:
+        'If to convert hex colors to the color name, if the color name is shorter then the hex equivalent.',
+      type: 'boolean',
+      default: true,
+    },
+  },
+};
 
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
 const rComma = '\\s*,\\s*';

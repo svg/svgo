@@ -1,8 +1,39 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeElementsByAttr';
 export const description =
   'removes arbitrary elements by ID or className (disabled by default)';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    id: {
+      title: 'IDs',
+      description:
+        'Remove elements where one of these IDs will be match the element ID.',
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      default: [],
+    },
+    class: {
+      title: 'Classes',
+      description:
+        'Remove elements where the `class` attribute includes at least one of these classes.',
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      default: [],
+    },
+  },
+};
 
 /**
  * Remove arbitrary SVG elements by ID or className.

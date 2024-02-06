@@ -8,9 +8,76 @@ import {
 import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'removeUnknownsAndDefaults';
 export const description =
   'removes unknown elements content and attributes, removes attrs with default values';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    unknownContent: {
+      title: 'Unknown Content',
+      description:
+        "If to remove elements that are not known or can't be the child of the parent element according.",
+      type: 'boolean',
+      default: true,
+    },
+    unknownAttrs: {
+      title: 'Unknown Attributes',
+      description:
+        'If to remove attributes that are not assignable to the respective element.',
+      type: 'boolean',
+      default: true,
+    },
+    defaultAttrs: {
+      title: 'Default Attributes',
+      description:
+        'If to remove attributes that are assigned their default value anyway.',
+      type: 'boolean',
+      default: true,
+    },
+    defaultMarkupDeclarations: {
+      title: 'Default Markup Declarations',
+      description:
+        'If to remove XML declarations that are assigned their default value. XML declarations are the properties in the `<?xml … ?>` block at the top of the document.',
+      type: 'boolean',
+      default: true,
+    },
+    uselessOverrides: {
+      title: 'Useless Overrides',
+      description:
+        "If to remove attributes that are being if the same value is being inherited by it's parent element anyway.",
+      type: 'boolean',
+      default: true,
+    },
+    keepDataAttrs: {
+      title: 'Keep Data Attributes',
+      description:
+        'If to keep [`data-*`](https://developer.mozilla.org/docs/Web/SVG/Attribute/data-*) attributes.',
+      type: 'boolean',
+      default: true,
+    },
+    keepAriaAttrs: {
+      title: 'Keep ARIA Attributes',
+      description:
+        'If to keep [ARIA (Accessible Rich Internet Applications)](https://developer.mozilla.org/docs/Web/Accessibility/ARIA) attributes, used for accessibility. This excludes `role`, which is managed with the `keepRoleAttr` parameter.',
+      type: 'boolean',
+      default: true,
+    },
+    keepRoleAttr: {
+      title: 'Keep Role Attributes',
+      description:
+        'If to keep the ARIA [`role`](https://developer.mozilla.org/docs/Web/Accessibility/ARIA/Roles) attribute.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 // resolve all groups references
 

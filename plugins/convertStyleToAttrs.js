@@ -1,7 +1,25 @@
 import { attrsGroups } from './_collections.js';
 
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'convertStyleToAttrs';
 export const description = 'converts style to attributes';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    keepImportant: {
+      title: 'Keep Important',
+      description:
+        'If to always keep [`!important`](https://developer.mozilla.org/docs/Web/CSS/important) styles.',
+      type: 'boolean',
+      default: false,
+    },
+  },
+};
 
 /**
  * @type {(...args: string[]) => string}

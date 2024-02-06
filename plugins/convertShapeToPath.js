@@ -2,11 +2,32 @@ import { stringifyPathData } from '../lib/path.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
 /**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
  * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
 export const name = 'convertShapeToPath';
 export const description = 'converts basic shapes to more compact path form';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  properties: {
+    convertArcs: {
+      title: 'Convert Arcs',
+      description:
+        'If to convert `<circle>` and `<ellipse>` elements to paths.',
+      type: 'boolean',
+      default: false,
+    },
+    floatPrecision: {
+      title: 'Float Precision',
+      description:
+        'Number of decimal places to round to, using conventional rounding rules.',
+      type: 'number',
+    },
+  },
+};
 
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 

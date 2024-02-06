@@ -1,5 +1,28 @@
+/**
+ * @typedef {import('json-schema-typed').JSONSchema} JSONSchema
+ */
+
 export const name = 'addClassesToSVGElement';
 export const description = 'adds classnames to an outer <svg> element';
+
+/** @type {JSONSchema} */
+export const schema = {
+  type: 'object',
+  required: ['classNames'],
+  properties: {
+    classNames: {
+      title: 'Class Names',
+      description:
+        'Adds the specified class names to the outer most `<svg>` element.',
+      type: 'array',
+      default: undefined,
+      minItems: 1,
+      items: {
+        type: 'string',
+      },
+    },
+  },
+};
 
 var ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
 It should have a list of classes in "classNames" or one "className".

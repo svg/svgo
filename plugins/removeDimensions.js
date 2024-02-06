@@ -1,6 +1,7 @@
 export const name = 'removeDimensions';
 export const description =
   'removes width and height in presence of viewBox (opposite to removeViewBox, disable it first)';
+export const schema = null;
 
 /**
  * Remove width/height attributes and add the viewBox attribute if it's missing
