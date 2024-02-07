@@ -20,7 +20,7 @@ export const description = 'merges multiple paths in one if possible';
 export const fn = (root, params) => {
   const {
     force = false,
-    floatPrecision,
+    floatPrecision = 3,
     noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
   } = params;
   const stylesheet = collectStylesheet(root);
