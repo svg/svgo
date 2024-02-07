@@ -183,7 +183,6 @@ export const fn = (_root, params, info) => {
             });
 
             child.value = csstree.generate(cssAst);
-            return;
           }
         }
 
