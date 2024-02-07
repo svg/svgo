@@ -71,7 +71,7 @@ export const fn = (root) => {
           node.children.length === 1
         ) {
           const firstChild = node.children[0];
-          let nodeHasFilter = node.attributes.filter ? true : false;
+          let nodeHasFilter = !!node.attributes.filter;
           if (!nodeHasFilter && node.attributes.style) {
             if (computeStyle(stylesheet, node)['filter']) {
               nodeHasFilter = true;
