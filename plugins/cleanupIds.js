@@ -268,9 +268,9 @@ export const fn = (_root, params) => {
                   const styles = value.split(';');
                   for (let index = 0; index < styles.length; index++) {
                     const style = styles[index];
-                    const match = style.match(/#([^\s)]+)/);
-                    if (match) {
-                      const id = match[1];
+                    const refs = findReferences('style', style);
+                    if (refs.length) {
+                      const id = refs[0];
                       const newId = idMap.get(id);
                       if (newId) {
                         styles[index] = style.replace(
