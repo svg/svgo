@@ -51,7 +51,10 @@ export const fn = () => {
             }
 
             const index = parentNode.children.indexOf(node);
-            parentNode.children.splice(index, 1, ...node.children);
+            const usefulChildren = node.children.filter(
+              (child) => !(child.type === 'text' && /\s*/.test(child.value)),
+            );
+            parentNode.children.splice(index, 1, ...usefulChildren);
 
             // TODO remove legacy parentNode in v4
             for (const child of node.children) {
