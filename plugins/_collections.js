@@ -55,6 +55,7 @@ export const elemsGroups = {
     'symbol',
   ]),
   textContent: new Set([
+    'a',
     'altGlyph',
     'altGlyphDef',
     'altGlyphItem',

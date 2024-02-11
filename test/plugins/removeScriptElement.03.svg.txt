@@ -12,6 +12,6 @@ Does not remove normal links, and does remove event attributes.
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <a href="https://yewtu.be/watch?v=dQw4w9WgXcQ">
-        <text y="10">uwu</text>
-    </a>
+    <text y="10">uwu</text>
+  </a>
 </svg>
