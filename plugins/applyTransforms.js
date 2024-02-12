@@ -12,7 +12,7 @@ import {
 import { referencesProps, attrsGroupsDefaults } from './_collections.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-import { removeLeadingZero, includesUrlReference } from '../lib/svgo/tools.js';
+import { removeLeadingZero, includesUrlReference, toFixed } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {PathDataItem[]} PathData
@@ -92,11 +92,8 @@ export const applyTransforms = (root, params) => {
           return;
         }
 
-        const scale = Number(
-          Math.hypot(matrix.data[0], matrix.data[1]).toFixed(
-            transformPrecision,
-          ),
-        );
+        const scale = toFixed(Math.hypot(matrix.data[0], matrix.data[1]),
+          transformPrecision);
 
         if (stroke && stroke != 'none') {
           if (!params.applyTransformsStroked) {

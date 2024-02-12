@@ -1,4 +1,4 @@
-import { removeLeadingZero } from '../lib/svgo/tools.js';
+import { removeLeadingZero, toFixedStr } from '../lib/svgo/tools.js';
 
 export const name = 'cleanupListOfValues';
 export const description = 'rounds list of values to the fixed precision';
@@ -52,8 +52,7 @@ export const fn = (_root, params) => {
 
       // if attribute value matches regNumericValues
       if (match) {
-        // round it to the fixed precision
-        let num = Number(Number(match[1]).toFixed(floatPrecision));
+        let strNum = match[1];
         /**
          * @type {any}
          */
@@ -65,22 +64,19 @@ export const fn = (_root, params) => {
 
         // convert absolute values to pixels
         if (convertToPx && units && units in absoluteLengths) {
-          const pxNum = Number(
-            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision),
-          );
+          const pxNum = (absoluteLengths[units] * strNum).toString();
 
-          if (pxNum.toString().length < match[0].length) {
-            num = pxNum;
+          if (pxNum.length < match[0].length) {
+            strNum = pxNum;
             units = 'px';
           }
         }
 
+        // round it to the fixed precision
+        let str = toFixedStr(strNum, floatPrecision);
         // and remove leading zero
-        let str;
         if (leadingZero) {
-          str = removeLeadingZero(num);
-        } else {
-          str = num.toString();
+          str = removeLeadingZero(str);
         }
 
         // remove default 'px' units
