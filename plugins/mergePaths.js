@@ -1,4 +1,7 @@
 /**
+ * @typedef {import('../lib/types.js').ComputedStyles} ComputedStyles
+ * @typedef {import('../lib/types.js').StaticStyle} StaticStyle
+ * @typedef {import('../lib/types.js').DynamicStyle} DynamicStyle
  * @typedef {import("../lib/types.js").PathDataItem} PathDataItem
  * @typedef {import('../lib/types.js').XastChild} XastChild
  * @typedef {import('../lib/types.js').XastElement} XastElement
@@ -9,6 +12,34 @@ import { path2js, js2path, intersects } from './_path.js';
 
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
+
+/**
+ * @param {XastElement} element
+ * @param {ComputedStyles} computedStyle
+ */
+function elementHasGradientFill(element, computedStyle) {
+  /**
+   * @param {string} str
+   */
+  function hasGradientFill(str) {
+    return Boolean(str) && str.includes('url(');
+  }
+
+  /**
+   * @param {StaticStyle|DynamicStyle|undefined} style
+   */
+  function hasGradientFillStyle(style) {
+    if (!style || style.type !== 'static') {
+      return false;
+    }
+    return hasGradientFill(style.value);
+  }
+
+  return (
+    hasGradientFill(element.attributes.fill) ||
+    hasGradientFillStyle(computedStyle['fill'])
+  );
+}
 
 /**
  * Merge multiple Paths into one.
@@ -82,7 +113,8 @@ export const fn = (root, params) => {
           if (
             computedStyle['marker-start'] ||
             computedStyle['marker-mid'] ||
-            computedStyle['marker-end']
+            computedStyle['marker-end'] ||
+            elementHasGradientFill(child, computedStyle)
           ) {
             if (prevPathData) {
               updatePreviousPath(prevChild, prevPathData);
