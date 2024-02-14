@@ -16,29 +16,14 @@ export const description = 'merges multiple paths in one if possible';
 /**
  * @param {XastElement} element
  * @param {ComputedStyles} computedStyle
+ * @param {string} attName
  */
-function elementHasGradientFill(element, computedStyle) {
-  /**
-   * @param {string} str
-   */
-  function hasGradientFill(str) {
-    return Boolean(str) && str.includes('url(');
+function elementHasGradient(element, computedStyle, attName) {
+  const style = computedStyle[attName];
+  if (!style || style.type !== 'static') {
+    return false;
   }
-
-  /**
-   * @param {StaticStyle|DynamicStyle|undefined} style
-   */
-  function hasGradientFillStyle(style) {
-    if (!style || style.type !== 'static') {
-      return false;
-    }
-    return hasGradientFill(style.value);
-  }
-
-  return (
-    hasGradientFill(element.attributes.fill) ||
-    hasGradientFillStyle(computedStyle['fill'])
-  );
+  return style.value && style.value.includes('url(');
 }
 
 /**
@@ -114,7 +99,9 @@ export const fn = (root, params) => {
             computedStyle['marker-start'] ||
             computedStyle['marker-mid'] ||
             computedStyle['marker-end'] ||
-            elementHasGradientFill(child, computedStyle)
+            ['fill', 'filter', 'stroke'].some((attName) =>
+              elementHasGradient(child, computedStyle, attName),
+            )
           ) {
             if (prevPathData) {
               updatePreviousPath(prevChild, prevPathData);
