@@ -18,7 +18,7 @@ export const description = 'merges multiple paths in one if possible';
  * @param {ComputedStyles} computedStyle
  * @param {string} attName
  */
-function elementHasGradient(element, computedStyle, attName) {
+function elementHasURL(element, computedStyle, attName) {
   const style = computedStyle[attName];
   if (!style || style.type !== 'static') {
     return false;
@@ -99,8 +99,11 @@ export const fn = (root, params) => {
             computedStyle['marker-start'] ||
             computedStyle['marker-mid'] ||
             computedStyle['marker-end'] ||
+            computedStyle['clip-path'] ||
+            computedStyle['mask'] ||
+            computedStyle['mask-image'] ||
             ['fill', 'filter', 'stroke'].some((attName) =>
-              elementHasGradient(child, computedStyle, attName),
+              elementHasURL(child, computedStyle, attName),
             )
           ) {
             if (prevPathData) {
