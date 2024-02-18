@@ -1,3 +1,4 @@
+import { computeStyle, collectStylesheet } from '../lib/style.js';
 import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
@@ -50,7 +51,9 @@ const hasAnimatedAttr = (node, name) => {
  *
  * @type {import('./plugins-types.js').Plugin<'collapseGroups'>}
  */
-export const fn = () => {
+export const fn = (root) => {
+  const stylesheet = collectStylesheet(root);
+
   return {
     element: {
       exit: (node, parentNode) => {
@@ -68,11 +71,14 @@ export const fn = () => {
           node.children.length === 1
         ) {
           const firstChild = node.children[0];
+          const nodeHasFilter = !!(
+            node.attributes.filter || computeStyle(stylesheet, node).filter
+          );
           // TODO untangle this mess
           if (
             firstChild.type === 'element' &&
             firstChild.attributes.id == null &&
-            node.attributes.filter == null &&
+            !nodeHasFilter &&
             (node.attributes.class == null ||
               firstChild.attributes.class == null) &&
             ((node.attributes['clip-path'] == null &&

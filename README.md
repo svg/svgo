@@ -49,9 +49,9 @@ svgo --help
 
 SVGO has a plugin architecture. You can read more about all plugins in [Plugins | SVGO Documentation](https://svgo.dev/docs/plugins/), and the default plugins in [Preset Default | SVGO Documentation](https://svgo.dev/docs/preset-default/).
 
-SVGO reads the configuration from `svgo.config.js` or the `--config path/to/config.js` command-line option. Some other parameters can be configured though command-line options too.
+SVGO reads the configuration from `svgo.config.mjs` or the `--config path/to/config.mjs` command-line option. Some other parameters can be configured though command-line options too.
 
-**`svgo.config.js`**
+**`svgo.config.mjs`**
 
 ```js
 export default {
@@ -80,7 +80,7 @@ export default {
 
 Instead of configuring SVGO from scratch, you can tweak the default preset to suit your needs by configuring or disabling the respective plugin.
 
-**`svgo.config.js`**
+**`svgo.config.mjs`**
 
 ```js
 export default {
@@ -109,7 +109,7 @@ You can find a list of the default plugins in the order they run in [Preset Defa
 
 You can also specify custom plugins:
 
-**`svgo.config.js`**
+**`svgo.config.mjs`**
 
 ```js
 import importedPlugin from './imported-plugin';
@@ -152,7 +152,7 @@ const optimizedSvgString = result.data;
 
 ### loadConfig
 
-If you write a tool on top of SVGO you may want to resolve the `svgo.config.js` file.
+If you write a tool on top of SVGO you may want to resolve the `svgo.config.mjs` file.
 
 ```js
 import { loadConfig } from 'svgo';
