@@ -14,16 +14,18 @@ export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
 
 /**
- * @param {XastElement} element
  * @param {ComputedStyles} computedStyle
  * @param {string} attName
+ * @returns {boolean}
  */
-function elementHasURL(element, computedStyle, attName) {
+function elementHasUrl(computedStyle, attName) {
   const style = computedStyle[attName];
-  if (!style || style.type !== 'static') {
-    return false;
+
+  if (style?.type === 'static') {
+    return includesUrlReference(style.value);
   }
-  return style.value && style.value.includes('url(');
+
+  return false;
 }
 
 /**
