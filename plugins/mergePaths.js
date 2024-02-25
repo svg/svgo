@@ -9,6 +9,7 @@
 
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { path2js, js2path, intersects } from './_path.js';
+import { includesUrlReference } from '../lib/svgo/tools.js';
 
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
@@ -105,7 +106,7 @@ export const fn = (root, params) => {
             computedStyle['mask'] ||
             computedStyle['mask-image'] ||
             ['fill', 'filter', 'stroke'].some((attName) =>
-              elementHasURL(child, computedStyle, attName),
+              elementHasUrl(computedStyle, attName),
             )
           ) {
             if (prevPathData) {
