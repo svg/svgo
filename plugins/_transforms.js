@@ -504,7 +504,7 @@ const transformToMatrix = (transform) => {
         transform.data[0],
         0,
         0,
-        transform.data[1] || transform.data[0],
+        transform.data[1] ?? transform.data[0],
         0,
         0,
       ];
