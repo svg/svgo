@@ -273,8 +273,10 @@ export type BuiltinsWithRequiredParams = {
     attributes?: Array<string | Record<string, null | string>>;
   };
   addClassesToSVGElement: {
-    className?: string;
-    classNames?: string[];
+    className?: string | ((node: XastElement, info: PluginInfo) => string);
+    classNames?: Array<
+      string | ((node: XastElement, info: PluginInfo) => string)
+    >;
   };
   removeAttributesBySelector: any;
   removeAttrs: {
