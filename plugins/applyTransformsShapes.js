@@ -1,27 +1,22 @@
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { removeLeadingZero } = require('../lib/svgo/tools.js');
-const { attrsGroupsDefaults } = require('./_collections.js');
-const { transformsMultiply, transform2js } = require('./_transforms.js');
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { toFixed, removeLeadingZero } from '../lib/svgo/tools.js';
+import { attrsGroupsDefaults } from './_collections.js';
+import { transform2js, transformsMultiply } from './_transforms.js';
 
-exports.name = 'applyTransformsShapes';
-exports.description = 'Applies transforms to some shapes.';
+export const name = 'applyTransformsShapes';
+export const description = 'Applies transforms to some shapes.';
 
 const APPLICABLE_SHAPES = ['circle', 'ellipse', 'rect', 'image'];
-
-/**
- * @typedef {number[]} Matrix
- */
 
 /**
  * Applies transforms to some shapes.
  *
  * @author Kendell R
  *
- * @type {import('./plugins-types').Plugin<'applyTransformsShapes'>}
+ * @type {import('./plugins-types.js').Plugin<'applyTransformsShapes'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { floatPrecision = 3, leadingZero = true } = params;
-  const factor = Math.pow(10, floatPrecision);
   const stylesheet = collectStylesheet(root);
   return {
     element: {
@@ -90,21 +85,25 @@ exports.fn = (root, params) => {
           if (strokeWidth) {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
-              factor,
+              floatPrecision,
               leadingZero,
             );
           }
           node.attributes.cx = stringifyNumber(
             newCenter[0],
-            factor,
+            floatPrecision,
             leadingZero,
           );
           node.attributes.cy = stringifyNumber(
             newCenter[1],
-            factor,
+            floatPrecision,
             leadingZero,
           );
-          node.attributes.r = stringifyNumber(r * scale, factor, leadingZero);
+          node.attributes.r = stringifyNumber(
+            r * scale,
+            floatPrecision,
+            leadingZero,
+          );
           delete node.attributes.transform;
         } else if (node.name == 'ellipse') {
           if (!isLinear) return;
@@ -121,22 +120,30 @@ exports.fn = (root, params) => {
           if (strokeWidth) {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
-              factor,
+              floatPrecision,
               leadingZero,
             );
           }
           node.attributes.cx = stringifyNumber(
             newCenter[0],
-            factor,
+            floatPrecision,
             leadingZero,
           );
           node.attributes.cy = stringifyNumber(
             newCenter[1],
-            factor,
+            floatPrecision,
             leadingZero,
           );
-          node.attributes.rx = stringifyNumber(newRx, factor, leadingZero);
-          node.attributes.ry = stringifyNumber(newRy, factor, leadingZero);
+          node.attributes.rx = stringifyNumber(
+            newRx,
+            floatPrecision,
+            leadingZero,
+          );
+          node.attributes.ry = stringifyNumber(
+            newRy,
+            floatPrecision,
+            leadingZero,
+          );
           delete node.attributes.transform;
         } else if (node.name == 'rect') {
           if (!isLinear) return;
@@ -165,23 +172,51 @@ exports.fn = (root, params) => {
           if (strokeWidth) {
             node.attributes['stroke-width'] = stringifyNumber(
               strokeWidth * scale,
-              factor,
+              floatPrecision,
               leadingZero,
             );
           }
-          node.attributes.x = stringifyNumber(cornerX, factor, leadingZero);
-          node.attributes.y = stringifyNumber(cornerY, factor, leadingZero);
-          node.attributes.width = stringifyNumber(newW, factor, leadingZero);
-          node.attributes.height = stringifyNumber(newH, factor, leadingZero);
-          if (newRx < 1 / factor && newRy < 1 / factor) {
+          node.attributes.x = stringifyNumber(
+            cornerX,
+            floatPrecision,
+            leadingZero,
+          );
+          node.attributes.y = stringifyNumber(
+            cornerY,
+            floatPrecision,
+            leadingZero,
+          );
+          node.attributes.width = stringifyNumber(
+            newW,
+            floatPrecision,
+            leadingZero,
+          );
+          node.attributes.height = stringifyNumber(
+            newH,
+            floatPrecision,
+            leadingZero,
+          );
+          if (newRx < 1 / floatPrecision && newRy < 1 / floatPrecision) {
             delete node.attributes.rx;
             delete node.attributes.ry;
-          } else if (Math.abs(newRx - newRy) < 1 / factor) {
-            node.attributes.rx = stringifyNumber(newRx, factor, leadingZero);
+          } else if (Math.abs(newRx - newRy) < 1 / floatPrecision) {
+            node.attributes.rx = stringifyNumber(
+              newRx,
+              floatPrecision,
+              leadingZero,
+            );
             delete node.attributes.ry;
           } else {
-            node.attributes.rx = stringifyNumber(newRx, factor, leadingZero);
-            node.attributes.ry = stringifyNumber(newRy, factor, leadingZero);
+            node.attributes.rx = stringifyNumber(
+              newRx,
+              floatPrecision,
+              leadingZero,
+            );
+            node.attributes.ry = stringifyNumber(
+              newRy,
+              floatPrecision,
+              leadingZero,
+            );
           }
           delete node.attributes.transform;
         } else if (node.name == 'image') {
@@ -191,8 +226,16 @@ exports.fn = (root, params) => {
           const y = Number(node.attributes.y || '0');
           const corner = transformAbsolutePoint(matrix.data, x, y);
 
-          node.attributes.x = stringifyNumber(corner[0], factor, leadingZero);
-          node.attributes.y = stringifyNumber(corner[1], factor, leadingZero);
+          node.attributes.x = stringifyNumber(
+            corner[0],
+            floatPrecision,
+            leadingZero,
+          );
+          node.attributes.y = stringifyNumber(
+            corner[1],
+            floatPrecision,
+            leadingZero,
+          );
           delete node.attributes.transform;
         }
       },
@@ -201,7 +244,7 @@ exports.fn = (root, params) => {
 };
 
 /**
- * @param {Matrix} matrix
+ * @param {number[]} matrix
  * @param {number} x
  * @param {number} y
  */
@@ -212,7 +255,7 @@ const transformAbsolutePoint = (matrix, x, y) => {
 };
 
 /**
- * @param {Matrix} matrix
+ * @param {number[]} matrix
  * @param {number} w
  * @param {number} h
  */
@@ -224,10 +267,10 @@ const transformSize = (matrix, w, h) => {
 
 /**
  * @param {number} number
- * @param {number} factor
+ * @param {number} precision
  * @param {boolean} leadingZero
  */
-const stringifyNumber = (number, factor, leadingZero) => {
-  const rounded = Math.round(number * factor) / factor;
+const stringifyNumber = (number, precision, leadingZero) => {
+  const rounded = toFixed(number, precision);
   return leadingZero ? removeLeadingZero(rounded) : rounded.toString();
 };
