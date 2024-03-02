@@ -172,10 +172,13 @@ export const fn = (root, params) => {
               computedStyle['stroke-linejoin'].value === 'round'
             : true;
 
-          var data = path2js(node);
+          let data = path2js(node);
 
           // TODO: get rid of functions returns
           if (data.length) {
+            const includesVertices = data.some(
+              (item) => item.command !== 'm' && item.command !== 'M',
+            );
             convertToRelative(data);
 
             data = filters(data, newParams, {
@@ -186,6 +189,23 @@ export const fn = (root, params) => {
 
             if (utilizeAbsolute) {
               data = convertToMixed(data, newParams);
+            }
+
+            const hasMarker =
+              node.attributes['marker-start'] != null ||
+              node.attributes['marker-end'] != null;
+            const isMarkersOnlyPath =
+              hasMarker &&
+              includesVertices &&
+              data.every(
+                (item) => item.command === 'm' || item.command === 'M',
+              );
+
+            if (isMarkersOnlyPath) {
+              data.push({
+                command: 'z',
+                args: [],
+              });
             }
 
             // @ts-ignore
