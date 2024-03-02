@@ -2,7 +2,7 @@ import { collectStylesheet, computeStyle } from '../lib/style.js';
 import {
   toFixed,
   removeLeadingZero,
-  canChangePath,
+  canChangePosition,
 } from '../lib/svgo/tools.js';
 import { attrsGroupsDefaults } from './_collections.js';
 import { transform2js, transformsMultiply } from './_transforms.js';
@@ -37,7 +37,7 @@ export const fn = (root, params) => {
         ) {
           return;
         }
-        if (!canChangePath(computedStyle)) {
+        if (!canChangePosition(computedStyle)) {
           return;
         }
 

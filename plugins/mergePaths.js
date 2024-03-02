@@ -9,7 +9,7 @@
 
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { path2js, js2path, intersects } from './_path.js';
-import { canChangePath } from '../lib/svgo/tools.js';
+import { canChangePosition } from '../lib/svgo/tools.js';
 
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
@@ -83,7 +83,7 @@ export const fn = (root, params) => {
           }
 
           const computedStyle = computeStyle(stylesheet, child);
-          if (!canChangePath(computedStyle)) {
+          if (!canChangePosition(computedStyle)) {
             if (prevPathData) {
               updatePreviousPath(prevChild, prevPathData);
             }
