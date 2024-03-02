@@ -25,7 +25,10 @@ export const fn = (root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (!APPLICABLE_SHAPES.includes(node.name)) {
+        if (
+          !APPLICABLE_SHAPES.includes(node.name) ||
+          !node.attributes.transform
+        ) {
           return;
         }
 
@@ -43,7 +46,7 @@ export const fn = (root, params) => {
 
         const transformStyle = computedStyle.transform;
         if (
-          transformStyle?.type !== 'static' ||
+          transformStyle.type !== 'static' ||
           transformStyle.value !== node.attributes.transform
         ) {
           return;
