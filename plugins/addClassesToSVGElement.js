@@ -49,9 +49,9 @@ plugins: [
  *
  * @type {import('./plugins-types.js').Plugin<'addClassesToSVGElement'>}
  */
-export const fn = (root, params) => {
+export const fn = (root, params, info) => {
   if (
-    !(Array.isArray(params.classNames) && params.classNames.some(String)) &&
+    !(Array.isArray(params.classNames) && params.classNames.length !== 0) &&
     !params.className
   ) {
     console.error(ENOCLS);
@@ -69,7 +69,11 @@ export const fn = (root, params) => {
           );
           for (const className of classNames) {
             if (className != null) {
-              classList.add(className);
+              const classToAdd =
+                typeof className === 'string'
+                  ? className
+                  : className(node, info);
+              classList.add(classToAdd);
             }
           }
           node.attributes.class = Array.from(classList).join(' ');
