@@ -4,6 +4,7 @@ Precision should be applied to all converted shapes
 
 <svg xmlns="http://www.w3.org/2000/svg" width="65mm" height="45mm" viewBox="0 0 65 45">
   <rect x="26.614" y="29.232" width="34.268" height="8.1757"/>
+  <rect x="26.614" y="29.232" width="34.268" height="8.1757" rx="1.0001" ry="0.9999"/>
   <line x1="26.6142" y1="29.2322" x2="34.2682" y2="8.1757"/>
   <polyline points="26.6142,29.2322 34.2682,8.1757"/>
   <polygon points="26.6142,29.2322 34.2682,8.1757"/>
@@ -15,6 +16,7 @@ Precision should be applied to all converted shapes
 
 <svg xmlns="http://www.w3.org/2000/svg" width="65mm" height="45mm" viewBox="0 0 65 45">
     <path d="M26.614 29.232H60.882V37.408H26.614z"/>
+    <path d="M27.614 29.232H59.882A1 1 0 0 1 60.882 30.232V36.408A1 1 0 0 1 59.882 37.408H27.614A1 1 0 0 1 26.614 36.408V30.232A1 1 0 0 1 27.614 29.232z"/>
     <path d="M26.614 29.232 34.268 8.176"/>
     <path d="M26.614 29.232 34.268 8.176"/>
     <path d="M26.614 29.232 34.268 8.176z"/>
