@@ -212,7 +212,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
     }
 
     // horizontal lineto (x)
-    // convert to lineto to handle two-dimentional transforms
+    // convert to lineto to handle two-dimensional transforms
     if (command === 'H') {
       command = 'L';
       args = [args[0], cursor[1]];
@@ -223,7 +223,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
     }
 
     // vertical lineto (y)
-    // convert to lineto to handle two-dimentional transforms
+    // convert to lineto to handle two-dimensional transforms
     if (command === 'V') {
       command = 'L';
       args = [cursor[0], args[0]];
