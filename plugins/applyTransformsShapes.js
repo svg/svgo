@@ -1,5 +1,9 @@
 import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { toFixed, removeLeadingZero } from '../lib/svgo/tools.js';
+import {
+  toFixed,
+  removeLeadingZero,
+  canChangePath,
+} from '../lib/svgo/tools.js';
 import { attrsGroupsDefaults } from './_collections.js';
 import { transform2js, transformsMultiply } from './_transforms.js';
 
@@ -31,6 +35,9 @@ export const fn = (root, params) => {
           computedStyle.stroke?.type === 'dynamic' ||
           computedStyle['stroke-width']?.type === 'dynamic'
         ) {
+          return;
+        }
+        if (!canChangePath(computedStyle)) {
           return;
         }
 
