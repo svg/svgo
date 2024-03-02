@@ -4,7 +4,6 @@ import {
   removeLeadingZero,
   canChangePosition,
 } from '../lib/svgo/tools.js';
-import { attrsGroupsDefaults } from './_collections.js';
 import { transform2js, transformsMultiply } from './_transforms.js';
 
 export const name = 'applyTransformsShapes';
@@ -34,12 +33,6 @@ export const fn = (root, params) => {
 
         const computedStyle = computeStyle(stylesheet, node);
         if (computedStyle.filter) return;
-        if (
-          computedStyle.stroke?.type === 'dynamic' ||
-          computedStyle['stroke-width']?.type === 'dynamic'
-        ) {
-          return;
-        }
         if (!canChangePosition(computedStyle)) {
           return;
         }
@@ -51,16 +44,28 @@ export const fn = (root, params) => {
         ) {
           return;
         }
-
         const matrix = transformsMultiply(
           transform2js(node.attributes.transform),
         );
-        const hasStroke =
-          computedStyle.stroke && computedStyle.stroke.value !== 'none';
-        const strokeWidth = Number(
-          computedStyle['stroke-width']?.value ||
-            (hasStroke && attrsGroupsDefaults.presentation['stroke-width']),
-        );
+
+        if (
+          computedStyle.stroke?.type === 'dynamic' ||
+          computedStyle['stroke-width']?.type === 'dynamic'
+        ) {
+          return;
+        }
+        let strokeWidth = 0;
+        if (computedStyle['stroke-width']) {
+          if (!node.attributes['stroke-width']) {
+            return;
+          }
+          strokeWidth = +computedStyle['stroke-width'].value;
+        } else if (
+          computedStyle.stroke &&
+          computedStyle.stroke.value !== 'none'
+        ) {
+          strokeWidth = 1;
+        }
 
         const isSimilar =
           (matrix.data[0] === matrix.data[3] &&
