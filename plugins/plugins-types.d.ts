@@ -164,6 +164,7 @@ type DefaultPlugins = {
   removeHiddenElems: {
     isHidden?: boolean;
     displayNone?: boolean;
+    noColor?: boolean;
     opacity0?: boolean;
     circleR0?: boolean;
     ellipseRX0?: boolean;
