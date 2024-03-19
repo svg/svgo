@@ -1,0 +1,22 @@
+It should transform polyline to path
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <polyline points="0,0 0,100 100,100 100,0" />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,0v100h100v-100"/>
+</svg>
+
+@@@
+
+{
+    "polyline": {
+        "transform": true,
+        "simplifyThreshold": null
+    }
+}
