@@ -1,8 +1,12 @@
-import { querySelectorAll } from '../lib/xast.js';
+import { matches } from '../lib/xast.js';
 
 export const name = 'removeAttributesBySelector';
 export const description =
   'removes attributes of elements that match a css selector';
+
+const ENOATTRS = `Warning: The plugin "removeAttributesBySelector" is missing parameters.
+It should have a list of "selectors", or one "selector" and one "attributes".
+Without either, the plugin is a noop.`;
 
 /**
  * Removes attributes of elements that match a css selector.
@@ -74,22 +78,33 @@ export const description =
  * @type {import('./plugins-types.js').Plugin<'removeAttributesBySelector'>}
  */
 export const fn = (root, params) => {
+  if (
+    !Array.isArray(params.selectors) &&
+    (!params.selector || !params.attributes)
+  ) {
+    console.warn(ENOATTRS);
+    return null;
+  }
+
   const selectors = Array.isArray(params.selectors)
     ? params.selectors
     : [params];
-  for (const { selector, attributes } of selectors) {
-    const nodes = querySelectorAll(root, selector);
-    for (const node of nodes) {
-      if (node.type === 'element') {
-        if (Array.isArray(attributes)) {
-          for (const name of attributes) {
-            delete node.attributes[name];
+
+  return {
+    element: {
+      enter: (node) => {
+        for (const { selector, attributes } of selectors) {
+          if (matches(node, selector)) {
+            if (Array.isArray(attributes)) {
+              for (const name of attributes) {
+                delete node.attributes[name];
+              }
+            } else {
+              delete node.attributes[attributes];
+            }
           }
-        } else {
-          delete node.attributes[attributes];
         }
-      }
-    }
-  }
-  return {};
+      },
+    },
+  };
 };
