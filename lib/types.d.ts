@@ -111,6 +111,17 @@ export type Plugin<Params> = (
   info: PluginInfo,
 ) => Visitor | null | void;
 
+export type PluginConfig<Params> = {
+  name: string;
+  params: any;
+  fn: Plugin<Params> | null;
+};
+
+export type PresetConfig = {
+  name: string;
+  plugins: PluginConfig<any>[];
+};
+
 export type Specificity = [number, number, number];
 
 export type StylesheetDeclaration = {
