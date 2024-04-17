@@ -1,6 +1,6 @@
-Should handle non-ASCII IDs and resolve URI encoded references.
+Should handle non-ASCII IDs and resolve not correctly URI encoded references.
 
-See: https://github.com/svg/svgo/issues/1696
+See: https://github.com/svg/svgo/issues/1981
 
 ===
 
