@@ -233,7 +233,7 @@ export const fn = (_root, params) => {
                 if (value.includes('#')) {
                   // replace id in href and url()
                   element.attributes[name] = value.replace(
-                    `#${encodeURI(id)}`,
+                    new RegExp(`#(${id}|${encodeURI(id)})`),
                     `#${currentIdString}`,
                   );
                 } else {
