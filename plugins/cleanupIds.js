@@ -232,10 +232,9 @@ export const fn = (_root, params) => {
                 const value = element.attributes[name];
                 if (value.includes('#')) {
                   // replace id in href and url()
-                  element.attributes[name] = value.replace(
-                    new RegExp(`#(${id}|${encodeURI(id)})`),
-                    `#${currentIdString}`,
-                  );
+                  element.attributes[name] = value
+                    .replace(`#${encodeURI(id)}`, `#${currentIdString}`)
+                    .replace(`#${id}`, `#${currentIdString}`);
                 } else {
                   // replace id in begin attribute
                   element.attributes[name] = value.replace(
