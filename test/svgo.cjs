@@ -1,4 +1,4 @@
-const { optimize } = require('../dist/svgo-node.cjs');
+const { loadConfig, optimize } = require('../dist/svgo-node.cjs');
 const assert = require('assert');
 
 const fixture = `<svg xmlns="http://www.w3.org/2000/svg">
@@ -28,6 +28,7 @@ const runTest = () => {
   const actual = result.data;
 
   assert.equal(actual, expected);
+  assert.notEqual(loadConfig, undefined);
 };
 
 runTest();
