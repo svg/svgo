@@ -23,7 +23,7 @@ const expected = `<svg xmlns="http://www.w3.org/2000/svg">
 const runTest = () => {
   const result = optimize(fixture, {
     plugins: [],
-    js2svg: { pretty: true, indent: 2 },
+    js2svg: { pretty: true, indent: 2, eol: 'lf' },
   });
   const actual = result.data;
 
