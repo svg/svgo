@@ -54,8 +54,13 @@
   "bin": "./bin/svgo.js",
   "types": "./lib/svgo.d.ts",
   "exports": {
-    "require": "./dist/svgo-node.cjs",
-    "default": "./lib/svgo-node.js"
+    ".": {
+      "import": "./lib/svgo-node.js",
+      "require": "./dist/svgo-node.cjs"
+    },
+    "./browser": {
+      "import": "./dist/svgo.browser.js"
+    }
   },
   "files": [
     "bin",
