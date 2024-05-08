@@ -52,14 +52,16 @@
   },
   "main": "./lib/svgo-node.js",
   "bin": "./bin/svgo.js",
-  "types": "./lib/svgo.d.ts",
+  "types": "./lib/svgo-node.d.ts",
   "exports": {
     ".": {
       "import": "./lib/svgo-node.js",
-      "require": "./dist/svgo-node.cjs"
+      "require": "./dist/svgo-node.cjs",
+      "types": "./lib/svgo-node.d.ts"
     },
     "./browser": {
-      "import": "./dist/svgo.browser.js"
+      "import": "./dist/svgo.browser.js",
+      "types": "./lib/svgo.d.ts"
     }
   },
   "files": [
