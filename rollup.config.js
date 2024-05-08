@@ -35,7 +35,7 @@ const terserOptions = {
 
 export default [
   {
-    input: './lib/svgo.js',
+    input: './lib/svgo-node.js',
     output: {
       file: './dist/svgo-node.cjs',
       format: 'cjs',
