@@ -25,6 +25,7 @@ export const description =
  * Remove hidden elements with disabled rendering:
  * - display="none"
  * - opacity="0"
+ * - shapes with no fill/stroke/markers
  * - circle with zero radius
  * - ellipse with zero x-axis or y-axis radius
  * - rectangle with zero width or height
@@ -42,6 +43,7 @@ export const fn = (root, params) => {
   const {
     isHidden = true,
     displayNone = true,
+    noColor = true,
     opacity0 = true,
     circleR0 = true,
     ellipseRX0 = true,
@@ -210,6 +212,27 @@ export const fn = (root, params) => {
           computedStyle.display.value === 'none' &&
           // markers with display: none still rendered
           node.name !== 'marker'
+        ) {
+          removeElement(node, parentNode);
+          return;
+        }
+
+        // Shapes that aren't rendered in any way
+        if (
+          noColor &&
+          elemsGroups.shape.has(node.name) &&
+          computedStyle.fill &&
+          computedStyle.fill.type === 'static' &&
+          computedStyle.fill.value === 'none' &&
+          (computedStyle.stroke
+            ? computedStyle.stroke.type === 'static' &&
+              computedStyle.stroke.value === 'none'
+            : true) &&
+          !computedStyle['marker-start'] &&
+          !computedStyle['marker-mid'] &&
+          !computedStyle['marker-end'] &&
+          (parentNode.type !== 'element' ||
+            (parentNode.name !== 'defs' && parentNode.name !== 'clipPath'))
         ) {
           removeElement(node, parentNode);
           return;
