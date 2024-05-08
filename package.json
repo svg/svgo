@@ -64,6 +64,16 @@
       "types": "./lib/svgo.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./lib/svgo-node.d.ts"
+      ],
+      "browser": [
+        "./lib/svgo.d.ts"
+      ]
+    }
+  },
   "files": [
     "bin",
     "lib",
