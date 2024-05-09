@@ -1,4 +1,4 @@
-Add multple attributes with values
+Add multiple attributes with values
 
 ===
 
