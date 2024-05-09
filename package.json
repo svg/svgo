@@ -120,7 +120,6 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
-    "node-fetch": "^2.7.0",
     "pixelmatch": "^5.3.0",
     "playwright": "^1.44.0",
     "pngjs": "^7.0.0",
