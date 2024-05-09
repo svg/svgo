@@ -433,7 +433,7 @@ const optimize = (roundedTransforms, rawTransforms) => {
     }
   }
 
-  // If everything was optimized out, reture identity transform scale(1).
+  // If everything was optimized out, return identity transform scale(1).
   return optimizedTransforms.length
     ? optimizedTransforms
     : [{ name: 'scale', data: [1] }];

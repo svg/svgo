@@ -1,4 +1,4 @@
-Remove inheritable overriden groups attributes
+Remove inheritable overridden groups attributes
 
 ===
 

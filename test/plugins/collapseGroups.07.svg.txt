@@ -1,4 +1,4 @@
-Remove equal overriden groups attributes
+Remove equal overridden groups attributes
 
 ===
 
