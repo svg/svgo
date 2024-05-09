@@ -1,6 +1,6 @@
-import { VERSION, Config, optimize, builtinPlugins } from './svgo';
+import { Config } from './svgo';
 
-export { VERSION, optimize, builtinPlugins };
+export * from './svgo';
 
 /**
  * If you write a tool on top of svgo you might need a way to load svgo config.
