@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import del from 'del';
 import { Command } from 'commander';
 import { fileURLToPath } from 'url';
 import svgo, { checkIsDir } from '../../lib/svgo/coa.js';
@@ -27,12 +26,12 @@ function runProgram(args) {
 
 describe('coa', function () {
   beforeEach(async () => {
-    await del(tempFolder);
+    await fs.promises.rm(tempFolder, { force: true, recursive: true });
     await fs.promises.mkdir(tempFolder);
   });
 
   afterAll(async () => {
-    await del(tempFolder);
+    await fs.promises.rm(tempFolder, { force: true, recursive: true });
   });
 
   const initialConsoleError = global.console.error;
@@ -104,7 +103,7 @@ describe('coa', function () {
     const optimizedWeight = calcFolderSvgWeight(tempFolder);
     expect(optimizedWeight).toBeGreaterThan(0);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
-    await del('temp.svg');
+    await fs.promises.rm('temp.svg', { force: true });
   });
 
   it('should optimize folder, when it stated in input', async () => {
