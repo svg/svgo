@@ -59,6 +59,10 @@
       "require": "./dist/svgo-node.cjs",
       "types": "./lib/svgo-node.d.ts"
     },
+    "./dist/svgo.browser.js": {
+      "import": "./dist/svgo.browser.js",
+      "types": "./lib/svgo.d.ts"
+    },
     "./browser": {
       "import": "./dist/svgo.browser.js",
       "types": "./lib/svgo.d.ts"
