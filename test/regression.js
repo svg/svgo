@@ -104,7 +104,7 @@ const runTests = async (list) => {
       let file;
       try {
         file = await fs.readFile(path.join(fixturesDir, name), 'utf-8');
-      } catch (error) {
+      } catch {
         res.statusCode = 404;
         res.end();
         return;
