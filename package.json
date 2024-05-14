@@ -86,8 +86,8 @@
   },
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
-    "lint": "eslint --ignore-path .gitignore . && prettier --check . --ignore-path .gitignore",
-    "fix": "eslint --ignore-path .gitignore --fix . && prettier --write . --ignore-path .gitignore",
+    "lint": "eslint --ignore-path .gitignore . && prettier --check .",
+    "fix": "eslint --ignore-path .gitignore --fix . && prettier --write .",
     "typecheck": "tsc",
     "generate-bundles": "rollup -c",
     "test-bundles": "yarn generate-bundles && node ./test/svgo.cjs && node ./test/browser.js",
