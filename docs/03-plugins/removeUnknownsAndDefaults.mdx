@@ -1,0 +1,35 @@
+---
+title: removeUnknownsAndDefaults
+svgo:
+  pluginId: removeUnknownsAndDefaults
+  defaultPlugin: true
+  parameters:
+    unknownContent:
+      description: If to remove elements that are not known or can't be the child of the parent element according.
+      default: true
+    unknownAttrs:
+      description: If to remove attributes that are not assignable to the respective element.
+      default: true
+    defaultAttrs:
+      description: If to remove attributes that are assigned their default value anyway.
+      default: true
+    defaultMarkupDeclarations:
+      description: If to remove XML declarations that are assigned their default value. XML declarations are the properties in the <code>&lt;?xml … ?&gt;</code> block at the top of the document.
+      default: true
+    uselessOverrides:
+      description: If to remove attributes that are being if the same value is being inherited by it's parent element anyway.
+      default: true
+    keepDataAttrs:
+      description: If to keep <a href="https://developer.mozilla.org/docs/Web/SVG/Attribute/data-*" target="_blank"><code>data-*</code></a> attributes.
+      default: true
+    keepAriaAttrs:
+      description: If to keep <a href="https://developer.mozilla.org/docs/Web/Accessibility/ARIA" target="_blank">ARIA (Accessible Rich Internet Applications)</a> attributes, used for accessibility. This excludes <code>role</code>, which is managed with the <code>keepRoleAttr</code> parameter.
+      default: true
+    keepRoleAttr:
+      description: If to keep the ARIA <a href="https://developer.mozilla.org/docs/Web/Accessibility/ARIA/Roles" target="_blank"><code>role</code></a> attribute.
+      default: false
+---
+
+Removes unknown elements and attributes, as well as attributes that are set to their default value.
+
+This can also remove defaults from the XML declaration if present in the document, namely [`standalone`](https://www.w3.org/TR/REC-xml/#sec-rmd) if it's set to `no`.

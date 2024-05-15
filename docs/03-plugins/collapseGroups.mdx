@@ -1,0 +1,16 @@
+---
+title: collapseGroups
+svgo:
+  pluginId: collapseGroups
+  defaultPlugin: true
+---
+
+Finds groups that effectively do nothing and flattens them, preserving the contents of the groups.
+
+Groups can be formed using the [`<g>`](https://developer.mozilla.org/docs/Web/SVG/Element/g) element. They're used for organizing the document, or applying [presentation attributes](https://developer.mozilla.org/docs/Web/SVG/Attribute/Presentation) to all children contained in a group.
+
+:::info
+
+This plugin doesn't remove empty groups. That's handled by the [removeEmptyContainers](/docs/plugins/removeEmptyContainers/) plugin which is enabled by default.
+
+:::
