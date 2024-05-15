@@ -1,0 +1,17 @@
+---
+title: removeTitle
+svgo:
+  pluginId: removeTitle
+  defaultPlugin: true
+---
+
+Removes the [`<title>`](https://developer.mozilla.org/docs/Web/SVG/Element/title) element from the document.
+
+This plugin may have significant accessibility implications. The purpose of `<title>` is to provide users of assistive technologies the means to get a summary of the SVG if they're not able to view it.
+
+It can be sensible to remove the `<title>` element in one of the following scenarios:
+
+- The SVG is purely aesthetic and has no impact on the user-experience.
+- Accessibility is handled elsewhere, such as in the [`aria-label`](https://developer.mozilla.org/docs/Web/Accessibility/ARIA/Attributes/aria-label) or [`aria-describedby`](https://developer.mozilla.org/docs/Web/Accessibility/ARIA/Attributes/aria-describedby) attributes in an HTML document.
+
+Consider doing the free [Introduction to Web Accessibility](https://www.w3.org/WAI/courses/foundations-course/) course by W3Cx for more information.

@@ -1,0 +1,19 @@
+---
+title: prefixIds
+svgo:
+  pluginId: prefixIds
+  parameters:
+    delim:
+      description: Content to insert between the prefix and original value.
+      default: '__'
+    prefix:
+      description: Either a string or a function that resolves to a string.
+    prefixIds:
+      description: If to prefix <code>id</code> attributes.
+      default: true
+    prefixClassNames:
+      description: If to prefix classes in the <code>class</code> attribute.
+      default: true
+---
+
+Prefix element IDs and class names with the filename or another arbitrary string.

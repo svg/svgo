@@ -71,8 +71,8 @@ export const fn = (_, params) => {
 
   /**
    * Namespace prefixes that exist in {@link xlinkPrefixes} but were overridden
-   * in a child element to point to another namespace, and so is not treated as
-   * an XLink attribute.
+   * in a child element to point to another namespace, and is not treated as an
+   * XLink attribute.
    *
    * @type {string[]}
    */

@@ -1,0 +1,71 @@
+---
+title: convertPathData
+svgo:
+  pluginId: convertPathData
+  defaultPlugin: true
+  parameters:
+    applyTransforms:
+      description: If to apply transforms.
+      default: true
+    applyTransformsStroked:
+      description: If to apply transforms to paths with a stroke.
+      default: true
+    makeArcs:
+      description: If to convert from curves to arcs when possible. This is an object with two properties, <code>threshold</code> and <code>tolerance</code>.
+    straightCurves:
+      description: If to convert curve commands that are effectively straight lines to line commands.
+      default: true
+    convertToQ:
+      description: If to convert cubic beziers to quadratic beziers when they effectively are.
+      default: true
+    lineShorthands:
+      description: If to convert regular lines to an explicit horizontal or vertical line where possible.
+      default: true
+    convertToZ:
+      description: If to convert lines that go to the start to a <code>z</code> command.
+      default: true
+    curveSmoothShorthands:
+      description: If to convert curves to smooth curves where possible.
+      default: true
+    floatPrecision:
+      description: Number of decimal places to round to, using conventional rounding rules.
+      default: 3
+    transformPrecision:
+      description: Number of decimal places to round to, using conventional rounding rules.
+      default: 5
+    smartArcRounding:
+      description: Round the radius of circular arcs when the effective change is under the error. The effective change is determined using the <a href="https://wikipedia.org/wiki/Sagitta_(geometry)" target="_blank">sagitta</a> of the arc.
+      default: true
+    removeUseless:
+      description: Remove redundant path commands that don't draw anything.
+      default: true
+    collapseRepeated:
+      description: Collapse repeated commands when they can be merged into one.
+      default: true
+    utilizeAbsolute:
+      description: If to convert between absolute or relative coordinates, whichever is shortest.
+      default: true
+    negativeExtraSpace:
+      default: true
+    forceAbsolutePath:
+      description: If to always convert to absolute coordinates, even if it adds more bytes.
+      default: false
+---
+
+Optimize path commands found in `<path>`, `<glyph>`, and `<missing-glyph>` elements. Path commands are the syntax used in the `d` attribute, each character represents an instruction to draw paths.
+
+:::info
+
+You can get more context on path commands on [MDN Web Docs](https://developer.mozilla.org/docs/Web/SVG/Attribute/d#path_commands).
+
+:::
+
+This plugin uses multiple techniques to either reduce the number of instructions or reduce the attribute length:
+
+- Convert between relative or absolute coordinates, whichever is shortest.
+- Convert between commands. For example, a bézier curve that behaves like a straight line might as well use a line instruction.
+- Remove redundant commands. For example, a command that moves to the current position can be removed.
+- Trim redundant delimiters and leading zeros.
+- Round numeric values using conventional rounding rules.
+
+You can read more about the plugins capabilities by going through the individual parameters.
