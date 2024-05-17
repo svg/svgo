@@ -4,10 +4,10 @@ svgo:
   pluginId: addClassesToSVGElement
   parameters:
     classNames:
-      description: Adds the specified class names to the outer most <code>&lt;svg&gt;</code> element.
+      description: Adds the specified class names to the outer most `<svg>` element.
       default: null
     className:
-      description: Adds the specified class name to the outer most <code>&lt;svg&gt;</code> element. If <code>classNames</code> is specified, this is ignored.
+      description: Adds the specified class name to the outer most `<svg>` element. If `classNames` is specified, this is ignored.
 ---
 
 Overrides the `class` attribute in the outer most `<svg>` element, omitting duplicates or null classes if found in your configuration.

@@ -11,7 +11,7 @@ svgo:
       description: If to apply transforms to paths with a stroke.
       default: true
     makeArcs:
-      description: If to convert from curves to arcs when possible. This is an object with two properties, <code>threshold</code> and <code>tolerance</code>.
+      description: If to convert from curves to arcs when possible. This is an object with two properties, `threshold` and `tolerance`.
     straightCurves:
       description: If to convert curve commands that are effectively straight lines to line commands.
       default: true
@@ -22,7 +22,7 @@ svgo:
       description: If to convert regular lines to an explicit horizontal or vertical line where possible.
       default: true
     convertToZ:
-      description: If to convert lines that go to the start to a <code>z</code> command.
+      description: If to convert lines that go to the start to a `z` command.
       default: true
     curveSmoothShorthands:
       description: If to convert curves to smooth curves where possible.
@@ -34,7 +34,7 @@ svgo:
       description: Number of decimal places to round to, using conventional rounding rules.
       default: 5
     smartArcRounding:
-      description: Round the radius of circular arcs when the effective change is under the error. The effective change is determined using the <a href="https://wikipedia.org/wiki/Sagitta_(geometry)" target="_blank">sagitta</a> of the arc.
+      description: Round the radius of circular arcs when the effective change is under the error. The effective change is determined using the [sagitta](https://wikipedia.org/wiki/Sagitta_(geometry)) of the arc.
       default: true
     removeUseless:
       description: Remove redundant path commands that don't draw anything.
