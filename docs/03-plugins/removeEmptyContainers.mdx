@@ -5,7 +5,7 @@ svgo:
   defaultPlugin: true
 ---
 
-Remove container elements in the document that have no children or meaningful attributes.
+Remove container elements in the document that have no children or meaningful attributes, excluding the `<svg>` element which is ignored.
 
 A container, as defined in the [SVG specifications](https://www.w3.org/TR/SVG11/intro.html#TermContainerElement), is an SVG element that can have graphical child elements. Container elements include:
 
@@ -20,5 +20,3 @@ A container, as defined in the [SVG specifications](https://www.w3.org/TR/SVG11/
 - [`<svg>`](https://developer.mozilla.org/docs/Web/SVG/Element/svg)
 - [`<switch>`](https://developer.mozilla.org/docs/Web/SVG/Element/switch)
 - [`<symbol>`](https://developer.mozilla.org/docs/Web/SVG/Element/symbol)
-
-Despite the `<svg>` element being a container element, they are not ignored by this plugin.
