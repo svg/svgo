@@ -16,4 +16,30 @@ svgo:
       default: true
 ---
 
-Prefix element IDs and class names with the filename or another arbitrary string.
+Prefix element IDs and class names with the filename or another arbitrary string. This is useful for reducing the likeliness of ID conflicts when multiple vectors are inlined into the same document.
+
+## Prefer Reproducible IDs
+
+It's acceptable to generate IDs that have no relation to the node or file they're for, such as through a counter, random number generator, or UUID. Consider the following SVGO config:
+
+```js title="svgo.config.js"
+let prefixCounter = 0;
+
+module.exports = {
+  plugins: [
+    {
+      name: 'prefixIds',
+      params: {
+        delim: '',
+        prefix: () => prefixCounter++,
+      },
+    },
+  ],
+};
+```
+
+However, a solution like this can not gurantee a reproducible prefix. Unpredictable IDs can pose an issue for tooling, namely React, and anything that depends on it like Next.js and Docusaurus.
+
+With unpredictable IDs, if you're prerendering or use SSR (Server-Side Rendering), the client-side and server-side HTML may mismatch, leading to errors on client-side and regenerating the tree.
+
+For this reason, it's preferred to use reproducible prefixes where possible. Consider using the filename or node as a seed to produce a shorter string, rather than generating something from scratch.
