@@ -45,14 +45,14 @@ test('accepts svg as input stream', async () => {
   const proc = spawn('node', ['../../bin/svgo', '--no-color', '-'], {
     cwd: __dirname,
   });
-  proc.stdin.write('<svg><title>stdin</title></svg>');
+  proc.stdin.write('<svg><desc>Created with Love</desc></svg>');
   proc.stdin.end();
   const stdout = await waitStdout(proc);
   expect(stdout).toBe('<svg/>');
 });
 
 test('accepts svg as string', async () => {
-  const input = '<svg><title>string</title></svg>';
+  const input = '<svg><desc>Created with Love</desc></svg>';
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', '--string', input],
