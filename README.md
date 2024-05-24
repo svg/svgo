@@ -90,7 +90,7 @@ export default {
       params: {
         overrides: {
           // disable a default plugin
-          removeViewBox: false,
+          cleanupIds: false,
 
           // customize the params of a default plugin
           inlineStyles: {
