@@ -32,7 +32,6 @@ import * as mergePaths from './mergePaths.js';
 import * as removeUnusedNS from './removeUnusedNS.js';
 import * as sortAttrs from './sortAttrs.js';
 import * as sortDefsChildren from './sortDefsChildren.js';
-import * as removeTitle from './removeTitle.js';
 import * as removeDesc from './removeDesc.js';
 
 const presetDefault = createPreset({
@@ -71,7 +70,6 @@ const presetDefault = createPreset({
     removeUnusedNS,
     sortAttrs,
     sortDefsChildren,
-    removeTitle,
     removeDesc,
   ],
 });

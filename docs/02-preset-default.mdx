@@ -30,7 +30,6 @@ The following plugins are included in `preset-default`, in the order that they'r
 - [removeUnknownsAndDefaults](/docs/plugins/removeUnknownsAndDefaults/)
 - [removeNonInheritableGroupAttrs](/docs/plugins/removeNonInheritableGroupAttrs/)
 - [removeUselessStrokeAndFill](/docs/plugins/removeUselessStrokeAndFill/)
-- [removeViewBox](/docs/plugins/removeViewBox/)
 - [cleanupEnableBackground](/docs/plugins/cleanupEnableBackground/)
 - [removeHiddenElems](/docs/plugins/removeHiddenElems/)
 - [removeEmptyText](/docs/plugins/removeEmptyText/)
@@ -47,7 +46,6 @@ The following plugins are included in `preset-default`, in the order that they'r
 - [mergePaths](/docs/plugins/mergePaths/)
 - [sortAttrs](/docs/plugins/sortAttrs/)
 - [sortDefsChildren](/docs/plugins/sortDefsChildren/)
-- [removeTitle](/docs/plugins/removeTitle/)
 - [removeDesc](/docs/plugins/removeDesc/)
 
 ## Disable a Plugin
@@ -63,7 +61,7 @@ module.exports = {
       name: 'preset-default',
       params: {
         overrides: {
-          removeViewBox: false,
+          cleanupIds: false,
         },
       },
     },
