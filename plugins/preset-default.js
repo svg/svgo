@@ -16,7 +16,6 @@ import * as convertColors from './convertColors.js';
 import * as removeUnknownsAndDefaults from './removeUnknownsAndDefaults.js';
 import * as removeNonInheritableGroupAttrs from './removeNonInheritableGroupAttrs.js';
 import * as removeUselessStrokeAndFill from './removeUselessStrokeAndFill.js';
-import * as removeViewBox from './removeViewBox.js';
 import * as cleanupEnableBackground from './cleanupEnableBackground.js';
 import * as removeHiddenElems from './removeHiddenElems.js';
 import * as removeEmptyText from './removeEmptyText.js';
@@ -56,7 +55,6 @@ const presetDefault = createPreset({
     removeUnknownsAndDefaults,
     removeNonInheritableGroupAttrs,
     removeUselessStrokeAndFill,
-    removeViewBox,
     cleanupEnableBackground,
     removeHiddenElems,
     removeEmptyText,
