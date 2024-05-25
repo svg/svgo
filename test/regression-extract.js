@@ -3,7 +3,6 @@ import path from 'path';
 import stream from 'stream';
 import util from 'util';
 import zlib from 'zlib';
-import fetch from 'node-fetch';
 import tarStream from 'tar-stream';
 import { fileURLToPath } from 'url';
 
