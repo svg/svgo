@@ -1,9 +1,12 @@
 import js from '@eslint/js';
 import globals from 'globals';
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/**
+ * @typedef {import('eslint').Linter.FlatConfig} FlatConfig
+ */
+
+/** @type {FlatConfig[]} */
 export default [
-  // global ignores
   {
     ignores: [
       '.yarn/**',
@@ -18,7 +21,6 @@ export default [
   {
     languageOptions: {
       ecmaVersion: 2021,
-      sourceType: 'module',
       globals: {
         ...globals.nodeBuiltin,
       },
@@ -35,15 +37,8 @@ export default [
     },
   },
   {
-    files: ['**/*.cjs'],
-    languageOptions: {
-      sourceType: 'commonjs',
-    },
-  },
-  {
     files: ['**/*.test.js'],
     languageOptions: {
-      sourceType: 'module',
       globals: {
         ...globals.jest,
       },
