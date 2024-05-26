@@ -6,7 +6,7 @@ export const description =
   'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
-const rComma = '\\s*,\\s*|\\s+';
+const rComma = '(?:\\s*,\\s*|\\s+)';
 const regRGB = new RegExp(
   '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$',
 );
