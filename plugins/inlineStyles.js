@@ -190,7 +190,7 @@ export const fn = (root, params) => {
                 matchedElements.push(node);
               }
             }
-          } catch (selectError) {
+          } catch {
             continue;
           }
           // nothing selected
