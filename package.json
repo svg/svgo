@@ -1,7 +1,7 @@
 {
   "packageManager": "yarn@3.8.2",
   "name": "svgo",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "description": "SVGO is a Node.js library and command-line application for optimizing vector images.",
   "license": "MIT",
   "type": "module",
@@ -85,15 +85,15 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
+    "build": "node scripts/sync-version.js && rollup -c",
+    "typecheck": "tsc",
     "lint": "eslint . && prettier --check .",
     "fix": "eslint --fix . && prettier --write .",
-    "typecheck": "tsc",
-    "generate-bundles": "rollup -c",
-    "test-bundles": "yarn generate-bundles && node ./test/svgo.cjs && node ./test/browser.js",
-    "test-regression": "node ./test/regression-extract.js && cross-env NO_DIFF=1 node ./test/regression.js",
-    "prepublishOnly": "rimraf dist && yarn generate-bundles",
-    "qa": "yarn lint && yarn typecheck && yarn test && yarn test-bundles && yarn test-regression"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
+    "test:bundles": "yarn build && node ./test/svgo.cjs && node ./test/browser.js",
+    "test:regression": "node ./test/regression-extract.js && cross-env NO_DIFF=1 node ./test/regression.js",
+    "qa": "yarn typecheck && yarn lint && yarn test && yarn test:bundles && yarn test:regression",
+    "prepublishOnly": "rimraf dist && yarn build"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
