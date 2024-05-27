@@ -20,7 +20,7 @@ export default [
   },
   {
     languageOptions: {
-      ecmaVersion: 2021,
+      ecmaVersion: 'latest',
       globals: {
         ...globals.nodeBuiltin,
       },
