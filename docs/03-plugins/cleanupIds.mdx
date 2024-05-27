@@ -1,0 +1,42 @@
+---
+title: cleanupIds
+svgo:
+  pluginId: cleanupIds
+  parameters:
+    remove:
+      description: If to remove all unreferenced IDs.
+      default: true
+    minify:
+      description: If to minify referenced IDs.
+      default: true
+    preserve:
+      description: Elements with one of these IDs will be ignored.
+      default: []
+    preservePrefixes:
+      description: Elements with an ID that starts with one of these prefixes will be ignored.
+      default: []
+    force:
+      description: This plugin normally does nothing if a `<script>` or `<style>` element is found. Setting this to true will bypass that behaviour, which may result in destructive changes.
+      default: false
+  defaultPlugin: true
+---
+
+Removes unused IDs, and minifys IDs that are referenced by other elements.
+
+By default, we back off from removing and minifying IDs if a `<script>` or `<style>` element is present in the document. You can bypass this behavior by setting the `force` parameter to `true`.
+
+:::info
+
+Between v2 and v3, the plugin ID was renamed from `cleanupIDs` to `cleanupIds`, if you've recently migrated and having issues, please double-check the capitalization!
+
+:::
+
+:::caution
+
+This plugin has been known to cause problems when inlining multiple SVGs in the same parent document. Due to the predictable algorithm used to minify IDs, separate documents that are run though SVGO may end up with clashing IDs.
+
+You can work around this by enabling the [prefixIds](/docs/plugins/prefixIds/) plugin. Alternatively, you can set the `minify` parameter to `false`, however this will not resolve the issue if your SVGs already had clashing IDs to start with.
+
+See [facebook/docusaurus#8297](https://github.com/facebook/docusaurus/issues/8297) for more context.
+
+:::

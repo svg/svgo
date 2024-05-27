@@ -16,7 +16,6 @@ import * as convertColors from './convertColors.js';
 import * as removeUnknownsAndDefaults from './removeUnknownsAndDefaults.js';
 import * as removeNonInheritableGroupAttrs from './removeNonInheritableGroupAttrs.js';
 import * as removeUselessStrokeAndFill from './removeUselessStrokeAndFill.js';
-import * as removeViewBox from './removeViewBox.js';
 import * as cleanupEnableBackground from './cleanupEnableBackground.js';
 import * as removeHiddenElems from './removeHiddenElems.js';
 import * as removeEmptyText from './removeEmptyText.js';
@@ -33,7 +32,6 @@ import * as mergePaths from './mergePaths.js';
 import * as removeUnusedNS from './removeUnusedNS.js';
 import * as sortAttrs from './sortAttrs.js';
 import * as sortDefsChildren from './sortDefsChildren.js';
-import * as removeTitle from './removeTitle.js';
 import * as removeDesc from './removeDesc.js';
 
 const presetDefault = createPreset({
@@ -56,7 +54,6 @@ const presetDefault = createPreset({
     removeUnknownsAndDefaults,
     removeNonInheritableGroupAttrs,
     removeUselessStrokeAndFill,
-    removeViewBox,
     cleanupEnableBackground,
     removeHiddenElems,
     removeEmptyText,
@@ -73,7 +70,6 @@ const presetDefault = createPreset({
     removeUnusedNS,
     sortAttrs,
     sortDefsChildren,
-    removeTitle,
     removeDesc,
   ],
 });

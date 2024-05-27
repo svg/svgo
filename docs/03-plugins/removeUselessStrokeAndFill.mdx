@@ -1,0 +1,20 @@
+---
+title: removeUselessStrokeAndFill
+svgo:
+  pluginId: removeUselessStrokeAndFill
+  defaultPlugin: true
+  parameters:
+    stroke:
+      description: If to remove redundant strokes.
+      default: true
+    fill:
+      description: If to remove redundant fills.
+      default: true
+    removeNone:
+      description: If to remove elements where both the `fill` and `stroke` attributes are `none`.
+      default: false
+---
+
+Removes useless `stroke` and `fill` attributes.
+
+Assigning these attributes can sometimes change nothing in the document. For example, in most cases assigning a `stroke` color is redundant if the elements [`stroke-width`](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-width) or [`stroke-opacity`](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-opacity) is `0`.

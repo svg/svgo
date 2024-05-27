@@ -15,6 +15,7 @@ coverage
 .DS_Store
 .vscode
 *.log
+package-lock.json
 
 # https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
 [._]*.s[a-v][a-z]

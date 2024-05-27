@@ -1,0 +1,40 @@
+---
+title: convertColors
+svgo:
+  pluginId: convertColors
+  defaultPlugin: true
+  parameters:
+    currentColor:
+      description: If to convert all instances of a color to `currentcolor`. This means to inherit the active foreground color, for example in HTML5 this would be the [`color`](https://developer.mozilla.org/docs/Web/CSS/color) property in CSS.
+      default: false
+    names2hex:
+      description: If to convert color names to the hex equivalent.
+      default: true
+    rgb2hex:
+      description: If to convert RGB colors to the hex equivalent, ignores RGBA.
+      default: true
+    convertCase:
+      description: Convert all color values to either upper or lower case by setting this to `'upper'` or `'lower'` respectively to improve compression. Set to `false` to disable this behavior.
+      default: 'lower'
+    shorthex:
+      description: If to convert 6 character hex colors to the 3 character equivalent where possible.
+      default: true
+    shortname:
+      description: If to convert hex colors to the color name, if the color name is shorter then the hex equivalent.
+      default: true
+---
+
+Converts color references to the shortest equivalent.
+
+Colors can be represented in various notations, the following table showcases some equivalent colors:
+
+| Name     | rgb()              | #rrggbb   | #rgb   |
+| -------- | ------------------ | --------- | ------ |
+| `red`    | `rgb(255, 0, 0)`   | `#ff0000` | `#f00` |
+| `orange` | `rgb(255, 165, 0)` | `#ffa500` |        |
+| `yellow` | `rgb(255, 255, 0)` | `#ffff00` | `#ff0` |
+| `green`  | `rgb(0, 128, 0)`   | `#008000` |        |
+| `blue`   | `rgb(0, 0, 255)`   | `#0000FF` | `#00f` |
+| `purple` | `rgb(128, 0, 128)` | `#800080` |        |
+
+It makes no difference which format is received by a client, and each one has wide support across browsers and image viewing software.
