@@ -101,13 +101,13 @@
     ]
   },
   "dependencies": {
-    "@trysound/sax": "0.2.0",
     "commander": "^7.2.0",
     "css-select": "^5.1.0",
     "css-tree": "^2.3.1",
     "css-what": "^6.1.0",
     "csso": "^5.0.5",
-    "picocolors": "^1.0.0"
+    "picocolors": "^1.0.0",
+    "sax": "^1.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
@@ -118,6 +118,7 @@
     "@types/csso": "^5.0.4",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.11",
+    "@types/sax": "^1.2.7",
     "cross-env": "^7.0.3",
     "eslint": "^9.3.0",
     "globals": "^14.0.0",
@@ -130,5 +131,8 @@
     "rollup": "^4.17.2",
     "tar-stream": "^3.1.7",
     "typescript": "^5.4.5"
+  },
+  "resolutions": {
+    "sax@^1.4.1": "patch:sax@npm%3A1.4.1#./.yarn/patches/sax-npm-1.4.1-503b1923cb.patch"
   }
 }
