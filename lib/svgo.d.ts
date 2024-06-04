@@ -52,5 +52,8 @@ type Output = {
   data: string;
 };
 
+/** Installed version of SVGO. */
+export declare const VERSION: string;
+
 /** The core of SVGO */
 export declare function optimize(input: string, config?: Config): Output;
