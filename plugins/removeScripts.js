@@ -1,7 +1,7 @@
 import { attrsGroups } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
-export const name = 'removeScriptElement';
+export const name = 'removeScripts';
 export const description = 'removes scripts (disabled by default)';
 
 /** Union of all event attributes. */
@@ -19,7 +19,7 @@ const eventAttrs = [
  * https://www.w3.org/TR/SVG11/script.html
  *
  * @author Patrick Klingemann
- * @type {import('./plugins-types.js').Plugin<'removeScriptElement'>}
+ * @type {import('./plugins-types.js').Plugin<'removeScripts'>}
  */
 export const fn = () => {
   return {

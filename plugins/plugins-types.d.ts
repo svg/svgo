@@ -249,7 +249,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
   removeDimensions: void;
   removeOffCanvasPaths: void;
   removeRasterImages: void;
-  removeScriptElement: void;
+  removeScripts: void;
   removeStyleElement: void;
   removeTitle: void;
   removeViewBox: void;
