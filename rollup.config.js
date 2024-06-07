@@ -39,6 +39,7 @@ export default [
     output: {
       file: './dist/svgo-node.cjs',
       format: 'cjs',
+      exports: 'named',
     },
     external: ['os', 'fs', 'url', 'path', ...Object.keys(PKG.dependencies)],
     onwarn(warning) {
