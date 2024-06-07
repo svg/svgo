@@ -7,12 +7,12 @@ const standardDescs = /^(Created with|Created using)/;
 
 /**
  * Removes <desc>.
- * Removes only standard editors content or empty elements 'cause it can be used for accessibility.
- * Enable parameter 'removeAny' to remove any description.
- *
- * https://developer.mozilla.org/docs/Web/SVG/Element/desc
+ * Removes only standard editors content or empty elements because it can be
+ * used for accessibility. Enable parameter 'removeAny' to remove any
+ * description.
  *
  * @author Daniel Wabyick
+ * @see https://developer.mozilla.org/docs/Web/SVG/Element/desc
  *
  * @type {import('./plugins-types.js').Plugin<'removeDesc'>}
  */

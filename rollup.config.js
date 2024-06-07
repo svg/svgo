@@ -35,12 +35,12 @@ const terserOptions = {
 
 export default [
   {
-    input: './lib/svgo.js',
+    input: './lib/svgo-node.js',
     output: {
       file: './dist/svgo-node.cjs',
       format: 'cjs',
     },
-    external: Object.keys(PKG.dependencies),
+    external: ['os', 'fs', 'url', 'path', ...Object.keys(PKG.dependencies)],
     onwarn(warning) {
       throw Error(warning.toString());
     },

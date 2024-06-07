@@ -262,7 +262,7 @@ export const intersects = function (path1, path2) {
         direction = minus(simplex[0]); // set the direction to point towards the origin
 
       var iterations = 1e4; // infinite loop protection, 10 000 iterations is more than enough
-      // eslint-disable-next-line no-constant-condition
+
       while (true) {
         if (iterations-- == 0) {
           console.error(
