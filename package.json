@@ -82,7 +82,7 @@
     "!**/*.test.js"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "scripts": {
     "build": "node scripts/sync-version.js && rollup -c",
