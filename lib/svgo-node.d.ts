@@ -1,6 +1,6 @@
-import { Config, optimize } from './svgo';
+import { VERSION, Config, optimize } from './svgo';
 
-export { optimize };
+export { VERSION, optimize };
 
 /**
  * If you write a tool on top of svgo you might need a way to load svgo config.
