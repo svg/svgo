@@ -1,7 +1,7 @@
 ---
-title: removeScriptElement
+title: removeScripts
 svgo:
-  pluginId: removeScriptElement
+  pluginId: removeScripts
 ---
 
 Removes all scripts from the document.
@@ -19,3 +19,9 @@ This plugin performs the following operations:
 - Removes [`<script>`](https://developer.mozilla.org/docs/Web/SVG/Element/script) elements.
 - Removes [SVG event attributes](https://developer.mozilla.org/docs/Web/SVG/Attribute/Events), such as `onload`, `onclick`, and `oninput`, preserving the element itself.
 - Collapses [`<a>`](https://developer.mozilla.org/docs/Web/SVG/Element/a) elements, moving children up to the parent element.
+
+:::info
+
+Between v3 and v4, the plugin was renamed from `removeScriptElement` to `removeScripts` to reflect that it does more than just remove the `<script>` tag.
+
+:::
