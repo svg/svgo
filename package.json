@@ -98,6 +98,11 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "fixtures"
+    ],
+    "coverageReporters": [
+      "html",
+      "lcov",
+      "text"
     ]
   },
   "dependencies": {
