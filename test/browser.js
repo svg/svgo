@@ -30,12 +30,13 @@ const expected = `<svg xmlns="http://www.w3.org/2000/svg">
 
 const content = `
 <script type="module">
-import { VERSION, optimize } from '/svgo.browser.js';
+import { VERSION, optimize, builtinPlugins } from '/svgo.browser.js';
 const result = optimize(${JSON.stringify(fixture)}, {
   plugins : [],
   js2svg  : { pretty: true, indent: 2 }
 });
 globalThis.version = VERSION;
+globalThis.builtinPlugins = builtinPlugins;
 globalThis.result = result.data;
 </script>
 `;
@@ -60,10 +61,12 @@ const runTest = async () => {
 
   const actual = await page.evaluate(() => ({
     version: globalThis.version,
+    builtinPlugins: globalThis.builtinPlugins,
     result: globalThis.result,
   }));
 
   assert.strictEqual(actual.version, version);
+  assert.notEqual(actual.builtinPlugins, undefined);
   assert.equal(actual.result, expected);
 
   await browser.close();

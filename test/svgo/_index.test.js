@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'path';
 import { EOL } from 'os';
 import { fileURLToPath } from 'url';
-import { VERSION, optimize } from '../../lib/svgo.js';
+import { VERSION, optimize, builtinPlugins } from '../../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -23,6 +23,12 @@ describe('svgo', () => {
     const pkgPath = path.resolve(__dirname, '../../package.json');
     const { version } = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
     expect(VERSION).toStrictEqual(version);
+  });
+
+  it('should have all exported members', async () => {
+    expect(VERSION).toBeDefined();
+    expect(optimize).toBeDefined();
+    expect(builtinPlugins).toBeDefined();
   });
 
   it('should create indent with 2 spaces', async () => {

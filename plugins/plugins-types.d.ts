@@ -290,7 +290,8 @@ export type BuiltinsWithRequiredParams = {
   };
 };
 
-type PluginsParams = BuiltinsWithOptionalParams & BuiltinsWithRequiredParams;
+export type PluginsParams = BuiltinsWithOptionalParams &
+  BuiltinsWithRequiredParams;
 
 export type Plugin<Name extends keyof PluginsParams> = PluginDef<
   PluginsParams[Name]
