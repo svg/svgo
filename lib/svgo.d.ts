@@ -34,21 +34,26 @@ type BuiltinPlugin<Name, Params> = {
   fn: Plugin<Params>;
 };
 
+type BuiltinPluginOrPreset<Name, Params> = BuiltinPlugin<Name, Params> & {
+  /** If the plugin is itself a preset that invokes other plugins. */
+  isPreset: true | undefined;
+  /**
+   * If the plugin is a preset that invokes other plugins, this returns an
+   * array of the plugins in the preset in the order that they are invoked.
+   */
+  plugins?: Readonly<BuiltinPlugin<unknown, unknown>[]>;
+};
+
 /**
  * Plugins that are bundled with SVGO. This includes plugin presets, and plugins
  * that are not enabled by default.
  */
 export declare const builtinPlugins: Array<
   {
-    [Name in keyof PluginsParams]: BuiltinPlugin<Name, PluginsParams[Name]> & {
-      /** If the plugin is itself a preset that invokes other plugins. */
-      isPreset: true | undefined;
-      /**
-       * If the plugin is a preset that invokes other plugins, this returns an
-       * array of the plugins in the preset in the order that they are invoked.
-       */
-      plugins?: BuiltinPlugin<unknown, unknown>[];
-    };
+    [Name in keyof PluginsParams]: BuiltinPluginOrPreset<
+      Name,
+      PluginsParams[Name]
+    >;
   }[keyof PluginsParams]
 >;
 
