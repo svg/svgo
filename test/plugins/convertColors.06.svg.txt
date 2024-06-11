@@ -3,6 +3,7 @@ Do not touch the mask color attributes.
 ===
 
 <svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="white"/>
     <mask id="mask1" fill="white" />
     <mask id="mask2">
         <path fill="white"/>
@@ -18,6 +19,7 @@ Do not touch the mask color attributes.
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentcolor"/>
     <mask id="mask1" fill="white"/>
     <mask id="mask2">
         <path fill="white"/>
