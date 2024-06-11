@@ -32,6 +32,7 @@ type DefaultPlugins = {
     convertCase?: false | 'lower' | 'upper';
     shorthex?: boolean;
     shortname?: boolean;
+    ignoreElements?: string[];
   };
   convertEllipseToCircle: void;
   convertPathData: {

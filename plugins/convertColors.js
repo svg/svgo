@@ -1,5 +1,10 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
+import { visitSkip } from '../lib/xast.js';
+
+/**
+ * @typedef {import('../lib/types.js').XastNode} XastNode
+ */
 
 export const name = 'convertColors';
 export const description =
@@ -40,6 +45,12 @@ const convertRgbToHex = ([r, g, b]) => {
 };
 
 /**
+ * @type {(ignoredNodes: string[], node: XastNode) => boolean}
+ */
+const isIgnored = (ignoredElements, node) =>
+  node && node.type === 'element' && ignoredElements.includes(node.name);
+
+/**
  * Convert different colors formats in element attributes to hex.
  *
  * @see https://www.w3.org/TR/SVG11/types.html#DataTypeColor
@@ -71,11 +82,15 @@ export const fn = (_root, params) => {
     convertCase = 'lower',
     shorthex = true,
     shortname = true,
+    ignoreElements = [],
   } = params;
 
   return {
     element: {
       enter: (node) => {
+        if (currentColor && isIgnored(ignoreElements, node)) {
+          return visitSkip;
+        }
         for (const [name, value] of Object.entries(node.attributes)) {
           if (colorsProps.has(name)) {
             let val = value;

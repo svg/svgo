@@ -22,6 +22,9 @@ svgo:
     shortname:
       description: If to convert hex colors to the color name, if the color name is shorter then the hex equivalent.
       default: true
+    ignoreElements:
+      description: If to ignore all the element names contained in the provided array. eg: `["mask"]`. also ignore element's children.
+      default: []
 ---
 
 Converts color references to the shortest equivalent.

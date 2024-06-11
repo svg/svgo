@@ -1,0 +1,35 @@
+Do not touch the mask color attributes.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <mask id="mask1" fill="white" />
+    <mask id="mask2">
+        <path fill="white"/>
+    </mask>
+    <mask id="mask3">
+        <g>
+            <path fill="white"/>
+            <path stroke="black"/>
+        </g>
+    </mask>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <mask id="mask1" fill="white"/>
+    <mask id="mask2">
+        <path fill="white"/>
+    </mask>
+    <mask id="mask3">
+        <g>
+            <path fill="white"/>
+            <path stroke="black"/>
+        </g>
+    </mask>
+</svg>
+
+@@@
+
+{ "currentColor": true, "ignoreElements": ["mask"] }
