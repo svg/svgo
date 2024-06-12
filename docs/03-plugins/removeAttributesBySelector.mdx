@@ -3,8 +3,14 @@ title: removeAttributesBySelector
 svgo:
   pluginId: removeAttributesBySelector
   parameters:
+    selector:
+      description: A CSS selector that matches the elements to be modified.
+      default: "[fill='#00ff00']"
+    attributes:
+      description: An attribute, or array of attributes, to remove from the matched elements.
+      default: fill
     selectors:
-      description: An array of objects with two properties, `selector`, and `attributes`, which represent a CSS selector and the attributes to remove respectively.
+      description: An array of objects, each containing <code>selector</code> and <code>attributes</code> as described above. To match on more than one selector, use this parameter instead of the two above.
       default: null
 ---
 
