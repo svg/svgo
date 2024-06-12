@@ -48,7 +48,7 @@ const convertRgbToHex = ([r, g, b]) => {
  * @type {(ignoredNodes: string[], node: XastNode) => boolean}
  */
 const isIgnored = (ignoredElements, node) =>
-  node && node.type === 'element' && ignoredElements.includes(node.name);
+  node && node.type === 'element' && ignoredElements && ignoredElements.includes(node.name);
 
 /**
  * Convert different colors formats in element attributes to hex.
@@ -88,7 +88,7 @@ export const fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (currentColor && isIgnored(ignoreElements, node)) {
+        if (isIgnored(ignoreElements, node)) {
           return visitSkip;
         }
         for (const [name, value] of Object.entries(node.attributes)) {
