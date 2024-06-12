@@ -1,4 +1,4 @@
-Do not touch the mask color attributes.
+Do not touch the ignored elements color attributes.
 
 ===
 
