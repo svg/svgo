@@ -41,7 +41,7 @@ type BuiltinPluginOrPreset<Name, Params> = BuiltinPlugin<Name, Params> & {
    * If the plugin is a preset that invokes other plugins, this returns an
    * array of the plugins in the preset in the order that they are invoked.
    */
-  plugins?: Readonly<BuiltinPlugin<unknown, unknown>[]>;
+  plugins?: Readonly<BuiltinPlugin<string, Object>[]>;
 };
 
 /**
