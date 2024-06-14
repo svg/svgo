@@ -1,4 +1,4 @@
-Do not touch the ignored elements color attributes.
+Do not apply currentColor to masks.
 
 ===
 
@@ -14,24 +14,26 @@ Do not touch the ignored elements color attributes.
             <path stroke="black"/>
         </g>
     </mask>
+    <path fill="red"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
     <path fill="currentcolor"/>
-    <mask id="mask1" fill="white"/>
+    <mask id="mask1" fill="#fff"/>
     <mask id="mask2">
-        <path fill="white"/>
+        <path fill="#fff"/>
     </mask>
     <mask id="mask3">
         <g>
-            <path fill="white"/>
-            <path stroke="black"/>
+            <path fill="#fff"/>
+            <path stroke="#000"/>
         </g>
     </mask>
+    <path fill="currentcolor"/>
 </svg>
 
 @@@
 
-{ "currentColor": true, "ignoreElements": ["mask"] }
+{ "currentColor": true }

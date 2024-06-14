@@ -1,6 +1,5 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
-import { visitSkip } from '../lib/xast.js';
 
 /**
  * @typedef {import('../lib/types.js').XastNode} XastNode
@@ -45,10 +44,10 @@ const convertRgbToHex = ([r, g, b]) => {
 };
 
 /**
- * @type {(ignoredNodes: string[], node: XastNode) => boolean}
+ * @type {(node: XastNode) => boolean}
  */
-const isIgnored = (ignoredElements, node) =>
-  node && node.type === 'element' && ignoredElements && ignoredElements.includes(node.name);
+const isMask = (node) =>
+  node && node.type === 'element' && node.name === 'mask';
 
 /**
  * Convert different colors formats in element attributes to hex.
@@ -82,21 +81,22 @@ export const fn = (_root, params) => {
     convertCase = 'lower',
     shorthex = true,
     shortname = true,
-    ignoreElements = [],
   } = params;
+
+  let maskCounter = 0;
 
   return {
     element: {
       enter: (node) => {
-        if (isIgnored(ignoreElements, node)) {
-          return visitSkip;
+        if (isMask(node)) {
+          maskCounter++;
         }
         for (const [name, value] of Object.entries(node.attributes)) {
           if (colorsProps.has(name)) {
             let val = value;
 
             // convert colors to currentColor
-            if (currentColor) {
+            if (currentColor && maskCounter === 0) {
               let matched;
               if (typeof currentColor === 'string') {
                 matched = val === currentColor;
@@ -161,6 +161,11 @@ export const fn = (_root, params) => {
 
             node.attributes[name] = val;
           }
+        }
+      },
+      exit: (node) => {
+        if (isMask(node)) {
+          maskCounter--;
         }
       },
     },
