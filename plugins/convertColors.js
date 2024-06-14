@@ -44,10 +44,9 @@ const convertRgbToHex = ([r, g, b]) => {
 };
 
 /**
- * @type {(node: XastNode) => boolean}
+ * @type {(node: XastElement) => boolean}
  */
-const isMask = (node) =>
-  node && node.type === 'element' && node.name === 'mask';
+const isMask = (node) => node.name === 'mask'
 
 /**
  * Convert different colors formats in element attributes to hex.
