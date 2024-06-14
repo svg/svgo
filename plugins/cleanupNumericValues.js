@@ -39,6 +39,7 @@ export const fn = (_root, params) => {
         if (node.attributes.viewBox != null) {
           const nums = node.attributes.viewBox.split(/\s,?\s*|,\s*/g);
           node.attributes.viewBox = nums
+            .filter((value) => value.length != 0)
             .map((value) => {
               const num = Number(value);
               return Number.isNaN(num)
@@ -54,7 +55,7 @@ export const fn = (_root, params) => {
             continue;
           }
 
-          const match = value.match(regNumericValues);
+          const match = regNumericValues.exec(value);
 
           // if attribute value matches regNumericValues
           if (match) {
