@@ -78,7 +78,7 @@ export const fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (node.name === "mask") {
+        if (node.name === 'mask') {
           maskCounter++;
         }
         for (const [name, value] of Object.entries(node.attributes)) {
@@ -154,7 +154,7 @@ export const fn = (_root, params) => {
         }
       },
       exit: (node) => {
-        if (node.name === "mask") {
+        if (node.name === 'mask') {
           maskCounter--;
         }
       },
