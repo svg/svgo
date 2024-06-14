@@ -1,10 +1,6 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
-/**
- * @typedef {import('../lib/types.js').XastNode} XastNode
- */
-
 export const name = 'convertColors';
 export const description =
   'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
@@ -42,11 +38,6 @@ const convertRgbToHex = ([r, g, b]) => {
   // remove the 1 to get the number with 0s intact
   return '#' + hexNumber.toString(16).slice(1).toUpperCase();
 };
-
-/**
- * @type {(node: XastElement) => boolean}
- */
-const isMask = (node) => node.name === 'mask'
 
 /**
  * Convert different colors formats in element attributes to hex.
@@ -87,7 +78,7 @@ export const fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
-        if (isMask(node)) {
+        if (node.name === "mask") {
           maskCounter++;
         }
         for (const [name, value] of Object.entries(node.attributes)) {
@@ -163,7 +154,7 @@ export const fn = (_root, params) => {
         }
       },
       exit: (node) => {
-        if (isMask(node)) {
+        if (node.name === "mask") {
           maskCounter--;
         }
       },
