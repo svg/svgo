@@ -73,15 +73,20 @@ export const fn = (_root, params) => {
     shortname = true,
   } = params;
 
+  let maskCounter = 0;
+
   return {
     element: {
       enter: (node) => {
+        if (node.name === 'mask') {
+          maskCounter++;
+        }
         for (const [name, value] of Object.entries(node.attributes)) {
           if (colorsProps.has(name)) {
             let val = value;
 
             // convert colors to currentColor
-            if (currentColor) {
+            if (currentColor && maskCounter === 0) {
               let matched;
               if (typeof currentColor === 'string') {
                 matched = val === currentColor;
@@ -146,6 +151,11 @@ export const fn = (_root, params) => {
 
             node.attributes[name] = val;
           }
+        }
+      },
+      exit: (node) => {
+        if (node.name === 'mask') {
+          maskCounter--;
         }
       },
     },
