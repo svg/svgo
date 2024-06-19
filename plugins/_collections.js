@@ -2091,6 +2091,7 @@ export const editorNamespaces = new Set([
   'http://www.serif.com/',
   'http://www.vector.evaxdesign.sk',
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  'https://boxy-svg.com',
 ]);
 
 /**
