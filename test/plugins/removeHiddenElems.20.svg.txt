@@ -1,0 +1,24 @@
+Remove all unreferenced elements which are only referenced by other unreferenced elements.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <clipPath clipPathUnits="userSpaceOnUse" id="clipPath3889">
+            <path d="M200 200 l50 -300" style="fill:url(#linearGradient3893)"/>
+        </clipPath>
+        <linearGradient xlink:href="#linearGradient6131" id="linearGradient3893" gradientUnits="userSpaceOnUse" gradientTransform="scale(2)" x1="86" y1="93" x2="95" y2="102" />
+        <linearGradient id="linearGradient6131">
+            <stop id="stop6133" offset="0" style="stop-color:#fcfcfc;stop-opacity:1" />
+            <stop id="stop6137" offset="1" style="stop-color:#cecbcb;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <path d="M200 200 l50 -300" />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <path d="M200 200 l50 -300"/>
+</svg>
