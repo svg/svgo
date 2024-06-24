@@ -2,7 +2,7 @@
   <img src="./logo/logo-web.svg" width="348.61" height="100" alt=""/>
 </div>
 
-# SVGO [![npm](https://img.shields.io/npm/v/svgo?logo=npm)](https://npmjs.org/package/svgo) [![Discord](https://img.shields.io/discord/815166721315831868?logo=discord&logoColor=white&label=Discord&color=5865F2)](https://discord.gg/z8jX8NYxrE) [![docs](https://img.shields.io/badge/docs-svgo.dev-blue)](https://svgo.dev/) ![GitHub License](https://img.shields.io/github/license/svg/svgo)
+# SVGO [![Discord](https://img.shields.io/discord/815166721315831868?logo=discord&logoColor=whitesmoke&label=Discord&color=5865F2)](https://discord.gg/z8jX8NYxrE) [![docs](https://img.shields.io/badge/docs-svgo.dev-blue)](https://svgo.dev) [![GitHub License](https://img.shields.io/github/license/svg/svgo?logo=github)](https://github.com/svg/svgo/blob/main/LICENSE)
 
 SVGO, short for **SVG O**ptimizer, is a Node.js library and command-line application for optimizing SVG files.
 
@@ -16,6 +16,15 @@ You can install SVGO globally through npm, yarn, or pnpm. Alternatively, drop th
 
 ### npm
 [![Download](https://img.shields.io/badge/npm-Download-blue?logo=npm)](https://www.npmjs.com/package/svgo)
+![NPM Collaborators](https://img.shields.io/npm/collaborators/svgo?logo=npm)
+![NPM License](https://img.shields.io/npm/l/svgo?logo=npm)
+[![npm](https://img.shields.io/npm/v/svgo?logo=npm)](https://npmjs.org/package/svgo)
+
+![NPM Downloads](https://img.shields.io/npm/dw/svgo?logo=npm)
+![NPM Downloads](https://img.shields.io/npm/dm/svgo?logo=npm)
+![NPM Downloads](https://img.shields.io/npm/dy/svgo?logo=npm)
+![NPM Downloads](https://img.shields.io/npm/d18m/svgo?logo=npm)
+
 ```sh
 npm install -g svgo
 ```
