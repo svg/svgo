@@ -15,11 +15,13 @@ SVG files, especially those exported from vector editors, usually contain a lot 
 You can install SVGO globally through npm, yarn, or pnpm. Alternatively, drop the global flag (`global`/`-g`) to use it in your Node.js project.
 
 ### npm
+[![Download](https://img.shields.io/badge/npm-Download-blue?logo=npm)](https://www.npmjs.com/package/svgo)
 ```sh
 npm install -g svgo
 ```
 
 ### yarn
+[![Static Badge](https://img.shields.io/badge/yarn-Download-blue?logo=yarn)](https://yarnpkg.com/package?name=svgo)
 ```sh
 yarn global add svgo
 ```
