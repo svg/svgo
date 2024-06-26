@@ -40,6 +40,11 @@ yarn global add svgo
 pnpm add -g svgo
 ```
 
+### Homebrew
+```sh
+brew install svgo
+```
+
 ## Command-line usage
 
 Process single files:
