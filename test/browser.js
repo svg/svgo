@@ -1,7 +1,13 @@
 import assert from 'assert';
 import fs from 'node:fs/promises';
 import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { chromium } from 'playwright';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkgPath = path.join(__dirname, '../package.json');
+const { version } = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
 
 const fixture = `<svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">
@@ -24,11 +30,13 @@ const expected = `<svg xmlns="http://www.w3.org/2000/svg">
 
 const content = `
 <script type="module">
-import { optimize } from '/svgo.browser.js';
+import { VERSION, optimize, builtinPlugins } from '/svgo.browser.js';
 const result = optimize(${JSON.stringify(fixture)}, {
   plugins : [],
   js2svg  : { pretty: true, indent: 2 }
 });
+globalThis.version = VERSION;
+globalThis.builtinPlugins = builtinPlugins;
 globalThis.result = result.data;
 </script>
 `;
@@ -50,8 +58,17 @@ const runTest = async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('http://localhost:5000');
-  const actual = await page.evaluate(() => globalThis.result);
-  assert.equal(actual, expected);
+
+  const actual = await page.evaluate(() => ({
+    version: globalThis.version,
+    builtinPlugins: globalThis.builtinPlugins,
+    result: globalThis.result,
+  }));
+
+  assert.strictEqual(actual.version, version);
+  assert.notEqual(actual.builtinPlugins, undefined);
+  assert.equal(actual.result, expected);
+
   await browser.close();
 };
 

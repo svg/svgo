@@ -90,7 +90,7 @@ export default {
       params: {
         overrides: {
           // disable a default plugin
-          removeViewBox: false,
+          cleanupIds: false,
 
           // customize the params of a default plugin
           inlineStyles: {
@@ -165,26 +165,6 @@ You can also specify a path and customize the current working directory.
 ```js
 const config = await loadConfig(configFile, cwd);
 ```
-
-## Other ways to use SVGO
-
-| Method                    | Reference                                                                                                               |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Web app                   | [SVGOMG](https://jakearchibald.github.io/svgomg/)                                                                       |
-| Grunt task                | [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)                                                            |
-| Gulp task                 | [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)                                                                    |
-| Webpack loader            | [image-minimizer-webpack-plugin](https://github.com/webpack-contrib/image-minimizer-webpack-plugin/#optimize-with-svgo) |
-| PostCSS plugin            | [postcss-svgo](https://github.com/cssnano/cssnano/tree/master/packages/postcss-svgo)                                    |
-| Inkscape plugin           | [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)                                                              |
-| Sketch plugin             | [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)                                                    |
-| Rollup plugin             | [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)                                                    |
-| Visual Studio Code plugin | [vscode-svgo](https://github.com/1000ch/vscode-svgo)                                                                    |
-| Atom plugin               | [atom-svgo](https://github.com/1000ch/atom-svgo)                                                                        |
-| Sublime plugin            | [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)                                                                  |
-| Figma plugin              | [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)                            |
-| Linux app                 | [Oh My SVG](https://github.com/sonnyp/OhMySVG)                                                                          |
-| Browser extension         | [SVG Gobbler](https://github.com/rossmoody/svg-gobbler)                                                                 |
-| API                       | [Vector Express](https://github.com/smidyo/vectorexpress-api#convertor-svgo)                                            |
 
 ## Donors
 

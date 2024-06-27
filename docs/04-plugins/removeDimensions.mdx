@@ -1,0 +1,13 @@
+---
+title: removeDimensions
+svgo:
+  pluginId: removeDimensions
+---
+
+Removes the [`width`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) and [`height`](https://developer.mozilla.org/docs/Web/SVG/Attribute/height) attribute from the top-most [`<svg>`](https://developer.mozilla.org/docs/Web/SVG/Element/svg) element if specified, and replaces it with the [`viewBox`](https://developer.mozilla.org/docs/Web/SVG/Attribute/viewBox) attribute if it's missing.
+
+:::info
+
+This is effectively the opposite of the [removeViewBox](/docs/plugins/removeViewBox/) plugin, ensure that is disabled before using this one.
+
+:::

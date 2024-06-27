@@ -1,8 +1,8 @@
-import fs from 'fs';
+import fs from 'node:fs/promises';
 import path from 'path';
 import { EOL } from 'os';
 import { fileURLToPath } from 'url';
-import { optimize } from '../../lib/svgo.js';
+import { VERSION, optimize, builtinPlugins } from '../../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,11 +14,23 @@ const normalize = (file) => {
 
 const parseFixture = async (file) => {
   const filepath = path.resolve(__dirname, file);
-  const content = await fs.promises.readFile(filepath, 'utf-8');
+  const content = await fs.readFile(filepath, 'utf-8');
   return normalize(content).split(/\s*@@@\s*/);
 };
 
 describe('svgo', () => {
+  it('version should match package.json', async () => {
+    const pkgPath = path.resolve(__dirname, '../../package.json');
+    const { version } = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
+    expect(VERSION).toStrictEqual(version);
+  });
+
+  it('should have all exported members', async () => {
+    expect(VERSION).toBeDefined();
+    expect(optimize).toBeDefined();
+    expect(builtinPlugins).toBeDefined();
+  });
+
   it('should create indent with 2 spaces', async () => {
     const [original, expected] = await parseFixture('test.svg.txt');
     const result = optimize(original, {

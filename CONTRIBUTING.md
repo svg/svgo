@@ -21,7 +21,7 @@ See: [SECURITY.md](./SECURITY.md)
 ### Requirements
 
 - [Git](https://git-scm.com/)
-- [Node.js 14](https://nodejs.org/) or later
+- [Node.js 20](https://nodejs.org/) or later
 
 ### Getting Started
 

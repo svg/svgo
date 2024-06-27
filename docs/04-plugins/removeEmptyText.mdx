@@ -1,0 +1,24 @@
+---
+title: removeEmptyText
+svgo:
+  pluginId: removeEmptyText
+  defaultPlugin: true
+  parameters:
+    text:
+      description: If to remove empty [`<text>`](https://developer.mozilla.org/docs/Web/SVG/Element/text) elements.
+      default: true
+    tspan:
+      description: If to remove empty [`<tspan>`](https://developer.mozilla.org/docs/Web/SVG/Element/tspan) elements.
+      default: true
+    tref:
+      description: If to remove empty [`<tref>`](https://developer.mozilla.org/docs/Web/SVG/Element/tref) elements.
+      default: true
+---
+
+Removes empty [`<text>`](https://developer.mozilla.org/docs/Web/SVG/Element/text) and [`<tspan>`](https://developer.mozilla.org/docs/Web/SVG/Element/tspan) elements, and [`<tref>`](https://developer.mozilla.org/docs/Web/SVG/Element/tref) elements that don't reference another node in the document.
+
+:::info
+
+No browsers supports `<tref>`, so it's best to avoid that element regardless.
+
+:::

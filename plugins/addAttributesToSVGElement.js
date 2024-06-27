@@ -41,7 +41,7 @@ plugins: [
 `;
 
 /**
- * Add attributes to an outer <svg> element. Example config:
+ * Add attributes to an outer <svg> element.
  *
  * @author April Arcus
  *

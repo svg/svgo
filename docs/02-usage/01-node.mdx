@@ -1,0 +1,51 @@
+---
+title: Node.js
+slug: 'node'
+---
+
+To minimally use SVGO in Node.js, ensure you've installed the dependency by following the instructions in [Getting Started](../01-index.mdx#installation), then import the `optimize` function.
+
+Here's a minimal example:
+
+```js
+import { optimize } from 'svgo';
+
+const svg = `
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 100 100">
+  <text x="50" y="50" text-anchor="middle">•ᴗ•</text>
+</svg>
+`;
+
+const { data } = optimize(svg);
+console.log(data);
+// <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="50" text-anchor="middle">•ᴗ•</text></svg>
+```
+
+## Exports
+
+<dl>
+  <dt>
+    <code>VERSION</code>
+  </dt>
+  <dd>Version of SVGO during runtime.</dd>
+  <dt>
+    <code>builtinPlugins</code>
+  </dt>
+  <dd>
+    Array of built-in plugins, including plugins that are disabled by default
+    and any presets.
+  </dd>
+  <dt>
+    <code>optimize(svgCode, svgoConfig)</code>
+  </dt>
+  <dd>Invokes the optimization and returns the optimized/minified SVG code.</dd>
+  <dt>
+    <code>loadConfig(configFile, directory)</code>
+  </dt>
+  <dd>
+    Utility to find the nearest <code>svgo.config.js</code> file by searching up
+    the parent directories.
+  </dd>
+</dl>

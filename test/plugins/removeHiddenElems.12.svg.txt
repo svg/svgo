@@ -1,4 +1,4 @@
-Keep invisible elements which have visibile ones inside
+Keep invisible elements which have visible ones inside
 and resolve styles
 
 ===
