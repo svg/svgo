@@ -52,7 +52,7 @@ export const fn = () => {
 
             const index = parentNode.children.indexOf(node);
             const usefulChildren = node.children.filter(
-              (child) => !(child.type === 'text' && /\s*/.test(child.value)),
+              (child) => child.type !== 'text',
             );
             parentNode.children.splice(index, 1, ...usefulChildren);
 
