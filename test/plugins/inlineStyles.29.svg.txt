@@ -1,0 +1,35 @@
+Styles should not be inlined in the presence of media queries.
+
+See: https://github.com/svg/svgo/issues/1834
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+    <style>
+        .fill {
+            fill: red
+        }
+        @media (max-width:500px) {
+            .fill {
+                fill: blue
+            }
+        }
+    </style>
+    <rect class="fill" x="1" y="1" width="10" height="10"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+    <style>
+        .fill {
+            fill: red
+        }
+        @media (max-width:500px) {
+            .fill {
+                fill: blue
+            }
+        }
+    </style>
+    <rect class="fill" x="1" y="1" width="10" height="10"/>
+</svg>
