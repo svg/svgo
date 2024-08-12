@@ -1,0 +1,36 @@
+When two IDs are referenced in the same attribute, make sure they both get changed even if the new
+value of the first ID is the same as the old value of the second ID.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <linearGradient id="a">
+        <stop stop-color="blue" offset="0"/>
+    </linearGradient>
+    <linearGradient id="ccc">
+        <stop stop-color="#f00" offset="0"/>
+    </linearGradient>
+    <linearGradient id="b">
+        <stop stop-color="green" offset="0"/>
+    </linearGradient>
+    <rect y="40" width="10" height="20" style="fill:url(#a)"/>
+    <rect y="10" width="10" height="20" style="fill:url(#ccc);stroke:url(#b);stroke-width:3"/>
+    <rect y="70" width="10" height="20" style="fill:url(#ccc);stroke:#ccc;stroke-width:3"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <linearGradient id="a">
+        <stop stop-color="blue" offset="0"/>
+    </linearGradient>
+    <linearGradient id="b">
+        <stop stop-color="#f00" offset="0"/>
+    </linearGradient>
+    <linearGradient id="c">
+        <stop stop-color="green" offset="0"/>
+    </linearGradient>
+    <rect y="40" width="10" height="20" style="fill:url(#a)"/>
+    <rect y="10" width="10" height="20" style="fill:url(#b);stroke:url(#c);stroke-width:3"/>
+    <rect y="70" width="10" height="20" style="fill:url(#b);stroke:#ccc;stroke-width:3"/>
+</svg>
