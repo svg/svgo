@@ -102,4 +102,17 @@ describe('svgo', () => {
     });
     expect(normalize(result.data)).toStrictEqual(expected);
   });
+
+  it('should preserve comments and cdata in foreign object', async () => {
+    const [original, expected] = await parseFixture(
+      'foreign-comments-and-cdata-pretty.svg.txt',
+    );
+    // Disable plugins so comments aren't removed.
+    const result = optimize(original, {
+      path: 'input.svg',
+      plugins: [],
+      js2svg: { pretty: true },
+    });
+    expect(normalize(result.data)).toStrictEqual(expected);
+  });
 });

@@ -103,10 +103,8 @@ export const elemsGroups = {
 /**
  * Elements where adding or removing whitespace may effect rendering, metadata,
  * or semantic meaning.
- *
- * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
  */
-export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
+export const textElems = new Set([...elemsGroups.textContent, 'title']);
 
 export const pathElems = new Set(['glyph', 'missing-glyph', 'path']);
 
