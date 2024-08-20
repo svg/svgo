@@ -1,6 +1,6 @@
 Issue 1677: don't remove fill from animated elements.
 
-===========================
+===
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 24">
   <animate href="#a" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze" />
@@ -19,10 +19,10 @@ Issue 1677: don't remove fill from animated elements.
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 24">
-    <animate href="#a" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze" />
-    <animate href="#b" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze" />
+    <animate href="#a" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze"/>
+    <animate href="#b" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze"/>
     <circle cx="12" cy="12" r="8" fill="red" fill-opacity="0">
-        <animate attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze" />
+        <animate attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze"/>
     </circle>
     <circle id="a" cx="36" cy="12" r="8" fill="blue" fill-opacity="0"/>
     <g id="b" fill-opacity="0">
