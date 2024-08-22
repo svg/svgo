@@ -1,6 +1,6 @@
 inlineStyles plugin should not remove id attribute from target element.
 
-See: https://github.com/svg/svgo/issues/1486
+See: https://github.com/svg/svgo/issues/2065
 
 ===
 
