@@ -1,21 +1,16 @@
-'use strict';
+import * as csstree from 'css-tree';
+
+import { visitSkip, querySelector } from '../lib/xast.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastParent} XastParent
- * @typedef {import('../lib/types').XastParent} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
  */
 
-const structuredClone = require('@ungap/structured-clone').default;
+export const name = 'dereferenceUses';
+export const description = 'dereferences <use/> elements';
 
-const csstree = require('css-tree');
-
-const { visitSkip, querySelector } = require('../lib/xast.js');
-
-exports.name = 'dereferenceUses';
-exports.description = 'dereferences <use/> elements';
-
-exports.params = {
+export const params = {
   keepHref: false, // keep (xlink:)href attributes
   symbolContainer: 'svg', // browsers use <svg/> as container of <symbol/> content (e.g. <g> could also be used)
 };
@@ -39,9 +34,9 @@ const HrefAttributeNames = [
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('./plugins-types').Plugin<'dereferenceUses'>}
+ * @type {import('./plugins-types.js').Plugin<'dereferenceUses'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { keepHref = false, symbolContainer = 'svg' } = params;
 
   /**
