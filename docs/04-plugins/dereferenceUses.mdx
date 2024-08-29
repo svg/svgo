@@ -1,0 +1,15 @@
+---
+title: dereferenceUses
+svgo:
+  pluginId: dereferenceUses
+  defaultPlugin: false
+  parameters:
+    keepHref:
+      description: keep (xlink:)href attributes
+      default: false
+    symbolContainer:
+      description: browsers use <svg/> as container of <symbol/> content (e.g. <g> could also be used)
+      default: 'svg'
+---
+
+Dereferences <use/> elements.
