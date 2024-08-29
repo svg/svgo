@@ -1,23 +1,22 @@
-'use strict';
-
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const {
+import { path2js } from './_path.js';
+import {
   transformsMultiply,
   transform2js,
   transformArc,
-} = require('./_transforms.js');
-const { path2js } = require('./_path.js');
-const { removeLeadingZero } = require('../lib/svgo/tools.js');
-const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
+} from './_transforms.js';
+import { referencesProps, attrsGroupsDefaults } from './_collections.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+
+import { removeLeadingZero, includesUrlReference } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {Array<PathDataItem>} PathData
- * @typedef {Array<number>} Matrix
+ * @typedef {PathDataItem[]} PathData
+ * @typedef {number[]} Matrix
  */
 
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
@@ -25,19 +24,16 @@ const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 /**
  * Apply transformation(s) to the Path data.
  *
- * @type {import('../lib/types').Plugin<{
+ * @type {import('../lib/types.js').Plugin<{
  *   transformPrecision: number,
  *   applyTransformsStroked: boolean,
  * }>}
  */
-const applyTransforms = (root, params) => {
+export const applyTransforms = (root, params) => {
   const stylesheet = collectStylesheet(root);
   return {
     element: {
       enter: (node) => {
-        const computedStyle = computeStyle(stylesheet, node);
-
-        // used only for paths for now
         if (node.attributes.d == null) {
           return;
         }
@@ -48,7 +44,7 @@ const applyTransforms = (root, params) => {
         }
 
         // if there are no 'stroke' attr and references to other objects such as
-        // gradiends or clip-path which are also subjects to transform.
+        // gradients or clip-path which are also subjects to transform.
         if (
           node.attributes.transform == null ||
           node.attributes.transform === '' ||
@@ -57,44 +53,53 @@ const applyTransforms = (root, params) => {
           node.attributes.style != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && value.includes('url(')
+              referencesProps.has(name) && includesUrlReference(value),
           )
         ) {
           return;
         }
 
+        const computedStyle = computeStyle(stylesheet, node);
+        const transformStyle = computedStyle.transform;
+
+        // Transform overridden in <style> tag which is not considered
+        if (
+          transformStyle.type === 'static' &&
+          transformStyle.value !== node.attributes.transform
+        ) {
+          return;
+        }
+
         const matrix = transformsMultiply(
-          transform2js(node.attributes.transform)
+          transform2js(node.attributes.transform),
         );
+
         const stroke =
-          computedStyle.stroke != null && computedStyle.stroke.type === 'static'
+          computedStyle.stroke?.type === 'static'
             ? computedStyle.stroke.value
             : null;
 
         const strokeWidth =
-          computedStyle['stroke-width'] != null &&
-          computedStyle['stroke-width'].type === 'static'
+          computedStyle['stroke-width']?.type === 'static'
             ? computedStyle['stroke-width'].value
             : null;
         const transformPrecision = params.transformPrecision;
 
         if (
-          (computedStyle.stroke != null &&
-            computedStyle.stroke.type === 'dynamic') ||
-          (computedStyle.strokeWidth != null &&
-            computedStyle['stroke-width'].type === 'dynamic')
+          computedStyle.stroke?.type === 'dynamic' ||
+          computedStyle['stroke-width']?.type === 'dynamic'
         ) {
           return;
         }
 
         const scale = Number(
-          Math.sqrt(
-            matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1]
-          ).toFixed(transformPrecision)
+          Math.hypot(matrix.data[0], matrix.data[1]).toFixed(
+            transformPrecision,
+          ),
         );
 
         if (stroke && stroke != 'none') {
-          if (params.applyTransformsStroked === false) {
+          if (!params.applyTransformsStroked) {
             return;
           }
 
@@ -116,7 +121,7 @@ const applyTransforms = (root, params) => {
               )
                 .trim()
                 .replace(regNumericValues, (num) =>
-                  removeLeadingZero(Number(num) * scale)
+                  removeLeadingZero(Number(num) * scale),
                 );
 
               if (node.attributes['stroke-dashoffset'] != null) {
@@ -125,7 +130,7 @@ const applyTransforms = (root, params) => {
                 ]
                   .trim()
                   .replace(regNumericValues, (num) =>
-                    removeLeadingZero(Number(num) * scale)
+                    removeLeadingZero(Number(num) * scale),
                   );
               }
 
@@ -135,7 +140,7 @@ const applyTransforms = (root, params) => {
                 ]
                   .trim()
                   .replace(regNumericValues, (num) =>
-                    removeLeadingZero(Number(num) * scale)
+                    removeLeadingZero(Number(num) * scale),
                   );
               }
             }
@@ -151,7 +156,6 @@ const applyTransforms = (root, params) => {
     },
   };
 };
-exports.applyTransforms = applyTransforms;
 
 /**
  * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
@@ -208,7 +212,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
     }
 
     // horizontal lineto (x)
-    // convert to lineto to handle two-dimentional transforms
+    // convert to lineto to handle two-dimensional transforms
     if (command === 'H') {
       command = 'L';
       args = [args[0], cursor[1]];
@@ -219,7 +223,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
     }
 
     // vertical lineto (y)
-    // convert to lineto to handle two-dimentional transforms
+    // convert to lineto to handle two-dimensional transforms
     if (command === 'V') {
       command = 'L';
       args = [cursor[0], args[0]];

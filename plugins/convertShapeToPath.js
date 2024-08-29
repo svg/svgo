@@ -1,14 +1,12 @@
-'use strict';
+import { stringifyPathData } from '../lib/path.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
  */
 
-const { stringifyPathData } = require('../lib/path.js');
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'convertShapeToPath';
-exports.description = 'converts basic shapes to more compact path form';
+export const name = 'convertShapeToPath';
+export const description = 'converts basic shapes to more compact path form';
 
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
@@ -21,9 +19,9 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types').Plugin<'convertShapeToPath'>}
+ * @type {import('./plugins-types.js').Plugin<'convertShapeToPath'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { convertArcs = false, floatPrecision: precision } = params;
 
   return {
@@ -46,7 +44,7 @@ exports.fn = (root, params) => {
           // TODO: Calculate sizes from % and non-px units if possible.
           if (Number.isNaN(x - y + width - height)) return;
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [x, y] },
@@ -71,7 +69,7 @@ exports.fn = (root, params) => {
           const y2 = Number(node.attributes.y2 || '0');
           if (Number.isNaN(x1 - y1 + x2 - y2)) return;
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [x1, y1] },
@@ -91,14 +89,14 @@ exports.fn = (root, params) => {
           node.attributes.points != null
         ) {
           const coords = (node.attributes.points.match(regNumber) || []).map(
-            Number
+            Number,
           );
           if (coords.length < 4) {
             detachNodeFromParent(node, parentNode);
             return;
           }
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [];
           for (let i = 0; i < coords.length; i += 2) {
@@ -124,7 +122,7 @@ exports.fn = (root, params) => {
             return;
           }
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [cx, cy - r] },
@@ -139,7 +137,7 @@ exports.fn = (root, params) => {
           delete node.attributes.r;
         }
 
-        // optionally covert ellipse
+        // optionally convert ellipse
         if (node.name === 'ellipse' && convertArcs) {
           const ecx = Number(node.attributes.cx || '0');
           const ecy = Number(node.attributes.cy || '0');
@@ -149,7 +147,7 @@ exports.fn = (root, params) => {
             return;
           }
           /**
-           * @type {Array<PathDataItem>}
+           * @type {PathDataItem[]}
            */
           const pathData = [
             { command: 'M', args: [ecx, ecy - ry] },

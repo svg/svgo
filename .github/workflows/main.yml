@@ -1,54 +1,69 @@
 name: CI
+
 env:
   FORCE_COLOR: 2
-  NODE: 18
+  NODE: 20
+
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
       - run: yarn install
       - run: yarn lint
       - run: yarn typecheck
-  regression:
-    name: Test regressions
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE }}
-          cache: yarn
-      - run: yarn install
-      - run: yarn test-regression
   test:
-    name: Node.js ${{ matrix.node-version }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
     strategy:
       fail-fast: false
       matrix:
         node-version:
+          - 22
+          - 20
           - 18
           - 16
-          - 14
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
       - run: yarn install
+      - run: yarn playwright install --with-deps chromium
       - run: yarn test
-      - run: yarn test-browser
+      - run: yarn test:bundles
+  regression:
+    name: Test regressions
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    needs:
+      - lint
+      - test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE }}
+          cache: yarn
+      - run: yarn install
+      - run: yarn playwright install --with-deps chromium
+      - run: yarn test:regression

@@ -1,0 +1,15 @@
+---
+title: removeViewBox
+svgo:
+  pluginId: removeViewBox
+---
+
+Removes the [`viewBox`](https://developer.mozilla.org/docs/Web/SVG/Attribute/viewBox) attribute where it matches the documents width and height.
+
+:::danger
+
+This plugin prevents SVGs from scaling, so they will not fill their parent container, or may clip if the container is too small.
+
+See [svg/svgo#1128](https://github.com/svg/svgo/issues/1128) for more context.
+
+:::

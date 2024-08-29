@@ -1,9 +1,7 @@
-'use strict';
+import { removeLeadingZero } from '../lib/svgo/tools.js';
 
-const { removeLeadingZero } = require('../lib/svgo/tools.js');
-
-exports.name = 'cleanupListOfValues';
-exports.description = 'rounds list of values to the fixed precision';
+export const name = 'cleanupListOfValues';
+export const description = 'rounds list of values to the fixed precision';
 
 const regNumericValues =
   /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
@@ -32,9 +30,9 @@ const absoluteLengths = {
  *
  * @author kiyopikko
  *
- * @type {import('./plugins-types').Plugin<'cleanupListOfValues'>}
+ * @type {import('./plugins-types.js').Plugin<'cleanupListOfValues'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     floatPrecision = 3,
     leadingZero = true,
@@ -68,7 +66,7 @@ exports.fn = (_root, params) => {
         // convert absolute values to pixels
         if (convertToPx && units && units in absoluteLengths) {
           const pxNum = Number(
-            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision)
+            (absoluteLengths[units] * Number(match[1])).toFixed(floatPrecision),
           );
 
           if (pxNum.toString().length < match[0].length) {
@@ -112,7 +110,7 @@ exports.fn = (_root, params) => {
 
         if (node.attributes['enable-background'] != null) {
           node.attributes['enable-background'] = roundValues(
-            node.attributes['enable-background']
+            node.attributes['enable-background'],
           );
         }
 
@@ -122,7 +120,7 @@ exports.fn = (_root, params) => {
 
         if (node.attributes['stroke-dasharray'] != null) {
           node.attributes['stroke-dasharray'] = roundValues(
-            node.attributes['stroke-dasharray']
+            node.attributes['stroke-dasharray'],
           );
         }
 

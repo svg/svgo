@@ -1,9 +1,7 @@
-'use strict';
+import { removeLeadingZero } from '../lib/svgo/tools.js';
 
-const { removeLeadingZero } = require('../lib/svgo/tools');
-
-exports.name = 'cleanupNumericValues';
-exports.description =
+export const name = 'cleanupNumericValues';
+export const description =
   'rounds numeric values to the fixed precision, removes default ‘px’ units';
 
 const regNumericValues =
@@ -25,9 +23,9 @@ const absoluteLengths = {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'cleanupNumericValues'>}
+ * @type {import('./plugins-types.js').Plugin<'cleanupNumericValues'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     floatPrecision = 3,
     leadingZero = true,
@@ -39,7 +37,7 @@ exports.fn = (_root, params) => {
     element: {
       enter: (node) => {
         if (node.attributes.viewBox != null) {
-          const nums = node.attributes.viewBox.split(/\s,?\s*|,\s*/g);
+          const nums = node.attributes.viewBox.trim().split(/(?:\s,?|,)\s*/g);
           node.attributes.viewBox = nums
             .map((value) => {
               const num = Number(value);
@@ -56,7 +54,7 @@ exports.fn = (_root, params) => {
             continue;
           }
 
-          const match = value.match(regNumericValues);
+          const match = regNumericValues.exec(value);
 
           // if attribute value matches regNumericValues
           if (match) {
@@ -75,8 +73,8 @@ exports.fn = (_root, params) => {
             if (convertToPx && units !== '' && units in absoluteLengths) {
               const pxNum = Number(
                 (absoluteLengths[units] * Number(match[1])).toFixed(
-                  floatPrecision
-                )
+                  floatPrecision,
+                ),
               );
               if (pxNum.toString().length < match[0].length) {
                 num = pxNum;

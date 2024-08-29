@@ -1,9 +1,7 @@
-'use strict';
+import { attrsGroups } from './_collections.js';
 
-const { attrsGroups } = require('./_collections');
-
-exports.name = 'convertStyleToAttrs';
-exports.description = 'converts style to attributes';
+export const name = 'convertStyleToAttrs';
+export const description = 'converts style to attributes';
 
 /**
  * @type {(...args: string[]) => string}
@@ -19,7 +17,7 @@ const rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)"; // string 
 const rQuotes = '"(?:[^"\\n\\r\\\\]|' + rEscape + ')*?(?:"|$)'; // string in double quotes: "smth"
 const rQuotedString = new RegExp('^' + g(rSingleQuotes, rQuotes) + '$');
 // Parentheses, E.g.: url(data:image/png;base64,iVBO...).
-// ':' and ';' inside of it should be threated as is. (Just like in strings.)
+// ':' and ';' inside of it should be treated as is. (Just like in strings.)
 const rParenthesis =
   '\\(' + g('[^\'"()\\\\]+', rEscape, rSingleQuotes, rQuotes) + '*?' + '\\)';
 // The value. It can have strings and parentheses (see above). Fallbacks to anything in case of unexpected input.
@@ -31,7 +29,7 @@ const rValue =
     rSingleQuotes,
     rQuotes,
     rParenthesis,
-    '[^;]*?'
+    '[^;]*?',
   ) +
   '*?' +
   ')';
@@ -42,12 +40,12 @@ const rImportant = '(\\s*!important(?![-(\\w]))?';
 // Final RegExp to parse CSS declarations.
 const regDeclarationBlock = new RegExp(
   rAttr + ':' + rValue + rImportant + rDeclEnd,
-  'ig'
+  'ig',
 );
 // Comments expression. Honors escape sequences and strings.
 const regStripComments = new RegExp(
   g(rEscape, rSingleQuotes, rQuotes, '/\\*[^]*?\\*/'),
-  'ig'
+  'ig',
 );
 
 /**
@@ -65,9 +63,9 @@ const regStripComments = new RegExp(
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertStyleToAttrs'>}
+ * @type {import('./plugins-types.js').Plugin<'convertStyleToAttrs'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const { keepImportant = false } = params;
   return {
     element: {
@@ -87,13 +85,12 @@ exports.fn = (_root, params) => {
               return match[0] == '/'
                 ? ''
                 : match[0] == '\\' && /[-g-z]/i.test(match[1])
-                ? match[1]
-                : match;
-            }
+                  ? match[1]
+                  : match;
+            },
           );
 
           regDeclarationBlock.lastIndex = 0;
-          // eslint-disable-next-line no-cond-assign
           for (var rule; (rule = regDeclarationBlock.exec(styleValue)); ) {
             if (!keepImportant || !rule[3]) {
               styles.push([rule[1], rule[2]]);
@@ -110,7 +107,7 @@ exports.fn = (_root, params) => {
                   val = val.slice(1, -1);
                 }
 
-                if (stylingProps.includes(prop)) {
+                if (stylingProps.has(prop)) {
                   newAttributes[prop] = val;
 
                   return false;

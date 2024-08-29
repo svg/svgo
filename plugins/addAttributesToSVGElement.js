@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'addAttributesToSVGElement';
-exports.description = 'adds attributes to an outer <svg> element';
+export const name = 'addAttributesToSVGElement';
+export const description = 'adds attributes to an outer <svg> element';
 
 var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
 It should have a list of "attributes" or one "attribute".
@@ -43,13 +41,13 @@ plugins: [
 `;
 
 /**
- * Add attributes to an outer <svg> element. Example config:
+ * Add attributes to an outer <svg> element.
  *
  * @author April Arcus
  *
- * @type {import('./plugins-types').Plugin<'addAttributesToSVGElement'>}
+ * @type {import('./plugins-types.js').Plugin<'addAttributesToSVGElement'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   if (!Array.isArray(params.attributes) && !params.attribute) {
     console.error(ENOCLS);
     return null;

@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "noEmit": true,
-    "module": "commonjs",
-    "target": "es2018",
-    "lib": ["es2018"],
+    "module": "node16",
+    "target": "es2020",
+    "lib": ["es2020"],
     "allowJs": true,
     "checkJs": true,
     "strict": true,

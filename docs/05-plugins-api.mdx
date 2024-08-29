@@ -1,0 +1,120 @@
+---
+title: Plugin Architecture
+---
+
+SVGO is primarily an optimizer, and is evolving as the community continue to propose or implement better optimizations.
+
+Since SVGO v2, our plugins API use the [xast](https://github.com/syntax-tree/xast) specification, and the more practical visitor pattern.
+
+A minimal plugin looks like this:
+
+```js
+export const myPlugin = {
+  name: 'myPlugin',
+  description: 'A plugin that does nothing.',
+  fn: () => {},
+};
+```
+
+It currently does nothing, but can still be referenced in your `svgo.config.js`:
+
+```js
+import { myPlugin } from './myPlugin.js';
+
+export default {
+  plugins: [myPlugin],
+};
+```
+
+The visitor pattern lets you to access nodes as the parser enters and exits them, in the order that the respective tag appears.
+
+The following JavaScript shows all of the types of nodes you can implement a callback for, which all callbacks are optional.
+
+```js
+const myPlugin = {
+  name: 'pluginName',
+  description: 'A plugin that does a lot of nothing.',
+  fn: () => {
+    return {
+      root: {
+        enter: (node) => {},
+        exit: (node) => {},
+      },
+      element: {
+        enter: (node, parentNode) => {},
+        exit: (node, parentNode) => {},
+      },
+      doctype: {
+        enter: (node, parentNode) => {},
+        exit: (node, parentNode) => {},
+      },
+      instruction: {
+        enter: (node, parentNode) => {},
+        exit: (node, parentNode) => {},
+      },
+      comment: {
+        enter: (node, parentNode) => {},
+        exit: (node, parentNode) => {},
+      },
+      cdata: {
+        enter: (node, parentNode) => {},
+        exit: (node, parentNode) => {},
+      },
+      text: {
+        enter: (node, parentNode) => {},
+        exit: (node, parentNode) => {},
+      },
+    };
+  },
+};
+```
+
+Where a parent node is present, it will always be a direct child of the current node.
+
+## Common Operations
+
+Finding specific nodes to modify their attributes:
+
+```js
+const myPlugin = {
+  name: 'makeEverythingPink',
+  description: 'Change all fill attribute values to pink.',
+  fn: () => {
+    return {
+      element: {
+        enter: (node, parentNode) => {
+          if (node.attributes.fill == null) {
+            return;
+          }
+
+          node.attributes.fill = 'pink';
+        },
+      },
+    };
+  },
+};
+```
+
+Remove a node from its parent:
+
+```js
+const removeNoAttributes = {
+  name: 'removeNoAttributes',
+  description: 'Removes nodes with no attributes.',
+  fn: () => {
+    return {
+      element: {
+        enter: (node, parentNode) => {
+          if (Object.keys(node.attributes).length !== 0) {
+            return;
+          }
+
+          parentNode.children = parentNode.children.filter(
+            (child) => child !== node,
+          );
+        },
+      },
+    };
+  },
+};
+```

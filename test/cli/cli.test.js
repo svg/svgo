@@ -1,12 +1,13 @@
-'use strict';
-
 /**
  * @typedef {import('child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams
  */
 
-const fs = require('fs');
-const path = require('path');
-const { spawn } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @type {(proc: ChildProcessWithoutNullStreams) => Promise<string>}
@@ -34,7 +35,7 @@ test('shows plugins when flag specified', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', '--show-plugins'],
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   const stdout = await waitStdout(proc);
   expect(stdout).toMatch(/Currently available plugins:/);
@@ -44,45 +45,45 @@ test('accepts svg as input stream', async () => {
   const proc = spawn('node', ['../../bin/svgo', '--no-color', '-'], {
     cwd: __dirname,
   });
-  proc.stdin.write('<svg><title>stdin</title></svg>');
+  proc.stdin.write('<svg><desc>Created with Love</desc></svg>');
   proc.stdin.end();
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>');
+  expect(stdout).toBe('<svg/>');
 });
 
 test('accepts svg as string', async () => {
-  const input = '<svg><title>string</title></svg>';
+  const input = '<svg><desc>Created with Love</desc></svg>';
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', '--string', input],
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>');
+  expect(stdout).toBe('<svg/>');
 });
 
 test('accepts svg as filename', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', 'single.svg', '-o', 'output/single.svg'],
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   await waitClose(proc);
   const output = fs.readFileSync(
     path.join(__dirname, 'output/single.svg'),
-    'utf-8'
+    'utf-8',
   );
-  expect(output).toEqual('<svg/>');
+  expect(output).toBe('<svg/>');
 });
 
 test('output as stream when "-" is specified', async () => {
   const proc = spawn(
     'node',
     ['../../bin/svgo', '--no-color', 'single.svg', '-o', '-'],
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   const stdout = await waitStdout(proc);
-  expect(stdout).toEqual('<svg/>');
+  expect(stdout).toBe('<svg/>');
 });
 
 test('should exit with 1 code on syntax error', async () => {
@@ -101,9 +102,9 @@ test('should exit with 1 code on syntax error', async () => {
       });
     }),
   ]);
-  expect(code).toEqual(1);
+  expect(code).toBe(1);
   expect(stderr)
-    .toEqual(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
+    .toBe(`SvgoParserError: invalid.svg:2:27: Unquoted attribute value
 
   1 | <svg>
 > 2 |   <rect x="0" y="0" width=10" height="20" />

@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'removeAttrs';
-exports.description = 'removes specified attributes';
+export const name = 'removeAttrs';
+export const description = 'removes specified attributes';
 
 const DEFAULT_SEPARATOR = ':';
 const ENOATTRS = `Warning: The plugin "removeAttrs" requires the "attrs" parameter.
@@ -81,9 +79,9 @@ plugins: [
  *
  * @author Benny Schudel
  *
- * @type {import('./plugins-types').Plugin<'removeAttrs'>}
+ * @type {import('./plugins-types.js').Plugin<'removeAttrs'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   if (typeof params.attrs == 'undefined') {
     console.warn(ENOATTRS);
     return null;
@@ -104,13 +102,11 @@ exports.fn = (root, params) => {
       enter: (node) => {
         for (let pattern of attrs) {
           // if no element separators (:), assume it's attribute name, and apply to all elements *regardless of value*
-          if (pattern.includes(elemSeparator) === false) {
-            pattern = ['.*', elemSeparator, pattern, elemSeparator, '.*'].join(
-              ''
-            );
+          if (!pattern.includes(elemSeparator)) {
+            pattern = ['.*', pattern, '.*'].join(elemSeparator);
             // if only 1 separator, assume it's element and attribute name, and apply regardless of attribute value
           } else if (pattern.split(elemSeparator).length < 3) {
-            pattern = [pattern, elemSeparator, '.*'].join('');
+            pattern = [pattern, '.*'].join(elemSeparator);
           }
 
           // create regexps for element, attribute name, and attribute value
@@ -126,14 +122,11 @@ exports.fn = (root, params) => {
           if (list[0].test(node.name)) {
             // loop attributes
             for (const [name, value] of Object.entries(node.attributes)) {
+              const isCurrentColor = value.toLowerCase() === 'currentcolor';
               const isFillCurrentColor =
-                preserveCurrentColor &&
-                name == 'fill' &&
-                value == 'currentColor';
+                preserveCurrentColor && name == 'fill' && isCurrentColor;
               const isStrokeCurrentColor =
-                preserveCurrentColor &&
-                name == 'stroke' &&
-                value == 'currentColor';
+                preserveCurrentColor && name == 'stroke' && isCurrentColor;
               if (
                 !isFillCurrentColor &&
                 !isStrokeCurrentColor &&

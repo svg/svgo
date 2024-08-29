@@ -1,14 +1,14 @@
-'use strict';
+import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
+import { includesUrlReference } from '../lib/svgo/tools.js';
 
-const collections = require('./_collections.js');
-
-exports.name = 'convertColors';
-exports.description = 'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
+export const name = 'convertColors';
+export const description =
+  'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
 
 const rNumber = '([+-]?(?:\\d*\\.\\d+|\\d+\\.?)%?)';
-const rComma = '\\s*,\\s*';
+const rComma = '(?:\\s*,\\s*|\\s+)';
 const regRGB = new RegExp(
-  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'
+  '^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$',
 );
 const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
 
@@ -22,7 +22,7 @@ const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
  *
  * @author Jed Schmidt
  *
- * @type {(rgb: Array<number>) => string}
+ * @type {(rgb: number[]) => string}
  */
 const convertRgbToHex = ([r, g, b]) => {
   // combine the octets into a 32-bit integer as: [1][r][g][b]
@@ -61,26 +61,32 @@ const convertRgbToHex = ([r, g, b]) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertColors'>}
+ * @type {import('./plugins-types.js').Plugin<'convertColors'>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     currentColor = false,
     names2hex = true,
     rgb2hex = true,
+    convertCase = 'lower',
     shorthex = true,
     shortname = true,
   } = params;
 
+  let maskCounter = 0;
+
   return {
     element: {
       enter: (node) => {
+        if (node.name === 'mask') {
+          maskCounter++;
+        }
         for (const [name, value] of Object.entries(node.attributes)) {
-          if (collections.colorsProps.includes(name)) {
+          if (colorsProps.has(name)) {
             let val = value;
 
             // convert colors to currentColor
-            if (currentColor) {
+            if (currentColor && maskCounter === 0) {
               let matched;
               if (typeof currentColor === 'string') {
                 matched = val === currentColor;
@@ -90,15 +96,15 @@ exports.fn = (_root, params) => {
                 matched = val !== 'none';
               }
               if (matched) {
-                val = 'currentColor';
+                val = 'currentcolor';
               }
             }
 
             // convert color name keyword to long hex
             if (names2hex) {
               const colorName = val.toLowerCase();
-              if (collections.colorsNames[colorName] != null) {
-                val = collections.colorsNames[colorName];
+              if (colorsNames[colorName] != null) {
+                val = colorsNames[colorName];
               }
             }
 
@@ -119,9 +125,17 @@ exports.fn = (_root, params) => {
               }
             }
 
+            if (convertCase && !includesUrlReference(val)) {
+              if (convertCase === 'lower') {
+                val = val.toLowerCase();
+              } else if (convertCase === 'upper') {
+                val = val.toUpperCase();
+              }
+            }
+
             // convert long hex to short hex
             if (shorthex) {
-              let match = val.match(regHEX);
+              let match = regHEX.exec(val);
               if (match != null) {
                 val = '#' + match[0][1] + match[0][3] + match[0][5];
               }
@@ -130,13 +144,18 @@ exports.fn = (_root, params) => {
             // convert hex to short name
             if (shortname) {
               const colorName = val.toLowerCase();
-              if (collections.colorsShortNames[colorName] != null) {
-                val = collections.colorsShortNames[colorName];
+              if (colorsShortNames[colorName] != null) {
+                val = colorsShortNames[colorName];
               }
             }
 
             node.attributes[name] = val;
           }
+        }
+      },
+      exit: (node) => {
+        if (node.name === 'mask') {
+          maskCounter--;
         }
       },
     },

@@ -1,0 +1,14 @@
+---
+title: removeUnusedNS
+svgo:
+  pluginId: removeUnusedNS
+  defaultPlugin: true
+---
+
+Removes unused namespace declarations from the document.
+
+:::caution
+
+This plugin currently only removes unused namespaces from the top-most `<svg>` element. It does not check for unused namespaces that may be present in child elements further down the document.
+
+:::

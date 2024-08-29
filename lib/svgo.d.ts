@@ -1,12 +1,14 @@
-import type { StringifyOptions, DataUri, Plugin as PluginFn } from './types';
+import type { StringifyOptions, DataUri, Plugin } from './types.js';
 import type {
   BuiltinsWithOptionalParams,
   BuiltinsWithRequiredParams,
-} from '../plugins/plugins-types';
+  PluginsParams,
+} from '../plugins/plugins-types.js';
 
-type CustomPlugin = {
+type CustomPlugin<T = any> = {
   name: string;
-  fn: PluginFn<void>;
+  fn: Plugin<T>;
+  params?: T;
 };
 
 type PluginConfig =
@@ -25,12 +27,42 @@ type PluginConfig =
     }[keyof BuiltinsWithRequiredParams]
   | CustomPlugin;
 
+type BuiltinPlugin<Name, Params> = {
+  /** Name of the plugin, also known as the plugin ID. */
+  name: Name;
+  description?: string;
+  fn: Plugin<Params>;
+};
+
+type BuiltinPluginOrPreset<Name, Params> = BuiltinPlugin<Name, Params> & {
+  /** If the plugin is itself a preset that invokes other plugins. */
+  isPreset: true | undefined;
+  /**
+   * If the plugin is a preset that invokes other plugins, this returns an
+   * array of the plugins in the preset in the order that they are invoked.
+   */
+  plugins?: Readonly<BuiltinPlugin<string, Object>[]>;
+};
+
+/**
+ * Plugins that are bundled with SVGO. This includes plugin presets, and plugins
+ * that are not enabled by default.
+ */
+export declare const builtinPlugins: Array<
+  {
+    [Name in keyof PluginsParams]: BuiltinPluginOrPreset<
+      Name,
+      PluginsParams[Name]
+    >;
+  }[keyof PluginsParams]
+>;
+
 export type Config = {
   /** Can be used by plugins, for example prefixids */
   path?: string;
   /** Pass over SVGs multiple times to ensure all optimizations are applied. */
   multipass?: boolean;
-  /** Precision of floating point numbers. Will be passed to each plugin that suppors this param. */
+  /** Precision of floating point numbers. Will be passed to each plugin that supports this param. */
   floatPrecision?: number;
   /**
    * Plugins configuration
@@ -51,16 +83,8 @@ type Output = {
   data: string;
 };
 
+/** Installed version of SVGO. */
+export declare const VERSION: string;
+
 /** The core of SVGO */
 export declare function optimize(input: string, config?: Config): Output;
-
-/**
- * If you write a tool on top of svgo you might need a way to load svgo config.
- *
- * You can also specify relative or absolute path and customize current working directory.
- */
-export declare function loadConfig(
-  configFile: string,
-  cwd?: string
-): Promise<Config>;
-export declare function loadConfig(): Promise<Config | null>;

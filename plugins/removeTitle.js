@@ -1,20 +1,18 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeTitle';
-exports.description = 'removes <title>';
+export const name = 'removeTitle';
+export const description = 'removes <title>';
 
 /**
  * Remove <title>.
  *
- * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title
+ * https://developer.mozilla.org/docs/Web/SVG/Element/title
  *
  * @author Igor Kalashnikov
  *
- * @type {import('./plugins-types').Plugin<'removeTitle'>}
+ * @type {import('./plugins-types.js').Plugin<'removeTitle'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {

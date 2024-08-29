@@ -1,9 +1,9 @@
-'use strict';
+import { pathElems, referencesProps } from './_collections.js';
+import { includesUrlReference } from '../lib/svgo/tools.js';
 
-const { pathElems, referencesProps } = require('./_collections.js');
-
-exports.name = 'moveGroupAttrsToElems';
-exports.description = 'moves some group attributes to the content elements';
+export const name = 'moveGroupAttrsToElems';
+export const description =
+  'moves some group attributes to the content elements';
 
 const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
 
@@ -23,9 +23,9 @@ const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'moveGroupAttrsToElems'>}
+ * @type {import('./plugins-types.js').Plugin<'moveGroupAttrsToElems'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {
@@ -36,13 +36,13 @@ exports.fn = () => {
           node.attributes.transform != null &&
           Object.entries(node.attributes).some(
             ([name, value]) =>
-              referencesProps.includes(name) && value.includes('url(')
+              referencesProps.has(name) && includesUrlReference(value),
           ) === false &&
           node.children.every(
             (child) =>
               child.type === 'element' &&
               pathElemsWithGroupsAndText.includes(child.name) &&
-              child.attributes.id == null
+              child.attributes.id == null,
           )
         ) {
           for (const child of node.children) {

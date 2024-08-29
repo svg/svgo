@@ -1,0 +1,17 @@
+---
+title: Plugins
+---
+
+All optimizations performed by SVGO are through the various plugins that are either built-in, or provided in your SVGO config.
+
+Built-in plugins are focused around either optimizations or compatibility. However, the plugin architecture is very flexible, so plugins can be made to do effectively anything.
+
+## Presets
+
+Presets are generalized SVGO plugin pipelines, though there is only one built-in to SVGO called [preset-default](/docs/preset-default/).
+
+The preset-default pipeline can be used by either:
+
+- Not defining a `plugins` property in the config.
+- Omitting the config altogether.
+- Specifying the `preset-default` plugin.

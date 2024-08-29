@@ -1,2 +1,2 @@
 declare let obj: any;
-export = obj;
+export default obj;

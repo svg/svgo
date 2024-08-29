@@ -1,20 +1,19 @@
-'use strict';
+import { visit, visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { hasScripts } from '../lib/svgo/tools.js';
+import { elemsGroups } from './_collections.js';
 
-const { visit, visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { elemsGroups } = require('./_collections.js');
-
-exports.name = 'removeUselessStrokeAndFill';
-exports.description = 'removes useless stroke and fill attributes';
+export const name = 'removeUselessStrokeAndFill';
+export const description = 'removes useless stroke and fill attributes';
 
 /**
  * Remove useless stroke and fill attrs.
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeUselessStrokeAndFill'>}
+ * @type {import('./plugins-types.js').Plugin<'removeUselessStrokeAndFill'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     stroke: removeStroke = true,
     fill: removeFill = true,
@@ -26,7 +25,7 @@ exports.fn = (root, params) => {
   visit(root, {
     element: {
       enter: (node) => {
-        if (node.name === 'style' || node.name === 'script') {
+        if (node.name === 'style' || hasScripts(node)) {
           hasStyleOrScript = true;
         }
       },
@@ -45,7 +44,7 @@ exports.fn = (root, params) => {
         if (node.attributes.id != null) {
           return visitSkip;
         }
-        if (elemsGroups.shape.includes(node.name) == false) {
+        if (!elemsGroups.shape.has(node.name)) {
           return;
         }
         const computedStyle = computeStyle(stylesheet, node);

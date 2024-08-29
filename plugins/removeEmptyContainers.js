@@ -1,10 +1,8 @@
-'use strict';
+import { elemsGroups } from './_collections.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-const { elemsGroups } = require('./_collections.js');
-
-exports.name = 'removeEmptyContainers';
-exports.description = 'removes empty container elements';
+export const name = 'removeEmptyContainers';
+export const description = 'removes empty container elements';
 
 /**
  * Remove empty containers.
@@ -19,16 +17,16 @@ exports.description = 'removes empty container elements';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeEmptyContainers'>}
+ * @type {import('./plugins-types.js').Plugin<'removeEmptyContainers'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       exit: (node, parentNode) => {
         // remove only empty non-svg containers
         if (
           node.name === 'svg' ||
-          elemsGroups.container.includes(node.name) === false ||
+          !elemsGroups.container.has(node.name) ||
           node.children.length !== 0
         ) {
           return;
@@ -47,6 +45,9 @@ exports.fn = () => {
         }
         // empty <mask> hides masked element
         if (node.name === 'mask' && node.attributes.id != null) {
+          return;
+        }
+        if (parentNode.type === 'element' && parentNode.name === 'switch') {
           return;
         }
         detachNodeFromParent(node, parentNode);

@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'removeXMLNS';
-exports.description =
+export const name = 'removeXMLNS';
+export const description =
   'removes xmlns attribute (for inline svg, disabled by default)';
 
 /**
@@ -14,15 +12,14 @@ exports.description =
  *
  * @author Ricardo Tomasi
  *
- * @type {import('./plugins-types').Plugin<'removeXMLNS'>}
+ * @type {import('./plugins-types.js').Plugin<'removeXMLNS'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {
         if (node.name === 'svg') {
           delete node.attributes.xmlns;
-          delete node.attributes['xmlns:xlink'];
         }
       },
     },

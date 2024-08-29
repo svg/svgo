@@ -1,42 +1,38 @@
-'use strict';
-
-const { createPreset } = require('../lib/svgo/plugins.js');
-
-const removeDoctype = require('./removeDoctype.js');
-const removeXMLProcInst = require('./removeXMLProcInst.js');
-const removeComments = require('./removeComments.js');
-const removeMetadata = require('./removeMetadata.js');
-const removeEditorsNSData = require('./removeEditorsNSData.js');
-const cleanupAttrs = require('./cleanupAttrs.js');
-const mergeStyles = require('./mergeStyles.js');
-const inlineStyles = require('./inlineStyles.js');
-const minifyStyles = require('./minifyStyles.js');
-const cleanupIds = require('./cleanupIds.js');
-const removeUselessDefs = require('./removeUselessDefs.js');
-const cleanupNumericValues = require('./cleanupNumericValues.js');
-const convertColors = require('./convertColors.js');
-const removeUnknownsAndDefaults = require('./removeUnknownsAndDefaults.js');
-const removeNonInheritableGroupAttrs = require('./removeNonInheritableGroupAttrs.js');
-const removeUselessStrokeAndFill = require('./removeUselessStrokeAndFill.js');
-const removeViewBox = require('./removeViewBox.js');
-const cleanupEnableBackground = require('./cleanupEnableBackground.js');
-const removeHiddenElems = require('./removeHiddenElems.js');
-const removeEmptyText = require('./removeEmptyText.js');
-const convertShapeToPath = require('./convertShapeToPath.js');
-const convertEllipseToCircle = require('./convertEllipseToCircle.js');
-const moveElemsAttrsToGroup = require('./moveElemsAttrsToGroup.js');
-const moveGroupAttrsToElems = require('./moveGroupAttrsToElems.js');
-const collapseGroups = require('./collapseGroups.js');
-const convertPathData = require('./convertPathData.js');
-const convertTransform = require('./convertTransform.js');
-const removeEmptyAttrs = require('./removeEmptyAttrs.js');
-const removeEmptyContainers = require('./removeEmptyContainers.js');
-const mergePaths = require('./mergePaths.js');
-const removeUnusedNS = require('./removeUnusedNS.js');
-const sortAttrs = require('./sortAttrs.js');
-const sortDefsChildren = require('./sortDefsChildren.js');
-const removeTitle = require('./removeTitle.js');
-const removeDesc = require('./removeDesc.js');
+import { createPreset } from '../lib/svgo/plugins.js';
+import * as removeDoctype from './removeDoctype.js';
+import * as removeXMLProcInst from './removeXMLProcInst.js';
+import * as removeComments from './removeComments.js';
+import * as removeDeprecatedAttrs from './removeDeprecatedAttrs.js';
+import * as removeMetadata from './removeMetadata.js';
+import * as removeEditorsNSData from './removeEditorsNSData.js';
+import * as cleanupAttrs from './cleanupAttrs.js';
+import * as mergeStyles from './mergeStyles.js';
+import * as inlineStyles from './inlineStyles.js';
+import * as minifyStyles from './minifyStyles.js';
+import * as cleanupIds from './cleanupIds.js';
+import * as removeUselessDefs from './removeUselessDefs.js';
+import * as cleanupNumericValues from './cleanupNumericValues.js';
+import * as convertColors from './convertColors.js';
+import * as removeUnknownsAndDefaults from './removeUnknownsAndDefaults.js';
+import * as removeNonInheritableGroupAttrs from './removeNonInheritableGroupAttrs.js';
+import * as removeUselessStrokeAndFill from './removeUselessStrokeAndFill.js';
+import * as cleanupEnableBackground from './cleanupEnableBackground.js';
+import * as removeHiddenElems from './removeHiddenElems.js';
+import * as removeEmptyText from './removeEmptyText.js';
+import * as convertShapeToPath from './convertShapeToPath.js';
+import * as convertEllipseToCircle from './convertEllipseToCircle.js';
+import * as moveElemsAttrsToGroup from './moveElemsAttrsToGroup.js';
+import * as moveGroupAttrsToElems from './moveGroupAttrsToElems.js';
+import * as collapseGroups from './collapseGroups.js';
+import * as convertPathData from './convertPathData.js';
+import * as convertTransform from './convertTransform.js';
+import * as removeEmptyAttrs from './removeEmptyAttrs.js';
+import * as removeEmptyContainers from './removeEmptyContainers.js';
+import * as mergePaths from './mergePaths.js';
+import * as removeUnusedNS from './removeUnusedNS.js';
+import * as sortAttrs from './sortAttrs.js';
+import * as sortDefsChildren from './sortDefsChildren.js';
+import * as removeDesc from './removeDesc.js';
 
 const presetDefault = createPreset({
   name: 'preset-default',
@@ -44,6 +40,7 @@ const presetDefault = createPreset({
     removeDoctype,
     removeXMLProcInst,
     removeComments,
+    removeDeprecatedAttrs,
     removeMetadata,
     removeEditorsNSData,
     cleanupAttrs,
@@ -57,7 +54,6 @@ const presetDefault = createPreset({
     removeUnknownsAndDefaults,
     removeNonInheritableGroupAttrs,
     removeUselessStrokeAndFill,
-    removeViewBox,
     cleanupEnableBackground,
     removeHiddenElems,
     removeEmptyText,
@@ -74,9 +70,8 @@ const presetDefault = createPreset({
     removeUnusedNS,
     sortAttrs,
     sortDefsChildren,
-    removeTitle,
     removeDesc,
   ],
 });
 
-module.exports = presetDefault;
+export default presetDefault;

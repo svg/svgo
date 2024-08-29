@@ -1,0 +1,21 @@
+prefixIds should correctly handle url()s in style attribute, including multiple ones
+
+===
+
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="fill"/>
+        <linearGradient id="stroke"/>
+    </defs>
+    <rect style="fill:url(#fill); stroke: url(#stroke)" x="10" y="10" width="100" height="100"/>
+</svg>
+
+@@@
+
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="prefixIds_11_svg_txt__fill"/>
+        <linearGradient id="prefixIds_11_svg_txt__stroke"/>
+    </defs>
+    <rect style="fill:url(#prefixIds_11_svg_txt__fill); stroke: url(#prefixIds_11_svg_txt__stroke)" x="10" y="10" width="100" height="100"/>
+</svg>

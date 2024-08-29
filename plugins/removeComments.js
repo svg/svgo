@@ -1,9 +1,13 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
+export const name = 'removeComments';
+export const description = 'removes comments';
 
-exports.name = 'removeComments';
-exports.description = 'removes comments';
+/**
+ * If a comment matches one of the following patterns, it will be
+ * preserved by default. Particularly for copyright/license information.
+ */
+const DEFAULT_PRESERVE_PATTERNS = [/^!/];
 
 /**
  * Remove comments.
@@ -14,15 +18,31 @@ exports.description = 'removes comments';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeComments'>}
+ * @type {import('./plugins-types.js').Plugin<'removeComments'>}
  */
-exports.fn = () => {
+export const fn = (_root, params) => {
+  const { preservePatterns = DEFAULT_PRESERVE_PATTERNS } = params;
+
   return {
     comment: {
       enter: (node, parentNode) => {
-        if (node.value.charAt(0) !== '!') {
-          detachNodeFromParent(node, parentNode);
+        if (preservePatterns) {
+          if (!Array.isArray(preservePatterns)) {
+            throw Error(
+              `Expected array in removeComments preservePatterns parameter but received ${preservePatterns}`,
+            );
+          }
+
+          const matches = preservePatterns.some((pattern) => {
+            return new RegExp(pattern).test(node.value);
+          });
+
+          if (matches) {
+            return;
+          }
         }
+
+        detachNodeFromParent(node, parentNode);
       },
     },
   };

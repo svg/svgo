@@ -1,10 +1,9 @@
-'use strict';
+import { editorNamespaces } from './_collections.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-const { editorNamespaces } = require('./_collections.js');
-
-exports.name = 'removeEditorsNSData';
-exports.description = 'removes editors namespaces, elements and attributes';
+export const name = 'removeEditorsNSData';
+export const description =
+  'removes editors namespaces, elements and attributes';
 
 /**
  * Remove editors namespaces, elements and attributes.
@@ -16,21 +15,21 @@ exports.description = 'removes editors namespaces, elements and attributes';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeEditorsNSData'>}
+ * @type {import('./plugins-types.js').Plugin<'removeEditorsNSData'>}
  */
-exports.fn = (_root, params) => {
-  let namespaces = editorNamespaces;
+export const fn = (_root, params) => {
+  let namespaces = [...editorNamespaces];
   if (Array.isArray(params.additionalNamespaces)) {
     namespaces = [...editorNamespaces, ...params.additionalNamespaces];
   }
   /**
-   * @type {Array<string>}
+   * @type {string[]}
    */
   const prefixes = [];
   return {
     element: {
       enter: (node, parentNode) => {
-        // collect namespace aliases from svg element
+        // collect namespace prefixes from svg element
         if (node.name === 'svg') {
           for (const [name, value] of Object.entries(node.attributes)) {
             if (name.startsWith('xmlns:') && namespaces.includes(value)) {

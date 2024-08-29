@@ -1,0 +1,13 @@
+<svg width="48" height="48" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">
+  <style>@keyframes a{0%,to{clip-path:inset(84%0 0)}4%,96%{clip-path:inset(74%0 0)}16%,52%,84%{clip-path:inset(16%0 0)}20%,48%{clip-path:inset(19%0 0)}24%,44%{clip-path:inset(26%0 0)}28%,64%,72%{clip-path:inset(29%0 0)}32%{clip-path:inset(45%0 0)}36%,40%{clip-path:inset(35%0 0)}60%,76%{clip-path:inset(23%0 0)}68%{clip-path:inset(32%0 0)}}</style>
+  <path d="M2.117 2.249h2.38v8.202h-2.38z" fill="#FFF" style="animation:a 1.25s linear infinite"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 12.7 12.7">
+    <style>
+        @keyframes a{0%,to{clip-path:inset(84%0 0)}4%,96%{clip-path:inset(74%0 0)}16%,52%,84%{clip-path:inset(16%0 0)}20%,48%{clip-path:inset(19%0 0)}24%,44%{clip-path:inset(26%0 0)}28%,64%,72%{clip-path:inset(29%0 0)}32%{clip-path:inset(45%0 0)}36%,40%{clip-path:inset(35%0 0)}60%,76%{clip-path:inset(23%0 0)}68%{clip-path:inset(32%0 0)}}
+    </style>
+    <path fill="#fff" d="M2.117 2.249h2.38v8.202h-2.38z" style="animation:a 1.25s linear infinite"/>
+</svg>

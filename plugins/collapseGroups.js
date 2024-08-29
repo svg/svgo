@@ -1,13 +1,13 @@
-'use strict';
+import { computeStyle, collectStylesheet } from '../lib/style.js';
+import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types').XastNode} XastNode
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastNode} XastNode
  */
 
-const { inheritableAttrs, elemsGroups } = require('./_collections.js');
-
-exports.name = 'collapseGroups';
-exports.description = 'collapses useless groups';
+export const name = 'collapseGroups';
+export const description = 'collapses useless groups';
 
 /**
  * @type {(node: XastNode, name: string) => boolean}
@@ -15,7 +15,7 @@ exports.description = 'collapses useless groups';
 const hasAnimatedAttr = (node, name) => {
   if (node.type === 'element') {
     if (
-      elemsGroups.animation.includes(node.name) &&
+      elemsGroups.animation.has(node.name) &&
       node.attributes.attributeName === name
     ) {
       return true;
@@ -49,9 +49,11 @@ const hasAnimatedAttr = (node, name) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'collapseGroups'>}
+ * @type {import('./plugins-types.js').Plugin<'collapseGroups'>}
  */
-exports.fn = () => {
+export const fn = (root) => {
+  const stylesheet = collectStylesheet(root);
+
   return {
     element: {
       exit: (node, parentNode) => {
@@ -63,17 +65,20 @@ exports.fn = () => {
           return;
         }
 
-        // move group attibutes to the single child element
+        // move group attributes to the single child element
         if (
           Object.keys(node.attributes).length !== 0 &&
           node.children.length === 1
         ) {
           const firstChild = node.children[0];
+          const nodeHasFilter = !!(
+            node.attributes.filter || computeStyle(stylesheet, node).filter
+          );
           // TODO untangle this mess
           if (
             firstChild.type === 'element' &&
             firstChild.attributes.id == null &&
-            node.attributes.filter == null &&
+            !nodeHasFilter &&
             (node.attributes.class == null ||
               firstChild.attributes.class == null) &&
             ((node.attributes['clip-path'] == null &&
@@ -82,26 +87,30 @@ exports.fn = () => {
                 node.attributes.transform == null &&
                 firstChild.attributes.transform == null))
           ) {
+            const newChildElemAttrs = { ...firstChild.attributes };
+
             for (const [name, value] of Object.entries(node.attributes)) {
               // avoid copying to not conflict with animated attribute
               if (hasAnimatedAttr(firstChild, name)) {
                 return;
               }
-              if (firstChild.attributes[name] == null) {
-                firstChild.attributes[name] = value;
+
+              if (newChildElemAttrs[name] == null) {
+                newChildElemAttrs[name] = value;
               } else if (name === 'transform') {
-                firstChild.attributes[name] =
-                  value + ' ' + firstChild.attributes[name];
-              } else if (firstChild.attributes[name] === 'inherit') {
-                firstChild.attributes[name] = value;
+                newChildElemAttrs[name] = value + ' ' + newChildElemAttrs[name];
+              } else if (newChildElemAttrs[name] === 'inherit') {
+                newChildElemAttrs[name] = value;
               } else if (
-                inheritableAttrs.includes(name) === false &&
-                firstChild.attributes[name] !== value
+                !inheritableAttrs.has(name) &&
+                newChildElemAttrs[name] !== value
               ) {
                 return;
               }
-              delete node.attributes[name];
             }
+
+            node.attributes = {};
+            firstChild.attributes = newChildElemAttrs;
           }
         }
 
@@ -112,7 +121,7 @@ exports.fn = () => {
           for (const child of node.children) {
             if (
               child.type === 'element' &&
-              elemsGroups.animation.includes(child.name)
+              elemsGroups.animation.has(child.name)
             ) {
               return;
             }

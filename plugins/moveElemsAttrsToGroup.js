@@ -1,10 +1,9 @@
-'use strict';
+import { visit } from '../lib/xast.js';
+import { inheritableAttrs, pathElems } from './_collections.js';
 
-const { visit } = require('../lib/xast.js');
-const { inheritableAttrs, pathElems } = require('./_collections.js');
-
-exports.name = 'moveElemsAttrsToGroup';
-exports.description = 'Move common attributes of group children to the group';
+export const name = 'moveElemsAttrsToGroup';
+export const description =
+  'Move common attributes of group children to the group';
 
 /**
  * Move common attributes of group children to the group
@@ -26,9 +25,9 @@ exports.description = 'Move common attributes of group children to the group';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'moveElemsAttrsToGroup'>}
+ * @type {import('./plugins-types.js').Plugin<'moveElemsAttrsToGroup'>}
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   // find if any style element is present
   let deoptimizedWithStyles = false;
   visit(root, {
@@ -64,7 +63,7 @@ exports.fn = (root) => {
         let everyChildIsPath = true;
         for (const child of node.children) {
           if (child.type === 'element') {
-            if (pathElems.includes(child.name) === false) {
+            if (!pathElems.has(child.name)) {
               everyChildIsPath = false;
             }
             if (initial) {
@@ -72,7 +71,7 @@ exports.fn = (root) => {
               // collect all inheritable attributes from first child element
               for (const [name, value] of Object.entries(child.attributes)) {
                 // consider only inheritable attributes
-                if (inheritableAttrs.includes(name)) {
+                if (inheritableAttrs.has(name)) {
                   commonAttributes.set(name, value);
                 }
               }
@@ -87,8 +86,9 @@ exports.fn = (root) => {
           }
         }
 
-        // preserve transform on children when group has clip-path or mask
+        // preserve transform on children when group has filter or clip-path or mask
         if (
+          node.attributes['filter'] != null ||
           node.attributes['clip-path'] != null ||
           node.attributes.mask != null
         ) {

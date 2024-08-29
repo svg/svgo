@@ -1,9 +1,7 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeElementsByAttr';
-exports.description =
+export const name = 'removeElementsByAttr';
+export const description =
   'removes arbitrary elements by ID or className (disabled by default)';
 
 /**
@@ -37,17 +35,17 @@ exports.description =
  *
  * @author Eli Dupuis (@elidupuis)
  *
- * @type {import('./plugins-types').Plugin<'removeElementsByAttr'>}
+ * @type {import('./plugins-types.js').Plugin<'removeElementsByAttr'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const ids =
     params.id == null ? [] : Array.isArray(params.id) ? params.id : [params.id];
   const classes =
     params.class == null
       ? []
       : Array.isArray(params.class)
-      ? params.class
-      : [params.class];
+        ? params.class
+        : [params.class];
   return {
     element: {
       enter: (node, parentNode) => {

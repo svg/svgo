@@ -1,17 +1,15 @@
-'use strict';
-
-const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const {
+import {
   elems,
   attrsGroups,
   elemsGroups,
   attrsGroupsDefaults,
   presentationNonInheritableGroupAttrs,
-} = require('./_collections');
+} from './_collections.js';
+import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-exports.name = 'removeUnknownsAndDefaults';
-exports.description =
+export const name = 'removeUnknownsAndDefaults';
+export const description =
   'removes unknown elements content and attributes, removes attrs with default values';
 
 // resolve all groups references
@@ -92,13 +90,14 @@ for (const [name, config] of Object.entries(elems)) {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeUnknownsAndDefaults'>}
+ * @type {import('./plugins-types.js').Plugin<'removeUnknownsAndDefaults'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     unknownContent = true,
     unknownAttrs = true,
     defaultAttrs = true,
+    defaultMarkupDeclarations = true,
     uselessOverrides = true,
     keepDataAttrs = true,
     keepAriaAttrs = true,
@@ -107,6 +106,13 @@ exports.fn = (root, params) => {
   const stylesheet = collectStylesheet(root);
 
   return {
+    instruction: {
+      enter: (node) => {
+        if (defaultMarkupDeclarations) {
+          node.value = node.value.replace(/\s*standalone\s*=\s*(["'])no\1/, '');
+        }
+      },
+    },
     element: {
       enter: (node, parentNode) => {
         // skip namespaced elements
@@ -121,7 +127,7 @@ exports.fn = (root, params) => {
         // remove unknown element's content
         if (unknownContent && parentNode.type === 'element') {
           const allowedChildren = allowedChildrenPerElement.get(
-            parentNode.name
+            parentNode.name,
           );
           if (allowedChildren == null || allowedChildren.size === 0) {
             // remove unknown elements
@@ -182,18 +188,14 @@ exports.fn = (root, params) => {
             attributesDefaults.get(name) === value
           ) {
             // keep defaults if parent has own or inherited style
-            if (
-              computedParentStyle == null ||
-              computedParentStyle[name] == null
-            ) {
+            if (computedParentStyle?.[name] == null) {
               delete node.attributes[name];
             }
           }
           if (uselessOverrides && node.attributes.id == null) {
-            const style =
-              computedParentStyle == null ? null : computedParentStyle[name];
+            const style = computedParentStyle?.[name];
             if (
-              presentationNonInheritableGroupAttrs.includes(name) === false &&
+              presentationNonInheritableGroupAttrs.has(name) === false &&
               style != null &&
               style.type === 'static' &&
               style.value === value

@@ -1,1 +1,1 @@
-module.exports = { plugins: [] };
+export default { plugins: [] };

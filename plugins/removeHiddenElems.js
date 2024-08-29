@@ -1,16 +1,24 @@
-'use strict';
+/**
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ */
 
-const {
+import { elemsGroups } from './_collections.js';
+import {
   visit,
   visitSkip,
   querySelector,
   detachNodeFromParent,
-} = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { parsePathData } = require('../lib/path.js');
+} from '../lib/xast.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { parsePathData } from '../lib/path.js';
+import { hasScripts, findReferences } from '../lib/svgo/tools.js';
 
-exports.name = 'removeHiddenElems';
-exports.description =
+const nonRendering = elemsGroups.nonRendering;
+
+export const name = 'removeHiddenElems';
+export const description =
   'removes hidden elements (zero sized, with absent attributes)';
 
 /**
@@ -28,9 +36,9 @@ exports.description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeHiddenElems'>}
+ * @type {import('./plugins-types.js').Plugin<'removeHiddenElems'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     isHidden = true,
     displayNone = true,
@@ -50,11 +58,79 @@ exports.fn = (root, params) => {
   } = params;
   const stylesheet = collectStylesheet(root);
 
+  /**
+   * Skip non-rendered nodes initially, and only detach if they have no ID, or
+   * their ID is not referenced by another node.
+   *
+   * @type {Map<XastElement, XastParent>}
+   */
+  const nonRenderedNodes = new Map();
+
+  /**
+   * IDs for removed hidden definitions.
+   *
+   * @type {Set<string>}
+   */
+  const removedDefIds = new Set();
+
+  /**
+   * @type {Map<XastElement, XastParent>}
+   */
+  const allDefs = new Map();
+
+  /** @type {Set<string>} */
+  const allReferences = new Set();
+
+  /**
+   * @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>}
+   */
+  const referencesById = new Map();
+
+  /**
+   * If styles are present, we can't be sure if a definition is unused or not
+   */
+  let deoptimized = false;
+
+  /**
+   * Nodes can't be removed if they or any of their children have an id attribute that is referenced.
+   * @param {XastElement} node
+   * @returns boolean
+   */
+  function canRemoveNonRenderingNode(node) {
+    if (allReferences.has(node.attributes.id)) {
+      return false;
+    }
+    for (const child of node.children) {
+      if (child.type === 'element' && !canRemoveNonRenderingNode(child)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * @param {XastChild} node
+   * @param {XastParent} parentNode
+   */
+  function removeElement(node, parentNode) {
+    if (
+      node.type === 'element' &&
+      node.attributes.id != null &&
+      parentNode.type === 'element' &&
+      parentNode.name === 'defs'
+    ) {
+      removedDefIds.add(node.attributes.id);
+    }
+
+    detachNodeFromParent(node, parentNode);
+  }
+
   visit(root, {
     element: {
       enter: (node, parentNode) => {
-        // transparent element inside clipPath still affect clipped elements
-        if (node.name === 'clipPath') {
+        // transparent non-rendering elements still apply where referenced
+        if (nonRendering.has(node.name)) {
+          nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
         const computedStyle = computeStyle(stylesheet, node);
@@ -67,8 +143,11 @@ exports.fn = (root, params) => {
           computedStyle.opacity.type === 'static' &&
           computedStyle.opacity.value === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
-          return;
+          if (node.name === 'path') {
+            nonRenderedNodes.set(node, parentNode);
+            return visitSkip;
+          }
+          removeElement(node, parentNode);
         }
       },
     },
@@ -77,6 +156,33 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
+        if (
+          (node.name === 'style' && node.children.length !== 0) ||
+          hasScripts(node)
+        ) {
+          deoptimized = true;
+          return;
+        }
+
+        if (node.name === 'defs') {
+          allDefs.set(node, parentNode);
+        }
+
+        if (node.name === 'use') {
+          for (const attr of Object.keys(node.attributes)) {
+            if (attr !== 'href' && !attr.endsWith(':href')) continue;
+            const value = node.attributes[attr];
+            const id = value.slice(1);
+
+            let refs = referencesById.get(id);
+            if (!refs) {
+              refs = [];
+              referencesById.set(id, refs);
+            }
+            refs.push({ node, parentNode });
+          }
+        }
+
         // Removes hidden elements
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
         const computedStyle = computeStyle(stylesheet, node);
@@ -88,7 +194,7 @@ exports.fn = (root, params) => {
           // keep if any descendant enables visibility
           querySelector(node, '[visibility=visible]') == null
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -105,7 +211,7 @@ exports.fn = (root, params) => {
           // markers with display: none still rendered
           node.name !== 'marker'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -121,7 +227,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.r === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -137,7 +243,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.rx === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -153,7 +259,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.ry === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -169,7 +275,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.width === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -186,7 +292,7 @@ exports.fn = (root, params) => {
           node.children.length === 0 &&
           node.attributes.height === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -201,7 +307,7 @@ exports.fn = (root, params) => {
           node.name === 'pattern' &&
           node.attributes.width === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -216,7 +322,7 @@ exports.fn = (root, params) => {
           node.name === 'pattern' &&
           node.attributes.height === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -231,7 +337,7 @@ exports.fn = (root, params) => {
           node.name === 'image' &&
           node.attributes.width === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -246,7 +352,7 @@ exports.fn = (root, params) => {
           node.name === 'image' &&
           node.attributes.height === '0'
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -257,12 +363,12 @@ exports.fn = (root, params) => {
         // <path d=""/>
         if (pathEmptyD && node.name === 'path') {
           if (node.attributes.d == null) {
-            detachNodeFromParent(node, parentNode);
+            removeElement(node, parentNode);
             return;
           }
           const pathData = parsePathData(node.attributes.d);
           if (pathData.length === 0) {
-            detachNodeFromParent(node, parentNode);
+            removeElement(node, parentNode);
             return;
           }
           // keep single point paths for markers
@@ -271,10 +377,9 @@ exports.fn = (root, params) => {
             computedStyle['marker-start'] == null &&
             computedStyle['marker-end'] == null
           ) {
-            detachNodeFromParent(node, parentNode);
+            removeElement(node, parentNode);
             return;
           }
-          return;
         }
 
         // Polyline with empty points
@@ -287,7 +392,7 @@ exports.fn = (root, params) => {
           node.name === 'polyline' &&
           node.attributes.points == null
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
         }
 
@@ -301,8 +406,45 @@ exports.fn = (root, params) => {
           node.name === 'polygon' &&
           node.attributes.points == null
         ) {
-          detachNodeFromParent(node, parentNode);
+          removeElement(node, parentNode);
           return;
+        }
+
+        for (const [name, value] of Object.entries(node.attributes)) {
+          const ids = findReferences(name, value);
+
+          for (const id of ids) {
+            allReferences.add(id);
+          }
+        }
+      },
+    },
+    root: {
+      exit: () => {
+        for (const id of removedDefIds) {
+          const refs = referencesById.get(id);
+          if (refs) {
+            for (const { node, parentNode } of refs) {
+              detachNodeFromParent(node, parentNode);
+            }
+          }
+        }
+
+        if (!deoptimized) {
+          for (const [
+            nonRenderedNode,
+            nonRenderedParent,
+          ] of nonRenderedNodes.entries()) {
+            if (canRemoveNonRenderingNode(nonRenderedNode)) {
+              detachNodeFromParent(nonRenderedNode, nonRenderedParent);
+            }
+          }
+        }
+
+        for (const [node, parentNode] of allDefs.entries()) {
+          if (node.children.length === 0) {
+            detachNodeFromParent(node, parentNode);
+          }
         }
       },
     },

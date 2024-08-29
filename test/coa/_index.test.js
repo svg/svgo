@@ -1,10 +1,10 @@
-'use strict';
+import fs from 'fs';
+import path from 'path';
+import { Command } from 'commander';
+import { fileURLToPath } from 'url';
+import svgo, { checkIsDir } from '../../lib/svgo/coa.js';
 
-const fs = require('fs');
-const path = require('path');
-const del = require('del');
-const { Command } = require('commander');
-const svgo = require('../../lib/svgo/coa.js');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const svgFolderPath = path.resolve(__dirname, 'testSvg');
 const svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively');
@@ -14,8 +14,6 @@ const svgFiles = [
 ];
 const tempFolder = 'temp';
 const noop = () => {};
-
-const { checkIsDir } = svgo;
 
 function runProgram(args) {
   const program = new Command();
@@ -28,12 +26,12 @@ function runProgram(args) {
 
 describe('coa', function () {
   beforeEach(async () => {
-    await del(tempFolder);
+    await fs.promises.rm(tempFolder, { force: true, recursive: true });
     await fs.promises.mkdir(tempFolder);
   });
 
   afterAll(async () => {
-    await del(tempFolder);
+    await fs.promises.rm(tempFolder, { force: true, recursive: true });
   });
 
   const initialConsoleError = global.console.error;
@@ -60,7 +58,7 @@ describe('coa', function () {
           (checkIsDir(path.join(folderPath, name))
             ? calcFolderSvgWeight(path.join(folderPath, name))
             : 0),
-        0
+        0,
       );
   }
 
@@ -105,7 +103,7 @@ describe('coa', function () {
     const optimizedWeight = calcFolderSvgWeight(tempFolder);
     expect(optimizedWeight).toBeGreaterThan(0);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
-    await del('temp.svg');
+    await fs.promises.rm('temp.svg', { force: true });
   });
 
   it('should optimize folder, when it stated in input', async () => {
@@ -124,15 +122,11 @@ describe('coa', function () {
   it('should throw error when stated in input folder does not exist', async () => {
     replaceConsoleError();
     try {
-      await runProgram([
-        '--input',
-        svgFolderPath + 'temp',
-        '--output',
-        tempFolder,
-      ]);
-    } catch (error) {
+      await expect(
+        runProgram(['--input', svgFolderPath + 'temp', '--output', tempFolder]),
+      ).rejects.toThrow(/no such file or directory/);
+    } finally {
       restoreConsoleError();
-      expect(error.message).toMatch(/no such file or directory/);
     }
   });
 
@@ -142,23 +136,19 @@ describe('coa', function () {
       if (!fs.existsSync(emptyFolderPath)) {
         fs.mkdirSync(emptyFolderPath);
       }
-      try {
-        await runProgram(['--folder', emptyFolderPath, '--quiet']);
-      } catch (error) {
-        expect(error.message).toMatch(/No SVG files/);
-      }
+      await expect(
+        runProgram(['--folder', emptyFolderPath, '--quiet']),
+      ).rejects.toThrow(/No SVG files/);
     });
 
     it('should show message when folder does not consists any svg files', async () => {
-      try {
-        await runProgram([
+      await expect(
+        runProgram([
           '--folder',
           path.resolve(__dirname, 'testFolderWithNoSvg'),
           '--quiet',
-        ]);
-      } catch (error) {
-        expect(error.message).toMatch(/No SVG files have been found/);
-      }
+        ]),
+      ).rejects.toThrow(/No SVG files have been found/);
     });
   });
 });

@@ -1,9 +1,7 @@
-'use strict';
+export const name = 'removeViewBox';
+export const description = 'removes viewBox attribute when possible';
 
-exports.name = 'removeViewBox';
-exports.description = 'removes viewBox attribute when possible';
-
-const viewBoxElems = ['svg', 'pattern', 'symbol'];
+const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
 
 /**
  * Remove viewBox attr which coincides with a width/height box.
@@ -17,14 +15,14 @@ const viewBoxElems = ['svg', 'pattern', 'symbol'];
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeViewBox'>}
+ * @type {import('./plugins-types.js').Plugin<'removeViewBox'>}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {
         if (
-          viewBoxElems.includes(node.name) &&
+          viewBoxElems.has(node.name) &&
           node.attributes.viewBox != null &&
           node.attributes.width != null &&
           node.attributes.height != null

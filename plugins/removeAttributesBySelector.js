@@ -1,9 +1,7 @@
-'use strict';
+import { querySelectorAll } from '../lib/xast.js';
 
-const { querySelectorAll } = require('../lib/xast.js');
-
-exports.name = 'removeAttributesBySelector';
-exports.description =
+export const name = 'removeAttributesBySelector';
+export const description =
   'removes attributes of elements that match a css selector';
 
 /**
@@ -69,13 +67,13 @@ exports.description =
  *   ↓
  * <rect x="0" y="0" width="100" height="100"/>
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors|MDN CSS Selectors
+ * @link https://developer.mozilla.org/docs/Web/CSS/CSS_Selectors|MDN CSS Selectors
  *
  * @author Bradley Mease
  *
- * @type {import('./plugins-types').Plugin<'removeAttributesBySelector'>}
+ * @type {import('./plugins-types.js').Plugin<'removeAttributesBySelector'>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const selectors = Array.isArray(params.selectors)
     ? params.selectors
     : [params];
