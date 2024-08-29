@@ -87,7 +87,7 @@ export const fn = (root, params) => {
           //   "Only the attributes x, y, width, height and href on the use element will override those set on the referenced element.
           //    However, any other attributes not set on the referenced element will be applied to the use element."
           const insertElementAttributeNames = Object.keys(
-            insertElement.attributes
+            insertElement.attributes,
           );
           for (const attributeName in useElement.node.attributes) {
             // don't remove attributes from the referenced element that, by spec, override the one of the <use> element
@@ -129,7 +129,7 @@ export const fn = (root, params) => {
           if (useElementStyles) {
             const useElementStylesAst = csstree.parse(
               useElementStyles,
-              styleParseOpts
+              styleParseOpts,
             );
             if (useElementStylesAst.type !== 'DeclarationList') {
               continue;
@@ -137,18 +137,18 @@ export const fn = (root, params) => {
 
             const insertElementStylesAst = csstree.parse(
               insertElementStyles,
-              styleParseOpts
+              styleParseOpts,
             );
             if (insertElementStylesAst.type !== 'DeclarationList') {
               continue;
             }
 
             insertElementStylesAst.children.appendList(
-              useElementStylesAst.children
+              useElementStylesAst.children,
             );
 
             const insertElementStylesAppended = csstree.generate(
-              insertElementStylesAst
+              insertElementStylesAst,
             );
             insertElement.attributes.style = insertElementStylesAppended; // append styles (styles from <use/> have higher priority)
           }
@@ -157,13 +157,13 @@ export const fn = (root, params) => {
 
           // position of <use/> in parent
           const useElementPosition = useElement.parentNode.children.indexOf(
-            useElement.node
+            useElement.node,
           );
 
           useElement.parentNode.children.splice(
             useElementPosition,
             1,
-            insertElement
+            insertElement,
           );
         }
       },
