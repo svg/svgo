@@ -1,7 +1,12 @@
 // https://www.w3.org/TR/SVG11/intro.html#Definitions
 
 /**
+ * @typedef {import('../lib/svgo.ts')} svgo
+ */
+
+/**
  * @type {Record<string, Set<string>>}
+ * @see svgo#_collections
  */
 export const elemsGroups = {
   animation: new Set([
@@ -101,18 +106,18 @@ export const elemsGroups = {
 };
 
 /**
- * Elements where adding or removing whitespace may effect rendering, metadata,
- * or semantic meaning.
- *
- * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
+ * @see svgo#_collections
  */
 export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
 
+/**
+ * @see svgo#_collections
+ */
 export const pathElems = new Set(['glyph', 'missing-glyph', 'path']);
 
 /**
  * @type {Record<string, Set<string>>}
- * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
+ * @see svgo#_collections
  */
 export const attrsGroups = {
   animationAddition: new Set(['additive', 'accumulate']),
@@ -311,6 +316,7 @@ export const attrsGroups = {
 
 /**
  * @type {Record<string, Record<string, string>>}
+ * @see svgo#_collections
  */
 export const attrsGroupsDefaults = {
   core: { 'xml:space': 'default' },
@@ -378,7 +384,7 @@ export const attrsGroupsDefaults = {
 
 /**
  * @type {Record<string, { safe?: Set<string>, unsafe?: Set<string> }>}
- * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
+ * @see svgo#_collections
  */
 export const attrsGroupsDeprecated = {
   animationAttributeTarget: { unsafe: new Set(['attributeType']) },
@@ -408,7 +414,7 @@ export const attrsGroupsDeprecated = {
  *   contentGroups?: Set<string>,
  *   content?: Set<string>,
  * }>}
- * @see https://www.w3.org/TR/SVG11/eltindex.html
+ * @see svgo#_collections
  */
 export const elems = {
   a: {
@@ -2067,7 +2073,9 @@ export const elems = {
   },
 };
 
-// https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+/**
+ * @see svgo#_collections
+ */
 export const editorNamespaces = new Set([
   'http://creativecommons.org/ns#',
   'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
@@ -2094,7 +2102,7 @@ export const editorNamespaces = new Set([
 ]);
 
 /**
- * @see https://www.w3.org/TR/SVG11/linking.html#processingIRI
+ * @see svgo#_collections
  */
 export const referencesProps = new Set([
   'clip-path',
@@ -2110,7 +2118,7 @@ export const referencesProps = new Set([
 ]);
 
 /**
- * @see https://www.w3.org/TR/SVG11/propidx.html
+ * @see svgo#_collections
  */
 export const inheritableAttrs = new Set([
   'clip-rule',
@@ -2172,9 +2180,8 @@ export const presentationNonInheritableGroupAttrs = new Set([
 ]);
 
 /**
- * https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
- *
  * @type {Record<string, string>}
+ * @see svgo#_collections
  */
 export const colorsNames = {
   aliceblue: '#f0f8ff',
@@ -2366,7 +2373,7 @@ export const colorsShortNames = {
 };
 
 /**
- * @see https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
+ * @see svgo#_collections
  */
 export const colorsProps = new Set([
   'color',
@@ -2377,7 +2384,9 @@ export const colorsProps = new Set([
   'stroke',
 ]);
 
-/** @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes */
+/**
+ * @see svgo#_collections
+ */
 export const pseudoClasses = {
   displayState: new Set(['fullscreen', 'modal', 'picture-in-picture']),
   input: new Set([
@@ -2433,4 +2442,22 @@ export const pseudoClasses = {
     'hover',
   ]),
   functional: new Set(['is', 'not', 'where', 'has']),
+};
+
+export default {
+  elemsGroups,
+  textElems,
+  pathElems,
+  attrsGroups,
+  attrsGroupsDefaults,
+  attrsGroupsDeprecated,
+  elems,
+  editorNamespaces,
+  referencesProps,
+  inheritableAttrs,
+  presentationNonInheritableGroupAttrs,
+  colorsNames,
+  colorsShortNames,
+  colorsProps,
+  pseudoClasses,
 };

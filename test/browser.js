@@ -30,13 +30,14 @@ const expected = `<svg xmlns="http://www.w3.org/2000/svg">
 
 const content = `
 <script type="module">
-import { VERSION, optimize, builtinPlugins } from '/svgo.browser.js';
+import { VERSION, optimize, builtinPlugins, _collections } from '/svgo.browser.js';
 const result = optimize(${JSON.stringify(fixture)}, {
   plugins : [],
   js2svg  : { pretty: true, indent: 2 }
 });
 globalThis.version = VERSION;
 globalThis.builtinPlugins = builtinPlugins;
+globalThis._collections = _collections;
 globalThis.result = result.data;
 </script>
 `;
@@ -62,11 +63,21 @@ const runTest = async () => {
   const actual = await page.evaluate(() => ({
     version: globalThis.version,
     builtinPlugins: globalThis.builtinPlugins,
+    _collections: globalThis._collections,
     result: globalThis.result,
   }));
 
   assert.strictEqual(actual.version, version);
-  assert.notEqual(actual.builtinPlugins, undefined);
+  assert.notEqual(
+    actual.builtinPlugins,
+    undefined,
+    'builtinPlugins must be defined',
+  );
+  assert.notEqual(
+    actual._collections,
+    undefined,
+    '_collections must be defined',
+  );
   assert.equal(actual.result, expected);
 
   await browser.close();
