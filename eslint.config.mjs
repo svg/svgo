@@ -10,6 +10,7 @@ export default [
   {
     ignores: [
       '.yarn/**',
+      '.yarnrc.yml',
       'node_modules/**',
       'dist/**',
       'test/regression-fixtures/**',
