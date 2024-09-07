@@ -2,10 +2,10 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 /**
- * @typedef {import('eslint').Linter.FlatConfig} FlatConfig
+ * @typedef {import('eslint').Linter.Config} Config
  */
 
-/** @type {FlatConfig[]} */
+/** @type {Config[]} */
 export default [
   {
     ignores: [
