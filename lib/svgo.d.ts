@@ -1,4 +1,10 @@
-import type { StringifyOptions, DataUri, Plugin } from './types.js';
+import type {
+  StringifyOptions,
+  DataUri,
+  Plugin,
+  XastChild,
+  XastNode,
+} from './types.js';
 import type {
   BuiltinsWithOptionalParams,
   BuiltinsWithRequiredParams,
@@ -34,7 +40,10 @@ type BuiltinPlugin<Name, Params> = {
   fn: Plugin<Params>;
 };
 
-type BuiltinPluginOrPreset<Name, Params> = BuiltinPlugin<Name, Params> & {
+export type BuiltinPluginOrPreset<Name, Params> = BuiltinPlugin<
+  Name,
+  Params
+> & {
   /** If the plugin is itself a preset that invokes other plugins. */
   isPreset: true | undefined;
   /**
@@ -83,8 +92,98 @@ type Output = {
   data: string;
 };
 
+export declare const _collections: {
+  elemsGroups: Readonly<Record<string, Set<string>>>;
+  /**
+   * Elements where adding or removing whitespace may effect rendering, metadata,
+   * or semantic meaning.
+   *
+   * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
+   */
+  textElems: Readonly<Set<string>>;
+  pathElems: Readonly<Set<string>>;
+  /**
+   * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
+   */
+  attrsGroups: Readonly<Record<string, Set<string>>>;
+  attrsGroupsDefaults: Readonly<Record<string, Record<string, string>>>;
+  /**
+   * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
+   */
+  attrsGroupsDeprecated: Readonly<
+    Record<string, { safe?: Set<string>; unsafe?: Set<string> }>
+  >;
+  /**
+   * @see https://www.w3.org/TR/SVG11/eltindex.html
+   */
+  elems: Readonly<
+    Record<
+      string,
+      {
+        attrsGroups: Set<string>;
+        attrs?: Set<string>;
+        defaults?: Record<string, string>;
+        deprecated?: {
+          safe?: Set<string>;
+          unsafe?: Set<string>;
+        };
+        contentGroups?: Set<string>;
+        content?: Set<string>;
+      }
+    >
+  >;
+  /**
+   * @see https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+   */
+  editorNamespaces: Readonly<Set<string>>;
+  /**
+   * @see https://www.w3.org/TR/SVG11/linking.html#processingIRI
+   */
+  referencesProps: Readonly<Set<string>>;
+  /**
+   * @see https://www.w3.org/TR/SVG11/propidx.html
+   */
+  inheritableAttrs: Readonly<Set<string>>;
+  presentationNonInheritableGroupAttrs: Readonly<Set<string>>;
+  /**
+   * @see https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
+   */
+  colorsNames: Readonly<Record<string, string>>;
+  colorsShortNames: Readonly<Record<string, string>>;
+  /**
+   * @see https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
+   */
+  colorsProps: Readonly<Set<string>>;
+  /**
+   * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
+   */
+  pseudoClasses: Readonly<Record<string, Set<string>>>;
+};
+
+export type * from './types.d.ts';
+
 /** Installed version of SVGO. */
 export declare const VERSION: string;
 
 /** The core of SVGO */
 export declare function optimize(input: string, config?: Config): Output;
+
+/**
+ * @param node Element to query the children of.
+ * @param selector CSS selector string.
+ * @returns First match, or null if there was no match.
+ */
+export declare function querySelector(
+  node: XastNode,
+  selector: string,
+): XastChild | null;
+
+/**
+ * @param node Element to query the children of.
+ * @param selector CSS selector string.
+ * @returns All matching elements.
+ */
+export declare function querySelectorAll(
+  node: XastNode,
+  selector: string,
+): XastChild[];
