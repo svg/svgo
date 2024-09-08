@@ -20,18 +20,22 @@ export const fn = (root, params) => {
     removeNone = false,
   } = params;
 
-  // style and script elements deoptimise this plugin
-  let hasStyleOrScript = false;
+  // style, animation, and script elements deoptimise this plugin
+  let deoptimized = false;
   visit(root, {
     element: {
       enter: (node) => {
-        if (node.name === 'style' || hasScripts(node)) {
-          hasStyleOrScript = true;
+        if (
+          node.name === 'style' ||
+          hasScripts(node) ||
+          elemsGroups.animation.has(node.name)
+        ) {
+          deoptimized = true;
         }
       },
     },
   });
-  if (hasStyleOrScript) {
+  if (deoptimized) {
     return null;
   }
 
