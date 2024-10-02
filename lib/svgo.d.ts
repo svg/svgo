@@ -88,7 +88,7 @@ export type Config = {
   datauri?: DataUri;
 };
 
-type Output = {
+export type Output = {
   data: string;
 };
 
