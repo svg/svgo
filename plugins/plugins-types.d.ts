@@ -208,6 +208,10 @@ type DefaultPlugins = {
     xmlnsOrder?: 'front' | 'alphabetical';
   };
   sortDefsChildren: void;
+  dereferenceUses: {
+    keepHref?: boolean;
+    symbolContainer?: 'svg';
+  };
 };
 
 type PresetDefaultOverrides = {
