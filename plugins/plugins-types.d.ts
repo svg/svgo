@@ -77,6 +77,8 @@ type DefaultPlugins = {
   };
   mergeStyles: void;
   inlineStyles: {
+    /** If true, do not inline styles if any CSS at rules are present. */
+    disableIfAtRulesPresent?: boolean;
     /**
      * Inlines selectors that match once only.
      *
