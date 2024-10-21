@@ -11,13 +11,13 @@ import type {
   PluginsParams,
 } from '../plugins/plugins-types.js';
 
-type CustomPlugin<T = any> = {
+export type CustomPlugin<T = any> = {
   name: string;
   fn: Plugin<T>;
   params?: T;
 };
 
-type PluginConfig =
+export type PluginConfig =
   | keyof BuiltinsWithOptionalParams
   | {
       [Name in keyof BuiltinsWithOptionalParams]: {
