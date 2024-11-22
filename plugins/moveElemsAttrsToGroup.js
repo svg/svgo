@@ -43,7 +43,7 @@ export const fn = (root) => {
   return {
     element: {
       exit: (node) => {
-        // process only groups with more than 1 children
+        // process only groups with more than 1 child
         if (node.name !== 'g' || node.children.length <= 1) {
           return;
         }

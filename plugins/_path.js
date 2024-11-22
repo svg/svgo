@@ -517,7 +517,7 @@ function gatherPoints(pathData) {
 
       case 'C':
         if (basePoint != null) {
-          // Approximate quibic Bezier curve with middle points between control points
+          // Approximate cubic Bezier curve with middle points between control points
           addPoint(subPath, [
             0.5 * (basePoint[0] + data[0]),
             0.5 * (basePoint[1] + data[1]),
