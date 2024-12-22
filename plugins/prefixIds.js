@@ -207,7 +207,7 @@ export const fn = (_root, params, info) => {
             .join(' ');
         }
 
-        // prefix a href attribute value
+        // prefix an href attribute value
         // xlink:href is deprecated, must be still supported
         for (const name of ['href', 'xlink:href']) {
           if (

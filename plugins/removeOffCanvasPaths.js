@@ -88,7 +88,7 @@ export const fn = () => {
         ) {
           const pathData = parsePathData(node.attributes.d);
 
-          // consider that a M command within the viewBox is visible
+          // consider that an M command within the viewBox is visible
           let visible = false;
           for (const pathDataItem of pathData) {
             if (pathDataItem.command === 'M') {

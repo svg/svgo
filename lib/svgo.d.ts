@@ -95,7 +95,7 @@ export type Output = {
 export declare const _collections: {
   elemsGroups: Readonly<Record<string, Set<string>>>;
   /**
-   * Elements where adding or removing whitespace may effect rendering, metadata,
+   * Elements where adding or removing whitespace may affect rendering, metadata,
    * or semantic meaning.
    *
    * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre

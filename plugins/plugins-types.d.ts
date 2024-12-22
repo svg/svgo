@@ -96,7 +96,7 @@ type DefaultPlugins = {
     useMqs?: string[];
     /**
      * Pseudo-classes and elements to use. An empty string indicates all
-     * all non-pseudo-classes and elements.
+     * non-pseudo-classes and elements.
      */
     usePseudos?: string[];
   };

@@ -146,7 +146,7 @@ export const fn = (root) => {
 };
 
 /**
- * @param {string} value Value of a enable-background attribute or style declaration.
+ * @param {string} value Value of an enable-background attribute or style declaration.
  * @param {string} nodeName Name of the node the value was assigned to.
  * @param {string} width Width of the node the value was assigned to.
  * @param {string} height Height of the node the value was assigned to.

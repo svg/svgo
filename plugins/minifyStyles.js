@@ -38,7 +38,7 @@ export const fn = (_root, { usage, ...params }) => {
 
   /**
    * Force to use usage data even if it unsafe. For example, the document
-   * contains scripts or in attributes..
+   * contains scripts or in attributes.
    */
   let forceUsageDeoptimized = false;
 
