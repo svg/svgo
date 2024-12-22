@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { chromium } from 'playwright';
 
+const PORT = 5001;
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pkgPath = path.join(__dirname, '../package.json');
 const { version } = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
@@ -58,7 +60,7 @@ const runTest = async () => {
   const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto('http://localhost:5000');
+  await page.goto(`http://localhost:${PORT}`);
 
   const actual = await page.evaluate(() => ({
     version: globalThis.version,
@@ -83,7 +85,7 @@ const runTest = async () => {
   await browser.close();
 };
 
-server.listen(5000, async () => {
+server.listen(PORT, async () => {
   try {
     await runTest();
     console.info('Tested successfully');
