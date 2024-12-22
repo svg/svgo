@@ -15,13 +15,14 @@ import { optimize } from '../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const width = 960;
-const height = 720;
+const PORT = 5001;
+const WIDTH = 960;
+const HEIGHT = 720;
 
 /** @type {PageScreenshotOptions} */
 const screenshotOptions = {
   omitBackground: true,
-  clip: { x: 0, y: 0, width, height },
+  clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
   animations: 'disabled',
 };
 
@@ -38,21 +39,21 @@ const runTests = async (list) => {
    * @param {string} name
    */
   const processFile = async (page, name) => {
-    await page.goto(`http://localhost:5000/original/${name}`);
+    await page.goto(`http://localhost:${PORT}/original/${name}`);
     const originalBuffer = await page.screenshot(screenshotOptions);
-    await page.goto(`http://localhost:5000/optimized/${name}`);
+    await page.goto(`http://localhost:${PORT}/optimized/${name}`);
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
     const writeDiffs = process.env.NO_DIFF == null;
-    const diff = writeDiffs && new PNG({ width, height });
+    const diff = writeDiffs && new PNG({ width: WIDTH, height: HEIGHT });
     const originalPng = PNG.sync.read(originalBuffer);
     const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
     const matched = pixelmatch(
       originalPng.data,
       optimizedPng.data,
       diff ? diff.data : null,
-      width,
-      height,
+      WIDTH,
+      HEIGHT,
     );
     // ignore small aliasing issues
     if (matched <= 4) {
@@ -83,7 +84,7 @@ const runTests = async (list) => {
   const browser = await chromium.launch();
   const context = await browser.newContext({
     javaScriptEnabled: false,
-    viewport: { width, height },
+    viewport: { width: WIDTH, height: HEIGHT },
   });
   await Promise.all(
     Array.from(new Array(os.cpus().length * 2), () => worker()),
@@ -126,7 +127,7 @@ const runTests = async (list) => {
       throw new Error(`unknown path ${req.url}`);
     });
     await new Promise((resolve) => {
-      server.listen(5000, resolve);
+      server.listen(PORT, resolve);
     });
     const list = (await filesPromise).filter((name) => name.endsWith('.svg'));
     const passed = await runTests(list);
