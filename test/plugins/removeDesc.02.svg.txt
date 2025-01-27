@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <desc>    A non-standard description isn't removed, but is escaped,  terminally trimmed and indented. </desc>
+    <g/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <desc>
+        A non-standard description isn&apos;t removed, but is escaped,  terminally trimmed and indented.
+    </desc>
+    <g/>
+</svg>
