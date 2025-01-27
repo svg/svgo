@@ -24,6 +24,7 @@ type DefaultPlugins = {
     defaultPx?: boolean;
     convertToPx?: boolean;
   };
+  cleanupTitle: void;
   collapseGroups: void;
   convertColors: {
     currentColor?: boolean | string | RegExp;
