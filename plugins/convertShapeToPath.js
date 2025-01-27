@@ -31,34 +31,63 @@ export const fn = (root, params) => {
         if (
           node.name === 'rect' &&
           node.attributes.width != null &&
-          node.attributes.height != null &&
-          node.attributes.rx == null &&
-          node.attributes.ry == null
+          node.attributes.height != null
         ) {
           const x = Number(node.attributes.x || '0');
           const y = Number(node.attributes.y || '0');
           const width = Number(node.attributes.width);
           const height = Number(node.attributes.height);
+          let rrx =
+            Number(node.attributes.rx) || Number(node.attributes.ry) || 0;
+          let rry =
+            Number(node.attributes.ry) || Number(node.attributes.rx) || 0;
+
+          rrx = rrx > width / 2 ? width / 2 : rrx;
+          rry = rry > height / 2 ? height / 2 : rry;
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
           if (Number.isNaN(x - y + width - height)) return;
+
           /**
            * @type {PathDataItem[]}
            */
-          const pathData = [
-            { command: 'M', args: [x, y] },
-            { command: 'H', args: [x + width] },
-            { command: 'V', args: [y + height] },
-            { command: 'H', args: [x] },
-            { command: 'z', args: [] },
-          ];
+          let pathData = [];
+
+          if (rrx === 0 && rry === 0) {
+            pathData = [
+              { command: 'M', args: [x, y] },
+              { command: 'H', args: [x + width] },
+              { command: 'V', args: [y + height] },
+              { command: 'H', args: [x] },
+              { command: 'z', args: [] },
+            ];
+          } else {
+            pathData = [
+              { command: 'M', args: [x + rrx, y] },
+              { command: 'H', args: [x + width - rrx] },
+              { command: 'A', args: [rrx, rry, 0, 0, 1, x + width, y + rry] },
+              { command: 'V', args: [y + height - rry] },
+              {
+                command: 'A',
+                args: [rrx, rry, 0, 0, 1, x + width - rrx, y + height],
+              },
+              { command: 'H', args: [x + rrx] },
+              { command: 'A', args: [rrx, rry, 0, 0, 1, x, y + height - rry] },
+              { command: 'V', args: [y + rry] },
+              { command: 'A', args: [rrx, rry, 0, 0, 1, x + rrx, y] },
+              { command: 'z', args: [] },
+            ];
+          }
+
           node.name = 'path';
           node.attributes.d = stringifyPathData({ pathData, precision });
           delete node.attributes.x;
           delete node.attributes.y;
           delete node.attributes.width;
           delete node.attributes.height;
+          delete node.attributes.rx;
+          delete node.attributes.ry;
         }
 
         // convert line to path
