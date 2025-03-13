@@ -211,10 +211,12 @@ export const fn = (root, params) => {
             floatPrecision,
             leadingZero,
           );
-          if (newRx < 1 / floatPrecision && newRy < 1 / floatPrecision) {
+
+          const acceptableError = 1 / 10 ** floatPrecision;
+          if (newRx < acceptableError && newRy < acceptableError) {
             delete node.attributes.rx;
             delete node.attributes.ry;
-          } else if (Math.abs(newRx - newRy) < 1 / floatPrecision) {
+          } else if (Math.abs(newRx - newRy) < acceptableError) {
             node.attributes.rx = stringifyNumber(
               newRx,
               floatPrecision,
