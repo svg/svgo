@@ -161,7 +161,7 @@ const definePrecision = (data, { ...newParams }) => {
       ),
     );
   }
-  // No sense in angle precision more then number of significant digits in matrix.
+  // No sense in angle precision more than number of significant digits in matrix.
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,

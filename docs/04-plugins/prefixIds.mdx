@@ -38,7 +38,7 @@ module.exports = {
 };
 ```
 
-However, a solution like this can not gurantee a reproducible prefix. Unpredictable IDs can pose an issue for tooling, namely React, and anything that depends on it like Next.js and Docusaurus.
+However, a solution like this can not guarantee a reproducible prefix. Unpredictable IDs can pose an issue for tooling, namely React, and anything that depends on it like Next.js and Docusaurus.
 
 With unpredictable IDs, if you're prerendering or use SSR (Server-Side Rendering), the client-side and server-side HTML may mismatch, leading to errors on client-side and regenerating the tree.
 

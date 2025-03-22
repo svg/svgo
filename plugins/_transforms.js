@@ -537,7 +537,7 @@ const transformToMatrix = (transform) => {
  * Applies transformation to an arc. To do so, we represent ellipse as a matrix, multiply it
  * by the transformation matrix and use a singular value decomposition to represent in a form
  * rotate(θ)·scale(a b)·rotate(φ). This gives us new ellipse params a, b and θ.
- * SVD is being done with the formulae provided by Wolffram|Alpha (svd {{m0, m2}, {m1, m3}})
+ * SVD is being done with the formulae provided by Wolfram|Alpha (svd {{m0, m2}, {m1, m3}})
  *
  * @type {(
  *   cursor: [x: number, y: number],
