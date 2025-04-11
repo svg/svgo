@@ -45,13 +45,13 @@ const runTests = async (list) => {
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
     const writeDiffs = process.env.NO_DIFF == null;
-    const diff = writeDiffs && new PNG({ width: WIDTH, height: HEIGHT });
+    const diff = writeDiffs ? new PNG({ width: WIDTH, height: HEIGHT }) : null;
     const originalPng = PNG.sync.read(originalBuffer);
     const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
     const matched = pixelmatch(
       originalPng.data,
       optimizedPng.data,
-      diff ? diff.data : null,
+      diff?.data,
       WIDTH,
       HEIGHT,
     );
