@@ -3851,14 +3851,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixelmatch@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "pixelmatch@npm:5.3.0"
+"pixelmatch@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "pixelmatch@npm:7.1.0"
   dependencies:
-    pngjs: ^6.0.0
+    pngjs: ^7.0.0
   bin:
     pixelmatch: bin/pixelmatch
-  checksum: f542713d89536551181ad9ddb666a1792ba00a8632d831093232a075cb3ccac05856e7a453ed7d0a41aaef64dcb5962e8ae5cbe646dd2761790d8ee51b0a0743
+  checksum: 0ad2e863e0e87ae52289c4366860a4040712a30a1e19c606745b9750b3ecda6f587dc959ce452818c50c7753ef6916f23026c14ef4d5f6c3b13c8205d61b923d
   languageName: node
   linkType: hard
 
@@ -3892,13 +3892,6 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 2d78f53eed438d26df9743f98227d2e33bb5a378c8d0144a4ed75b4010c9c517d5a6ee6c1c9245ad61dc615054c5e19d2ded5a6e285e35d2bca39b05bc9c4a35
-  languageName: node
-  linkType: hard
-
-"pngjs@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "pngjs@npm:6.0.0"
-  checksum: ab6c285086060087097eab9fe6b5a528a24f9e79c03dea2b4fd6264ed4fdb5beff4a3257eeeaf2a9dc18249b539609c2a4e4013c567164a1f6b5ba2c974d5ecb
   languageName: node
   linkType: hard
 
@@ -4516,7 +4509,7 @@ __metadata:
     globals: ^14.0.0
     jest: ^29.7.0
     picocolors: ^1.1.1
-    pixelmatch: ^5.3.0
+    pixelmatch: ^7.1.0
     playwright: ^1.51.1
     pngjs: ^7.0.0
     prettier: ^3.2.5
