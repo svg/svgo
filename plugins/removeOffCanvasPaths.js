@@ -8,10 +8,10 @@ import { intersects } from './_path.js';
 
 export const name = 'removeOffCanvasPaths';
 export const description =
-  'removes elements that are drawn outside of the viewbox (disabled by default)';
+  'removes elements that are drawn outside of the viewBox (disabled by default)';
 
 /**
- * Remove elements that are drawn outside of the viewbox.
+ * Remove elements that are drawn outside of the viewBox.
  *
  * @author JoshyPHP
  *
@@ -35,7 +35,7 @@ export const fn = () => {
       enter: (node, parentNode) => {
         if (node.name === 'svg' && parentNode.type === 'root') {
           let viewBox = '';
-          // find viewbox
+          // find viewBox
           if (node.attributes.viewBox != null) {
             // remove commas and plus signs, normalize and trim whitespace
             viewBox = node.attributes.viewBox;
@@ -46,7 +46,7 @@ export const fn = () => {
             viewBox = `0 0 ${node.attributes.width} ${node.attributes.height}`;
           }
 
-          // parse viewbox
+          // parse viewBox
           // remove commas and plus signs, normalize and trim whitespace
           viewBox = viewBox
             .replace(/[,+]|px/g, ' ')

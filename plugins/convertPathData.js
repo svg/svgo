@@ -1006,8 +1006,8 @@ function convertToMixed(path, params) {
 }
 
 /**
- * Checks if curve is convex. Control points of such a curve must form
- * a convex quadrilateral with diagonals crosspoint inside of it.
+ * Checks if curve is convex. Control points of such a curve must form a convex
+ * quadrilateral with diagonals crosspoint inside of it.
  *
  * @type {(data: number[]) => boolean}
  */

@@ -108,13 +108,13 @@ type DefaultPlugins = {
 
   minifyStyles: {
     /**
-     * Disable or enable a structure optimisations.
+     * Disable or enable a structure optimizations.
      * @default true
      */
     restructure?: boolean;
     /**
      * Enables merging of @media rules with the same media query split by other rules.
-     * The optimisation is unsafe in general, but should work fine in most cases. Use it on your own risk.
+     * Unsafe in general, but should work fine in most cases. Use it on your own risk.
      * @default false
      */
     forceMediaMerge?: boolean;

@@ -58,7 +58,7 @@ export const fn = (_root, { usage, ...params }) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // detect deoptimisations
+        // detect deoptimizations
         if (hasScripts(node)) {
           deoptimized = true;
         }
@@ -115,7 +115,7 @@ export const fn = (_root, { usage, ...params }) => {
             }
 
             // preserve cdata if necessary
-            // TODO split cdata -> text optimisation into separate plugin
+            // TODO split cdata -> text optimization into separate plugin
             if (cssText.indexOf('>') >= 0 || cssText.indexOf('<') >= 0) {
               styleNode.children[0].type = 'cdata';
               styleNode.children[0].value = minified;
