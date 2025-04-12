@@ -78,7 +78,7 @@ export const fn = (root, params) => {
 
         const cssText = node.children
           .filter((child) => child.type === 'text' || child.type === 'cdata')
-          // @ts-ignore
+          // @ts-expect-error
           .map((child) => child.value)
           .join('');
 
