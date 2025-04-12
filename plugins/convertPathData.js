@@ -129,7 +129,7 @@ export const fn = (root, params) => {
   if (_applyTransforms) {
     visit(
       root,
-      // @ts-ignore
+      // @ts-expect-error
       applyTransforms(root, {
         transformPrecision,
         applyTransformsStroked,
@@ -208,7 +208,7 @@ export const fn = (root, params) => {
               });
             }
 
-            // @ts-ignore
+            // @ts-expect-error
             js2path(node, data, newParams);
           }
         }
@@ -379,11 +379,11 @@ const convertToRelative = (pathData) => {
     pathItem.args = args;
     // store absolute coordinates for later use
     // base should preserve reference from other element
-    // @ts-ignore
+    // @ts-expect-error
     pathItem.base = prevCoords;
-    // @ts-ignore
+    // @ts-expect-error
     pathItem.coords = [cursor[0], cursor[1]];
-    // @ts-ignore
+    // @ts-expect-error
     prevCoords = pathItem.coords;
   }
 
@@ -450,9 +450,9 @@ function filters(
           arc = {
             command: 'a',
             args: [r, r, 0, 0, sweep, sdata[4], sdata[5]],
-            // @ts-ignore
+            // @ts-expect-error
             coords: item.coords.slice(),
-            // @ts-ignore
+            // @ts-expect-error
             base: item.base,
           },
           /**
@@ -480,11 +480,11 @@ function filters(
           (prev.command == 'a' && prev.sdata && isArcPrev(prev.sdata, circle))
         ) {
           arcCurves.unshift(prev);
-          // @ts-ignore
+          // @ts-expect-error
           arc.base = prev.base;
-          // @ts-ignore
+          // @ts-expect-error
           arc.args[5] = arc.coords[0] - arc.base[0];
-          // @ts-ignore
+          // @ts-expect-error
           arc.args[6] = arc.coords[1] - arc.base[1];
           var prevData = prev.command == 'a' ? prev.sdata : prev.args;
           var prevAngle = findArcAngle(prevData, {
@@ -522,21 +522,21 @@ function filters(
             arcCurves.push(next);
             if (2 * Math.PI - angle > 1e-3) {
               // less than 360°
-              // @ts-ignore
+              // @ts-expect-error
               arc.coords = next.coords;
-              // @ts-ignore
+              // @ts-expect-error
               arc.args[5] = arc.coords[0] - arc.base[0];
-              // @ts-ignore
+              // @ts-expect-error
               arc.args[6] = arc.coords[1] - arc.base[1];
             } else {
               // full circle, make a half-circle arc and add a second one
               arc.args[5] = 2 * (relCircle.center[0] - nextData[4]);
               arc.args[6] = 2 * (relCircle.center[1] - nextData[5]);
-              // @ts-ignore
+              // @ts-expect-error
               arc.coords = [
-                // @ts-ignore
+                // @ts-expect-error
                 arc.base[0] + arc.args[5],
-                // @ts-ignore
+                // @ts-expect-error
                 arc.base[1] + arc.args[6],
               ];
               arc = {
@@ -547,14 +547,14 @@ function filters(
                   0,
                   0,
                   sweep,
-                  // @ts-ignore
+                  // @ts-expect-error
                   next.coords[0] - arc.coords[0],
-                  // @ts-ignore
+                  // @ts-expect-error
                   next.coords[1] - arc.coords[1],
                 ],
-                // @ts-ignore
+                // @ts-expect-error
                 coords: next.coords,
-                // @ts-ignore
+                // @ts-expect-error
                 base: arc.coords,
               };
               output.push(arc);
@@ -572,22 +572,22 @@ function filters(
           }
           if (hasPrev) {
             var prevArc = output.shift();
-            // @ts-ignore
+            // @ts-expect-error
             roundData(prevArc.args);
-            // @ts-ignore
+            // @ts-expect-error
             relSubpoint[0] += prevArc.args[5] - prev.args[prev.args.length - 2];
-            // @ts-ignore
+            // @ts-expect-error
             relSubpoint[1] += prevArc.args[6] - prev.args[prev.args.length - 1];
             prev.command = 'a';
-            // @ts-ignore
+            // @ts-expect-error
             prev.args = prevArc.args;
-            // @ts-ignore
+            // @ts-expect-error
             item.base = prev.coords = prevArc.coords;
           }
-          // @ts-ignore
+          // @ts-expect-error
           arc = output.shift();
           if (arcCurves.length == 1) {
-            // @ts-ignore
+            // @ts-expect-error
             item.sdata = sdata.slice(); // preserve curve data for future checks
           } else if (arcCurves.length - 1 - hasPrev > 0) {
             // filter out consumed next items
@@ -596,7 +596,7 @@ function filters(
           if (!arc) return false;
           command = 'a';
           data = arc.args;
-          // @ts-ignore
+          // @ts-expect-error
           item.coords = arc.coords;
         }
       }
@@ -614,19 +614,19 @@ function filters(
           command === 'c'
         ) {
           for (var i = data.length; i--; ) {
-            // @ts-ignore
+            // @ts-expect-error
             data[i] += item.base[i % 2] - relSubpoint[i % 2];
           }
         } else if (command == 'h') {
-          // @ts-ignore
+          // @ts-expect-error
           data[0] += item.base[0] - relSubpoint[0];
         } else if (command == 'v') {
-          // @ts-ignore
+          // @ts-expect-error
           data[0] += item.base[1] - relSubpoint[1];
         } else if (command == 'a') {
-          // @ts-ignore
+          // @ts-expect-error
           data[5] += item.base[0] - relSubpoint[0];
-          // @ts-ignore
+          // @ts-expect-error
           data[6] += item.base[1] - relSubpoint[1];
         }
         roundData(data);
@@ -698,26 +698,26 @@ function filters(
       // m 0 12 C 4 4 8 4 12 12 → M 0 12 Q 6 0 12 12
       if (params.convertToQ && command == 'c') {
         const x1 =
-          // @ts-ignore
+          // @ts-expect-error
           0.75 * (item.base[0] + data[0]) - 0.25 * item.base[0];
         const x2 =
-          // @ts-ignore
+          // @ts-expect-error
           0.75 * (item.base[0] + data[2]) - 0.25 * (item.base[0] + data[4]);
         if (Math.abs(x1 - x2) < error * 2) {
           const y1 =
-            // @ts-ignore
+            // @ts-expect-error
             0.75 * (item.base[1] + data[1]) - 0.25 * item.base[1];
           const y2 =
-            // @ts-ignore
+            // @ts-expect-error
             0.75 * (item.base[1] + data[3]) - 0.25 * (item.base[1] + data[5]);
           if (Math.abs(y1 - y2) < error * 2) {
             const newData = data.slice();
             newData.splice(
               0,
               4,
-              // @ts-ignore
+              // @ts-expect-error
               x1 + x2 - item.base[0],
-              // @ts-ignore
+              // @ts-expect-error
               y1 + y2 - item.base[1],
             );
             roundData(newData);
@@ -760,7 +760,7 @@ function filters(
         if (command != 'h' && command != 'v') {
           prev.args[1] += data[1];
         }
-        // @ts-ignore
+        // @ts-expect-error
         prev.coords = item.coords;
         path[index] = prev;
         return false;
@@ -817,15 +817,15 @@ function filters(
           // t + q → t + t
           else if (prev.command === 't') {
             const predictedControlPoint = reflectPoint(
-              // @ts-ignore
+              // @ts-expect-error
               qControlPoint,
-              // @ts-ignore
+              // @ts-expect-error
               item.base,
             );
             const realControlPoint = [
-              // @ts-ignore
+              // @ts-expect-error
               data[0] + item.base[0],
-              // @ts-ignore
+              // @ts-expect-error
               data[1] + item.base[1],
             ];
             if (
@@ -874,9 +874,9 @@ function filters(
         (command === 'l' || command === 'h' || command === 'v')
       ) {
         if (
-          // @ts-ignore
+          // @ts-expect-error
           Math.abs(pathBase[0] - item.coords[0]) < error &&
-          // @ts-ignore
+          // @ts-expect-error
           Math.abs(pathBase[1] - item.coords[1]) < error
         ) {
           command = 'z';
@@ -896,22 +896,22 @@ function filters(
       (command === 'Z' || command === 'z') &&
       params.removeUseless &&
       isSafeToUseZ &&
-      // @ts-ignore
+      // @ts-expect-error
       Math.abs(item.base[0] - item.coords[0]) < error / 10 &&
-      // @ts-ignore
+      // @ts-expect-error
       Math.abs(item.base[1] - item.coords[1]) < error / 10
     )
       return false;
 
     if (command === 'q') {
-      // @ts-ignore
+      // @ts-expect-error
       prevQControlPoint = [data[0] + item.base[0], data[1] + item.base[1]];
     } else if (command === 't') {
       if (qControlPoint) {
-        // @ts-ignore
+        // @ts-expect-error
         prevQControlPoint = reflectPoint(qControlPoint, item.base);
       } else {
-        // @ts-ignore
+        // @ts-expect-error
         prevQControlPoint = item.coords;
       }
     } else {
@@ -953,19 +953,19 @@ function convertToMixed(path, params) {
       command === 'c'
     ) {
       for (var i = adata.length; i--; ) {
-        // @ts-ignore
+        // @ts-expect-error
         adata[i] += item.base[i % 2];
       }
     } else if (command == 'h') {
-      // @ts-ignore
+      // @ts-expect-error
       adata[0] += item.base[0];
     } else if (command == 'v') {
-      // @ts-ignore
+      // @ts-expect-error
       adata[0] += item.base[1];
     } else if (command == 'a') {
-      // @ts-ignore
+      // @ts-expect-error
       adata[5] += item.base[0];
-      // @ts-ignore
+      // @ts-expect-error
       adata[6] += item.base[1];
     }
 
@@ -993,7 +993,7 @@ function convertToMixed(path, params) {
               prev.args[prev.args.length - 1] % 1))
         ))
     ) {
-      // @ts-ignore
+      // @ts-expect-error
       item.command = command.toUpperCase();
       item.args = adata;
     }
@@ -1218,23 +1218,23 @@ function findCircle(curve) {
       m2[1] - (m2[0] - midPoint[0]),
     ]),
     radius = center && getDistance([0, 0], center),
-    // @ts-ignore
+    // @ts-expect-error
     tolerance = Math.min(arcThreshold * error, (arcTolerance * radius) / 100);
 
   if (
     center &&
-    // @ts-ignore
+    // @ts-expect-error
     radius < 1e15 &&
     [1 / 4, 3 / 4].every(function (point) {
       return (
         Math.abs(
-          // @ts-ignore
+          // @ts-expect-error
           getDistance(getCubicBezierPoint(curve, point), center) - radius,
         ) <= tolerance
       );
     })
   )
-    // @ts-ignore
+    // @ts-expect-error
     return { center: center, radius: radius };
 }
 

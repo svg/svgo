@@ -16,7 +16,7 @@ var prevCtrlPoint;
  * @type {(path: XastElement) => PathDataItem[]}
  */
 export const path2js = (path) => {
-  // @ts-ignore legacy
+  // @ts-expect-error legacy
   if (path.pathJS) return path.pathJS;
   /**
    * @type {PathDataItem[]}
@@ -30,7 +30,7 @@ export const path2js = (path) => {
   if (pathData.length && pathData[0].command == 'm') {
     pathData[0].command = 'M';
   }
-  // @ts-ignore legacy
+  // @ts-expect-error legacy
   path.pathJS = pathData;
   return pathData;
 };
@@ -179,7 +179,7 @@ const convertRelativeToAbsolute = (data) => {
  * @type {(path: XastElement, data: PathDataItem[], params: Js2PathParams) => void}
  */
 export const js2path = function (path, data, params) {
-  // @ts-ignore legacy
+  // @ts-expect-error legacy
   path.pathJS = data;
 
   const pathData = [];
@@ -565,7 +565,7 @@ function gatherPoints(pathData) {
       case 'A':
         if (basePoint != null) {
           // Convert the arc to Bézier curves and use the same approximation
-          // @ts-ignore no idea what's going on here
+          // @ts-expect-error no idea what's going on here
           var curves = a2c.apply(0, basePoint.concat(data));
           for (
             var cData;

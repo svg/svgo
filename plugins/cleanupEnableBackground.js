@@ -111,7 +111,7 @@ export const fn = (root) => {
             enableBackgroundDeclaration
           ) {
             const styleValue = csstree.generate(
-              // @ts-ignore
+              // @ts-expect-error
               enableBackgroundDeclaration.data.value,
             );
             const styleCleaned = cleanupValue(
@@ -122,7 +122,7 @@ export const fn = (root) => {
             );
 
             if (styleCleaned) {
-              // @ts-ignore
+              // @ts-expect-error
               enableBackgroundDeclaration.data.value = {
                 type: 'Raw',
                 value: styleCleaned,
