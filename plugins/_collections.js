@@ -2397,7 +2397,7 @@ export const pseudoClasses = {
     'disabled',
     'enabled',
     'in-range',
-    'indetermined',
+    'indeterminate',
     'invalid',
     'optional',
     'out-of-range',

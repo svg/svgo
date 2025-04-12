@@ -564,7 +564,7 @@ function gatherPoints(pathData) {
 
       case 'A':
         if (basePoint != null) {
-          // Convert the arc to bezier curves and use the same approximation
+          // Convert the arc to Bézier curves and use the same approximation
           // @ts-ignore no idea what's going on here
           var curves = a2c.apply(0, basePoint.concat(data));
           for (

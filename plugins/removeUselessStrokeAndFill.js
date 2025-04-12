@@ -20,7 +20,7 @@ export const fn = (root, params) => {
     removeNone = false,
   } = params;
 
-  // style and script elements deoptimise this plugin
+  // style and script elements deoptimize this plugin
   let hasStyleOrScript = false;
   visit(root, {
     element: {
@@ -40,7 +40,7 @@ export const fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // id attribute deoptimise the whole subtree
+        // id attribute deoptimize the whole subtree
         if (node.attributes.id != null) {
           return visitSkip;
         }

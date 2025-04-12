@@ -67,7 +67,7 @@ export declare const builtinPlugins: Array<
 >;
 
 export type Config = {
-  /** Can be used by plugins, for example prefixids */
+  /** Can be used by plugins, for example prefixIds */
   path?: string;
   /** Pass over SVGs multiple times to ensure all optimizations are applied. */
   multipass?: boolean;

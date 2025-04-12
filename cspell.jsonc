@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "words": [
+    "Bézier",
+    "crosspoint",
+    "deoptimizations",
+    "deoptimize",
+    "deoptimized",
+    "fontawesome",
+    "Fontello",
+    "Fonticons",
+    "frontends",
+    "inlines",
+    "opencollective",
+    "subpoint",
+    "subselector",
+    "xast",
+    "Xlink",
+    // Abbreviations
+    "elems", // elements
+    "unenc", // unencoded
+    // SVG Keywords
+    "currentcolor",
+    // SVG Nodes / Attributes and CSS Properties, including plurals
+    "bbox",
+    "hkern",
+    "horiz",
+    "hrefs",
+    "mpath",
+    "onbegin",
+    "onrepeat",
+    "panose",
+    "stemh",
+    "stemv",
+    "vkern",
+    // Software
+    "grunt-svgmin",
+    "Inkscape",
+    "SVGOMG",
+    // NPM Packages
+    "csstree",
+    "csswhat",
+    // Names
+    "André",
+    "Baranovskiy",
+    "Dmitry",
+    "Keerthi",
+  ],
+  "ignorePaths": ["*.svg.txt", "*.svg", "cspell.jsonc", "LICENSE"],
+  "ignoreRegExpList": [
+    "-moz", // Mozilla Firefox CSS prefix
+    "'.+?.svg',", // path to file with .svg extension
+    "(?:xlink|sodipodi)(?::[a-z]+)?", // Common SVG namespaces
+    "[a-z]+: '#[a-f\\d]+',", // Color names in _collection.js
+    "[a-z]+…", // Words that have been cut off by an ellipsis
+    "@author .+", // JSDoc author tag line, usually names
+    "\"name\": .+", // package.json author name property
+    "\\*\\*SVG O\\*\\*ptimizer", // README
+    "\\b[aprs]data\\b",
+    "&.+?;", // HTML entity
+    "^svgo .+", // Command-line example of SVGO
+    "<svg.+>", // Inline SVG in code
+    "Atrule", // At-rule
+    "data:image/.+", // Data URI
+    "datauri", // Data URI
+    "descs", // Abbreviation of "descriptions"
+    "ENOCLS|ENOATTRS",
+    "id=([\"']).+?\\1", // ID attribute of inline SVG
+    "import .+", // Import statements in Javascript
+    "newres",
+    "nums", // Abbreviation of "numbers"
+    "onwarn", // Rollup API,
+    "QRAB|QRCD",
+    "rrggbb",
+    "sax\\..+", // Any properties of the sax API
+    "shorthex", // Parameter of convertColors plugin
+  ],
+}

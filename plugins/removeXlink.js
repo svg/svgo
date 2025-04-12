@@ -54,7 +54,7 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  * Removes XLink namespace prefixes and converts references to XLink attributes
  * to the native SVG equivalent.
  *
- * The XLink namespace is deprecated in SVG 2.
+ * XLink namespace is deprecated in SVG 2.
  *
  * @type {import('./plugins-types.js').Plugin<'removeXlink'>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
