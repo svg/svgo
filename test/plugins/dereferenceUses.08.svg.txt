@@ -1,0 +1,13 @@
+Does not break when there are actually no <use/> elements at all.
+
+===
+
+<svg viewBox="0 0 30 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <circle id="myCircle" cx="5" cy="5" r="4" x="5" />
+</svg>
+
+@@@
+
+<svg viewBox="0 0 30 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <circle id="myCircle" cx="5" cy="5" r="4" x="5"/>
+</svg>
