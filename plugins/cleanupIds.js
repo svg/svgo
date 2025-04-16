@@ -147,6 +147,37 @@ export const fn = (_root, params) => {
   const referencesById = new Map();
   let deoptimized = false;
 
+  function generateIdMap() {
+    /**
+     * @param {string} id
+     * @returns {boolean}
+     */
+    const isIdPreserved = (id) =>
+      preserveIds.has(id) || hasStringPrefix(id, preserveIdPrefixes);
+    const idMap = new Map();
+    let currentId = null;
+    for (const [id] of referencesById) {
+      const node = nodeById.get(id);
+      if (node != null) {
+        // replace referenced IDs with the minified ones
+        if (minify && isIdPreserved(id) === false) {
+          /** @type {?string} */
+          let currentIdString = null;
+          do {
+            currentId = generateId(currentId);
+            currentIdString = getIdString(currentId);
+          } while (
+            isIdPreserved(currentIdString) ||
+            (referencesById.has(currentIdString) &&
+              nodeById.get(currentIdString) == null)
+          );
+          idMap.set(id, currentIdString);
+        }
+      }
+    }
+    return idMap;
+  }
+
   return {
     element: {
       enter: (node) => {
@@ -210,43 +241,64 @@ export const fn = (_root, params) => {
          */
         const isIdPreserved = (id) =>
           preserveIds.has(id) || hasStringPrefix(id, preserveIdPrefixes);
-        /** @type {?number[]} */
-        let currentId = null;
+
+        const idMap = generateIdMap();
+        const elementssWithStylesUpdated = new Set();
+
         for (const [id, refs] of referencesById) {
-          const node = nodeById.get(id);
-          if (node != null) {
-            // replace referenced IDs with the minified ones
-            if (minify && isIdPreserved(id) === false) {
-              /** @type {?string} */
-              let currentIdString = null;
-              do {
-                currentId = generateId(currentId);
-                currentIdString = getIdString(currentId);
-              } while (
-                isIdPreserved(currentIdString) ||
-                (referencesById.has(currentIdString) &&
-                  nodeById.get(currentIdString) == null)
-              );
-              node.attributes.id = currentIdString;
-              for (const { element, name } of refs) {
-                const value = element.attributes[name];
-                if (value.includes('#')) {
-                  // replace id in href and url()
-                  element.attributes[name] = value
-                    .replace(`#${encodeURI(id)}`, `#${currentIdString}`)
-                    .replace(`#${id}`, `#${currentIdString}`);
-                } else {
-                  // replace id in begin attribute
-                  element.attributes[name] = value.replace(
-                    `${id}.`,
-                    `${currentIdString}.`,
-                  );
-                }
-              }
-            }
-            // keep referenced node
-            nodeById.delete(id);
+          // Ignore the node if no new ID was generated for it.
+          if (!idMap.has(id)) {
+            continue;
           }
+          const node = nodeById.get(id);
+          if (!node) {
+            continue;
+          }
+
+          // replace referenced IDs with the minified ones
+          const currentIdString = idMap.get(id);
+          node.attributes.id = currentIdString;
+
+          for (const { element, name } of refs) {
+            const value = element.attributes[name];
+            if (value.includes('#')) {
+              if (name === 'style') {
+                if (!elementssWithStylesUpdated.has(element)) {
+                  // The style may have more than one ID; all must be replaced at once to eliminate the possibility of overlap.
+                  const styles = value.split(';');
+                  for (let index = 0; index < styles.length; index++) {
+                    const style = styles[index];
+                    const refs = findReferences('style', style);
+                    if (refs.length) {
+                      const id = refs[0];
+                      const newId = idMap.get(id);
+                      if (newId) {
+                        styles[index] = style
+                          .replace(`#${encodeURI(id)}`, `#${newId}`)
+                          .replace(`#${id}`, `#${newId}`);
+                      }
+                    }
+                  }
+                  element.attributes[name] = styles.join(';');
+                  elementssWithStylesUpdated.add(element);
+                }
+              } else {
+                // replace id in href and url()
+                element.attributes[name] = value
+                  .replace(`#${encodeURI(id)}`, `#${currentIdString}`)
+                  .replace(`#${id}`, `#${currentIdString}`);
+              }
+            } else {
+              // replace id in begin attribute
+              element.attributes[name] = value.replace(
+                `${id}.`,
+                `${currentIdString}.`,
+              );
+            }
+          }
+
+          // keep referenced node
+          nodeById.delete(id);
         }
         // remove non-referenced IDs attributes from elements
         if (remove) {
