@@ -39,6 +39,7 @@ const preservedPseudos = [
  */
 export const fn = (root, params) => {
   const {
+    disableIfAtRulesPresent = true,
     onlyMatchedOnce = true,
     removeMatchedSelectors = true,
     useMqs = ['', 'screen'],
@@ -58,11 +59,12 @@ export const fn = (root, params) => {
    * }[]}
    */
   let selectors = [];
+  let deoptimized = false;
 
   return {
     element: {
       enter: (node, parentNode) => {
-        if (node.name === 'foreignObject') {
+        if (deoptimized || node.name === 'foreignObject') {
           return visitSkip;
         }
         if (node.name !== 'style' || node.children.length === 0) {
@@ -103,14 +105,18 @@ export const fn = (root, params) => {
             const atrule = this.atrule;
 
             // skip media queries not included into useMqs param
-            let mediaQuery = '';
+            let atRuleText = '';
             if (atrule != null) {
-              mediaQuery = atrule.name;
+              atRuleText = atrule.name;
               if (atrule.prelude != null) {
-                mediaQuery += ` ${csstree.generate(atrule.prelude)}`;
+                atRuleText += ` ${csstree.generate(atrule.prelude)}`;
               }
             }
-            if (!useMqs.includes(mediaQuery)) {
+            if (disableIfAtRulesPresent && atRuleText !== '') {
+              deoptimized = true;
+              return;
+            }
+            if (!useMqs.includes(atRuleText)) {
               return;
             }
 
@@ -167,7 +173,7 @@ export const fn = (root, params) => {
 
     root: {
       exit: () => {
-        if (styles.length === 0) {
+        if (deoptimized || styles.length === 0) {
           return;
         }
         const sortedSelectors = selectors
