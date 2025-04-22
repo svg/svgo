@@ -141,6 +141,11 @@ type DefaultPlugins = {
 
   moveElemsAttrsToGroup: void;
   moveGroupAttrsToElems: void;
+  optimizePathOrder: {
+    floatPrecision?: number;
+    noSpaceAfterFlags?: boolean;
+    polylineOnly?: boolean;
+  };
   removeComments: {
     preservePatterns: Array<RegExp | string> | false;
   };
