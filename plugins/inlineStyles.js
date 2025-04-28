@@ -78,7 +78,6 @@ export const fn = (root, params) => {
 
         const cssText = node.children
           .filter((child) => child.type === 'text' || child.type === 'cdata')
-          // @ts-expect-error
           .map((child) => child.value)
           .join('');
 
@@ -368,7 +367,6 @@ export const fn = (root, params) => {
             },
           });
 
-          // csstree v2 changed this type
           if (style.cssAst.children.isEmpty) {
             // remove empty style element
             detachNodeFromParent(style.node, style.parentNode);

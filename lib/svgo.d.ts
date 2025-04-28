@@ -33,7 +33,7 @@ export type PluginConfig =
     }[keyof BuiltinsWithRequiredParams]
   | CustomPlugin;
 
-type BuiltinPlugin<Name, Params> = {
+export type BuiltinPlugin<Name, Params> = {
   /** Name of the plugin, also known as the plugin ID. */
   name: Name;
   description?: string;

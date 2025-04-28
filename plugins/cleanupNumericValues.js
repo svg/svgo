@@ -60,13 +60,9 @@ export const fn = (_root, params) => {
           if (match) {
             // round it to the fixed precision
             let num = Number(Number(match[1]).toFixed(floatPrecision));
-            /**
-             * @type {any}
-             */
+            /** @type {any} */
             let matchedUnit = match[3] || '';
-            /**
-             * @type{'' | keyof typeof absoluteLengths}
-             */
+            /** @type {'' | keyof typeof absoluteLengths} */
             let units = matchedUnit;
 
             // convert absolute values to pixels

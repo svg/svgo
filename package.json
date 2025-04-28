@@ -116,6 +116,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
+    "@jest/globals": "^29.7.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
@@ -135,7 +136,7 @@
     "rimraf": "^5.0.7",
     "rollup": "^4.17.2",
     "tar-stream": "^3.1.7",
-    "typescript": "^5.4.5"
+    "typescript": "^5.8.3"
   },
   "resolutions": {
     "sax@^1.4.1": "patch:sax@npm%3A1.4.1#./.yarn/patches/sax-npm-1.4.1-503b1923cb.patch"

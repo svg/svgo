@@ -1,6 +1,6 @@
-import { Config } from './svgo';
+import type { Config } from './svgo.js';
 
-export * from './svgo';
+export * from './svgo.js';
 
 /**
  * If you write a tool on top of svgo you might need a way to load svgo config.
