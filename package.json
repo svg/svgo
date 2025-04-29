@@ -117,7 +117,7 @@
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "@jest/globals": "^29.7.0",
-    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-commonjs": "^26.0.3",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@types/css-tree": "^2.3.7",
