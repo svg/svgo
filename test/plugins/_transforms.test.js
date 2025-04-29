@@ -1,7 +1,7 @@
 import { matrixToTransform } from '../../plugins/_transforms.js';
 
 /**
- * @typedef {import('../../plugins/_transforms').TransformParams} TransformParams
+ * @typedef {import('../../plugins/_transforms.js').TransformParams} TransformParams
  */
 
 /** @type {TransformParams} */

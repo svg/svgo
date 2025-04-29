@@ -200,8 +200,13 @@ const extractTarGz = async (url, baseDir) => {
     stream.resume();
     next();
   });
-  const response = await fetch(url);
-  await pipeline(response.body, zlib.createGunzip(), extract);
+  const { body } = await fetch(url);
+
+  if (!body) {
+    throw Error('No body returned when fetching SVGO Test Suite.');
+  }
+
+  await pipeline(body, zlib.createGunzip(), extract);
 };
 
 (async () => {

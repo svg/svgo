@@ -41,7 +41,13 @@ export default [
       format: 'cjs',
       exports: 'named',
     },
-    external: ['os', 'fs', 'url', 'path', ...Object.keys(PKG.dependencies)],
+    external: [
+      'os',
+      'fs/promises',
+      'url',
+      'path',
+      ...Object.keys(PKG.dependencies),
+    ],
     onwarn(warning) {
       throw Error(warning.toString());
     },
