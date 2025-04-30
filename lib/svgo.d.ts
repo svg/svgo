@@ -1,10 +1,4 @@
-import type {
-  StringifyOptions,
-  DataUri,
-  Plugin,
-  XastChild,
-  XastNode,
-} from './types.js';
+import type { StringifyOptions, DataUri, Plugin } from './types.js';
 import type {
   BuiltinsWithOptionalParams,
   BuiltinsWithRequiredParams,
@@ -168,22 +162,4 @@ export declare const VERSION: string;
 /** The core of SVGO */
 export declare function optimize(input: string, config?: Config): Output;
 
-/**
- * @param node Element to query the children of.
- * @param selector CSS selector string.
- * @returns First match, or null if there was no match.
- */
-export declare function querySelector(
-  node: XastNode,
-  selector: string,
-): XastChild | null;
-
-/**
- * @param node Element to query the children of.
- * @param selector CSS selector string.
- * @returns All matching elements.
- */
-export declare function querySelectorAll(
-  node: XastNode,
-  selector: string,
-): XastChild[];
+export { querySelector, querySelectorAll } from './xast.js';
