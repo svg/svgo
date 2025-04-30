@@ -253,10 +253,18 @@ export const intersects = function (path1, path2) {
 
   // Check intersection of every subpath of the first path with every subpath of the second.
   return hullNest1.some(function (hull1) {
-    if (hull1.list.length < 3) return false;
+    if (hull1.list.length < 3) {
+      // When there are only two points in the convex hull, add the first point to close the polygon.
+      // This can happen when the path is only a line.
+      hull1.list.push(hull1.list[0]);
+    }
 
     return hullNest2.some(function (hull2) {
-      if (hull2.list.length < 3) return false;
+      if (hull2.list.length < 3) {
+        // When there are only two points in the convex hull, add the first point to close the polygon.
+        // This can happen when the path is only a line.
+        hull2.list.push(hull2.list[0]);
+      }
 
       var simplex = [getSupport(hull1, hull2, [1, 0])], // create the initial simplex
         direction = minus(simplex[0]); // set the direction to point towards the origin
