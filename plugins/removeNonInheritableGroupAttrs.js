@@ -13,7 +13,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeNonInheritableGroupAttrs'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

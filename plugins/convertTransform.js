@@ -10,6 +10,20 @@ import {
  * @typedef {import('../lib/types.js').XastChild} XastChild
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastParent} XastParent
+ *
+ * @typedef ConvertTransformParams
+ * @property {boolean=} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number=} floatPrecision
+ * @property {number=} transformPrecision
+ * @property {boolean=} matrixToTransform
+ * @property {boolean=} shortTranslate
+ * @property {boolean=} shortScale
+ * @property {boolean=} shortRotate
+ * @property {boolean=} removeUseless
+ * @property {boolean=} collapseIntoOne
+ * @property {boolean=} leadingZero
+ * @property {boolean=} negativeExtraSpace
  */
 
 export const name = 'convertTransform';
@@ -26,7 +40,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'convertTransform'>}
+ * @type {import('../lib/types.js').Plugin<ConvertTransformParams>}
  */
 export const fn = (_root, params) => {
   const {

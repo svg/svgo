@@ -183,7 +183,7 @@ const getDecompositions = (matrix) => {
 
 /**
  * @param {TransformItem} matrix
- * @returns {TransformItem[]|undefined}
+ * @returns {TransformItem[] | undefined}
  * @see {@link https://frederic-wang.fr/2013/12/01/decomposition-of-2d-transform-matrices/} Where applicable, variables are named in accordance with this document.
  */
 const decomposeQRAB = (matrix) => {
@@ -238,7 +238,7 @@ const decomposeQRAB = (matrix) => {
 
 /**
  * @param {TransformItem} matrix
- * @returns {TransformItem[]|undefined}
+ * @returns {TransformItem[] | undefined}
  * @see {@link https://frederic-wang.fr/2013/12/01/decomposition-of-2d-transform-matrices/} Where applicable, variables are named in accordance with this document.
  */
 const decomposeQRCD = (matrix) => {

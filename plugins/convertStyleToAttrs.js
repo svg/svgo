@@ -1,5 +1,10 @@
 import { attrsGroups } from './_collections.js';
 
+/**
+ * @typedef ConvertStyleToAttrsParams
+ * @property {boolean=} keepImportant
+ */
+
 export const name = 'convertStyleToAttrs';
 export const description = 'converts style to attributes';
 
@@ -70,7 +75,7 @@ const regStripComments = new RegExp(
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'convertStyleToAttrs'>}
+ * @type {import('../lib/types.js').Plugin<ConvertStyleToAttrsParams>}
  */
 export const fn = (_root, params) => {
   const { keepImportant = false } = params;

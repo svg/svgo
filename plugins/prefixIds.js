@@ -4,6 +4,12 @@ import { referencesProps } from './_collections.js';
 /**
  * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
  * @typedef {import('../lib/types.js').XastElement} XastElement
+ *
+ * @typedef PrefixIdsParams
+ * @property {boolean | string | ((node: XastElement, info: PluginInfo) => string)=} prefix
+ * @property {string=} delim
+ * @property {boolean=} prefixIds
+ * @property {boolean=} prefixClassNames
  */
 
 export const name = 'prefixIds';
@@ -79,7 +85,7 @@ const prefixReference = (prefixGenerator, reference) => {
  * @param {string} body An arbitrary string.
  * @param {XastElement} node XML node that the identifier belongs to.
  * @param {PluginInfo} info
- * @param {((node: XastElement, info: PluginInfo) => string)|string|boolean|undefined} prefixGenerator Some way of obtaining a prefix.
+ * @param {((node: XastElement, info: PluginInfo) => string) | string | boolean | undefined} prefixGenerator Some way of obtaining a prefix.
  * @param {string} delim Content to insert between the prefix and original value.
  * @param {Map<string, string>} history Map of previously generated prefixes to IDs.
  * @returns {string} A generated prefix.
@@ -116,7 +122,7 @@ const generatePrefix = (body, node, info, prefixGenerator, delim, history) => {
  * Prefixes identifiers
  *
  * @author strarsis <strarsis@gmail.com>
- * @type {import('./plugins-types.js').Plugin<'prefixIds'>}
+ * @type {import('../lib/types.js').Plugin<PrefixIdsParams>}
  */
 export const fn = (_root, params, info) => {
   const {

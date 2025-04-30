@@ -15,7 +15,7 @@ export const description =
  *
  * @author JoshyPHP
  *
- * @type {import('./plugins-types.js').Plugin<'removeOffCanvasPaths'>}
+ * @type {import('../lib/types.js').Plugin<'removeOffCanvasPaths'>}
  */
 export const fn = () => {
   /**

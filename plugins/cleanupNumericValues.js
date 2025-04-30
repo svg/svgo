@@ -1,5 +1,13 @@
 import { removeLeadingZero } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef CleanupNumericValuesParams
+ * @property {number=} floatPrecision
+ * @property {boolean=} leadingZero
+ * @property {boolean=} defaultPx
+ * @property {boolean=} convertToPx
+ */
+
 export const name = 'cleanupNumericValues';
 export const description =
   'rounds numeric values to the fixed precision, removes default ‘px’ units';
@@ -23,7 +31,7 @@ const absoluteLengths = {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'cleanupNumericValues'>}
+ * @type {import('../lib/types.js').Plugin<CleanupNumericValuesParams>}
  */
 export const fn = (_root, params) => {
   const {

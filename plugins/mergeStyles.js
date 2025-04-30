@@ -13,7 +13,7 @@ export const description = 'merge multiple style elements into one';
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('./plugins-types.js').Plugin<'mergeStyles'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   /**

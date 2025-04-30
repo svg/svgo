@@ -17,7 +17,7 @@ const regEnableBackground =
  *             ⬇
  * <svg width="100" height="50">
  * @author Kir Belevich
- * @type {import('./plugins-types.js').Plugin<'cleanupEnableBackground'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   let hasFilter = false;

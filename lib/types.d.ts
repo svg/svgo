@@ -105,9 +105,9 @@ export type PluginInfo = {
   multipassCount: number;
 };
 
-export type Plugin<Params> = (
+export type Plugin<P = null> = (
   root: XastRoot,
-  params: Params,
+  params: P,
   info: PluginInfo,
 ) => Visitor | null | void;
 

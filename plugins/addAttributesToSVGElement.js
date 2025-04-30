@@ -1,3 +1,9 @@
+/**
+ * @typedef AddAttributesToSVGElementParams
+ * @property {string | Record<string, null | string>=} attribute
+ * @property {Array<string | Record<string, null | string>>=} attributes
+ */
+
 export const name = 'addAttributesToSVGElement';
 export const description = 'adds attributes to an outer <svg> element';
 
@@ -45,7 +51,7 @@ plugins: [
  *
  * @author April Arcus
  *
- * @type {import('./plugins-types.js').Plugin<'addAttributesToSVGElement'>}
+ * @type {import('../lib/types.js').Plugin<AddAttributesToSVGElementParams>}
  */
 export const fn = (root, params) => {
   if (!Array.isArray(params.attributes) && !params.attribute) {

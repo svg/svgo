@@ -1,6 +1,16 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef ConvertColorsParams
+ * @property {boolean | string | RegExp=} currentColor
+ * @property {boolean=} names2hex
+ * @property {boolean=} rgb2hex
+ * @property {false | 'lower' | 'upper'=} convertCase
+ * @property {boolean=} shorthex
+ * @property {boolean=} shortname
+ */
+
 export const name = 'convertColors';
 export const description =
   'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
@@ -61,7 +71,7 @@ const convertRgbToHex = ([r, g, b]) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'convertColors'>}
+ * @type {import('../lib/types.js').Plugin<ConvertColorsParams>}
  */
 export const fn = (_root, params) => {
   const {

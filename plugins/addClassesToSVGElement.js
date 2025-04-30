@@ -1,3 +1,12 @@
+/**
+ * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ *
+ * @typedef AddClassesToSVGElementParams
+ * @property {string | ((node: XastElement, info: PluginInfo) => string)=} className
+ * @property {Array<string | ((node: XastElement, info: PluginInfo) => string)>=} classNames
+ */
+
 export const name = 'addClassesToSVGElement';
 export const description = 'adds classnames to an outer <svg> element';
 
@@ -47,7 +56,7 @@ plugins: [
  *
  * @author April Arcus
  *
- * @type {import('./plugins-types.js').Plugin<'addClassesToSVGElement'>}
+ * @type {import('../lib/types.js').Plugin<AddClassesToSVGElementParams>}
  */
 export const fn = (root, params, info) => {
   if (
