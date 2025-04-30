@@ -1,11 +1,30 @@
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- */
-
 import * as csso from 'csso';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { hasScripts } from '../lib/svgo/tools.js';
+
+/**
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ *
+ * @typedef Usage
+ * @property {boolean=} force
+ * @property {boolean=} ids
+ * @property {boolean=} classes
+ * @property {boolean=} tags
+ *
+ * @typedef MinifyStylesParams
+ * @property {boolean=} restructure Disable or enable a structure optimizations.
+ * @property {boolean=} forceMediaMerge
+ *   Enables merging of `@media` rules with the same media query split by other
+ *   rules. Unsafe in general, but should work fine in most cases. Use it on
+ *   your own risk.
+ * @property {'exclamation' | 'first-exclamation' | boolean=} comments
+ *   Specify what comments to leave:
+ *   - `'exclamation'` or `true` — leave all exclamation comments
+ *   - `'first-exclamation'` — remove every comment except first one
+ *   - `false` — remove all comments
+ * @property {boolean | Usage=} usage Advanced optimizations.
+ */
 
 export const name = 'minifyStyles';
 export const description = 'minifies styles and removes unused styles';
@@ -14,7 +33,7 @@ export const description = 'minifies styles and removes unused styles';
  * Minifies styles (<style> element + style attribute) using CSSO.
  *
  * @author strarsis <strarsis@gmail.com>
- * @type {import('./plugins-types.js').Plugin<'minifyStyles'>}
+ * @type {import('../lib/types.js').Plugin<MinifyStylesParams>}
  */
 export const fn = (_root, { usage, ...params }) => {
   /** @type {Map<XastElement, XastParent>} */

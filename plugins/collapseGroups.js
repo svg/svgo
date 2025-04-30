@@ -49,7 +49,7 @@ const hasAnimatedAttr = (node, name) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'collapseGroups'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);

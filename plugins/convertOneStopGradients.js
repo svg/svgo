@@ -19,7 +19,7 @@ export const description =
  * Converts one-stop (single color) gradients to a plain color.
  *
  * @author Seth Falco <seth@falco.fun>
- * @type {import('./plugins-types.js').Plugin<'convertOneStopGradients'>}
+ * @type {import('../lib/types.js').Plugin}
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/linearGradient
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/radialGradient
  */

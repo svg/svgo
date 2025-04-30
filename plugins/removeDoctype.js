@@ -25,7 +25,7 @@ export const description = 'removes doctype declaration';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeDoctype'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

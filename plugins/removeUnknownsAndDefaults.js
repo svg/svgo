@@ -8,6 +8,21 @@ import {
 import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
+/**
+ * @typedef RemoveUnknownsAndDefaultsParams
+ * @property {boolean=} unknownContent
+ * @property {boolean=} unknownAttrs
+ * @property {boolean=} defaultAttrs
+ * @property {boolean=} defaultMarkupDeclarations
+ *   If to remove XML declarations that are assigned their default value. XML
+ *   declarations are the properties in the `<?xml … ?>` block at the top of the
+ *   document.
+ * @property {boolean=} uselessOverrides
+ * @property {boolean=} keepDataAttrs
+ * @property {boolean=} keepAriaAttrs
+ * @property {boolean=} keepRoleAttr
+ */
+
 export const name = 'removeUnknownsAndDefaults';
 export const description =
   'removes unknown elements content and attributes, removes attrs with default values';
@@ -90,7 +105,7 @@ for (const [name, config] of Object.entries(elems)) {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeUnknownsAndDefaults'>}
+ * @type {import('../lib/types.js').Plugin<RemoveUnknownsAndDefaultsParams>}
  */
 export const fn = (root, params) => {
   const {

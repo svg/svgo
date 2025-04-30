@@ -19,7 +19,7 @@ export const description =
  *
  * @author Jacob Howcroft
  *
- * @type {import('./plugins-types.js').Plugin<'reusePaths'>}
+ * @type {import('../lib/types.js').Plugin<'reusePaths'>}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);

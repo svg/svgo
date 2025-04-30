@@ -1,9 +1,3 @@
-/**
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- */
-
 import { elemsGroups } from './_collections.js';
 import {
   visit,
@@ -14,6 +8,29 @@ import {
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { parsePathData } from '../lib/path.js';
 import { hasScripts, findReferences } from '../lib/svgo/tools.js';
+
+/**
+ * @typedef {import('../lib/types.js').XastChild} XastChild
+ * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef {import('../lib/types.js').XastParent} XastParent
+ *
+ * @typedef RemoveHiddenElemsParams
+ * @property {boolean=} isHidden
+ * @property {boolean=} displayNone
+ * @property {boolean=} opacity0
+ * @property {boolean=} circleR0
+ * @property {boolean=} ellipseRX0
+ * @property {boolean=} ellipseRY0
+ * @property {boolean=} rectWidth0
+ * @property {boolean=} rectHeight0
+ * @property {boolean=} patternWidth0
+ * @property {boolean=} patternHeight0
+ * @property {boolean=} imageWidth0
+ * @property {boolean=} imageHeight0
+ * @property {boolean=} pathEmptyD
+ * @property {boolean=} polylineEmptyPoints
+ * @property {boolean=} polygonEmptyPoints
+ */
 
 const nonRendering = elemsGroups.nonRendering;
 
@@ -36,7 +53,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeHiddenElems'>}
+ * @type {import('../lib/types.js').Plugin<RemoveHiddenElemsParams>}
  */
 export const fn = (root, params) => {
   const {

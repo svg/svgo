@@ -3,6 +3,13 @@ import { hasScripts, findReferences } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {import('../lib/types.js').XastElement} XastElement
+ *
+ * @typedef CleanupIdsParams
+ * @property {boolean=} remove
+ * @property {boolean=} minify
+ * @property {string[]=} preserve
+ * @property {string[]=} preservePrefixes
+ * @property {boolean=} force
  */
 
 export const name = 'cleanupIds';
@@ -119,7 +126,7 @@ const getIdString = (arr) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'cleanupIds'>}
+ * @type {import('../lib/types.js').Plugin<CleanupIdsParams>}
  */
 export const fn = (_root, params) => {
   const {

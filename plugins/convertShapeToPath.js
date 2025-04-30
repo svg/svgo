@@ -3,6 +3,10 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 /**
  * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
+ *
+ * @typedef ConvertShapeToPathParams
+ * @property {boolean=} convertArcs
+ * @property {number=} floatPrecision
  */
 
 export const name = 'convertShapeToPath';
@@ -19,7 +23,7 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types.js').Plugin<'convertShapeToPath'>}
+ * @type {import('../lib/types.js').Plugin<ConvertShapeToPathParams>}
  */
 export const fn = (root, params) => {
   const { convertArcs = false, floatPrecision: precision } = params;

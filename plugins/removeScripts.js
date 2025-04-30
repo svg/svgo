@@ -19,7 +19,7 @@ const eventAttrs = [
  * https://www.w3.org/TR/SVG11/script.html
  *
  * @author Patrick Klingemann
- * @type {import('./plugins-types.js').Plugin<'removeScripts'>}
+ * @type {import('../lib/types.js').Plugin<'removeScripts'>}
  */
 export const fn = () => {
   return {

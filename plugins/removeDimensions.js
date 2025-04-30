@@ -12,7 +12,7 @@ export const description =
  *
  * @author Benny Schudel
  *
- * @type {import('./plugins-types.js').Plugin<'removeDimensions'>}
+ * @type {import('../lib/types.js').Plugin<'removeDimensions'>}
  */
 export const fn = () => {
   return {

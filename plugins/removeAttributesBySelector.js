@@ -71,7 +71,7 @@ export const description =
  *
  * @author Bradley Mease
  *
- * @type {import('./plugins-types.js').Plugin<'removeAttributesBySelector'>}
+ * @type {import('../lib/types.js').Plugin<any>}
  */
 export const fn = (root, params) => {
   const selectors = Array.isArray(params.selectors)

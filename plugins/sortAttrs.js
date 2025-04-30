@@ -1,3 +1,9 @@
+/**
+ * @typedef SortAttrsParams
+ * @property {string[]=} order
+ * @property {'front' | 'alphabetical'=} xmlnsOrder
+ */
+
 export const name = 'sortAttrs';
 export const description = 'Sort element attributes for better compression';
 
@@ -6,7 +12,7 @@ export const description = 'Sort element attributes for better compression';
  *
  * @author Nikolay Frantsev
  *
- * @type {import('./plugins-types.js').Plugin<'sortAttrs'>}
+ * @type {import('../lib/types.js').Plugin<SortAttrsParams>}
  */
 export const fn = (_root, params) => {
   const {

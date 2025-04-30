@@ -12,7 +12,7 @@ export const description =
  *
  * @author Ricardo Tomasi
  *
- * @type {import('./plugins-types.js').Plugin<'removeXMLNS'>}
+ * @type {import('../lib/types.js').Plugin<'removeXMLNS'>}
  */
 export const fn = () => {
   return {

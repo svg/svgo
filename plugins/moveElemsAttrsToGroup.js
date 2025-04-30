@@ -25,7 +25,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'moveElemsAttrsToGroup'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   // find if any style element is present

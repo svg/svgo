@@ -13,7 +13,7 @@ export const description = 'removes elements in <defs> without id';
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types.js').Plugin<'removeUselessDefs'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

@@ -7,7 +7,7 @@ export const description = 'removes unused namespaces declaration';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeUnusedNS'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   /**

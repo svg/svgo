@@ -18,7 +18,7 @@ export const description = 'removes empty container elements';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeEmptyContainers'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);

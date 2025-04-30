@@ -10,7 +10,7 @@ export const description = 'removes raster images (disabled by default)';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeRasterImages'>}
+ * @type {import('../lib/types.js').Plugin<'removeRasterImages'>}
  */
 export const fn = () => {
   return {

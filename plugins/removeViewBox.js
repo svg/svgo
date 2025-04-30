@@ -15,7 +15,7 @@ const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeViewBox'>}
+ * @type {import('../lib/types.js').Plugin<'removeViewBox'>}
  */
 export const fn = () => {
   return {

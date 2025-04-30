@@ -7,6 +7,38 @@ import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
+ *
+ * @typedef {[number, number]} Point
+ *
+ * @typedef Circle
+ * @property {Point} center
+ * @property {number} radius
+ *
+ * @typedef MakeArcs
+ * @property {number} threshold
+ * @property {number} tolerance
+ *
+ * @typedef ConvertPathDataParams
+ * @property {boolean=} applyTransforms
+ * @property {boolean=} applyTransformsStroked
+ * @property {MakeArcs=} makeArcs
+ * @property {boolean=} straightCurves
+ * @property {boolean=} convertToQ
+ * @property {boolean=} lineShorthands
+ * @property {boolean=} convertToZ
+ * @property {boolean=} curveSmoothShorthands
+ * @property {number | false=} floatPrecision
+ * @property {number=} transformPrecision
+ * @property {boolean=} smartArcRounding
+ * @property {boolean=} removeUseless
+ * @property {boolean=} collapseRepeated
+ * @property {boolean=} utilizeAbsolute
+ * @property {boolean=} leadingZero
+ * @property {boolean=} negativeExtraSpace
+ * @property {boolean=} noSpaceAfterFlags
+ * @property {boolean=} forceAbsolutePath
+ *
+ * @typedef {Required<ConvertPathDataParams>} InternalParams
  */
 
 export const name = 'convertPathData';
@@ -25,43 +57,6 @@ let arcThreshold;
 let arcTolerance;
 
 /**
- * @typedef {{
- *   applyTransforms: boolean,
- *   applyTransformsStroked: boolean,
- *   makeArcs: {
- *     threshold: number,
- *     tolerance: number,
- *   },
- *   straightCurves: boolean,
- *   convertToQ: boolean,
- *   lineShorthands: boolean,
- *   convertToZ: boolean,
- *   curveSmoothShorthands: boolean,
- *   floatPrecision: number | false,
- *   transformPrecision: number,
- *   smartArcRounding: boolean,
- *   removeUseless: boolean,
- *   collapseRepeated: boolean,
- *   utilizeAbsolute: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- *   noSpaceAfterFlags: boolean,
- *   forceAbsolutePath: boolean,
- * }} InternalParams
- */
-
-/**
- * @typedef {[number, number]} Point
- */
-
-/**
- * @typedef {{
- *   center: Point,
- *   radius: number
- * }} Circle
- */
-
-/**
  * Convert absolute Path to relative,
  * collapse repeated instructions,
  * detect and convert Lineto shorthands,
@@ -73,7 +68,7 @@ let arcTolerance;
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'convertPathData'>}
+ * @type {import('../lib/types.js').Plugin<ConvertPathDataParams>}
  */
 export const fn = (root, params) => {
   const {

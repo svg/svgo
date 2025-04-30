@@ -1,5 +1,10 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef RemoveDescParams
+ * @property {boolean=} removeAny
+ */
+
 export const name = 'removeDesc';
 export const description = 'removes <desc>';
 
@@ -14,7 +19,7 @@ const standardDescs = /^(Created with|Created using)/;
  * @author Daniel Wabyick
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/desc
  *
- * @type {import('./plugins-types.js').Plugin<'removeDesc'>}
+ * @type {import('../lib/types.js').Plugin<RemoveDescParams>}
  */
 export const fn = (root, params) => {
   const { removeAny = false } = params;

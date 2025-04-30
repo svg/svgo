@@ -1,5 +1,13 @@
 import { removeLeadingZero } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef CleanupListOfValuesParams
+ * @property {number=} floatPrecision
+ * @property {boolean=} leadingZero
+ * @property {boolean=} defaultPx
+ * @property {boolean=} convertToPx
+ */
+
 export const name = 'cleanupListOfValues';
 export const description = 'rounds list of values to the fixed precision';
 
@@ -30,7 +38,7 @@ const absoluteLengths = {
  *
  * @author kiyopikko
  *
- * @type {import('./plugins-types.js').Plugin<'cleanupListOfValues'>}
+ * @type {import('../lib/types.js').Plugin<CleanupListOfValuesParams>}
  */
 export const fn = (_root, params) => {
   const {
@@ -57,7 +65,7 @@ export const fn = (_root, params) => {
         /** @type {any} */
         let matchedUnit = match[3] || '';
         /**
-         * @type{'' | keyof typeof absoluteLengths}
+         * @type {'' | keyof typeof absoluteLengths}
          */
         let units = matchedUnit;
 

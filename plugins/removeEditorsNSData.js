@@ -1,6 +1,11 @@
 import { editorNamespaces } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef RemoveEditorsNSDataParams
+ * @property {string[]=} additionalNamespaces
+ */
+
 export const name = 'removeEditorsNSData';
 export const description =
   'removes editors namespaces, elements and attributes';
@@ -15,7 +20,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeEditorsNSData'>}
+ * @type {import('../lib/types.js').Plugin<RemoveEditorsNSDataParams>}
  */
 export const fn = (_root, params) => {
   let namespaces = [...editorNamespaces];

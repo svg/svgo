@@ -11,6 +11,17 @@ import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 /**
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastParent} XastParent
+ *
+ * @typedef InlineStylesParams
+ * @property {boolean=} onlyMatchedOnce Inlines selectors that match once only.
+ * @property {boolean=} removeMatchedSelectors
+ *   Clean up matched selectors. Unused selects are left as-is.
+ * @property {string[]=} useMqs
+ *   Media queries to use. An empty string indicates all selectors outside of
+ *   media queries.
+ * @property {string[]=} usePseudos
+ *   Pseudo-classes and elements to use. An empty string indicates all
+ *   non-pseudo-classes and elements.
  */
 
 export const name = 'inlineStyles';
@@ -34,7 +45,7 @@ const preservedPseudos = [
 /**
  * Merges styles from style nodes into inline styles.
  *
- * @type {import('./plugins-types.js').Plugin<'inlineStyles'>}
+ * @type {import('../lib/types.js').Plugin<InlineStylesParams>}
  * @author strarsis <strarsis@gmail.com>
  */
 export const fn = (root, params) => {

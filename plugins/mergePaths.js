@@ -1,3 +1,7 @@
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { path2js, js2path, intersects } from './_path.js';
+import { includesUrlReference } from '../lib/svgo/tools.js';
+
 /**
  * @typedef {import('../lib/types.js').ComputedStyles} ComputedStyles
  * @typedef {import('../lib/types.js').StaticStyle} StaticStyle
@@ -5,11 +9,12 @@
  * @typedef {import("../lib/types.js").PathDataItem} PathDataItem
  * @typedef {import('../lib/types.js').XastChild} XastChild
  * @typedef {import('../lib/types.js').XastElement} XastElement
+ *
+ * @typedef MergePathsParams
+ * @property {boolean=} force
+ * @property {number=} floatPrecision
+ * @property {boolean=} noSpaceAfterFlags
  */
-
-import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { path2js, js2path, intersects } from './_path.js';
-import { includesUrlReference } from '../lib/svgo/tools.js';
 
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
@@ -34,7 +39,7 @@ function elementHasUrl(computedStyle, attName) {
  *
  * @author Kir Belevich, Lev Solntsev
  *
- * @type {import('./plugins-types.js').Plugin<'mergePaths'>}
+ * @type {import('../lib/types.js').Plugin<MergePathsParams>}
  */
 export const fn = (root, params) => {
   const {
