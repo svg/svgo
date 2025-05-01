@@ -162,4 +162,4 @@ export declare const VERSION: string;
 /** The core of SVGO */
 export declare function optimize(input: string, config?: Config): Output;
 
-export { querySelector, querySelectorAll } from './xast.js';
+export { mapNodesToParents, querySelector, querySelectorAll } from './xast.js';

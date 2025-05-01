@@ -129,13 +129,6 @@ export const fn = (root) => {
           // replace current node with all its children
           const index = parentNode.children.indexOf(node);
           parentNode.children.splice(index, 1, ...node.children);
-          // TODO remove legacy parentNode in v4
-          for (const child of node.children) {
-            Object.defineProperty(child, 'parentNode', {
-              writable: true,
-              value: parentNode,
-            });
-          }
         }
       },
     },

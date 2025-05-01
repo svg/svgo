@@ -32,13 +32,6 @@ export const fn = () => {
           if (usefulNodes.length === 0) {
             detachNodeFromParent(node, parentNode);
           }
-          // TODO remove legacy parentNode in v4
-          for (const usefulNode of usefulNodes) {
-            Object.defineProperty(usefulNode, 'parentNode', {
-              writable: true,
-              value: node,
-            });
-          }
           node.children = usefulNodes;
         }
       },

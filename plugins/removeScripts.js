@@ -55,14 +55,6 @@ export const fn = () => {
               (child) => child.type !== 'text',
             );
             parentNode.children.splice(index, 1, ...usefulChildren);
-
-            // TODO remove legacy parentNode in v4
-            for (const child of node.children) {
-              Object.defineProperty(child, 'parentNode', {
-                writable: true,
-                value: parentNode,
-              });
-            }
           }
         }
       },
