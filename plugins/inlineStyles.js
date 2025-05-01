@@ -57,7 +57,11 @@ export const fn = (root, params) => {
   } = params;
 
   /**
-   * @type {{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }[]}
+   * @type {{
+   *   node: XastElement,
+   *   parentNode: XastParent,
+   *   cssAst: csstree.StyleSheet
+   * }[]}
    */
   const styles = [];
   /**

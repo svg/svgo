@@ -10,7 +10,8 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * @type {(proc: ChildProcessWithoutNullStreams) => Promise<string>}
+ * @param {ChildProcessWithoutNullStreams} proc
+ * @returns {Promise<string>}
  */
 const waitStdout = (proc) => {
   return new Promise((resolve) => {
@@ -21,7 +22,8 @@ const waitStdout = (proc) => {
 };
 
 /**
- * @type {(proc: ChildProcessWithoutNullStreams) => Promise<void>}
+ * @param {ChildProcessWithoutNullStreams} proc
+ * @returns {Promise<void>}
  */
 const waitClose = (proc) => {
   return new Promise((resolve) => {

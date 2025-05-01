@@ -7,6 +7,7 @@ import {
 import { computeStyle, collectStylesheet } from '../lib/style.js';
 
 /**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastParent} XastParent
  */
@@ -19,7 +20,7 @@ export const description =
  * Converts one-stop (single color) gradients to a plain color.
  *
  * @author Seth Falco <seth@falco.fun>
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/linearGradient
  * @see https://developer.mozilla.org/docs/Web/SVG/Element/radialGradient
  */
@@ -33,14 +34,10 @@ export const fn = (root) => {
    */
   const effectedDefs = new Set();
 
-  /**
-   * @type {Map<XastElement, XastParent>}
-   */
+  /** @type {Map<XastElement, XastParent>} */
   const allDefs = new Map();
 
-  /**
-   * @type {Map<XastElement, XastParent>}
-   */
+  /** @type {Map<XastElement, XastParent>} */
   const gradientsToDetach = new Map();
 
   /** Number of references to the xlink:href attribute. */

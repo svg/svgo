@@ -90,17 +90,13 @@ export const fn = (root, params) => {
    */
   const removedDefIds = new Set();
 
-  /**
-   * @type {Map<XastElement, XastParent>}
-   */
+  /** @type {Map<XastElement, XastParent>} */
   const allDefs = new Map();
 
   /** @type {Set<string>} */
   const allReferences = new Set();
 
-  /**
-   * @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>}
-   */
+  /** @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>} */
   const referencesById = new Map();
 
   /**

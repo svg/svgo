@@ -49,7 +49,8 @@ export const fn = (_root, params) => {
   } = params;
 
   /**
-   * @type {(lists: string) => string}
+   * @param {string} lists
+   * @returns {string}
    */
   const roundValues = (lists) => {
     const roundedList = [];
@@ -64,9 +65,7 @@ export const fn = (_root, params) => {
         let num = Number(Number(match[1]).toFixed(floatPrecision));
         /** @type {any} */
         let matchedUnit = match[3] || '';
-        /**
-         * @type {'' | keyof typeof absoluteLengths}
-         */
+        /** @type {'' | keyof typeof absoluteLengths} */
         let units = matchedUnit;
 
         // convert absolute values to pixels

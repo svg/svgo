@@ -2,6 +2,7 @@ import { computeStyle, collectStylesheet } from '../lib/style.js';
 import { inheritableAttrs, elemsGroups } from './_collections.js';
 
 /**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastNode} XastNode
  */
@@ -10,7 +11,9 @@ export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
 
 /**
- * @type {(node: XastNode, name: string) => boolean}
+ * @param {XastNode} node
+ * @param {string} name
+ * @returns {boolean}
  */
 const hasAnimatedAttr = (node, name) => {
   if (node.type === 'element') {
@@ -49,7 +52,7 @@ const hasAnimatedAttr = (node, name) => {
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);

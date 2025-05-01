@@ -9,7 +9,8 @@ export const name = 'convertStyleToAttrs';
 export const description = 'converts style to attributes';
 
 /**
- * @type {(...args: string[]) => string}
+ * @param {...string} args
+ * @returns {string}
  */
 const g = (...args) => {
   return '(?:' + args.join('|') + ')';
@@ -85,9 +86,7 @@ export const fn = (_root, params) => {
         if (node.attributes.style != null) {
           // ['opacity: 1', 'color: #000']
           let styles = [];
-          /**
-           * @type {Record<string, string>}
-           */
+          /** @type {Record<string, string>} */
           const newAttributes = {};
 
           // Strip CSS comments preserving escape sequences and strings.

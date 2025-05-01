@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'convertEllipseToCircle';
 export const description = 'converts non-eccentric <ellipse>s to <circle>s';
 
@@ -8,7 +12,7 @@ export const description = 'converts non-eccentric <ellipse>s to <circle>s';
  *
  * @author Taylor Hunt
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {

@@ -1,21 +1,24 @@
 import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {{ name: string, data: number[] }} TransformItem
- * @typedef {{
- *   convertToShorts: boolean,
- *   degPrecision?: number,
- *   floatPrecision: number,
- *   transformPrecision: number,
- *   matrixToTransform: boolean,
- *   shortTranslate: boolean,
- *   shortScale: boolean,
- *   shortRotate: boolean,
- *   removeUseless: boolean,
- *   collapseIntoOne: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- * }} TransformParams
+ * @typedef TransformItem
+ * @property {string} name
+ * @property {number[]} data
+ *
+ * @typedef TransformParams
+ * @property {boolean} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number} floatPrecision
+ * @property {number} transformPrecision
+ * @property {boolean} matrixToTransform
+ * @property {boolean} shortTranslate
+ * @property {boolean} shortScale
+ * @property {boolean} shortRotate
+ * @property {boolean} removeUseless
+ * @property {boolean} collapseIntoOne
+ * @property {boolean} leadingZero
+ * @property {boolean} negativeExtraSpace
+ *
  */
 
 const transformTypes = new Set([
@@ -488,7 +491,8 @@ export const matrixToTransform = (origMatrix, params) => {
 /**
  * Convert transform to the matrix data.
  *
- * @type {(transform: TransformItem) => number[] }
+ * @param {TransformItem} transform
+ * @returns {number[]}
  */
 const transformToMatrix = (transform) => {
   if (transform.name === 'matrix') {
@@ -534,16 +538,16 @@ const transformToMatrix = (transform) => {
 };
 
 /**
- * Applies transformation to an arc. To do so, we represent ellipse as a matrix, multiply it
- * by the transformation matrix and use a singular value decomposition to represent in a form
- * rotate(θ)·scale(a b)·rotate(φ). This gives us new ellipse params a, b and θ.
- * SVD is being done with the formulae provided by Wolfram|Alpha (svd {{m0, m2}, {m1, m3}})
+ * Applies transformation to an arc. To do so, we represent ellipse as a matrix,
+ * multiply it by the transformation matrix and use a singular value
+ * decomposition to represent in a form rotate(θ)·scale(a b)·rotate(φ). This
+ * gives us new ellipse params a, b and θ. SVD is being done with the formulae
+ * provided by Wolfram|Alpha (svd {{m0, m2}, {m1, m3}})
  *
- * @type {(
- *   cursor: [x: number, y: number],
- *   arc: number[],
- *   transform: number[]
- * ) => number[]}
+ * @param {[number, number]} cursor
+ * @param {number[]} arc
+ * @param {number[]} transform
+ * @returns {number[]}
  */
 export const transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
@@ -604,7 +608,9 @@ export const transformArc = (cursor, arc, transform) => {
 /**
  * Multiply transformation matrices.
  *
- * @type {(a: number[], b: number[]) => number[]}
+ * @param {number[]} a
+ * @param {number[]} b
+ * @returns {number[]}
  */
 const multiplyTransformMatrices = (a, b) => {
   return [
@@ -618,7 +624,9 @@ const multiplyTransformMatrices = (a, b) => {
 };
 
 /**
- * @type {(transform: TransformItem, params: TransformParams) => TransformItem}
+ * @param {TransformItem} transform
+ * @param {TransformParams} params
+ * @returns {TransformItem}
  */
 export const roundTransform = (transform, params) => {
   switch (transform.name) {
@@ -649,7 +657,9 @@ export const roundTransform = (transform, params) => {
 };
 
 /**
- * @type {(data: number[], params: TransformParams) => number[]}
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
  */
 const degRound = (data, params) => {
   if (
@@ -664,7 +674,9 @@ const degRound = (data, params) => {
 };
 
 /**
- * @type {(data: number[], params: TransformParams) => number[]}
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
  */
 const floatRound = (data, params) => {
   if (params.floatPrecision >= 1 && params.floatPrecision < 20) {
@@ -675,7 +687,9 @@ const floatRound = (data, params) => {
 };
 
 /**
- * @type {(data: number[], params: TransformParams) => number[]}
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
  */
 const transformRound = (data, params) => {
   if (params.transformPrecision >= 1 && params.floatPrecision < 20) {
@@ -688,16 +702,16 @@ const transformRound = (data, params) => {
 /**
  * Rounds numbers in array.
  *
- * @type {(data: number[]) => number[]}
+ * @param {number[]} data
+ * @returns {number[]}
  */
 const round = (data) => {
   return data.map(Math.round);
 };
 
 /**
- * Decrease accuracy of floating-point numbers
- * in transforms keeping a specified number of decimals.
- * Smart rounds values like 2.349 to 2.35.
+ * Decrease accuracy of floating-point numbers in transforms keeping a specified
+ * number of decimals. Smart rounds values like 2.349 to 2.35.
  *
  * @param {number} precision
  * @param {number[]} data

@@ -1,6 +1,7 @@
 import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 
 /**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastChild} XastChild
  */
@@ -13,17 +14,13 @@ export const description = 'merge multiple style elements into one';
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = () => {
-  /**
-   * @type {?XastElement}
-   */
+  /** @type {?XastElement} */
   let firstStyleElement = null;
   let collectedStyles = '';
-  /**
-   * @type {'text' | 'cdata'}
-   */
+  /** @type {'text' | 'cdata'} */
   let styleContentType = 'text';
 
   return {
@@ -79,9 +76,7 @@ export const fn = () => {
           firstStyleElement = node;
         } else {
           detachNodeFromParent(node, parentNode);
-          /**
-           * @type {XastChild}
-           */
+          /** @type {XastChild} */
           const child = { type: styleContentType, value: collectedStyles };
           firstStyleElement.children = [child];
         }

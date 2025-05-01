@@ -1,10 +1,11 @@
-/**
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- */
-
 import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
 import { parsePathData } from '../lib/path.js';
 import { intersects } from './_path.js';
+
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
+ */
 
 export const name = 'removeOffCanvasPaths';
 export const description =
@@ -15,7 +16,7 @@ export const description =
  *
  * @author JoshyPHP
  *
- * @type {import('../lib/types.js').Plugin<'removeOffCanvasPaths'>}
+ * @type {Plugin}
  */
 export const fn = () => {
   /**
@@ -113,9 +114,7 @@ export const fn = () => {
           }
 
           const { left, top, width, height } = viewBoxData;
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {PathDataItem[]} */
           const viewBoxPathData = [
             { command: 'M', args: [left, top] },
             { command: 'h', args: [width] },

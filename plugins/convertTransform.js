@@ -24,6 +24,24 @@ import {
  * @property {boolean=} collapseIntoOne
  * @property {boolean=} leadingZero
  * @property {boolean=} negativeExtraSpace
+ *
+ * @typedef TransformParams
+ * @property {boolean} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number} floatPrecision
+ * @property {number} transformPrecision
+ * @property {boolean} matrixToTransform
+ * @property {boolean} shortTranslate
+ * @property {boolean} shortScale
+ * @property {boolean} shortRotate
+ * @property {boolean} removeUseless
+ * @property {boolean} collapseIntoOne
+ * @property {boolean} leadingZero
+ * @property {boolean} negativeExtraSpace
+ *
+ * @typedef TransformItem
+ * @property {string} name
+ * @property {number[]} data
  */
 
 export const name = 'convertTransform';
@@ -92,27 +110,6 @@ export const fn = (_root, params) => {
 };
 
 /**
- * @typedef {{
- *   convertToShorts: boolean,
- *   degPrecision?: number,
- *   floatPrecision: number,
- *   transformPrecision: number,
- *   matrixToTransform: boolean,
- *   shortTranslate: boolean,
- *   shortScale: boolean,
- *   shortRotate: boolean,
- *   removeUseless: boolean,
- *   collapseIntoOne: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- * }} TransformParams
- */
-
-/**
- * @typedef {{ name: string, data: number[] }} TransformItem
- */
-
-/**
  * @param {XastElement} item
  * @param {string} attrName
  * @param {TransformParams} params
@@ -144,14 +141,17 @@ const convertTransform = (item, attrName, params) => {
 
 /**
  * Defines precision to work with certain parts.
- * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
- * floatPrecision - for translate including two last matrix and rotate parameters,
- * degPrecision - for rotate and skew. By default it's equal to (roughly)
- * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
  *
- * @type {(data: TransformItem[], params: TransformParams) => TransformParams}
+ * - `transformPrecision` - for scale and four first matrix parameters (needs a better precision due to multiplying).
+ * - `floatPrecision` - for translate including two last matrix and rotate parameters.
+ * - `degPrecision` - for rotate and skew. By default it's equal to (roughly).
+ * - `transformPrecision` - 2 or floatPrecision whichever is lower. Can be set in params.
  *
- * clone params so it don't affect other elements transformations.
+ * Clone parameters so that it doesn't affect other element transformations.
+ *
+ * @param {TransformItem[]} data
+ * @param {TransformParams} param1
+ * @returns {TransformParams}
  */
 const definePrecision = (data, { ...newParams }) => {
   const matrixData = [];
@@ -186,9 +186,11 @@ const definePrecision = (data, { ...newParams }) => {
 };
 
 /**
- * Returns number of digits after the point. 0.125 → 3
+ * Returns number of digits after the point.
  *
- * @type {(n: number) => number}
+ * @example 0.125 → 3
+ * @param {number} n
+ * @returns {number}
  */
 const floatDigits = (n) => {
   const str = n.toString();
@@ -274,7 +276,8 @@ const convertToShorts = (transforms, params) => {
 /**
  * Remove useless transforms.
  *
- * @type {(transforms: TransformItem[]) => TransformItem[]}
+ * @param {TransformItem[]} transforms
+ * @returns {TransformItem[]}
  */
 const removeUseless = (transforms) => {
   return transforms.filter((transform) => {

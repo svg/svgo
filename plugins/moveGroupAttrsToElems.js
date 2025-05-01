@@ -1,6 +1,10 @@
 import { pathElems, referencesProps } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'moveGroupAttrsToElems';
 export const description =
   'moves some group attributes to the content elements';
@@ -23,7 +27,7 @@ const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {
