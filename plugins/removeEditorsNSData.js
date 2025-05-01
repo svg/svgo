@@ -27,9 +27,7 @@ export const fn = (_root, params) => {
   if (Array.isArray(params.additionalNamespaces)) {
     namespaces = [...editorNamespaces, ...params.additionalNamespaces];
   }
-  /**
-   * @type {string[]}
-   */
+  /** @type {string[]} */
   const prefixes = [];
   return {
     element: {

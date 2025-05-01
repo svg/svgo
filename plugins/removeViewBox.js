@@ -1,6 +1,10 @@
 export const name = 'removeViewBox';
 export const description = 'removes viewBox attribute when possible';
 
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
 
 /**
@@ -15,7 +19,7 @@ const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types.js').Plugin<'removeViewBox'>}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {

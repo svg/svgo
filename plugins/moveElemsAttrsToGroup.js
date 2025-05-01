@@ -1,6 +1,10 @@
 import { visit } from '../lib/xast.js';
 import { inheritableAttrs, pathElems } from './_collections.js';
 
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'moveElemsAttrsToGroup';
 export const description =
   'Move common attributes of group children to the group';
@@ -25,7 +29,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = (root) => {
   // find if any style element is present
@@ -55,7 +59,8 @@ export const fn = (root) => {
         }
 
         /**
-         * find common attributes in group children
+         * Find common attributes in group children.
+         *
          * @type {Map<string, string>}
          */
         const commonAttributes = new Map();

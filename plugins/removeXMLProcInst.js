@@ -1,5 +1,9 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'removeXMLProcInst';
 export const description = 'removes XML processing instructions';
 
@@ -11,7 +15,7 @@ export const description = 'removes XML processing instructions';
  *
  * @author Kir Belevich
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {

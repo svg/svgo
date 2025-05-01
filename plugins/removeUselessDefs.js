@@ -2,6 +2,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 import { elemsGroups } from './_collections.js';
 
 /**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
  * @typedef {import('../lib/types.js').XastElement} XastElement
  */
 
@@ -13,7 +14,7 @@ export const description = 'removes elements in <defs> without id';
  *
  * @author Lev Solntsev
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {
@@ -24,9 +25,7 @@ export const fn = () => {
           (elemsGroups.nonRendering.has(node.name) &&
             node.attributes.id == null)
         ) {
-          /**
-           * @type {XastElement[]}
-           */
+          /** @type {XastElement[]} */
           const usefulNodes = [];
           collectUsefulNodes(node, usefulNodes);
           if (usefulNodes.length === 0) {
@@ -40,7 +39,8 @@ export const fn = () => {
 };
 
 /**
- * @type {(node: XastElement, usefulNodes: XastElement[]) => void}
+ * @param {XastElement} node
+ * @param {XastElement[]} usefulNodes
  */
 const collectUsefulNodes = (node, usefulNodes) => {
   for (const child of node.children) {

@@ -1,22 +1,25 @@
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'sortDefsChildren';
 export const description = 'Sorts children of <defs> to improve compression';
 
 /**
- * Sorts children of defs in order to improve compression.
- * Sorted first by frequency then by element name length then by element name (to ensure grouping).
+ * Sorts children of defs in order to improve compression. Sorted first by
+ * frequency then by element name length then by element name (to ensure
+ * grouping).
  *
  * @author David Leston
  *
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {
     element: {
       enter: (node) => {
         if (node.name === 'defs') {
-          /**
-           * @type {Map<string, number>}
-           */
+          /** @type {Map<string, number>} */
           const frequencies = new Map();
           for (const child of node.children) {
             if (child.type === 'element') {

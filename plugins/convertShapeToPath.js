@@ -47,9 +47,7 @@ export const fn = (root, params) => {
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
           if (Number.isNaN(x - y + width - height)) return;
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [x, y] },
             { command: 'H', args: [x + width] },
@@ -72,9 +70,7 @@ export const fn = (root, params) => {
           const x2 = Number(node.attributes.x2 || '0');
           const y2 = Number(node.attributes.y2 || '0');
           if (Number.isNaN(x1 - y1 + x2 - y2)) return;
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [x1, y1] },
             { command: 'L', args: [x2, y2] },
@@ -99,9 +95,7 @@ export const fn = (root, params) => {
             detachNodeFromParent(node, parentNode);
             return;
           }
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {PathDataItem[]} */
           const pathData = [];
           for (let i = 0; i < coords.length; i += 2) {
             pathData.push({
@@ -125,9 +119,7 @@ export const fn = (root, params) => {
           if (Number.isNaN(cx - cy + r)) {
             return;
           }
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [cx, cy - r] },
             { command: 'A', args: [r, r, 0, 1, 0, cx, cy + r] },
@@ -150,9 +142,7 @@ export const fn = (root, params) => {
           if (Number.isNaN(ecx - ecy + rx - ry)) {
             return;
           }
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [ecx, ecy - ry] },
             { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy + ry] },

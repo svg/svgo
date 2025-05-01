@@ -16,8 +16,10 @@ export const name = 'prefixIds';
 export const description = 'prefix IDs';
 
 /**
- * extract basename from path
- * @type {(path: string) => string}
+ * Extract basename from path.
+ *
+ * @param {string} path
+ * @returns {string}
  */
 const getBasename = (path) => {
   // extract everything after latest slash or backslash
@@ -29,15 +31,18 @@ const getBasename = (path) => {
 };
 
 /**
- * escapes a string for being used as ID
- * @type {(string: string) => string}
+ * Escapes a string for being used as ID.
+ *
+ * @param {string} str
+ * @returns {string}
  */
 const escapeIdentifierName = (str) => {
   return str.replace(/[. ]/g, '_');
 };
 
 /**
- * @type {(string: string) => string}
+ * @param {string} string
+ * @returns {string}
  */
 const unquote = (string) => {
   if (

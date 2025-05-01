@@ -29,23 +29,15 @@ export const description =
 
 // resolve all groups references
 
-/**
- * @type {Map<string, Set<string>>}
- */
+/** @type {Map<string, Set<string>>} */
 const allowedChildrenPerElement = new Map();
-/**
- * @type {Map<string, Set<string>>}
- */
+/** @type {Map<string, Set<string>>} */
 const allowedAttributesPerElement = new Map();
-/**
- * @type {Map<string, Map<string, string>>}
- */
+/** @type {Map<string, Map<string, string>>} */
 const attributesDefaultsPerElement = new Map();
 
 for (const [name, config] of Object.entries(elems)) {
-  /**
-   * @type {Set<string>}
-   */
+  /** @type {Set<string>} */
   const allowedChildren = new Set();
   if (config.content) {
     for (const elementName of config.content) {
@@ -62,18 +54,14 @@ for (const [name, config] of Object.entries(elems)) {
       }
     }
   }
-  /**
-   * @type {Set<string>}
-   */
+  /** @type {Set<string>} */
   const allowedAttributes = new Set();
   if (config.attrs) {
     for (const attrName of config.attrs) {
       allowedAttributes.add(attrName);
     }
   }
-  /**
-   * @type {Map<string, string>}
-   */
+  /** @type {Map<string, string>} */
   const attributesDefaults = new Map();
   if (config.defaults) {
     for (const [attrName, defaultValue] of Object.entries(config.defaults)) {

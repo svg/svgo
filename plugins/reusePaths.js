@@ -2,6 +2,7 @@ import { collectStylesheet } from '../lib/style.js';
 import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
 
 /**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
  * @typedef {import('../lib/types.js').XastElement} XastElement
  * @typedef {import('../lib/types.js').XastParent} XastParent
  * @typedef {import('../lib/types.js').XastNode} XastNode
@@ -19,14 +20,12 @@ export const description =
  *
  * @author Jacob Howcroft
  *
- * @type {import('../lib/types.js').Plugin<'reusePaths'>}
+ * @type {Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
-  /**
-   * @type {Map<string, XastElement[]>}
-   */
+  /** @type {Map<string, XastElement[]>} */
   const paths = new Map();
 
   /**

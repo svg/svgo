@@ -1,5 +1,9 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'removeTitle';
 export const description = 'removes <title>';
 
@@ -10,7 +14,7 @@ export const description = 'removes <title>';
  *
  * @author Igor Kalashnikov
  *
- * @type {import('../lib/types.js').Plugin<'removeTitle'>}
+ * @type {Plugin}
  */
 export const fn = () => {
   return {

@@ -1,6 +1,10 @@
 import * as csstree from 'css-tree';
 import { visit } from '../lib/xast.js';
 
+/**
+ * @typedef {import('../lib/types.js').Plugin} Plugin
+ */
+
 export const name = 'cleanupEnableBackground';
 export const description =
   'remove or cleanup enable-background attribute when possible';
@@ -17,7 +21,7 @@ const regEnableBackground =
  *             ⬇
  * <svg width="100" height="50">
  * @author Kir Belevich
- * @type {import('../lib/types.js').Plugin}
+ * @type {Plugin}
  */
 export const fn = (root) => {
   let hasFilter = false;
