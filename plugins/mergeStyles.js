@@ -83,11 +83,6 @@ export const fn = () => {
            * @type {XastChild}
            */
           const child = { type: styleContentType, value: collectedStyles };
-          // TODO remove legacy parentNode in v4
-          Object.defineProperty(child, 'parentNode', {
-            writable: true,
-            value: firstStyleElement,
-          });
           firstStyleElement.children = [child];
         }
       },

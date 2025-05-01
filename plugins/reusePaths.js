@@ -92,11 +92,6 @@ export const fn = (root) => {
               attributes: {},
               children: [],
             };
-            // TODO remove legacy parentNode in v4
-            Object.defineProperty(defsTag, 'parentNode', {
-              writable: true,
-              value: node,
-            });
           }
 
           let index = 0;
@@ -129,11 +124,6 @@ export const fn = (root) => {
                 reusablePath.attributes.id = originalId;
                 delete list[0].attributes.id;
               }
-              // TODO remove legacy parentNode in v4
-              Object.defineProperty(reusablePath, 'parentNode', {
-                writable: true,
-                value: defsTag,
-              });
               defsTag.children.push(reusablePath);
               // convert paths to <use>
               for (const pathNode of list) {
