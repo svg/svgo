@@ -1,13 +1,13 @@
 import { path2js } from './_path.js';
 import {
-  transformsMultiply,
   transform2js,
   transformArc,
+  transformsMultiply,
 } from './_transforms.js';
-import { referencesProps, attrsGroupsDefaults } from './_collections.js';
+import { attrsGroupsDefaults, referencesProps } from './_collections.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-import { removeLeadingZero, includesUrlReference } from '../lib/svgo/tools.js';
+import { includesUrlReference, removeLeadingZero } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {import('../lib/types.js').PathDataItem} PathDataItem

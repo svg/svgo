@@ -7,7 +7,7 @@
 export const name = 'addAttributesToSVGElement';
 export const description = 'adds attributes to an outer <svg> element';
 
-var ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
+const ENOCLS = `Error in plugin "addAttributesToSVGElement": absent parameters.
 It should have a list of "attributes" or one "attribute".
 Config example:
 

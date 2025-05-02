@@ -46,7 +46,9 @@ export const fn = (root, params) => {
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
-          if (Number.isNaN(x - y + width - height)) return;
+          if (Number.isNaN(x - y + width - height)) {
+            return;
+          }
           /** @type {PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [x, y] },
@@ -69,7 +71,9 @@ export const fn = (root, params) => {
           const y1 = Number(node.attributes.y1 || '0');
           const x2 = Number(node.attributes.x2 || '0');
           const y2 = Number(node.attributes.y2 || '0');
-          if (Number.isNaN(x1 - y1 + x2 - y2)) return;
+          if (Number.isNaN(x1 - y1 + x2 - y2)) {
+            return;
+          }
           /** @type {PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [x1, y1] },

@@ -121,9 +121,9 @@ export const fn = (_root, params) => {
 
             // convert rgb() to long hex
             if (rgb2hex) {
-              let match = val.match(regRGB);
+              const match = val.match(regRGB);
               if (match != null) {
-                let nums = match.slice(1, 4).map((m) => {
+                const nums = match.slice(1, 4).map((m) => {
                   let n;
                   if (m.indexOf('%') > -1) {
                     n = Math.round(parseFloat(m) * 2.55);
@@ -146,7 +146,7 @@ export const fn = (_root, params) => {
 
             // convert long hex to short hex
             if (shorthex) {
-              let match = regHEX.exec(val);
+              const match = regHEX.exec(val);
               if (match != null) {
                 val = '#' + match[0][1] + match[0][3] + match[0][5];
               }

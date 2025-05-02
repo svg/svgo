@@ -10,7 +10,7 @@ import { removeLeadingZero } from '../lib/svgo/tools.js';
 
 export const name = 'cleanupNumericValues';
 export const description =
-  'rounds numeric values to the fixed precision, removes default ‘px’ units';
+  'rounds numeric values to the fixed precision, removes default "px" units';
 
 const regNumericValues =
   /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
@@ -26,8 +26,7 @@ const absoluteLengths = {
 };
 
 /**
- * Round numeric values to the fixed precision,
- * remove default 'px' units.
+ * Round numeric values to the fixed precision, remove default 'px' units.
  *
  * @author Kir Belevich
  *
@@ -69,7 +68,7 @@ export const fn = (_root, params) => {
             // round it to the fixed precision
             let num = Number(Number(match[1]).toFixed(floatPrecision));
             /** @type {any} */
-            let matchedUnit = match[3] || '';
+            const matchedUnit = match[3] || '';
             /** @type {'' | keyof typeof absoluteLengths} */
             let units = matchedUnit;
 

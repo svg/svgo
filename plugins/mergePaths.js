@@ -1,5 +1,5 @@
 import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { path2js, js2path, intersects } from './_path.js';
+import { intersects, js2path, path2js } from './_path.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
 /**

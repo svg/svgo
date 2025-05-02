@@ -164,7 +164,7 @@ export const fn = (_root, params, info) => {
 
             const cssText = child.value;
             /** @type {?csstree.CssNode} */
-            let cssAst = null;
+            let cssAst;
             try {
               cssAst = csstree.parse(cssText, {
                 parseValue: true,

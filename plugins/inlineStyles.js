@@ -2,9 +2,9 @@ import * as csstree from 'css-tree';
 import { syntax } from 'csso';
 import { attrsGroups, pseudoClasses } from './_collections.js';
 import {
-  visitSkip,
-  querySelectorAll,
   detachNodeFromParent,
+  querySelectorAll,
+  visitSkip,
 } from '../lib/xast.js';
 import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 
@@ -72,7 +72,7 @@ export const fn = (root, params) => {
    *   matchedElements?: XastElement[]
    * }[]}
    */
-  let selectors = [];
+  const selectors = [];
 
   return {
     element: {

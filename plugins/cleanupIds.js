@@ -1,5 +1,5 @@
 import { visitSkip } from '../lib/xast.js';
-import { hasScripts, findReferences } from '../lib/svgo/tools.js';
+import { findReferences, hasScripts } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {import('../lib/types.js').XastElement} XastElement
@@ -224,7 +224,7 @@ export const fn = (_root, params) => {
             // replace referenced IDs with the minified ones
             if (minify && isIdPreserved(id) === false) {
               /** @type {?string} */
-              let currentIdString = null;
+              let currentIdString;
               do {
                 currentId = generateId(currentId);
                 currentIdString = getIdString(currentId);

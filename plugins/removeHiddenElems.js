@@ -1,13 +1,13 @@
 import { elemsGroups } from './_collections.js';
 import {
+  detachNodeFromParent,
+  querySelector,
   visit,
   visitSkip,
-  querySelector,
-  detachNodeFromParent,
 } from '../lib/xast.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { parsePathData } from '../lib/path.js';
-import { hasScripts, findReferences } from '../lib/svgo/tools.js';
+import { findReferences, hasScripts } from '../lib/svgo/tools.js';
 
 /**
  * @typedef {import('../lib/types.js').XastChild} XastChild
@@ -183,7 +183,9 @@ export const fn = (root, params) => {
 
         if (node.name === 'use') {
           for (const attr of Object.keys(node.attributes)) {
-            if (attr !== 'href' && !attr.endsWith(':href')) continue;
+            if (attr !== 'href' && !attr.endsWith(':href')) {
+              continue;
+            }
             const value = node.attributes[attr];
             const id = value.slice(1);
 

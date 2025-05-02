@@ -1,10 +1,10 @@
 import { attrsGroupsDefaults, colorsProps } from './_collections.js';
 import {
   detachNodeFromParent,
-  querySelectorAll,
   querySelector,
+  querySelectorAll,
 } from '../lib/xast.js';
-import { computeStyle, collectStylesheet } from '../lib/style.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
 
 /**
  * @typedef {import('../lib/types.js').Plugin} Plugin
@@ -64,7 +64,7 @@ export const fn = (root) => {
         });
 
         const href = node.attributes['xlink:href'] || node.attributes['href'];
-        let effectiveNode =
+        const effectiveNode =
           stops.length === 0 && href != null && href.startsWith('#')
             ? querySelector(root, href)
             : node;
