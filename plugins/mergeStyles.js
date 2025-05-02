@@ -1,4 +1,4 @@
-import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { detachNodeFromParent, visitSkip } from '../lib/xast.js';
 
 /**
  * @typedef {import('../lib/types.js').Plugin} Plugin

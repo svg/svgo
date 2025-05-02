@@ -110,7 +110,7 @@ describe('coa', function () {
       tempFolder,
       '--quiet',
     ]);
-    let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
+    const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
   });
 

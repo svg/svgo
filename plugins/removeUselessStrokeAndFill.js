@@ -1,4 +1,4 @@
-import { visit, visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { detachNodeFromParent, visit, visitSkip } from '../lib/xast.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 import { elemsGroups } from './_collections.js';

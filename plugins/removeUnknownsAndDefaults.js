@@ -1,11 +1,11 @@
 import {
-  elems,
   attrsGroups,
-  elemsGroups,
   attrsGroupsDefaults,
+  elems,
+  elemsGroups,
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
-import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { detachNodeFromParent, visitSkip } from '../lib/xast.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
 /**

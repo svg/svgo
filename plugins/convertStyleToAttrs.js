@@ -111,8 +111,8 @@ export const fn = (_root, params) => {
           if (styles.length) {
             styles = styles.filter(function (style) {
               if (style[0]) {
-                var prop = style[0].toLowerCase(),
-                  val = style[1];
+                const prop = style[0].toLowerCase();
+                let val = style[1];
 
                 if (rQuotedString.test(val)) {
                   val = val.slice(1, -1);

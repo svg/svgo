@@ -10,7 +10,7 @@
 export const name = 'addClassesToSVGElement';
 export const description = 'adds classnames to an outer <svg> element';
 
-var ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
+const ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
 It should have a list of classes in "classNames" or one "className".
 Config example:
 

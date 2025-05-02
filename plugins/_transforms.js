@@ -514,10 +514,10 @@ const transformToMatrix = (transform) => {
       ];
     case 'rotate':
       // [cos(a), sin(a), -sin(a), cos(a), x, y]
-      var cos = mth.cos(transform.data[0]),
-        sin = mth.sin(transform.data[0]),
-        cx = transform.data[1] || 0,
-        cy = transform.data[2] || 0;
+      var cos = mth.cos(transform.data[0]);
+      var sin = mth.sin(transform.data[0]);
+      var cx = transform.data[1] || 0;
+      var cy = transform.data[2] || 0;
       return [
         cos,
         sin,
@@ -719,13 +719,13 @@ const round = (data) => {
  */
 const smartRound = (precision, data) => {
   for (
-    var i = data.length,
+    let i = data.length,
       tolerance = +Math.pow(0.1, precision).toFixed(precision);
     i--;
 
   ) {
     if (toFixed(data[i], precision) !== data[i]) {
-      var rounded = +data[i].toFixed(precision - 1);
+      const rounded = +data[i].toFixed(precision - 1);
       data[i] =
         +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance
           ? +data[i].toFixed(precision)

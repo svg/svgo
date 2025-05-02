@@ -1,5 +1,5 @@
-import { computeStyle, collectStylesheet } from '../lib/style.js';
-import { inheritableAttrs, elemsGroups } from './_collections.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { elemsGroups, inheritableAttrs } from './_collections.js';
 
 /**
  * @typedef {import('../lib/types.js').Plugin} Plugin

@@ -1,6 +1,6 @@
 import {
-  inheritableAttrs,
   attrsGroups,
+  inheritableAttrs,
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
 
@@ -10,7 +10,7 @@ import {
 
 export const name = 'removeNonInheritableGroupAttrs';
 export const description =
-  'removes non-inheritable group’s presentational attributes';
+  "removes non-inheritable group's presentational attributes";
 
 /**
  * Remove non-inheritable group's "presentation" attributes.

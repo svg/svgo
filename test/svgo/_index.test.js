@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'path';
 import { EOL } from 'os';
 import { fileURLToPath } from 'url';
-import { VERSION, optimize, builtinPlugins } from '../../lib/svgo.js';
+import { VERSION, builtinPlugins, optimize } from '../../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

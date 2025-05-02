@@ -34,6 +34,8 @@ export default [
   {
     files: ['**/*.js', '**/*.mjs'],
     rules: {
+      'one-var': ['error', 'never'],
+      curly: 'error',
       strict: 'error',
     },
   },

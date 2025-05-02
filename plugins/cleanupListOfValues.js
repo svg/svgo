@@ -64,7 +64,7 @@ export const fn = (_root, params) => {
         // round it to the fixed precision
         let num = Number(Number(match[1]).toFixed(floatPrecision));
         /** @type {any} */
-        let matchedUnit = match[3] || '';
+        const matchedUnit = match[3] || '';
         /** @type {'' | keyof typeof absoluteLengths} */
         let units = matchedUnit;
 

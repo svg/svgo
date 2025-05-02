@@ -205,12 +205,12 @@ const floatDigits = (n) => {
  * @returns {TransformItem[]}
  */
 const convertToShorts = (transforms, params) => {
-  for (var i = 0; i < transforms.length; i++) {
+  for (let i = 0; i < transforms.length; i++) {
     let transform = transforms[i];
 
     // convert matrix to the short aliases
     if (params.matrixToTransform && transform.name === 'matrix') {
-      var decomposed = matrixToTransform(transform, params);
+      const decomposed = matrixToTransform(transform, params);
       if (
         js2transform(decomposed, params).length <=
         js2transform([transform], params).length
