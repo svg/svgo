@@ -93,8 +93,11 @@ export const fn = (root, params) => {
   /** @type {Map<XastElement, XastParent>} */
   const allDefs = new Map();
 
-  /** @type {Set<string>} */
-  const allReferences = new Set();
+  /** @type {Map<string,Set<XastElement>>} */
+  const allReferences = new Map();
+
+  /** @type {Map<XastElement,string[]>} */
+  const referencedIdsByNode = new Map();
 
   /** @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>} */
   const referencesById = new Map();
@@ -110,7 +113,8 @@ export const fn = (root, params) => {
    * @returns boolean
    */
   function canRemoveNonRenderingNode(node) {
-    if (allReferences.has(node.attributes.id)) {
+    const refs = allReferences.get(node.attributes.id);
+    if (refs && refs.size) {
       return false;
     }
     for (const child of node.children) {
@@ -119,6 +123,25 @@ export const fn = (root, params) => {
       }
     }
     return true;
+  }
+
+  /**
+   * Retrieve information about all IDs referenced by an element and its children.
+   * @param {XastElement} node
+   * @returns {XastElement[]}
+   */
+  function getNodesReferencedByBranch(node) {
+    const allIds = [];
+    const thisNodeIds = referencedIdsByNode.get(node);
+    if (thisNodeIds) {
+      allIds.push(node);
+    }
+    for (const child of node.children) {
+      if (child.type === 'element') {
+        allIds.push(...getNodesReferencedByBranch(child));
+      }
+    }
+    return allIds;
   }
 
   /**
@@ -425,12 +448,25 @@ export const fn = (root, params) => {
           return;
         }
 
+        const allIds = [];
         for (const [name, value] of Object.entries(node.attributes)) {
           const ids = findReferences(name, value);
 
+          // Record which other nodes are referenced by this node.
           for (const id of ids) {
-            allReferences.add(id);
+            allIds.push(id);
+            const refs = allReferences.get(id);
+            if (refs) {
+              refs.add(node);
+            } else {
+              allReferences.set(id, new Set([node]));
+            }
           }
+        }
+
+        // Record which ids are referenced by this node.
+        if (allIds.length) {
+          referencedIdsByNode.set(node, allIds);
         }
       },
     },
@@ -446,14 +482,39 @@ export const fn = (root, params) => {
         }
 
         if (!deoptimized) {
-          for (const [
-            nonRenderedNode,
-            nonRenderedParent,
-          ] of nonRenderedNodes.entries()) {
-            if (canRemoveNonRenderingNode(nonRenderedNode)) {
-              detachNodeFromParent(nonRenderedNode, nonRenderedParent);
+          let tryAgain;
+          do {
+            tryAgain = false;
+            for (const [
+              nonRenderedNode,
+              nonRenderedParent,
+            ] of nonRenderedNodes.entries()) {
+              if (canRemoveNonRenderingNode(nonRenderedNode)) {
+                detachNodeFromParent(nonRenderedNode, nonRenderedParent);
+                nonRenderedNodes.delete(nonRenderedNode);
+
+                // For any elements referenced by the just-deleted node and its children, remove the node from the list of referencing nodes.
+                const deletedReferenceNodes =
+                  getNodesReferencedByBranch(nonRenderedNode);
+                for (const deletedNode of deletedReferenceNodes) {
+                  const referencedIds = referencedIdsByNode.get(deletedNode);
+                  if (referencedIds) {
+                    for (const id of referencedIds) {
+                      const referencingNodes = allReferences.get(id);
+                      if (referencingNodes) {
+                        referencingNodes.delete(deletedNode);
+                        if (referencingNodes.size === 0) {
+                          tryAgain = true;
+                        }
+                      }
+                    }
+                  }
+                }
+
+                nonRenderedNodes.delete(nonRenderedNode);
+              }
             }
-          }
+          } while (tryAgain);
         }
 
         for (const [node, parentNode] of allDefs.entries()) {
