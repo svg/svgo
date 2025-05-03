@@ -124,7 +124,7 @@ describe('coa', function () {
     it('should show message when the folder is empty', async () => {
       const emptyFolderPath = path.resolve(__dirname, 'testSvgEmpty');
       if (!fs.existsSync(emptyFolderPath)) {
-        fs.mkdirSync(emptyFolderPath);
+        await fs.promises.mkdir(emptyFolderPath);
       }
       await expect(
         runProgram(['--folder', emptyFolderPath, '--quiet']),

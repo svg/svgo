@@ -2,7 +2,7 @@
  * @typedef {import('child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams
  */
 
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -71,7 +71,7 @@ test('accepts svg as filename', async () => {
     { cwd: __dirname },
   );
   await waitClose(proc);
-  const output = fs.readFileSync(
+  const output = await fs.readFile(
     path.join(__dirname, 'output/single.svg'),
     'utf-8',
   );
