@@ -50,7 +50,6 @@
     "type": "opencollective",
     "url": "https://opencollective.com/svgo"
   },
-  "main": "./lib/svgo-node.js",
   "bin": "./bin/svgo.js",
   "types": "./lib/svgo-node.d.ts",
   "exports": {
@@ -82,7 +81,7 @@
     "!**/*.test.js"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=16"
   },
   "scripts": {
     "build": "node scripts/sync-version.js && rollup -c",
