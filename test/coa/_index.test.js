@@ -15,7 +15,7 @@ const svgFiles = [
 const tempFolder = 'temp';
 
 /**
- * @param {string[]} args
+ * @param {ReadonlyArray<string>} args
  * @returns {Promise<Command>}
  */
 function runProgram(args) {

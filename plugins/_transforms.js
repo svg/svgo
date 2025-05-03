@@ -74,7 +74,7 @@ export const transform2js = (transformString) => {
 /**
  * Multiply transforms into one.
  *
- * @param {TransformItem[]} transforms
+ * @param {ReadonlyArray<TransformItem>} transforms
  * @returns {TransformItem}
  */
 export const transformsMultiply = (transforms) => {
@@ -344,8 +344,8 @@ const isIdentityTransform = (t) => {
 
 /**
  * Optimize matrix of simple transforms.
- * @param {TransformItem[]} roundedTransforms
- * @param {TransformItem[]} rawTransforms
+ * @param {ReadonlyArray<TransformItem>} roundedTransforms
+ * @param {ReadonlyArray<TransformItem>} rawTransforms
  * @returns {TransformItem[]}
  */
 const optimize = (roundedTransforms, rawTransforms) => {
@@ -443,7 +443,7 @@ const optimize = (roundedTransforms, rawTransforms) => {
 };
 
 /**
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {TransformItem}
  */
 const createScaleTransform = (data) => {
@@ -546,7 +546,7 @@ const transformToMatrix = (transform) => {
  *
  * @param {[number, number]} cursor
  * @param {number[]} arc
- * @param {number[]} transform
+ * @param {ReadonlyArray<number>} transform
  * @returns {number[]}
  */
 export const transformArc = (cursor, arc, transform) => {
@@ -608,8 +608,8 @@ export const transformArc = (cursor, arc, transform) => {
 /**
  * Multiply transformation matrices.
  *
- * @param {number[]} a
- * @param {number[]} b
+ * @param {ReadonlyArray<number>} a
+ * @param {ReadonlyArray<number>} b
  * @returns {number[]}
  */
 const multiplyTransformMatrices = (a, b) => {
@@ -702,7 +702,7 @@ const transformRound = (data, params) => {
 /**
  * Rounds numbers in array.
  *
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {number[]}
  */
 const round = (data) => {
@@ -739,7 +739,7 @@ const smartRound = (precision, data) => {
 /**
  * Convert transforms JS representation to string.
  *
- * @param {TransformItem[]} transformJS
+ * @param {ReadonlyArray<TransformItem>} transformJS
  * @param {TransformParams} params
  * @returns {string}
  */

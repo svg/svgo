@@ -56,7 +56,7 @@ export const path2js = (path) => {
 /**
  * Convert relative Path data to absolute.
  *
- * @param {PathDataItem[]} data
+ * @param {ReadonlyArray<PathDataItem>} data
  * @returns {PathDataItem[]}
  */
 const convertRelativeToAbsolute = (data) => {
@@ -189,7 +189,7 @@ const convertRelativeToAbsolute = (data) => {
  * Convert path array to string.
  *
  * @param {XastElement} path
- * @param {PathDataItem[]} data
+ * @param {ReadonlyArray<PathDataItem>} data
  * @param {Js2PathParams} params
  */
 export const js2path = function (path, data, params) {
@@ -223,7 +223,7 @@ export const js2path = function (path, data, params) {
 
 /**
  * @param {number[]} dest
- * @param {number[]} source
+ * @param {ReadonlyArray<number>} source
  * @returns {number[]}
  */
 function set(dest, source) {
@@ -237,8 +237,8 @@ function set(dest, source) {
  * collision using Gilbert-Johnson-Keerthi distance algorithm
  * https://web.archive.org/web/20180822200027/http://entropyinteractive.com/2011/04/gjk-algorithm/
  *
- * @param {PathDataItem[]} path1
- * @param {PathDataItem[]} path2
+ * @param {ReadonlyArray<PathDataItem>} path1
+ * @param {ReadonlyArray<PathDataItem>} path2
  * @returns {boolean}
  */
 export const intersects = function (path1, path2) {
@@ -310,7 +310,7 @@ export const intersects = function (path1, path2) {
   /**
    * @param {Point} a
    * @param {Point} b
-   * @param {number[]} direction
+   * @param {ReadonlyArray<number>} direction
    * @returns {number[]}
    */
   function getSupport(a, b, direction) {
@@ -324,7 +324,7 @@ export const intersects = function (path1, path2) {
    * we find the farthest point.
    *
    * @param {Point} polygon
-   * @param {number[]} direction
+   * @param {ReadonlyArray<number>} direction
    * @returns {number[]}
    */
   function supportPoint(polygon, direction) {
@@ -408,7 +408,7 @@ function processSimplex(simplex, direction) {
 }
 
 /**
- * @param {number[]} v
+ * @param {ReadonlyArray<number>} v
  * @returns {number[]}
  */
 function minus(v) {
@@ -416,8 +416,8 @@ function minus(v) {
 }
 
 /**
- * @param {number[]} v1
- * @param {number[]} v2
+ * @param {ReadonlyArray<number>} v1
+ * @param {ReadonlyArray<number>} v2
  * @returns {number[]}
  */
 function sub(v1, v2) {
@@ -425,8 +425,8 @@ function sub(v1, v2) {
 }
 
 /**
- * @param {number[]} v1
- * @param {number[]} v2
+ * @param {ReadonlyArray<number>} v1
+ * @param {ReadonlyArray<number>} v2
  * @returns {number}
  */
 function dot(v1, v2) {
@@ -434,8 +434,8 @@ function dot(v1, v2) {
 }
 
 /**
- * @param {number[]} v
- * @param {number[]} from
+ * @param {ReadonlyArray<number>} v
+ * @param {ReadonlyArray<number>} from
  * @returns {number[]}
  */
 function orth(v, from) {
@@ -444,7 +444,7 @@ function orth(v, from) {
 }
 
 /**
- * @param {PathDataItem[]} pathData
+ * @param {ReadonlyArray<PathDataItem>} pathData
  * @returns {Points}
  */
 function gatherPoints(pathData) {
@@ -699,9 +699,9 @@ function convexHull(points) {
 }
 
 /**
- * @param {number[]} o
- * @param {number[]} a
- * @param {number[]} b
+ * @param {ReadonlyArray<number>} o
+ * @param {ReadonlyArray<number>} a
+ * @param {ReadonlyArray<number>} b
  * @returns {number}
  */
 function cross(o, a, b) {
@@ -721,7 +721,7 @@ function cross(o, a, b) {
  * @param {number} sweep_flag
  * @param {number} x2
  * @param {number} y2
- * @param {number[]} recursive
+ * @param {ReadonlyArray<number>} recursive
  * @returns {number[]}
  */
 const a2c = (

@@ -1,6 +1,6 @@
 /**
  * @typedef SortAttrsParams
- * @property {string[]=} order
+ * @property {ReadonlyArray<string>=} order
  * @property {'front' | 'alphabetical'=} xmlnsOrder
  */
 

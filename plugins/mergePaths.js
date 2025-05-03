@@ -63,7 +63,7 @@ export const fn = (root, params) => {
 
         /**
          * @param {XastElement} child
-         * @param {PathDataItem[]} pathData
+         * @param {ReadonlyArray<PathDataItem>} pathData
          */
         const updatePreviousPath = (child, pathData) => {
           js2path(child, pathData, {

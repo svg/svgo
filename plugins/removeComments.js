@@ -2,7 +2,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
 
 /**
  * @typedef RemoveCommentsParams
- * @property {Array<RegExp | string> | false=} preservePatterns
+ * @property {ReadonlyArray<RegExp | string> | false=} preservePatterns
  */
 
 export const name = 'removeComments';

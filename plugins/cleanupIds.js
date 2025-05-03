@@ -75,7 +75,7 @@ const maxIdIndex = generateIdChars.length - 1;
  * Check if an ID starts with any one of a list of strings.
  *
  * @param {string} string
- * @param {string[]} prefixes
+ * @param {ReadonlyArray<string>} prefixes
  * @returns {boolean}
  */
 const hasStringPrefix = (string, prefixes) => {
@@ -116,7 +116,7 @@ const generateId = (currentId) => {
 /**
  * Get string from generated ID array.
  *
- * @param {number[]} arr
+ * @param {ReadonlyArray<number>} arr
  * @returns {string}
  */
 const getIdString = (arr) => {

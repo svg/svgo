@@ -1021,7 +1021,7 @@ function convertToMixed(path, params) {
  * Checks if curve is convex. Control points of such a curve must form a convex
  * quadrilateral with diagonals crosspoint inside of it.
  *
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {boolean}
  */
 function isConvex(data) {
@@ -1048,7 +1048,7 @@ function isConvex(data) {
 /**
  * Computes lines equations by two points and returns their intersection point.
  *
- * @param {number[]} coords
+ * @param {ReadonlyArray<number>} coords
  * @returns {Point | undefined}
  */
 function getIntersection(coords) {
@@ -1118,7 +1118,7 @@ function round(data) {
  * Checks if a curve is a straight line by measuring distance from middle points
  * to the line formed by end points.
  *
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {boolean}
  */
 function isCurveStraightLine(data) {
@@ -1146,7 +1146,7 @@ function isCurveStraightLine(data) {
  * Calculates the sagitta of an arc if possible.
  *
  * @see https://wikipedia.org/wiki/Sagitta_(geometry)#Formulas
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {number | undefined}
  */
 function calculateSagitta(data) {
@@ -1168,7 +1168,7 @@ function calculateSagitta(data) {
  * Converts next curve from shorthand to full form using the current curve data.
  *
  * @param {PathDataItem} item
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {PathDataItem}
  */
 function makeLonghand(item, data) {
@@ -1214,7 +1214,7 @@ function reflectPoint(controlPoint, base) {
  * a·(1 - t)³·p1 + b·(1 - t)²·t·p2 + c·(1 - t)·t²·p3 + d·t³·p4,
  * where pN are control points and p1 is zero due to relative coordinates.
  *
- * @param {number[]} curve
+ * @param {ReadonlyArray<number>} curve
  * @param {number} t
  * @returns {Point}
  */
@@ -1233,7 +1233,7 @@ function getCubicBezierPoint(curve, t) {
 /**
  * Finds circle by 3 points of the curve and checks if the curve fits the found circle.
  *
- * @param {number[]} curve
+ * @param {ReadonlyArray<number>} curve
  * @returns {Circle | undefined}
  */
 function findCircle(curve) {
@@ -1278,7 +1278,7 @@ function findCircle(curve) {
 /**
  * Checks if a curve fits the given circle.
  *
- * @param {number[]} curve
+ * @param {ReadonlyArray<number>} curve
  * @param {Circle} circle
  * @returns {boolean}
  */
@@ -1301,7 +1301,7 @@ function isArc(curve, circle) {
 /**
  * Checks if a previous curve fits the given circle.
  *
- * @param {number[]} curve
+ * @param {ReadonlyArray<number>} curve
  * @param {Circle} circle
  * @returns {boolean}
  */
@@ -1315,7 +1315,7 @@ function isArcPrev(curve, circle) {
 /**
  * Finds angle of a curve fitting the given arc.
  *
- * @param {number[]} curve
+ * @param {ReadonlyArray<number>} curve
  * @param {Circle} relCircle
  * @returns {number}
  */
@@ -1334,7 +1334,7 @@ function findArcAngle(curve, relCircle) {
  * Converts given path data to string.
  *
  * @param {InternalParams} params
- * @param {PathDataItem[]} pathData
+ * @param {ReadonlyArray<PathDataItem>} pathData
  * @returns {string}
  */
 function data2Path(params, pathData) {

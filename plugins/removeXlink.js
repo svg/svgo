@@ -45,7 +45,7 @@ const LEGACY_ELEMENTS = new Set([
 
 /**
  * @param {XastElement} node
- * @param {string[]} prefixes
+ * @param {ReadonlyArray<string>} prefixes
  * @param {string} attr
  * @returns {string[]}
  */

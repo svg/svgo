@@ -114,7 +114,7 @@ export const fn = () => {
           }
 
           const { left, top, width, height } = viewBoxData;
-          /** @type {PathDataItem[]} */
+          /** @type {ReadonlyArray<PathDataItem>} */
           const viewBoxPathData = [
             { command: 'M', args: [left, top] },
             { command: 'h', args: [width] },

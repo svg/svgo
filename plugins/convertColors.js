@@ -32,7 +32,7 @@ const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
  *
  * @author Jed Schmidt
  *
- * @param {number[]} param0
+ * @param {ReadonlyArray<number>} param0
  * @returns {string}
  */
 const convertRgbToHex = ([r, g, b]) => {

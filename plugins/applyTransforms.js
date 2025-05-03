@@ -153,7 +153,7 @@ export const applyTransforms = (root, params) => {
 };
 
 /**
- * @param {number[]} matrix
+ * @param {ReadonlyArray<number>} matrix
  * @param {number} x
  * @param {number} y
  * @returns {[number, number]}
@@ -165,7 +165,7 @@ const transformAbsolutePoint = (matrix, x, y) => {
 };
 
 /**
- * @param {number[]} matrix
+ * @param {ReadonlyArray<number>} matrix
  * @param {number} x
  * @param {number} y
  * @returns {[number, number]}
@@ -177,8 +177,8 @@ const transformRelativePoint = (matrix, x, y) => {
 };
 
 /**
- * @param {PathDataItem[]} pathData
- * @param {number[]} matrix
+ * @param {ReadonlyArray<PathDataItem>} pathData
+ * @param {ReadonlyArray<number>} matrix
  */
 const applyMatrixToPathData = (pathData, matrix) => {
   /** @type {[number, number]} */
