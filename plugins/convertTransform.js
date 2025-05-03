@@ -149,7 +149,7 @@ const convertTransform = (item, attrName, params) => {
  *
  * Clone parameters so that it doesn't affect other element transformations.
  *
- * @param {TransformItem[]} data
+ * @param {ReadonlyArray<TransformItem>} data
  * @param {TransformParams} param1
  * @returns {TransformParams}
  */
@@ -276,7 +276,7 @@ const convertToShorts = (transforms, params) => {
 /**
  * Remove useless transforms.
  *
- * @param {TransformItem[]} transforms
+ * @param {ReadonlyArray<TransformItem>} transforms
  * @returns {TransformItem[]}
  */
 const removeUseless = (transforms) => {

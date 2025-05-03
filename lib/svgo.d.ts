@@ -44,14 +44,14 @@ export type BuiltinPluginOrPreset<Name, Params> = BuiltinPlugin<
    * If the plugin is a preset that invokes other plugins, this returns an
    * array of the plugins in the preset in the order that they are invoked.
    */
-  plugins?: Readonly<BuiltinPlugin<string, Object>[]>;
+  plugins?: ReadonlyArray<BuiltinPlugin<string, Object>>;
 };
 
 /**
  * Plugins that are bundled with SVGO. This includes plugin presets, and plugins
  * that are not enabled by default.
  */
-export declare const builtinPlugins: Array<
+export declare const builtinPlugins: ReadonlyArray<
   {
     [Name in keyof PluginsParams]: BuiltinPluginOrPreset<
       Name,
