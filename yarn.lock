@@ -1154,10 +1154,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/css-tree@npm:*, @types/css-tree@npm:^2.3.7":
-  version: 2.3.7
-  resolution: "@types/css-tree@npm:2.3.7"
-  checksum: e13d526e7c0b4d881cddf759e111843bf4127701218141e68709d666ccf01b5ed1dd805697e577225b76471590295a10c7673d19741be26f67610a3acb0ed532
+"@types/css-tree@npm:*, @types/css-tree@npm:^2.3.10":
+  version: 2.3.10
+  resolution: "@types/css-tree@npm:2.3.10"
+  checksum: ed676a2735db9597cdd0e1b7bdeaf0227b5f1a1855df99d2a4d22ad241baab693b18048c0097a1efff46b8e6ca20a289272e711a60689424858de42b14abe8e0
   languageName: node
   linkType: hard
 
@@ -1211,13 +1211,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^29.5.12":
-  version: 29.5.12
-  resolution: "@types/jest@npm:29.5.12"
+"@types/jest@npm:^29.5.14":
+  version: 29.5.14
+  resolution: "@types/jest@npm:29.5.14"
   dependencies:
     expect: ^29.0.0
     pretty-format: ^29.0.0
-  checksum: 19b1efdeed9d9a60a81edc8226cdeae5af7479e493eaed273e01243891c9651f7b8b4c08fc633a7d0d1d379b091c4179bbaa0807af62542325fd72f2dd17ce1c
+  checksum: 18dba4623f26661641d757c63da2db45e9524c9be96a29ef713c703a9a53792df9ecee9f7365a0858ddbd6440d98fe6b65ca67895ca5884b73cbc7ffc11f3838
   languageName: node
   linkType: hard
 
@@ -1228,12 +1228,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.12.11":
-  version: 20.12.11
-  resolution: "@types/node@npm:20.12.11"
+"@types/node@npm:*, @types/node@npm:^22.15.3":
+  version: 22.15.3
+  resolution: "@types/node@npm:22.15.3"
   dependencies:
-    undici-types: ~5.26.4
-  checksum: 0cc06bb69cd8150e96fcf65fa3d7f2eeebedf110a99e1834a7fa55bd6c04e7b6d73f74321a2acfc569ca300c0b88d8e1b702ce245b3802f6e5f6a8987fef451a
+    undici-types: ~6.21.0
+  checksum: 26618a9fdfb84de3841e898b7c5fd372e1c0bdb9adc3ec71c12c38dd07d4e73da14681924919d27ff509ebf3714b8de941a21f51c26146cc8aaae31561ca7a5c
   languageName: node
   linkType: hard
 
@@ -4527,10 +4527,10 @@ __metadata:
     "@rollup/plugin-commonjs": ^26.0.3
     "@rollup/plugin-node-resolve": ^15.2.3
     "@rollup/plugin-terser": ^0.4.4
-    "@types/css-tree": ^2.3.7
+    "@types/css-tree": ^2.3.10
     "@types/csso": ^5.0.4
-    "@types/jest": ^29.5.12
-    "@types/node": ^20.12.11
+    "@types/jest": ^29.5.14
+    "@types/node": ^22.15.3
     "@types/sax": ^1.2.7
     "@types/tar-stream": ^3.1.3
     commander: ^11.1.0
@@ -4673,10 +4673,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~5.26.4":
-  version: 5.26.5
-  resolution: "undici-types@npm:5.26.5"
-  checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 46331c7d6016bf85b3e8f20c159d62f5ae471aba1eb3dc52fff35a0259d58dcc7d592d4cc4f00c5f9243fa738a11cfa48bd20203040d4a9e6bc25e807fab7ab3
   languageName: node
   linkType: hard
 
