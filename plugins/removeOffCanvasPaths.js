@@ -2,11 +2,6 @@ import { detachNodeFromParent, visitSkip } from '../lib/xast.js';
 import { parsePathData } from '../lib/path.js';
 import { intersects } from './_path.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- */
-
 export const name = 'removeOffCanvasPaths';
 export const description =
   'removes elements that are drawn outside of the viewBox (disabled by default)';
@@ -16,7 +11,7 @@ export const description =
  *
  * @author JoshyPHP
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   /**
@@ -114,7 +109,7 @@ export const fn = () => {
           }
 
           const { left, top, width, height } = viewBoxData;
-          /** @type {ReadonlyArray<PathDataItem>} */
+          /** @type {ReadonlyArray<import('../lib/types.js').PathDataItem>} */
           const viewBoxPathData = [
             { command: 'M', args: [left, top] },
             { command: 'h', args: [width] },

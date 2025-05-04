@@ -1,8 +1,3 @@
-/**
- * @typedef {import('playwright').Page} Page
- * @typedef {import('playwright').PageScreenshotOptions} PageScreenshotOptions
- */
-
 import fs from 'node:fs/promises';
 import http from 'http';
 import os from 'os';
@@ -19,7 +14,7 @@ const PORT = 5001;
 const WIDTH = 960;
 const HEIGHT = 720;
 
-/** @type {PageScreenshotOptions} */
+/** @type {import('playwright').PageScreenshotOptions} */
 const screenshotOptions = {
   omitBackground: true,
   clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
@@ -35,7 +30,7 @@ const runTests = async (list) => {
   let passed = 0;
   console.info('Start browser…');
   /**
-   * @param {Page} page
+   * @param {import('playwright').Page} page
    * @param {string} name
    */
   const processFile = async (page, name) => {

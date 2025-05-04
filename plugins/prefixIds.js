@@ -2,11 +2,8 @@ import * as csstree from 'css-tree';
 import { referencesProps } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
- * @typedef {import('../lib/types.js').XastElement} XastElement
- *
  * @typedef PrefixIdsParams
- * @property {boolean | string | ((node: XastElement, info: PluginInfo) => string)=} prefix
+ * @property {boolean | string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)=} prefix
  * @property {string=} delim
  * @property {boolean=} prefixIds
  * @property {boolean=} prefixClassNames
@@ -88,9 +85,9 @@ const prefixReference = (prefixGenerator, reference) => {
  * Generates a prefix for the given string.
  *
  * @param {string} body An arbitrary string.
- * @param {XastElement} node XML node that the identifier belongs to.
- * @param {PluginInfo} info
- * @param {((node: XastElement, info: PluginInfo) => string) | string | boolean | undefined} prefixGenerator Some way of obtaining a prefix.
+ * @param {import('../lib/types.js').XastElement} node XML node that the identifier belongs to.
+ * @param {import('../lib/types.js').PluginInfo} info
+ * @param {((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string) | string | boolean | undefined} prefixGenerator Some way of obtaining a prefix.
  * @param {string} delim Content to insert between the prefix and original value.
  * @param {Map<string, string>} history Map of previously generated prefixes to IDs.
  * @returns {string} A generated prefix.

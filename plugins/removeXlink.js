@@ -1,8 +1,6 @@
 import { elems } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- *
  * @typedef RemoveXlinkParams
  * @property {boolean=} includeLegacy
  *   By default this plugin ignores legacy elements that were deprecated or
@@ -44,7 +42,7 @@ const LEGACY_ELEMENTS = new Set([
 ]);
 
 /**
- * @param {XastElement} node
+ * @param {import('../lib/types.js').XastElement} node
  * @param {ReadonlyArray<string>} prefixes
  * @param {string} attr
  * @returns {string[]}
@@ -147,7 +145,7 @@ export const fn = (_, params) => {
             continue;
           }
 
-          /** @type {XastElement} */
+          /** @type {import('../lib/types.js').XastElement} */
           const titleTag = {
             type: 'element',
             name: 'title',

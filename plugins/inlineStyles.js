@@ -9,9 +9,6 @@ import {
 import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- *
  * @typedef InlineStylesParams
  * @property {boolean=} onlyMatchedOnce Inlines selectors that match once only.
  * @property {boolean=} removeMatchedSelectors
@@ -58,8 +55,8 @@ export const fn = (root, params) => {
 
   /**
    * @type {{
-   *   node: XastElement,
-   *   parentNode: XastParent,
+   *   node: import('../lib/types.js').XastElement,
+   *   parentNode: import('../lib/types.js').XastParent,
    *   cssAst: csstree.StyleSheet
    * }[]}
    */
@@ -69,7 +66,7 @@ export const fn = (root, params) => {
    *   node: csstree.Selector,
    *   item: csstree.ListItem<csstree.CssNode>,
    *   rule: csstree.Rule,
-   *   matchedElements?: XastElement[]
+   *   matchedElements?: import('../lib/types.js').XastElement[]
    * }[]}
    */
   const selectors = [];
@@ -196,7 +193,7 @@ export const fn = (root, params) => {
         for (const selector of sortedSelectors) {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
-          /** @type {XastElement[]} */
+          /** @type {import('../lib/types.js').XastElement[]} */
           const matchedElements = [];
           try {
             for (const node of querySelectorAll(root, selectorText)) {

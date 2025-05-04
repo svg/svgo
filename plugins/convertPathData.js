@@ -6,8 +6,6 @@ import { visit } from '../lib/xast.js';
 import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- *
  * @typedef {[number, number]} Point
  *
  * @typedef Circle
@@ -213,8 +211,8 @@ export const fn = (root, params) => {
 /**
  * Convert absolute path data coordinates to relative.
  *
- * @param {PathDataItem[]} pathData
- * @returns {PathDataItem[]}
+ * @param {import('../lib/types.js').PathDataItem[]} pathData
+ * @returns {import('../lib/types.js').PathDataItem[]}
  */
 const convertToRelative = (pathData) => {
   const start = [0, 0];
@@ -387,10 +385,10 @@ const convertToRelative = (pathData) => {
 /**
  * Main filters loop.
  *
- * @param {PathDataItem[]} path
+ * @param {import('../lib/types.js').PathDataItem[]} path
  * @param {InternalParams} params
  * @param {{ isSafeToUseZ: boolean, maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }} param2
- * @returns {PathDataItem[]}
+ * @returns {import('../lib/types.js').PathDataItem[]}
  */
 function filters(
   path,
@@ -437,7 +435,7 @@ function filters(
         const r = roundData([circle.radius])[0];
         let angle = findArcAngle(sdata, circle);
         const sweep = sdata[5] * sdata[0] - sdata[4] * sdata[1] > 0 ? 1 : 0;
-        /** @type {PathDataItem} */
+        /** @type {import('../lib/types.js').PathDataItem} */
         let arc = {
           command: 'a',
           args: [r, r, 0, 0, sweep, sdata[4], sdata[5]],
@@ -446,7 +444,7 @@ function filters(
           // @ts-expect-error
           base: item.base,
         };
-        /** @type {PathDataItem[]} */
+        /** @type {import('../lib/types.js').PathDataItem[]} */
         const output = [arc];
         // relative coordinates to adjust the found circle
         /** @type {Point} */
@@ -935,9 +933,9 @@ function filters(
 /**
  * Writes data in shortest form using absolute or relative coordinates.
  *
- * @param {PathDataItem[]} path
+ * @param {import('../lib/types.js').PathDataItem[]} path
  * @param {InternalParams} params
- * @returns {PathDataItem[]}
+ * @returns {import('../lib/types.js').PathDataItem[]}
  */
 function convertToMixed(path, params) {
   let prev = path[0];
@@ -1167,9 +1165,9 @@ function calculateSagitta(data) {
 /**
  * Converts next curve from shorthand to full form using the current curve data.
  *
- * @param {PathDataItem} item
+ * @param {import('../lib/types.js').PathDataItem} item
  * @param {ReadonlyArray<number>} data
- * @returns {PathDataItem}
+ * @returns {import('../lib/types.js').PathDataItem}
  */
 function makeLonghand(item, data) {
   switch (item.command) {
@@ -1334,7 +1332,7 @@ function findArcAngle(curve, relCircle) {
  * Converts given path data to string.
  *
  * @param {InternalParams} params
- * @param {ReadonlyArray<PathDataItem>} pathData
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} pathData
  * @returns {string}
  */
 function data2Path(params, pathData) {

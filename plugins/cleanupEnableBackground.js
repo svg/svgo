@@ -1,10 +1,6 @@
 import * as csstree from 'css-tree';
 import { visit } from '../lib/xast.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'cleanupEnableBackground';
 export const description =
   'remove or cleanup enable-background attribute when possible';
@@ -13,15 +9,16 @@ const regEnableBackground =
   /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/;
 
 /**
- * Remove or cleanup enable-background attr which coincides with a width/height box.
+ * Remove or cleanup enable-background attr which coincides with a width/height
+ * box.
  *
  * @see https://www.w3.org/TR/SVG11/filters.html#EnableBackgroundProperty
  * @example
  * <svg width="100" height="50" enable-background="new 0 0 100 50">
- *             ⬇
+ *   ⬇
  * <svg width="100" height="50">
  * @author Kir Belevich
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   let hasFilter = false;

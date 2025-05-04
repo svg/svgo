@@ -2,10 +2,6 @@ import { elemsGroups } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeEmptyContainers';
 export const description = 'removes empty container elements';
 
@@ -22,7 +18,7 @@ export const description = 'removes empty container elements';
  *
  * @author Kir Belevich
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);

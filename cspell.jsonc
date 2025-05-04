@@ -47,7 +47,13 @@
     "Dmitry",
     "Keerthi",
   ],
-  "ignorePaths": ["*.svg.txt", "*.svg", "cspell.jsonc", "LICENSE"],
+  "ignorePaths": [
+    ".gitignore",
+    "*.svg.txt",
+    "*.svg",
+    "cspell.jsonc",
+    "LICENSE",
+  ],
   "ignoreRegExpList": [
     "-moz", // Mozilla Firefox CSS prefix
     "'.+?.svg',", // path to file with .svg extension

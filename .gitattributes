@@ -1,2 +1,6 @@
 # Enforce Unix newlines
 * text=auto eol=lf
+
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+/.yarn/releases/** binary
+/.yarn/plugins/** binary

@@ -66,12 +66,12 @@ const regStripComments = new RegExp(
  *
  * @example
  * <g style="fill:#000; color: #fff;">
- *             ⬇
+ *  ⬇
  * <g fill="#000" color="#fff">
  *
  * @example
  * <g style="fill:#000; color: #fff; -webkit-blah: blah">
- *             ⬇
+ *  ⬇
  * <g fill="#000" color="#fff" style="-webkit-blah: blah">
  *
  * @author Kir Belevich

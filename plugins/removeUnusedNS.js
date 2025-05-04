@@ -1,7 +1,3 @@
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeUnusedNS';
 export const description = 'removes unused namespaces declaration';
 
@@ -11,7 +7,7 @@ export const description = 'removes unused namespaces declaration';
  *
  * @author Kir Belevich
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   /** @type {Set<string>} */

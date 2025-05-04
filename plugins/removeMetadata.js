@@ -1,9 +1,5 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeMetadata';
 export const description = 'removes <metadata>';
 
@@ -14,7 +10,7 @@ export const description = 'removes <metadata>';
  *
  * @author Kir Belevich
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

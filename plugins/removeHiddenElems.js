@@ -10,10 +10,6 @@ import { parsePathData } from '../lib/path.js';
 import { findReferences, hasScripts } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- *
  * @typedef RemoveHiddenElemsParams
  * @property {boolean=} isHidden
  * @property {boolean=} displayNone
@@ -79,7 +75,7 @@ export const fn = (root, params) => {
    * Skip non-rendered nodes initially, and only detach if they have no ID, or
    * their ID is not referenced by another node.
    *
-   * @type {Map<XastElement, XastParent>}
+   * @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>}
    */
   const nonRenderedNodes = new Map();
 
@@ -90,13 +86,13 @@ export const fn = (root, params) => {
    */
   const removedDefIds = new Set();
 
-  /** @type {Map<XastElement, XastParent>} */
+  /** @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>} */
   const allDefs = new Map();
 
   /** @type {Set<string>} */
   const allReferences = new Set();
 
-  /** @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>} */
+  /** @type {Map<string, Array<{ node: import('../lib/types.js').XastElement, parentNode: import('../lib/types.js').XastParent }>>} */
   const referencesById = new Map();
 
   /**
@@ -106,7 +102,7 @@ export const fn = (root, params) => {
 
   /**
    * Nodes can't be removed if they or any of their children have an id attribute that is referenced.
-   * @param {XastElement} node
+   * @param {import('../lib/types.js').XastElement} node
    * @returns boolean
    */
   function canRemoveNonRenderingNode(node) {
@@ -122,8 +118,8 @@ export const fn = (root, params) => {
   }
 
   /**
-   * @param {XastChild} node
-   * @param {XastParent} parentNode
+   * @param {import('../lib/types.js').XastChild} node
+   * @param {import('../lib/types.js').XastParent} parentNode
    */
   function removeElement(node, parentNode) {
     if (

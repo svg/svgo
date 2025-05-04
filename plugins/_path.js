@@ -1,9 +1,6 @@
 import { parsePathData, stringifyPathData } from '../lib/path.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- *
  * @typedef Js2PathParams
  * @property {number=} floatPrecision
  * @property {boolean=} noSpaceAfterFlags
@@ -29,8 +26,8 @@ let prevCtrlPoint;
 /**
  * Convert path string to JS representation.
  *
- * @param {XastElement} path
- * @returns {PathDataItem[]}
+ * @param {import('../lib/types.js').XastElement} path
+ * @returns {import('../lib/types.js').PathDataItem[]}
  */
 export const path2js = (path) => {
   // @ts-expect-error legacy
@@ -38,7 +35,7 @@ export const path2js = (path) => {
     // @ts-expect-error legacy
     return path.pathJS;
   }
-  /** @type {PathDataItem[]} */
+  /** @type {import('../lib/types.js').PathDataItem[]} */
   const pathData = []; // JS representation of the path data
   const newPathData = parsePathData(path.attributes.d);
   for (const { command, args } of newPathData) {
@@ -56,11 +53,11 @@ export const path2js = (path) => {
 /**
  * Convert relative Path data to absolute.
  *
- * @param {ReadonlyArray<PathDataItem>} data
- * @returns {PathDataItem[]}
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} data
+ * @returns {import('../lib/types.js').PathDataItem[]}
  */
 const convertRelativeToAbsolute = (data) => {
-  /** @type {PathDataItem[]} */
+  /** @type {import('../lib/types.js').PathDataItem[]} */
   const newData = [];
   const start = [0, 0];
   const cursor = [0, 0];
@@ -188,8 +185,8 @@ const convertRelativeToAbsolute = (data) => {
 /**
  * Convert path array to string.
  *
- * @param {XastElement} path
- * @param {ReadonlyArray<PathDataItem>} data
+ * @param {import('../lib/types.js').XastElement} path
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} data
  * @param {Js2PathParams} params
  */
 export const js2path = function (path, data, params) {
@@ -237,8 +234,8 @@ function set(dest, source) {
  * collision using Gilbert-Johnson-Keerthi distance algorithm
  * https://web.archive.org/web/20180822200027/http://entropyinteractive.com/2011/04/gjk-algorithm/
  *
- * @param {ReadonlyArray<PathDataItem>} path1
- * @param {ReadonlyArray<PathDataItem>} path2
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} path1
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} path2
  * @returns {boolean}
  */
 export const intersects = function (path1, path2) {
@@ -444,7 +441,7 @@ function orth(v, from) {
 }
 
 /**
- * @param {ReadonlyArray<PathDataItem>} pathData
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} pathData
  * @returns {Points}
  */
 function gatherPoints(pathData) {
