@@ -1,10 +1,7 @@
 /**
- * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
- * @typedef {import('../lib/types.js').XastElement} XastElement
- *
  * @typedef AddClassesToSVGElementParams
- * @property {string | ((node: XastElement, info: PluginInfo) => string)=} className
- * @property {Array<string | ((node: XastElement, info: PluginInfo) => string)>=} classNames
+ * @property {string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)=} className
+ * @property {Array<string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)>=} classNames
  */
 
 export const name = 'addClassesToSVGElement';

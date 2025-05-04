@@ -24,7 +24,18 @@ jobs:
           cache: yarn
       - run: yarn install
       - run: yarn lint
-      - run: yarn typecheck
+      - run: yarn test:types
+  types:
+    name: Types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE }}
+          cache: yarn
+      - run: yarn install
+      - run: yarn test:types
   test:
     name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
     strategy:

@@ -1,7 +1,3 @@
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'sortDefsChildren';
 export const description = 'Sorts children of <defs> to improve compression';
 
@@ -12,7 +8,7 @@ export const description = 'Sorts children of <defs> to improve compression';
  *
  * @author David Leston
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

@@ -4,11 +4,6 @@ import { EOL } from 'os';
 import { fileURLToPath } from 'url';
 import { optimize } from '../../lib/svgo.js';
 
-/**
- * @typedef {import('../../lib/svgo.js').PluginConfig} PluginConfig
- * @typedef {import('../../lib/svgo.js').CustomPlugin} CustomPlugin
- */
-
 const regFilename = /^(.*)\.(\d+)\.svg\.txt$/;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const files = await fs.readdir(__dirname);
@@ -33,7 +28,7 @@ describe('plugins tests', function () {
           const test = items.length === 2 ? items[1] : items[0];
           // extract test case
           const [original, should, params] = test.split(/\s*@@@\s*/);
-          /** @type {Exclude<PluginConfig, CustomPlugin>} */
+          /** @type {Exclude<import('../../lib/types.js').PluginConfig, import('../../lib/types.js').CustomPlugin>} */
           const plugin = {
             name,
             params: params ? JSON.parse(params) : {},

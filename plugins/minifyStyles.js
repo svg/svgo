@@ -3,9 +3,6 @@ import { detachNodeFromParent } from '../lib/xast.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- *
  * @typedef Usage
  * @property {boolean=} force
  * @property {boolean=} ids
@@ -36,10 +33,10 @@ export const description = 'minifies styles and removes unused styles';
  * @type {import('../lib/types.js').Plugin<MinifyStylesParams>}
  */
 export const fn = (_root, { usage, ...params }) => {
-  /** @type {Map<XastElement, XastParent>} */
+  /** @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>} */
   const styleElements = new Map();
 
-  /** @type {XastElement[]} */
+  /** @type {import('../lib/types.js').XastElement[]} */
   const elementsWithStyleAttributes = [];
 
   /** @type {Set<string>} */

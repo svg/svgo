@@ -1,7 +1,3 @@
-/**
- * @typedef {import('child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams
- */
-
 import fs from 'fs/promises';
 import path from 'path';
 import { spawn } from 'child_process';
@@ -10,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * @param {ChildProcessWithoutNullStreams} proc
+ * @param {import('child_process').ChildProcessWithoutNullStreams} proc
  * @returns {Promise<string>}
  */
 const waitStdout = (proc) => {
@@ -22,7 +18,7 @@ const waitStdout = (proc) => {
 };
 
 /**
- * @param {ChildProcessWithoutNullStreams} proc
+ * @param {import('child_process').ChildProcessWithoutNullStreams} proc
  * @returns {Promise<void>}
  */
 const waitClose = (proc) => {

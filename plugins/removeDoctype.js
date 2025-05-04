@@ -1,9 +1,5 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeDoctype';
 export const description = 'removes doctype declaration';
 
@@ -29,7 +25,7 @@ export const description = 'removes doctype declaration';
  *
  * @author Kir Belevich
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

@@ -2,8 +2,6 @@ import { visitSkip } from '../lib/xast.js';
 import { findReferences, hasScripts } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- *
  * @typedef CleanupIdsParams
  * @property {boolean=} remove
  * @property {boolean=} minify
@@ -124,8 +122,8 @@ const getIdString = (arr) => {
 };
 
 /**
- * Remove unused and minify used IDs
- * (only if there are no any <style> or <script>).
+ * Remove unused and minify used IDs (only if there are no `<style>` or
+ * `<script>` nodes).
  *
  * @author Kir Belevich
  *
@@ -147,9 +145,9 @@ export const fn = (_root, params) => {
     : preservePrefixes
       ? [preservePrefixes]
       : [];
-  /** @type {Map<string, XastElement>} */
+  /** @type {Map<string, import('../lib/types.js').XastElement>} */
   const nodeById = new Map();
-  /** @type {Map<string, {element: XastElement, name: string }[]>} */
+  /** @type {Map<string, {element: import('../lib/types.js').XastElement, name: string }[]>} */
   const referencesById = new Map();
   let deoptimized = false;
 

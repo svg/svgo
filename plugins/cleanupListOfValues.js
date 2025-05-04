@@ -29,11 +29,11 @@ const absoluteLengths = {
  *
  * @example
  * <svg viewBox="0 0 200.28423 200.28423" enable-background="new 0 0 200.28423 200.28423">
- *         ⬇
+ *  ⬇
  * <svg viewBox="0 0 200.284 200.284" enable-background="new 0 0 200.284 200.284">
  *
  * <polygon points="208.250977 77.1308594 223.069336 ... "/>
- *         ⬇
+ *  ⬇
  * <polygon points="208.251 77.131 223.069 ... "/>
  *
  * @author kiyopikko

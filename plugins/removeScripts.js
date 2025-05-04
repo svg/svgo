@@ -1,10 +1,6 @@
 import { attrsGroups } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeScripts';
 export const description = 'removes scripts (disabled by default)';
 
@@ -23,7 +19,7 @@ const eventAttrs = [
  * https://www.w3.org/TR/SVG11/script.html
  *
  * @author Patrick Klingemann
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

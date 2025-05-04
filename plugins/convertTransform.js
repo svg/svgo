@@ -7,10 +7,6 @@ import {
 } from './_transforms.js';
 
 /**
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- *
  * @typedef ConvertTransformParams
  * @property {boolean=} convertToShorts
  * @property {number=} degPrecision
@@ -110,7 +106,7 @@ export const fn = (_root, params) => {
 };
 
 /**
- * @param {XastElement} item
+ * @param {import('../lib/types.js').XastElement} item
  * @param {string} attrName
  * @param {TransformParams} params
  */

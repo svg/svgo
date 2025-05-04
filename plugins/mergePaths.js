@@ -3,13 +3,6 @@ import { intersects, js2path, path2js } from './_path.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types.js').ComputedStyles} ComputedStyles
- * @typedef {import('../lib/types.js').StaticStyle} StaticStyle
- * @typedef {import('../lib/types.js').DynamicStyle} DynamicStyle
- * @typedef {import("../lib/types.js").PathDataItem} PathDataItem
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- *
  * @typedef MergePathsParams
  * @property {boolean=} force
  * @property {number=} floatPrecision
@@ -20,7 +13,7 @@ export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
 
 /**
- * @param {ComputedStyles} computedStyle
+ * @param {import('../lib/types.js').ComputedStyles} computedStyle
  * @param {string} attName
  * @returns {boolean}
  */
@@ -56,14 +49,14 @@ export const fn = (root, params) => {
           return;
         }
 
-        /** @type {XastChild[]} */
+        /** @type {import('../lib/types.js').XastChild[]} */
         const elementsToRemove = [];
         let prevChild = node.children[0];
         let prevPathData = null;
 
         /**
-         * @param {XastElement} child
-         * @param {ReadonlyArray<PathDataItem>} pathData
+         * @param {import('../lib/types.js').XastElement} child
+         * @param {ReadonlyArray<import("../lib/types.js").PathDataItem>} pathData
          */
         const updatePreviousPath = (child, pathData) => {
           js2path(child, pathData, {

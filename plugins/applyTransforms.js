@@ -9,11 +9,6 @@ import { collectStylesheet, computeStyle } from '../lib/style.js';
 
 import { includesUrlReference, removeLeadingZero } from '../lib/svgo/tools.js';
 
-/**
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- * @typedef {import('../lib/types.js').XastElement} XastElement
- */
-
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
@@ -177,7 +172,7 @@ const transformRelativePoint = (matrix, x, y) => {
 };
 
 /**
- * @param {ReadonlyArray<PathDataItem>} pathData
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} pathData
  * @param {ReadonlyArray<number>} matrix
  */
 const applyMatrixToPathData = (pathData, matrix) => {

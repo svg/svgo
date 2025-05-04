@@ -3,9 +3,6 @@ import { attrsGroupsDeprecated, elems } from './_collections.js';
 import { collectStylesheet } from '../lib/style.js';
 
 /**
- * @typedef {{ safe?: Set<string>; unsafe?: Set<string> }} DeprecatedAttrs
- * @typedef {import('../lib/types.js').XastElement} XastElement
- *
  * @typedef RemoveDeprecatedAttrsParams
  * @property {boolean=} removeUnsafe
  */
@@ -37,9 +34,9 @@ function extractAttributesInStylesheet(stylesheet) {
 }
 
 /**
- * @param {XastElement} node
- * @param {DeprecatedAttrs | undefined} deprecatedAttrs
- * @param {import('./plugins-types.js').DefaultPlugins['removeDeprecatedAttrs']} params
+ * @param {import('../lib/types.js').XastElement} node
+ * @param {{ safe?: Set<string>; unsafe?: Set<string> }|undefined} deprecatedAttrs
+ * @param {import('../lib/types.js').DefaultPlugins['removeDeprecatedAttrs']} params
  * @param {Set<string>} attributesInStylesheet
  */
 function processAttributes(

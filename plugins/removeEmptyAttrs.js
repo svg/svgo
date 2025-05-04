@@ -1,9 +1,5 @@
 import { attrsGroups } from './_collections.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeEmptyAttrs';
 export const description = 'removes empty attributes';
 
@@ -12,7 +8,7 @@ export const description = 'removes empty attributes';
  *
  * @author Kir Belevich
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

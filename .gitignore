@@ -1,4 +1,4 @@
-.pnp.*
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -6,8 +6,25 @@
 !.yarn/sdks
 !.yarn/versions
 
-node_modules
+# https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
+[._]*.s[a-v][a-z]
+!*.svg
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+tags
+[._]*.un~
+
+# Ignore generated files for browser, CommonJS, or types
 dist
+types
+
+node_modules
 test/regression-fixtures
 test/regression-diffs
 test/cli/output
@@ -16,11 +33,3 @@ coverage
 .vscode
 *.log
 package-lock.json
-
-# https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
-[._]*.s[a-v][a-z]
-!*.svg  # comment out if you don't need vector files
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]

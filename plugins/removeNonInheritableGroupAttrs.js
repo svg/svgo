@@ -4,10 +4,6 @@ import {
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeNonInheritableGroupAttrs';
 export const description =
   "removes non-inheritable group's presentational attributes";
@@ -17,7 +13,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

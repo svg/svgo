@@ -1,9 +1,5 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
-/**
- * @typedef {import('../lib/types.js').Plugin} Plugin
- */
-
 export const name = 'removeStyleElement';
 export const description = 'removes <style> element (disabled by default)';
 
@@ -14,7 +10,7 @@ export const description = 'removes <style> element (disabled by default)';
  *
  * @author Betsy Dupuis
  *
- * @type {Plugin}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {
