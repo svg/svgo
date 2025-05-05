@@ -122,7 +122,7 @@ SVGO now only has named exports, there are no default exports in the public API.
 
 If you use SVGO from the CLI, or have a Common JS project (you import SVGO using `require`), or if you were already using named exports, you don't have to do anything.
 
-If one way or another you're using the `import` keyword to import SVGO, then any instance where you do use our default export, it must be switched for the named equivilent.
+If one way or another you're using the `import` keyword to import SVGO, then any instance where you use a default export must be switched for the named equivilent.
 
 ```diff
 - import svgo from 'svgo';
