@@ -10,6 +10,7 @@ import { optimize } from '../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const NAVIGATION_TIMEOUT = 120000;
 const PORT = 5001;
 const WIDTH = 960;
 const HEIGHT = 720;
@@ -34,9 +35,13 @@ const runTests = async (list) => {
    * @param {string} name
    */
   const processFile = async (page, name) => {
-    await page.goto(`http://localhost:${PORT}/original/${name}`);
+    await page.goto(`http://localhost:${PORT}/original/${name}`, {
+      timeout: NAVIGATION_TIMEOUT,
+    });
     const originalBuffer = await page.screenshot(screenshotOptions);
-    await page.goto(`http://localhost:${PORT}/optimized/${name}`);
+    await page.goto(`http://localhost:${PORT}/optimized/${name}`, {
+      timeout: NAVIGATION_TIMEOUT,
+    });
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
     const writeDiffs = process.env.NO_DIFF == null;

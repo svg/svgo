@@ -43,6 +43,10 @@ Finally, make sure all quality assurance checks pass before making changes. This
 yarn run qa
 ```
 
+### Regression Tests
+
+The test cases include some larger SVGs that may take some while to render especially on older machines. The default value for the timeout in those cases is set to 120 seconds but can be changed in the [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying the const `NAVIGATION_TIMEOUT`. Setting the value to `0` will allow the tests to run indefinetly if needs be.
+
 ### Plugins
 
 SVGO uses a plugin architecture, so we ultimately perform many smaller tasks rather than a single monolithic task. This provides users a lot of flexibility for which optimizations they use, and in what order to run them.
