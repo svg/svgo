@@ -10,6 +10,7 @@ import { optimize } from '../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const NAVIGATION_TIMEOUT_MS = 600000;
 const PORT = 5001;
 const WIDTH = 960;
 const HEIGHT = 720;
@@ -81,6 +82,8 @@ const runTests = async (list) => {
     javaScriptEnabled: false,
     viewport: { width: WIDTH, height: HEIGHT },
   });
+  context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
+
   await Promise.all(
     Array.from(new Array(os.cpus().length * 2), () => worker()),
   );

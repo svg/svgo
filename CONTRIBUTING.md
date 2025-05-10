@@ -57,6 +57,12 @@ SVGO plugins can optionally have parameters. These can be consumed by the plugin
 
 Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typedef) at the top of the file. For new plugins, you must also append the appropriate type in [`lib/types.d.ts`](https://github.com/svg/svgo/blob/main/lib/types.d.ts). This way built-in plugins will have code completion and type checking as you'd expect while editing the plugin.
 
+### Testing
+
+Our regression test suite includes larger SVGs that may take a long time to render and optimize, especially on older machines. The default timeout is 10 minutes, but can be increased in [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying `NAVIGATION_TIMEOUT_MS`. Setting the value to `0` will disable the timeout entirely.
+
+If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
+
 ## Documentation
 
 Our documentation is maintained in [MDX](https://mdxjs.com/), which is Markdown with React components. The files are then pulled by [svg/svgo.dev](https://github.com/svg/svgo.dev) to build and deploy the SVGO website.
