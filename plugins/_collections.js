@@ -2080,6 +2080,7 @@ export const elems = {
 export const editorNamespaces = new Set([
   'http://creativecommons.org/ns#',
   'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
+  'http://krita.org/namespaces/svg/krita',
   'http://ns.adobe.com/AdobeIllustrator/10.0/',
   'http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/',
   'http://ns.adobe.com/Extensibility/1.0/',
