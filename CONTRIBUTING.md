@@ -43,10 +43,6 @@ Finally, make sure all quality assurance checks pass before making changes. This
 yarn run qa
 ```
 
-### Regression Tests
-
-The test cases include some larger SVGs that may take some while to render especially on older machines. The default value for the timeout in those cases is set to 120 seconds but can be changed in the [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying the const `NAVIGATION_TIMEOUT`. Setting the value to `0` will allow the tests to run indefinetly if needs be.
-
 ### Plugins
 
 SVGO uses a plugin architecture, so we ultimately perform many smaller tasks rather than a single monolithic task. This provides users a lot of flexibility for which optimizations they use, and in what order to run them.
@@ -60,6 +56,12 @@ You should read our [Plugin Architecture](https://svgo.dev/docs/plugins-api/) do
 SVGO plugins can optionally have parameters. These can be consumed by the plugin to tailor the behavior.
 
 Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typedef) at the top of the file. For new plugins, you must also append the appropriate type in [`lib/types.d.ts`](https://github.com/svg/svgo/blob/main/lib/types.d.ts). This way built-in plugins will have code completion and type checking as you'd expect while editing the plugin.
+
+### Testing
+
+Our regression test suite includes larger SVGs that may take a long time to render and optimize, especially on older machines. The default timeout is 10 minutes, but can be increased in [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying `NAVIGATION_TIMEOUT_MS`. Setting the value to `0` will disable the timeout entirely.
+
+If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
 
 ## Documentation
 
