@@ -5,7 +5,8 @@ import {
   elemsGroups,
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
-import { detachNodeFromParent, visitSkip } from '../lib/xast.js';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
 /**

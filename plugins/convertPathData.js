@@ -2,7 +2,7 @@ import { js2path, path2js } from './_path.js';
 import { pathElems } from './_collections.js';
 import { applyTransforms } from './applyTransforms.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { visit } from '../lib/xast.js';
+import { visit } from '../lib/util/visit.js';
 import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**

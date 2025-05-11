@@ -1,5 +1,5 @@
 import * as csstree from 'css-tree';
-import { visit } from '../lib/xast.js';
+import { visit } from '../lib/util/visit.js';
 
 export const name = 'cleanupEnableBackground';
 export const description =

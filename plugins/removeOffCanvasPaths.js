@@ -1,4 +1,5 @@
-import { detachNodeFromParent, visitSkip } from '../lib/xast.js';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 import { parsePathData } from '../lib/path.js';
 import { intersects } from './_path.js';
 

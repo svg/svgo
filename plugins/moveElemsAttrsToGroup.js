@@ -1,4 +1,4 @@
-import { visit } from '../lib/xast.js';
+import { visit } from '../lib/util/visit.js';
 import { inheritableAttrs, pathElems } from './_collections.js';
 
 export const name = 'moveElemsAttrsToGroup';

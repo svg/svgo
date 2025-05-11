@@ -1,4 +1,4 @@
-import { visitSkip } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 import { findReferences, hasScripts } from '../lib/svgo/tools.js';
 
 /**
