@@ -1,10 +1,6 @@
 import { elemsGroups } from './_collections.js';
-import {
-  detachNodeFromParent,
-  querySelector,
-  visit,
-  visitSkip,
-} from '../lib/xast.js';
+import { detachNodeFromParent, querySelector } from '../lib/xast.js';
+import { visit, visitSkip } from '../lib/util/visit.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { parsePathData } from '../lib/path.js';
 import { findReferences, hasScripts } from '../lib/svgo/tools.js';

@@ -1,11 +1,8 @@
 import * as csstree from 'css-tree';
 import { syntax } from 'csso';
 import { attrsGroups, pseudoClasses } from './_collections.js';
-import {
-  detachNodeFromParent,
-  querySelectorAll,
-  visitSkip,
-} from '../lib/xast.js';
+import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 
 /**
