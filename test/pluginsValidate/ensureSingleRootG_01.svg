@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g id="uber_main_group">
+    <title>Correct Single Group Test</title>
+    <defs>
+      <filter id="f1" x="0" y="0">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+      </filter>
+    </defs>
+    <g id="visual_content_group">
+      <rect x="10" y="10" width="80" height="80" fill="blue"/>
+      <circle cx="50" cy="50" r="30" fill="red"/>
+      <path d="M20,80 Q50,20 80,80" stroke="yellow" fill="none"/>
+    </g>
+    <style>
+      /* some style */
+    </style>
+  </g>
+</svg>
+@@@ true @@@ {} 

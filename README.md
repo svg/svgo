@@ -6,13 +6,63 @@
 
 **SVG O**ptimizer is a Node.js-based tool for optimizing SVG vector graphics files.
 
-## Forks purpose
+## Fork Purpose
 
 We saw the need to have a fork of SVGO to use it's architecture - structure and plugins, to create a tool that would allow us to validate the structure of SVG files, by crating a set of rules that would be applied to the SVG files and would return a result of the validation.
 
 ## Why?
 
 SVG files, especially those exported from various editors, usually contain a lot of redundant and useless information. This can include editor metadata, comments, hidden elements, default or non-optimal values and other stuff that can be safely removed or converted without affecting the SVG rendering result.
+
+## Test and Validation Capabilities
+
+### Running Plugin Validation Tests
+
+To specifically run the plugin validation tests, use the following command:
+
+```bash
+yarn test-plugins
+```
+
+### Validating SVG Files Against Rules
+
+To validate a directory of SVG files against a specific validation rule:
+
+```bash
+yarn validate-rule --rule=<ruleName> --dir=<directoryPath> [--verbose] [--fail-fast] [--jobs=<number>]
+```
+
+Parameters:
+- `--rule`: Name of the validation rule to run (e.g., `ensureSingleRootG`)
+- `--dir`: Directory containing SVG files to validate
+- `--verbose` (optional): Show detailed validation information
+- `--fail-fast` (optional): Stop on first validation failure
+- `--jobs` (optional): Number of concurrent validation jobs (default: 4)
+
+Example:
+```bash
+yarn validate-rule --rule=ensureSingleRootG --dir=/path/to/illustrations --verbose --jobs=8
+```
+
+### Plugin Validation Structure
+
+The validation tests have a specific structure:
+
+1. **Test Runner**: Located in `test/pluginsValidate/index.test.js`
+2. **Test Case Files**: Individual `.svg` files in the `test/pluginsValidate/` directory
+3. **Naming Convention**: Files follow the pattern `[checkOrRuleName]_[variantIdentifier].svg`
+4. **Embedding Test Parameters**: Test files can include expected outcomes and parameters using a special delimiter format:
+   ```svg
+   <svg width="10" height="10">...</svg>
+   @@@ true @@@ {"somePluginParameter": "value", "anotherParameter": [1, 2, 3]}
+   ```
+
+### Adding a New Validation Rule
+
+1. **Define the Plugin Logic** in `pluginsValidate/yourRuleName.js`
+2. **Register the Plugin** in `lib/builtinValidate.js`
+3. **Create Test Cases** in `test/pluginsValidate/yourRuleName_variant.svg`
+4. **Run the Tests** using `yarn test-plugins`
 
 ## Installation
 

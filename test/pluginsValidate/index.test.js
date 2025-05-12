@@ -30,8 +30,6 @@ describe('pluginsValidate tests', function () {
           should = should === 'true';
           if (name === 'is_snake_case') {
             name = 'isSnakeCase';
-          } else if (name === 'sme_isPrefixPresent') {
-            name = 'isPrefixPresent';
           } else if (name === 'hasNoDiącritićCharacters') {
             name = 'hasNoDiacriticCharacters';
           } else if (name === 'pl' || name === 'polska') {
@@ -41,6 +39,8 @@ describe('pluginsValidate tests', function () {
             name = 'isISO3166_1Alpha2';
           } else if (name === 'hasIllustrationCorrectColorLayers') {
             file = 'skateboard_man_young.svg';
+          } else if (name === 'isSVG') {
+            name = 'isCorrectSvg';
           }
 
           const plugin = {

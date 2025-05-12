@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <title>Incorrect Grouping Test - Loose Path</title>
+  <g id="some_group">
+    <rect x="10" y="10" width="30" height="30" fill="green"/>
+  </g>
+  <path d="M50,50 L80,80" stroke="red"/> 
+  <circle cx="20" cy="70" r="10" fill="purple"/>
+</svg>
+@@@ false @@@ {} 

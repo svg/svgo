@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <filter id="f1" x="0" y="0">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+    </filter>
+  </defs>
+  <title>This title is outside the g, which is not allowed</title>
+  <g id="main_group">
+    <rect x="10" y="10" width="80" height="80" fill="blue"/>
+    <circle cx="50" cy="50" r="30" fill="red"/>
+    <path d="M20,80 Q50,20 80,80" stroke="yellow" fill="none"/>
+  </g>
+</svg>
+@@@ false @@@ {} 

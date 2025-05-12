@@ -68,6 +68,7 @@
   },
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4",
+    "test-plugins": "jest test/pluginsValidate/index.test.js",
     "lint": "eslint --ignore-path .gitignore . && prettier --check \"**/*.js\" --ignore-path .gitignore",
     "fix": "eslint --ignore-path .gitignore --fix . && prettier --write \"**/*.js\" --ignore-path .gitignore",
     "typecheck": "tsc",
@@ -77,7 +78,8 @@
     "release": "standard-version",
     "build": "yarn prepublishOnly",
     "release-and-publish": "yarn release && yarn build && npm publish",
-    "publish:external": "git tag --delete $(git tag --list) && git fetch; yarn release-and-publish && git push --follow-tags origin mbank"
+    "publish:external": "git tag --delete $(git tag --list) && git fetch; yarn release-and-publish && git push --follow-tags origin mbank",
+    "validate-rule": "scripts/validate_rule_on_directory.sh"
   },
   "prettier": {
     "singleQuote": true
@@ -131,12 +133,14 @@
     "svg-path-bbox": "^1.2.4"
   },
   "devDependencies": {
+    "@mservicestech/scripts": "^3.1.0",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/css-tree": "^2.0.0",
     "@types/csso": "^5.0.0",
     "@types/jest": "^29.1.1",
+    "chai": "^4.3.7",
     "del": "^6.0.0",
     "eslint": "^8.24.0",
     "jest": "^29.1.2",
