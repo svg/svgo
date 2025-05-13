@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/mbank-design/svgo/compare/v3.0.3...v3.3.0) (2025-05-13)
+
+
+### Features
+
+* add fork reasoning to README ([bb3c0c4](https://github.com/mbank-design/svgo/commit/bb3c0c46ad8c665265960dc93759be5fe6e82018))
+* add hasNoColorSuffix rule ([a7bed05](https://github.com/mbank-design/svgo/commit/a7bed058804bf60686c2bd16b0e7e129c25fd24f))
+* add isBlackStrokeCorrect, isDarkmodeMaskCorrect rules ([ef390ae](https://github.com/mbank-design/svgo/commit/ef390ae9e9966e6ccce9b0d681bcee5e1f183219))
+* Add validation rules for SVG structure and string length ([50e8ece](https://github.com/mbank-design/svgo/commit/50e8ece5919d0e92aebd186102afa999897d7294))
+
+
+### Bug Fixes
+
+* check if darkmodemask element is present in isDarkmodeMaskCorrect rule ([e71c451](https://github.com/mbank-design/svgo/commit/e71c4512d7a85ed400fe316a75d8e087b2a40676))
+* check if there is only one element with blackStroke id in isBlackStrokeCorrect rule ([d4d6e05](https://github.com/mbank-design/svgo/commit/d4d6e050f3a0a9b3a50f9e5cb5ce2b1c4b6258e2))
+
 ### [3.2.2](https://github.com/mbank-design/svgo/compare/v3.2.1...v3.2.2) (2023-09-15)
 
 
