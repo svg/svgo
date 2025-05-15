@@ -61,8 +61,9 @@ The validation tests have a specific structure:
 
 1. **Define the Plugin Logic** in `pluginsValidate/yourRuleName.js`
 2. **Register the Plugin** in `lib/builtinValidate.js`
-3. **Create Test Cases** in `test/pluginsValidate/yourRuleName_variant.svg`
-4. **Run the Tests** using `yarn test-plugins`
+3. **Add Plugin Configuration** in `pluginsValidate/validatePluginConfig.js` so the plugin is registered for selected types of assets
+4. **Create Test Cases** in `test/pluginsValidate/yourRuleName_variant.svg`
+5. **Run the Tests** using `yarn test-plugins`
 
 ## Installation
 

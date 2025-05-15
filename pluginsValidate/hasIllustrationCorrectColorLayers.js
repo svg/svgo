@@ -114,7 +114,10 @@ exports.fn = function (root, validateResult, params) {
 
 function colorExistsInElement(elementColors, checkedColor) {
   const result = elementColors.filter(
-    (color) => color.toLowerCase() !== checkedColor.toLowerCase()
+    (color) =>
+      color &&
+      checkedColor &&
+      color.toLowerCase() !== checkedColor.toLowerCase()
   );
   return result.length === 0;
 }
@@ -130,11 +133,19 @@ function collectFillsFromObjects(elements) {
 
 // check if values have the same order in the arrays
 function isFillColorOrderCorrect(elementColors, stripeColors) {
-  let currentStripeColors = elementColors.map((color) => color.toLowerCase());
+  let currentStripeColors = elementColors.map((color) =>
+    color ? color.toLowerCase() : color
+  );
   for (let index = 0; index < stripeColors.length; index++) {
-    if (stripeColors.includes(elementColors[index].toLowerCase())) {
+    if (
+      elementColors[index] &&
+      stripeColors.includes(elementColors[index].toLowerCase())
+    ) {
       currentStripeColors = currentStripeColors.filter(
-        (color) => color.toLowerCase() !== stripeColors[index].toLowerCase()
+        (color) =>
+          color &&
+          stripeColors[index] &&
+          color.toLowerCase() !== stripeColors[index].toLowerCase()
       );
     } else {
       return false;

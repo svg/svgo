@@ -164,6 +164,12 @@ var ASSET_TYPE = {
         name: 'isSuffixPresent',
       },
       {
+        name: 'maxAndroidStringLength',
+      },
+      {
+        name: 'ensureSingleRootG',
+      },
+      {
         name: 'isText',
       },
       {
