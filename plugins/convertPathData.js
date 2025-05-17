@@ -230,8 +230,7 @@ const convertToRelative = (pathData) => {
       cursor[1] += args[1];
       start[0] = cursor[0];
       start[1] = cursor[1];
-    }
-    if (command === 'M') {
+    } else if (command === 'M') {
       // M → m
       // skip first moveto
       if (i !== 0) {
@@ -247,11 +246,10 @@ const convertToRelative = (pathData) => {
     }
 
     // lineto (x y)
-    if (command === 'l') {
+    else if (command === 'l') {
       cursor[0] += args[0];
       cursor[1] += args[1];
-    }
-    if (command === 'L') {
+    } else if (command === 'L') {
       // L → l
       command = 'l';
       args[0] -= cursor[0];
@@ -261,10 +259,9 @@ const convertToRelative = (pathData) => {
     }
 
     // horizontal lineto (x)
-    if (command === 'h') {
+    else if (command === 'h') {
       cursor[0] += args[0];
-    }
-    if (command === 'H') {
+    } else if (command === 'H') {
       // H → h
       command = 'h';
       args[0] -= cursor[0];
@@ -272,10 +269,9 @@ const convertToRelative = (pathData) => {
     }
 
     // vertical lineto (y)
-    if (command === 'v') {
+    else if (command === 'v') {
       cursor[1] += args[0];
-    }
-    if (command === 'V') {
+    } else if (command === 'V') {
       // V → v
       command = 'v';
       args[0] -= cursor[1];
@@ -283,11 +279,10 @@ const convertToRelative = (pathData) => {
     }
 
     // curveto (x1 y1 x2 y2 x y)
-    if (command === 'c') {
+    else if (command === 'c') {
       cursor[0] += args[4];
       cursor[1] += args[5];
-    }
-    if (command === 'C') {
+    } else if (command === 'C') {
       // C → c
       command = 'c';
       args[0] -= cursor[0];
@@ -301,11 +296,10 @@ const convertToRelative = (pathData) => {
     }
 
     // smooth curveto (x2 y2 x y)
-    if (command === 's') {
+    else if (command === 's') {
       cursor[0] += args[2];
       cursor[1] += args[3];
-    }
-    if (command === 'S') {
+    } else if (command === 'S') {
       // S → s
       command = 's';
       args[0] -= cursor[0];
@@ -317,11 +311,10 @@ const convertToRelative = (pathData) => {
     }
 
     // quadratic Bézier curveto (x1 y1 x y)
-    if (command === 'q') {
+    else if (command === 'q') {
       cursor[0] += args[2];
       cursor[1] += args[3];
-    }
-    if (command === 'Q') {
+    } else if (command === 'Q') {
       // Q → q
       command = 'q';
       args[0] -= cursor[0];
@@ -333,11 +326,10 @@ const convertToRelative = (pathData) => {
     }
 
     // smooth quadratic Bézier curveto (x y)
-    if (command === 't') {
+    else if (command === 't') {
       cursor[0] += args[0];
       cursor[1] += args[1];
-    }
-    if (command === 'T') {
+    } else if (command === 'T') {
       // T → t
       command = 't';
       args[0] -= cursor[0];
@@ -347,11 +339,10 @@ const convertToRelative = (pathData) => {
     }
 
     // elliptical arc (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
-    if (command === 'a') {
+    else if (command === 'a') {
       cursor[0] += args[5];
       cursor[1] += args[6];
-    }
-    if (command === 'A') {
+    } else if (command === 'A') {
       // A → a
       command = 'a';
       args[5] -= cursor[0];
@@ -361,7 +352,7 @@ const convertToRelative = (pathData) => {
     }
 
     // closepath
-    if (command === 'Z' || command === 'z') {
+    else if (command === 'Z' || command === 'z') {
       // reset cursor
       cursor[0] = start[0];
       cursor[1] = start[1];
