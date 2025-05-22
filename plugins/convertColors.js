@@ -107,7 +107,7 @@ export const fn = (_root, params) => {
                 matched = val !== 'none';
               }
               if (matched) {
-                val = 'currentcolor';
+                val = 'currentColor';
               }
             }
 
@@ -136,7 +136,11 @@ export const fn = (_root, params) => {
               }
             }
 
-            if (convertCase && !includesUrlReference(val)) {
+            if (
+              convertCase &&
+              !includesUrlReference(val) &&
+              val !== 'currentColor'
+            ) {
               if (convertCase === 'lower') {
                 val = val.toLowerCase();
               } else if (convertCase === 'upper') {
