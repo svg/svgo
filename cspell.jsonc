@@ -49,6 +49,7 @@
   ],
   "ignorePaths": [
     ".gitignore",
+    ".yarnrc.yml",
     "*.svg.txt",
     "*.svg",
     "cspell.jsonc",
