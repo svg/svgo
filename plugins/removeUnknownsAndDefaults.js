@@ -7,7 +7,11 @@ import {
 } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { visitSkip } from '../lib/util/visit.js';
-import { collectStylesheet, computeStyle } from '../lib/style.js';
+import {
+  collectStylesheet,
+  computeStyle,
+  includesAttrSelector,
+} from '../lib/style.js';
 
 /**
  * @typedef RemoveUnknownsAndDefaultsParams
@@ -192,7 +196,12 @@ export const fn = (root, params) => {
             attributesDefaults.get(name) === value
           ) {
             // keep defaults if parent has own or inherited style
-            if (computedParentStyle?.[name] == null) {
+            if (
+              computedParentStyle?.[name] == null &&
+              !stylesheet.rules.some((rule) =>
+                includesAttrSelector(rule.selector, name),
+              )
+            ) {
               delete node.attributes[name];
             }
           }
