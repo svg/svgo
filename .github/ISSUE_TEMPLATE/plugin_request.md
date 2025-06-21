@@ -2,12 +2,13 @@
 name: Plugin request
 about: Suggest a plugin for this project
 title: ''
-labels: 'New plugin'
+labels: 'new plugin'
+type: feature
 assignees: ''
 ---
 
 **Is your plugin request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+A clear and concise description of what the problem is. Ex. I'm always frustrated when […]
 
 **Describe what the plugin should do**
 A clear and concise description of what you want to happen.
