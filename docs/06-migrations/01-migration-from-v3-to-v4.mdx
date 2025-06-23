@@ -69,12 +69,12 @@ If you `import`/`require` helpers, the array of built-in plugins, or a single pl
 
 // import the array of built-in plugins
 - import { builtin } from 'svgo/lib/builtin';
-+ import { builtinPlugins } from 'svgo'
++ import { builtinPlugins } from 'svgo';
 
 // getting a single plugin
 - import presetDefault from 'svgo/plugins/preset-default';
 + import { builtinPlugins } from 'svgo';
-+ const prefixDefault = builtinPlugins.find(plugin => plugin.name === 'preset-default');
++ const presetDefault = builtinPlugins.find(plugin => plugin.name === 'preset-default');
 
 // getting a map of plugin names to implementations
 import { builtinPlugins } from 'svgo';
