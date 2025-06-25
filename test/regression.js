@@ -18,7 +18,6 @@ const HEIGHT = 720;
 /** @type {import('playwright').PageScreenshotOptions} */
 const screenshotOptions = {
   omitBackground: true,
-  clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
   animations: 'disabled',
 };
 
@@ -36,21 +35,29 @@ const runTests = async (list) => {
    */
   const processFile = async (page, name) => {
     await page.goto(`http://localhost:${PORT}/original/${name}`);
-    const originalBuffer = await page.screenshot(screenshotOptions);
+    let element = await page.waitForSelector('svg');
+    const originalBuffer = await element.screenshot(screenshotOptions);
     await page.goto(`http://localhost:${PORT}/optimized/${name}`);
-    const optimizedBufferPromise = page.screenshot(screenshotOptions);
+    element = await page.waitForSelector('svg');
+    const optimizedBufferPromise = element.screenshot(screenshotOptions);
 
-    const writeDiffs = process.env.NO_DIFF == null;
-    const diff = writeDiffs ? new PNG({ width: WIDTH, height: HEIGHT }) : null;
     const originalPng = PNG.sync.read(originalBuffer);
     const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
+    const writeDiffs = process.env.NO_DIFF == null;
+    const diff = writeDiffs
+      ? new PNG({ width: originalPng.width, height: originalPng.height })
+      : null;
+
+    // TODO: Maybe we would also like to manually compare orig and optimized size otherwise we *may* crash the entire test process otherwise.
+    //       But at the same time it is much more unlikely to have a change in the
     const matched = pixelmatch(
       originalPng.data,
       optimizedPng.data,
       diff?.data,
-      WIDTH,
-      HEIGHT,
+      originalPng.width,
+      originalPng.height,
     );
+
     // ignore small aliasing issues
     if (matched <= 4) {
       passed++;
@@ -68,6 +75,7 @@ const runTests = async (list) => {
       }
     }
   };
+
   const worker = async () => {
     let item;
     const page = await context.newPage();
