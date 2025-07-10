@@ -671,17 +671,24 @@ function filters(
           } // fix up next curve
           command = 'l';
           data = data.slice(-2);
-        } else if (command === 'q' && isCurveStraightLine(data)) {
-          if (next && next.command == 't') {
+        } else if (
+          (command === 'q' && isCurveStraightLine(data)) ||
+          (command === 't' && prev.command !== 'q' && prev.command !== 't')
+        ) {
+          if (command == 'q' && next && next.command == 't') {
             makeLonghand(next, data);
           } // fix up next curve
-          command = 'l';
-          data = data.slice(-2);
-        } else if (
-          command === 't' &&
-          prev.command !== 'q' &&
-          prev.command !== 't'
-        ) {
+          if (command == 't' && next && next.command == 't') {
+            next.command = 'q';
+            next.args.unshift(
+              // @ts-expect-error
+              // prettier-ignore
+              (2 * item.coords[0] - item.base[0]) - item.coords[0],
+              // @ts-expect-error
+              // prettier-ignore
+              (2 * item.coords[1] - item.base[1]) - item.coords[1],
+            );
+          } // fix up next curve
           command = 'l';
           data = data.slice(-2);
         } else if (
