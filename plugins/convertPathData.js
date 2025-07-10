@@ -877,10 +877,8 @@ function filters(
         (command === 'l' || command === 'h' || command === 'v')
       ) {
         if (
-          // @ts-expect-error
-          Math.abs(pathBase[0] - item.coords[0]) < error &&
-          // @ts-expect-error
-          Math.abs(pathBase[1] - item.coords[1]) < error
+          Math.abs(pathBase[0] - relSubpoint[0]) < error &&
+          Math.abs(pathBase[1] - relSubpoint[1]) < error
         ) {
           command = 'z';
           data = [];
@@ -918,7 +916,7 @@ function filters(
         prevQControlPoint = reflectPoint(qControlPoint, item.base);
       } else {
         // @ts-expect-error
-        prevQControlPoint = item.coords;
+        prevQControlPoint = relSubpoint.slice();
       }
     } else {
       prevQControlPoint = undefined;
