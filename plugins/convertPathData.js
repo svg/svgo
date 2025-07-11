@@ -626,18 +626,19 @@ function filters(
           data[6] += item.base[1] - relSubpoint[1];
         }
         // Correct l commands heading home
-        if (command == 'l') {
-          if (
-            // @ts-expect-error
-            Math.abs(item.coords[0] - pathBase[0]) < error &&
-            // @ts-expect-error
-            Math.abs(item.coords[1] - pathBase[1]) < error
-          ) {
-            // @ts-expect-error
-            data[0] = pathBase[0] - item.base[0];
-            // @ts-expect-error
-            data[1] = pathBase[1] - item.base[1];
-          }
+        if (
+          command == 'l' &&
+          prev.command != 'M' &&
+          prev.command != 'm' &&
+          // @ts-expect-error
+          Math.abs(item.coords[0] - pathBase[0]) < error &&
+          // @ts-expect-error
+          Math.abs(item.coords[1] - pathBase[1]) < error
+        ) {
+          // @ts-expect-error
+          data[0] = pathBase[0] - item.base[0];
+          // @ts-expect-error
+          data[1] = pathBase[1] - item.base[1];
         }
         roundData(data);
 
