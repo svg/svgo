@@ -1,8 +1,6 @@
-'use strict';
-
-exports.name = 'removeDimensions';
-exports.description =
-  'removes width and height in presence of viewBox (opposite to removeViewBox, disable it first)';
+export const name = 'removeDimensions';
+export const description =
+  'removes width and height in presence of viewBox (opposite to removeViewBox)';
 
 /**
  * Remove width/height attributes and add the viewBox attribute if it's missing
@@ -14,9 +12,9 @@ exports.description =
  *
  * @author Benny Schudel
  *
- * @type {import('./plugins-types').Plugin<'removeDimensions'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {

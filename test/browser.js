@@ -1,7 +1,15 @@
-const assert = require('assert');
-const fs = require('node:fs/promises');
-const http = require('http');
-const { chromium } = require('playwright');
+import assert from 'assert';
+import fs from 'node:fs/promises';
+import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { chromium } from 'playwright';
+
+const PORT = 5001;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkgPath = path.join(__dirname, '../package.json');
+const { version } = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
 
 const fixture = `<svg xmlns="http://www.w3.org/2000/svg">
     <g attr1="val1">
@@ -24,11 +32,14 @@ const expected = `<svg xmlns="http://www.w3.org/2000/svg">
 
 const content = `
 <script type="module">
-import { optimize } from '/svgo.browser.js';
+import { VERSION, optimize, builtinPlugins, _collections } from '/svgo.browser.js';
 const result = optimize(${JSON.stringify(fixture)}, {
   plugins : [],
   js2svg  : { pretty: true, indent: 2 }
 });
+globalThis.version = VERSION;
+globalThis.builtinPlugins = builtinPlugins;
+globalThis._collections = _collections;
 globalThis.result = result.data;
 </script>
 `;
@@ -49,13 +60,32 @@ const runTest = async () => {
   const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto('http://localhost:5000');
-  const actual = await page.evaluate(() => globalThis.result);
-  assert.equal(actual, expected);
+  await page.goto(`http://localhost:${PORT}`);
+
+  const actual = await page.evaluate(() => ({
+    version: globalThis.version,
+    builtinPlugins: globalThis.builtinPlugins,
+    _collections: globalThis._collections,
+    result: globalThis.result,
+  }));
+
+  assert.strictEqual(actual.version, version);
+  assert.notEqual(
+    actual.builtinPlugins,
+    undefined,
+    'builtinPlugins must be defined',
+  );
+  assert.notEqual(
+    actual._collections,
+    undefined,
+    '_collections must be defined',
+  );
+  assert.equal(actual.result, expected);
+
   await browser.close();
 };
 
-server.listen(5000, async () => {
+server.listen(PORT, async () => {
   try {
     await runTest();
     console.info('Tested successfully');

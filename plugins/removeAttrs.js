@@ -1,7 +1,12 @@
-'use strict';
+/**
+ * @typedef RemoveAttrsParams
+ * @property {string=} elemSeparator
+ * @property {boolean=} preserveCurrentColor
+ * @property {string | string[]} attrs
+ */
 
-exports.name = 'removeAttrs';
-exports.description = 'removes specified attributes';
+export const name = 'removeAttrs';
+export const description = 'removes specified attributes';
 
 const DEFAULT_SEPARATOR = ':';
 const ENOATTRS = `Warning: The plugin "removeAttrs" requires the "attrs" parameter.
@@ -81,9 +86,9 @@ plugins: [
  *
  * @author Benny Schudel
  *
- * @type {import('./plugins-types').Plugin<'removeAttrs'>}
+ * @type {import('../lib/types.js').Plugin<RemoveAttrsParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   if (typeof params.attrs == 'undefined') {
     console.warn(ENOATTRS);
     return null;
@@ -124,14 +129,11 @@ exports.fn = (root, params) => {
           if (list[0].test(node.name)) {
             // loop attributes
             for (const [name, value] of Object.entries(node.attributes)) {
+              const isCurrentColor = value.toLowerCase() === 'currentcolor';
               const isFillCurrentColor =
-                preserveCurrentColor &&
-                name == 'fill' &&
-                value == 'currentColor';
+                preserveCurrentColor && name == 'fill' && isCurrentColor;
               const isStrokeCurrentColor =
-                preserveCurrentColor &&
-                name == 'stroke' &&
-                value == 'currentColor';
+                preserveCurrentColor && name == 'stroke' && isCurrentColor;
               if (
                 !isFillCurrentColor &&
                 !isStrokeCurrentColor &&

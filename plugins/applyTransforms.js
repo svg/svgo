@@ -1,39 +1,25 @@
-'use strict';
-
-/**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
- * @typedef {import('../lib/types').XastElement} XastElement
- */
-
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const {
-  transformsMultiply,
+import { path2js } from './_path.js';
+import {
   transform2js,
   transformArc,
-} = require('./_transforms.js');
-const { path2js } = require('./_path.js');
-const {
-  removeLeadingZero,
-  includesUrlReference,
-} = require('../lib/svgo/tools.js');
-const { referencesProps, attrsGroupsDefaults } = require('./_collections.js');
+  transformsMultiply,
+} from './_transforms.js';
+import { attrsGroupsDefaults, referencesProps } from './_collections.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-/**
- * @typedef {PathDataItem[]} PathData
- * @typedef {number[]} Matrix
- */
+import { includesUrlReference, removeLeadingZero } from '../lib/svgo/tools.js';
 
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
  * Apply transformation(s) to the Path data.
  *
- * @type {import('../lib/types').Plugin<{
+ * @type {import('../lib/types.js').Plugin<{
  *   transformPrecision: number,
  *   applyTransformsStroked: boolean,
  * }>}
  */
-const applyTransforms = (root, params) => {
+export const applyTransforms = (root, params) => {
   const stylesheet = collectStylesheet(root);
   return {
     element: {
@@ -97,9 +83,9 @@ const applyTransforms = (root, params) => {
         }
 
         const scale = Number(
-          Math.sqrt(
-            matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1],
-          ).toFixed(transformPrecision),
+          Math.hypot(matrix.data[0], matrix.data[1]).toFixed(
+            transformPrecision,
+          ),
         );
 
         if (stroke && stroke != 'none') {
@@ -160,10 +146,12 @@ const applyTransforms = (root, params) => {
     },
   };
 };
-exports.applyTransforms = applyTransforms;
 
 /**
- * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
+ * @param {ReadonlyArray<number>} matrix
+ * @param {number} x
+ * @param {number} y
+ * @returns {[number, number]}
  */
 const transformAbsolutePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y + matrix[4];
@@ -172,7 +160,10 @@ const transformAbsolutePoint = (matrix, x, y) => {
 };
 
 /**
- * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
+ * @param {ReadonlyArray<number>} matrix
+ * @param {number} x
+ * @param {number} y
+ * @returns {[number, number]}
  */
 const transformRelativePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y;
@@ -181,16 +172,13 @@ const transformRelativePoint = (matrix, x, y) => {
 };
 
 /**
- * @type {(pathData: PathData, matrix: Matrix) => void}
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} pathData
+ * @param {ReadonlyArray<number>} matrix
  */
 const applyMatrixToPathData = (pathData, matrix) => {
-  /**
-   * @type {[number, number]}
-   */
+  /** @type {[number, number]} */
   const start = [0, 0];
-  /**
-   * @type {[number, number]}
-   */
+  /** @type {[number, number]} */
   const cursor = [0, 0];
 
   for (const pathItem of pathData) {
@@ -217,7 +205,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
     }
 
     // horizontal lineto (x)
-    // convert to lineto to handle two-dimentional transforms
+    // convert to lineto to handle two-dimensional transforms
     if (command === 'H') {
       command = 'L';
       args = [args[0], cursor[1]];
@@ -228,7 +216,7 @@ const applyMatrixToPathData = (pathData, matrix) => {
     }
 
     // vertical lineto (y)
-    // convert to lineto to handle two-dimentional transforms
+    // convert to lineto to handle two-dimensional transforms
     if (command === 'V') {
       command = 'L';
       args = [cursor[0], args[0]];

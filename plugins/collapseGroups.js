@@ -1,16 +1,13 @@
-'use strict';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { elemsGroups, inheritableAttrs } from './_collections.js';
+
+export const name = 'collapseGroups';
+export const description = 'collapses useless groups';
 
 /**
- * @typedef {import('../lib/types').XastNode} XastNode
- */
-
-const { inheritableAttrs, elemsGroups } = require('./_collections.js');
-
-exports.name = 'collapseGroups';
-exports.description = 'collapses useless groups';
-
-/**
- * @type {(node: XastNode, name: string) => boolean}
+ * @param {import('../lib/types.js').XastNode} node
+ * @param {string} name
+ * @returns {boolean}
  */
 const hasAnimatedAttr = (node, name) => {
   if (node.type === 'element') {
@@ -38,20 +35,22 @@ const hasAnimatedAttr = (node, name) => {
  *         <path d="..."/>
  *     </g>
  * </g>
- *         ⬇
+ *  ⬇
  * <g>
  *     <g>
  *         <path attr1="val1" d="..."/>
  *     </g>
  * </g>
- *         ⬇
+ *  ⬇
  * <path attr1="val1" d="..."/>
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'collapseGroups'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = (root) => {
+  const stylesheet = collectStylesheet(root);
+
   return {
     element: {
       exit: (node, parentNode) => {
@@ -69,11 +68,14 @@ exports.fn = () => {
           node.children.length === 1
         ) {
           const firstChild = node.children[0];
+          const nodeHasFilter = !!(
+            node.attributes.filter || computeStyle(stylesheet, node).filter
+          );
           // TODO untangle this mess
           if (
             firstChild.type === 'element' &&
             firstChild.attributes.id == null &&
-            node.attributes.filter == null &&
+            !nodeHasFilter &&
             (node.attributes.class == null ||
               firstChild.attributes.class == null) &&
             ((node.attributes['clip-path'] == null &&
@@ -82,26 +84,30 @@ exports.fn = () => {
                 node.attributes.transform == null &&
                 firstChild.attributes.transform == null))
           ) {
+            const newChildElemAttrs = { ...firstChild.attributes };
+
             for (const [name, value] of Object.entries(node.attributes)) {
               // avoid copying to not conflict with animated attribute
               if (hasAnimatedAttr(firstChild, name)) {
                 return;
               }
-              if (firstChild.attributes[name] == null) {
-                firstChild.attributes[name] = value;
+
+              if (newChildElemAttrs[name] == null) {
+                newChildElemAttrs[name] = value;
               } else if (name === 'transform') {
-                firstChild.attributes[name] =
-                  value + ' ' + firstChild.attributes[name];
-              } else if (firstChild.attributes[name] === 'inherit') {
-                firstChild.attributes[name] = value;
+                newChildElemAttrs[name] = value + ' ' + newChildElemAttrs[name];
+              } else if (newChildElemAttrs[name] === 'inherit') {
+                newChildElemAttrs[name] = value;
               } else if (
-                inheritableAttrs.has(name) === false &&
-                firstChild.attributes[name] !== value
+                !inheritableAttrs.has(name) &&
+                newChildElemAttrs[name] !== value
               ) {
                 return;
               }
-              delete node.attributes[name];
             }
+
+            node.attributes = {};
+            firstChild.attributes = newChildElemAttrs;
           }
         }
 
@@ -120,13 +126,6 @@ exports.fn = () => {
           // replace current node with all its children
           const index = parentNode.children.indexOf(node);
           parentNode.children.splice(index, 1, ...node.children);
-          // TODO remove legacy parentNode in v4
-          for (const child of node.children) {
-            Object.defineProperty(child, 'parentNode', {
-              writable: true,
-              value: parentNode,
-            });
-          }
         }
       },
     },

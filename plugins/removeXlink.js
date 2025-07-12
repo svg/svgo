@@ -1,13 +1,14 @@
-'use strict';
-
-const { elems } = require('./_collections');
+import { elems } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef RemoveXlinkParams
+ * @property {boolean=} includeLegacy
+ *   By default this plugin ignores legacy elements that were deprecated or
+ *   removed in SVG 2. Set to true to force performing operations on those too.
  */
 
-exports.name = 'removeXlink';
-exports.description =
+export const name = 'removeXlink';
+export const description =
   'remove xlink namespace and replaces attributes with the SVG 2 equivalent where applicable';
 
 /** URI indicating the Xlink namespace. */
@@ -41,8 +42,8 @@ const LEGACY_ELEMENTS = new Set([
 ]);
 
 /**
- * @param {XastElement} node
- * @param {string[]} prefixes
+ * @param {import('../lib/types.js').XastElement} node
+ * @param {ReadonlyArray<string>} prefixes
  * @param {string} attr
  * @returns {string[]}
  */
@@ -56,12 +57,12 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  * Removes XLink namespace prefixes and converts references to XLink attributes
  * to the native SVG equivalent.
  *
- * The XLink namespace is deprecated in SVG 2.
+ * XLink namespace is deprecated in SVG 2.
  *
- * @type {import('./plugins-types').Plugin<'removeXlink'>}
+ * @type {import('../lib/types.js').Plugin<RemoveXlinkParams>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
  */
-exports.fn = (_, params) => {
+export const fn = (_, params) => {
   const { includeLegacy } = params;
 
   /**
@@ -73,8 +74,8 @@ exports.fn = (_, params) => {
 
   /**
    * Namespace prefixes that exist in {@link xlinkPrefixes} but were overridden
-   * in a child element to point to another namespace, and so is not treated as
-   * an XLink attribute.
+   * in a child element to point to another namespace, and is not treated as an
+   * XLink attribute.
    *
    * @type {string[]}
    */
@@ -144,7 +145,7 @@ exports.fn = (_, params) => {
             continue;
           }
 
-          /** @type {XastElement} */
+          /** @type {import('../lib/types.js').XastElement} */
           const titleTag = {
             type: 'element',
             name: 'title',

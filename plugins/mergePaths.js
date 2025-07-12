@@ -1,28 +1,43 @@
-'use strict';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { intersects, js2path, path2js } from './_path.js';
+import { includesUrlReference } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import("../lib/types").PathDataItem} PathDataItem
- * @typedef {import('../lib/types').XastChild} XastChild
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef MergePathsParams
+ * @property {boolean=} force
+ * @property {number=} floatPrecision
+ * @property {boolean=} noSpaceAfterFlags
  */
 
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { path2js, js2path, intersects } = require('./_path.js');
+export const name = 'mergePaths';
+export const description = 'merges multiple paths in one if possible';
 
-exports.name = 'mergePaths';
-exports.description = 'merges multiple paths in one if possible';
+/**
+ * @param {import('../lib/types.js').ComputedStyles} computedStyle
+ * @param {string} attName
+ * @returns {boolean}
+ */
+function elementHasUrl(computedStyle, attName) {
+  const style = computedStyle[attName];
+
+  if (style?.type === 'static') {
+    return includesUrlReference(style.value);
+  }
+
+  return false;
+}
 
 /**
  * Merge multiple Paths into one.
  *
  * @author Kir Belevich, Lev Solntsev
  *
- * @type {import('./plugins-types').Plugin<'mergePaths'>}
+ * @type {import('../lib/types.js').Plugin<MergePathsParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     force = false,
-    floatPrecision,
+    floatPrecision = 3,
     noSpaceAfterFlags = false, // a20 60 45 0 1 30 20 → a20 60 45 0130 20
   } = params;
   const stylesheet = collectStylesheet(root);
@@ -34,14 +49,14 @@ exports.fn = (root, params) => {
           return;
         }
 
-        /** @type {XastChild[]} */
+        /** @type {import('../lib/types.js').XastChild[]} */
         const elementsToRemove = [];
         let prevChild = node.children[0];
         let prevPathData = null;
 
         /**
-         * @param {XastElement} child
-         * @param {PathDataItem[]} pathData
+         * @param {import('../lib/types.js').XastElement} child
+         * @param {ReadonlyArray<import("../lib/types.js").PathDataItem>} pathData
          */
         const updatePreviousPath = (child, pathData) => {
           js2path(child, pathData, {
@@ -84,7 +99,13 @@ exports.fn = (root, params) => {
           if (
             computedStyle['marker-start'] ||
             computedStyle['marker-mid'] ||
-            computedStyle['marker-end']
+            computedStyle['marker-end'] ||
+            computedStyle['clip-path'] ||
+            computedStyle['mask'] ||
+            computedStyle['mask-image'] ||
+            ['fill', 'filter', 'stroke'].some((attName) =>
+              elementHasUrl(computedStyle, attName),
+            )
           ) {
             if (prevPathData) {
               updatePreviousPath(prevChild, prevPathData);

@@ -1,29 +1,28 @@
-'use strict';
+import { stringifyPathData } from '../lib/path.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef ConvertShapeToPathParams
+ * @property {boolean=} convertArcs
+ * @property {number=} floatPrecision
  */
 
-const { stringifyPathData } = require('../lib/path.js');
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'convertShapeToPath';
-exports.description = 'converts basic shapes to more compact path form';
+export const name = 'convertShapeToPath';
+export const description = 'converts basic shapes to more compact path form';
 
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
- * Converts basic shape to more compact path.
- * It also allows further optimizations like
- * combining paths with similar attributes.
+ * Converts basic shape to more compact path. It also allows further
+ * optimizations like combining paths with similar attributes.
  *
  * @see https://www.w3.org/TR/SVG11/shapes.html
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types').Plugin<'convertShapeToPath'>}
+ * @type {import('../lib/types.js').Plugin<ConvertShapeToPathParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { convertArcs = false, floatPrecision: precision } = params;
 
   return {
@@ -44,10 +43,10 @@ exports.fn = (root, params) => {
           // Values like '100%' compute to NaN, thus running after
           // cleanupNumericValues when 'px' units has already been removed.
           // TODO: Calculate sizes from % and non-px units if possible.
-          if (Number.isNaN(x - y + width - height)) return;
-          /**
-           * @type {PathDataItem[]}
-           */
+          if (Number.isNaN(x - y + width - height)) {
+            return;
+          }
+          /** @type {import('../lib/types.js').PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [x, y] },
             { command: 'H', args: [x + width] },
@@ -69,10 +68,10 @@ exports.fn = (root, params) => {
           const y1 = Number(node.attributes.y1 || '0');
           const x2 = Number(node.attributes.x2 || '0');
           const y2 = Number(node.attributes.y2 || '0');
-          if (Number.isNaN(x1 - y1 + x2 - y2)) return;
-          /**
-           * @type {PathDataItem[]}
-           */
+          if (Number.isNaN(x1 - y1 + x2 - y2)) {
+            return;
+          }
+          /** @type {import('../lib/types.js').PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [x1, y1] },
             { command: 'L', args: [x2, y2] },
@@ -97,9 +96,7 @@ exports.fn = (root, params) => {
             detachNodeFromParent(node, parentNode);
             return;
           }
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {import('../lib/types.js').PathDataItem[]} */
           const pathData = [];
           for (let i = 0; i < coords.length; i += 2) {
             pathData.push({
@@ -123,9 +120,7 @@ exports.fn = (root, params) => {
           if (Number.isNaN(cx - cy + r)) {
             return;
           }
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {import('../lib/types.js').PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [cx, cy - r] },
             { command: 'A', args: [r, r, 0, 1, 0, cx, cy + r] },
@@ -148,9 +143,7 @@ exports.fn = (root, params) => {
           if (Number.isNaN(ecx - ecy + rx - ry)) {
             return;
           }
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {import('../lib/types.js').PathDataItem[]} */
           const pathData = [
             { command: 'M', args: [ecx, ecy - ry] },
             { command: 'A', args: [rx, ry, 0, 1, 0, ecx, ecy + ry] },

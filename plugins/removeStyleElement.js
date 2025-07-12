@@ -1,9 +1,7 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeStyleElement';
-exports.description = 'removes <style> element (disabled by default)';
+export const name = 'removeStyleElement';
+export const description = 'removes <style> element (disabled by default)';
 
 /**
  * Remove <style>.
@@ -12,9 +10,9 @@ exports.description = 'removes <style> element (disabled by default)';
  *
  * @author Betsy Dupuis
  *
- * @type {import('./plugins-types').Plugin<'removeStyleElement'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {

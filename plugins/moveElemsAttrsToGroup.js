@@ -1,10 +1,9 @@
-'use strict';
+import { visit } from '../lib/util/visit.js';
+import { inheritableAttrs, pathElems } from './_collections.js';
 
-const { visit } = require('../lib/xast.js');
-const { inheritableAttrs, pathElems } = require('./_collections.js');
-
-exports.name = 'moveElemsAttrsToGroup';
-exports.description = 'Move common attributes of group children to the group';
+export const name = 'moveElemsAttrsToGroup';
+export const description =
+  'Move common attributes of group children to the group';
 
 /**
  * Move common attributes of group children to the group
@@ -16,7 +15,7 @@ exports.description = 'Move common attributes of group children to the group';
  *     </g>
  *     <circle attr2="val2" attr3="val3"/>
  * </g>
- *              ⬇
+ *  ⬇
  * <g attr1="val1" attr2="val2">
  *     <g>
  *         text
@@ -26,9 +25,9 @@ exports.description = 'Move common attributes of group children to the group';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'moveElemsAttrsToGroup'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   // find if any style element is present
   let deoptimizedWithStyles = false;
   visit(root, {
@@ -79,7 +78,8 @@ exports.fn = (root) => {
         }
 
         /**
-         * attributes in group children
+         * Find common attributes in group children.
+         *
          * @type {Map<string, string[]>}
          */
         const attributes = new Map();
@@ -102,8 +102,9 @@ exports.fn = (root) => {
           }
         }
 
-        // preserve transform on children when group has clip-path or mask
+        // preserve transform on children when group has filter or clip-path or mask
         if (
+          node.attributes['filter'] != null ||
           node.attributes['clip-path'] != null ||
           node.attributes.mask != null
         ) {

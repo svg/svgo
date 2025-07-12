@@ -1,0 +1,63 @@
+---
+title: Browser
+---
+
+SVGO can run in the browser, but how to use it depends on the structure of your project.
+
+## With Build Tools
+
+These instructions are for when you're writing your website in a Node.js environment, probably with tools like [webpack](https://webpack.js.org/) or [Rollup](https://rollupjs.org/) to build it.
+
+Ensure you've installed the dependency by following the instructions in [Getting Started](../01-index.mdx#installation), then you can import `svgo/browser` to use SVGO on client-side.
+
+Here's a minimal example using [React](https://react.dev/):
+
+```js
+import React from 'react';
+import { optimize } from 'svgo/browser';
+
+export default function SvgoDemo(props) {
+  const { svg, svgoConfig } = props;
+  const { data } = optimize(svg, svgoConfig);
+
+  return (
+    <>
+      <span id="before">{svg}</span>
+      <span id="after">{data}</span>
+    </>
+  );
+}
+```
+
+## Without Build Tools
+
+These instructions are for when you want to fetch the SVGO browser bundle from client-side. For example, when you're building a static website with a templating engine like Handlebars, SSG like Jekyll, or just plain old HTML.
+
+You'll have to somehow serve a copy of `svgo.browser.js`, you could either:
+
+- Download the latest version of `svgo.browser.js` from our [GitHub Releases](https://github.com/svg/svgo/releases), and place it in your project directory to self-serve it.
+- Use a public CDN like [unpkg](https://unpkg.com/svgo/dist/svgo.browser.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/svgo/dist/svgo.browser.js).
+
+Here's a minimal example:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>SVGO Browser Example</title>
+    <script type="module">
+      import { VERSION } from '/svgo.browser.js';
+      // You could also do:
+      // import { VERSION } from 'https://unpkg.com/svgo/dist/svgo.browser.js';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('version').innerHTML = VERSION;
+      });
+    </script>
+  </head>
+
+  <body>
+    <span id="version"></span>
+  </body>
+</html>
+```

@@ -1,12 +1,16 @@
-'use strict';
-
-const { attrsGroups } = require('./_collections');
-
-exports.name = 'convertStyleToAttrs';
-exports.description = 'converts style to attributes';
+import { attrsGroups } from './_collections.js';
 
 /**
- * @type {(...args: string[]) => string}
+ * @typedef ConvertStyleToAttrsParams
+ * @property {boolean=} keepImportant
+ */
+
+export const name = 'convertStyleToAttrs';
+export const description = 'converts style to attributes';
+
+/**
+ * @param {...string} args
+ * @returns {string}
  */
 const g = (...args) => {
   return '(?:' + args.join('|') + ')';
@@ -14,9 +18,16 @@ const g = (...args) => {
 
 const stylingProps = attrsGroups.presentation;
 const rEscape = '\\\\(?:[0-9a-f]{1,6}\\s?|\\r\\n|.)'; // Like \" or \2051. Code points consume one space.
-const rAttr = '\\s*(' + g('[^:;\\\\]', rEscape) + '*?)\\s*'; // attribute name like ‘fill’
-const rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)"; // string in single quotes: 'smth'
-const rQuotes = '"(?:[^"\\n\\r\\\\]|' + rEscape + ')*?(?:"|$)'; // string in double quotes: "smth"
+
+/** Pattern to match attribute name like: 'fill' */
+const rAttr = '\\s*(' + g('[^:;\\\\]', rEscape) + '*?)\\s*';
+
+/** Pattern to match string in single quotes like: 'foo' */
+const rSingleQuotes = "'(?:[^'\\n\\r\\\\]|" + rEscape + ")*?(?:'|$)";
+
+/** Pattern to match string in double quotes like: "foo" */
+const rQuotes = '"(?:[^"\\n\\r\\\\]|' + rEscape + ')*?(?:"|$)';
+
 const rQuotedString = new RegExp('^' + g(rSingleQuotes, rQuotes) + '$');
 // Parentheses, E.g.: url(data:image/png;base64,iVBO...).
 // ':' and ';' inside of it should be treated as is. (Just like in strings.)
@@ -55,19 +66,19 @@ const regStripComments = new RegExp(
  *
  * @example
  * <g style="fill:#000; color: #fff;">
- *             ⬇
+ *  ⬇
  * <g fill="#000" color="#fff">
  *
  * @example
  * <g style="fill:#000; color: #fff; -webkit-blah: blah">
- *             ⬇
+ *  ⬇
  * <g fill="#000" color="#fff" style="-webkit-blah: blah">
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'convertStyleToAttrs'>}
+ * @type {import('../lib/types.js').Plugin<ConvertStyleToAttrsParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const { keepImportant = false } = params;
   return {
     element: {
@@ -75,9 +86,7 @@ exports.fn = (_root, params) => {
         if (node.attributes.style != null) {
           // ['opacity: 1', 'color: #000']
           let styles = [];
-          /**
-           * @type {Record<string, string>}
-           */
+          /** @type {Record<string, string>} */
           const newAttributes = {};
 
           // Strip CSS comments preserving escape sequences and strings.
@@ -102,8 +111,8 @@ exports.fn = (_root, params) => {
           if (styles.length) {
             styles = styles.filter(function (style) {
               if (style[0]) {
-                var prop = style[0].toLowerCase(),
-                  val = style[1];
+                const prop = style[0].toLowerCase();
+                let val = style[1];
 
                 if (rQuotedString.test(val)) {
                   val = val.slice(1, -1);

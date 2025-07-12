@@ -1,26 +1,24 @@
-'use strict';
+import fs from 'node:fs/promises';
+import http from 'http';
+import os from 'os';
+import path from 'path';
+import pixelmatch from 'pixelmatch';
+import { chromium } from 'playwright';
+import { PNG } from 'pngjs';
+import { fileURLToPath } from 'url';
+import { optimize } from '../lib/svgo.js';
 
-/**
- * @typedef {import('playwright').Page} Page
- * @typedef {import('playwright').PageScreenshotOptions} PageScreenshotOptions
- */
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const fs = require('node:fs/promises');
-const http = require('http');
-const os = require('os');
-const path = require('path');
-const pixelmatch = require('pixelmatch');
-const { chromium } = require('playwright');
-const { PNG } = require('pngjs');
-const { optimize } = require('../lib/svgo.js');
+const NAVIGATION_TIMEOUT_MS = 600000;
+const PORT = 5001;
+const WIDTH = 960;
+const HEIGHT = 720;
 
-const width = 960;
-const height = 720;
-
-/** @type {PageScreenshotOptions} */
+/** @type {import('playwright').PageScreenshotOptions} */
 const screenshotOptions = {
   omitBackground: true,
-  clip: { x: 0, y: 0, width, height },
+  clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
   animations: 'disabled',
 };
 
@@ -33,29 +31,28 @@ const runTests = async (list) => {
   let passed = 0;
   console.info('Start browser…');
   /**
-   * @param {Page} page
+   * @param {import('playwright').Page} page
    * @param {string} name
    */
   const processFile = async (page, name) => {
-    await page.goto(`http://localhost:5000/original/${name}`);
+    await page.goto(`http://localhost:${PORT}/original/${name}`);
     const originalBuffer = await page.screenshot(screenshotOptions);
-    await page.goto(`http://localhost:5000/optimized/${name}`);
+    await page.goto(`http://localhost:${PORT}/optimized/${name}`);
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
     const writeDiffs = process.env.NO_DIFF == null;
-    const diff = writeDiffs && new PNG({ width, height });
+    const diff = writeDiffs ? new PNG({ width: WIDTH, height: HEIGHT }) : null;
     const originalPng = PNG.sync.read(originalBuffer);
     const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
     const matched = pixelmatch(
       originalPng.data,
       optimizedPng.data,
-      diff ? diff.data : null,
-      width,
-      height,
+      diff?.data,
+      WIDTH,
+      HEIGHT,
     );
     // ignore small aliasing issues
     if (matched <= 4) {
-      console.info(`${name} is passed`);
       passed++;
     } else {
       mismatched++;
@@ -83,8 +80,10 @@ const runTests = async (list) => {
   const browser = await chromium.launch();
   const context = await browser.newContext({
     javaScriptEnabled: false,
-    viewport: { width, height },
+    viewport: { width: WIDTH, height: HEIGHT },
   });
+  context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
+
   await Promise.all(
     Array.from(new Array(os.cpus().length * 2), () => worker()),
   );
@@ -104,7 +103,7 @@ const runTests = async (list) => {
       let file;
       try {
         file = await fs.readFile(path.join(fixturesDir, name), 'utf-8');
-      } catch (error) {
+      } catch {
         res.statusCode = 404;
         res.end();
         return;
@@ -126,7 +125,7 @@ const runTests = async (list) => {
       throw new Error(`unknown path ${req.url}`);
     });
     await new Promise((resolve) => {
-      server.listen(5000, resolve);
+      server.listen(PORT, resolve);
     });
     const list = (await filesPromise).filter((name) => name.endsWith('.svg'));
     const passed = await runTests(list);

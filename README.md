@@ -33,10 +33,10 @@ Process single files:
 svgo one.svg two.svg -o one.min.svg two.min.svg
 ```
 
-Process a directory of files recursively with `-f`/`--folder`:
+Process a directory of files recursively with `-r`/`--recursive` and `-f`/`--folder`:
 
 ```sh
-svgo -f path/to/directory_with_svgs -o path/to/output_directory
+svgo -rf path/to/directory_with_svgs -o path/to/output_directory
 ```
 
 Help for advanced usage:
@@ -49,12 +49,12 @@ svgo --help
 
 SVGO has a plugin architecture. You can read more about all plugins in [Plugins | SVGO Documentation](https://svgo.dev/docs/plugins/), and the default plugins in [Preset Default | SVGO Documentation](https://svgo.dev/docs/preset-default/).
 
-SVGO reads the configuration from `svgo.config.js` or the `--config path/to/config.js` command-line option. Some other parameters can be configured though command-line options too.
+SVGO reads the configuration from `svgo.config.mjs` or the `--config path/to/config.mjs` command-line option. Some other parameters can be configured though command-line options too.
 
-**`svgo.config.js`**
+**`svgo.config.mjs`**
 
 ```js
-module.exports = {
+export default {
   multipass: false, // boolean
   datauri: 'base64', // 'base64'|'enc'|'unenc'
   js2svg: {
@@ -80,17 +80,17 @@ module.exports = {
 
 Instead of configuring SVGO from scratch, you can tweak the default preset to suit your needs by configuring or disabling the respective plugin.
 
-**`svgo.config.js`**
+**`svgo.config.mjs`**
 
 ```js
-module.exports = {
+export default {
   plugins: [
     {
       name: 'preset-default',
       params: {
         overrides: {
           // disable a default plugin
-          removeViewBox: false,
+          cleanupIds: false,
 
           // customize the params of a default plugin
           inlineStyles: {
@@ -109,12 +109,12 @@ You can find a list of the default plugins in the order they run in [Preset Defa
 
 You can also specify custom plugins:
 
-**`svgo.config.js`**
+**`svgo.config.mjs`**
 
 ```js
-const importedPlugin = require('./imported-plugin');
+import importedPlugin from './imported-plugin';
 
-module.exports = {
+export default {
   plugins: [
     // plugin imported from another JavaScript file
     importedPlugin,
@@ -140,7 +140,7 @@ SVGO provides a few low level utilities.
 The core of SVGO is `optimize` function.
 
 ```js
-const { optimize } = require('svgo');
+import { optimize } from 'svgo';
 
 const result = optimize(svgString, {
   path: 'path-to.svg', // recommended
@@ -152,10 +152,10 @@ const optimizedSvgString = result.data;
 
 ### loadConfig
 
-If you write a tool on top of SVGO you may want to resolve the `svgo.config.js` file.
+If you write a tool on top of SVGO you may want to resolve the `svgo.config.mjs` file.
 
 ```js
-const { loadConfig } = require('svgo');
+import { loadConfig } from 'svgo';
 
 const config = await loadConfig();
 ```
@@ -165,26 +165,6 @@ You can also specify a path and customize the current working directory.
 ```js
 const config = await loadConfig(configFile, cwd);
 ```
-
-## Other ways to use SVGO
-
-| Method                    | Reference                                                                                                               |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Web app                   | [SVGOMG](https://jakearchibald.github.io/svgomg/)                                                                       |
-| Grunt task                | [grunt-svgmin](https://github.com/sindresorhus/grunt-svgmin)                                                            |
-| Gulp task                 | [gulp-svgmin](https://github.com/ben-eb/gulp-svgmin)                                                                    |
-| Webpack loader            | [image-minimizer-webpack-plugin](https://github.com/webpack-contrib/image-minimizer-webpack-plugin/#optimize-with-svgo) |
-| PostCSS plugin            | [postcss-svgo](https://github.com/cssnano/cssnano/tree/master/packages/postcss-svgo)                                    |
-| Inkscape plugin           | [inkscape-svgo](https://github.com/konsumer/inkscape-svgo)                                                              |
-| Sketch plugin             | [svgo-compressor](https://github.com/BohemianCoding/svgo-compressor)                                                    |
-| Rollup plugin             | [rollup-plugin-svgo](https://github.com/porsager/rollup-plugin-svgo)                                                    |
-| Visual Studio Code plugin | [vscode-svgo](https://github.com/1000ch/vscode-svgo)                                                                    |
-| Atom plugin               | [atom-svgo](https://github.com/1000ch/atom-svgo)                                                                        |
-| Sublime plugin            | [Sublime-svgo](https://github.com/1000ch/Sublime-svgo)                                                                  |
-| Figma plugin              | [Advanced SVG Export](https://www.figma.com/c/plugin/782713260363070260/Advanced-SVG-Export)                            |
-| Linux app                 | [Oh My SVG](https://github.com/sonnyp/OhMySVG)                                                                          |
-| Browser extension         | [SVG Gobbler](https://github.com/rossmoody/svg-gobbler)                                                                 |
-| API                       | [Vector Express](https://github.com/smidyo/vectorexpress-api#convertor-svgo)                                            |
 
 ## Donors
 

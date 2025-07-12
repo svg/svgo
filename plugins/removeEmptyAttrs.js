@@ -1,18 +1,16 @@
-'use strict';
+import { attrsGroups } from './_collections.js';
 
-const { attrsGroups } = require('./_collections.js');
-
-exports.name = 'removeEmptyAttrs';
-exports.description = 'removes empty attributes';
+export const name = 'removeEmptyAttrs';
+export const description = 'removes empty attributes';
 
 /**
  * Remove attributes with empty values.
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeEmptyAttrs'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {

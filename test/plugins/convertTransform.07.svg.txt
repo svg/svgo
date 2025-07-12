@@ -1,0 +1,17 @@
+Test with skewX and sx != sy
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <text x="-32" y="32" transform="matrix(-1,0,-0.3,0.9,0,0)">uwu</text>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <text x="-32" y="32" transform="scale(-1 .9)skewX(16.7)">uwu</text>
+</svg>
+
+@@@
+
+{"degPrecision":3}

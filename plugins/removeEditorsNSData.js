@@ -1,10 +1,14 @@
-'use strict';
+import { editorNamespaces } from './_collections.js';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-const { editorNamespaces } = require('./_collections.js');
+/**
+ * @typedef RemoveEditorsNSDataParams
+ * @property {string[]=} additionalNamespaces
+ */
 
-exports.name = 'removeEditorsNSData';
-exports.description = 'removes editors namespaces, elements and attributes';
+export const name = 'removeEditorsNSData';
+export const description =
+  'removes editors namespaces, elements and attributes';
 
 /**
  * Remove editors namespaces, elements and attributes.
@@ -16,16 +20,14 @@ exports.description = 'removes editors namespaces, elements and attributes';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeEditorsNSData'>}
+ * @type {import('../lib/types.js').Plugin<RemoveEditorsNSDataParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   let namespaces = [...editorNamespaces];
   if (Array.isArray(params.additionalNamespaces)) {
     namespaces = [...editorNamespaces, ...params.additionalNamespaces];
   }
-  /**
-   * @type {string[]}
-   */
+  /** @type {string[]} */
   const prefixes = [];
   return {
     element: {

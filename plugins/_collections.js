@@ -1,11 +1,11 @@
-'use strict';
-
-// https://www.w3.org/TR/SVG11/intro.html#Definitions
+/**
+ * @fileoverview Based on https://www.w3.org/TR/SVG11/intro.html#Definitions.
+ */
 
 /**
- * @type {Record<string, Set<string>>}
+ * @type {Readonly<Record<string, Set<string>>>}
  */
-exports.elemsGroups = {
+export const elemsGroups = {
   animation: new Set([
     'animate',
     'animateColor',
@@ -57,6 +57,7 @@ exports.elemsGroups = {
     'symbol',
   ]),
   textContent: new Set([
+    'a',
     'altGlyph',
     'altGlyphDef',
     'altGlyphItem',
@@ -102,24 +103,24 @@ exports.elemsGroups = {
 };
 
 /**
- * Elements where adding or removing whitespace may effect rendering, metadata,
+ * Elements where adding or removing whitespace may affect rendering, metadata,
  * or semantic meaning.
  *
  * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
+ * @type {Readonly<Set<string>>}
  */
-exports.textElems = new Set([
-  ...exports.elemsGroups.textContent,
-  'pre',
-  'title',
-]);
-
-exports.pathElems = new Set(['glyph', 'missing-glyph', 'path']);
+export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
 
 /**
- * @type {Record<string, Set<string>>}
+ * @type {Readonly<Set<string>>}
+ */
+export const pathElems = new Set(['glyph', 'missing-glyph', 'path']);
+
+/**
+ * @type {Readonly<Record<string, Set<string>>>}
  * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
  */
-exports.attrsGroups = {
+export const attrsGroups = {
   animationAddition: new Set(['additive', 'accumulate']),
   animationAttributeTarget: new Set(['attributeType', 'attributeName']),
   animationEvent: new Set(['onbegin', 'onend', 'onrepeat', 'onload']),
@@ -315,9 +316,9 @@ exports.attrsGroups = {
 };
 
 /**
- * @type {Record<string, Record<string, string>>}
+ * @type {Readonly<Record<string, Record<string, string>>>}
  */
-exports.attrsGroupsDefaults = {
+export const attrsGroupsDefaults = {
   core: { 'xml:space': 'default' },
   presentation: {
     clip: 'auto',
@@ -382,16 +383,40 @@ exports.attrsGroupsDefaults = {
 };
 
 /**
- * @type {Record<string, {
+ * @type {Readonly<Record<string, { safe?: Set<string>; unsafe?: Set<string> }>>}
+ * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
+ */
+export const attrsGroupsDeprecated = {
+  animationAttributeTarget: { unsafe: new Set(['attributeType']) },
+  conditionalProcessing: { unsafe: new Set(['requiredFeatures']) },
+  core: { unsafe: new Set(['xml:base', 'xml:lang', 'xml:space']) },
+  presentation: {
+    unsafe: new Set([
+      'clip',
+      'color-profile',
+      'enable-background',
+      'glyph-orientation-horizontal',
+      'glyph-orientation-vertical',
+      'kerning',
+    ]),
+  },
+};
+
+/**
+ * @type {Readonly<Record<string, {
  *   attrsGroups: Set<string>,
  *   attrs?: Set<string>,
  *   defaults?: Record<string, string>,
+ *   deprecated?: {
+ *     safe?: Set<string>,
+ *     unsafe?: Set<string>,
+ *   },
  *   contentGroups?: Set<string>,
  *   content?: Set<string>,
- * }>}
+ * }>>}
  * @see https://www.w3.org/TR/SVG11/eltindex.html
  */
-exports.elems = {
+export const elems = {
   a: {
     attrsGroups: new Set([
       'conditionalProcessing',
@@ -580,6 +605,7 @@ exports.elems = {
       name: 'sRGB',
       'rendering-intent': 'auto',
     },
+    deprecated: { unsafe: new Set(['name']) },
     contentGroups: new Set(['descriptive']),
   },
   cursor: {
@@ -964,6 +990,7 @@ exports.elems = {
       width: '120%',
       height: '120%',
     },
+    deprecated: { unsafe: new Set(['filterRes']) },
     contentGroups: new Set(['descriptive', 'filterPrimitive']),
     content: new Set(['animate', 'set']),
   },
@@ -983,6 +1010,15 @@ exports.elems = {
     defaults: {
       'horiz-origin-x': '0',
       'horiz-origin-y': '0',
+    },
+    deprecated: {
+      unsafe: new Set([
+        'horiz-origin-x',
+        'horiz-origin-y',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
     },
     contentGroups: new Set(['descriptive']),
     content: new Set(['font-face', 'glyph', 'hkern', 'missing-glyph', 'vkern']),
@@ -1034,6 +1070,31 @@ exports.elems = {
       'panose-1': '0 0 0 0 0 0 0 0 0 0',
       slope: '0',
     },
+    deprecated: {
+      unsafe: new Set([
+        'accent-height',
+        'alphabetic',
+        'ascent',
+        'bbox',
+        'cap-height',
+        'descent',
+        'hanging',
+        'ideographic',
+        'mathematical',
+        'panose-1',
+        'slope',
+        'stemh',
+        'stemv',
+        'unicode-range',
+        'units-per-em',
+        'v-alphabetic',
+        'v-hanging',
+        'v-ideographic',
+        'v-mathematical',
+        'widths',
+        'x-height',
+      ]),
+    },
     contentGroups: new Set(['descriptive']),
     content: new Set([
       // TODO: "at most one 'font-face-src' element"
@@ -1044,10 +1105,12 @@ exports.elems = {
   'font-face-format': {
     attrsGroups: new Set(['core']),
     attrs: new Set(['string']),
+    deprecated: { unsafe: new Set(['string']) },
   },
   'font-face-name': {
     attrsGroups: new Set(['core']),
     attrs: new Set(['name']),
+    deprecated: { unsafe: new Set(['name']) },
   },
   'font-face-src': {
     attrsGroups: new Set(['core']),
@@ -1140,6 +1203,18 @@ exports.elems = {
     defaults: {
       'arabic-form': 'initial',
     },
+    deprecated: {
+      unsafe: new Set([
+        'arabic-form',
+        'glyph-name',
+        'horiz-adv-x',
+        'orientation',
+        'unicode',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1179,6 +1254,14 @@ exports.elems = {
       'vert-origin-x',
       'vert-origin-y',
     ]),
+    deprecated: {
+      unsafe: new Set([
+        'horiz-adv-x',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1242,6 +1325,7 @@ exports.elems = {
   hkern: {
     attrsGroups: new Set(['core']),
     attrs: new Set(['u1', 'g1', 'u2', 'g2', 'k']),
+    deprecated: { unsafe: new Set(['g1', 'g2', 'k', 'u1', 'u2']) },
   },
   image: {
     attrsGroups: new Set([
@@ -1436,6 +1520,14 @@ exports.elems = {
       'vert-origin-x',
       'vert-origin-y',
     ]),
+    deprecated: {
+      unsafe: new Set([
+        'horiz-adv-x',
+        'vert-adv-y',
+        'vert-origin-x',
+        'vert-origin-y',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1716,6 +1808,15 @@ exports.elems = {
       contentScriptType: 'application/ecmascript',
       contentStyleType: 'text/css',
     },
+    deprecated: {
+      safe: new Set(['version']),
+      unsafe: new Set([
+        'baseProfile',
+        'contentScriptType',
+        'contentStyleType',
+        'zoomAndPan',
+      ]),
+    },
     contentGroups: new Set([
       'animation',
       'descriptive',
@@ -1962,18 +2063,24 @@ exports.elems = {
       'viewTarget',
       'zoomAndPan',
     ]),
+    deprecated: { unsafe: new Set(['viewTarget', 'zoomAndPan']) },
     contentGroups: new Set(['descriptive']),
   },
   vkern: {
     attrsGroups: new Set(['core']),
     attrs: new Set(['u1', 'g1', 'u2', 'g2', 'k']),
+    deprecated: { unsafe: new Set(['g1', 'g2', 'k', 'u1', 'u2']) },
   },
 };
 
-// https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
-exports.editorNamespaces = new Set([
+/**
+ * @type {Readonly<Set<string>>}
+ * @see https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+ */
+export const editorNamespaces = new Set([
   'http://creativecommons.org/ns#',
   'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
+  'http://krita.org/namespaces/svg/krita',
   'http://ns.adobe.com/AdobeIllustrator/10.0/',
   'http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/',
   'http://ns.adobe.com/Extensibility/1.0/',
@@ -1994,12 +2101,14 @@ exports.editorNamespaces = new Set([
   'http://www.serif.com/',
   'http://www.vector.evaxdesign.sk',
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  'https://boxy-svg.com',
 ]);
 
 /**
+ * @type {Readonly<Set<string>>}
  * @see https://www.w3.org/TR/SVG11/linking.html#processingIRI
  */
-exports.referencesProps = new Set([
+export const referencesProps = new Set([
   'clip-path',
   'color-profile',
   'fill',
@@ -2013,9 +2122,10 @@ exports.referencesProps = new Set([
 ]);
 
 /**
+ * @type {Readonly<Set<string>>}
  * @see https://www.w3.org/TR/SVG11/propidx.html
  */
-exports.inheritableAttrs = new Set([
+export const inheritableAttrs = new Set([
   'clip-rule',
   'color-interpolation-filters',
   'color-interpolation',
@@ -2063,7 +2173,10 @@ exports.inheritableAttrs = new Set([
   'writing-mode',
 ]);
 
-exports.presentationNonInheritableGroupAttrs = new Set([
+/**
+ * @type {Readonly<Set<string>>}
+ */
+export const presentationNonInheritableGroupAttrs = new Set([
   'clip-path',
   'display',
   'filter',
@@ -2075,11 +2188,10 @@ exports.presentationNonInheritableGroupAttrs = new Set([
 ]);
 
 /**
- * https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
- *
- * @type {Record<string, string>}
+ * @type {Readonly<Record<string, string>>}
+ * @see https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
  */
-exports.colorsNames = {
+export const colorsNames = {
   aliceblue: '#f0f8ff',
   antiquewhite: '#faebd7',
   aqua: '#0ff',
@@ -2231,9 +2343,9 @@ exports.colorsNames = {
 };
 
 /**
- * @type {Record<string, string>}
+ * @type {Readonly<Record<string, string>>}
  */
-exports.colorsShortNames = {
+export const colorsShortNames = {
   '#f0ffff': 'azure',
   '#f5f5dc': 'beige',
   '#ffe4c4': 'bisque',
@@ -2269,9 +2381,10 @@ exports.colorsShortNames = {
 };
 
 /**
+ * @type {Readonly<Set<string>>}
  * @see https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
  */
-exports.colorsProps = new Set([
+export const colorsProps = new Set([
   'color',
   'fill',
   'flood-color',
@@ -2280,8 +2393,11 @@ exports.colorsProps = new Set([
   'stroke',
 ]);
 
-/** @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes */
-exports.pseudoClasses = {
+/**
+ * @type {Readonly<Record<string, Set<string>>>}
+ * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
+ */
+export const pseudoClasses = {
   displayState: new Set(['fullscreen', 'modal', 'picture-in-picture']),
   input: new Set([
     'autofill',
@@ -2291,7 +2407,7 @@ exports.pseudoClasses = {
     'disabled',
     'enabled',
     'in-range',
-    'indetermined',
+    'indeterminate',
     'invalid',
     'optional',
     'out-of-range',

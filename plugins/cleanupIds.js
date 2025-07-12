@@ -1,14 +1,17 @@
-'use strict';
+import { visitSkip } from '../lib/util/visit.js';
+import { findReferences, hasScripts } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {import('../lib/types').XastElement} XastElement
+ * @typedef CleanupIdsParams
+ * @property {boolean=} remove
+ * @property {boolean=} minify
+ * @property {string[]=} preserve
+ * @property {string[]=} preservePrefixes
+ * @property {boolean=} force
  */
 
-const { visitSkip } = require('../lib/xast.js');
-const { hasScripts, findReferences } = require('../lib/svgo/tools');
-
-exports.name = 'cleanupIds';
-exports.description = 'removes unused IDs and minifies used';
+export const name = 'cleanupIds';
+export const description = 'removes unused IDs and minifies used';
 
 const generateIdChars = [
   'a',
@@ -69,7 +72,9 @@ const maxIdIndex = generateIdChars.length - 1;
 /**
  * Check if an ID starts with any one of a list of strings.
  *
- * @type {(string: string, prefixes: string[]) => boolean}
+ * @param {string} string
+ * @param {ReadonlyArray<string>} prefixes
+ * @returns {boolean}
  */
 const hasStringPrefix = (string, prefixes) => {
   for (const prefix of prefixes) {
@@ -109,21 +114,22 @@ const generateId = (currentId) => {
 /**
  * Get string from generated ID array.
  *
- * @type {(arr: number[]) => string}
+ * @param {ReadonlyArray<number>} arr
+ * @returns {string}
  */
 const getIdString = (arr) => {
   return arr.map((i) => generateIdChars[i]).join('');
 };
 
 /**
- * Remove unused and minify used IDs
- * (only if there are no any <style> or <script>).
+ * Remove unused and minify used IDs (only if there are no `<style>` or
+ * `<script>` nodes).
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'cleanupIds'>}
+ * @type {import('../lib/types.js').Plugin<CleanupIdsParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     remove = true,
     minify = true,
@@ -139,13 +145,9 @@ exports.fn = (_root, params) => {
     : preservePrefixes
       ? [preservePrefixes]
       : [];
-  /**
-   * @type {Map<string, XastElement>}
-   */
+  /** @type {Map<string, import('../lib/types.js').XastElement>} */
   const nodeById = new Map();
-  /**
-   * @type {Map<string, {element: XastElement, name: string }[]>}
-   */
+  /** @type {Map<string, {element: import('../lib/types.js').XastElement, name: string }[]>} */
   const referencesById = new Map();
   let deoptimized = false;
 
@@ -220,7 +222,7 @@ exports.fn = (_root, params) => {
             // replace referenced IDs with the minified ones
             if (minify && isIdPreserved(id) === false) {
               /** @type {?string} */
-              let currentIdString = null;
+              let currentIdString;
               do {
                 currentId = generateId(currentId);
                 currentIdString = getIdString(currentId);
@@ -234,10 +236,9 @@ exports.fn = (_root, params) => {
                 const value = element.attributes[name];
                 if (value.includes('#')) {
                   // replace id in href and url()
-                  element.attributes[name] = value.replace(
-                    `#${encodeURI(id)}`,
-                    `#${currentIdString}`,
-                  );
+                  element.attributes[name] = value
+                    .replace(`#${encodeURI(id)}`, `#${currentIdString}`)
+                    .replace(`#${id}`, `#${currentIdString}`);
                 } else {
                   // replace id in begin attribute
                   element.attributes[name] = value.replace(

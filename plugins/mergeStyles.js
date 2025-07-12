@@ -1,31 +1,21 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 
-/**
- * @typedef {import('../lib/types').XastElement} XastElement
- * @typedef {import('../lib/types').XastChild} XastChild
- */
-
-const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'mergeStyles';
-exports.description = 'merge multiple style elements into one';
+export const name = 'mergeStyles';
+export const description = 'merge multiple style elements into one';
 
 /**
  * Merge multiple style elements into one.
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('./plugins-types').Plugin<'mergeStyles'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
-  /**
-   * @type {?XastElement}
-   */
+export const fn = () => {
+  /** @type {?import('../lib/types.js').XastElement} */
   let firstStyleElement = null;
   let collectedStyles = '';
-  /**
-   * @type {'text' | 'cdata'}
-   */
+  /** @type {'text' | 'cdata'} */
   let styleContentType = 'text';
 
   return {
@@ -81,15 +71,8 @@ exports.fn = () => {
           firstStyleElement = node;
         } else {
           detachNodeFromParent(node, parentNode);
-          /**
-           * @type {XastChild}
-           */
+          /** @type {import('../lib/types.js').XastChild} */
           const child = { type: styleContentType, value: collectedStyles };
-          // TODO remove legacy parentNode in v4
-          Object.defineProperty(child, 'parentNode', {
-            writable: true,
-            value: firstStyleElement,
-          });
           firstStyleElement.children = [child];
         }
       },

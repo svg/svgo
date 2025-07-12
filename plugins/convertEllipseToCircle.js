@@ -1,7 +1,5 @@
-'use strict';
-
-exports.name = 'convertEllipseToCircle';
-exports.description = 'converts non-eccentric <ellipse>s to <circle>s';
+export const name = 'convertEllipseToCircle';
+export const description = 'converts non-eccentric <ellipse>s to <circle>s';
 
 /**
  * Converts non-eccentric <ellipse>s to <circle>s.
@@ -10,9 +8,9 @@ exports.description = 'converts non-eccentric <ellipse>s to <circle>s';
  *
  * @author Taylor Hunt
  *
- * @type {import('./plugins-types').Plugin<'convertEllipseToCircle'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node) => {

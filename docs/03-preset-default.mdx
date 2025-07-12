@@ -1,0 +1,84 @@
+---
+title: Preset Default
+---
+
+SVGO runs with a default preset that has the plugin ID `preset-default`. This is the default set of plugins that are used when not explicitly specified or overridden elsewhere.
+
+:::info
+
+If you aren't using SVGO directly, like through [SVGR](https://github.com/gregberge/svgr), the default plugins may differ from the default preset.
+
+:::
+
+## Plugins List
+
+The following plugins are included in `preset-default`, in the order that they're executed:
+
+- [removeDoctype](/docs/plugins/removeDoctype/)
+- [removeXMLProcInst](/docs/plugins/removeXMLProcInst/)
+- [removeComments](/docs/plugins/removeComments/)
+- [removeMetadata](/docs/plugins/removeMetadata/)
+- [removeEditorsNSData](/docs/plugins/removeEditorsNSData/)
+- [cleanupAttrs](/docs/plugins/cleanupAttrs/)
+- [mergeStyles](/docs/plugins/mergeStyles/)
+- [inlineStyles](/docs/plugins/inlineStyles/)
+- [minifyStyles](/docs/plugins/minifyStyles/)
+- [cleanupIds](/docs/plugins/cleanupIds/)
+- [removeUselessDefs](/docs/plugins/removeUselessDefs/)
+- [cleanupNumericValues](/docs/plugins/cleanupNumericValues/)
+- [convertColors](/docs/plugins/convertColors/)
+- [removeUnknownsAndDefaults](/docs/plugins/removeUnknownsAndDefaults/)
+- [removeNonInheritableGroupAttrs](/docs/plugins/removeNonInheritableGroupAttrs/)
+- [removeUselessStrokeAndFill](/docs/plugins/removeUselessStrokeAndFill/)
+- [cleanupEnableBackground](/docs/plugins/cleanupEnableBackground/)
+- [removeHiddenElems](/docs/plugins/removeHiddenElems/)
+- [removeEmptyText](/docs/plugins/removeEmptyText/)
+- [convertShapeToPath](/docs/plugins/convertShapeToPath/)
+- [convertEllipseToCircle](/docs/plugins/convertEllipseToCircle/)
+- [moveElemsAttrsToGroup](/docs/plugins/moveElemsAttrsToGroup/)
+- [moveGroupAttrsToElems](/docs/plugins/moveGroupAttrsToElems/)
+- [collapseGroups](/docs/plugins/collapseGroups/)
+- [convertPathData](/docs/plugins/convertPathData/)
+- [convertTransform](/docs/plugins/convertTransform/)
+- [removeEmptyAttrs](/docs/plugins/removeEmptyAttrs/)
+- [removeEmptyContainers](/docs/plugins/removeEmptyContainers/)
+- [removeUnusedNS](/docs/plugins/removeUnusedNS/)
+- [mergePaths](/docs/plugins/mergePaths/)
+- [sortAttrs](/docs/plugins/sortAttrs/)
+- [sortDefsChildren](/docs/plugins/sortDefsChildren/)
+- [removeDesc](/docs/plugins/removeDesc/)
+
+## Disable a Plugin
+
+Sometimes a specific plugin might not be appropriate for your workflow. You can continue using `preset-default` while disabling any plugin by using the `overrides` parameter.
+
+In `overrides`, reference the plugin ID and set it to `false` to disable it:
+
+```js
+module.exports = {
+  plugins: [
+    {
+      name: 'preset-default',
+      params: {
+        overrides: {
+          cleanupIds: false,
+        },
+      },
+    },
+  ],
+};
+```
+
+Alternatively, you can drop `preset-default` entirely, and configure your own plugin pipeline from scratch, with only the desirable plugins:
+
+```js
+module.exports = {
+  plugins: [
+    'removeDoctype',
+    'removeXMLProcInst',
+    'minifyStyles',
+    'sortAttrs',
+    'sortDefsChildren',
+  ],
+};
+```

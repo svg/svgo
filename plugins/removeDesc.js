@@ -1,24 +1,27 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
+/**
+ * @typedef RemoveDescParams
+ * @property {boolean=} removeAny
+ */
 
-exports.name = 'removeDesc';
-exports.description = 'removes <desc>';
+export const name = 'removeDesc';
+export const description = 'removes <desc>';
 
 const standardDescs = /^(Created with|Created using)/;
 
 /**
  * Removes <desc>.
- * Removes only standard editors content or empty elements 'cause it can be used for accessibility.
- * Enable parameter 'removeAny' to remove any description.
- *
- * https://developer.mozilla.org/docs/Web/SVG/Element/desc
+ * Removes only standard editors content or empty elements because it can be
+ * used for accessibility. Enable parameter 'removeAny' to remove any
+ * description.
  *
  * @author Daniel Wabyick
+ * @see https://developer.mozilla.org/docs/Web/SVG/Element/desc
  *
- * @type {import('./plugins-types').Plugin<'removeDesc'>}
+ * @type {import('../lib/types.js').Plugin<RemoveDescParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const { removeAny = false } = params;
   return {
     element: {

@@ -1,9 +1,12 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
+/**
+ * @typedef RemoveCommentsParams
+ * @property {ReadonlyArray<RegExp | string> | false=} preservePatterns
+ */
 
-exports.name = 'removeComments';
-exports.description = 'removes comments';
+export const name = 'removeComments';
+export const description = 'removes comments';
 
 /**
  * If a comment matches one of the following patterns, it will be
@@ -20,9 +23,9 @@ const DEFAULT_PRESERVE_PATTERNS = [/^!/];
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeComments'>}
+ * @type {import('../lib/types.js').Plugin<RemoveCommentsParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const { preservePatterns = DEFAULT_PRESERVE_PATTERNS } = params;
 
   return {

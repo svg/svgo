@@ -1,10 +1,10 @@
-'use strict';
+import fs from 'fs';
+import path from 'path';
+import { Command } from 'commander';
+import { fileURLToPath } from 'url';
+import svgo, { checkIsDir } from '../../lib/svgo/coa.js';
 
-const fs = require('fs');
-const path = require('path');
-const del = require('del');
-const { Command } = require('commander');
-const svgo = require('../../lib/svgo/coa.js');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const svgFolderPath = path.resolve(__dirname, 'testSvg');
 const svgFolderPathRecursively = path.resolve(__dirname, 'testSvgRecursively');
@@ -13,41 +13,34 @@ const svgFiles = [
   path.resolve(__dirname, 'testSvg/test.1.svg'),
 ];
 const tempFolder = 'temp';
-const noop = () => {};
 
-const { checkIsDir } = svgo;
-
+/**
+ * @param {ReadonlyArray<string>} args
+ * @returns {Promise<Command>}
+ */
 function runProgram(args) {
   const program = new Command();
   svgo(program);
   // prevent running process.exit
   program.exitOverride(() => {});
   // parser skips first two arguments
-  return program.parseAsync([0, 1, ...args]);
+  return program.parseAsync(['', '', ...args]);
 }
 
 describe('coa', function () {
   beforeEach(async () => {
-    await del(tempFolder);
+    await fs.promises.rm(tempFolder, { force: true, recursive: true });
     await fs.promises.mkdir(tempFolder);
   });
 
   afterAll(async () => {
-    await del(tempFolder);
+    await fs.promises.rm(tempFolder, { force: true, recursive: true });
   });
 
-  const initialConsoleError = global.console.error;
-  const initialProcessExit = global.process.exit;
-
-  function replaceConsoleError() {
-    global.process.exit = noop;
-  }
-
-  function restoreConsoleError() {
-    global.console.error = initialConsoleError;
-    global.process.exit = initialProcessExit;
-  }
-
+  /**
+   * @param {string} folderPath
+   * @returns {number}
+   */
   function calcFolderSvgWeight(folderPath) {
     return fs
       .readdirSync(folderPath)
@@ -105,7 +98,7 @@ describe('coa', function () {
     const optimizedWeight = calcFolderSvgWeight(tempFolder);
     expect(optimizedWeight).toBeGreaterThan(0);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
-    await del('temp.svg');
+    await fs.promises.rm('temp.svg', { force: true });
   });
 
   it('should optimize folder, when it stated in input', async () => {
@@ -117,48 +110,35 @@ describe('coa', function () {
       tempFolder,
       '--quiet',
     ]);
-    let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
+    const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
   });
 
   it('should throw error when stated in input folder does not exist', async () => {
-    replaceConsoleError();
-    try {
-      await runProgram([
-        '--input',
-        svgFolderPath + 'temp',
-        '--output',
-        tempFolder,
-      ]);
-    } catch (error) {
-      restoreConsoleError();
-      expect(error.message).toMatch(/no such file or directory/);
-    }
+    await expect(
+      runProgram(['--input', svgFolderPath + 'temp', '--output', tempFolder]),
+    ).rejects.toThrow(/no such file or directory/);
   });
 
   describe('stdout', () => {
     it('should show message when the folder is empty', async () => {
       const emptyFolderPath = path.resolve(__dirname, 'testSvgEmpty');
       if (!fs.existsSync(emptyFolderPath)) {
-        fs.mkdirSync(emptyFolderPath);
+        await fs.promises.mkdir(emptyFolderPath);
       }
-      try {
-        await runProgram(['--folder', emptyFolderPath, '--quiet']);
-      } catch (error) {
-        expect(error.message).toMatch(/No SVG files/);
-      }
+      await expect(
+        runProgram(['--folder', emptyFolderPath, '--quiet']),
+      ).rejects.toThrow(/No SVG files/);
     });
 
     it('should show message when folder does not consists any svg files', async () => {
-      try {
-        await runProgram([
+      await expect(
+        runProgram([
           '--folder',
           path.resolve(__dirname, 'testFolderWithNoSvg'),
           '--quiet',
-        ]);
-      } catch (error) {
-        expect(error.message).toMatch(/No SVG files have been found/);
-      }
+        ]),
+      ).rejects.toThrow(/No SVG files have been found/);
     });
   });
 });

@@ -1,9 +1,13 @@
-'use strict';
+/**
+ * @typedef AddClassesToSVGElementParams
+ * @property {string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)=} className
+ * @property {Array<string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)>=} classNames
+ */
 
-exports.name = 'addClassesToSVGElement';
-exports.description = 'adds classnames to an outer <svg> element';
+export const name = 'addClassesToSVGElement';
+export const description = 'adds classnames to an outer <svg> element';
 
-var ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
+const ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
 It should have a list of classes in "classNames" or one "className".
 Config example:
 
@@ -49,11 +53,11 @@ plugins: [
  *
  * @author April Arcus
  *
- * @type {import('./plugins-types').Plugin<'addClassesToSVGElement'>}
+ * @type {import('../lib/types.js').Plugin<AddClassesToSVGElementParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params, info) => {
   if (
-    !(Array.isArray(params.classNames) && params.classNames.some(String)) &&
+    !(Array.isArray(params.classNames) && params.classNames.length !== 0) &&
     !params.className
   ) {
     console.error(ENOCLS);
@@ -71,7 +75,11 @@ exports.fn = (root, params) => {
           );
           for (const className of classNames) {
             if (className != null) {
-              classList.add(className);
+              const classToAdd =
+                typeof className === 'string'
+                  ? className
+                  : className(node, info);
+              classList.add(classToAdd);
             }
           }
           node.attributes.class = Array.from(classList).join(' ');

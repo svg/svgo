@@ -1,254 +1,498 @@
-'use strict';
+import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
-const regTransformTypes = /matrix|translate|scale|rotate|skewX|skewY/;
+/**
+ * @typedef TransformItem
+ * @property {string} name
+ * @property {number[]} data
+ *
+ * @typedef TransformParams
+ * @property {boolean} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number} floatPrecision
+ * @property {number} transformPrecision
+ * @property {boolean} matrixToTransform
+ * @property {boolean} shortTranslate
+ * @property {boolean} shortScale
+ * @property {boolean} shortRotate
+ * @property {boolean} removeUseless
+ * @property {boolean} collapseIntoOne
+ * @property {boolean} leadingZero
+ * @property {boolean} negativeExtraSpace
+ *
+ */
+
+const transformTypes = new Set([
+  'matrix',
+  'rotate',
+  'scale',
+  'skewX',
+  'skewY',
+  'translate',
+]);
+
 const regTransformSplit =
   /\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*(.+?)\s*\)[\s,]*/;
 const regNumericValues = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 /**
- * @typedef {{ name: string, data: number[] }} TransformItem
- */
-
-/**
  * Convert transform string to JS representation.
  *
- * @type {(transformString: string) => TransformItem[]}
+ * @param {string} transformString
+ * @returns {TransformItem[]} Object representation of transform, or an empty array if it was malformed.
  */
-exports.transform2js = (transformString) => {
-  // JS representation of the transform data
-  /**
-   * @type {TransformItem[]}
-   */
+export const transform2js = (transformString) => {
+  /** @type {TransformItem[]} */
   const transforms = [];
-  // current transform context
-  /**
-   * @type {?TransformItem}
-   */
-  let current = null;
+  /** @type {?TransformItem} */
+  let currentTransform = null;
+
   // split value into ['', 'translate', '10 50', '', 'scale', '2', '', 'rotate', '-45', '']
   for (const item of transformString.split(regTransformSplit)) {
-    var num;
-    if (item) {
-      // if item is a translate function
-      if (regTransformTypes.test(item)) {
-        // then collect it and change current context
-        current = { name: item, data: [] };
-        transforms.push(current);
-        // else if item is data
-      } else {
-        // then split it into [10, 50] and collect as context.data
-        while ((num = regNumericValues.exec(item))) {
-          num = Number(num);
-          if (current != null) {
-            current.data.push(num);
-          }
+    if (!item) {
+      continue;
+    }
+
+    if (transformTypes.has(item)) {
+      currentTransform = { name: item, data: [] };
+      transforms.push(currentTransform);
+    } else {
+      let num;
+      // then split it into [10, 50] and collect as context.data
+      while ((num = regNumericValues.exec(item))) {
+        num = Number(num);
+        if (currentTransform != null) {
+          currentTransform.data.push(num);
         }
       }
     }
   }
-  // return empty array if broken transform (no data)
-  return current == null || current.data.length == 0 ? [] : transforms;
-};
 
+  return currentTransform == null || currentTransform.data.length == 0
+    ? []
+    : transforms;
+};
 /**
  * Multiply transforms into one.
  *
- * @type {(transforms: TransformItem[]) => TransformItem}
+ * @param {ReadonlyArray<TransformItem>} transforms
+ * @returns {TransformItem}
  */
-exports.transformsMultiply = (transforms) => {
-  // convert transforms objects to the matrices
+export const transformsMultiply = (transforms) => {
   const matrixData = transforms.map((transform) => {
     if (transform.name === 'matrix') {
       return transform.data;
     }
     return transformToMatrix(transform);
   });
-  // multiply all matrices into one
+
   const matrixTransform = {
     name: 'matrix',
     data:
       matrixData.length > 0 ? matrixData.reduce(multiplyTransformMatrices) : [],
   };
+
   return matrixTransform;
 };
 
 /**
- * math utilities in radians.
+ * Math utilities in radians.
  */
 const mth = {
   /**
-   * @type {(deg: number) => number}
+   * @param {number} deg
+   * @returns {number}
    */
   rad: (deg) => {
     return (deg * Math.PI) / 180;
   },
 
   /**
-   * @type {(rad: number) => number}
+   * @param {number} rad
+   * @returns {number}
    */
   deg: (rad) => {
     return (rad * 180) / Math.PI;
   },
 
   /**
-   * @type {(deg: number) => number}
+   * @param {number} deg
+   * @returns {number}
    */
   cos: (deg) => {
     return Math.cos(mth.rad(deg));
   },
 
   /**
-   * @type {(val: number, floatPrecision: number) => number}
+   * @param {number} val
+   * @param {number} floatPrecision
+   * @returns {number}
    */
   acos: (val, floatPrecision) => {
-    return Number(mth.deg(Math.acos(val)).toFixed(floatPrecision));
+    return toFixed(mth.deg(Math.acos(val)), floatPrecision);
   },
 
   /**
-   * @type {(deg: number) => number}
+   * @param {number} deg
+   * @returns {number}
    */
   sin: (deg) => {
     return Math.sin(mth.rad(deg));
   },
 
   /**
-   * @type {(val: number, floatPrecision: number) => number}
+   * @param {number} val
+   * @param {number} floatPrecision
+   * @returns {number}
    */
   asin: (val, floatPrecision) => {
-    return Number(mth.deg(Math.asin(val)).toFixed(floatPrecision));
+    return toFixed(mth.deg(Math.asin(val)), floatPrecision);
   },
 
   /**
-   * @type {(deg: number) => number}
+   * @param {number} deg
+   * @returns {number}
    */
   tan: (deg) => {
     return Math.tan(mth.rad(deg));
   },
 
   /**
-   * @type {(val: number, floatPrecision: number) => number}
+   * @param {number} val
+   * @param {number} floatPrecision
+   * @returns {number}
    */
   atan: (val, floatPrecision) => {
-    return Number(mth.deg(Math.atan(val)).toFixed(floatPrecision));
+    return toFixed(mth.deg(Math.atan(val)), floatPrecision);
   },
 };
 
 /**
- * @typedef {{
- *   convertToShorts: boolean,
- *   floatPrecision: number,
- *   transformPrecision: number,
- *   matrixToTransform: boolean,
- *   shortTranslate: boolean,
- *   shortScale: boolean,
- *   shortRotate: boolean,
- *   removeUseless: boolean,
- *   collapseIntoOne: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- * }} TransformParams
+ * @param {TransformItem} matrix
+ * @returns {TransformItem[][]}
  */
+const getDecompositions = (matrix) => {
+  const decompositions = [];
+  const qrab = decomposeQRAB(matrix);
+  const qrcd = decomposeQRCD(matrix);
+
+  if (qrab) {
+    decompositions.push(qrab);
+  }
+  if (qrcd) {
+    decompositions.push(qrcd);
+  }
+  return decompositions;
+};
 
 /**
- * Decompose matrix into simple transforms. See
- * https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html
- *
- * @type {(transform: TransformItem, params: TransformParams) => TransformItem[]}
+ * @param {TransformItem} matrix
+ * @returns {TransformItem[] | undefined}
+ * @see {@link https://frederic-wang.fr/2013/12/01/decomposition-of-2d-transform-matrices/} Where applicable, variables are named in accordance with this document.
  */
-exports.matrixToTransform = (transform, params) => {
-  let floatPrecision = params.floatPrecision;
-  let data = transform.data;
-  let transforms = [];
-  let sx = Number(
-    Math.hypot(data[0], data[1]).toFixed(params.transformPrecision),
-  );
-  let sy = Number(
-    ((data[0] * data[3] - data[1] * data[2]) / sx).toFixed(
-      params.transformPrecision,
-    ),
-  );
-  let colsSum = data[0] * data[2] + data[1] * data[3];
-  let rowsSum = data[0] * data[1] + data[2] * data[3];
-  let scaleBefore = rowsSum != 0 || sx == sy;
+const decomposeQRAB = (matrix) => {
+  const data = matrix.data;
+
+  const [a, b, c, d, e, f] = data;
+  const delta = a * d - b * c;
+  if (delta === 0) {
+    return;
+  }
+  const r = Math.hypot(a, b);
+
+  if (r === 0) {
+    return;
+  }
+
+  const decomposition = [];
+  const cosOfRotationAngle = a / r;
 
   // [..., ..., ..., ..., tx, ty] → translate(tx, ty)
-  if (data[4] || data[5]) {
-    transforms.push({
+  if (e || f) {
+    decomposition.push({
       name: 'translate',
-      data: data.slice(4, data[5] ? 6 : 5),
+      data: [e, f],
     });
   }
 
-  // [sx, 0, tan(a)·sy, sy, 0, 0] → skewX(a)·scale(sx, sy)
-  if (!data[1] && data[2]) {
-    transforms.push({
+  if (cosOfRotationAngle !== 1) {
+    const rotationAngleRads = Math.acos(cosOfRotationAngle);
+    decomposition.push({
+      name: 'rotate',
+      data: [mth.deg(b < 0 ? -rotationAngleRads : rotationAngleRads), 0, 0],
+    });
+  }
+
+  const sx = r;
+  const sy = delta / sx;
+  if (sx !== 1 || sy !== 1) {
+    decomposition.push({ name: 'scale', data: [sx, sy] });
+  }
+
+  const ac_plus_bd = a * c + b * d;
+  if (ac_plus_bd) {
+    decomposition.push({
       name: 'skewX',
-      data: [mth.atan(data[2] / sy, floatPrecision)],
+      data: [mth.deg(Math.atan(ac_plus_bd / (a * a + b * b)))],
     });
-
-    // [sx, sx·tan(a), 0, sy, 0, 0] → skewY(a)·scale(sx, sy)
-  } else if (data[1] && !data[2]) {
-    transforms.push({
-      name: 'skewY',
-      data: [mth.atan(data[1] / data[0], floatPrecision)],
-    });
-    sx = data[0];
-    sy = data[3];
-
-    // [sx·cos(a), sx·sin(a), sy·-sin(a), sy·cos(a), x, y] → rotate(a[, cx, cy])·(scale or skewX) or
-    // [sx·cos(a), sy·sin(a), sx·-sin(a), sy·cos(a), x, y] → scale(sx, sy)·rotate(a[, cx, cy]) (if !scaleBefore)
-  } else if (!colsSum || (sx == 1 && sy == 1) || !scaleBefore) {
-    if (!scaleBefore) {
-      sx = (data[0] < 0 ? -1 : 1) * Math.hypot(data[0], data[2]);
-      sy = (data[3] < 0 ? -1 : 1) * Math.hypot(data[1], data[3]);
-      transforms.push({ name: 'scale', data: [sx, sy] });
-    }
-    var angle = Math.min(Math.max(-1, data[0] / sx), 1),
-      rotate = [
-        mth.acos(angle, floatPrecision) *
-          ((scaleBefore ? 1 : sy) * data[1] < 0 ? -1 : 1),
-      ];
-
-    if (rotate[0]) transforms.push({ name: 'rotate', data: rotate });
-
-    if (rowsSum && colsSum)
-      transforms.push({
-        name: 'skewX',
-        data: [mth.atan(colsSum / (sx * sx), floatPrecision)],
-      });
-
-    // rotate(a, cx, cy) can consume translate() within optional arguments cx, cy (rotation point)
-    if (rotate[0] && (data[4] || data[5])) {
-      transforms.shift();
-      var cos = data[0] / sx,
-        sin = data[1] / (scaleBefore ? sx : sy),
-        x = data[4] * (scaleBefore ? 1 : sy),
-        y = data[5] * (scaleBefore ? 1 : sx),
-        denom =
-          (Math.pow(1 - cos, 2) + Math.pow(sin, 2)) *
-          (scaleBefore ? 1 : sx * sy);
-      rotate.push(((1 - cos) * x - sin * y) / denom);
-      rotate.push(((1 - cos) * y + sin * x) / denom);
-    }
-
-    // Too many transformations, return original matrix if it isn't just a scale/translate
-  } else if (data[1] || data[2]) {
-    return [transform];
   }
 
-  if ((scaleBefore && (sx != 1 || sy != 1)) || !transforms.length)
-    transforms.push({
-      name: 'scale',
-      data: sx == sy ? [sx] : [sx, sy],
+  return decomposition;
+};
+
+/**
+ * @param {TransformItem} matrix
+ * @returns {TransformItem[] | undefined}
+ * @see {@link https://frederic-wang.fr/2013/12/01/decomposition-of-2d-transform-matrices/} Where applicable, variables are named in accordance with this document.
+ */
+const decomposeQRCD = (matrix) => {
+  const data = matrix.data;
+
+  const [a, b, c, d, e, f] = data;
+  const delta = a * d - b * c;
+  if (delta === 0) {
+    return;
+  }
+  const s = Math.hypot(c, d);
+  if (s === 0) {
+    return;
+  }
+
+  const decomposition = [];
+
+  if (e || f) {
+    decomposition.push({
+      name: 'translate',
+      data: [e, f],
+    });
+  }
+
+  const rotationAngleRads = Math.PI / 2 - (d < 0 ? -1 : 1) * Math.acos(-c / s);
+  decomposition.push({
+    name: 'rotate',
+    data: [mth.deg(rotationAngleRads), 0, 0],
+  });
+
+  const sx = delta / s;
+  const sy = s;
+  if (sx !== 1 || sy !== 1) {
+    decomposition.push({ name: 'scale', data: [sx, sy] });
+  }
+
+  const ac_plus_bd = a * c + b * d;
+  if (ac_plus_bd) {
+    decomposition.push({
+      name: 'skewY',
+      data: [mth.deg(Math.atan(ac_plus_bd / (c * c + d * d)))],
+    });
+  }
+
+  return decomposition;
+};
+
+/**
+ * Convert translate(tx,ty)rotate(a) to rotate(a,cx,cy).
+ * @param {number} tx
+ * @param {number} ty
+ * @param {number} a
+ * @returns {TransformItem}
+ */
+const mergeTranslateAndRotate = (tx, ty, a) => {
+  // From https://www.w3.org/TR/SVG11/coords.html#TransformAttribute:
+  // We have translate(tx,ty) rotate(a). This is equivalent to [cos(a) sin(a) -sin(a) cos(a) tx ty].
+  //
+  // rotate(a,cx,cy) is equivalent to translate(cx, cy) rotate(a) translate(-cx, -cy).
+  // Multiplying the right side gives the matrix
+  //   [cos(a) sin(a) -sin(a) cos(a)
+  //   -cx * cos(a) + cy * sin(a) + cx
+  //   -cx * sin(a) - cy * cos(a) + cy
+  // ]
+  //
+  // We need cx and cy such that
+  //   tx = -cx * cos(a) + cy * sin(a) + cx
+  //   ty = -cx * sin(a) - cy * cos(a) + cy
+  //
+  // Solving these for cx and cy gives
+  //   cy = (d * ty + e * tx)/(d^2 + e^2)
+  //   cx = (tx - e * cy) / d
+  // where d = 1 - cos(a) and e = sin(a)
+
+  const rotationAngleRads = mth.rad(a);
+  const d = 1 - Math.cos(rotationAngleRads);
+  const e = Math.sin(rotationAngleRads);
+  const cy = (d * ty + e * tx) / (d * d + e * e);
+  const cx = (tx - e * cy) / d;
+  return { name: 'rotate', data: [a, cx, cy] };
+};
+
+/**
+ * @param {TransformItem} t
+ * @returns {Boolean}
+ */
+const isIdentityTransform = (t) => {
+  switch (t.name) {
+    case 'rotate':
+    case 'skewX':
+    case 'skewY':
+      return t.data[0] === 0;
+    case 'scale':
+      return t.data[0] === 1 && t.data[1] === 1;
+    case 'translate':
+      return t.data[0] === 0 && t.data[1] === 0;
+  }
+  return false;
+};
+
+/**
+ * Optimize matrix of simple transforms.
+ * @param {ReadonlyArray<TransformItem>} roundedTransforms
+ * @param {ReadonlyArray<TransformItem>} rawTransforms
+ * @returns {TransformItem[]}
+ */
+const optimize = (roundedTransforms, rawTransforms) => {
+  const optimizedTransforms = [];
+
+  for (let index = 0; index < roundedTransforms.length; index++) {
+    const roundedTransform = roundedTransforms[index];
+
+    // Don't include any identity transforms.
+    if (isIdentityTransform(roundedTransform)) {
+      continue;
+    }
+    const data = roundedTransform.data;
+    switch (roundedTransform.name) {
+      case 'rotate':
+        switch (data[0]) {
+          case 180:
+          case -180:
+            {
+              // If the next element is a scale, invert it, and don't add the rotate to the optimized array.
+              const next = roundedTransforms[index + 1];
+              if (next && next.name === 'scale') {
+                optimizedTransforms.push(
+                  createScaleTransform(next.data.map((v) => -v)),
+                );
+                index++;
+              } else {
+                // Otherwise replace the rotate with a scale(-1).
+                optimizedTransforms.push({
+                  name: 'scale',
+                  data: [-1],
+                });
+              }
+            }
+            continue;
+        }
+        optimizedTransforms.push({
+          name: 'rotate',
+          data: data.slice(0, data[1] || data[2] ? 3 : 1),
+        });
+        break;
+
+      case 'scale':
+        optimizedTransforms.push(createScaleTransform(data));
+        break;
+
+      case 'skewX':
+      case 'skewY':
+        optimizedTransforms.push({
+          name: roundedTransform.name,
+          data: [data[0]],
+        });
+        break;
+
+      case 'translate':
+        {
+          // If the next item is a rotate(a,0,0), merge the translate and rotate.
+          // If the rotation angle is +/-180, assume it will be optimized out, and don't do the merge.
+          const next = roundedTransforms[index + 1];
+          if (
+            next &&
+            next.name === 'rotate' &&
+            next.data[0] !== 180 &&
+            next.data[0] !== -180 &&
+            next.data[0] !== 0 &&
+            next.data[1] === 0 &&
+            next.data[2] === 0
+          ) {
+            // Use the un-rounded data to do the merge.
+            const data = rawTransforms[index].data;
+            optimizedTransforms.push(
+              mergeTranslateAndRotate(
+                data[0],
+                data[1],
+                rawTransforms[index + 1].data[0],
+              ),
+            );
+            // Skip over the rotate.
+            index++;
+            continue;
+          }
+        }
+        optimizedTransforms.push({
+          name: 'translate',
+          data: data.slice(0, data[1] ? 2 : 1),
+        });
+        break;
+    }
+  }
+
+  // If everything was optimized out, return identity transform scale(1).
+  return optimizedTransforms.length
+    ? optimizedTransforms
+    : [{ name: 'scale', data: [1] }];
+};
+
+/**
+ * @param {ReadonlyArray<number>} data
+ * @returns {TransformItem}
+ */
+const createScaleTransform = (data) => {
+  const scaleData = data.slice(0, data[0] === data[1] ? 1 : 2);
+  return {
+    name: 'scale',
+    data: scaleData,
+  };
+};
+
+/**
+ * Decompose matrix into simple transforms and optimize.
+ * @param {TransformItem} origMatrix
+ * @param {TransformParams} params
+ * @returns {TransformItem[]}
+ */
+export const matrixToTransform = (origMatrix, params) => {
+  const decomposed = getDecompositions(origMatrix);
+
+  let shortest;
+  let shortestLen = Number.MAX_VALUE;
+
+  for (const decomposition of decomposed) {
+    // Make a copy of the decomposed matrix, and round all data. We need to keep the original decomposition,
+    // at full precision, to perform some optimizations.
+    const roundedTransforms = decomposition.map((transformItem) => {
+      const transformCopy = {
+        name: transformItem.name,
+        data: [...transformItem.data],
+      };
+      return roundTransform(transformCopy, params);
     });
 
-  return transforms;
+    const optimized = optimize(roundedTransforms, decomposition);
+    const len = js2transform(optimized, params).length;
+    if (len < shortestLen) {
+      shortest = optimized;
+      shortestLen = len;
+    }
+  }
+
+  return shortest ?? [origMatrix];
 };
 
 /**
  * Convert transform to the matrix data.
  *
- * @type {(transform: TransformItem) => number[] }
+ * @param {TransformItem} transform
+ * @returns {number[]}
  */
 const transformToMatrix = (transform) => {
   if (transform.name === 'matrix') {
@@ -264,16 +508,16 @@ const transformToMatrix = (transform) => {
         transform.data[0],
         0,
         0,
-        transform.data[1] || transform.data[0],
+        transform.data[1] ?? transform.data[0],
         0,
         0,
       ];
     case 'rotate':
       // [cos(a), sin(a), -sin(a), cos(a), x, y]
-      var cos = mth.cos(transform.data[0]),
-        sin = mth.sin(transform.data[0]),
-        cx = transform.data[1] || 0,
-        cy = transform.data[2] || 0;
+      var cos = mth.cos(transform.data[0]);
+      var sin = mth.sin(transform.data[0]);
+      var cx = transform.data[1] || 0;
+      var cy = transform.data[2] || 0;
       return [
         cos,
         sin,
@@ -294,18 +538,18 @@ const transformToMatrix = (transform) => {
 };
 
 /**
- * Applies transformation to an arc. To do so, we represent ellipse as a matrix, multiply it
- * by the transformation matrix and use a singular value decomposition to represent in a form
- * rotate(θ)·scale(a b)·rotate(φ). This gives us new ellipse params a, b and θ.
- * SVD is being done with the formulae provided by Wolffram|Alpha (svd {{m0, m2}, {m1, m3}})
+ * Applies transformation to an arc. To do so, we represent ellipse as a matrix,
+ * multiply it by the transformation matrix and use a singular value
+ * decomposition to represent in a form rotate(θ)·scale(a b)·rotate(φ). This
+ * gives us new ellipse params a, b and θ. SVD is being done with the formulae
+ * provided by Wolfram|Alpha (svd {{m0, m2}, {m1, m3}})
  *
- * @type {(
- *   cursor: [x: number, y: number],
- *   arc: number[],
- *   transform: number[]
- * ) => number[]}
+ * @param {[number, number]} cursor
+ * @param {number[]} arc
+ * @param {ReadonlyArray<number>} transform
+ * @returns {number[]}
  */
-exports.transformArc = (cursor, arc, transform) => {
+export const transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
   const y = arc[6] - cursor[1];
   let a = arc[0];
@@ -364,7 +608,9 @@ exports.transformArc = (cursor, arc, transform) => {
 /**
  * Multiply transformation matrices.
  *
- * @type {(a: number[], b: number[]) => number[]}
+ * @param {ReadonlyArray<number>} a
+ * @param {ReadonlyArray<number>} b
+ * @returns {number[]}
  */
 const multiplyTransformMatrices = (a, b) => {
   return [
@@ -375,4 +621,135 @@ const multiplyTransformMatrices = (a, b) => {
     a[0] * b[4] + a[2] * b[5] + a[4],
     a[1] * b[4] + a[3] * b[5] + a[5],
   ];
+};
+
+/**
+ * @param {TransformItem} transform
+ * @param {TransformParams} params
+ * @returns {TransformItem}
+ */
+export const roundTransform = (transform, params) => {
+  switch (transform.name) {
+    case 'translate':
+      transform.data = floatRound(transform.data, params);
+      break;
+    case 'rotate':
+      transform.data = [
+        ...degRound(transform.data.slice(0, 1), params),
+        ...floatRound(transform.data.slice(1), params),
+      ];
+      break;
+    case 'skewX':
+    case 'skewY':
+      transform.data = degRound(transform.data, params);
+      break;
+    case 'scale':
+      transform.data = transformRound(transform.data, params);
+      break;
+    case 'matrix':
+      transform.data = [
+        ...transformRound(transform.data.slice(0, 4), params),
+        ...floatRound(transform.data.slice(4), params),
+      ];
+      break;
+  }
+  return transform;
+};
+
+/**
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
+ */
+const degRound = (data, params) => {
+  if (
+    params.degPrecision != null &&
+    params.degPrecision >= 1 &&
+    params.floatPrecision < 20
+  ) {
+    return smartRound(params.degPrecision, data);
+  } else {
+    return round(data);
+  }
+};
+
+/**
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
+ */
+const floatRound = (data, params) => {
+  if (params.floatPrecision >= 1 && params.floatPrecision < 20) {
+    return smartRound(params.floatPrecision, data);
+  } else {
+    return round(data);
+  }
+};
+
+/**
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
+ */
+const transformRound = (data, params) => {
+  if (params.transformPrecision >= 1 && params.floatPrecision < 20) {
+    return smartRound(params.transformPrecision, data);
+  } else {
+    return round(data);
+  }
+};
+
+/**
+ * Rounds numbers in array.
+ *
+ * @param {ReadonlyArray<number>} data
+ * @returns {number[]}
+ */
+const round = (data) => {
+  return data.map(Math.round);
+};
+
+/**
+ * Decrease accuracy of floating-point numbers in transforms keeping a specified
+ * number of decimals. Smart rounds values like 2.349 to 2.35.
+ *
+ * @param {number} precision
+ * @param {number[]} data
+ * @returns {number[]}
+ */
+const smartRound = (precision, data) => {
+  for (
+    let i = data.length,
+      tolerance = +Math.pow(0.1, precision).toFixed(precision);
+    i--;
+
+  ) {
+    if (toFixed(data[i], precision) !== data[i]) {
+      const rounded = +data[i].toFixed(precision - 1);
+      data[i] =
+        +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance
+          ? +data[i].toFixed(precision)
+          : rounded;
+    }
+  }
+
+  return data;
+};
+
+/**
+ * Convert transforms JS representation to string.
+ *
+ * @param {ReadonlyArray<TransformItem>} transformJS
+ * @param {TransformParams} params
+ * @returns {string}
+ */
+export const js2transform = (transformJS, params) => {
+  const transformString = transformJS
+    .map((transform) => {
+      roundTransform(transform, params);
+      return `${transform.name}(${cleanupOutData(transform.data, params)})`;
+    })
+    .join('');
+
+  return transformString;
 };

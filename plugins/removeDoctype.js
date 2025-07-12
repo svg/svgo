@@ -1,9 +1,7 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeDoctype';
-exports.description = 'removes doctype declaration';
+export const name = 'removeDoctype';
+export const description = 'removes doctype declaration';
 
 /**
  * Remove DOCTYPE declaration.
@@ -27,9 +25,9 @@ exports.description = 'removes doctype declaration';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeDoctype'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     doctype: {
       enter: (node, parentNode) => {

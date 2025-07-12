@@ -1,10 +1,16 @@
-'use strict';
+import { removeLeadingZero } from '../lib/svgo/tools.js';
 
-const { removeLeadingZero } = require('../lib/svgo/tools');
+/**
+ * @typedef CleanupNumericValuesParams
+ * @property {number=} floatPrecision
+ * @property {boolean=} leadingZero
+ * @property {boolean=} defaultPx
+ * @property {boolean=} convertToPx
+ */
 
-exports.name = 'cleanupNumericValues';
-exports.description =
-  'rounds numeric values to the fixed precision, removes default ‘px’ units';
+export const name = 'cleanupNumericValues';
+export const description =
+  'rounds numeric values to the fixed precision, removes default "px" units';
 
 const regNumericValues =
   /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
@@ -20,14 +26,13 @@ const absoluteLengths = {
 };
 
 /**
- * Round numeric values to the fixed precision,
- * remove default 'px' units.
+ * Round numeric values to the fixed precision, remove default 'px' units.
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'cleanupNumericValues'>}
+ * @type {import('../lib/types.js').Plugin<CleanupNumericValuesParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     floatPrecision = 3,
     leadingZero = true,
@@ -39,7 +44,7 @@ exports.fn = (_root, params) => {
     element: {
       enter: (node) => {
         if (node.attributes.viewBox != null) {
-          const nums = node.attributes.viewBox.split(/\s,?\s*|,\s*/g);
+          const nums = node.attributes.viewBox.trim().split(/(?:\s,?|,)\s*/g);
           node.attributes.viewBox = nums
             .map((value) => {
               const num = Number(value);
@@ -56,19 +61,15 @@ exports.fn = (_root, params) => {
             continue;
           }
 
-          const match = value.match(regNumericValues);
+          const match = regNumericValues.exec(value);
 
           // if attribute value matches regNumericValues
           if (match) {
             // round it to the fixed precision
             let num = Number(Number(match[1]).toFixed(floatPrecision));
-            /**
-             * @type {any}
-             */
-            let matchedUnit = match[3] || '';
-            /**
-             * @type{'' | keyof typeof absoluteLengths}
-             */
+            /** @type {any} */
+            const matchedUnit = match[3] || '';
+            /** @type {'' | keyof typeof absoluteLengths} */
             let units = matchedUnit;
 
             // convert absolute values to pixels

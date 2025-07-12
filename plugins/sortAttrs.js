@@ -1,16 +1,20 @@
-'use strict';
+/**
+ * @typedef SortAttrsParams
+ * @property {ReadonlyArray<string>=} order
+ * @property {'front' | 'alphabetical'=} xmlnsOrder
+ */
 
-exports.name = 'sortAttrs';
-exports.description = 'Sort element attributes for better compression';
+export const name = 'sortAttrs';
+export const description = 'Sort element attributes for better compression';
 
 /**
  * Sort element attributes for better compression
  *
  * @author Nikolay Frantsev
  *
- * @type {import('./plugins-types').Plugin<'sortAttrs'>}
+ * @type {import('../lib/types.js').Plugin<SortAttrsParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     order = [
       'id',
@@ -35,7 +39,8 @@ exports.fn = (_root, params) => {
   } = params;
 
   /**
-   * @type {(name: string) => number}
+   * @param {string} name
+   * @returns {number}
    */
   const getNsPriority = (name) => {
     if (xmlnsOrder === 'front') {
@@ -57,7 +62,9 @@ exports.fn = (_root, params) => {
   };
 
   /**
-   * @type {(a: [string, string], b: [string, string]) => number}
+   * @param {[string, string]} param0
+   * @param {[string, string]} param1
+   * @returns {number}
    */
   const compareAttrs = ([aName], [bName]) => {
     // sort namespaces
@@ -94,9 +101,7 @@ exports.fn = (_root, params) => {
       enter: (node) => {
         const attrs = Object.entries(node.attributes);
         attrs.sort(compareAttrs);
-        /**
-         * @type {Record<string, string>}
-         */
+        /** @type {Record<string, string>} */
         const sortedAttributes = {};
         for (const [name, value] of attrs) {
           sortedAttributes[name] = value;

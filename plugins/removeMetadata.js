@@ -1,9 +1,7 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeMetadata';
-exports.description = 'removes <metadata>';
+export const name = 'removeMetadata';
+export const description = 'removes <metadata>';
 
 /**
  * Remove <metadata>.
@@ -12,9 +10,9 @@ exports.description = 'removes <metadata>';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeMetadata'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     element: {
       enter: (node, parentNode) => {

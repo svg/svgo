@@ -1,27 +1,26 @@
-'use strict';
+import * as csstree from 'css-tree';
+import { visit } from '../lib/util/visit.js';
 
-const csstree = require('css-tree');
-const { visit } = require('../lib/xast.js');
-
-exports.name = 'cleanupEnableBackground';
-exports.description =
+export const name = 'cleanupEnableBackground';
+export const description =
   'remove or cleanup enable-background attribute when possible';
 
 const regEnableBackground =
   /^new\s0\s0\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)\s([-+]?\d*\.?\d+([eE][-+]?\d+)?)$/;
 
 /**
- * Remove or cleanup enable-background attr which coincides with a width/height box.
+ * Remove or cleanup enable-background attr which coincides with a width/height
+ * box.
  *
  * @see https://www.w3.org/TR/SVG11/filters.html#EnableBackgroundProperty
  * @example
  * <svg width="100" height="50" enable-background="new 0 0 100 50">
- *             ⬇
+ *   ⬇
  * <svg width="100" height="50">
  * @author Kir Belevich
- * @type {import('./plugins-types').Plugin<'cleanupEnableBackground'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = (root) => {
+export const fn = (root) => {
   let hasFilter = false;
 
   visit(root, {
@@ -113,7 +112,7 @@ exports.fn = (root) => {
             enableBackgroundDeclaration
           ) {
             const styleValue = csstree.generate(
-              // @ts-ignore
+              // @ts-expect-error
               enableBackgroundDeclaration.data.value,
             );
             const styleCleaned = cleanupValue(
@@ -124,7 +123,7 @@ exports.fn = (root) => {
             );
 
             if (styleCleaned) {
-              // @ts-ignore
+              // @ts-expect-error
               enableBackgroundDeclaration.data.value = {
                 type: 'Raw',
                 value: styleCleaned,
@@ -148,7 +147,7 @@ exports.fn = (root) => {
 };
 
 /**
- * @param {string} value Value of a enable-background attribute or style declaration.
+ * @param {string} value Value of an enable-background attribute or style declaration.
  * @param {string} nodeName Name of the node the value was assigned to.
  * @param {string} width Width of the node the value was assigned to.
  * @param {string} height Height of the node the value was assigned to.

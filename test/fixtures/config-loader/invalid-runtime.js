@@ -1,1 +1,3 @@
-module.exports = { plugins }; // eslint-disable-line no-undef
+/* eslint-disable no-undef */
+// @ts-expect-error Testing malformed configuration.
+export default { plugins };

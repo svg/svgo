@@ -1,9 +1,15 @@
-'use strict';
+import { removeLeadingZero } from '../lib/svgo/tools.js';
 
-const { removeLeadingZero } = require('../lib/svgo/tools.js');
+/**
+ * @typedef CleanupListOfValuesParams
+ * @property {number=} floatPrecision
+ * @property {boolean=} leadingZero
+ * @property {boolean=} defaultPx
+ * @property {boolean=} convertToPx
+ */
 
-exports.name = 'cleanupListOfValues';
-exports.description = 'rounds list of values to the fixed precision';
+export const name = 'cleanupListOfValues';
+export const description = 'rounds list of values to the fixed precision';
 
 const regNumericValues =
   /^([-+]?\d*\.?\d+([eE][-+]?\d+)?)(px|pt|pc|mm|cm|m|in|ft|em|ex|%)?$/;
@@ -23,18 +29,18 @@ const absoluteLengths = {
  *
  * @example
  * <svg viewBox="0 0 200.28423 200.28423" enable-background="new 0 0 200.28423 200.28423">
- *         ⬇
+ *  ⬇
  * <svg viewBox="0 0 200.284 200.284" enable-background="new 0 0 200.284 200.284">
  *
  * <polygon points="208.250977 77.1308594 223.069336 ... "/>
- *         ⬇
+ *  ⬇
  * <polygon points="208.251 77.131 223.069 ... "/>
  *
  * @author kiyopikko
  *
- * @type {import('./plugins-types').Plugin<'cleanupListOfValues'>}
+ * @type {import('../lib/types.js').Plugin<CleanupListOfValuesParams>}
  */
-exports.fn = (_root, params) => {
+export const fn = (_root, params) => {
   const {
     floatPrecision = 3,
     leadingZero = true,
@@ -43,7 +49,8 @@ exports.fn = (_root, params) => {
   } = params;
 
   /**
-   * @type {(lists: string) => string}
+   * @param {string} lists
+   * @returns {string}
    */
   const roundValues = (lists) => {
     const roundedList = [];
@@ -56,13 +63,9 @@ exports.fn = (_root, params) => {
       if (match) {
         // round it to the fixed precision
         let num = Number(Number(match[1]).toFixed(floatPrecision));
-        /**
-         * @type {any}
-         */
-        let matchedUnit = match[3] || '';
-        /**
-         * @type{'' | keyof typeof absoluteLengths}
-         */
+        /** @type {any} */
+        const matchedUnit = match[3] || '';
+        /** @type {'' | keyof typeof absoluteLengths} */
         let units = matchedUnit;
 
         // convert absolute values to pixels

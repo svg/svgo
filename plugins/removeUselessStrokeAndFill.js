@@ -1,28 +1,34 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visit, visitSkip } from '../lib/util/visit.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { hasScripts } from '../lib/svgo/tools.js';
+import { elemsGroups } from './_collections.js';
 
-const { visit, visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const { hasScripts } = require('../lib/svgo/tools.js');
-const { elemsGroups } = require('./_collections.js');
+/**
+ * @typedef RemoveUselessStrokeAndFillParams
+ * @property {boolean=} stroke
+ * @property {boolean=} fill
+ * @property {boolean=} removeNone
+ */
 
-exports.name = 'removeUselessStrokeAndFill';
-exports.description = 'removes useless stroke and fill attributes';
+export const name = 'removeUselessStrokeAndFill';
+export const description = 'removes useless stroke and fill attributes';
 
 /**
  * Remove useless stroke and fill attrs.
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeUselessStrokeAndFill'>}
+ * @type {import('../lib/types.js').Plugin<RemoveUselessStrokeAndFillParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     stroke: removeStroke = true,
     fill: removeFill = true,
     removeNone = false,
   } = params;
 
-  // style and script elements deoptimise this plugin
+  // style and script elements deoptimize this plugin
   let hasStyleOrScript = false;
   visit(root, {
     element: {
@@ -42,7 +48,7 @@ exports.fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // id attribute deoptimise the whole subtree
+        // id attribute deoptimize the whole subtree
         if (node.attributes.id != null) {
           return visitSkip;
         }

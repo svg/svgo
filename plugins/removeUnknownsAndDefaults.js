@@ -1,38 +1,48 @@
-'use strict';
-
-const { visitSkip, detachNodeFromParent } = require('../lib/xast.js');
-const { collectStylesheet, computeStyle } = require('../lib/style.js');
-const {
-  elems,
+import {
   attrsGroups,
-  elemsGroups,
   attrsGroupsDefaults,
+  elems,
+  elemsGroups,
   presentationNonInheritableGroupAttrs,
-} = require('./_collections');
+} from './_collections.js';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
+import {
+  collectStylesheet,
+  computeStyle,
+  includesAttrSelector,
+} from '../lib/style.js';
 
-exports.name = 'removeUnknownsAndDefaults';
-exports.description =
+/**
+ * @typedef RemoveUnknownsAndDefaultsParams
+ * @property {boolean=} unknownContent
+ * @property {boolean=} unknownAttrs
+ * @property {boolean=} defaultAttrs
+ * @property {boolean=} defaultMarkupDeclarations
+ *   If to remove XML declarations that are assigned their default value. XML
+ *   declarations are the properties in the `<?xml … ?>` block at the top of the
+ *   document.
+ * @property {boolean=} uselessOverrides
+ * @property {boolean=} keepDataAttrs
+ * @property {boolean=} keepAriaAttrs
+ * @property {boolean=} keepRoleAttr
+ */
+
+export const name = 'removeUnknownsAndDefaults';
+export const description =
   'removes unknown elements content and attributes, removes attrs with default values';
 
 // resolve all groups references
 
-/**
- * @type {Map<string, Set<string>>}
- */
+/** @type {Map<string, Set<string>>} */
 const allowedChildrenPerElement = new Map();
-/**
- * @type {Map<string, Set<string>>}
- */
+/** @type {Map<string, Set<string>>} */
 const allowedAttributesPerElement = new Map();
-/**
- * @type {Map<string, Map<string, string>>}
- */
+/** @type {Map<string, Map<string, string>>} */
 const attributesDefaultsPerElement = new Map();
 
 for (const [name, config] of Object.entries(elems)) {
-  /**
-   * @type {Set<string>}
-   */
+  /** @type {Set<string>} */
   const allowedChildren = new Set();
   if (config.content) {
     for (const elementName of config.content) {
@@ -49,18 +59,14 @@ for (const [name, config] of Object.entries(elems)) {
       }
     }
   }
-  /**
-   * @type {Set<string>}
-   */
+  /** @type {Set<string>} */
   const allowedAttributes = new Set();
   if (config.attrs) {
     for (const attrName of config.attrs) {
       allowedAttributes.add(attrName);
     }
   }
-  /**
-   * @type {Map<string, string>}
-   */
+  /** @type {Map<string, string>} */
   const attributesDefaults = new Map();
   if (config.defaults) {
     for (const [attrName, defaultValue] of Object.entries(config.defaults)) {
@@ -92,9 +98,9 @@ for (const [name, config] of Object.entries(elems)) {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeUnknownsAndDefaults'>}
+ * @type {import('../lib/types.js').Plugin<RemoveUnknownsAndDefaultsParams>}
  */
-exports.fn = (root, params) => {
+export const fn = (root, params) => {
   const {
     unknownContent = true,
     unknownAttrs = true,
@@ -190,7 +196,12 @@ exports.fn = (root, params) => {
             attributesDefaults.get(name) === value
           ) {
             // keep defaults if parent has own or inherited style
-            if (computedParentStyle?.[name] == null) {
+            if (
+              computedParentStyle?.[name] == null &&
+              !stylesheet.rules.some((rule) =>
+                includesAttrSelector(rule.selector, name),
+              )
+            ) {
               delete node.attributes[name];
             }
           }

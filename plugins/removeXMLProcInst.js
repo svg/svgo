@@ -1,9 +1,7 @@
-'use strict';
+import { detachNodeFromParent } from '../lib/xast.js';
 
-const { detachNodeFromParent } = require('../lib/xast.js');
-
-exports.name = 'removeXMLProcInst';
-exports.description = 'removes XML processing instructions';
+export const name = 'removeXMLProcInst';
+export const description = 'removes XML processing instructions';
 
 /**
  * Remove XML Processing Instruction.
@@ -13,9 +11,9 @@ exports.description = 'removes XML processing instructions';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types').Plugin<'removeXMLProcInst'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-exports.fn = () => {
+export const fn = () => {
   return {
     instruction: {
       enter: (node, parentNode) => {
