@@ -1,6 +1,16 @@
 import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
+/**
+ * @typedef ConvertColorsParams
+ * @property {boolean | string | RegExp=} currentColor
+ * @property {boolean=} names2hex
+ * @property {boolean=} rgb2hex
+ * @property {false | 'lower' | 'upper'=} convertCase
+ * @property {boolean=} shorthex
+ * @property {boolean=} shortname
+ */
+
 export const name = 'convertColors';
 export const description =
   'converts colors: rgb() to #rrggbb and #rrggbb to #rgb';
@@ -22,7 +32,8 @@ const regHEX = /^#(([a-fA-F0-9])\2){3}$/;
  *
  * @author Jed Schmidt
  *
- * @type {(rgb: number[]) => string}
+ * @param {ReadonlyArray<number>} param0
+ * @returns {string}
  */
 const convertRgbToHex = ([r, g, b]) => {
   // combine the octets into a 32-bit integer as: [1][r][g][b]
@@ -61,7 +72,7 @@ const convertRgbToHex = ([r, g, b]) => {
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'convertColors'>}
+ * @type {import('../lib/types.js').Plugin<ConvertColorsParams>}
  */
 export const fn = (_root, params) => {
   const {
@@ -96,7 +107,7 @@ export const fn = (_root, params) => {
                 matched = val !== 'none';
               }
               if (matched) {
-                val = 'currentcolor';
+                val = 'currentColor';
               }
             }
 
@@ -110,9 +121,9 @@ export const fn = (_root, params) => {
 
             // convert rgb() to long hex
             if (rgb2hex) {
-              let match = val.match(regRGB);
+              const match = val.match(regRGB);
               if (match != null) {
-                let nums = match.slice(1, 4).map((m) => {
+                const nums = match.slice(1, 4).map((m) => {
                   let n;
                   if (m.indexOf('%') > -1) {
                     n = Math.round(parseFloat(m) * 2.55);
@@ -125,7 +136,11 @@ export const fn = (_root, params) => {
               }
             }
 
-            if (convertCase && !includesUrlReference(val)) {
+            if (
+              convertCase &&
+              !includesUrlReference(val) &&
+              val !== 'currentColor'
+            ) {
               if (convertCase === 'lower') {
                 val = val.toLowerCase();
               } else if (convertCase === 'upper') {
@@ -135,7 +150,7 @@ export const fn = (_root, params) => {
 
             // convert long hex to short hex
             if (shorthex) {
-              let match = regHEX.exec(val);
+              const match = regHEX.exec(val);
               if (match != null) {
                 val = '#' + match[0][1] + match[0][3] + match[0][5];
               }

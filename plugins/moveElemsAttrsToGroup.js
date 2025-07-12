@@ -1,4 +1,4 @@
-import { visit } from '../lib/xast.js';
+import { visit } from '../lib/util/visit.js';
 import { inheritableAttrs, pathElems } from './_collections.js';
 
 export const name = 'moveElemsAttrsToGroup';
@@ -15,7 +15,7 @@ export const description =
  *     </g>
  *     <circle attr2="val2" attr3="val3"/>
  * </g>
- *              ⬇
+ *  ⬇
  * <g attr1="val1" attr2="val2">
  *     <g>
  *         text
@@ -25,7 +25,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'moveElemsAttrsToGroup'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   // find if any style element is present
@@ -43,7 +43,7 @@ export const fn = (root) => {
   return {
     element: {
       exit: (node) => {
-        // process only groups with more than 1 children
+        // process only groups with more than 1 child
         if (node.name !== 'g' || node.children.length <= 1) {
           return;
         }
@@ -55,7 +55,8 @@ export const fn = (root) => {
         }
 
         /**
-         * find common attributes in group children
+         * Find common attributes in group children.
+         *
          * @type {Map<string, string>}
          */
         const commonAttributes = new Map();

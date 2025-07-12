@@ -1,19 +1,19 @@
 import {
-  inheritableAttrs,
   attrsGroups,
+  inheritableAttrs,
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
 
 export const name = 'removeNonInheritableGroupAttrs';
 export const description =
-  'removes non-inheritable group’s presentational attributes';
+  "removes non-inheritable group's presentational attributes";
 
 /**
  * Remove non-inheritable group's "presentation" attributes.
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeNonInheritableGroupAttrs'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

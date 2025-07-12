@@ -21,7 +21,7 @@ See: [SECURITY.md](./SECURITY.md)
 ### Requirements
 
 - [Git](https://git-scm.com/)
-- [Node.js 20](https://nodejs.org/) or later
+- [Node.js >=16](https://nodejs.org/) — Our CI pipeline includes Node.js v16, so even development code must be runnable in a Node.js v16 environment.
 
 ### Getting Started
 
@@ -55,7 +55,13 @@ You should read our [Plugin Architecture](https://svgo.dev/docs/plugins-api/) do
 
 SVGO plugins can optionally have parameters. These can be consumed by the plugin to tailor the behavior.
 
-As types are managed through TypeScript definition files and JSDocs, you must define the parameter types in [`plugins/plugin-types.d.ts`](https://github.com/svg/svgo/blob/main/plugins/plugins-types.d.ts) for built-in plugins. Then you'll have code completion and type checking as you'd expect while editing the plugin if your code editor supports that.
+Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typedef) at the top of the file. For new plugins, you must also append the appropriate type in [`lib/types.d.ts`](https://github.com/svg/svgo/blob/main/lib/types.d.ts). This way built-in plugins will have code completion and type checking as you'd expect while editing the plugin.
+
+### Testing
+
+Our regression test suite includes larger SVGs that may take a long time to render and optimize, especially on older machines. The default timeout is 10 minutes, but can be increased in [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying `NAVIGATION_TIMEOUT_MS`. Setting the value to `0` will disable the timeout entirely.
+
+If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
 
 ## Documentation
 

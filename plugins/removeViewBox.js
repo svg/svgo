@@ -10,12 +10,12 @@ const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
  *
  * @example
  * <svg width="100" height="50" viewBox="0 0 100 50">
- *             ⬇
+ *  ⬇
  * <svg width="100" height="50">
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeViewBox'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

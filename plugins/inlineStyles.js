@@ -1,16 +1,21 @@
 import * as csstree from 'css-tree';
 import { syntax } from 'csso';
 import { attrsGroups, pseudoClasses } from './_collections.js';
-import {
-  visitSkip,
-  querySelectorAll,
-  detachNodeFromParent,
-} from '../lib/xast.js';
+import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
+ * @typedef InlineStylesParams
+ * @property {boolean=} onlyMatchedOnce Inlines selectors that match once only.
+ * @property {boolean=} removeMatchedSelectors
+ *   Clean up matched selectors. Unused selects are left as-is.
+ * @property {string[]=} useMqs
+ *   Media queries to use. An empty string indicates all selectors outside of
+ *   media queries.
+ * @property {string[]=} usePseudos
+ *   Pseudo-classes and elements to use. An empty string indicates all
+ *   non-pseudo-classes and elements.
  */
 
 export const name = 'inlineStyles';
@@ -21,8 +26,8 @@ export const description = 'inline styles (additional options)';
  * :future, or :hover, but there are other pseudo-classes that we can evaluate
  * during optimization.
  *
- * The list of pseudo-classes that we can evaluate during optimization, and
- * shouldn't be toggled conditionally through the `usePseudos` parameter.
+ * Pseudo-classes that we can evaluate during optimization, and shouldn't be
+ * toggled conditionally through the `usePseudos` parameter.
  *
  * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
  */
@@ -34,7 +39,7 @@ const preservedPseudos = [
 /**
  * Merges styles from style nodes into inline styles.
  *
- * @type {import('./plugins-types.js').Plugin<'inlineStyles'>}
+ * @type {import('../lib/types.js').Plugin<InlineStylesParams>}
  * @author strarsis <strarsis@gmail.com>
  */
 export const fn = (root, params) => {
@@ -46,7 +51,11 @@ export const fn = (root, params) => {
   } = params;
 
   /**
-   * @type {{ node: XastElement, parentNode: XastParent, cssAst: csstree.StyleSheet }[]}
+   * @type {{
+   *   node: import('../lib/types.js').XastElement,
+   *   parentNode: import('../lib/types.js').XastParent,
+   *   cssAst: csstree.StyleSheet
+   * }[]}
    */
   const styles = [];
   /**
@@ -54,10 +63,10 @@ export const fn = (root, params) => {
    *   node: csstree.Selector,
    *   item: csstree.ListItem<csstree.CssNode>,
    *   rule: csstree.Rule,
-   *   matchedElements?: XastElement[]
+   *   matchedElements?: import('../lib/types.js').XastElement[]
    * }[]}
    */
-  let selectors = [];
+  const selectors = [];
 
   return {
     element: {
@@ -78,7 +87,6 @@ export const fn = (root, params) => {
 
         const cssText = node.children
           .filter((child) => child.type === 'text' || child.type === 'cdata')
-          // @ts-ignore
           .map((child) => child.value)
           .join('');
 
@@ -182,7 +190,7 @@ export const fn = (root, params) => {
         for (const selector of sortedSelectors) {
           // match selectors
           const selectorText = csstree.generate(selector.item.data);
-          /** @type {XastElement[]} */
+          /** @type {import('../lib/types.js').XastElement[]} */
           const matchedElements = [];
           try {
             for (const node of querySelectorAll(root, selectorText)) {
@@ -368,7 +376,6 @@ export const fn = (root, params) => {
             },
           });
 
-          // csstree v2 changed this type
           if (style.cssAst.children.isEmpty) {
             // remove empty style element
             detachNodeFromParent(style.node, style.parentNode);

@@ -1,16 +1,13 @@
-import { computeStyle, collectStylesheet } from '../lib/style.js';
-import { inheritableAttrs, elemsGroups } from './_collections.js';
-
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastNode} XastNode
- */
+import { collectStylesheet, computeStyle } from '../lib/style.js';
+import { elemsGroups, inheritableAttrs } from './_collections.js';
 
 export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
 
 /**
- * @type {(node: XastNode, name: string) => boolean}
+ * @param {import('../lib/types.js').XastNode} node
+ * @param {string} name
+ * @returns {boolean}
  */
 const hasAnimatedAttr = (node, name) => {
   if (node.type === 'element') {
@@ -38,18 +35,18 @@ const hasAnimatedAttr = (node, name) => {
  *         <path d="..."/>
  *     </g>
  * </g>
- *         ⬇
+ *  ⬇
  * <g>
  *     <g>
  *         <path attr1="val1" d="..."/>
  *     </g>
  * </g>
- *         ⬇
+ *  ⬇
  * <path attr1="val1" d="..."/>
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'collapseGroups'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);
@@ -129,13 +126,6 @@ export const fn = (root) => {
           // replace current node with all its children
           const index = parentNode.children.indexOf(node);
           parentNode.children.splice(index, 1, ...node.children);
-          // TODO remove legacy parentNode in v4
-          for (const child of node.children) {
-            Object.defineProperty(child, 'parentNode', {
-              writable: true,
-              value: parentNode,
-            });
-          }
         }
       },
     },

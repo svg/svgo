@@ -5,15 +5,11 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 
-/**
- * @typedef {import('@rollup/plugin-terser').Options} Options
- */
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pkgPath = path.join(__dirname, './package.json');
 const PKG = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
-/** @type {Options} */
+/** @type {import('@rollup/plugin-terser').Options} */
 const terserOptions = {
   compress: {
     defaults: false,
@@ -41,7 +37,13 @@ export default [
       format: 'cjs',
       exports: 'named',
     },
-    external: ['os', 'fs', 'url', 'path', ...Object.keys(PKG.dependencies)],
+    external: [
+      'os',
+      'fs/promises',
+      'url',
+      'path',
+      ...Object.keys(PKG.dependencies),
+    ],
     onwarn(warning) {
       throw Error(warning.toString());
     },

@@ -1,21 +1,18 @@
-/**
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- */
-
-import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 import { parsePathData } from '../lib/path.js';
 import { intersects } from './_path.js';
 
 export const name = 'removeOffCanvasPaths';
 export const description =
-  'removes elements that are drawn outside of the viewbox (disabled by default)';
+  'removes elements that are drawn outside of the viewBox (disabled by default)';
 
 /**
- * Remove elements that are drawn outside of the viewbox.
+ * Remove elements that are drawn outside of the viewBox.
  *
  * @author JoshyPHP
  *
- * @type {import('./plugins-types.js').Plugin<'removeOffCanvasPaths'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   /**
@@ -35,7 +32,7 @@ export const fn = () => {
       enter: (node, parentNode) => {
         if (node.name === 'svg' && parentNode.type === 'root') {
           let viewBox = '';
-          // find viewbox
+          // find viewBox
           if (node.attributes.viewBox != null) {
             // remove commas and plus signs, normalize and trim whitespace
             viewBox = node.attributes.viewBox;
@@ -46,7 +43,7 @@ export const fn = () => {
             viewBox = `0 0 ${node.attributes.width} ${node.attributes.height}`;
           }
 
-          // parse viewbox
+          // parse viewBox
           // remove commas and plus signs, normalize and trim whitespace
           viewBox = viewBox
             .replace(/[,+]|px/g, ' ')
@@ -88,7 +85,7 @@ export const fn = () => {
         ) {
           const pathData = parsePathData(node.attributes.d);
 
-          // consider that a M command within the viewBox is visible
+          // consider that an M command within the viewBox is visible
           let visible = false;
           for (const pathDataItem of pathData) {
             if (pathDataItem.command === 'M') {
@@ -113,9 +110,7 @@ export const fn = () => {
           }
 
           const { left, top, width, height } = viewBoxData;
-          /**
-           * @type {PathDataItem[]}
-           */
+          /** @type {ReadonlyArray<import('../lib/types.js').PathDataItem>} */
           const viewBoxPathData = [
             { command: 'M', args: [left, top] },
             { command: 'h', args: [width] },

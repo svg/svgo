@@ -1,7 +1,10 @@
 import { elems } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef RemoveXlinkParams
+ * @property {boolean=} includeLegacy
+ *   By default this plugin ignores legacy elements that were deprecated or
+ *   removed in SVG 2. Set to true to force performing operations on those too.
  */
 
 export const name = 'removeXlink';
@@ -39,8 +42,8 @@ const LEGACY_ELEMENTS = new Set([
 ]);
 
 /**
- * @param {XastElement} node
- * @param {string[]} prefixes
+ * @param {import('../lib/types.js').XastElement} node
+ * @param {ReadonlyArray<string>} prefixes
  * @param {string} attr
  * @returns {string[]}
  */
@@ -54,9 +57,9 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  * Removes XLink namespace prefixes and converts references to XLink attributes
  * to the native SVG equivalent.
  *
- * The XLink namespace is deprecated in SVG 2.
+ * XLink namespace is deprecated in SVG 2.
  *
- * @type {import('./plugins-types.js').Plugin<'removeXlink'>}
+ * @type {import('../lib/types.js').Plugin<RemoveXlinkParams>}
  * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
  */
 export const fn = (_, params) => {
@@ -142,7 +145,7 @@ export const fn = (_, params) => {
             continue;
           }
 
-          /** @type {XastElement} */
+          /** @type {import('../lib/types.js').XastElement} */
           const titleTag = {
             type: 'element',
             name: 'title',

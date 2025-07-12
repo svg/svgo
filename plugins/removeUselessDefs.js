@@ -1,10 +1,6 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 import { elemsGroups } from './_collections.js';
 
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- */
-
 export const name = 'removeUselessDefs';
 export const description = 'removes elements in <defs> without id';
 
@@ -13,7 +9,7 @@ export const description = 'removes elements in <defs> without id';
  *
  * @author Lev Solntsev
  *
- * @type {import('./plugins-types.js').Plugin<'removeUselessDefs'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {
@@ -24,20 +20,11 @@ export const fn = () => {
           (elemsGroups.nonRendering.has(node.name) &&
             node.attributes.id == null)
         ) {
-          /**
-           * @type {XastElement[]}
-           */
+          /** @type {import('../lib/types.js').XastElement[]} */
           const usefulNodes = [];
           collectUsefulNodes(node, usefulNodes);
           if (usefulNodes.length === 0) {
             detachNodeFromParent(node, parentNode);
-          }
-          // TODO remove legacy parentNode in v4
-          for (const usefulNode of usefulNodes) {
-            Object.defineProperty(usefulNode, 'parentNode', {
-              writable: true,
-              value: node,
-            });
           }
           node.children = usefulNodes;
         }
@@ -47,7 +34,8 @@ export const fn = () => {
 };
 
 /**
- * @type {(node: XastElement, usefulNodes: XastElement[]) => void}
+ * @param {import('../lib/types.js').XastElement} node
+ * @param {import('../lib/types.js').XastElement[]} usefulNodes
  */
 const collectUsefulNodes = (node, usefulNodes) => {
   for (const child of node.children) {

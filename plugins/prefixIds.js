@@ -2,16 +2,21 @@ import * as csstree from 'css-tree';
 import { referencesProps } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types.js').PluginInfo} PluginInfo
- * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef PrefixIdsParams
+ * @property {boolean | string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)=} prefix
+ * @property {string=} delim
+ * @property {boolean=} prefixIds
+ * @property {boolean=} prefixClassNames
  */
 
 export const name = 'prefixIds';
 export const description = 'prefix IDs';
 
 /**
- * extract basename from path
- * @type {(path: string) => string}
+ * Extract basename from path.
+ *
+ * @param {string} path
+ * @returns {string}
  */
 const getBasename = (path) => {
   // extract everything after latest slash or backslash
@@ -23,15 +28,18 @@ const getBasename = (path) => {
 };
 
 /**
- * escapes a string for being used as ID
- * @type {(string: string) => string}
+ * Escapes a string for being used as ID.
+ *
+ * @param {string} str
+ * @returns {string}
  */
 const escapeIdentifierName = (str) => {
   return str.replace(/[. ]/g, '_');
 };
 
 /**
- * @type {(string: string) => string}
+ * @param {string} string
+ * @returns {string}
  */
 const unquote = (string) => {
   if (
@@ -77,9 +85,9 @@ const prefixReference = (prefixGenerator, reference) => {
  * Generates a prefix for the given string.
  *
  * @param {string} body An arbitrary string.
- * @param {XastElement} node XML node that the identifier belongs to.
- * @param {PluginInfo} info
- * @param {((node: XastElement, info: PluginInfo) => string)|string|boolean|undefined} prefixGenerator Some way of obtaining a prefix.
+ * @param {import('../lib/types.js').XastElement} node XML node that the identifier belongs to.
+ * @param {import('../lib/types.js').PluginInfo} info
+ * @param {((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string) | string | boolean | undefined} prefixGenerator Some way of obtaining a prefix.
  * @param {string} delim Content to insert between the prefix and original value.
  * @param {Map<string, string>} history Map of previously generated prefixes to IDs.
  * @returns {string} A generated prefix.
@@ -116,7 +124,7 @@ const generatePrefix = (body, node, info, prefixGenerator, delim, history) => {
  * Prefixes identifiers
  *
  * @author strarsis <strarsis@gmail.com>
- * @type {import('./plugins-types.js').Plugin<'prefixIds'>}
+ * @type {import('../lib/types.js').Plugin<PrefixIdsParams>}
  */
 export const fn = (_root, params, info) => {
   const {
@@ -153,7 +161,7 @@ export const fn = (_root, params, info) => {
 
             const cssText = child.value;
             /** @type {?csstree.CssNode} */
-            let cssAst = null;
+            let cssAst;
             try {
               cssAst = csstree.parse(cssText, {
                 parseValue: true,
@@ -207,7 +215,7 @@ export const fn = (_root, params, info) => {
             .join(' ');
         }
 
-        // prefix a href attribute value
+        // prefix an href attribute value
         // xlink:href is deprecated, must be still supported
         for (const name of ['href', 'xlink:href']) {
           if (

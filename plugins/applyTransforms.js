@@ -1,23 +1,13 @@
-/**
- * @typedef {import('../lib/types.js').PathDataItem} PathDataItem
- * @typedef {import('../lib/types.js').XastElement} XastElement
- */
-
 import { path2js } from './_path.js';
 import {
-  transformsMultiply,
   transform2js,
   transformArc,
+  transformsMultiply,
 } from './_transforms.js';
-import { referencesProps, attrsGroupsDefaults } from './_collections.js';
+import { attrsGroupsDefaults, referencesProps } from './_collections.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
-import { removeLeadingZero, includesUrlReference } from '../lib/svgo/tools.js';
-
-/**
- * @typedef {PathDataItem[]} PathData
- * @typedef {number[]} Matrix
- */
+import { includesUrlReference, removeLeadingZero } from '../lib/svgo/tools.js';
 
 const regNumericValues = /[-+]?(\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
@@ -158,7 +148,10 @@ export const applyTransforms = (root, params) => {
 };
 
 /**
- * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
+ * @param {ReadonlyArray<number>} matrix
+ * @param {number} x
+ * @param {number} y
+ * @returns {[number, number]}
  */
 const transformAbsolutePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y + matrix[4];
@@ -167,7 +160,10 @@ const transformAbsolutePoint = (matrix, x, y) => {
 };
 
 /**
- * @type {(matrix: Matrix, x: number, y: number) => [number, number]}
+ * @param {ReadonlyArray<number>} matrix
+ * @param {number} x
+ * @param {number} y
+ * @returns {[number, number]}
  */
 const transformRelativePoint = (matrix, x, y) => {
   const newX = matrix[0] * x + matrix[2] * y;
@@ -176,16 +172,13 @@ const transformRelativePoint = (matrix, x, y) => {
 };
 
 /**
- * @type {(pathData: PathData, matrix: Matrix) => void}
+ * @param {ReadonlyArray<import('../lib/types.js').PathDataItem>} pathData
+ * @param {ReadonlyArray<number>} matrix
  */
 const applyMatrixToPathData = (pathData, matrix) => {
-  /**
-   * @type {[number, number]}
-   */
+  /** @type {[number, number]} */
   const start = [0, 0];
-  /**
-   * @type {[number, number]}
-   */
+  /** @type {[number, number]} */
   const cursor = [0, 0];
 
   for (const pathItem of pathData) {

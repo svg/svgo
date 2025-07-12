@@ -1,7 +1,15 @@
-import { visit, visitSkip, detachNodeFromParent } from '../lib/xast.js';
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visit, visitSkip } from '../lib/util/visit.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 import { elemsGroups } from './_collections.js';
+
+/**
+ * @typedef RemoveUselessStrokeAndFillParams
+ * @property {boolean=} stroke
+ * @property {boolean=} fill
+ * @property {boolean=} removeNone
+ */
 
 export const name = 'removeUselessStrokeAndFill';
 export const description = 'removes useless stroke and fill attributes';
@@ -11,7 +19,7 @@ export const description = 'removes useless stroke and fill attributes';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeUselessStrokeAndFill'>}
+ * @type {import('../lib/types.js').Plugin<RemoveUselessStrokeAndFillParams>}
  */
 export const fn = (root, params) => {
   const {
@@ -20,7 +28,7 @@ export const fn = (root, params) => {
     removeNone = false,
   } = params;
 
-  // style and script elements deoptimise this plugin
+  // style and script elements deoptimize this plugin
   let hasStyleOrScript = false;
   visit(root, {
     element: {
@@ -40,7 +48,7 @@ export const fn = (root, params) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // id attribute deoptimise the whole subtree
+        // id attribute deoptimize the whole subtree
         if (node.attributes.id != null) {
           return visitSkip;
         }

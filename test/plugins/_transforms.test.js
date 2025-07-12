@@ -1,10 +1,6 @@
 import { matrixToTransform } from '../../plugins/_transforms.js';
 
-/**
- * @typedef {import('../../plugins/_transforms').TransformParams} TransformParams
- */
-
-/** @type {TransformParams} */
+/** @type {import('../../plugins/_transforms.js').TransformParams} */
 const params = {
   floatPrecision: 3,
   transformPrecision: 5,

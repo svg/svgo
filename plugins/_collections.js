@@ -1,7 +1,9 @@
-// https://www.w3.org/TR/SVG11/intro.html#Definitions
+/**
+ * @fileoverview Based on https://www.w3.org/TR/SVG11/intro.html#Definitions.
+ */
 
 /**
- * @type {Record<string, Set<string>>}
+ * @type {Readonly<Record<string, Set<string>>>}
  */
 export const elemsGroups = {
   animation: new Set([
@@ -101,17 +103,21 @@ export const elemsGroups = {
 };
 
 /**
- * Elements where adding or removing whitespace may effect rendering, metadata,
+ * Elements where adding or removing whitespace may affect rendering, metadata,
  * or semantic meaning.
  *
  * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
+ * @type {Readonly<Set<string>>}
  */
 export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
 
+/**
+ * @type {Readonly<Set<string>>}
+ */
 export const pathElems = new Set(['glyph', 'missing-glyph', 'path']);
 
 /**
- * @type {Record<string, Set<string>>}
+ * @type {Readonly<Record<string, Set<string>>>}
  * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
  */
 export const attrsGroups = {
@@ -310,7 +316,7 @@ export const attrsGroups = {
 };
 
 /**
- * @type {Record<string, Record<string, string>>}
+ * @type {Readonly<Record<string, Record<string, string>>>}
  */
 export const attrsGroupsDefaults = {
   core: { 'xml:space': 'default' },
@@ -377,7 +383,7 @@ export const attrsGroupsDefaults = {
 };
 
 /**
- * @type {Record<string, { safe?: Set<string>, unsafe?: Set<string> }>}
+ * @type {Readonly<Record<string, { safe?: Set<string>; unsafe?: Set<string> }>>}
  * @see https://www.w3.org/TR/SVG11/intro.html#Definitions
  */
 export const attrsGroupsDeprecated = {
@@ -397,7 +403,7 @@ export const attrsGroupsDeprecated = {
 };
 
 /**
- * @type {Record<string, {
+ * @type {Readonly<Record<string, {
  *   attrsGroups: Set<string>,
  *   attrs?: Set<string>,
  *   defaults?: Record<string, string>,
@@ -407,7 +413,7 @@ export const attrsGroupsDeprecated = {
  *   },
  *   contentGroups?: Set<string>,
  *   content?: Set<string>,
- * }>}
+ * }>>}
  * @see https://www.w3.org/TR/SVG11/eltindex.html
  */
 export const elems = {
@@ -2067,10 +2073,14 @@ export const elems = {
   },
 };
 
-// https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+/**
+ * @type {Readonly<Set<string>>}
+ * @see https://wiki.inkscape.org/wiki/index.php/Inkscape-specific_XML_attributes
+ */
 export const editorNamespaces = new Set([
   'http://creativecommons.org/ns#',
   'http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd',
+  'http://krita.org/namespaces/svg/krita',
   'http://ns.adobe.com/AdobeIllustrator/10.0/',
   'http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/',
   'http://ns.adobe.com/Extensibility/1.0/',
@@ -2091,9 +2101,11 @@ export const editorNamespaces = new Set([
   'http://www.serif.com/',
   'http://www.vector.evaxdesign.sk',
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  'https://boxy-svg.com',
 ]);
 
 /**
+ * @type {Readonly<Set<string>>}
  * @see https://www.w3.org/TR/SVG11/linking.html#processingIRI
  */
 export const referencesProps = new Set([
@@ -2110,6 +2122,7 @@ export const referencesProps = new Set([
 ]);
 
 /**
+ * @type {Readonly<Set<string>>}
  * @see https://www.w3.org/TR/SVG11/propidx.html
  */
 export const inheritableAttrs = new Set([
@@ -2160,6 +2173,9 @@ export const inheritableAttrs = new Set([
   'writing-mode',
 ]);
 
+/**
+ * @type {Readonly<Set<string>>}
+ */
 export const presentationNonInheritableGroupAttrs = new Set([
   'clip-path',
   'display',
@@ -2172,9 +2188,8 @@ export const presentationNonInheritableGroupAttrs = new Set([
 ]);
 
 /**
- * https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
- *
- * @type {Record<string, string>}
+ * @type {Readonly<Record<string, string>>}
+ * @see https://www.w3.org/TR/SVG11/single-page.html#types-ColorKeywords
  */
 export const colorsNames = {
   aliceblue: '#f0f8ff',
@@ -2328,7 +2343,7 @@ export const colorsNames = {
 };
 
 /**
- * @type {Record<string, string>}
+ * @type {Readonly<Record<string, string>>}
  */
 export const colorsShortNames = {
   '#f0ffff': 'azure',
@@ -2366,6 +2381,7 @@ export const colorsShortNames = {
 };
 
 /**
+ * @type {Readonly<Set<string>>}
  * @see https://www.w3.org/TR/SVG11/single-page.html#types-DataTypeColor
  */
 export const colorsProps = new Set([
@@ -2377,7 +2393,10 @@ export const colorsProps = new Set([
   'stroke',
 ]);
 
-/** @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes */
+/**
+ * @type {Readonly<Record<string, Set<string>>>}
+ * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
+ */
 export const pseudoClasses = {
   displayState: new Set(['fullscreen', 'modal', 'picture-in-picture']),
   input: new Set([
@@ -2388,7 +2407,7 @@ export const pseudoClasses = {
     'disabled',
     'enabled',
     'in-range',
-    'indetermined',
+    'indeterminate',
     'invalid',
     'optional',
     'out-of-range',

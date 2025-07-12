@@ -10,7 +10,7 @@ export const description = 'removes <title>';
  *
  * @author Igor Kalashnikov
  *
- * @type {import('./plugins-types.js').Plugin<'removeTitle'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

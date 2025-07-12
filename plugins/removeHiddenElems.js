@@ -1,19 +1,28 @@
-/**
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- */
-
 import { elemsGroups } from './_collections.js';
-import {
-  visit,
-  visitSkip,
-  querySelector,
-  detachNodeFromParent,
-} from '../lib/xast.js';
+import { detachNodeFromParent, querySelector } from '../lib/xast.js';
+import { visit, visitSkip } from '../lib/util/visit.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { parsePathData } from '../lib/path.js';
-import { hasScripts, findReferences } from '../lib/svgo/tools.js';
+import { findReferences, hasScripts } from '../lib/svgo/tools.js';
+
+/**
+ * @typedef RemoveHiddenElemsParams
+ * @property {boolean=} isHidden
+ * @property {boolean=} displayNone
+ * @property {boolean=} opacity0
+ * @property {boolean=} circleR0
+ * @property {boolean=} ellipseRX0
+ * @property {boolean=} ellipseRY0
+ * @property {boolean=} rectWidth0
+ * @property {boolean=} rectHeight0
+ * @property {boolean=} patternWidth0
+ * @property {boolean=} patternHeight0
+ * @property {boolean=} imageWidth0
+ * @property {boolean=} imageHeight0
+ * @property {boolean=} pathEmptyD
+ * @property {boolean=} polylineEmptyPoints
+ * @property {boolean=} polygonEmptyPoints
+ */
 
 const nonRendering = elemsGroups.nonRendering;
 
@@ -36,7 +45,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeHiddenElems'>}
+ * @type {import('../lib/types.js').Plugin<RemoveHiddenElemsParams>}
  */
 export const fn = (root, params) => {
   const {
@@ -62,7 +71,7 @@ export const fn = (root, params) => {
    * Skip non-rendered nodes initially, and only detach if they have no ID, or
    * their ID is not referenced by another node.
    *
-   * @type {Map<XastElement, XastParent>}
+   * @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>}
    */
   const nonRenderedNodes = new Map();
 
@@ -73,17 +82,13 @@ export const fn = (root, params) => {
    */
   const removedDefIds = new Set();
 
-  /**
-   * @type {Map<XastElement, XastParent>}
-   */
+  /** @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>} */
   const allDefs = new Map();
 
   /** @type {Set<string>} */
   const allReferences = new Set();
 
-  /**
-   * @type {Map<string, Array<{ node: XastElement, parentNode: XastParent }>>}
-   */
+  /** @type {Map<string, Array<{ node: import('../lib/types.js').XastElement, parentNode: import('../lib/types.js').XastParent }>>} */
   const referencesById = new Map();
 
   /**
@@ -93,7 +98,7 @@ export const fn = (root, params) => {
 
   /**
    * Nodes can't be removed if they or any of their children have an id attribute that is referenced.
-   * @param {XastElement} node
+   * @param {import('../lib/types.js').XastElement} node
    * @returns boolean
    */
   function canRemoveNonRenderingNode(node) {
@@ -109,8 +114,8 @@ export const fn = (root, params) => {
   }
 
   /**
-   * @param {XastChild} node
-   * @param {XastParent} parentNode
+   * @param {import('../lib/types.js').XastChild} node
+   * @param {import('../lib/types.js').XastParent} parentNode
    */
   function removeElement(node, parentNode) {
     if (
@@ -170,7 +175,9 @@ export const fn = (root, params) => {
 
         if (node.name === 'use') {
           for (const attr of Object.keys(node.attributes)) {
-            if (attr !== 'href' && !attr.endsWith(':href')) continue;
+            if (attr !== 'href' && !attr.endsWith(':href')) {
+              continue;
+            }
             const value = node.attributes[attr];
             const id = value.slice(1);
 

@@ -18,13 +18,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
       - run: yarn install
       - run: yarn lint
-      - run: yarn typecheck
+      - run: yarn test:types
+  types:
+    name: Types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE }}
+          cache: yarn
+      - run: yarn install
+      - run: yarn test:types
   test:
     name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
     strategy:
@@ -41,6 +54,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - run: npm install -g corepack@0.20.0 --force
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -60,6 +75,7 @@ jobs:
       - test
     steps:
       - uses: actions/checkout@v4
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE }}

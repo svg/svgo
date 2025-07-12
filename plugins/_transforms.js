@@ -1,21 +1,24 @@
 import { cleanupOutData, toFixed } from '../lib/svgo/tools.js';
 
 /**
- * @typedef {{ name: string, data: number[] }} TransformItem
- * @typedef {{
- *   convertToShorts: boolean,
- *   degPrecision?: number,
- *   floatPrecision: number,
- *   transformPrecision: number,
- *   matrixToTransform: boolean,
- *   shortTranslate: boolean,
- *   shortScale: boolean,
- *   shortRotate: boolean,
- *   removeUseless: boolean,
- *   collapseIntoOne: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- * }} TransformParams
+ * @typedef TransformItem
+ * @property {string} name
+ * @property {number[]} data
+ *
+ * @typedef TransformParams
+ * @property {boolean} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number} floatPrecision
+ * @property {number} transformPrecision
+ * @property {boolean} matrixToTransform
+ * @property {boolean} shortTranslate
+ * @property {boolean} shortScale
+ * @property {boolean} shortRotate
+ * @property {boolean} removeUseless
+ * @property {boolean} collapseIntoOne
+ * @property {boolean} leadingZero
+ * @property {boolean} negativeExtraSpace
+ *
  */
 
 const transformTypes = new Set([
@@ -71,7 +74,7 @@ export const transform2js = (transformString) => {
 /**
  * Multiply transforms into one.
  *
- * @param {TransformItem[]} transforms
+ * @param {ReadonlyArray<TransformItem>} transforms
  * @returns {TransformItem}
  */
 export const transformsMultiply = (transforms) => {
@@ -183,8 +186,8 @@ const getDecompositions = (matrix) => {
 
 /**
  * @param {TransformItem} matrix
- * @returns {TransformItem[]|undefined}
- * @see {@link https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html} Where applicable, variables are named in accordance with this document.
+ * @returns {TransformItem[] | undefined}
+ * @see {@link https://frederic-wang.fr/2013/12/01/decomposition-of-2d-transform-matrices/} Where applicable, variables are named in accordance with this document.
  */
 const decomposeQRAB = (matrix) => {
   const data = matrix.data;
@@ -238,8 +241,8 @@ const decomposeQRAB = (matrix) => {
 
 /**
  * @param {TransformItem} matrix
- * @returns {TransformItem[]|undefined}
- * @see {@link https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html} Where applicable, variables are named in accordance with this document.
+ * @returns {TransformItem[] | undefined}
+ * @see {@link https://frederic-wang.fr/2013/12/01/decomposition-of-2d-transform-matrices/} Where applicable, variables are named in accordance with this document.
  */
 const decomposeQRCD = (matrix) => {
   const data = matrix.data;
@@ -341,8 +344,8 @@ const isIdentityTransform = (t) => {
 
 /**
  * Optimize matrix of simple transforms.
- * @param {TransformItem[]} roundedTransforms
- * @param {TransformItem[]} rawTransforms
+ * @param {ReadonlyArray<TransformItem>} roundedTransforms
+ * @param {ReadonlyArray<TransformItem>} rawTransforms
  * @returns {TransformItem[]}
  */
 const optimize = (roundedTransforms, rawTransforms) => {
@@ -440,7 +443,7 @@ const optimize = (roundedTransforms, rawTransforms) => {
 };
 
 /**
- * @param {number[]} data
+ * @param {ReadonlyArray<number>} data
  * @returns {TransformItem}
  */
 const createScaleTransform = (data) => {
@@ -488,7 +491,8 @@ export const matrixToTransform = (origMatrix, params) => {
 /**
  * Convert transform to the matrix data.
  *
- * @type {(transform: TransformItem) => number[] }
+ * @param {TransformItem} transform
+ * @returns {number[]}
  */
 const transformToMatrix = (transform) => {
   if (transform.name === 'matrix') {
@@ -510,10 +514,10 @@ const transformToMatrix = (transform) => {
       ];
     case 'rotate':
       // [cos(a), sin(a), -sin(a), cos(a), x, y]
-      var cos = mth.cos(transform.data[0]),
-        sin = mth.sin(transform.data[0]),
-        cx = transform.data[1] || 0,
-        cy = transform.data[2] || 0;
+      var cos = mth.cos(transform.data[0]);
+      var sin = mth.sin(transform.data[0]);
+      var cx = transform.data[1] || 0;
+      var cy = transform.data[2] || 0;
       return [
         cos,
         sin,
@@ -534,16 +538,16 @@ const transformToMatrix = (transform) => {
 };
 
 /**
- * Applies transformation to an arc. To do so, we represent ellipse as a matrix, multiply it
- * by the transformation matrix and use a singular value decomposition to represent in a form
- * rotate(θ)·scale(a b)·rotate(φ). This gives us new ellipse params a, b and θ.
- * SVD is being done with the formulae provided by Wolffram|Alpha (svd {{m0, m2}, {m1, m3}})
+ * Applies transformation to an arc. To do so, we represent ellipse as a matrix,
+ * multiply it by the transformation matrix and use a singular value
+ * decomposition to represent in a form rotate(θ)·scale(a b)·rotate(φ). This
+ * gives us new ellipse params a, b and θ. SVD is being done with the formulae
+ * provided by Wolfram|Alpha (svd {{m0, m2}, {m1, m3}})
  *
- * @type {(
- *   cursor: [x: number, y: number],
- *   arc: number[],
- *   transform: number[]
- * ) => number[]}
+ * @param {[number, number]} cursor
+ * @param {number[]} arc
+ * @param {ReadonlyArray<number>} transform
+ * @returns {number[]}
  */
 export const transformArc = (cursor, arc, transform) => {
   const x = arc[5] - cursor[0];
@@ -604,7 +608,9 @@ export const transformArc = (cursor, arc, transform) => {
 /**
  * Multiply transformation matrices.
  *
- * @type {(a: number[], b: number[]) => number[]}
+ * @param {ReadonlyArray<number>} a
+ * @param {ReadonlyArray<number>} b
+ * @returns {number[]}
  */
 const multiplyTransformMatrices = (a, b) => {
   return [
@@ -618,7 +624,9 @@ const multiplyTransformMatrices = (a, b) => {
 };
 
 /**
- * @type {(transform: TransformItem, params: TransformParams) => TransformItem}
+ * @param {TransformItem} transform
+ * @param {TransformParams} params
+ * @returns {TransformItem}
  */
 export const roundTransform = (transform, params) => {
   switch (transform.name) {
@@ -649,7 +657,9 @@ export const roundTransform = (transform, params) => {
 };
 
 /**
- * @type {(data: number[], params: TransformParams) => number[]}
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
  */
 const degRound = (data, params) => {
   if (
@@ -664,7 +674,9 @@ const degRound = (data, params) => {
 };
 
 /**
- * @type {(data: number[], params: TransformParams) => number[]}
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
  */
 const floatRound = (data, params) => {
   if (params.floatPrecision >= 1 && params.floatPrecision < 20) {
@@ -675,7 +687,9 @@ const floatRound = (data, params) => {
 };
 
 /**
- * @type {(data: number[], params: TransformParams) => number[]}
+ * @param {number[]} data
+ * @param {TransformParams} params
+ * @returns {number[]}
  */
 const transformRound = (data, params) => {
   if (params.transformPrecision >= 1 && params.floatPrecision < 20) {
@@ -688,16 +702,16 @@ const transformRound = (data, params) => {
 /**
  * Rounds numbers in array.
  *
- * @type {(data: number[]) => number[]}
+ * @param {ReadonlyArray<number>} data
+ * @returns {number[]}
  */
 const round = (data) => {
   return data.map(Math.round);
 };
 
 /**
- * Decrease accuracy of floating-point numbers
- * in transforms keeping a specified number of decimals.
- * Smart rounds values like 2.349 to 2.35.
+ * Decrease accuracy of floating-point numbers in transforms keeping a specified
+ * number of decimals. Smart rounds values like 2.349 to 2.35.
  *
  * @param {number} precision
  * @param {number[]} data
@@ -705,13 +719,13 @@ const round = (data) => {
  */
 const smartRound = (precision, data) => {
   for (
-    var i = data.length,
+    let i = data.length,
       tolerance = +Math.pow(0.1, precision).toFixed(precision);
     i--;
 
   ) {
     if (toFixed(data[i], precision) !== data[i]) {
-      var rounded = +data[i].toFixed(precision - 1);
+      const rounded = +data[i].toFixed(precision - 1);
       data[i] =
         +Math.abs(rounded - data[i]).toFixed(precision + 1) >= tolerance
           ? +data[i].toFixed(precision)
@@ -725,7 +739,7 @@ const smartRound = (precision, data) => {
 /**
  * Convert transforms JS representation to string.
  *
- * @param {TransformItem[]} transformJS
+ * @param {ReadonlyArray<TransformItem>} transformJS
  * @param {TransformParams} params
  * @returns {string}
  */

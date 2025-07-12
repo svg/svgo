@@ -1,12 +1,6 @@
 import { collectStylesheet } from '../lib/style.js';
 import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
 
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- * @typedef {import('../lib/types.js').XastNode} XastNode
- */
-
 export const name = 'reusePaths';
 export const description =
   'Finds <path> elements with the same d, fill, and ' +
@@ -19,21 +13,19 @@ export const description =
  *
  * @author Jacob Howcroft
  *
- * @type {import('./plugins-types.js').Plugin<'reusePaths'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);
 
-  /**
-   * @type {Map<string, XastElement[]>}
-   */
+  /** @type {Map<string, import('../lib/types.js').XastElement[]>} */
   const paths = new Map();
 
   /**
    * Reference to the first defs element that is a direct child of the svg
    * element if one exists.
    *
-   * @type {XastElement}
+   * @type {import('../lib/types.js').XastElement}
    * @see https://developer.mozilla.org/docs/Web/SVG/Element/defs
    */
   let svgDefs;
@@ -92,17 +84,12 @@ export const fn = (root) => {
               attributes: {},
               children: [],
             };
-            // TODO remove legacy parentNode in v4
-            Object.defineProperty(defsTag, 'parentNode', {
-              writable: true,
-              value: node,
-            });
           }
 
           let index = 0;
           for (const list of paths.values()) {
             if (list.length > 1) {
-              /** @type {XastElement} */
+              /** @type {import('../lib/types.js').XastElement} */
               const reusablePath = {
                 type: 'element',
                 name: 'path',
@@ -129,11 +116,6 @@ export const fn = (root) => {
                 reusablePath.attributes.id = originalId;
                 delete list[0].attributes.id;
               }
-              // TODO remove legacy parentNode in v4
-              Object.defineProperty(reusablePath, 'parentNode', {
-                writable: true,
-                value: defsTag,
-              });
               defsTag.children.push(reusablePath);
               // convert paths to <use>
               for (const pathNode of list) {

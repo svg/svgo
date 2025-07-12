@@ -19,7 +19,7 @@ const eventAttrs = [
  * https://www.w3.org/TR/SVG11/script.html
  *
  * @author Patrick Klingemann
- * @type {import('./plugins-types.js').Plugin<'removeScripts'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {
@@ -52,17 +52,9 @@ export const fn = () => {
 
             const index = parentNode.children.indexOf(node);
             const usefulChildren = node.children.filter(
-              (child) => !(child.type === 'text' && /\s*/.test(child.value)),
+              (child) => child.type !== 'text',
             );
             parentNode.children.splice(index, 1, ...usefulChildren);
-
-            // TODO remove legacy parentNode in v4
-            for (const child of node.children) {
-              Object.defineProperty(child, 'parentNode', {
-                writable: true,
-                value: parentNode,
-              });
-            }
           }
         }
       },

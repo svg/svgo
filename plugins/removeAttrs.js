@@ -1,3 +1,10 @@
+/**
+ * @typedef RemoveAttrsParams
+ * @property {string=} elemSeparator
+ * @property {boolean=} preserveCurrentColor
+ * @property {string | string[]} attrs
+ */
+
 export const name = 'removeAttrs';
 export const description = 'removes specified attributes';
 
@@ -79,7 +86,7 @@ plugins: [
  *
  * @author Benny Schudel
  *
- * @type {import('./plugins-types.js').Plugin<'removeAttrs'>}
+ * @type {import('../lib/types.js').Plugin<RemoveAttrsParams>}
  */
 export const fn = (root, params) => {
   if (typeof params.attrs == 'undefined') {

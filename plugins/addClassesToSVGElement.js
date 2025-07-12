@@ -1,7 +1,13 @@
+/**
+ * @typedef AddClassesToSVGElementParams
+ * @property {string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)=} className
+ * @property {Array<string | ((node: import('../lib/types.js').XastElement, info: import('../lib/types.js').PluginInfo) => string)>=} classNames
+ */
+
 export const name = 'addClassesToSVGElement';
 export const description = 'adds classnames to an outer <svg> element';
 
-var ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
+const ENOCLS = `Error in plugin "addClassesToSVGElement": absent parameters.
 It should have a list of classes in "classNames" or one "className".
 Config example:
 
@@ -47,7 +53,7 @@ plugins: [
  *
  * @author April Arcus
  *
- * @type {import('./plugins-types.js').Plugin<'addClassesToSVGElement'>}
+ * @type {import('../lib/types.js').Plugin<AddClassesToSVGElementParams>}
  */
 export const fn = (root, params, info) => {
   if (

@@ -16,7 +16,7 @@ svgo:
       description: If to convert curve commands that are effectively straight lines to line commands.
       default: true
     convertToQ:
-      description: If to convert cubic beziers to quadratic beziers when they effectively are.
+      description: If to convert cubic Bézier curves to quadratic Bézier curves when they effectively are.
       default: true
     lineShorthands:
       description: If to convert regular lines to an explicit horizontal or vertical line where possible.
@@ -63,7 +63,7 @@ You can get more context on path commands on [MDN Web Docs](https://developer.mo
 This plugin uses multiple techniques to either reduce the number of instructions or reduce the attribute length:
 
 - Convert between relative or absolute coordinates, whichever is shortest.
-- Convert between commands. For example, a bézier curve that behaves like a straight line might as well use a line instruction.
+- Convert between commands. For example, a Bézier curve that behaves like a straight line might as well use a line instruction.
 - Remove redundant commands. For example, a command that moves to the current position can be removed.
 - Trim redundant delimiters and leading zeros.
 - Round numeric values using conventional rounding rules.

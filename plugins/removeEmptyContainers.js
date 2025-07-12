@@ -1,5 +1,6 @@
 import { elemsGroups } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
+import { collectStylesheet, computeStyle } from '../lib/style.js';
 
 export const name = 'removeEmptyContainers';
 export const description = 'removes empty container elements';
@@ -17,9 +18,11 @@ export const description = 'removes empty container elements';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeEmptyContainers'>}
+ * @type {import('../lib/types.js').Plugin}
  */
-export const fn = () => {
+export const fn = (root) => {
+  const stylesheet = collectStylesheet(root);
+
   return {
     element: {
       exit: (node, parentNode) => {
@@ -38,11 +41,7 @@ export const fn = () => {
         ) {
           return;
         }
-        // The <g> may not have content, but the filter may cause a rectangle
-        // to be created and filled with pattern.
-        if (node.name === 'g' && node.attributes.filter != null) {
-          return;
-        }
+
         // empty <mask> hides masked element
         if (node.name === 'mask' && node.attributes.id != null) {
           return;
@@ -50,6 +49,17 @@ export const fn = () => {
         if (parentNode.type === 'element' && parentNode.name === 'switch') {
           return;
         }
+
+        // The <g> may not have content, but the filter may cause a rectangle
+        // to be created and filled with pattern.
+        if (
+          node.name === 'g' &&
+          (node.attributes.filter != null ||
+            computeStyle(stylesheet, node).filter)
+        ) {
+          return;
+        }
+
         detachNodeFromParent(node, parentNode);
       },
     },
