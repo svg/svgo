@@ -63,13 +63,17 @@ export const fn = (root) => {
           ) {
             // remove attributes that all children override
             for (const a of Object.keys(node.attributes)) {
-              if (!inheritableAttrs.has(a)) continue;
-              if (a === 'transform') continue;
-              const isOverriden = children.every(
+              if (!inheritableAttrs.has(a)) {
+                continue;
+              }
+              if (a === 'transform') {
+                continue;
+              }
+              const isOverridden = children.every(
                 (child) =>
                   child.attributes[a] && child.attributes[a] !== 'inherit',
               );
-              if (isOverriden) {
+              if (isOverridden) {
                 delete node.attributes[a];
               }
             }
@@ -91,7 +95,9 @@ export const fn = (root) => {
           // collect all inheritable attributes from first child element
           for (const [name, value] of Object.entries(child.attributes)) {
             // consider only inheritable attributes
-            if (!inheritableAttrs.has(name)) continue;
+            if (!inheritableAttrs.has(name)) {
+              continue;
+            }
 
             let list = attributes.get(name);
             if (!list) {
@@ -119,12 +125,18 @@ export const fn = (root) => {
 
         // add common children attributes to group
         for (const [name, values] of attributes) {
-          if (values.includes('inherit')) continue;
+          if (values.includes('inherit')) {
+            continue;
+          }
 
           if (name === 'transform') {
             const value = values[0];
-            if (values.length != children.length) continue;
-            if (values.some((v) => v !== value)) continue;
+            if (values.length != children.length) {
+              continue;
+            }
+            if (values.some((v) => v !== value)) {
+              continue;
+            }
             if (node.attributes.transform != null) {
               node.attributes.transform = `${node.attributes.transform} ${value}`;
             } else {
@@ -138,13 +150,16 @@ export const fn = (root) => {
           if (
             (name === 'fill' || name === 'stroke') &&
             values.some((v) => v.includes('url'))
-          )
+          ) {
             continue;
+          }
 
           const unsetValues = children.length - values.length;
           const defaultV = node.attributes[name];
           const assignmentCost = name.length + 4;
-          if (unsetValues && !defaultV) continue;
+          if (unsetValues && !defaultV) {
+            continue;
+          }
 
           /**
            * @type {Map<string, {chars: number, count: number}>}
@@ -180,12 +195,16 @@ export const fn = (root) => {
           ).reduce((a, b) => (a[1].chars > b[1].chars ? a : b));
           if (preferredInfo.count === 1) {
             children.forEach((c) => {
-              if (!c.attributes[name]) c.attributes[name] = defaultV;
+              if (!c.attributes[name]) {
+                c.attributes[name] = defaultV;
+              }
             });
             delete node.attributes[name];
             continue;
           }
-          if (preferred === defaultV) continue;
+          if (preferred === defaultV) {
+            continue;
+          }
 
           children.forEach((c) => {
             if (!c.attributes[name]) {
