@@ -6,6 +6,12 @@ import {
 } from '../lib/svgo/tools.js';
 import { transform2js, transformsMultiply } from './_transforms.js';
 
+/**
+ * @typedef ApplyTransformsShapesParams
+ * @property {number=} floatPrecision
+ * @property {boolean=} leadingZero
+ */
+
 export const name = 'applyTransformsShapes';
 export const description = 'Applies transforms to some shapes.';
 
@@ -16,7 +22,7 @@ const APPLICABLE_SHAPES = ['circle', 'ellipse', 'rect', 'image'];
  *
  * @author Kendell R
  *
- * @type {import('./plugins-types.js').Plugin<'applyTransformsShapes'>}
+ * @type {import('../lib/types.js').Plugin<ApplyTransformsShapesParams>}
  */
 export const fn = (root, params) => {
   const { floatPrecision = 3, leadingZero = true } = params;
@@ -32,7 +38,9 @@ export const fn = (root, params) => {
         }
 
         const computedStyle = computeStyle(stylesheet, node);
-        if (computedStyle.filter) return;
+        if (computedStyle.filter) {
+          return;
+        }
         if (!canChangePosition(computedStyle)) {
           return;
         }
@@ -90,7 +98,9 @@ export const fn = (root, params) => {
           matrix.data[0] * matrix.data[0] + matrix.data[1] * matrix.data[1],
         );
         if (node.name == 'circle') {
-          if (!isSimilar) return;
+          if (!isSimilar) {
+            return;
+          }
 
           const cx = Number(node.attributes.cx || '0');
           const cy = Number(node.attributes.cy || '0');
@@ -121,8 +131,12 @@ export const fn = (root, params) => {
           );
           delete node.attributes.transform;
         } else if (node.name == 'ellipse') {
-          if (!isLinear) return;
-          if (strokeWidth && !isSimilar) return;
+          if (!isLinear) {
+            return;
+          }
+          if (strokeWidth && !isSimilar) {
+            return;
+          }
 
           const cx = Number(node.attributes.cx || '0');
           const cy = Number(node.attributes.cy || '0');
@@ -161,8 +175,12 @@ export const fn = (root, params) => {
           );
           delete node.attributes.transform;
         } else if (node.name == 'rect') {
-          if (!isLinear) return;
-          if (strokeWidth && !isSimilar) return;
+          if (!isLinear) {
+            return;
+          }
+          if (strokeWidth && !isSimilar) {
+            return;
+          }
 
           const x = Number(node.attributes.x || '0');
           const y = Number(node.attributes.y || '0');
@@ -237,7 +255,9 @@ export const fn = (root, params) => {
           }
           delete node.attributes.transform;
         } else if (node.name == 'image') {
-          if (!isTranslation) return;
+          if (!isTranslation) {
+            return;
+          }
 
           const x = Number(node.attributes.x || '0');
           const y = Number(node.attributes.y || '0');
