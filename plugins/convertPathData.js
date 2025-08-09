@@ -155,13 +155,27 @@ export const fn = (root, params) => {
             computedStyle['stroke-linecap'] &&
             (computedStyle['stroke-linecap'].type === 'dynamic' ||
               computedStyle['stroke-linecap'].value !== 'butt');
-          const maybeHasStrokeAndLinecap = maybeHasStroke && maybeHasLinecap;
           const isSafeToUseZ = maybeHasStroke
             ? computedStyle['stroke-linecap']?.type === 'static' &&
               computedStyle['stroke-linecap'].value === 'round' &&
               computedStyle['stroke-linejoin']?.type === 'static' &&
               computedStyle['stroke-linejoin'].value === 'round'
             : true;
+          const isSafeToRemove = (/** @type {boolean} */ isFirstDraw) => {
+            if (!maybeHasStroke) {
+              return true;
+            }
+            if (isFirstDraw) {
+              if (maybeHasLinecap) {
+                return false;
+              }
+            } else {
+              if (!isSafeToUseZ) {
+                return false;
+              }
+            }
+            return true;
+          };
 
           let data = path2js(node);
 
@@ -174,7 +188,7 @@ export const fn = (root, params) => {
 
             data = filters(data, newParams, {
               isSafeToUseZ,
-              maybeHasStrokeAndLinecap,
+              isSafeToRemove,
               hasMarkerMid,
             });
 
@@ -387,14 +401,10 @@ const convertToRelative = (pathData) => {
  *
  * @param {import('../lib/types.js').PathDataItem[]} path
  * @param {InternalParams} params
- * @param {{ isSafeToUseZ: boolean, maybeHasStrokeAndLinecap: boolean, hasMarkerMid: boolean }} param2
+ * @param {{ isSafeToUseZ: boolean, isSafeToRemove: (isFirstDraw: boolean) => boolean, hasMarkerMid: boolean }} param2
  * @returns {import('../lib/types.js').PathDataItem[]}
  */
-function filters(
-  path,
-  params,
-  { isSafeToUseZ, maybeHasStrokeAndLinecap, hasMarkerMid },
-) {
+function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
   const stringify = data2Path.bind(null, params);
   const relSubpoint = [0, 0];
   const pathBase = [0, 0];
@@ -844,7 +854,7 @@ function filters(
       }
 
       // remove useless non-first path segments
-      if (params.removeUseless && !maybeHasStrokeAndLinecap) {
+      if (params.removeUseless && isSafeToRemove(prev.command == 'M')) {
         // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
         if (
           (command === 'l' ||
@@ -900,7 +910,7 @@ function filters(
     if (
       (command === 'Z' || command === 'z') &&
       params.removeUseless &&
-      isSafeToUseZ &&
+      isSafeToRemove(prev.command == 'M') &&
       // @ts-expect-error
       Math.abs(item.base[0] - item.coords[0]) < error / 10 &&
       // @ts-expect-error
