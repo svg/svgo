@@ -161,20 +161,18 @@ export const fn = (root, params) => {
               computedStyle['stroke-linejoin']?.type === 'static' &&
               computedStyle['stroke-linejoin'].value === 'round'
             : true;
-          const isSafeToRemove = (/** @type {boolean} */ isFirstDraw) => {
+          const isSafeToRemove = (
+            /** @type {boolean} */ isFirstDraw,
+            /** @type {boolean} */ safeIfNotFirstDraw,
+          ) => {
             if (!maybeHasStroke) {
               return true;
             }
             if (isFirstDraw) {
-              if (maybeHasLinecap) {
-                return false;
-              }
+              return !maybeHasLinecap;
             } else {
-              if (!isSafeToUseZ) {
-                return false;
-              }
+              return safeIfNotFirstDraw;
             }
-            return true;
           };
 
           let data = path2js(node);
@@ -401,7 +399,7 @@ const convertToRelative = (pathData) => {
  *
  * @param {import('../lib/types.js').PathDataItem[]} path
  * @param {InternalParams} params
- * @param {{ isSafeToUseZ: boolean, isSafeToRemove: (isFirstDraw: boolean) => boolean, hasMarkerMid: boolean }} param2
+ * @param {{ isSafeToUseZ: boolean, isSafeToRemove: (isFirstDraw: boolean, safeIfNotFirstDraw: boolean) => boolean, hasMarkerMid: boolean }} param2
  * @returns {import('../lib/types.js').PathDataItem[]}
  */
 function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
@@ -854,7 +852,7 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
       }
 
       // remove useless non-first path segments
-      if (params.removeUseless && isSafeToRemove(prev.command == 'M')) {
+      if (params.removeUseless && isSafeToRemove(prev.command == 'M', true)) {
         // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
         if (
           (command === 'l' ||
@@ -910,7 +908,7 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
     if (
       (command === 'Z' || command === 'z') &&
       params.removeUseless &&
-      isSafeToRemove(prev.command == 'M') &&
+      isSafeToRemove(prev.command == 'M', isSafeToUseZ) &&
       // @ts-expect-error
       Math.abs(item.base[0] - item.coords[0]) < error / 10 &&
       // @ts-expect-error
