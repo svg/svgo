@@ -852,7 +852,10 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
       }
 
       // remove useless non-first path segments
-      if (params.removeUseless && isSafeToRemove(prev.command == 'M', true)) {
+      if (
+        params.removeUseless &&
+        isSafeToRemove(prev.command == 'm' || prev.command == 'M', true)
+      ) {
         // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
         if (
           (command === 'l' ||
@@ -908,7 +911,10 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
     if (
       (command === 'Z' || command === 'z') &&
       params.removeUseless &&
-      isSafeToRemove(prev.command == 'M', isSafeToUseZ) &&
+      isSafeToRemove(
+        prev.command == 'm' || prev.command == 'M',
+        isSafeToUseZ,
+      ) &&
       // @ts-expect-error
       Math.abs(item.base[0] - item.coords[0]) < error / 10 &&
       // @ts-expect-error
