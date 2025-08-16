@@ -33,7 +33,10 @@
     "panose",
     "stemh",
     "stemv",
+    "SVGs",
     "vkern",
+    // Storage
+    "kibibytes",
     // Software
     "grunt-svgmin",
     "Inkscape",
@@ -54,6 +57,7 @@
     "*.svg",
     "cspell.jsonc",
     "LICENSE",
+    "test/regression/lists/",
   ],
   "ignoreRegExpList": [
     "-moz", // Mozilla Firefox CSS prefix

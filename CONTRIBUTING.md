@@ -10,11 +10,11 @@ Your issue should ideally contain:
 - How you were using SVGO, the version of the tool, and any configuration or command-line options.
 - The SVG that was effected, or a [Minimal, Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example).
 
-If you haven't found a bug, but need help using SVGO in your project, please consider asking on [Stack Overflow](https://stackoverflow.com/questions/tagged/svgo) with the `[svgo]` tag, you may get help faster there. You can still create an issue if the confusion stemmed from a lack of documentation.
+If you haven't found a bug, but need help using SVGO in your project, please consider asking on [Stack Overflow](https://stackoverflow.com/questions/tagged/svgo) with the `[svgo]` tag, you'll get help faster there. You can still create an issue if the confusion stemmed from a lack of documentation.
 
 ## Reporting Security Vulnerabilities
 
-See: [SECURITY.md](./SECURITY.md)
+See our [Security Policy](https://github.com/svg/svgo/security/policy).
 
 ## Development
 
@@ -59,9 +59,14 @@ Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typ
 
 ### Testing
 
-Our regression test suite includes larger SVGs that may take a long time to render and optimize, especially on older machines. The default timeout is 10 minutes, but can be increased in [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying `NAVIGATION_TIMEOUT_MS`. Setting the value to `0` will disable the timeout entirely.
+Our regression test suite includes larger SVGs that may take a long time to render and optimize, especially on older machines. The default timeout is 20 minutes, but can be increased in [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying `NAVIGATION_TIMEOUT_MS`. Setting the value to `0` will disable the timeout entirely.
 
 If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
+
+> [!IMPORTANT]  
+> Regression test results vary between hosts. It's not known why yet, but it's likely related to the host environment, such as system packages, drivers, or hardware.
+>
+> Until regression tests are host-agnostic, all version controlled files such as configuration and known mismatches must cater to our CI environment, _not to development environments_.
 
 ## Documentation
 

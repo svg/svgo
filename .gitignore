@@ -25,8 +25,8 @@ dist
 types
 
 node_modules
-test/regression-fixtures
-test/regression-diffs
+regression-fixtures
+regression-diffs
 test/cli/output
 coverage
 .DS_Store
