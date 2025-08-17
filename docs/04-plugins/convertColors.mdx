@@ -5,7 +5,7 @@ svgo:
   defaultPlugin: true
   parameters:
     currentColor:
-      description: If to convert all instances of a color to `currentColor`. This means to inherit the active foreground color, for example in HTML5 this would be the [`color`](https://developer.mozilla.org/docs/Web/CSS/color) property in CSS.
+      description: If to convert all instances of a color to `currentColor`. This means to inherit the active foreground color, for example in HTML5 this would be the [`color`](https://developer.mozilla.org/docs/Web/CSS/color) property in CSS. Can be a boolean, string, RegExp, or an object with `value` and `excludeMulticolor` options.
       default: false
     names2hex:
       description: If to convert color names to the hex equivalent.
@@ -23,6 +23,29 @@ svgo:
       description: If to convert hex colors to the color name, if the color name is shorter then the hex equivalent.
       default: true
 ---
+
+## currentColor Object Options
+
+When `currentColor` is an object, you can use these additional options:
+
+- **`value`**: Specific color value to convert (boolean, string, or RegExp). If not specified, converts all colors.
+- **`excludeMulticolor`**: When `true`, prevents conversion on multi-color and gradient icons while still converting on single-color icons.
+
+## Usage Examples
+
+```js
+// Convert all colors to currentColor
+{ currentColor: true }
+
+// Convert only red colors to currentColor
+{ currentColor: 'red' }
+
+// Convert only red colors, but exclude multi-color icons
+{ currentColor: { value: 'red', excludeMulticolor: true } }
+
+// Convert all colors, but exclude multi-color icons
+{ currentColor: { excludeMulticolor: true } }
+```
 
 Converts color references to the shortest equivalent.
 
