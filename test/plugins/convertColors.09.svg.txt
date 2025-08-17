@@ -1,0 +1,31 @@
+Test currentColor object form with value parameter on gradient icon - should convert only specified color.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="grad">
+            <stop offset="0%" stop-color="red"/>
+            <stop offset="100%" stop-color="blue"/>
+        </linearGradient>
+    </defs>
+    <rect fill="url(#grad)"/>
+    <circle fill="green"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="grad">
+            <stop offset="0%" stop-color="red"/>
+            <stop offset="100%" stop-color="#00f"/>
+        </linearGradient>
+    </defs>
+    <rect fill="url(#grad)"/>
+    <circle fill="currentColor"/>
+</svg>
+
+@@@
+
+{"currentColor": {"value": "green", "excludeMulticolor": true}} 
