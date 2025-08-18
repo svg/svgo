@@ -1,0 +1,2 @@
+# SVGO can not handle this SVG in a reasonable amount of time
+wikimedia-commons/1_42_polytope_7-cube.svg
