@@ -37,7 +37,7 @@ export function md5sum(value) {
 }
 
 /**
- * @param {import('./regression.js').TestReport} report
+ * @param {import('./regression-io.js').TestReport} report
  */
 export async function printReport(report) {
   const { shouldHaveMatched, shouldHaveMismatched } = report.errors;
@@ -45,10 +45,10 @@ export async function printReport(report) {
   console.log(`SVGO Test Suite Version: ${report.version}
 
 ▶ Test Results
-              Match: ${report.results.match.toLocaleString()} / ${report.suite.toMatch.toLocaleString()}
-  Expected Mismatch: ${report.results.expectMismatch.toLocaleString()} / ${report.suite.toMismatch.toLocaleString()}
-            Ignored: ${report.results.ignored.toLocaleString()} / ${report.suite.toIgnore.toLocaleString()}
-            Skipped: ${report.suite.toSkip.toLocaleString()}
+              Match: ${report.results.match.toLocaleString()} / ${report.files.toMatch.toLocaleString()}
+  Expected Mismatch: ${report.results.expectMismatch.toLocaleString()} / ${report.files.toMismatch.toLocaleString()}
+            Ignored: ${report.results.ignored.toLocaleString()} / ${report.files.toIgnore.toLocaleString()}
+            Skipped: ${report.files.toSkip.toLocaleString()}
 
 ▶ Metrics
         Bytes Saved: ${bytesToHumanReadable(report.metrics.bytesSaved)}
@@ -110,7 +110,7 @@ export function secsToHumanReadable(secs) {
     arr.push(`${minutes.toString().padStart(2, '0')}m`);
   }
 
-  arr.push(`${secs.toString().padStart(2, '0')}s`);
+  arr.push(`${Math.round(secs).toString().padStart(2, '0')}s`);
   return arr.join('');
 }
 

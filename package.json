@@ -83,7 +83,7 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
     "test:bundles": "yarn build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
     "test:types": "yarn build:types && tsc && tsd",
-    "test:regression": "node ./test/regression/extract.js && cross-env NO_DIFF=1 node ./test/regression/regression.js",
+    "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && cross-env NO_DIFF=1 node ./test/regression/compare.js",
     "qa": "yarn lint && yarn test:types && yarn test && yarn test:bundles && yarn test:regression",
     "clean": "yarn clean:build && yarn clean:types",
     "clean:build": "rimraf dist",
