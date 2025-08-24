@@ -1,5 +1,4 @@
 import fs from 'node:fs/promises';
-import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import pixelmatch from 'pixelmatch';
@@ -17,7 +16,6 @@ import {
 } from './regression-io.js';
 
 const NAVIGATION_TIMEOUT_MS = 1200000;
-const PORT = 5001;
 const WIDTH = 960;
 const HEIGHT = 720;
 
@@ -64,10 +62,10 @@ const runTests = async (list) => {
    * @param {string} name
    */
   const processFile = async (page, name) => {
-    await page.goto(`http://localhost:${PORT}/original/${name}`);
+    await page.goto(`file://${path.join(REGRESSION_FIXTURES_PATH, name)}`);
     const originalBuffer = await page.screenshot(screenshotOptions);
 
-    await page.goto(`http://localhost:${PORT}/optimized/${name}`);
+    await page.goto(`file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`);
     const optimizedBufferPromise = page.screenshot(screenshotOptions);
 
     const writeDiffs = process.env.NO_DIFF == null;
@@ -151,47 +149,12 @@ const runTests = async (list) => {
     });
     const list = (await filesPromise).filter((name) => name.endsWith('.svg'));
 
-    const server = http.createServer(async (req, res) => {
-      const url = /** @type {string} */ (req.url);
-      const name = url.slice(url.indexOf('/', 1));
-
-      if (!list.includes(name.slice(1))) {
-        res.statusCode = 404;
-        res.end();
-        return;
-      }
-
-      res.setHeader('Content-Type', 'image/svg+xml');
-
-      if (url.startsWith('/original/')) {
-        res.end(
-          await fs.readFile(path.join(REGRESSION_FIXTURES_PATH, name)),
-        );
-        return;
-      }
-
-      if (url.startsWith('/optimized/')) {
-        res.end(
-          await fs.readFile(path.join(REGRESSION_OPTIMIZED_PATH, name)),
-        );
-        return;
-      }
-
-      throw new Error(`Something went wrong on path: ${req.url}`);
-    });
-
-    await new Promise((/** @type {(value?: never) => unknown} */ resolve) => {
-      server.listen(PORT, resolve);
-    });
-
     const report = await runTests(list);
     const metrics = await readReport();
     const combinedReport = {
       ...report,
       ...metrics,
     };
-
-    server.close();
 
     printReport(
       /** @type {import('./regression-io.js').TestReport}*/ (combinedReport),
