@@ -36,7 +36,8 @@ import path from 'node:path';
  * @property {Metrics} metrics
  * @property {Errors} errors
  * @property {Record<string, string>} checksums
- *   Dictionary of checksums after an SVG has been optimized.
+ *   Dictionary of checksums after an SVG has been optimized. Keys are filepaths
+ *   with POSIX file separators.
  */
 
 export const TEMP_DIR_PATH = path.join(tmpdir(), 'svgo.2a5HM7nlGG');

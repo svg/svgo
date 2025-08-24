@@ -6,7 +6,7 @@ import {
   REGRESSION_OPTIMIZED_PATH,
   writeReport,
 } from './regression-io.js';
-import { md5sum } from './lib.js';
+import { md5sum, pathToPosix } from './lib.js';
 import { optimize } from '../../lib/svgo.js';
 
 /** @type {import('../../lib/types.js').Config} */
@@ -39,7 +39,8 @@ const optimizeFixtures = async (list) => {
       'utf-8',
     );
     const optimized = optimize(original, SVGO_OPTS).data;
-    report.checksums[name] = md5sum(optimized);
+    const namePosix = pathToPosix(name);
+    report.checksums[namePosix] = md5sum(optimized);
 
     const prevFileSize = Buffer.byteLength(original, 'utf8');
     const resultFileSize = Buffer.byteLength(optimized, 'utf8');

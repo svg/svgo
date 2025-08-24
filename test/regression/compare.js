@@ -5,7 +5,7 @@ import pixelmatch from 'pixelmatch';
 import { chromium } from 'playwright';
 import { PNG } from 'pngjs';
 import { expectMismatch, ignore, skip } from './file-lists.js';
-import { printReport } from './lib.js';
+import { pathToPosix, printReport } from './lib.js';
 import {
   readReport,
   readVersion,
@@ -82,12 +82,13 @@ const runTests = async (list) => {
 
     // ignore small aliasing issues
     const isMatch = matched <= 4;
-    const expectedToMismatch = expectMismatch.includes(name);
+    const namePosix = pathToPosix(name);
+    const expectedToMismatch = expectMismatch.includes(namePosix);
 
     if (isMatch) {
       if (expectedToMismatch) {
-        report.errors.shouldHaveMismatched.push(name);
-      } else if (ignore.includes(name)) {
+        report.errors.shouldHaveMismatched.push(namePosix);
+      } else if (ignore.includes(namePosix)) {
         report.results.ignored++;
       } else {
         report.results.match++;
@@ -95,8 +96,8 @@ const runTests = async (list) => {
     } else {
       if (expectedToMismatch) {
         report.results.expectMismatch++;
-      } else if (!ignore.includes(name)) {
-        report.errors.shouldHaveMatched.push(name);
+      } else if (!ignore.includes(namePosix)) {
+        report.errors.shouldHaveMatched.push(namePosix);
       }
 
       if (diff) {

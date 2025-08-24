@@ -3,6 +3,7 @@
  */
 
 import crypto from 'node:crypto';
+import path from 'node:path';
 import fs from 'node:fs/promises';
 import picocolors from 'picocolors';
 
@@ -121,4 +122,15 @@ export function secsToHumanReadable(secs) {
  */
 export function toBulletPointList(arr, bullet = '*') {
   return arr.map((s) => `${bullet} ${s}`).join('\n');
+}
+
+/**
+ * @param {string} filepath
+ *   Path that uses file separators for the current operating system.
+ *   ({@link path.sep})
+ * @returns {string}
+ *   Same path but with POSIX file separators. ({@link path.posix.sep})
+ */
+export function pathToPosix(filepath) {
+  return filepath.replaceAll(path.sep, path.posix.sep);
 }
