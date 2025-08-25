@@ -59,9 +59,7 @@ Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typ
 
 ### Testing
 
-Our regression test suite includes larger SVGs that may take a long time to render and optimize, especially on older machines. The default timeout is 20 minutes, but can be increased in [`test/regression.js`](https://github.com/svg/svgo/blob/main/test/regression.js) by modifying `NAVIGATION_TIMEOUT_MS`. Setting the value to `0` will disable the timeout entirely.
-
-If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
+Our regression test suite includes larger SVGs that may take a long time to optimize and render, especially on older machines. If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
 
 > [!IMPORTANT]  
 > Regression test results vary between hosts. It's not known why yet, but it's likely related to the host environment, such as system packages, drivers, or hardware.

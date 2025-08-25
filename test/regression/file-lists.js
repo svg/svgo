@@ -1,3 +1,16 @@
+/**
+ * @fileoverview
+ *   Helpers to interact with file lists. File lists are used to configure
+ *   exceptions in SVGO Test Suite.
+ *
+ *   All file lists are defined in `./lists`.
+ *
+ *   Syntax:
+ *   * All entires must be written with POSIX file separators.
+ *   * Comments can be written by putting `#` at the start of the line.
+ *   * Blank lines are ignored.
+ */
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { readFileList, toBulletPointList } from './lib.js';

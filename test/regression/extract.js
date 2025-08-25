@@ -1,13 +1,20 @@
-import fs from 'fs';
-import path from 'path';
-import stream from 'stream';
-import util from 'util';
-import zlib from 'zlib';
-import tarStream from 'tar-stream';
-import { fileURLToPath } from 'url';
-import { skip, validateFileLists } from './file-lists.js';
+/**
+ * @fileoverview Download and extracts the latest version of SVGO Test Suite.
+ */
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import fs from 'node:fs';
+import path from 'node:path';
+import stream from 'node:stream';
+import util from 'node:util';
+import zlib from 'node:zlib';
+import tarStream from 'tar-stream';
+import { skip, validateFileLists } from './file-lists.js';
+import {
+  readPrevEtag,
+  REGRESSION_FIXTURES_PATH,
+  writeEtag,
+  TEMP_DIR_PATH,
+} from './regression-io.js';
 
 const pipeline = util.promisify(stream.pipeline);
 
@@ -49,22 +56,43 @@ const extractTarGz = async (url, baseDir) => {
     next();
   });
 
-  const { body } = await fetch(url);
+  const etag = await readPrevEtag();
 
-  if (!body) {
-    throw Error('No body returned when fetching SVGO Test Suite.');
+  /** @type {Record<string, string>} */
+  const headers = {};
+
+  if (etag) {
+    headers['If-None-Match'] = etag;
   }
 
-  await pipeline(body, zlib.createGunzip(), extract);
-  await validateFileLists(svgs);
+  const response = await fetch(url, {
+    headers,
+  });
+
+  if (response.status === 200 && response.body) {
+    console.info('Downloading SVGO Test Suite and extracting files…');
+    await fs.promises.rm(REGRESSION_FIXTURES_PATH, {
+      recursive: true,
+      force: true,
+    });
+    await pipeline(response.body, zlib.createGunzip(), extract);
+    await validateFileLists(svgs);
+
+    const etag = response.headers.get('ETag');
+    if (etag) {
+      await writeEtag(etag);
+    }
+  } else if (response.status === 304) {
+    console.info('Reusing local copy of SVGO Test Suite');
+  }
 };
 
 (async () => {
   try {
-    console.info('Downloading SVGO Test Suite and extracting files');
+    console.info('Using temporary directory: %s\n', TEMP_DIR_PATH);
     await extractTarGz(
       'https://svg.github.io/svgo-test-suite/svgo-test-suite.tar.gz',
-      path.join(__dirname, 'regression-fixtures'),
+      REGRESSION_FIXTURES_PATH,
     );
   } catch (error) {
     console.error(error);

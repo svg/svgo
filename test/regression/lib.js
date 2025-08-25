@@ -3,6 +3,7 @@
  */
 
 import crypto from 'node:crypto';
+import path from 'node:path';
 import fs from 'node:fs/promises';
 import picocolors from 'picocolors';
 
@@ -37,7 +38,7 @@ export function md5sum(value) {
 }
 
 /**
- * @param {import('./regression.js').TestReport} report
+ * @param {import('./regression-io.js').TestReport} report
  */
 export async function printReport(report) {
   const { shouldHaveMatched, shouldHaveMismatched } = report.errors;
@@ -45,10 +46,10 @@ export async function printReport(report) {
   console.log(`SVGO Test Suite Version: ${report.version}
 
 ▶ Test Results
-              Match: ${report.results.match.toLocaleString()} / ${report.suite.toMatch.toLocaleString()}
-  Expected Mismatch: ${report.results.expectMismatch.toLocaleString()} / ${report.suite.toMismatch.toLocaleString()}
-            Ignored: ${report.results.ignored.toLocaleString()} / ${report.suite.toIgnore.toLocaleString()}
-            Skipped: ${report.suite.toSkip.toLocaleString()}
+              Match: ${report.results.match.toLocaleString()} / ${report.files.toMatch.toLocaleString()}
+  Expected Mismatch: ${report.results.expectMismatch.toLocaleString()} / ${report.files.toMismatch.toLocaleString()}
+            Ignored: ${report.results.ignored.toLocaleString()} / ${report.files.toIgnore.toLocaleString()}
+            Skipped: ${report.files.toSkip.toLocaleString()}
 
 ▶ Metrics
         Bytes Saved: ${bytesToHumanReadable(report.metrics.bytesSaved)}
@@ -110,7 +111,7 @@ export function secsToHumanReadable(secs) {
     arr.push(`${minutes.toString().padStart(2, '0')}m`);
   }
 
-  arr.push(`${secs.toString().padStart(2, '0')}s`);
+  arr.push(`${Math.round(secs).toString().padStart(2, '0')}s`);
   return arr.join('');
 }
 
@@ -121,4 +122,15 @@ export function secsToHumanReadable(secs) {
  */
 export function toBulletPointList(arr, bullet = '*') {
   return arr.map((s) => `${bullet} ${s}`).join('\n');
+}
+
+/**
+ * @param {string} filepath
+ *   Path that uses file separators for the current operating system.
+ *   ({@link path.sep})
+ * @returns {string}
+ *   Same path but with POSIX file separators. ({@link path.posix.sep})
+ */
+export function pathToPosix(filepath) {
+  return filepath.replaceAll(path.sep, path.posix.sep);
 }

@@ -9,8 +9,6 @@ export default [
       '.yarnrc.yml',
       'node_modules/**',
       'dist/**',
-      'test/regression-fixtures/**',
-      'test/regression-diffs/**',
       'test/cli/output/**',
       'coverage/**',
     ],
