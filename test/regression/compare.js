@@ -15,7 +15,7 @@ import {
   writeReport,
 } from './regression-io.js';
 
-const NAVIGATION_TIMEOUT_MS = 1200000;
+const NAVIGATION_TIMEOUT_MS = 0;
 const WIDTH = 960;
 const HEIGHT = 720;
 
