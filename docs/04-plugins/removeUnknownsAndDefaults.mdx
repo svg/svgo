@@ -5,7 +5,7 @@ svgo:
   defaultPlugin: true
   parameters:
     unknownContent:
-      description: If to remove elements that are not known or can't be the child of the parent element according.
+      description: If to remove elements that are not known or can't be the child of its parent element.
       default: true
     unknownAttrs:
       description: If to remove attributes that are not assignable to the respective element.
@@ -20,7 +20,7 @@ svgo:
       description: If to remove attributes that are being if the same value is being inherited by it's parent element anyway.
       default: true
     keepDataAttrs:
-      description: If to keep [`data-*`](https://developer.mozilla.org/docs/Web/SVG/Attribute/data-*) attributes.
+      description: If to keep [`data-*`](https://developer.mozilla.org/docs/Web/SVG/Attribute/data-*) attributes. Set to `false` to remove data attributes.
       default: true
     keepAriaAttrs:
       description: If to keep [ARIA (Accessible Rich Internet Applications)](https://developer.mozilla.org/docs/Web/Accessibility/ARIA) attributes, used for accessibility. This excludes `role`, which is managed with the `keepRoleAttr` parameter.
