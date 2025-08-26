@@ -19,6 +19,7 @@ import * as removeUselessStrokeAndFill from './removeUselessStrokeAndFill.js';
 import * as cleanupEnableBackground from './cleanupEnableBackground.js';
 import * as removeHiddenElems from './removeHiddenElems.js';
 import * as removeEmptyText from './removeEmptyText.js';
+import * as removeFigmaAttrs from './removeFigmaAttrs.js';
 import * as convertShapeToPath from './convertShapeToPath.js';
 import * as convertEllipseToCircle from './convertEllipseToCircle.js';
 import * as moveElemsAttrsToGroup from './moveElemsAttrsToGroup.js';
@@ -66,6 +67,7 @@ const presetDefault = createPreset({
     convertTransform,
     removeEmptyAttrs,
     removeEmptyContainers,
+    removeFigmaAttrs,
     mergePaths,
     removeUnusedNS,
     sortAttrs,

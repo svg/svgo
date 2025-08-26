@@ -51,6 +51,7 @@ export type DefaultPlugins = {
   removeEmptyAttrs: null;
   removeEmptyContainers: null;
   removeEmptyText: RemoveEmptyTextParams;
+  removeFigmaAttrs: null,
   removeHiddenElems: RemoveHiddenElemsParams;
   removeMetadata: null;
   removeNonInheritableGroupAttrs: null;
