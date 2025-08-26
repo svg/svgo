@@ -1,3 +1,4 @@
+import { ApplyTransformsShapesParams } from '../plugins/applyTransformsShapes.js';
 import { AddAttributesToSVGElementParams } from '../plugins/addAttributesToSVGElement.js';
 import { AddClassesToSVGElementParams } from '../plugins/addClassesToSVGElement.js';
 import { CleanupAttrsParams } from '../plugins/cleanupAttrs.js';
@@ -27,6 +28,7 @@ import { RemoveXlinkParams } from '../plugins/removeXlink.js';
 import { SortAttrsParams } from '../plugins/sortAttrs.js';
 
 export type DefaultPlugins = {
+  applyTransformsShapes: ApplyTransformsShapesParams;
   cleanupAttrs: CleanupAttrsParams;
   cleanupEnableBackground: null;
   cleanupIds: CleanupIdsParams;
