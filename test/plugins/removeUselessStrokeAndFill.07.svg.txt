@@ -1,0 +1,44 @@
+should remove elements if they are transparent or have zero fill and stroke values
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="20" height="20" fill="transparent" stroke="rgba(0, 0, 0, 0)"/>
+    <circle r="25" fill="hsla(120, 100%, 50%, 0)" stroke="transparent"/>
+    <ellipse rx="40" ry="20" fill="rgba(255, 255, 255, 0)" stroke="hsla(240, 100%, 50%, 0%)"/>
+    
+    <rect fill="red" fill-opacity="0" stroke="blue" stroke-opacity="0" width="30" height="30"/>
+    <circle fill-opacity="0" stroke-width="0" r="25"/>
+    
+    <rect width="50" height="50" fill="transparent" stroke="red"/>
+    <circle r="25" fill="blue" stroke="rgba(0, 0, 0, 0)"/>
+    
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5">
+            <path d="M 0 0 L 10 5 L 0 10 z"/>
+        </marker>
+    </defs>
+    <path d="M10,10 L50,50" fill="transparent" stroke="rgba(0, 0, 0, 0)" marker-start="url(#arrow)"/>
+    <path d="M10,10 L50,50" fill="none" stroke="rgba(0, 0, 0, 0)" marker-mid="url(#arrow)"/>
+    <path d="M10,10 L50,50" fill="none" stroke="rgba(0, 0, 0, 0)" marker-end="url(#arrow)"/>
+
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="50" height="50" fill="none" stroke="red"/>
+    <circle r="25" fill="blue"/>
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5">
+            <path d="M 0 0 L 10 5 L 0 10 z"/>
+        </marker>
+    </defs>
+    <path d="M10,10 L50,50" fill="none" stroke="rgba(0, 0, 0, 0)" marker-start="url(#arrow)"/>
+    <path d="M10,10 L50,50" fill="none" stroke="rgba(0, 0, 0, 0)" marker-mid="url(#arrow)"/>
+    <path d="M10,10 L50,50" fill="none" stroke="rgba(0, 0, 0, 0)" marker-end="url(#arrow)"/>
+</svg>
+
+@@@
+
+{ "removeNone": true }
