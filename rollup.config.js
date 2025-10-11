@@ -29,6 +29,9 @@ const terserOptions = {
   },
 };
 
+/**
+ * @type {import('rollup').RollupOptions[]}
+ */
 export default [
   {
     input: './lib/svgo-node.js',
