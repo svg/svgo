@@ -1,0 +1,150 @@
+---
+title: Migration from v2 to v3
+---
+
+This is a summary of the changes necessary to migrate from SVGO v2 to SVGO v3. If you want more details or have any questions, please refer to our [release notes for SVGO v3.0.0](https://github.com/svg/svgo/releases/tag/v3.0.0).
+
+## Version Requirements
+
+SVGO now requires [Node.js >=14.0.0](https://nodejs.org/blog/release/v14.0.0).
+
+## Default Behavior
+
+The **[sortAttrs](/docs/plugins/sortAttrs)** plugin is now enabled by default to improve gzip compression.
+
+To disable this behavior, configure it in the SVGO config. See the [README](https://github.com/svg/svgo?tab=readme-ov-file#configuration) for more context.
+
+```diff
+  export default {
+    plugins: [
+-     'preset-default',
++     {
++       name: 'preset-default',
++       params: {
++         overrides: {
++           sortAttrs: false,
++         },
++       },
++     },
+    ],
+  };
+```
+
+## Plugins
+
+The cleanupIDs plugin has been renamed to **[cleanupIds](/docs/plugins/cleanupIds)** to bring more consistency between plugin names. If you were using cleanupIDs explicitly, amend your SVGO config to use cleanupIds instead:
+
+```diff
+  export default {
+    plugins: [
+-     'cleanupIDs',
++     'cleanupIds',
+    ],
+  };
+```
+
+The cleanupIds plugin no longer accepts the `prefix` parameter. Use the **[prefixIds](/docs/plugins/prefixIds)** plugin instead. You must put prefixIds **_after_** cleanupIds. Doing so the other way around would just remove the prefixes again.
+
+```diff
+  export default {
+    plugins: [
+      {
+        name: 'cleanupIds',
+-       params: {
+-         prefix: 'my-prefix',
+-       },
+      },
++     {
++       name: 'prefixIds',
++       params: {
++         prefix: 'my-prefix',
++       },
++     },
+    ]
+  }
+```
+
+## Configuration
+
+### Active Plugins
+
+Plugins defined in the `plugins` array no longer accept the property `active`. A plugin is enabled if it is named, and disabled if it is not named. Remove these entries from your config outright if you do not want them enabled.
+
+```diff
+  export default {
+    plugins: [
+      {
+        name: 'removeDoctype',
+-       active: true,
+      },
+-     {
+-       name: 'removeComments',
+-       active: false,
+-     },
+    ],
+  }
+```
+
+### Overriding Default Plugins
+
+The `extendDefaultPlugins` helper utility has been removed. You can disable plugins that are enabled by default in `preset-default` through the `override` parameter instead.
+
+```diff
+- import { extendDefaultPlugins } from 'svgo';
+
+  export default {
+-   plugins: extendDefaultPlugins([
+-     {
+-       name: 'collapseGroups',
+-       active: false,
+-     },
+-   ]),
++   plugins: [
++     {
++       name: 'preset-default',
++       params: {
++         overrides: {
++           collapseGroups: false,
++         },
++       },
++     },
++   ],
+  }
+```
+
+## JavaScript API
+
+We've removed the `info` property from the optimization result. This means we no longer return a width and height of the SVG. We've also removed `error` and `modernError` from the optimization result. All exceptions are thrown to the caller.
+
+```diff
+- const {data, error, modernError } = optimize(svg)
++ try {
++   const { data } = optimize(svg)
++ } catch (error) {
++   if (error.name === 'SvgoParserError') {
++     error.toString(); // formatted error
++   } else {
++     // other runtime error
++   }
++ }
+```
+
+## Custom Plugins
+
+We previously supported different types of plugins: `full`, `perItem`, `perItemReverse`, and `visitor`.
+
+We now only support the `visitor` plugin API. Any other type would need to be migrated to it. See the [Plugin Architecture documentation](/docs/plugins-api) for more information.
+
+## TypeScript
+
+SVGO now bundles TypeScript declarations in the npm package. There is no need to install `@types/svgo` separately. This does not affect users that never depended on `@types/svgo` directly or indirectly. You can check your lockfile to be sure.
+
+If you depended on `@types/svgo` before, uninstall it:
+
+```sh
+# npm
+npm uninstall @types/svgo
+
+# Yarn
+yarn remove @types/svgo
+```
