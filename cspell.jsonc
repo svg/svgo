@@ -51,6 +51,7 @@
     "Keerthi",
   ],
   "ignorePaths": [
+    ".github/workflows/",
     ".gitignore",
     ".yarnrc.yml",
     "*.svg.txt",
