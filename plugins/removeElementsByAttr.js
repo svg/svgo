@@ -7,8 +7,7 @@ import { detachNodeFromParent } from '../lib/xast.js';
  */
 
 export const name = 'removeElementsByAttr';
-export const description =
-  'removes arbitrary elements by ID or className (disabled by default)';
+export const description = 'removes arbitrary elements by ID or className';
 
 /**
  * Remove arbitrary SVG elements by ID or className.

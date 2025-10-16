@@ -1,6 +1,5 @@
 export const name = 'removeXMLNS';
-export const description =
-  'removes xmlns attribute (for inline svg, disabled by default)';
+export const description = 'removes xmlns attribute (for inline svg)';
 
 /**
  * Remove the xmlns attribute when present.
