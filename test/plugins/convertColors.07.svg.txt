@@ -1,0 +1,17 @@
+Test currentColor object form with value parameter - should convert specific color to currentColor.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect fill="red" stroke="red"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect fill="currentColor" stroke="currentColor"/>
+</svg>
+
+@@@
+
+{"currentColor": {"value": "red", "excludeMulticolor": true}} 
