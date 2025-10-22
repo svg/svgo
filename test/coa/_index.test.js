@@ -12,7 +12,7 @@ const svgFiles = [
   path.resolve(__dirname, 'testSvg/test.svg'),
   path.resolve(__dirname, 'testSvg/test.1.svg'),
 ];
-const tempFolder = 'temp';
+const tempFolder = 'temp/';
 
 /**
  * @param {ReadonlyArray<string>} args
@@ -139,6 +139,53 @@ describe('coa', function () {
           '--quiet',
         ]),
       ).rejects.toThrow(/No SVG files have been found/);
+    });
+
+    it('Should not show output when svg remains unchanged (--hide-unchanged is set)', async () => {
+      let output = '';
+      const original = console.log;
+      console.log = function (...args) {
+        output += args.join(' ') + '\n';
+      };
+      try {
+        await expect(
+          runProgram([
+            '--folder',
+            path.resolve(__dirname, 'testFolderUnchangedSvg'),
+            '--hide-unchanged',
+            '--output',
+            tempFolder,
+          ]),
+        ).resolves.toBeDefined();
+
+        expect(output).not.toContain('unchanged.svg');
+      } finally {
+        console.log = original;
+      }
+    });
+
+    it('Should show output when svg gets optimised (--hide-unchanged is set)', async () => {
+      let output = '';
+      const original = console.log;
+      console.log = function (...args) {
+        output += args.join(' ') + '\n';
+      };
+      try {
+        await expect(
+          runProgram([
+            '--folder',
+            path.resolve(__dirname, 'testFolderUnchangedSvg'),
+            '--hide-unchanged',
+            '--output',
+            tempFolder,
+          ]),
+        ).resolves.toBeDefined();
+
+        expect(output).toContain('optimizable.svg');
+        expect(output).not.toContain('unchanged.svg');
+      } finally {
+        console.log = original;
+      }
     });
   });
 });
