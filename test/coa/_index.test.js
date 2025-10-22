@@ -164,7 +164,7 @@ describe('coa', function () {
       }
     });
 
-    it('Should show output when svg gets optimised (--hide-unchanged is set)', async () => {
+    it('Should show output when svg gets optimized (--hide-unchanged is set)', async () => {
       let output = '';
       const original = console.log;
       console.log = function (...args) {
