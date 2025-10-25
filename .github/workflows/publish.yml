@@ -1,0 +1,28 @@
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: yarn install
+      - run: |
+          if jq -r .version <package.json | grep -q \\-rc.; then
+            yarn npm publish --access public --tag rc
+          else
+            yarn npm publish --access public
+          fi
