@@ -5,4 +5,7 @@ svgo:
   defaultPlugin: true
 ---
 
-Move an elements attributes to their enclosing group.
+Optimize the flow of attributes for a group by:
+
+- Removing default attributes that are overridden by children
+- Analyzing the attributes children have, and setting a group default based on them
