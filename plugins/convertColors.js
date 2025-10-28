@@ -3,7 +3,7 @@ import { includesUrlReference } from '../lib/svgo/tools.js';
 
 /**
  * @typedef ConvertColorsParams
- * @property {boolean | string | RegExp=} currentColor
+ * @property {boolean | string | RegExp | {value?: boolean | string | RegExp, excludeMulticolor?: boolean}=} currentColor
  * @property {boolean=} names2hex
  * @property {boolean=} rgb2hex
  * @property {false | 'lower' | 'upper'=} convertCase
@@ -51,6 +51,123 @@ const convertRgbToHex = ([r, g, b]) => {
 };
 
 /**
+ * Check if SVG is single-color icon.
+ *
+ * @param {Object} node - SVG node
+ * @returns {boolean}
+ */
+function isSingleColorIcon(node) {
+  const colorValues = new Set();
+  let hasMultipleColors = false;
+
+  /**
+   * Collect all color values, excluding masks.
+   *
+   * @param {any} element
+   * @param {boolean} inMask
+   */
+  function collectColors(element, inMask = false) {
+    if (hasMultipleColors) {
+      return;
+    }
+
+    if (!element.attributes) {
+      return;
+    }
+
+    for (const [name, value] of Object.entries(element.attributes)) {
+      // skip non-color properties
+      if (!colorsProps.has(name)) {
+        continue;
+      }
+
+      // skip none and currentColor
+      if (value === 'none' || value === 'currentColor') {
+        continue;
+      }
+
+      // skip mask colors
+      if (inMask || element.name === 'mask') {
+        continue;
+      }
+
+      colorValues.add(value);
+
+      if (colorValues.size > 1) {
+        hasMultipleColors = true;
+        return;
+      }
+    }
+
+    if (!hasMultipleColors && element.children) {
+      for (const child of element.children) {
+        // mark children as in mask
+        const childInMask = inMask || element.name === 'mask';
+        collectColors(child, childInMask);
+
+        // check after each child
+        if (hasMultipleColors) {
+          return;
+        }
+      }
+    }
+  }
+
+  collectColors(node);
+
+  if (hasMultipleColors) {
+    return false;
+  }
+
+  // check for gradients
+  if (colorValues.size === 1) {
+    const hasGradient = Array.from(colorValues).some(
+      (value) => typeof value === 'string' && includesUrlReference(value),
+    );
+
+    if (hasGradient) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Check if a color value matches the currentColor configuration.
+ *
+ * @param {boolean | string | RegExp | {value?: boolean | string | RegExp, excludeMulticolor?: boolean}} currentColor - currentColor configuration
+ * @param {string} val - color value to check
+ * @returns {boolean} true if color should be converted
+ */
+function isColorMatched(currentColor, val) {
+  if (typeof currentColor === 'string') {
+    return val === currentColor;
+  }
+
+  if (currentColor instanceof RegExp) {
+    return currentColor.exec(val) != null;
+  }
+
+  if (typeof currentColor === 'object' && !(currentColor instanceof RegExp)) {
+    // object form: check value if provided, otherwise convert all
+    if (currentColor.value != null) {
+      if (typeof currentColor.value === 'string') {
+        return val === currentColor.value;
+      }
+      if (currentColor.value instanceof RegExp) {
+        return currentColor.value.exec(val) != null;
+      }
+      return currentColor.value && val !== 'none';
+    }
+    // no value specified, convert all non-none colors
+    return val !== 'none';
+  }
+
+  return typeof currentColor === 'boolean' && currentColor && val !== 'none';
+}
+
+/**
  * Convert different colors formats in element attributes to hex.
  *
  * @see https://www.w3.org/TR/SVG11/types.html#DataTypeColor
@@ -85,6 +202,15 @@ export const fn = (_root, params) => {
   } = params;
 
   let maskCounter = 0;
+  let isSingleColor = false;
+  let hasCheckedIconType = false;
+
+  // only check icon type when needed
+  const needsIconTypeCheck =
+    currentColor &&
+    typeof currentColor === 'object' &&
+    !(currentColor instanceof RegExp) &&
+    currentColor.excludeMulticolor === true;
 
   return {
     element: {
@@ -92,22 +218,33 @@ export const fn = (_root, params) => {
         if (node.name === 'mask') {
           maskCounter++;
         }
+
+        // check icon type when needed
+        if (needsIconTypeCheck && node.name === 'svg' && !hasCheckedIconType) {
+          isSingleColor = isSingleColorIcon(node);
+          hasCheckedIconType = true;
+        }
+
         for (const [name, value] of Object.entries(node.attributes)) {
           if (colorsProps.has(name)) {
             let val = value;
 
             // convert colors to currentColor
             if (currentColor && maskCounter === 0) {
-              let matched;
-              if (typeof currentColor === 'string') {
-                matched = val === currentColor;
-              } else if (currentColor instanceof RegExp) {
-                matched = currentColor.exec(val) != null;
-              } else {
-                matched = val !== 'none';
+              let shouldConvert = true;
+
+              // exclude multi-color icons (unless specific value is provided)
+              if (needsIconTypeCheck) {
+                // if value is specified, always convert that specific color
+                // if no value, only convert on single-color icons
+                shouldConvert = currentColor.value != null || isSingleColor;
               }
-              if (matched) {
-                val = 'currentColor';
+
+              if (shouldConvert) {
+                const matched = isColorMatched(currentColor, val);
+                if (matched) {
+                  val = 'currentColor';
+                }
               }
             }
 

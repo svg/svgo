@@ -1,0 +1,19 @@
+Test currentColor object form with value parameter on multi-color icon - should convert only specified color.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect fill="red" stroke="blue"/>
+    <circle fill="green"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect fill="currentColor" stroke="#00f"/>
+    <circle fill="green"/>
+</svg>
+
+@@@
+
+{"currentColor": {"value": "red", "excludeMulticolor": true}} 
