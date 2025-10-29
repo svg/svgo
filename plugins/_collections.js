@@ -106,7 +106,7 @@ export const elemsGroups = {
  * Elements where adding or removing whitespace may affect rendering, metadata,
  * or semantic meaning.
  *
- * @see https://developer.mozilla.org/docs/Web/HTML/Element/pre
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre
  * @type {Readonly<Set<string>>}
  */
 export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
@@ -2395,7 +2395,7 @@ export const colorsProps = new Set([
 
 /**
  * @type {Readonly<Record<string, Set<string>>>}
- * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes
  */
 export const pseudoClasses = {
   displayState: new Set(['fullscreen', 'modal', 'picture-in-picture']),
