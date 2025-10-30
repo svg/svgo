@@ -66,7 +66,7 @@ export const OPTIMIZATION_REPORT_PATH = path.join(
  * Path to a file that stores the `ETag` header returned from the
  * webserver when download the SVGO Test Suite.
  *
- * @see https://developer.mozilla.org/docs/Web/HTTP/Reference/Headers/ETag
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag
  */
 export const ETAG_PATH = path.join(TEMP_DIR_PATH, '.etag');
 

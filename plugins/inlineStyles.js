@@ -29,7 +29,7 @@ export const description = 'inline styles (additional options)';
  * Pseudo-classes that we can evaluate during optimization, and shouldn't be
  * toggled conditionally through the `usePseudos` parameter.
  *
- * @see https://developer.mozilla.org/docs/Web/CSS/Pseudo-classes
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes
  */
 const preservedPseudos = [
   ...pseudoClasses.functional,
