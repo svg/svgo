@@ -25,7 +25,6 @@ jobs:
           cache: yarn
       - run: yarn install
       - run: yarn lint
-      - run: yarn test:types
   types:
     name: Types
     runs-on: ubuntu-latest
@@ -38,6 +37,18 @@ jobs:
           cache: yarn
       - run: yarn install
       - run: yarn test:types
+  spellcheck:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: corepack enable
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE }}
+          cache: yarn
+      - run: yarn install
+      - run: yarn spellcheck
   test:
     name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
     strategy:

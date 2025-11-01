@@ -31,12 +31,12 @@ export const fn = () => {
           if (node.name === 'svg' && parentNode.type !== 'root') {
             return;
           }
-          const nums = node.attributes.viewBox.split(/[ ,]+/g);
+          const numbers = node.attributes.viewBox.split(/[ ,]+/g);
           if (
-            nums[0] === '0' &&
-            nums[1] === '0' &&
-            node.attributes.width.replace(/px$/, '') === nums[2] && // could use parseFloat too
-            node.attributes.height.replace(/px$/, '') === nums[3]
+            numbers[0] === '0' &&
+            numbers[1] === '0' &&
+            node.attributes.width.replace(/px$/, '') === numbers[2] && // could use parseFloat too
+            node.attributes.height.replace(/px$/, '') === numbers[3]
           ) {
             delete node.attributes.viewBox;
           }

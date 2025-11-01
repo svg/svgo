@@ -44,8 +44,10 @@ export const fn = (_root, params) => {
     element: {
       enter: (node) => {
         if (node.attributes.viewBox != null) {
-          const nums = node.attributes.viewBox.trim().split(/(?:\s,?|,)\s*/g);
-          node.attributes.viewBox = nums
+          const numbers = node.attributes.viewBox
+            .trim()
+            .split(/(?:\s,?|,)\s*/g);
+          node.attributes.viewBox = numbers
             .map((value) => {
               const num = Number(value);
               return Number.isNaN(num)
