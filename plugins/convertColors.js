@@ -123,7 +123,7 @@ export const fn = (_root, params) => {
             if (rgb2hex) {
               const match = val.match(regRGB);
               if (match != null) {
-                const nums = match.slice(1, 4).map((m) => {
+                const numbers = match.slice(1, 4).map((m) => {
                   let n;
                   if (m.indexOf('%') > -1) {
                     n = Math.round(parseFloat(m) * 2.55);
@@ -132,7 +132,7 @@ export const fn = (_root, params) => {
                   }
                   return Math.max(0, Math.min(n, 255));
                 });
-                val = convertRgbToHex(nums);
+                val = convertRgbToHex(numbers);
               }
             }
 
