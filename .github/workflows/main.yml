@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: corepack enable
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: corepack enable
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/checkout@v5
       - run: npm install -g corepack@0.20.0 --force
       - run: corepack enable
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
@@ -76,7 +76,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: corepack enable
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
