@@ -1,0 +1,29 @@
+name: Test Report
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+      - run: yarn install
+      - run: yarn playwright install --with-deps chromium
+      - run: yarn test:regression
+      - uses: actions/upload-artifact@v4
+        with:
+          name: svgo-test-report
+          path: /tmp/svgo.${{ github.sha }}/svgo-test-report.json
+          if-no-files-found: error
