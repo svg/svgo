@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { getCommitRef } from './lib.js';
 
 /**
  * @typedef Files
@@ -40,7 +41,9 @@ import path from 'node:path';
  *   with POSIX file separators.
  */
 
-export const TEMP_DIR_PATH = path.join(tmpdir(), 'svgo.2a5HM7nlGG');
+const GIT_COMMIT_REF = await getCommitRef();
+
+export const TEMP_DIR_PATH = path.join(tmpdir(), `svgo.${GIT_COMMIT_REF}`);
 export const REGRESSION_FIXTURES_PATH = path.join(
   TEMP_DIR_PATH,
   'regression-fixtures',
@@ -80,8 +83,8 @@ export async function writeReport(data) {
 /**
  * @returns {Promise<Partial<TestReport>>}
  */
-export async function readReport() {
-  const text = await fs.readFile(OPTIMIZATION_REPORT_PATH, 'utf-8');
+export async function readReport(path = OPTIMIZATION_REPORT_PATH) {
+  const text = await fs.readFile(path, 'utf-8');
   return JSON.parse(text);
 }
 
