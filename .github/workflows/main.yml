@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: corepack enable
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE }}
           cache: yarn
