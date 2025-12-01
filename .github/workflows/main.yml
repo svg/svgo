@@ -17,7 +17,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v6
         with:
@@ -29,7 +29,7 @@ jobs:
     name: Types
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v6
         with:
@@ -41,7 +41,7 @@ jobs:
     name: Spell Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v5
         with:
@@ -64,7 +64,7 @@ jobs:
           - windows-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - run: npm install -g corepack@0.20.0 --force
       - run: corepack enable
       - uses: actions/setup-node@v6
@@ -85,7 +85,7 @@ jobs:
       - lint
       - test
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v6
         with:
