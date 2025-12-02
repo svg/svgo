@@ -76,8 +76,6 @@ const runTests = async (list) => {
       ? new PNG({ width: originalPng.width, height: originalPng.height })
       : null;
 
-    // TODO: Maybe we would also like to manually compare orig and optimized size otherwise we *may* crash the entire test process otherwise.
-    //       But at the same time it is much more unlikely to have a change in the
     const matched = pixelmatch(
       originalPng.data,
       optimizedPng.data,

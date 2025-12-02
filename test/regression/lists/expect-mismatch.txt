@@ -158,5 +158,7 @@ W3C_SVG_11_TestSuite/svg/filters-displace-01-f.svg
 W3C_SVG_11_TestSuite/svg/fonts-kern-01-t.svg
 W3C_SVG_11_TestSuite/svg/interact-pevents-01-b.svg
 W3C_SVG_11_TestSuite/svg/struct-cond-03-t.svg
+wikimedia-commons/Aegean_sea_Anatolia_and_Armenian_highlands_regions_large_topographic_basemap.svg
 wikimedia-commons/Italy_-_Regions_and_provinces.svg
 wikimedia-commons/Saariston_Rengastie_route_labels.svg
+wikimedia-commons/Spain_languages-de.svg
