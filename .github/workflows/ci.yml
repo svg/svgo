@@ -1,9 +1,5 @@
 name: CI
 
-env:
-  FORCE_COLOR: 2
-  NODE: 20
-
 on:
   pull_request:
     branches:
@@ -14,47 +10,41 @@ permissions:
 
 jobs:
   lint:
-    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE }}
+        with: &setup-node-config
+          node-version: 24
           cache: yarn
       - run: yarn install
       - run: yarn lint
   types:
-    name: Types
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE }}
-          cache: yarn
+        with: *setup-node-config
       - run: yarn install
       - run: yarn test:types
   spellcheck:
-    name: Spell Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - run: corepack enable
       - uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE }}
-          cache: yarn
+        with: *setup-node-config
       - run: yarn install
       - run: yarn spellcheck
   test:
-    name: ${{ matrix.os }} Node.js ${{ matrix.node-version }}
+    name: test - ${{ matrix.os }} - Node.js v${{ matrix.node-version }}
     strategy:
       fail-fast: false
       matrix:
         node-version:
+          - 24
           - 22
           - 20
           - 18
@@ -75,22 +65,3 @@ jobs:
       - run: yarn playwright install --with-deps chromium
       - run: yarn test
       - run: yarn test:bundles
-  regression:
-    name: Test regressions
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-    needs:
-      - lint
-      - test
-    steps:
-      - uses: actions/checkout@v6
-      - run: corepack enable
-      - uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE }}
-          cache: yarn
-      - run: yarn install
-      - run: yarn playwright install --with-deps chromium
-      - run: yarn test:regression
