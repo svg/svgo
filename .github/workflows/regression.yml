@@ -1,0 +1,55 @@
+name: Regression Test
+
+env:
+  # For debugging, you can override this to your fork to test.
+  REPO: 'svg/svgo'
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v5
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+      - run: yarn install
+      - run: yarn playwright install --with-deps chromium
+      - run: yarn test:regression
+      # We use upload/artifacts instead of outputs because our regression test
+      # report can exceed 1 MB which is a limit GitHub imposes.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: svgo-test-report-${{ github.sha }}
+          path: /tmp/svgo.${{ github.sha }}/svgo-test-report.json
+          if-no-files-found: error
+          retention-days: 1
+  delta:
+    runs-on: ubuntu-latest
+    needs:
+      - regression
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+      - run: yarn install
+      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report-${{ github.sha }} -D /tmp/svgo.${{ github.sha }}/
+      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report -D /tmp/svgo.main/
+      - run: ./test/regression/delta.js /tmp/svgo.main/svgo-test-report.json /tmp/svgo.${{ github.sha }}/svgo-test-report.json
