@@ -190,38 +190,6 @@ export const fn = (root, params) => {
           }
         }
 
-        // Removes hidden elements
-        // https://www.w3schools.com/cssref/pr_class_visibility.asp
-        const computedStyle = computeStyle(stylesheet, node);
-        if (
-          isHidden &&
-          computedStyle.visibility &&
-          computedStyle.visibility.type === 'static' &&
-          computedStyle.visibility.value === 'hidden' &&
-          // keep if any descendant enables visibility
-          querySelector(node, '[visibility=visible]') == null
-        ) {
-          removeElement(node, parentNode);
-          return;
-        }
-
-        // display="none"
-        //
-        // https://www.w3.org/TR/SVG11/painting.html#DisplayProperty
-        // "A value of display: none indicates that the given element
-        // and its children shall not be rendered directly"
-        if (
-          displayNone &&
-          computedStyle.display &&
-          computedStyle.display.type === 'static' &&
-          computedStyle.display.value === 'none' &&
-          // markers with display: none still rendered
-          node.name !== 'marker'
-        ) {
-          removeElement(node, parentNode);
-          return;
-        }
-
         // Circles with zero radius
         //
         // https://www.w3.org/TR/SVG11/shapes.html#CircleElementRAttribute
@@ -363,32 +331,6 @@ export const fn = (root, params) => {
           return;
         }
 
-        // Path with empty data
-        //
-        // https://www.w3.org/TR/SVG11/paths.html#DAttribute
-        //
-        // <path d=""/>
-        if (pathEmptyD && node.name === 'path') {
-          if (node.attributes.d == null) {
-            removeElement(node, parentNode);
-            return;
-          }
-          const pathData = parsePathData(node.attributes.d);
-          if (pathData.length === 0) {
-            removeElement(node, parentNode);
-            return;
-          }
-          // keep single point paths for markers
-          if (
-            pathData.length === 1 &&
-            computedStyle['marker-start'] == null &&
-            computedStyle['marker-end'] == null
-          ) {
-            removeElement(node, parentNode);
-            return;
-          }
-        }
-
         // Polyline with empty points
         //
         // https://www.w3.org/TR/SVG11/shapes.html#PolylineElementPointsAttribute
@@ -415,6 +357,64 @@ export const fn = (root, params) => {
         ) {
           removeElement(node, parentNode);
           return;
+        }
+
+        // Removes hidden elements
+        // https://www.w3schools.com/cssref/pr_class_visibility.asp
+        const computedStyle = computeStyle(stylesheet, node);
+        if (
+          isHidden &&
+          computedStyle.visibility &&
+          computedStyle.visibility.type === 'static' &&
+          computedStyle.visibility.value === 'hidden' &&
+          // keep if any descendant enables visibility
+          querySelector(node, '[visibility=visible]') == null
+        ) {
+          removeElement(node, parentNode);
+          return;
+        }
+
+        // display="none"
+        //
+        // https://www.w3.org/TR/SVG11/painting.html#DisplayProperty
+        // "A value of display: none indicates that the given element
+        // and its children shall not be rendered directly"
+        if (
+          displayNone &&
+          computedStyle.display &&
+          computedStyle.display.type === 'static' &&
+          computedStyle.display.value === 'none' &&
+          // markers with display: none still rendered
+          node.name !== 'marker'
+        ) {
+          removeElement(node, parentNode);
+          return;
+        }
+
+        // Path with empty data
+        //
+        // https://www.w3.org/TR/SVG11/paths.html#DAttribute
+        //
+        // <path d=""/>
+        if (pathEmptyD && node.name === 'path') {
+          if (node.attributes.d == null) {
+            removeElement(node, parentNode);
+            return;
+          }
+          const pathData = parsePathData(node.attributes.d);
+          if (pathData.length === 0) {
+            removeElement(node, parentNode);
+            return;
+          }
+          // keep single point paths for markers
+          if (
+            pathData.length === 1 &&
+            computedStyle['marker-start'] == null &&
+            computedStyle['marker-end'] == null
+          ) {
+            removeElement(node, parentNode);
+            return;
+          }
         }
 
         for (const [name, value] of Object.entries(node.attributes)) {
