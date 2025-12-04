@@ -301,7 +301,7 @@ export const fn = (root, params) => {
           return;
         }
 
-        // clean up matched class + ID attribute values
+        // clean up matched class values
         for (const selector of sortedSelectors) {
           if (selector.matchedElements == null) {
             continue;
@@ -340,23 +340,6 @@ export const fn = (root, params) => {
               delete selectedEl.attributes.class;
             } else {
               selectedEl.attributes.class = Array.from(classList).join(' ');
-            }
-
-            // ID
-            const firstSubSelector = selector.node.children.first;
-            if (
-              firstSubSelector?.type === 'IdSelector' &&
-              selectedEl.attributes.id === firstSubSelector.name &&
-              !selectors.some((selector) =>
-                includesAttrSelector(
-                  selector.item,
-                  'id',
-                  firstSubSelector.name,
-                  true,
-                ),
-              )
-            ) {
-              delete selectedEl.attributes.id;
             }
           }
         }
