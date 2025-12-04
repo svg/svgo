@@ -1,0 +1,19 @@
+<svg>
+    <rect width="10" height="10" transform="translate(20 20)"/>
+    <rect width="10" height="10" rx="3" transform="scale(2 2)"/>
+    <rect width="10" height="10" rx="3" transform="scale(2 1)"/>
+    <rect width="10" height="10" stroke="#000" transform="translate(20 20)"/>
+    <rect width="10" height="10" stroke="#000" rx="3" transform="scale(2 2)"/>
+    <rect width="10" height="10" stroke="#000" rx="3" transform="scale(2 1)"/>
+</svg>
+
+@@@
+
+<svg>
+    <rect width="10" height="10" x="20" y="20"/>
+    <rect width="20" height="20" rx="6" x="0" y="0"/>
+    <rect width="20" height="10" rx="6" x="0" y="0" ry="3"/>
+    <rect width="10" height="10" stroke="#000" stroke-width="1" x="20" y="20"/>
+    <rect width="20" height="20" stroke="#000" rx="6" stroke-width="2" x="0" y="0"/>
+    <rect width="10" height="10" stroke="#000" rx="3" transform="scale(2 1)"/>
+</svg>

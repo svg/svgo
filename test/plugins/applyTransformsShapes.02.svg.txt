@@ -1,0 +1,19 @@
+<svg>
+    <ellipse cx="5" cy="5" rx="2" ry="4" transform="matrix(2 0 0 -2 0 10)"/>
+    <ellipse cx="10" cy="10" rx="2" ry="4" transform="rotate(45 0 0)"/>
+    <ellipse cx="5" cy="10" rx="2" ry="4" transform="scale(2 1)"/>
+    <ellipse cx="5" cy="5" rx="2" ry="4" stroke="#000" transform="matrix(2 0 0 -2 0 10)"/>
+    <ellipse cx="10" cy="10" rx="2" ry="4" stroke="#000" transform="rotate(45 0 0)"/>
+    <ellipse cx="5" cy="10" rx="2" ry="4" stroke="#000" transform="scale(2 1)"/>
+</svg>
+
+@@@
+
+<svg>
+    <ellipse cx="10" cy="0" rx="4" ry="8"/>
+    <ellipse cx="10" cy="10" rx="2" ry="4" transform="rotate(45 0 0)"/>
+    <ellipse cx="10" cy="10" rx="4" ry="4"/>
+    <ellipse cx="10" cy="0" rx="4" ry="8" stroke="#000" stroke-width="2"/>
+    <ellipse cx="10" cy="10" rx="2" ry="4" stroke="#000" transform="rotate(45 0 0)"/>
+    <ellipse cx="5" cy="10" rx="2" ry="4" stroke="#000" transform="scale(2 1)"/>
+</svg>

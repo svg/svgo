@@ -1,6 +1,6 @@
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { intersects, js2path, path2js } from './_path.js';
-import { includesUrlReference } from '../lib/svgo/tools.js';
+import { canChangePosition } from '../lib/svgo/tools.js';
 
 /**
  * @typedef MergePathsParams
@@ -11,21 +11,6 @@ import { includesUrlReference } from '../lib/svgo/tools.js';
 
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
-
-/**
- * @param {import('../lib/types.js').ComputedStyles} computedStyle
- * @param {string} attName
- * @returns {boolean}
- */
-function elementHasUrl(computedStyle, attName) {
-  const style = computedStyle[attName];
-
-  if (style?.type === 'static') {
-    return includesUrlReference(style.value);
-  }
-
-  return false;
-}
 
 /**
  * Merge multiple Paths into one.
@@ -96,17 +81,7 @@ export const fn = (root, params) => {
           }
 
           const computedStyle = computeStyle(stylesheet, child);
-          if (
-            computedStyle['marker-start'] ||
-            computedStyle['marker-mid'] ||
-            computedStyle['marker-end'] ||
-            computedStyle['clip-path'] ||
-            computedStyle['mask'] ||
-            computedStyle['mask-image'] ||
-            ['fill', 'filter', 'stroke'].some((attName) =>
-              elementHasUrl(computedStyle, attName),
-            )
-          ) {
+          if (!canChangePosition(computedStyle)) {
             if (prevPathData) {
               updatePreviousPath(prevChild, prevPathData);
             }
