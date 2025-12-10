@@ -77,6 +77,11 @@ export const fn = () => {
         if (node.attributes.transform != null) {
           return visitSkip;
         }
+        
+        // consider that any item within <defs> is visible
+        if (node.name === 'defs') {
+          return visitSkip;
+        }
 
         if (
           node.name === 'path' &&
