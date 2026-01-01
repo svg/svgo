@@ -30,7 +30,7 @@ jobs:
       - run: yarn test:regression
       # We use upload/artifacts instead of outputs because our regression test
       # report can exceed 1 MB which is a limit GitHub imposes.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: success() || failure()
         with:
           name: svgo-test-report-${{ github.sha }}

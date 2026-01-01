@@ -22,7 +22,7 @@ jobs:
       - run: yarn install
       - run: yarn playwright install --with-deps chromium
       - run: yarn test:regression
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: svgo-test-report
           path: /tmp/svgo.${{ github.sha }}/svgo-test-report.json
