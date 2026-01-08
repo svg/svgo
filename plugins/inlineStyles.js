@@ -1,5 +1,5 @@
-import * as csstree from 'css-tree';
-import { syntax } from 'csso';
+import * as csstree from '../lib/csstree.js';
+import { syntax } from '../lib/csso.js';
 import { attrsGroups, pseudoClasses } from './_collections.js';
 import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
 import { visitSkip } from '../lib/util/visit.js';
