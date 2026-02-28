@@ -398,6 +398,7 @@ function filters(
   const stringify = data2Path.bind(null, params);
   const relSubpoint = [0, 0];
   const pathBase = [0, 0];
+  const pathBaseExact = [0, 0];
   /** @type {any} */
   let prev = {};
   /** @type {Point | undefined} */
@@ -631,14 +632,12 @@ function filters(
           prev.command != 'M' &&
           prev.command != 'm' &&
           // @ts-expect-error
-          Math.abs(item.coords[0] - pathBase[0]) < error &&
+          Math.abs(pathBaseExact[0] - item.coords[0]) < error &&
           // @ts-expect-error
-          Math.abs(item.coords[1] - pathBase[1]) < error
+          Math.abs(pathBaseExact[1] - item.coords[1]) < error
         ) {
-          // @ts-expect-error
-          data[0] = pathBase[0] - item.base[0];
-          // @ts-expect-error
-          data[1] = pathBase[1] - item.base[1];
+          data[0] = pathBase[0] - relSubpoint[0];
+          data[1] = pathBase[1] - relSubpoint[1];
         }
         roundData(data);
 
@@ -655,6 +654,10 @@ function filters(
         if (command === 'M' || command === 'm') {
           pathBase[0] = relSubpoint[0];
           pathBase[1] = relSubpoint[1];
+          // @ts-expect-error
+          pathBaseExact[0] = item.coords[0];
+          // @ts-expect-error
+          pathBaseExact[1] = item.coords[1];
         }
       }
 
