@@ -834,11 +834,18 @@ function filters(
         }
       }
 
-      // remove useless non-first path segments
-      if (params.removeUseless && !maybeHasStrokeAndLinecap) {
-        // l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
+      // remove useless non-start/end path segments
+      var isStart = !path[index - 1] || path[index - 1].command === 'm';
+      var isEnd = !path[index + 1] || path[index + 1].command === 'm';
+      if (
+        params.removeUseless &&
+        !hasMarkerMid &&
+        (!maybeHasStrokeAndLinecap || !(isStart || isEnd))
+      ) {
+        // m 0,0 / l 0,0 / h 0 / v 0 / q 0,0 0,0 / t 0,0 / c 0,0 0,0 0,0 / s 0,0 0,0
         if (
-          (command === 'l' ||
+          (command === 'm' ||
+            command === 'l' ||
             command === 'h' ||
             command === 'v' ||
             command === 'q' ||
