@@ -30,6 +30,6 @@ jobs:
               yarn npm publish --access public
             else
               MAJOR="$(awk -F '.' '{ print $1 }' <<< "$VERSION")"
-               npm publish --access public --tag "v$MAJOR"
+              yarn npm publish --access public --tag "v$MAJOR"
             fi
           fi
