@@ -39,7 +39,7 @@ const extractTarGz = async (url, baseDir, include) => {
     next();
   });
   const response = await fetch(url);
-  await pipeline(response.body, extract);
+  await pipeline(response.body, zlib.createGunzip(), extract);
 };
 
 (async () => {
