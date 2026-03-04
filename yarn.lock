@@ -5451,17 +5451,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sax@npm:1.4.1":
-  version: 1.4.1
-  resolution: "sax@npm:1.4.1"
-  checksum: 3ad64df16b743f0f2eb7c38ced9692a6d924f1cd07bbe45c39576c2cf50de8290d9d04e7b2228f924c7d05fecc4ec5cf651423278e0c7b63d260c387ef3af84a
+"sax@npm:1.5.0":
+  version: 1.5.0
+  resolution: "sax@npm:1.5.0"
+  checksum: e143cbeb6ca59345db142d97d1bbb620553beb8b166eda36ffeaba4b01af47dcf0423cd8781d0805b75feea69462cf80d0db7bf0a7e6dd87b711fda51b9153df
   languageName: node
   linkType: hard
 
-"sax@patch:sax@npm%3A1.4.1#./.yarn/patches/sax-npm-1.4.1-503b1923cb.patch::locator=svgo%40workspace%3A.":
-  version: 1.4.1
-  resolution: "sax@patch:sax@npm%3A1.4.1#./.yarn/patches/sax-npm-1.4.1-503b1923cb.patch::version=1.4.1&hash=ad106d&locator=svgo%40workspace%3A."
-  checksum: 511be280ca9f1d474466aa165a7e6b50fc70e2de2f263462f60358a9f0661cf36c8f334234813e438d61676374e7aa551a6c81bcecb763e3d3914e2f627a8a51
+"sax@patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch::locator=svgo%40workspace%3A.":
+  version: 1.5.0
+  resolution: "sax@patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch::version=1.5.0&hash=76ff30&locator=svgo%40workspace%3A."
+  checksum: e284b1d2584a046258c323837a3c8d6e10d37468c5fbea9c092d3106761f57b8a5947e63bbf8b27b1930e7f9adb439f2a3c31d4c316495b8d7830fb03c8cb9e8
   languageName: node
   linkType: hard
 
@@ -5858,7 +5858,7 @@ __metadata:
     prettier: ^3.5.3
     rimraf: ^5.0.10
     rollup: ^4.22.4
-    sax: ^1.4.1
+    sax: ^1.5.0
     tar-stream: ^3.1.7
     tsd: ^0.32.0
     typescript: ^5.8.3

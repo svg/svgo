@@ -1,7 +1,7 @@
 {
   "packageManager": "yarn@3.8.7",
   "name": "svgo",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "SVGO is a Node.js library and command-line application for optimizing vector images.",
   "license": "MIT",
   "type": "module",
@@ -108,7 +108,7 @@
     "css-what": "^6.1.0",
     "csso": "^5.0.5",
     "picocolors": "^1.1.1",
-    "sax": "^1.4.1"
+    "sax": "^1.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
@@ -139,6 +139,6 @@
     "typescript": "^5.8.3"
   },
   "resolutions": {
-    "sax@^1.4.1": "patch:sax@npm%3A1.4.1#./.yarn/patches/sax-npm-1.4.1-503b1923cb.patch"
+    "sax@^1.5.0": "patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch"
   }
 }
