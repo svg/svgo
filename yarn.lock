@@ -928,13 +928,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trysound/sax@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@trysound/sax@npm:0.2.0"
-  checksum: 11226c39b52b391719a2a92e10183e4260d9651f86edced166da1d95f39a0a1eaa470e44d14ac685ccd6d3df7e2002433782872c0feeb260d61e80f21250e65c
-  languageName: node
-  linkType: hard
-
 "@types/babel__core@npm:^7.1.14":
   version: 7.1.16
   resolution: "@types/babel__core@npm:7.1.16"
@@ -1056,6 +1049,15 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: dc6a6df507656004e242dcb02c784479deca516d5f4b58a1707e708022b269ae147e1da0521f3e8ad0d63638869d87e0adc023f0bd5454aa6f72ac66c7525cf5
+  languageName: node
+  linkType: hard
+
+"@types/sax@npm:^1.2.7":
+  version: 1.2.7
+  resolution: "@types/sax@npm:1.2.7"
+  dependencies:
+    "@types/node": "*"
+  checksum: 7ece5fbb5d9c8fc76ab0de2f99d705edf92f18e701d4f9d9b0647275e32eb65e656c1badf9dfaa12f4e1ff3e250561c8c9cfe79e8b5f33dd1417ac0f1804f6cc
   languageName: node
   linkType: hard
 
@@ -4136,6 +4138,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sax@npm:1.5.0":
+  version: 1.5.0
+  resolution: "sax@npm:1.5.0"
+  checksum: e143cbeb6ca59345db142d97d1bbb620553beb8b166eda36ffeaba4b01af47dcf0423cd8781d0805b75feea69462cf80d0db7bf0a7e6dd87b711fda51b9153df
+  languageName: node
+  linkType: hard
+
+"sax@patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch::locator=svgo%40workspace%3A.":
+  version: 1.5.0
+  resolution: "sax@patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch::version=1.5.0&hash=21deb4&locator=svgo%40workspace%3A."
+  checksum: e284b1d2584a046258c323837a3c8d6e10d37468c5fbea9c092d3106761f57b8a5947e63bbf8b27b1930e7f9adb439f2a3c31d4c316495b8d7830fb03c8cb9e8
+  languageName: node
+  linkType: hard
+
 "semver@npm:^6.0.0, semver@npm:^6.3.0":
   version: 6.3.1
   resolution: "semver@npm:6.3.1"
@@ -4445,10 +4461,10 @@ __metadata:
   dependencies:
     "@rollup/plugin-commonjs": ^22.0.2
     "@rollup/plugin-node-resolve": ^14.1.0
-    "@trysound/sax": 0.2.0
     "@types/css-tree": ^2.3.4
     "@types/csso": ^5.0.4
     "@types/jest": ^29.5.5
+    "@types/sax": ^1.2.7
     commander: ^7.2.0
     css-select: ^5.1.0
     css-tree: ^2.3.1
@@ -4465,6 +4481,7 @@ __metadata:
     prettier: ^3.1.1
     rollup: ^2.79.1
     rollup-plugin-terser: ^7.0.2
+    sax: ^1.5.0
     tar-stream: ^3.1.6
     typescript: ^5.3.3
   bin:

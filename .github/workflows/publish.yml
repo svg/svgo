@@ -1,0 +1,34 @@
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - run: yarn install
+      - run: |
+          VERSION=$(jq -r .version <package.json)
+          if [[ "$VERSION" = *"-rc."* ]]; then
+            yarn npm publish --access public --tag rc
+          else
+            LATEST_VERSION="$(gh release view --json tagName -q '.tagName' --repo ${{ github.repository }})"
+            if [[ "${{ github.ref_name }}" = "$LATEST_VERSION" ]]; then
+              yarn npm publish --access public
+            else
+              MAJOR="$(awk -F '.' '{ print $1 }' <<< "$VERSION")"
+              yarn npm publish --access public --tag "v$MAJOR"
+            fi
+          fi
