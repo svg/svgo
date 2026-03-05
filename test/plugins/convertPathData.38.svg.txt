@@ -1,0 +1,14 @@
+Should convert t commands to l when previous command is not quadratic.
+Should convert t->t sequences to l->q properly.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <path d="M10 10t20 0t20 20"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <path d="M10 10h20q20 0 20 20"/>
+</svg>
