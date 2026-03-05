@@ -389,6 +389,7 @@ function filters(
   const stringify = data2Path.bind(null, params);
   const relSubpoint = [0, 0];
   const pathBase = [0, 0];
+  const pathBaseExact = [0, 0];
   /** @type {any} */
   let prev = {};
   /** @type {Point | undefined} */
@@ -591,6 +592,7 @@ function filters(
       // to get closer to absolute coordinates. Sum of rounded value remains same:
       // l .25 3 .25 2 .25 3 .25 2 -> l .3 3 .2 2 .3 3 .2 2
       if (precision !== false) {
+        // Correct for accumulated error
         if (
           command === 'm' ||
           command === 'l' ||
@@ -615,6 +617,19 @@ function filters(
           // @ts-expect-error
           data[6] += item.base[1] - relSubpoint[1];
         }
+        // Correct l commands heading home
+        if (
+          command == 'l' &&
+          prev.command != 'M' &&
+          prev.command != 'm' &&
+          // @ts-expect-error
+          Math.abs(pathBaseExact[0] - item.coords[0]) < error &&
+          // @ts-expect-error
+          Math.abs(pathBaseExact[1] - item.coords[1]) < error
+        ) {
+          data[0] = pathBase[0] - relSubpoint[0];
+          data[1] = pathBase[1] - relSubpoint[1];
+        }
         roundData(data);
 
         if (command == 'h') {
@@ -630,6 +645,10 @@ function filters(
         if (command === 'M' || command === 'm') {
           pathBase[0] = relSubpoint[0];
           pathBase[1] = relSubpoint[1];
+          // @ts-expect-error
+          pathBaseExact[0] = item.coords[0];
+          // @ts-expect-error
+          pathBaseExact[1] = item.coords[1];
         }
       }
 
@@ -868,10 +887,8 @@ function filters(
         (command === 'l' || command === 'h' || command === 'v')
       ) {
         if (
-          // @ts-expect-error
-          Math.abs(pathBase[0] - item.coords[0]) < error &&
-          // @ts-expect-error
-          Math.abs(pathBase[1] - item.coords[1]) < error
+          Math.abs(pathBase[0] - relSubpoint[0]) < error &&
+          Math.abs(pathBase[1] - relSubpoint[1]) < error
         ) {
           command = 'z';
           data = [];
@@ -909,7 +926,7 @@ function filters(
         prevQControlPoint = reflectPoint(qControlPoint, item.base);
       } else {
         // @ts-expect-error
-        prevQControlPoint = item.coords;
+        prevQControlPoint = relSubpoint.slice();
       }
     } else {
       prevQControlPoint = undefined;
