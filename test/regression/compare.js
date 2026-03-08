@@ -85,7 +85,8 @@ const runTests = async (list) => {
     );
 
     // ignore small aliasing issues
-    const isMatch = matched <= 4;
+    const threshold = originalPng.width <= 16 ? 3 : 4;
+    const isMatch = matched <= threshold;
     const namePosix = pathToPosix(name);
     const expectedToMismatch = expectMismatch.includes(namePosix);
 

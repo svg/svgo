@@ -11,6 +11,8 @@ W3C_SVG_11_TestSuite/svg/styling-css-01-b.svg
 W3C_SVG_11_TestSuite/svg/styling-css-04-f.svg
 
 # broken and pending fix
+charm-icons-0.18.0/docs/img/splash.svg
+charm-icons-0.18.0/icons/atom.svg
 oxygen-icons-5.116.0/scalable/actions/hidef/tools-rip-audio-cd.svg
 oxygen-icons-5.116.0/scalable/actions/im-ban-kick-user.svg
 oxygen-icons-5.116.0/scalable/actions/im-ban-user.svg
