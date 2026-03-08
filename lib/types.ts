@@ -136,18 +136,26 @@ export type BuiltinPlugin<Name extends string, Params> = {
   fn: Plugin<Params>;
 };
 
+type PresetProperties<IsPreset extends boolean> = {
+  name: IsPreset extends true ? `preset-${string}` : string;
+
+  /** If the plugin is itself a preset that invokes other plugins. */
+  isPreset: IsPreset extends true ? true : undefined;
+
+  /**
+   * If {@link #isPreset} is true, an array of the plugins in the preset
+   * in the order that they are invoked.
+   */
+  plugins: IsPreset extends true
+    ? ReadonlyArray<BuiltinPlugin<string, Object>>
+    : undefined;
+};
+
 export type BuiltinPluginOrPreset<Name extends string, Params> = BuiltinPlugin<
   Name,
   Params
-> & {
-  /** If the plugin is itself a preset that invokes other plugins. */
-  isPreset?: true;
-  /**
-   * If the plugin is a preset that invokes other plugins, this returns an
-   * array of the plugins in the preset in the order that they are invoked.
-   */
-  plugins?: ReadonlyArray<BuiltinPlugin<string, Object>>;
-};
+> &
+  (PresetProperties<true> | Partial<PresetProperties<false>>);
 
 export type XastDoctype = {
   type: 'doctype';
