@@ -17,7 +17,7 @@ const standardDescs = /^(Created with|Created using)/;
  * description.
  *
  * @author Daniel Wabyick
- * @see https://developer.mozilla.org/docs/Web/SVG/Element/desc
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc
  *
  * @type {import('../lib/types.js').Plugin<RemoveDescParams>}
  */

@@ -2,7 +2,7 @@ import { attrsGroups } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeScripts';
-export const description = 'removes scripts (disabled by default)';
+export const description = 'removes scripts';
 
 /** Union of all event attributes. */
 const eventAttrs = [
