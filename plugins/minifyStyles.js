@@ -145,9 +145,13 @@ export const fn = (_root, { usage, ...params }) => {
         for (const node of elementsWithStyleAttributes) {
           // style attribute
           const elemStyle = node.attributes.style;
-          node.attributes.style = csso.minifyBlock(elemStyle, {
-            ...params,
-          }).css;
+          try {
+            node.attributes.style = csso.minifyBlock(elemStyle, {
+              ...params,
+            }).css;
+          } catch {
+            /** ignore style syntax errors */
+          }
         }
       },
     },
