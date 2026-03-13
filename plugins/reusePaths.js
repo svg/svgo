@@ -26,7 +26,7 @@ export const fn = (root) => {
    * element if one exists.
    *
    * @type {import('../lib/types.js').XastElement}
-   * @see https://developer.mozilla.org/docs/Web/SVG/Element/defs
+   * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs
    */
   let svgDefs;
 

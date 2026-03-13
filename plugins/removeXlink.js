@@ -18,7 +18,7 @@ const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
  * Map of `xlink:show` values to the SVG 2 `target` attribute values.
  *
  * @type {Record<string, string>}
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:show#usage_notes
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:show#usage_notes
  */
 const SHOW_TO_TARGET = {
   new: '_blank',
@@ -30,8 +30,8 @@ const SHOW_TO_TARGET = {
  * don't support the SVG 2 href attribute.
  *
  * @type {Set<string>}
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/href
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/href
  */
 const LEGACY_ELEMENTS = new Set([
   'cursor',
@@ -60,7 +60,7 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  * XLink namespace is deprecated in SVG 2.
  *
  * @type {import('../lib/types.js').Plugin<RemoveXlinkParams>}
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
  */
 export const fn = (_, params) => {
   const { includeLegacy } = params;

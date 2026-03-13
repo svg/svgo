@@ -2,21 +2,20 @@
 title: Migration from v3 to v4
 ---
 
-This is a summary of the changes necessary to migrate from SVGO v3 to SVGO v4. If you want more details or have any questions, please refer to our [release notes for SVGO v4.0.0](https://github.com/svg/svgo/releases/tag/v4.0.0) or related pull requests. You're also encouraged to leave comments in pull requests if the existing content doesn't already answer your question.
+This is a summary of the changes necessary to migrate from SVGO v3 to SVGO v4. If you want more details or have any questions, please refer to our [release notes for SVGO v4.0.0](https://github.com/svg/svgo/releases/tag/v4.0.0) or related pull requests. You're encouraged to leave comments in pull requests if the existing content doesn't answer your question.
 
 ## Version Requirements
 
-SVGO now requires [Node.js >=16.0.0](https://nodejs.org/en/blog/release/v16.0.0).
+SVGO now requires [Node.js >=16.0.0](https://nodejs.org/blog/release/v16.0.0).
 
 ## Default Behavior
 
-The following changes have been made to default plugins, also known as [preset-default](/docs/preset-default/).
+The following changes have been made to default plugins, also known as [preset-default](/docs/preset-default/):
 
-- **[removeViewBox](/docs/plugins/removeViewBox/)** is no longer a default plugin, to preserve scalability.
-- **[removeTitle](/docs/plugins/removeTitle)** is no longer a default plugin, to preserve accessibility.
-- **removeScriptElement** has been renamed to **[removeScripts](/docs/plugins/removeScripts)**, as it not only removes the `<script>` element, but also event handlers, and script URIs.
+- **[removeViewBox](/docs/plugins/removeViewBox/)** is no longer a default plugin to preserve scalability.
+- **[removeTitle](/docs/plugins/removeTitle)** is no longer a default plugin to preserve accessibility.
 
-To continue using removeViewBox or removeTitle, configure it in the SVGO config, see the [README](https://github.com/svg/svgo?tab=readme-ov-file#configuration) for more context, but please consider reading the warnings in the respective plugin's documentation first:
+To continue using removeViewBox or removeTitle, configure it in the SVGO config. See the [README](https://github.com/svg/svgo?tab=readme-ov-file#configuration) for more context, but please consider reading the warnings in the respective plugin's documentation first:
 
 ```diff
   export default {
@@ -28,7 +27,9 @@ To continue using removeViewBox or removeTitle, configure it in the SVGO config,
   };
 ```
 
-If you were using the removeScriptElement plugin, amend your SVGO config to use removeScripts instead:
+## Plugins
+
+The removeScriptElement plugin has been renamed to **[removeScripts](/docs/plugins/removeScripts)**, as it not only removes the `<script>` element but also event handlers and script URIs. If you were using the removeScriptElement plugin, amend your SVGO config to use removeScripts instead:
 
 ```diff
   export default {
@@ -40,9 +41,9 @@ If you were using the removeScriptElement plugin, amend your SVGO config to use 
   };
 ```
 
-## Public vs Internal API
+## Public vs. Internal API
 
-We now enforce a boundary between public and internal API. It's no longer possible to arbitrarily import any code declared by SVGO, but rather only the public API we declare as part of our semantic versioning.
+We now enforce a boundary between public and internal APIs. It's no longer possible to arbitrarily import any code declared by SVGO, but rather only the public API we declare as part of our semantic versioning.
 
 There are two ways to import SVGO:
 
@@ -83,7 +84,7 @@ const pluginMap = builtinPlugins.reduce((acc, val) => acc.set(val.name, val), ne
 
 ### Selector Helpers
 
-Xast/CSS helpers for selecting nodes must be imported from `svgo` instead, and have different behavior. This effects custom plugins that use any of the following functions, where the `selector` (2nd) argument could reference parent or sibling nodes (i.e. `div > span`):
+Xast/CSS helpers for selecting nodes must be imported from `svgo` instead and have different behavior. This affects custom plugins that use any of the following functions, where the `selector` (2nd) argument could reference parent or sibling nodes (i.e. `div > span`):
 
 - `querySelectorAll`
 - `querySelector`
@@ -91,37 +92,36 @@ Xast/CSS helpers for selecting nodes must be imported from `svgo` instead, and h
 
 If this applies to you, then you need to pass a `Map` of nodes to their parent node as a third argument.
 
-A helper has been provided named `#mapNodesToParents`, which does this for you. This can be used to easily migrate to the new API. If you're not sure if you need it, then it's safer to take this approach. The third argument won't be necessary if `selector` does not traverse nodes, for example querying using one or more attributes of a single node.
+A helper has been provided named `#mapNodesToParents`, which does this for you. This can be used to easily migrate to the new API. If you're not sure if you need it, then it's safer to take this approach. The third argument won't be necessary if `selector` doesn't traverse nodes. For example, querying using one or more attributes of a single node.
 
 ```diff
 - import { querySelectorAll } from 'svgo';
 - const nodes = querySelectorAll(childNode, selector);
-
 + import { querySelectorAll, mapNodesToParents } from 'svgo';
 + const nodes = querySelectorAll(childNode, selector, mapNodesToParents(rootNode));
 ```
 
-The new API for these functions are as follows:
+The new API for these functions is as follows:
 
 ```js
-// applies `selector` with the context of the `childNode` and its descendants
+// applies `selector` with context of the `childNode` and its descendants
 const nodes = querySelectorAll(childNode, selector);
 
-// applies `selector` with the context of the entire node tree relative from `childNode`
-// the `rootNode` is required if the result of `selector` may depend on the parent or sibling of `childNode`
+// applies `selector` with context of the node tree relative from `childNode`
+// `rootNode` is required if result depends on a parent/sibling of `childNode`
 const nodes = querySelectorAll(childNode, selector, rootNode);
 
-// this usage has the same behavior as v3, as `rootNode` is already the entire node tree
+// same behavior as v3, as `rootNode` is already the entire node tree
 const nodes = querySelectorAll(rootNode, selector);
 ```
 
-## Named vs Default Exports
+## Named vs. Default Exports
 
-SVGO now only has named exports, there are no default exports in the public API.
+SVGO now only has named exports—there are no default exports in the public API.
 
-If you use SVGO from the CLI, or have a Common JS project (you import SVGO using `require`), or if you were already using named exports, you don't have to do anything.
+If you use SVGO from the CLI, have a Common JS project (you import SVGO using `require`), or are already using named exports, you don't have to do anything.
 
-If one way or another you're using the `import` keyword to import SVGO, then any instance where you use a default export must be switched for the named equivilent.
+If one way or another you're using the `import` keyword to import SVGO, then any instance where you use the default export must be replaced with the named equivalent.
 
 ```diff
 - import svgo from 'svgo';
