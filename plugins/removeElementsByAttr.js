@@ -1,8 +1,13 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef RemoveElementsByAttrParams
+ * @property {string | string[]=} id
+ * @property {string | string[]=} class
+ */
+
 export const name = 'removeElementsByAttr';
-export const description =
-  'removes arbitrary elements by ID or className (disabled by default)';
+export const description = 'removes arbitrary elements by ID or className';
 
 /**
  * Remove arbitrary SVG elements by ID or className.
@@ -35,7 +40,7 @@ export const description =
  *
  * @author Eli Dupuis (@elidupuis)
  *
- * @type {import('./plugins-types.js').Plugin<'removeElementsByAttr'>}
+ * @type {import('../lib/types.js').Plugin<RemoveElementsByAttrParams>}
  */
 export const fn = (root, params) => {
   const ids =

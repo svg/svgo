@@ -10,12 +10,12 @@ const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
  *
  * @example
  * <svg width="100" height="50" viewBox="0 0 100 50">
- *             ⬇
+ *  ⬇
  * <svg width="100" height="50">
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeViewBox'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {
@@ -31,12 +31,12 @@ export const fn = () => {
           if (node.name === 'svg' && parentNode.type !== 'root') {
             return;
           }
-          const nums = node.attributes.viewBox.split(/[ ,]+/g);
+          const numbers = node.attributes.viewBox.split(/[ ,]+/g);
           if (
-            nums[0] === '0' &&
-            nums[1] === '0' &&
-            node.attributes.width.replace(/px$/, '') === nums[2] && // could use parseFloat too
-            node.attributes.height.replace(/px$/, '') === nums[3]
+            numbers[0] === '0' &&
+            numbers[1] === '0' &&
+            node.attributes.width.replace(/px$/, '') === numbers[2] && // could use parseFloat too
+            node.attributes.height.replace(/px$/, '') === numbers[3]
           ) {
             delete node.attributes.viewBox;
           }
