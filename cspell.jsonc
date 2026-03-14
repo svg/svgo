@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "allowCompoundWords": true,
+  "words": [
+    "deoptimizations",
+    "deoptimize",
+    "deoptimized",
+    "Fontello",
+    "inlines",
+    // Abbreviations
+    "elems", // elements
+    "unenc", // unencoded
+    // SVG Nodes / Attributes and CSS Properties, including plurals
+    "bbox",
+    "hkern",
+    "horiz",
+    "hrefs",
+    "mpath",
+    "onbegin",
+    "onrepeat",
+    "panose",
+    "stemh",
+    "stemv",
+    "SVGs",
+    "vkern",
+    // Storage
+    "kibibytes",
+    // Software
+    "SVGOMG",
+    // Names
+    "André",
+    "Baranovskiy",
+    "Dmitry",
+    "Keerthi",
+  ],
+  "ignorePaths": [
+    "*.svg.txt",
+    "*.svg",
+    "coverage/",
+    "cspell.jsonc",
+    "dist/",
+    "LICENSE",
+    "test/regression/lists/",
+  ],
+  "ignoreRegExpList": [
+    "(?:xlink|sodipodi)(?::[a-z]+)?", // Common SVG namespaces
+    "[a-z]+: '#[a-f\\d]+',", // Color names in _collection.js
+    "[a-z]+…", // Words that have been cut off by an ellipsis
+    "@author .+", // JSDoc author tag line, usually names
+    "\"name\": .+", // package.json author name property
+    "\\*\\*SVG O\\*\\*ptimizer", // README
+    "\\b[aprs]data\\b",
+    "&.+?;", // HTML entity
+    "<svg.+>", // Inline SVG in code
+    "Atrule", // At-rule
+    "data:image/.+", // Data URI
+    "datauri", // Data URI
+    "descs", // Abbreviation of "descriptions"
+    "ENOCLS|ENOATTRS",
+    "import .+", // Import statements in Javascript
+    "onwarn", // Rollup API,
+    "QRAB|QRCD",
+    "rrggbb",
+    "sax\\..+", // Any properties of the sax API
+  ],
+}

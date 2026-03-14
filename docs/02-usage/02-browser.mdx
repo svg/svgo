@@ -1,6 +1,5 @@
 ---
 title: Browser
-slug: 'browser'
 ---
 
 SVGO can run in the browser, but how to use it depends on the structure of your project.
@@ -62,23 +61,3 @@ Here's a minimal example:
   </body>
 </html>
 ```
-
-## Exports
-
-<dl>
-  <dt>
-    <code>VERSION</code>
-  </dt>
-  <dd>Version of SVGO during runtime.</dd>
-  <dt>
-    <code>builtinPlugins</code>
-  </dt>
-  <dd>
-    Array of built-in plugins, including plugins that are disabled by default
-    and any presets.
-  </dd>
-  <dt>
-    <code>optimize(svgCode, svgoConfig)</code>
-  </dt>
-  <dd>Invokes the optimization and returns the optimized/minified SVG code.</dd>
-</dl>

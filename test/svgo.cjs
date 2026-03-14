@@ -4,6 +4,9 @@ const {
   optimize,
   builtinPlugins,
   loadConfig,
+  querySelector,
+  querySelectorAll,
+  _collections,
 } = require('../dist/svgo-node.cjs');
 const PKG = require('../package.json');
 
@@ -37,6 +40,9 @@ const runTest = () => {
   assert.equal(actual, expected);
   assert.notEqual(builtinPlugins, undefined);
   assert.notEqual(loadConfig, undefined);
+  assert.notEqual(querySelector, undefined);
+  assert.notEqual(querySelectorAll, undefined);
+  assert.notEqual(_collections, undefined);
 };
 
 runTest();

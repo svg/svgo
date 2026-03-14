@@ -2,7 +2,7 @@ import { attrsGroups } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeScripts';
-export const description = 'removes scripts (disabled by default)';
+export const description = 'removes scripts';
 
 /** Union of all event attributes. */
 const eventAttrs = [
@@ -19,7 +19,7 @@ const eventAttrs = [
  * https://www.w3.org/TR/SVG11/script.html
  *
  * @author Patrick Klingemann
- * @type {import('./plugins-types.js').Plugin<'removeScripts'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {
@@ -55,14 +55,6 @@ export const fn = () => {
               (child) => child.type !== 'text',
             );
             parentNode.children.splice(index, 1, ...usefulChildren);
-
-            // TODO remove legacy parentNode in v4
-            for (const child of node.children) {
-              Object.defineProperty(child, 'parentNode', {
-                writable: true,
-                value: parentNode,
-              });
-            }
           }
         }
       },

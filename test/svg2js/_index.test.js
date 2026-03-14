@@ -1,17 +1,18 @@
-import FS from 'fs';
-import PATH from 'path';
+import fs from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import { parseSvg } from '../../lib/parser.js';
 
-const __dirname = PATH.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-describe('svg2js', function () {
-  describe('working svg', function () {
-    var filepath = PATH.resolve(__dirname, './test.svg'),
-      root;
+describe('svg2js', () => {
+  describe('working svg', () => {
+    const filepath = path.resolve(__dirname, './test.svg');
+    /** @type {any} */
+    let root;
 
-    beforeAll(function (done) {
-      FS.readFile(filepath, 'utf8', function (err, data) {
+    beforeAll((done) => {
+      fs.readFile(filepath, 'utf8', (err, data) => {
         if (err) {
           throw err;
         }
@@ -21,26 +22,26 @@ describe('svg2js', function () {
       });
     });
 
-    describe('root', function () {
-      it('should exist', function () {
+    describe('root', () => {
+      it('should exist', () => {
         expect(root).toStrictEqual(expect.anything());
       });
 
-      it('should be an instance of Object', function () {
+      it('should be an instance of Object', () => {
         expect(root).toBeInstanceOf(Object);
       });
 
-      it('should have property "children"', function () {
+      it('should have property "children"', () => {
         expect(root).toHaveProperty('children');
       });
     });
 
-    describe('root.children', function () {
-      it('should be an instance of Array', function () {
+    describe('root.children', () => {
+      it('should be an instance of Array', () => {
         expect(root.children).toBeInstanceOf(Array);
       });
 
-      it('should have length 4', function () {
+      it('should have length 4', () => {
         expect(root.children).toHaveLength(4);
       });
     });
@@ -72,7 +73,7 @@ describe('svg2js', function () {
       });
     });
 
-    describe('name', function () {
+    describe('name', () => {
       it('should have property name: "svg"', function () {
         expect(root.children[3]).toStrictEqual(
           expect.objectContaining({
@@ -82,22 +83,22 @@ describe('svg2js', function () {
       });
     });
 
-    describe('children', function () {
-      it('should exist', function () {
+    describe('children', () => {
+      it('should exist', () => {
         expect(root.children[3].children).toStrictEqual(expect.anything());
       });
 
-      it('should be an instance of Array', function () {
+      it('should be an instance of Array', () => {
         expect(root.children[3].children).toBeInstanceOf(Array);
       });
 
-      it('should eventually have length 3', function () {
+      it('should eventually have length 3', () => {
         expect(root.children[3].children).toHaveLength(3);
       });
     });
 
-    describe('text nodes', function () {
-      it('should contain preserved whitespace', function () {
+    describe('text nodes', () => {
+      it('should contain preserved whitespace', () => {
         const textNode = root.children[3].children[1].children[0].children[1];
         expect(textNode.children[0].value).toBe('  test  ');
       });
