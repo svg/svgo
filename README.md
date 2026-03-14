@@ -33,10 +33,10 @@ Process single files:
 svgo one.svg two.svg -o one.min.svg two.min.svg
 ```
 
-Process a directory of files recursively with `-f`/`--folder`:
+Process a directory of files recursively with `-r`/`--recursive` and `-f`/`--folder`:
 
 ```sh
-svgo -f path/to/directory_with_svgs -o path/to/output_directory
+svgo -rf path/to/directory_with_svgs -o path/to/output_directory
 ```
 
 Help for advanced usage:

@@ -1,6 +1,5 @@
 export const name = 'removeXMLNS';
-export const description =
-  'removes xmlns attribute (for inline svg, disabled by default)';
+export const description = 'removes xmlns attribute (for inline svg)';
 
 /**
  * Remove the xmlns attribute when present.
@@ -12,7 +11,7 @@ export const description =
  *
  * @author Ricardo Tomasi
  *
- * @type {import('./plugins-types.js').Plugin<'removeXMLNS'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

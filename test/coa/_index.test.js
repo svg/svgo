@@ -13,10 +13,10 @@ const svgFiles = [
   path.resolve(__dirname, 'testSvg/test.1.svg'),
 ];
 const tempFolder = 'temp';
-const noop = () => {};
 
 /**
- * @param {string[]} args
+ * @param {ReadonlyArray<string>} args
+ * @returns {Promise<Command>}
  */
 function runProgram(args) {
   const program = new Command();
@@ -24,7 +24,7 @@ function runProgram(args) {
   // prevent running process.exit
   program.exitOverride(() => {});
   // parser skips first two arguments
-  return program.parseAsync(['0', '1', ...args]);
+  return program.parseAsync(['', '', ...args]);
 }
 
 describe('coa', function () {
@@ -36,19 +36,6 @@ describe('coa', function () {
   afterAll(async () => {
     await fs.promises.rm(tempFolder, { force: true, recursive: true });
   });
-
-  const initialConsoleError = global.console.error;
-  const initialProcessExit = global.process.exit;
-
-  function replaceConsoleError() {
-    global.process.exit = noop;
-  }
-
-  function restoreConsoleError() {
-    global.console.error = initialConsoleError;
-    global.process.exit = initialProcessExit;
-  }
-
   /**
    * @param {string} folderPath
    * @returns {number}
@@ -139,26 +126,21 @@ describe('coa', function () {
       tempFolder,
       '--quiet',
     ]);
-    let optimizedWeight = calcFolderSvgWeight(svgFolderPath);
+    const optimizedWeight = calcFolderSvgWeight(svgFolderPath);
     expect(optimizedWeight).toBeLessThanOrEqual(initWeight);
   });
 
   it('should throw error when stated in input folder does not exist', async () => {
-    replaceConsoleError();
-    try {
-      await expect(
-        runProgram(['--input', svgFolderPath + 'temp', '--output', tempFolder]),
-      ).rejects.toThrow(/no such file or directory/);
-    } finally {
-      restoreConsoleError();
-    }
+    await expect(
+      runProgram(['--input', svgFolderPath + 'temp', '--output', tempFolder]),
+    ).rejects.toThrow(/no such file or directory/);
   });
 
   describe('stdout', () => {
     it('should show message when the folder is empty', async () => {
       const emptyFolderPath = path.resolve(__dirname, 'testSvgEmpty');
       if (!fs.existsSync(emptyFolderPath)) {
-        fs.mkdirSync(emptyFolderPath);
+        await fs.promises.mkdir(emptyFolderPath);
       }
       await expect(
         runProgram(['--folder', emptyFolderPath, '--quiet']),

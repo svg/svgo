@@ -2,13 +2,13 @@ import * as csswhat from 'css-what';
 import { attrsGroupsDeprecated, elems } from './_collections.js';
 import { collectStylesheet } from '../lib/style.js';
 
+/**
+ * @typedef RemoveDeprecatedAttrsParams
+ * @property {boolean=} removeUnsafe
+ */
+
 export const name = 'removeDeprecatedAttrs';
 export const description = 'removes deprecated attributes';
-
-/**
- * @typedef {{ safe?: Set<string>; unsafe?: Set<string> }} DeprecatedAttrs
- * @typedef {import('../lib/types.js').XastElement} XastElement
- */
 
 /**
  * @param {import('../lib/types.js').Stylesheet} stylesheet
@@ -34,9 +34,9 @@ function extractAttributesInStylesheet(stylesheet) {
 }
 
 /**
- * @param {XastElement} node
- * @param {DeprecatedAttrs | undefined} deprecatedAttrs
- * @param {import('./plugins-types.js').DefaultPlugins['removeDeprecatedAttrs']} params
+ * @param {import('../lib/types.js').XastElement} node
+ * @param {{ safe?: Set<string>; unsafe?: Set<string> }|undefined} deprecatedAttrs
+ * @param {import('../lib/types.js').DefaultPlugins['removeDeprecatedAttrs']} params
  * @param {Set<string>} attributesInStylesheet
  */
 function processAttributes(
@@ -71,7 +71,7 @@ function processAttributes(
 /**
  * Remove deprecated attributes.
  *
- * @type {import('./plugins-types.js').Plugin<'removeDeprecatedAttrs'>}
+ * @type {import('../lib/types.js').Plugin<RemoveDeprecatedAttrsParams>}
  */
 export function fn(root, params) {
   const stylesheet = collectStylesheet(root);

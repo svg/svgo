@@ -1,21 +1,19 @@
-/**
- * @typedef {import('../lib/types.js').ComputedStyles} ComputedStyles
- * @typedef {import('../lib/types.js').StaticStyle} StaticStyle
- * @typedef {import('../lib/types.js').DynamicStyle} DynamicStyle
- * @typedef {import("../lib/types.js").PathDataItem} PathDataItem
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- */
-
 import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { path2js, js2path, intersects } from './_path.js';
+import { intersects, js2path, path2js } from './_path.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
+
+/**
+ * @typedef MergePathsParams
+ * @property {boolean=} force
+ * @property {number=} floatPrecision
+ * @property {boolean=} noSpaceAfterFlags
+ */
 
 export const name = 'mergePaths';
 export const description = 'merges multiple paths in one if possible';
 
 /**
- * @param {ComputedStyles} computedStyle
+ * @param {import('../lib/types.js').ComputedStyles} computedStyle
  * @param {string} attName
  * @returns {boolean}
  */
@@ -34,7 +32,7 @@ function elementHasUrl(computedStyle, attName) {
  *
  * @author Kir Belevich, Lev Solntsev
  *
- * @type {import('./plugins-types.js').Plugin<'mergePaths'>}
+ * @type {import('../lib/types.js').Plugin<MergePathsParams>}
  */
 export const fn = (root, params) => {
   const {
@@ -51,14 +49,14 @@ export const fn = (root, params) => {
           return;
         }
 
-        /** @type {XastChild[]} */
+        /** @type {import('../lib/types.js').XastChild[]} */
         const elementsToRemove = [];
         let prevChild = node.children[0];
         let prevPathData = null;
 
         /**
-         * @param {XastElement} child
-         * @param {PathDataItem[]} pathData
+         * @param {import('../lib/types.js').XastElement} child
+         * @param {ReadonlyArray<import("../lib/types.js").PathDataItem>} pathData
          */
         const updatePreviousPath = (child, pathData) => {
           js2path(child, pathData, {

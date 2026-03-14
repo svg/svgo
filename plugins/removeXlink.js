@@ -1,7 +1,10 @@
 import { elems } from './_collections.js';
 
 /**
- * @typedef {import('../lib/types.js').XastElement} XastElement
+ * @typedef RemoveXlinkParams
+ * @property {boolean=} includeLegacy
+ *   By default this plugin ignores legacy elements that were deprecated or
+ *   removed in SVG 2. Set to true to force performing operations on those too.
  */
 
 export const name = 'removeXlink';
@@ -15,7 +18,7 @@ const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
  * Map of `xlink:show` values to the SVG 2 `target` attribute values.
  *
  * @type {Record<string, string>}
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:show#usage_notes
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:show#usage_notes
  */
 const SHOW_TO_TARGET = {
   new: '_blank',
@@ -27,8 +30,8 @@ const SHOW_TO_TARGET = {
  * don't support the SVG 2 href attribute.
  *
  * @type {Set<string>}
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/href
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/href
  */
 const LEGACY_ELEMENTS = new Set([
   'cursor',
@@ -39,8 +42,8 @@ const LEGACY_ELEMENTS = new Set([
 ]);
 
 /**
- * @param {XastElement} node
- * @param {string[]} prefixes
+ * @param {import('../lib/types.js').XastElement} node
+ * @param {ReadonlyArray<string>} prefixes
  * @param {string} attr
  * @returns {string[]}
  */
@@ -54,10 +57,10 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  * Removes XLink namespace prefixes and converts references to XLink attributes
  * to the native SVG equivalent.
  *
- * The XLink namespace is deprecated in SVG 2.
+ * XLink namespace is deprecated in SVG 2.
  *
- * @type {import('./plugins-types.js').Plugin<'removeXlink'>}
- * @see https://developer.mozilla.org/docs/Web/SVG/Attribute/xlink:href
+ * @type {import('../lib/types.js').Plugin<RemoveXlinkParams>}
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
  */
 export const fn = (_, params) => {
   const { includeLegacy } = params;
@@ -142,7 +145,7 @@ export const fn = (_, params) => {
             continue;
           }
 
-          /** @type {XastElement} */
+          /** @type {import('../lib/types.js').XastElement} */
           const titleTag = {
             type: 'element',
             name: 'title',
