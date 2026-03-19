@@ -257,12 +257,13 @@ export const fn = (_root, params, info) => {
             node.attributes[name] != null &&
             node.attributes[name].length !== 0
           ) {
-            const parts = node.attributes[name].split(/\s*;\s+/).map((val) => {
-              if (val.endsWith('.end') || val.endsWith('.start')) {
-                const [id, postfix] = val.split('.');
-                return `${prefixId(prefixGenerator, id)}.${postfix}`;
-              }
-              return val;
+            const parts = node.attributes[name].split(/\s*;\s*/).map((val) => {
+              return val.replace(
+                /^([a-zA-Z0-9_-]+)\.(begin|end)([+-].+)?$/,
+                (_, id, type, offset = '') => {
+                  return `${prefixId(prefixGenerator, id)}.${type}${offset}`;
+                },
+              );
             });
             node.attributes[name] = parts.join('; ');
           }
