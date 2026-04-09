@@ -35,7 +35,7 @@ Without either, the plugin is a noop.`;
  *   {
  *     name: "removeAttributesBySelector",
  *     params: {
- *       selector: "[fill='#00ff00']"
+ *       selector: "[fill='#00ff00']",
  *       attributes: "fill"
  *     }
  *   }
