@@ -1,4 +1,5 @@
-import { querySelectorAll } from '../lib/xast.js';
+import { matches } from '../lib/xast.js';
+import { mapNodesToParents } from '../lib/util/map-nodes-to-parents.js';
 
 /**
  * @typedef AttributesBySelector
@@ -107,19 +108,23 @@ export const fn = (root, params) => {
   const selectors = Array.isArray(params.selectors)
     ? params.selectors
     : [params];
-  for (const { selector, attributes } of selectors) {
-    const nodes = querySelectorAll(root, selector);
-    for (const node of nodes) {
-      if (node.type === 'element') {
-        if (Array.isArray(attributes)) {
-          for (const name of attributes) {
-            delete node.attributes[name];
+  const parents = mapNodesToParents(root);
+
+  return {
+    element: {
+      enter: (node) => {
+        for (const { selector, attributes } of selectors) {
+          if (matches(node, selector, parents)) {
+            if (Array.isArray(attributes)) {
+              for (const name of attributes) {
+                delete node.attributes[name];
+              }
+            } else {
+              delete node.attributes[attributes];
+            }
           }
-        } else {
-          delete node.attributes[attributes];
         }
-      }
-    }
-  }
-  return {};
+      },
+    },
+  };
 };
