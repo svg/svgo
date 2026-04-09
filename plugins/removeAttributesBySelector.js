@@ -19,6 +19,24 @@ import { mapNodesToParents } from '../lib/util/map-nodes-to-parents.js';
  * @typedef {(AttributesBySelector | AttributesBySelectors)} RemoveAttributesBySelectorParams
  */
 
+/**
+ * @typedef AttributesBySelector
+ * @property {string} selector
+ * @property {string | string[]} attributes
+ * @property {never} selectors
+ */
+
+/**
+ * @typedef AttributesBySelectors
+ * @property {never} selector
+ * @property {never} attributes
+ * @property {Array<AttributesBySelector>} selectors
+ */
+
+/**
+ * @typedef {(AttributesBySelector | AttributesBySelectors)} RemoveAttributesBySelectorParams
+ */
+
 export const name = 'removeAttributesBySelector';
 export const description =
   'removes attributes of elements that match a css selector';
@@ -36,7 +54,7 @@ Without either, the plugin is a noop.`;
  *   {
  *     name: "removeAttributesBySelector",
  *     params: {
- *       selector: "[fill='#00ff00']"
+ *       selector: "[fill='#00ff00']",
  *       attributes: "fill"
  *     }
  *   }
