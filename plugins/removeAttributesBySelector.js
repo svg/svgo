@@ -1,4 +1,5 @@
 import { matches } from '../lib/xast.js';
+import { mapNodesToParents } from '../lib/util/map-nodes-to-parents.js';
 
 /**
  * @typedef AttributesBySelector
@@ -107,12 +108,13 @@ export const fn = (root, params) => {
   const selectors = Array.isArray(params.selectors)
     ? params.selectors
     : [params];
+  const parents = mapNodesToParents(root);
 
   return {
     element: {
       enter: (node) => {
         for (const { selector, attributes } of selectors) {
-          if (matches(node, selector)) {
+          if (matches(node, selector, parents)) {
             if (Array.isArray(attributes)) {
               for (const name of attributes) {
                 delete node.attributes[name];
