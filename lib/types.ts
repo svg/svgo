@@ -13,6 +13,7 @@ import { InlineStylesParams } from '../plugins/inlineStyles.js';
 import { MergePathsParams } from '../plugins/mergePaths.js';
 import { MinifyStylesParams } from '../plugins/minifyStyles.js';
 import { PrefixIdsParams } from '../plugins/prefixIds.js';
+import { RemoveAttributesBySelectorParams } from '../plugins/removeAttributesBySelector.js';
 import { RemoveAttrsParams } from '../plugins/removeAttrs.js';
 import { RemoveCommentsParams } from '../plugins/removeComments.js';
 import { RemoveDeprecatedAttrsParams } from '../plugins/removeDeprecatedAttrs.js';
@@ -99,7 +100,7 @@ export type BuiltinsWithOptionalParams = DefaultPlugins & {
 export type BuiltinsWithRequiredParams = {
   addAttributesToSVGElement: AddAttributesToSVGElementParams;
   addClassesToSVGElement: AddClassesToSVGElementParams;
-  removeAttributesBySelector: any;
+  removeAttributesBySelector: RemoveAttributesBySelectorParams;
   removeAttrs: RemoveAttrsParams;
   removeElementsByAttr: RemoveElementsByAttrParams;
 };
