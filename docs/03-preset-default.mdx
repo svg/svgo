@@ -17,6 +17,7 @@ The following plugins are included in `preset-default`, in the order that they'r
 - [removeDoctype](/docs/plugins/removeDoctype/)
 - [removeXMLProcInst](/docs/plugins/removeXMLProcInst/)
 - [removeComments](/docs/plugins/removeComments/)
+- [removeDeprecatedAttrs](/docs/plugins/removeDeprecatedAttrs/)
 - [removeMetadata](/docs/plugins/removeMetadata/)
 - [removeEditorsNSData](/docs/plugins/removeEditorsNSData/)
 - [cleanupAttrs](/docs/plugins/cleanupAttrs/)
@@ -42,15 +43,15 @@ The following plugins are included in `preset-default`, in the order that they'r
 - [convertTransform](/docs/plugins/convertTransform/)
 - [removeEmptyAttrs](/docs/plugins/removeEmptyAttrs/)
 - [removeEmptyContainers](/docs/plugins/removeEmptyContainers/)
-- [removeUnusedNS](/docs/plugins/removeUnusedNS/)
 - [mergePaths](/docs/plugins/mergePaths/)
+- [removeUnusedNS](/docs/plugins/removeUnusedNS/)
 - [sortAttrs](/docs/plugins/sortAttrs/)
 - [sortDefsChildren](/docs/plugins/sortDefsChildren/)
 - [removeDesc](/docs/plugins/removeDesc/)
 
-## Disable a Plugin
+## Disable or Modify a Plugin
 
-Sometimes a specific plugin might not be appropriate for your workflow. You can continue using `preset-default` while disabling any plugin by using the `overrides` parameter.
+Sometimes a specific plugin might not be appropriate for your workflow. You can continue using `preset-default` while disabling modifying any plugin by using the `overrides` parameter.
 
 In `overrides`, reference the plugin ID and set it to `false` to disable it:
 
@@ -62,7 +63,27 @@ module.exports = {
       params: {
         overrides: {
           cleanupIds: false,
+          convertTransform: {
+            transformPrecision: 3,
+          },
         },
+      },
+    },
+  ],
+};
+```
+
+Additional plugins can be added after the default preset:
+
+```js
+module.exports = {
+  plugins: [
+    'preset-default',
+    'removeXMLNS',
+    {
+      name: "removeXlink",
+      params: {
+        includeLegacy: true,
       },
     },
   ],
@@ -79,6 +100,32 @@ module.exports = {
     'minifyStyles',
     'sortAttrs',
     'sortDefsChildren',
+  ],
+};
+```
+
+## Provide a Global Float Precision
+
+Plugins that affect float values have a `floatPrecision` parameter that controls the maximum number of decimal places to preserve. This precision can also be set globally.
+
+The `floatPrecision` can be set in three different places, with each level overriding the last: at the top level of the configuration object (global); at the top of the default preset; as a plugin parameter:
+
+```js
+module.exports = {
+  floatPrecision: 2,
+  plugins: [
+    {
+      name: 'preset-default',
+      params: {
+        floatPrecision: 1,
+        overrides: {
+          cleanupIds: false,
+          convertTransform: {
+            floatPrecision: 2,
+          },
+        },
+      },
+    },
   ],
 };
 ```
