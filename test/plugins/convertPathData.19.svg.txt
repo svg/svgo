@@ -1,9 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
     <path transform="translate(250, 250) scale(1.5, 1.5) translate(-250, -250)" fill="#7ED321" stroke="#000" stroke-width="15" vector-effect="non-scaling-stroke" d="M125 125h250v250h-250v-250z"/>
+    <path transform="translate(20, 20) scale(.5, 1.2)" fill="#7ED321" stroke="#000" stroke-width="15" vector-effect="non-scaling-stroke" d="M125 125h250v250h-250v-250z"/>
+    <path fill="none" stroke="red" stroke-width="2" d="m10 10 10 10H10z" transform="matrix(1 0 0 2 10 0)" vector-effect="non-scaling-stroke"/>
+    <path fill="none" stroke="green" stroke-width="2" d="m10 10 10 10H10z" transform="matrix(1 0 0 2 40 0)"/>
 </svg>
 
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
     <path fill="#7ED321" stroke="#000" stroke-width="15" vector-effect="non-scaling-stroke" d="M62.5 62.5h375v375h-375z"/>
+    <path fill="#7ED321" stroke="#000" stroke-width="15" vector-effect="non-scaling-stroke" d="M82.5 170h125v300h-125z"/>
+    <path fill="none" stroke="red" stroke-width="2" d="m20 20 10 20H20z" vector-effect="non-scaling-stroke"/>
+    <path fill="none" stroke="green" stroke-width="2" d="m10 10 10 10H10z" transform="matrix(1 0 0 2 40 0)"/>
 </svg>

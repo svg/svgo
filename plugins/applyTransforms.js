@@ -98,7 +98,13 @@ export const applyTransforms = (root, params) => {
             (matrix.data[0] !== matrix.data[3] ||
               matrix.data[1] !== -matrix.data[2]) &&
             (matrix.data[0] !== -matrix.data[3] ||
-              matrix.data[1] !== matrix.data[2])
+              matrix.data[1] !== matrix.data[2]) &&
+            // except that non-scaling-stroke and no skew
+            !(
+              node.attributes['vector-effect'] === 'non-scaling-stroke' &&
+              matrix.data[1] === 0 &&
+              matrix.data[2] === 0
+            )
           ) {
             return;
           }
