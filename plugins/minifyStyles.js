@@ -1,11 +1,27 @@
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
- */
-
 import * as csso from 'csso';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { hasScripts } from '../lib/svgo/tools.js';
+
+/**
+ * @typedef Usage
+ * @property {boolean=} force
+ * @property {boolean=} ids
+ * @property {boolean=} classes
+ * @property {boolean=} tags
+ *
+ * @typedef MinifyStylesParams
+ * @property {boolean=} restructure Disable or enable a structure optimizations.
+ * @property {boolean=} forceMediaMerge
+ *   Enables merging of `@media` rules with the same media query split by other
+ *   rules. Unsafe in general, but should work fine in most cases. Use it on
+ *   your own risk.
+ * @property {'exclamation' | 'first-exclamation' | boolean=} comments
+ *   Specify what comments to leave:
+ *   - `'exclamation'` or `true` — leave all exclamation comments
+ *   - `'first-exclamation'` — remove every comment except first one
+ *   - `false` — remove all comments
+ * @property {boolean | Usage=} usage Advanced optimizations.
+ */
 
 export const name = 'minifyStyles';
 export const description = 'minifies styles and removes unused styles';
@@ -14,13 +30,13 @@ export const description = 'minifies styles and removes unused styles';
  * Minifies styles (<style> element + style attribute) using CSSO.
  *
  * @author strarsis <strarsis@gmail.com>
- * @type {import('./plugins-types.js').Plugin<'minifyStyles'>}
+ * @type {import('../lib/types.js').Plugin<MinifyStylesParams>}
  */
 export const fn = (_root, { usage, ...params }) => {
-  /** @type {Map<XastElement, XastParent>} */
+  /** @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>} */
   const styleElements = new Map();
 
-  /** @type {XastElement[]} */
+  /** @type {import('../lib/types.js').XastElement[]} */
   const elementsWithStyleAttributes = [];
 
   /** @type {Set<string>} */
@@ -38,7 +54,7 @@ export const fn = (_root, { usage, ...params }) => {
 
   /**
    * Force to use usage data even if it unsafe. For example, the document
-   * contains scripts or in attributes..
+   * contains scripts or in attributes.
    */
   let forceUsageDeoptimized = false;
 
@@ -58,7 +74,7 @@ export const fn = (_root, { usage, ...params }) => {
   return {
     element: {
       enter: (node, parentNode) => {
-        // detect deoptimisations
+        // detect deoptimizations
         if (hasScripts(node)) {
           deoptimized = true;
         }
@@ -115,7 +131,7 @@ export const fn = (_root, { usage, ...params }) => {
             }
 
             // preserve cdata if necessary
-            // TODO split cdata -> text optimisation into separate plugin
+            // TODO split cdata -> text optimization into separate plugin
             if (cssText.indexOf('>') >= 0 || cssText.indexOf('<') >= 0) {
               styleNode.children[0].type = 'cdata';
               styleNode.children[0].value = minified;

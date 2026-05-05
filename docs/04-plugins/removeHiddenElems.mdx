@@ -5,54 +5,54 @@ svgo:
   defaultPlugin: true
   parameters:
     isHidden:
-      description: Removes elements where [`visibility`](https://developer.mozilla.org/docs/Web/SVG/Attribute/visibility) is `hidden`, unless a child element has `visibility` set to `visible`.
+      description: Removes elements where [`visibility`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/visibility) is `hidden`, unless a child element has `visibility` set to `visible`.
       default: true
     displayNone:
-      description: Removes elements where [`display`](https://developer.mozilla.org/docs/Web/SVG/Attribute/display) is `none`.
+      description: Removes elements where [`display`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/display) is `none`.
       default: true
     opacity0:
-      description: Removes element where [`opacity`](https://developer.mozilla.org/docs/Web/SVG/Attribute/opacity) is `0`.
+      description: Removes element where [`opacity`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/opacity) is `0`.
       default: true
     circleR0:
-      description: Removes [`<circle>`](https://developer.mozilla.org/docs/Web/SVG/Element/circle) elements with a [radius](https://developer.mozilla.org/docs/Web/SVG/Attribute/r) of `0`.
+      description: Removes [`<circle>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle) elements with a [radius](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/r) of `0`.
       default: true
     ellipseRX0:
-      description: Removes [`<ellipse>`](https://developer.mozilla.org/docs/Web/SVG/Element/ellipse) elements where [`rx`](https://developer.mozilla.org/docs/Web/SVG/Attribute/rx) is `0`.
+      description: Removes [`<ellipse>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/ellipse) elements where [`rx`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/rx) is `0`.
       default: true
     ellipseRY0:
-      description: Removes [`<ellipse>`](https://developer.mozilla.org/docs/Web/SVG/Element/ellipse) elements where [`ry`](https://developer.mozilla.org/docs/Web/SVG/Attribute/ry) is `0`.
+      description: Removes [`<ellipse>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/ellipse) elements where [`ry`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/ry) is `0`.
       default: true
     rectWidth0:
-      description: Removes [`<rect>`](https://developer.mozilla.org/docs/Web/SVG/Element/rect) elements where [`width`](https://developer.mozilla.org/docs/Web/SVG/Attribute/width) is `0`.
+      description: Removes [`<rect>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect) elements where [`width`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width) is `0`.
       default: true
     rectHeight0:
-      description: Removes [`height`](https://developer.mozilla.org/docs/Web/SVG/Element/rect) is `0`.
+      description: Removes [`height`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect) is `0`.
       default: true
     patternWidth0:
-      description: Removes [`width`](https://developer.mozilla.org/docs/Web/SVG/Element/pattern) is `0`.
+      description: Removes [`width`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/pattern) is `0`.
       default: true
     patternHeight0:
-      description: Removes [`height`](https://developer.mozilla.org/docs/Web/SVG/Element/pattern) is `0`.
+      description: Removes [`height`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/pattern) is `0`.
       default: true
     imageWidth0:
-      description: Removes [`width`](https://developer.mozilla.org/docs/Web/SVG/Element/image) is `0`.
+      description: Removes [`width`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image) is `0`.
       default: true
     imageHeight0:
-      description: Removes [`height`](https://developer.mozilla.org/docs/Web/SVG/Element/image) is `0`.
+      description: Removes [`height`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image) is `0`.
       default: true
     pathEmptyD:
-      description: Remove [`marker`](https://developer.mozilla.org/docs/Web/SVG/Element/path).
+      description: Remove [`marker`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path).
       default: true
     polylineEmptyPoints:
-      description: Removes [points](https://developer.mozilla.org/docs/Web/SVG/Element/polyline) defined.
+      description: Removes [points](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline) defined.
       default: true
     polygonEmptyPoints:
-      description: Removes [points](https://developer.mozilla.org/docs/Web/SVG/Element/polygon) defined.
+      description: Removes [points](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon) defined.
       default: true
 ---
 
 Remove hidden or invisible elements from the document. This can be elements with 0 width and height defined, or elements that were just hidden with CSS.
 
-This plugin ignores non-rendering elements, such as [`<clipPath>`](https://developer.mozilla.org/docs/Web/SVG/Element/clipPath) and [`<linearGradient>`](https://developer.mozilla.org/docs/Web/SVG/Element/linearGradient), which still apply regardless of styles, unless they are unused.
+This plugin ignores non-rendering elements, such as [`<clipPath>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/clipPath) and [`<linearGradient>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/linearGradient), which still apply regardless of styles, unless they are unused.
 
 Refer to the parameters for the conditions this plugin looks for. All checks enabled by default.

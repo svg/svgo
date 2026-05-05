@@ -21,7 +21,7 @@ Do not apply currentColor to masks.
 @@@
 
 <svg xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentcolor"/>
+    <path fill="currentColor"/>
     <mask id="mask1" fill="#fff"/>
     <mask id="mask2">
         <path fill="rgba(255,255,255,0.75)"/>
@@ -33,7 +33,7 @@ Do not apply currentColor to masks.
         </g>
         <mask id="inner-mask" fill="rgba(0,0,0,.5)"/>
     </mask>
-    <path fill="currentcolor"/>
+    <path fill="currentColor"/>
 </svg>
 
 @@@

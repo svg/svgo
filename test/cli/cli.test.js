@@ -1,8 +1,4 @@
-/**
- * @typedef {import('child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams
- */
-
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -10,7 +6,8 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * @type {(proc: ChildProcessWithoutNullStreams) => Promise<string>}
+ * @param {import('child_process').ChildProcessWithoutNullStreams} proc
+ * @returns {Promise<string>}
  */
 const waitStdout = (proc) => {
   return new Promise((resolve) => {
@@ -21,7 +18,8 @@ const waitStdout = (proc) => {
 };
 
 /**
- * @type {(proc: ChildProcessWithoutNullStreams) => Promise<void>}
+ * @param {import('child_process').ChildProcessWithoutNullStreams} proc
+ * @returns {Promise<void>}
  */
 const waitClose = (proc) => {
   return new Promise((resolve) => {
@@ -69,7 +67,7 @@ test('accepts svg as filename', async () => {
     { cwd: __dirname },
   );
   await waitClose(proc);
-  const output = fs.readFileSync(
+  const output = await fs.readFile(
     path.join(__dirname, 'output/single.svg'),
     'utf-8',
   );

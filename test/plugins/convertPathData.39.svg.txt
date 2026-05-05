@@ -1,0 +1,13 @@
+Should drop truely useless commands even when a linecap is present.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+    <path d="M 10 50 h 10 v 0" stroke="#00f" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+    <path d="M10 50h10" stroke="#00f" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

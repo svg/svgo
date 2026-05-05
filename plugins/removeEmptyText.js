@@ -1,5 +1,12 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef RemoveEmptyTextParams
+ * @property {boolean=} text
+ * @property {boolean=} tspan
+ * @property {boolean=} tref
+ */
+
 export const name = 'removeEmptyText';
 export const description = 'removes empty <text> elements';
 
@@ -20,7 +27,7 @@ export const description = 'removes empty <text> elements';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeEmptyText'>}
+ * @type {import('../lib/types.js').Plugin<RemoveEmptyTextParams>}
  */
 export const fn = (root, params) => {
   const { text = true, tspan = true, tref = true } = params;

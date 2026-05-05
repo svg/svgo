@@ -1,11 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 
-/**
- * @typedef {import('eslint').Linter.Config} Config
- */
-
-/** @type {Config[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
   {
     ignores: [
@@ -13,8 +9,6 @@ export default [
       '.yarnrc.yml',
       'node_modules/**',
       'dist/**',
-      'test/regression-fixtures/**',
-      'test/regression-diffs/**',
       'test/cli/output/**',
       'coverage/**',
     ],
@@ -34,6 +28,8 @@ export default [
   {
     files: ['**/*.js', '**/*.mjs'],
     rules: {
+      'one-var': ['error', 'never'],
+      curly: 'error',
       strict: 'error',
     },
   },

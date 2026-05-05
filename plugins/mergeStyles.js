@@ -1,9 +1,5 @@
-import { visitSkip, detachNodeFromParent } from '../lib/xast.js';
-
-/**
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastChild} XastChild
- */
+import { detachNodeFromParent } from '../lib/xast.js';
+import { visitSkip } from '../lib/util/visit.js';
 
 export const name = 'mergeStyles';
 export const description = 'merge multiple style elements into one';
@@ -13,17 +9,13 @@ export const description = 'merge multiple style elements into one';
  *
  * @author strarsis <strarsis@gmail.com>
  *
- * @type {import('./plugins-types.js').Plugin<'mergeStyles'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
-  /**
-   * @type {?XastElement}
-   */
+  /** @type {?import('../lib/types.js').XastElement} */
   let firstStyleElement = null;
   let collectedStyles = '';
-  /**
-   * @type {'text' | 'cdata'}
-   */
+  /** @type {'text' | 'cdata'} */
   let styleContentType = 'text';
 
   return {
@@ -79,15 +71,8 @@ export const fn = () => {
           firstStyleElement = node;
         } else {
           detachNodeFromParent(node, parentNode);
-          /**
-           * @type {XastChild}
-           */
+          /** @type {import('../lib/types.js').XastChild} */
           const child = { type: styleContentType, value: collectedStyles };
-          // TODO remove legacy parentNode in v4
-          Object.defineProperty(child, 'parentNode', {
-            writable: true,
-            value: firstStyleElement,
-          });
           firstStyleElement.children = [child];
         }
       },

@@ -8,7 +8,7 @@ export const description = 'removes empty attributes';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeEmptyAttrs'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

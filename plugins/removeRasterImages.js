@@ -1,7 +1,7 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeRasterImages';
-export const description = 'removes raster images (disabled by default)';
+export const description = 'removes raster images';
 
 /**
  * Remove raster images references in <image>.
@@ -10,7 +10,7 @@ export const description = 'removes raster images (disabled by default)';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeRasterImages'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

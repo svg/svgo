@@ -11,7 +11,7 @@ export const description = 'removes XML processing instructions';
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeXMLProcInst'>}
+ * @type {import('../lib/types.js').Plugin}
  */
 export const fn = () => {
   return {

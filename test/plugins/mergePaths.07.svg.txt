@@ -1,4 +1,4 @@
-Merged paths loose their ends and markers are rendered incorrectly
+Merged paths lose their ends and markers are rendered incorrectly
 
 ===
 

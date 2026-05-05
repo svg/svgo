@@ -1,8 +1,30 @@
 import { querySelectorAll } from '../lib/xast.js';
 
+/**
+ * @typedef AttributesBySelector
+ * @property {string} selector
+ * @property {string | string[]} attributes
+ * @property {never} selectors
+ */
+
+/**
+ * @typedef AttributesBySelectors
+ * @property {never} selector
+ * @property {never} attributes
+ * @property {Array<AttributesBySelector>} selectors
+ */
+
+/**
+ * @typedef {(AttributesBySelector | AttributesBySelectors)} RemoveAttributesBySelectorParams
+ */
+
 export const name = 'removeAttributesBySelector';
 export const description =
   'removes attributes of elements that match a css selector';
+
+const ENOATTRS = `Warning: The plugin "removeAttributesBySelector" is missing parameters.
+It should have a list of "selectors", or one "selector" and one "attributes".
+Without either, the plugin is a noop.`;
 
 /**
  * Removes attributes of elements that match a css selector.
@@ -13,7 +35,7 @@ export const description =
  *   {
  *     name: "removeAttributesBySelector",
  *     params: {
- *       selector: "[fill='#00ff00']"
+ *       selector: "[fill='#00ff00']",
  *       attributes: "fill"
  *     }
  *   }
@@ -71,9 +93,17 @@ export const description =
  *
  * @author Bradley Mease
  *
- * @type {import('./plugins-types.js').Plugin<'removeAttributesBySelector'>}
+ * @type {import('../lib/types.js').Plugin<RemoveAttributesBySelectorParams>}
  */
 export const fn = (root, params) => {
+  if (
+    !Array.isArray(params.selectors) &&
+    (!params.selector || !params.attributes)
+  ) {
+    console.warn(ENOATTRS);
+    return null;
+  }
+
   const selectors = Array.isArray(params.selectors)
     ? params.selectors
     : [params];

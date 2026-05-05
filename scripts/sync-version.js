@@ -8,5 +8,5 @@ const { version } = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
 
 await fs.writeFile(
   './lib/version.js',
-  `/** Version of SVGO. */\nexport const VERSION = '${version}';\n`,
+  `/**\n * Version of SVGO.\n *\n * @type {string}\n * @since 4.0.0\n */\nexport const VERSION = '${version}';\n`,
 );

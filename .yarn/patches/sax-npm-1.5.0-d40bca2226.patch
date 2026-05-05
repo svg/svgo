@@ -1,18 +1,18 @@
 diff --git a/lib/sax.js b/lib/sax.js
-index 122ad8e5a478339d56fc86d00d21c5d142739f0e..2557c46482ff651026436cc6c7142ebfe68ddfc5 100644
+index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd133213dcc7e0 100644
 --- a/lib/sax.js
 +++ b/lib/sax.js
-@@ -1,8 +1,6 @@
- ;(function (sax) { // wrapper for non-node envs
-   sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
+@@ -4,8 +4,6 @@
+     return new SAXParser(strict, opt)
+   }
    sax.SAXParser = SAXParser
 -  sax.SAXStream = SAXStream
 -  sax.createStream = createStream
  
    // When we pass the MAX_BUFFER_LENGTH position, start checking for buffer overruns.
    // When we check, schedule the next check for MAX_BUFFER_LENGTH - (max(buffer lengths)),
-@@ -164,111 +162,6 @@
-     flush: function () { flushBuffers(this) }
+@@ -191,123 +189,6 @@
+     },
    }
  
 -  var Stream
@@ -27,11 +27,11 @@ index 122ad8e5a478339d56fc86d00d21c5d142739f0e..2557c46482ff651026436cc6c7142ebf
 -    return ev !== 'error' && ev !== 'end'
 -  })
 -
--  function createStream (strict, opt) {
+-  function createStream(strict, opt) {
 -    return new SAXStream(strict, opt)
 -  }
 -
--  function SAXStream (strict, opt) {
+-  function SAXStream(strict, opt) {
 -    if (!(this instanceof SAXStream)) {
 -      return new SAXStream(strict, opt)
 -    }
@@ -72,26 +72,27 @@ index 122ad8e5a478339d56fc86d00d21c5d142739f0e..2557c46482ff651026436cc6c7142ebf
 -          me.on(ev, h)
 -        },
 -        enumerable: true,
--        configurable: false
+-        configurable: false,
 -      })
 -    })
 -  }
 -
 -  SAXStream.prototype = Object.create(Stream.prototype, {
 -    constructor: {
--      value: SAXStream
--    }
+-      value: SAXStream,
+-    },
 -  })
 -
 -  SAXStream.prototype.write = function (data) {
--    if (typeof Buffer === 'function' &&
+-    if (
+-      typeof Buffer === 'function' &&
 -      typeof Buffer.isBuffer === 'function' &&
--      Buffer.isBuffer(data)) {
+-      Buffer.isBuffer(data)
+-    ) {
 -      if (!this._decoder) {
--        var SD = require('string_decoder').StringDecoder
--        this._decoder = new SD('utf8')
+-        this._decoder = new TextDecoder('utf8')
 -      }
--      data = this._decoder.write(data)
+-      data = this._decoder.decode(data, { stream: true })
 -    }
 -
 -    this._parser.write(data.toString())
@@ -103,6 +104,14 @@ index 122ad8e5a478339d56fc86d00d21c5d142739f0e..2557c46482ff651026436cc6c7142ebf
 -    if (chunk && chunk.length) {
 -      this.write(chunk)
 -    }
+-    // Flush any remaining decoded data from the TextDecoder
+-    if (this._decoder) {
+-      var remaining = this._decoder.decode()
+-      if (remaining) {
+-        this._parser.write(remaining)
+-        this.emit('data', remaining)
+-      }
+-    }
 -    this._parser.end()
 -    return true
 -  }
@@ -111,7 +120,10 @@ index 122ad8e5a478339d56fc86d00d21c5d142739f0e..2557c46482ff651026436cc6c7142ebf
 -    var me = this
 -    if (!me._parser['on' + ev] && streamWraps.indexOf(ev) !== -1) {
 -      me._parser['on' + ev] = function () {
--        var args = arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments)
+-        var args =
+-          arguments.length === 1 ?
+-            [arguments[0]]
+-          : Array.apply(null, arguments)
 -        args.splice(0, 0, ev)
 -        me.emit.apply(me, args)
 -      }

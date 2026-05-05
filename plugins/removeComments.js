@@ -1,5 +1,10 @@
 import { detachNodeFromParent } from '../lib/xast.js';
 
+/**
+ * @typedef RemoveCommentsParams
+ * @property {ReadonlyArray<RegExp | string> | false=} preservePatterns
+ */
+
 export const name = 'removeComments';
 export const description = 'removes comments';
 
@@ -18,7 +23,7 @@ const DEFAULT_PRESERVE_PATTERNS = [/^!/];
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'removeComments'>}
+ * @type {import('../lib/types.js').Plugin<RemoveCommentsParams>}
  */
 export const fn = (_root, params) => {
   const { preservePatterns = DEFAULT_PRESERVE_PATTERNS } = params;

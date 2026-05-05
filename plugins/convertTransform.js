@@ -7,9 +7,37 @@ import {
 } from './_transforms.js';
 
 /**
- * @typedef {import('../lib/types.js').XastChild} XastChild
- * @typedef {import('../lib/types.js').XastElement} XastElement
- * @typedef {import('../lib/types.js').XastParent} XastParent
+ * @typedef ConvertTransformParams
+ * @property {boolean=} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number=} floatPrecision
+ * @property {number=} transformPrecision
+ * @property {boolean=} matrixToTransform
+ * @property {boolean=} shortTranslate
+ * @property {boolean=} shortScale
+ * @property {boolean=} shortRotate
+ * @property {boolean=} removeUseless
+ * @property {boolean=} collapseIntoOne
+ * @property {boolean=} leadingZero
+ * @property {boolean=} negativeExtraSpace
+ *
+ * @typedef TransformParams
+ * @property {boolean} convertToShorts
+ * @property {number=} degPrecision
+ * @property {number} floatPrecision
+ * @property {number} transformPrecision
+ * @property {boolean} matrixToTransform
+ * @property {boolean} shortTranslate
+ * @property {boolean} shortScale
+ * @property {boolean} shortRotate
+ * @property {boolean} removeUseless
+ * @property {boolean} collapseIntoOne
+ * @property {boolean} leadingZero
+ * @property {boolean} negativeExtraSpace
+ *
+ * @typedef TransformItem
+ * @property {string} name
+ * @property {number[]} data
  */
 
 export const name = 'convertTransform';
@@ -26,7 +54,7 @@ export const description =
  *
  * @author Kir Belevich
  *
- * @type {import('./plugins-types.js').Plugin<'convertTransform'>}
+ * @type {import('../lib/types.js').Plugin<ConvertTransformParams>}
  */
 export const fn = (_root, params) => {
   const {
@@ -78,28 +106,7 @@ export const fn = (_root, params) => {
 };
 
 /**
- * @typedef {{
- *   convertToShorts: boolean,
- *   degPrecision?: number,
- *   floatPrecision: number,
- *   transformPrecision: number,
- *   matrixToTransform: boolean,
- *   shortTranslate: boolean,
- *   shortScale: boolean,
- *   shortRotate: boolean,
- *   removeUseless: boolean,
- *   collapseIntoOne: boolean,
- *   leadingZero: boolean,
- *   negativeExtraSpace: boolean,
- * }} TransformParams
- */
-
-/**
- * @typedef {{ name: string, data: number[] }} TransformItem
- */
-
-/**
- * @param {XastElement} item
+ * @param {import('../lib/types.js').XastElement} item
  * @param {string} attrName
  * @param {TransformParams} params
  */
@@ -130,14 +137,17 @@ const convertTransform = (item, attrName, params) => {
 
 /**
  * Defines precision to work with certain parts.
- * transformPrecision - for scale and four first matrix parameters (needs a better precision due to multiplying),
- * floatPrecision - for translate including two last matrix and rotate parameters,
- * degPrecision - for rotate and skew. By default it's equal to (roughly)
- * transformPrecision - 2 or floatPrecision whichever is lower. Can be set in params.
  *
- * @type {(data: TransformItem[], params: TransformParams) => TransformParams}
+ * - `transformPrecision` - for scale and four first matrix parameters (needs a better precision due to multiplying).
+ * - `floatPrecision` - for translate including two last matrix and rotate parameters.
+ * - `degPrecision` - for rotate and skew. By default it's equal to (roughly).
+ * - `transformPrecision` - 2 or floatPrecision whichever is lower. Can be set in params.
  *
- * clone params so it don't affect other elements transformations.
+ * Clone parameters so that it doesn't affect other element transformations.
+ *
+ * @param {ReadonlyArray<TransformItem>} data
+ * @param {TransformParams} param1
+ * @returns {TransformParams}
  */
 const definePrecision = (data, { ...newParams }) => {
   const matrixData = [];
@@ -161,7 +171,7 @@ const definePrecision = (data, { ...newParams }) => {
       ),
     );
   }
-  // No sense in angle precision more then number of significant digits in matrix.
+  // No sense in angle precision more than number of significant digits in matrix.
   if (newParams.degPrecision == null) {
     newParams.degPrecision = Math.max(
       0,
@@ -172,9 +182,11 @@ const definePrecision = (data, { ...newParams }) => {
 };
 
 /**
- * Returns number of digits after the point. 0.125 → 3
+ * Returns number of digits after the point.
  *
- * @type {(n: number) => number}
+ * @example 0.125 → 3
+ * @param {number} n
+ * @returns {number}
  */
 const floatDigits = (n) => {
   const str = n.toString();
@@ -189,12 +201,12 @@ const floatDigits = (n) => {
  * @returns {TransformItem[]}
  */
 const convertToShorts = (transforms, params) => {
-  for (var i = 0; i < transforms.length; i++) {
+  for (let i = 0; i < transforms.length; i++) {
     let transform = transforms[i];
 
     // convert matrix to the short aliases
     if (params.matrixToTransform && transform.name === 'matrix') {
-      var decomposed = matrixToTransform(transform, params);
+      const decomposed = matrixToTransform(transform, params);
       if (
         js2transform(decomposed, params).length <=
         js2transform([transform], params).length
@@ -260,7 +272,8 @@ const convertToShorts = (transforms, params) => {
 /**
  * Remove useless transforms.
  *
- * @type {(transforms: TransformItem[]) => TransformItem[]}
+ * @param {ReadonlyArray<TransformItem>} transforms
+ * @returns {TransformItem[]}
  */
 const removeUseless = (transforms) => {
   return transforms.filter((transform) => {

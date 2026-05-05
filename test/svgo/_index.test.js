@@ -2,16 +2,22 @@ import fs from 'node:fs/promises';
 import path from 'path';
 import { EOL } from 'os';
 import { fileURLToPath } from 'url';
-import { VERSION, optimize, builtinPlugins } from '../../lib/svgo.js';
+import { VERSION, builtinPlugins, optimize } from '../../lib/svgo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const regEOL = new RegExp(EOL, 'g');
-
+/**
+ * @param {string} file
+ * @returns {string}
+ */
 const normalize = (file) => {
-  return file.trim().replace(regEOL, '\n');
+  return file.trim().replaceAll(EOL, '\n');
 };
 
+/**
+ * @param {string} file
+ * @returns {Promise<string[]>}
+ */
 const parseFixture = async (file) => {
   const filepath = path.resolve(__dirname, file);
   const content = await fs.readFile(filepath, 'utf-8');

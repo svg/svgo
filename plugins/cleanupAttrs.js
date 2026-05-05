@@ -1,3 +1,10 @@
+/**
+ * @typedef CleanupAttrsParams
+ * @property {boolean=} newlines
+ * @property {boolean=} trim
+ * @property {boolean=} spaces
+ */
+
 export const name = 'cleanupAttrs';
 export const description =
   'cleanups attributes from newlines, trailing and repeating spaces';
@@ -10,7 +17,7 @@ const regSpaces = /\s{2,}/g;
  * Cleanup attributes values from newlines, trailing and repeating spaces.
  *
  * @author Kir Belevich
- * @type {import('./plugins-types.js').Plugin<'cleanupAttrs'>}
+ * @type {import('../lib/types.js').Plugin<CleanupAttrsParams>}
  */
 export const fn = (root, params) => {
   const { newlines = true, trim = true, spaces = true } = params;
@@ -19,7 +26,7 @@ export const fn = (root, params) => {
       enter: (node) => {
         for (const name of Object.keys(node.attributes)) {
           if (newlines) {
-            // new line which requires a space instead of themself
+            // new line which requires a space instead
             node.attributes[name] = node.attributes[name].replace(
               regNewlinesNeedSpace,
               (match, p1, p2) => p1 + ' ' + p2,

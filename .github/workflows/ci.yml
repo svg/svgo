@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with: &setup-node-config
+          node-version: 24
+          cache: yarn
+      - run: yarn install
+      - run: yarn lint
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with: *setup-node-config
+      - run: yarn install
+      - run: yarn test:types
+  spellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with: *setup-node-config
+      - run: yarn install
+      - run: yarn spellcheck
+  test:
+    name: test - ${{ matrix.os }} - Node.js v${{ matrix.node-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 24
+          - 22
+          - 20
+          - 18
+          - 16
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - run: npm install -g corepack@0.20.0 --force
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+      - run: yarn install
+      - run: yarn playwright install --with-deps chromium
+      - run: yarn test
+      - run: yarn test:bundles
