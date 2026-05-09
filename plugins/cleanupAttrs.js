@@ -26,11 +26,12 @@ export const fn = (root, params) => {
       enter: (node) => {
         for (const name of Object.keys(node.attributes)) {
           const value = node.attributes[name];
-          if (value == null) {
+          if (value === undefined) {
             continue;
           }
 
-          let attrValue = typeof value === 'string' ? value : String(value);
+          let attrValue =
+            value === null ? '' : typeof value === 'string' ? value : String(value);
 
           if (newlines) {
             // new line which requires a space instead
