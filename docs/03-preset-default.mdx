@@ -51,9 +51,9 @@ The following plugins are included in `preset-default`, in the order that they'r
 
 ## Disable or Modify a Plugin
 
-Sometimes a specific plugin might not be appropriate for your workflow. You can continue using `preset-default` while disabling modifying any plugin by using the `overrides` parameter.
+Sometimes a specific plugin might not be appropriate for your workflow. You can continue using `preset-default` while disabling or modifying any plugin by using the `overrides` parameter.
 
-In `overrides`, reference the plugin ID and set it to `false` to disable it:
+In `overrides`, reference the plugin ID and set it to `false` to disable it. To modify a plugin, provide an object with the plugin parameters:
 
 ```js
 module.exports = {
@@ -81,7 +81,7 @@ module.exports = {
     'preset-default',
     'removeXMLNS',
     {
-      name: "removeXlink",
+      name: 'removeXlink',
       params: {
         includeLegacy: true,
       },
@@ -108,7 +108,12 @@ module.exports = {
 
 Plugins that affect float values have a `floatPrecision` parameter that controls the maximum number of decimal places to preserve. This precision can also be set globally.
 
-The `floatPrecision` can be set in three different places, with each level overriding the last: at the top level of the configuration object (global); at the top of the default preset; as a plugin parameter:
+The `floatPrecision` can be set in multiple places. More specific plugin overrides take precedence over global settings:
+
+- plugin defaults
+- `floatPrecision` in `preset-default` params
+- top-level `floatPrecision` in the configuration object
+- `floatPrecision` in a plugin override
 
 ```js
 module.exports = {
