@@ -17,8 +17,10 @@ export const description =
 export const fn = () => {
   return {
     element: {
-      enter: (node) => {
-        if (node.name === 'svg') {
+      enter: (node, parentNode) => {
+        // Only the top-most <svg> may drop width/height; nested <svg> elements
+        // rely on width/height to size and position themselves (#2217).
+        if (node.name === 'svg' && parentNode.type === 'root') {
           if (node.attributes.viewBox != null) {
             delete node.attributes.width;
             delete node.attributes.height;
