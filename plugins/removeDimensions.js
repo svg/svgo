@@ -17,8 +17,8 @@ export const description =
 export const fn = () => {
   return {
     element: {
-      enter: (node) => {
-        if (node.name === 'svg') {
+      enter: (node, parentNode) => {
+        if (node.name === 'svg' && parentNode.type === 'root') {
           if (node.attributes.viewBox != null) {
             delete node.attributes.width;
             delete node.attributes.height;
