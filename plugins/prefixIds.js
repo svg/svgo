@@ -1,4 +1,4 @@
-import * as csstree from 'css-tree';
+import * as csstree from '../lib/csstree.js';
 import { referencesProps } from './_collections.js';
 
 /**
