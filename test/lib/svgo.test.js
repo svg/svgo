@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').Plugin} Plugin
+ * @typedef {import('../../lib/types').Plugin} Plugin
  */
 
-const { optimize } = require('./svgo.js');
+const { optimize } = require('../../lib/svgo.js');
 
 test('allow to setup default preset', () => {
   const svg = `

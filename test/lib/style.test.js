@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * @typedef {import('./types').XastParent} XastParent
- * @typedef {import('./types').XastElement} XastElement
+ * @typedef {import('../../lib/types').XastParent} XastParent
+ * @typedef {import('../../lib/types').XastElement} XastElement
  */
 
-const { collectStylesheet, computeStyle } = require('./style.js');
-const { visit } = require('./xast.js');
-const { parseSvg } = require('./parser.js');
+const { collectStylesheet, computeStyle } = require('../../lib/style.js');
+const { visit } = require('../../lib/xast.js');
+const { parseSvg } = require('../../lib/parser.js');
 
 /**
  * @type {(node: XastParent, id: string) => XastElement}

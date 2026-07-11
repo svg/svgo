@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').Plugin} Plugin
+ * @typedef {import('../../lib/types').Plugin} Plugin
  */
 
 const os = require('os');
 const path = require('path');
-const { optimize, loadConfig } = require('./svgo-node.js');
+const { optimize, loadConfig } = require('../../lib/svgo-node.js');
 
 const describeLF = os.EOL === '\r\n' ? describe.skip : describe;
 const describeCRLF = os.EOL === '\r\n' ? describe : describe.skip;

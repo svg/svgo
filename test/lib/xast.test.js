@@ -1,11 +1,11 @@
 'use strict';
 
 /**
- * @typedef {import('./types').XastRoot} XastRoot
- * @typedef {import('./types').XastElement} XastElement
+ * @typedef {import('../../lib/types').XastRoot} XastRoot
+ * @typedef {import('../../lib/types').XastElement} XastElement
  */
 
-const { visit, visitSkip, detachNodeFromParent } = require('./xast.js');
+const { visit, visitSkip, detachNodeFromParent } = require('../../lib/xast.js');
 
 /**
  * @type {(children: Array<XastElement>) => XastRoot}

@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * @typedef {import('../lib/types').PathDataItem} PathDataItem
+ * @typedef {import('../../lib/types').PathDataItem} PathDataItem
  */
 
-const { parsePathData, stringifyPathData } = require('./path.js');
+const { parsePathData, stringifyPathData } = require('../../lib/path.js');
 
 describe('parse path data', () => {
   it('should allow spaces between commands', () => {
