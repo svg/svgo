@@ -182,10 +182,17 @@ export const fn = (root, params) => {
             }
           }
 
+          // an attribute referenced by an attribute selector must be kept,
+          // otherwise the stylesheet stops matching the element
+          const usedInAttrSelector = stylesheet.rules.some((rule) =>
+            includesAttrSelector(rule.selector, name),
+          );
+
           if (
             unknownAttrs &&
             allowedAttributes &&
-            allowedAttributes.has(name) === false
+            allowedAttributes.has(name) === false &&
+            !usedInAttrSelector
           ) {
             delete node.attributes[name];
           }
@@ -196,12 +203,7 @@ export const fn = (root, params) => {
             attributesDefaults.get(name) === value
           ) {
             // keep defaults if parent has own or inherited style
-            if (
-              computedParentStyle?.[name] == null &&
-              !stylesheet.rules.some((rule) =>
-                includesAttrSelector(rule.selector, name),
-              )
-            ) {
+            if (computedParentStyle?.[name] == null && !usedInAttrSelector) {
               delete node.attributes[name];
             }
           }
@@ -211,7 +213,8 @@ export const fn = (root, params) => {
               presentationNonInheritableGroupAttrs.has(name) === false &&
               style != null &&
               style.type === 'static' &&
-              style.value === value
+              style.value === value &&
+              !usedInAttrSelector
             ) {
               delete node.attributes[name];
             }
