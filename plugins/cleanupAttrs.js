@@ -25,27 +25,31 @@ export const fn = (root, params) => {
     element: {
       enter: (node) => {
         for (const name of Object.keys(node.attributes)) {
+          const value = node.attributes[name];
+          if (value === undefined) {
+            continue;
+          }
+
+          let attrValue =
+            value === null ? '' : typeof value === 'string' ? value : String(value);
+
           if (newlines) {
             // new line which requires a space instead
-            node.attributes[name] = node.attributes[name].replace(
+            attrValue = attrValue.replace(
               regNewlinesNeedSpace,
               (match, p1, p2) => p1 + ' ' + p2,
             );
             // simple new line
-            node.attributes[name] = node.attributes[name].replace(
-              regNewlines,
-              '',
-            );
+            attrValue = attrValue.replace(regNewlines, '');
           }
           if (trim) {
-            node.attributes[name] = node.attributes[name].trim();
+            attrValue = attrValue.trim();
           }
           if (spaces) {
-            node.attributes[name] = node.attributes[name].replace(
-              regSpaces,
-              ' ',
-            );
+            attrValue = attrValue.replace(regSpaces, ' ');
           }
+
+          node.attributes[name] = attrValue;
         }
       },
     },
