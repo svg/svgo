@@ -1,0 +1,15 @@
+Remove SVG attributes which are overridden
+
+===
+
+<svg fill="red">
+    <rect fill="blue"/>
+    <circle fill="blue"/>
+</svg>
+
+@@@
+
+<svg>
+    <rect fill="blue"/>
+    <circle fill="blue"/>
+</svg>
