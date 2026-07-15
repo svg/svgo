@@ -1,0 +1,14 @@
+Should not throw when a path is a lone moveto whose point lies within another path's bounding box
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M25 25"/>
+    <path d="M20 20 l10 10 l-10 0 z"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="m20 20 10 10-10 0z"/>
+</svg>
