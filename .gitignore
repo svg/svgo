@@ -29,5 +29,6 @@ test/cli/output
 coverage
 .DS_Store
 .vscode
+.idea
 *.log
 package-lock.json
