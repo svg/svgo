@@ -1,0 +1,13 @@
+Ensure plugin works with syntactically incorrect style attributes.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 225 425">
+    <path style="fill- opacity:0.5" d="M0 50 l50 50 0 20z"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 225 425">
+    <path style="fill- opacity:0.5" d="M0 50 l50 50 0 20z"/>
+</svg>
