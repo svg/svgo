@@ -59,7 +59,7 @@ export const fn = (_root, params) => {
 
         for (const [name, value] of Object.entries(node.attributes)) {
           // The `version` attribute is a text string and cannot be rounded
-          if (name === 'version') {
+          if (name === 'version' || name === 'id') {
             continue;
           }
 
