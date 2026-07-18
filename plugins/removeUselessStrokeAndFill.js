@@ -3,6 +3,7 @@ import { visit, visitSkip } from '../lib/util/visit.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 import { elemsGroups } from './_collections.js';
+import { isTransparent } from '../lib/svgo/tools.js';
 
 /**
  * @typedef RemoveUselessStrokeAndFillParams
@@ -59,6 +60,8 @@ export const fn = (root, params) => {
         const stroke = computedStyle.stroke;
         const strokeOpacity = computedStyle['stroke-opacity'];
         const strokeWidth = computedStyle['stroke-width'];
+        const markerStart = computedStyle['marker-start'];
+        const markerMid = computedStyle['marker-mid'];
         const markerEnd = computedStyle['marker-end'];
         const fill = computedStyle.fill;
         const fillOpacity = computedStyle['fill-opacity'];
@@ -79,7 +82,9 @@ export const fn = (root, params) => {
               strokeOpacity.value === '0') ||
             (strokeWidth != null &&
               strokeWidth.type === 'static' &&
-              strokeWidth.value === '0')
+              strokeWidth.value === '0') ||
+            (stroke != null && stroke.type === 'static' &&
+              isTransparent(stroke.value))
           ) {
             // stroke-width may affect the size of marker-end
             // marker is not visible when stroke-width is 0
@@ -87,7 +92,7 @@ export const fn = (root, params) => {
               (strokeWidth != null &&
                 strokeWidth.type === 'static' &&
                 strokeWidth.value === '0') ||
-              markerEnd == null
+              (markerEnd == null && markerStart == null && markerMid == null)
             ) {
               for (const name of Object.keys(node.attributes)) {
                 if (name.startsWith('stroke')) {
@@ -112,7 +117,9 @@ export const fn = (root, params) => {
             (fill != null && fill.type === 'static' && fill.value === 'none') ||
             (fillOpacity != null &&
               fillOpacity.type === 'static' &&
-              fillOpacity.value === '0')
+              fillOpacity.value === '0') ||
+            (fill != null && fill.type === 'static' &&
+              isTransparent(fill.value))
           ) {
             for (const name of Object.keys(node.attributes)) {
               if (name.startsWith('fill-')) {
@@ -129,13 +136,20 @@ export const fn = (root, params) => {
         }
 
         if (removeNone) {
-          if (
-            (stroke == null || node.attributes.stroke === 'none') &&
-            ((fill != null &&
-              fill.type === 'static' &&
-              fill.value === 'none') ||
-              node.attributes.fill === 'none')
-          ) {
+          const isStrokeNone = stroke == null ||
+            (stroke.type === 'static' && stroke.value === 'none') ||
+            (strokeOpacity != null && strokeOpacity.type === 'static' && strokeOpacity.value === '0') ||
+            (strokeWidth != null && strokeWidth.type === 'static' && strokeWidth.value === '0') ||
+            (stroke.type === 'static' && isTransparent(stroke.value));
+
+          const isFillNone = fill == null ||
+            (fill.type === 'static' && fill.value === 'none') ||
+            (fillOpacity != null && fillOpacity.type === 'static' && fillOpacity.value === '0') ||
+            (fill.type === 'static' && isTransparent(fill.value));
+
+          const hasMarkers = markerStart || markerMid || markerEnd;
+
+          if (isStrokeNone && isFillNone && !hasMarkers) {
             detachNodeFromParent(node, parentNode);
           }
         }
