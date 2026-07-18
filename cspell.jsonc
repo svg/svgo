@@ -9,6 +9,7 @@
     "Fontello",
     "inlines",
     // Abbreviations
+    "descs", // descriptions
     "elems", // elements
     "unenc", // unencoded
     // SVG Nodes / Attributes and CSS Properties, including plurals
@@ -56,7 +57,6 @@
     "Atrule", // At-rule
     "data:image/.+", // Data URI
     "datauri", // Data URI
-    "descs", // Abbreviation of "descriptions"
     "ENOCLS|ENOATTRS",
     "import .+", // Import statements in Javascript
     "onwarn", // Rollup API,
