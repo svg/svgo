@@ -344,6 +344,12 @@ export type Config = {
    */
   floatPrecision?: number;
   /**
+   * Maximum number of XML entities the parser is allowed to expand before
+   * throwing. When omitted, the underlying parser falls back to its own
+   * default (512 in recent versions).
+   */
+  maxEntityCount?: number;
+  /**
    * Plugins configuration. By default SVGO uses `preset-default`, but may
    * contain builtin or custom plugins.
    */
