@@ -42,4 +42,4 @@ However, a solution like this can not guarantee a reproducible prefix. Unpredict
 
 With unpredictable IDs, if you're prerendering or use <abbr title="Server-Side Rendering">SSR</abbr>, the client-side and server-side HTML may mismatch, leading to errors on client-side and regenerating the tree.
 
-For this reason, it's preferred to use reproducible prefixes where possible. Consider using the filename or node as a seed to produce a shorter string, rather than generating something from scratch.
+It's preferred to use reproducible prefixes where possible. Consider using the filename or node as a seed to produce a shorter string, rather than generating something from scratch.
