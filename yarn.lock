@@ -2168,19 +2168,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/css-tree@npm:^2, @types/css-tree@npm:^2.3.10":
-  version: 2.3.11
-  resolution: "@types/css-tree@npm:2.3.11"
-  checksum: 852818aff05b06ba47437ba054e0f7676caa46aacffedceba949336cae97c5d8d902c02886600f08122ba4c34fb048463d56857872089df25122bc4c2fca8fe6
+"@types/css-tree@npm:*, @types/css-tree@npm:^2.3.10":
+  version: 2.3.10
+  resolution: "@types/css-tree@npm:2.3.10"
+  checksum: ed676a2735db9597cdd0e1b7bdeaf0227b5f1a1855df99d2a4d22ad241baab693b18048c0097a1efff46b8e6ca20a289272e711a60689424858de42b14abe8e0
   languageName: node
   linkType: hard
 
 "@types/csso@npm:^5.0.4":
-  version: 5.0.5
-  resolution: "@types/csso@npm:5.0.5"
+  version: 5.0.4
+  resolution: "@types/csso@npm:5.0.4"
   dependencies:
-    "@types/css-tree": ^2
-  checksum: 158eabae12865a6ed1717eecb79276bb56c2ab82c32e0317ae00b39c63a281a838bc231781e530cbb8378f56638b75f713c36f4955d71ebf4f8b1995daa00d81
+    "@types/css-tree": "*"
+  checksum: 606ea4de171e807ffc8908f7ffec774c8a40f3c81e7c60f8a84c7f5327eb00f3c9948b021b91e2e8fe3a76af4623ac58538780f0789f1e03947b7de96c5f7994
   languageName: node
   linkType: hard
 

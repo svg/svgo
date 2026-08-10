@@ -9,7 +9,10 @@ module.exports = {
           if (structUtils.stringifyIdent(dependency) !== 'typescript') {
             return dependency;
           }
-          if (!dependency.range.startsWith('patch:')) {
+          if (
+            !dependency.range.startsWith('patch:') ||
+            !/#~builtin<compat\/typescript>(?:::.*)?$/.test(dependency.range)
+          ) {
             return dependency;
           }
 
