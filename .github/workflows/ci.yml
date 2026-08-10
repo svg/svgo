@@ -77,6 +77,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
+      - run: npm install -g corepack@0.20.0 --force
       - run: corepack enable
       - uses: actions/setup-node@v6
         with: *setup-node-config
