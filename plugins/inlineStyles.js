@@ -90,8 +90,8 @@ export const fn = (root, params) => {
           .map((child) => child.value)
           .join('');
 
-        /** @type {?csstree.CssNode} */
-        let cssAst = null;
+        /** @type {csstree.CssNode} */
+        let cssAst;
         try {
           cssAst = csstree.parse(cssText, {
             parseValue: false,

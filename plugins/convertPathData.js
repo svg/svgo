@@ -489,7 +489,6 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
         for (
           var j = index;
           (next = path[++j]) && (next.command === 'c' || next.command === 's');
-
         ) {
           let nextData = next.args;
           if (next.command == 's') {
@@ -607,7 +606,7 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
           command === 's' ||
           command === 'c'
         ) {
-          for (let i = data.length; i--; ) {
+          for (let i = data.length; i--;) {
             // @ts-expect-error
             data[i] += item.base[i % 2] - relSubpoint[i % 2];
           }
@@ -974,7 +973,7 @@ function convertToMixed(path, params) {
       command === 's' ||
       command === 'c'
     ) {
-      for (let i = adata.length; i--; ) {
+      for (let i = adata.length; i--;) {
         // @ts-expect-error
         adata[i] += item.base[i % 2];
       }
@@ -1098,7 +1097,7 @@ function getIntersection(coords) {
  */
 function strongRound(data) {
   const precisionNum = precision || 0;
-  for (let i = data.length; i-- > 0; ) {
+  for (let i = data.length; i-- > 0;) {
     const fixed = toFixed(data[i], precisionNum);
     if (fixed !== data[i]) {
       const rounded = toFixed(data[i], precisionNum - 1);
@@ -1118,7 +1117,7 @@ function strongRound(data) {
  * @returns {number[]}
  */
 function round(data) {
-  for (let i = data.length; i-- > 0; ) {
+  for (let i = data.length; i-- > 0;) {
     data[i] = Math.round(data[i]);
   }
   return data;
