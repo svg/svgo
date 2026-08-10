@@ -47,8 +47,6 @@ jobs:
           - 24
           - 22
           - 20
-          - 18
-          - 16
         os:
           - ubuntu-latest
           - windows-latest
@@ -65,3 +63,27 @@ jobs:
       - run: yarn playwright install --with-deps chromium
       - run: yarn test
       - run: yarn test:bundles
+  test-runtime:
+    name: test runtime - ${{ matrix.os }} - Node.js v${{ matrix.node-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 18
+          - 16
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: npm install -g corepack@0.20.0 --force
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with: *setup-node-config
+      - run: yarn install
+      - run: yarn build:bundles
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: node ./test/svgo.cjs

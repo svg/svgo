@@ -90,8 +90,8 @@ export const fn = (root, params) => {
           .map((child) => child.value)
           .join('');
 
-        /** @type {?csstree.CssNode} */
-        let cssAst = null;
+        /** @type {csstree.CssNode} */
+        let cssAst;
         try {
           cssAst = csstree.parse(cssText, {
             parseValue: false,
@@ -107,6 +107,10 @@ export const fn = (root, params) => {
         // collect selectors
         csstree.walk(cssAst, {
           visit: 'Rule',
+          /**
+           * @this {csstree.WalkContext}
+           * @param {csstree.Rule} node
+           */
           enter(node) {
             const atrule = this.atrule;
 
@@ -231,6 +235,10 @@ export const fn = (root, params) => {
 
             csstree.walk(styleDeclarationList, {
               visit: 'Declaration',
+              /**
+               * @param {csstree.Declaration} node
+               * @param {csstree.ListItem<csstree.CssNode>} item
+               */
               enter(node, item) {
                 if (firstListItem == null) {
                   firstListItem = item;
@@ -242,6 +250,7 @@ export const fn = (root, params) => {
             // merge declarations
             csstree.walk(selector.rule, {
               visit: 'Declaration',
+              /** @param {csstree.Declaration} ruleDeclaration */
               enter(ruleDeclaration) {
                 // existing inline styles have higher priority
                 // no inline styles, external styles,                                    external styles used
@@ -364,6 +373,11 @@ export const fn = (root, params) => {
         for (const style of styles) {
           csstree.walk(style.cssAst, {
             visit: 'Rule',
+            /**
+             * @param {csstree.Rule} node
+             * @param {csstree.ListItem<csstree.CssNode>} item
+             * @param {csstree.List<csstree.CssNode>} list
+             */
             enter: function (node, item, list) {
               // clean up <style/> rulesets without any css selectors left
               if (

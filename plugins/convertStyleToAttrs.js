@@ -102,7 +102,7 @@ export const fn = (_root, params) => {
           );
 
           regDeclarationBlock.lastIndex = 0;
-          for (var rule; (rule = regDeclarationBlock.exec(styleValue)); ) {
+          for (var rule; (rule = regDeclarationBlock.exec(styleValue));) {
             if (!keepImportant || !rule[3]) {
               styles.push([rule[1], rule[2]]);
             }

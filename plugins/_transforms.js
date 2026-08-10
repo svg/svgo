@@ -722,7 +722,6 @@ const smartRound = (precision, data) => {
     let i = data.length,
       tolerance = +Math.pow(0.1, precision).toFixed(precision);
     i--;
-
   ) {
     if (toFixed(data[i], precision) !== data[i]) {
       const rounded = +data[i].toFixed(precision - 1);
