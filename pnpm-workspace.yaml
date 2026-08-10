@@ -1,0 +1,7 @@
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@types/node@26.2.0'
+  - eslint@10.8.1
+
+patchedDependencies:
+  sax@1.5.0: patches/sax@1.5.0.patch

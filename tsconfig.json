@@ -13,7 +13,6 @@
     "skipLibCheck": true
   },
   "exclude": [
-    ".yarn/",
     "coverage/",
     "dist/",
     "node_modules/",

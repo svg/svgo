@@ -5,8 +5,6 @@ import globals from 'globals';
 export default [
   {
     ignores: [
-      '.yarn/**',
-      '.yarnrc.yml',
       'node_modules/**',
       'dist/**',
       'test/cli/output/**',
