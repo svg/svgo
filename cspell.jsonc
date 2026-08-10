@@ -29,6 +29,7 @@
     "kibibytes",
     // Software
     "SVGOMG",
+    "unrs",
     // Names
     "André",
     "Baranovskiy",
@@ -42,6 +43,8 @@
     "cspell.jsonc",
     "dist/",
     "LICENSE",
+    "patches/",
+    "pnpm-lock.yaml",
     "test/regression/lists/",
   ],
   "ignoreRegExpList": [

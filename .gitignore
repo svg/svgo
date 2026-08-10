@@ -1,11 +1,3 @@
-# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
 # https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
 [._]*.s[a-v][a-z]
 !*.svg
@@ -25,9 +17,11 @@ dist
 types
 
 node_modules
+.yarn/
 test/cli/output
 coverage
 .DS_Store
 .vscode
 *.log
 package-lock.json
+yarn.lock

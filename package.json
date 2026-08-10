@@ -1,5 +1,5 @@
 {
-  "packageManager": "yarn@3.8.7",
+  "packageManager": "pnpm@10.34.5",
   "name": "svgo",
   "version": "4.0.2",
   "description": "SVGO is a Node.js library and command-line application for optimizing vector images.",
@@ -75,21 +75,21 @@
     "node": ">=16"
   },
   "scripts": {
-    "build": "node scripts/sync-version.js && yarn build:bundles && yarn build:types",
-    "build:bundles": "yarn clean:build && rollup -c",
-    "build:types": "yarn clean:types && tsc && tsc -p tsconfig.build.json",
+    "build": "node scripts/sync-version.js && pnpm build:bundles && pnpm build:types",
+    "build:bundles": "pnpm clean:build && rollup -c",
+    "build:types": "pnpm clean:types && tsc && tsc -p tsconfig.build.json",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
-    "test:bundles": "yarn build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
-    "test:types": "yarn build:types && tsc && tsd",
+    "test:bundles": "pnpm build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
+    "test:types": "pnpm build:types && tsc && tsd",
     "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && cross-env NO_DIFF=1 node ./test/regression/compare.js",
-    "qa": "yarn lint && yarn test:types && yarn test && yarn test:bundles && yarn test:regression",
-    "clean": "yarn clean:build && yarn clean:types",
+    "qa": "pnpm lint && pnpm test:types && pnpm test && pnpm test:bundles && pnpm test:regression",
+    "clean": "pnpm clean:build && pnpm clean:types",
     "clean:build": "rimraf dist",
     "clean:types": "rimraf types",
     "spellcheck": "cspell -u .",
-    "prepublishOnly": "yarn clean && yarn build"
+    "prepublishOnly": "pnpm clean && pnpm build"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
@@ -101,6 +101,11 @@
       "text"
     ]
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "unrs-resolver"
+    ]
+  },
   "dependencies": {
     "commander": "^11.1.0",
     "css-select": "^5.1.0",
@@ -108,7 +113,7 @@
     "css-what": "^6.1.0",
     "csso": "^5.0.5",
     "picocolors": "^1.1.1",
-    "sax": "^1.5.0"
+    "sax": "1.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -137,8 +142,5 @@
     "tar-stream": "^3.2.0",
     "tsd": "^0.33.0",
     "typescript": "^7.0.2"
-  },
-  "resolutions": {
-    "sax@^1.5.0": "patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch"
   }
 }
