@@ -108,9 +108,9 @@
   },
   "dependencies": {
     "commander": "^11.1.0",
-    "css-select": "^5.1.0",
+    "css-select": "^6.0.0",
     "css-tree": "^3.0.1",
-    "css-what": "^6.1.0",
+    "css-what": "^7.0.0",
     "csso": "^5.0.5",
     "picocolors": "^1.1.1",
     "sax": "1.5.0"
