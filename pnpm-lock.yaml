@@ -62,9 +62,6 @@ importers:
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
-      '@types/pngjs':
-        specifier: ^6.0.5
-        version: 6.0.5
       '@types/sax':
         specifier: ^1.2.7
         version: 1.2.7
@@ -86,15 +83,12 @@ importers:
       jest:
         specifier: ^30.4.2
         version: 30.4.2(@types/node@26.2.0)
-      pixelmatch:
-        specifier: ^7.2.0
-        version: 7.2.0
+      odiff-bin:
+        specifier: ^4.5.0
+        version: 4.5.0
       playwright:
         specifier: 1.62.1
         version: 1.62.1
-      pngjs:
-        specifier: ^7.0.0
-        version: 7.0.0
       prettier:
         specifier: ^3.9.6
         version: 3.9.6
@@ -729,6 +723,41 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
+  '@odiff/darwin-arm64@4.5.0':
+    resolution: {integrity: sha512-fztpr/73BNwJqua2xSjGaxkZr9xMVDqYFIKFnZS/MAW1MzHg6lN9r0kno2aY9FSIbCyE6c6/0MqbHs/+AkDhXw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@odiff/darwin-x64@4.5.0':
+    resolution: {integrity: sha512-UXm/Ak+arL5tP8fwUNKR8vuuUGtm9aYOPS2oLzhkoV5/GfK5vY09nusW6Z5c5ka9VYQQyDHRKOUieXTIZKNdxg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@odiff/linux-arm64@4.5.0':
+    resolution: {integrity: sha512-tAuSZSW4H6D6rscqpTtZ68dzK+FxbeSSzJHfJqcAmn9k7WWzXIseNRH6XLgFQE8t3bY1u6DqtOxQbE7nQV3ciw==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@odiff/linux-riscv64@4.5.0':
+    resolution: {integrity: sha512-LZ42duK8HpPWNTJplqPufQWD9d5ce26imO1DOHWJoq6sGrYaNaihHJNXOX6EV363lmSEeEZNXZr+xOMgOGJoVg==}
+    cpu: [riscv64]
+    os: [linux]
+
+  '@odiff/linux-x64@4.5.0':
+    resolution: {integrity: sha512-9Png/tO5M70Btcsv68wvIGk2GXIbc2CAw71rbeSOyUm7acFK/rOOCt5m4aJR4ZPC+bqEpB5RBp0kccNv9/Ji3A==}
+    cpu: [x64]
+    os: [linux]
+
+  '@odiff/win32-arm64@4.5.0':
+    resolution: {integrity: sha512-Icz19TRoJXU6hEHppbEd8p4bGhDkE/aeECC/lnQuMMrUE14Meqmj+8Dwr+9/KWifIqDhgebwtH8wnNwH98x5/A==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@odiff/win32-x64@4.5.0':
+    resolution: {integrity: sha512-KSwUwFSmIbLxM+aJPrQggqLhMD+AUJMtsxX531Oiskp1n3z3o2V/6meIBdY6w7ZXb6ZvU/M1WjojPViCqiQFLw==}
+    cpu: [x64]
+    os: [win32]
+
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -980,9 +1009,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
-
-  '@types/pngjs@6.0.5':
-    resolution: {integrity: sha512-0k5eKfrA83JOZPppLtS2C7OUtyNAl2wKNxfyYl9Q5g9lPkgBl/9hNyAu6HuEH2J4XmIv2znEpkDd0SaZVxW6iQ==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -2320,6 +2346,10 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
+  odiff-bin@4.5.0:
+    resolution: {integrity: sha512-FaXidbI0XDLCjLAet5n5OvRDfr6Fwt/C5SyWPfwgSUvYhCej1rjZjDXb/xdk+N6yTOCeAFaJ5mwTmU4ZthvPaA==}
+    hasBin: true
+
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
@@ -2400,10 +2430,6 @@ packages:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
 
-  pixelmatch@7.2.0:
-    resolution: {integrity: sha512-xhcb4yHu9sM/G7foGzoLtXYcC0zHEaOXXjRKhGup0fw78Nf2Tkiapv4EQyMzrbcmQPsllAI7DbFY2UT7PlI9Pg==}
-    hasBin: true
-
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
@@ -2421,10 +2447,6 @@ packages:
   plur@4.0.0:
     resolution: {integrity: sha512-4UGewrYgqDFw9vV6zNV+ADmPAUAfJPKtGvb/VdpQAx25X5f3xXdGdyOEVFwkl8Hl/tl7+xbeHqSEM+D5/TirUg==}
     engines: {node: '>=10'}
-
-  pngjs@7.0.0:
-    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
-    engines: {node: '>=14.19.0'}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -3537,6 +3559,27 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
+  '@odiff/darwin-arm64@4.5.0':
+    optional: true
+
+  '@odiff/darwin-x64@4.5.0':
+    optional: true
+
+  '@odiff/linux-arm64@4.5.0':
+    optional: true
+
+  '@odiff/linux-riscv64@4.5.0':
+    optional: true
+
+  '@odiff/linux-x64@4.5.0':
+    optional: true
+
+  '@odiff/win32-arm64@4.5.0':
+    optional: true
+
+  '@odiff/win32-x64@4.5.0':
+    optional: true
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -3734,10 +3777,6 @@ snapshots:
       undici-types: 8.3.0
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/pngjs@6.0.5':
-    dependencies:
-      '@types/node': 26.2.0
 
   '@types/resolve@1.20.2': {}
 
@@ -5150,6 +5189,16 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
+  odiff-bin@4.5.0:
+    optionalDependencies:
+      '@odiff/darwin-arm64': 4.5.0
+      '@odiff/darwin-x64': 4.5.0
+      '@odiff/linux-arm64': 4.5.0
+      '@odiff/linux-riscv64': 4.5.0
+      '@odiff/linux-x64': 4.5.0
+      '@odiff/win32-arm64': 4.5.0
+      '@odiff/win32-x64': 4.5.0
+
   once@1.4.0:
     dependencies:
       wrappy: 1.0.2
@@ -5222,10 +5271,6 @@ snapshots:
 
   pirates@4.0.7: {}
 
-  pixelmatch@7.2.0:
-    dependencies:
-      pngjs: 7.0.0
-
   pkg-dir@4.2.0:
     dependencies:
       find-up: 4.1.0
@@ -5241,8 +5286,6 @@ snapshots:
   plur@4.0.0:
     dependencies:
       irregular-plurals: 3.5.0
-
-  pngjs@7.0.0: {}
 
   prelude-ls@1.2.1: {}
 

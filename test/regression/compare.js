@@ -1,9 +1,14 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import pixelmatch from 'pixelmatch';
+import { ODiffServer } from 'odiff-bin';
 import { chromium } from 'playwright';
-import { PNG } from 'pngjs';
+import {
+  compareImages,
+  getPngWidth,
+  isMatchingDiff,
+  stopODiffServer,
+} from './compare-images.js';
 import { expectMismatch, ignore, skip } from './file-lists.js';
 import { pathToPosix, printReport } from './lib.js';
 import {
@@ -55,6 +60,7 @@ const runTests = async (list) => {
 
   const totalFiles = listCopy.length;
   let tested = 0;
+  const odiff = new ODiffServer();
 
   /**
    * @param {import('playwright').Page} page
@@ -67,26 +73,16 @@ const runTests = async (list) => {
 
     await page.goto(`file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`);
     element = await page.waitForSelector('svg');
-    const optimizedBufferPromise = element.screenshot(screenshotOptions);
-
-    const originalPng = PNG.sync.read(originalBuffer);
-    const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
+    const optimizedBuffer = await element.screenshot(screenshotOptions);
     const writeDiffs = process.env.NO_DIFF == null;
-    const diff = writeDiffs
-      ? new PNG({ width: originalPng.width, height: originalPng.height })
-      : null;
-
-    const matched = pixelmatch(
-      originalPng.data,
-      optimizedPng.data,
-      diff?.data,
-      originalPng.width,
-      originalPng.height,
+    const diffCount = await compareImages(
+      odiff,
+      originalBuffer,
+      optimizedBuffer,
     );
 
     // ignore small aliasing issues
-    const threshold = originalPng.width <= 16 ? 3 : 4;
-    const isMatch = matched <= threshold;
+    const isMatch = isMatchingDiff(getPngWidth(originalBuffer), diffCount);
     const namePosix = pathToPosix(name);
     const expectedToMismatch = expectMismatch.includes(namePosix);
 
@@ -105,10 +101,9 @@ const runTests = async (list) => {
         report.errors.shouldHaveMatched.push(namePosix);
       }
 
-      if (diff) {
+      if (writeDiffs) {
         const file = path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`);
-        await fs.mkdir(path.dirname(file), { recursive: true });
-        await fs.writeFile(file, PNG.sync.write(diff));
+        await compareImages(odiff, originalBuffer, optimizedBuffer, file);
       }
     }
 
@@ -123,23 +118,33 @@ const runTests = async (list) => {
   const worker = async () => {
     let item;
     const page = await context.newPage();
-    while ((item = listCopy.pop())) {
-      await processFile(page, item);
+    try {
+      while ((item = listCopy.pop())) {
+        await processFile(page, item);
+      }
+    } finally {
+      await page.close();
     }
-    await page.close();
   };
 
-  const browser = await chromium.launch();
-  const context = await browser.newContext({
-    javaScriptEnabled: false,
-    viewport: { width: WIDTH, height: HEIGHT },
-  });
-  context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
+  let browser;
+  /** @type {import('playwright').BrowserContext} */
+  let context;
+  try {
+    browser = await chromium.launch();
+    context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: WIDTH, height: HEIGHT },
+    });
+    context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
 
-  await Promise.all(
-    Array.from(new Array(os.cpus().length * 2), () => worker()),
-  );
-  await browser.close();
+    await Promise.all(
+      Array.from(new Array(os.cpus().length * 2), () => worker()),
+    );
+  } finally {
+    await browser?.close();
+    await stopODiffServer(odiff);
+  }
 
   if (process.stdout.isTTY) {
     console.log();
