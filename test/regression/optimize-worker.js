@@ -10,8 +10,9 @@ const SVGO_OPTS = { floatPrecision: 4 };
 if (parentPort == null) {
   throw new Error('Optimization worker must run in a worker thread');
 }
+const port = parentPort;
 
-parentPort.on('message', async ({ name }) => {
+port.on('message', async ({ name }) => {
   try {
     const original = await fs.readFile(
       path.join(workerData.fixturesPath, name),
@@ -23,7 +24,7 @@ parentPort.on('message', async ({ name }) => {
     await fs.mkdir(path.dirname(file), { recursive: true });
     await fs.writeFile(file, optimized);
 
-    parentPort.postMessage({
+    port.postMessage({
       name: pathToPosix(name),
       checksum: md5sum(optimized),
       originalBytes: Buffer.byteLength(original, 'utf8'),
@@ -31,6 +32,8 @@ parentPort.on('message', async ({ name }) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to optimize ${name}: ${message}`, { cause: error });
+    throw Object.assign(new Error(`Failed to optimize ${name}: ${message}`), {
+      cause: error,
+    });
   }
 });

@@ -39,7 +39,7 @@ export const getHeavyWorkerCount = (fileCount, maxWorkers, totalMemory) => {
 /**
  * @param {ReadonlyArray<string>} list
  * @param {{ fixturesPath: string, optimizedPath: string, maxWorkers: number, totalMemory?: number }} options
- * @returns {Promise<Partial<import('./regression-io.js').TestReport>>}
+ * @returns {Promise<Pick<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
 export const optimizeFixtures = async (list, options) => {
   const totalFiles = list.length;
@@ -63,9 +63,10 @@ export const optimizeFixtures = async (list, options) => {
         };
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to optimize ${name}: ${message}`, {
-          cause: error,
-        });
+        throw Object.assign(
+          new Error(`Failed to optimize ${name}: ${message}`),
+          { cause: error },
+        );
       }
     }),
   );
@@ -160,10 +161,13 @@ export const optimizeFixtures = async (list, options) => {
         });
         worker.on('error', (error) => {
           const name = activeFixtures.get(worker);
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
           const workerError = name
-            ? new Error(`Failed to optimize ${name}: ${error.message}`, {
-                cause: error,
-              })
+            ? Object.assign(
+                new Error(`Failed to optimize ${name}: ${errorMessage}`),
+                { cause: error },
+              )
             : error;
           void fail(workerError);
         });
