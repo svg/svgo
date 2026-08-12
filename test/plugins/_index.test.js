@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import { EOL } from 'os';

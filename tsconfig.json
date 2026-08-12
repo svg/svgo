@@ -7,7 +7,7 @@
     "allowJs": true,
     "checkJs": true,
     "strict": true,
-    "types": ["node", "jest"],
+    "types": ["node"],
     "resolveJsonModule": true,
     "noUncheckedSideEffectImports": false,
     "skipLibCheck": true
