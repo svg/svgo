@@ -10,8 +10,13 @@ import {
 
 jest.unstable_mockModule('playwright', () => ({ chromium: {} }));
 
-const { compareScreenshots, DEFAULT_RENDER_WORKERS, runTests, withCleanup } =
-  await import('./compare.js');
+const {
+  compareScreenshots,
+  DEFAULT_RENDER_WORKERS,
+  renderScreenshots,
+  runTests,
+  withCleanup,
+} = await import('./compare.js');
 
 test('uses the original render concurrency for comparison', () => {
   expect(DEFAULT_RENDER_WORKERS).toBe(os.cpus().length * 2);
@@ -29,6 +34,67 @@ describe('withCleanup', () => {
         },
       ),
     ).rejects.toThrow('primary failed');
+  });
+});
+
+describe('renderScreenshots', () => {
+  test('renders both SVGs over the same checkerboard', async () => {
+    const elements = /** @type {Array<{
+      evaluate: jest.Mock,
+      screenshot: jest.Mock,
+    }>} */ (
+      Array.from({ length: 2 }, () => ({
+        evaluate: jest.fn(),
+        screenshot: jest.fn(),
+      }))
+    );
+    let selected = 0;
+    const page = {
+      goto: jest.fn(),
+      waitForSelector: jest.fn(async () => elements[selected++]),
+      close: jest.fn(async () => {}),
+    };
+    const context = {
+      setDefaultTimeout: jest.fn(),
+      newPage: jest.fn(async () => page),
+    };
+    const browser = {
+      newContext: jest.fn(async () => context),
+      close: jest.fn(async () => {}),
+    };
+    const chromium = /** @type {import('./compare.js').ChromiumLauncher} */ ({
+      launch: jest.fn(async () => browser),
+    });
+
+    await renderScreenshots(['fixture.svg'], {
+      workerCount: 1,
+      chromium,
+    });
+
+    for (const element of elements) {
+      expect(element.evaluate).toHaveBeenCalledTimes(1);
+      const applyBackground =
+        /** @type {(svg: { style: { setProperty: jest.Mock } }, background: string) => void} */ (
+          element.evaluate.mock.calls[0][0]
+        );
+      const background = /** @type {string} */ (
+        element.evaluate.mock.calls[0][1]
+      );
+      const setProperty = jest.fn();
+      const svg = { style: { setProperty } };
+      applyBackground(svg, background);
+      expect(setProperty).toHaveBeenCalledWith(
+        'background',
+        'conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0) 0 0 / 8px 8px',
+        'important',
+      );
+      expect(element.screenshot).toHaveBeenCalledWith(
+        expect.not.objectContaining({ omitBackground: true }),
+      );
+      expect(element.evaluate.mock.invocationCallOrder[0]).toBeLessThan(
+        element.screenshot.mock.invocationCallOrder[0],
+      );
+    }
   });
 });
 

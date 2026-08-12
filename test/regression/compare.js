@@ -21,16 +21,26 @@ import {
 const NAVIGATION_TIMEOUT_MS = 0;
 const WIDTH = 960;
 const HEIGHT = 720;
+const CHECKERBOARD_BACKGROUND =
+  'conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0) 0 0 / 8px 8px';
+const applyBackground =
+  /** @type {(svg: { style: { setProperty: (property: string, value: string, priority: string) => void } }, background: string) => void} */ (
+    (svg, background) => {
+      svg.style.setProperty('background', background, 'important');
+    }
+  );
 export const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
 
 /**
  * @typedef {{ name: string, isMatch: boolean }} MatchResult
  * @typedef {{ new (): Pick<import('odiff-bin').ODiffServer, 'compare' | 'stop'> }} ODiffServerConstructor
+ * @typedef {{ evaluate: (callback: (svg: { style: { setProperty: (property: string, value: string, priority: string) => void } }, background: string) => void, background: string) => Promise<unknown>, screenshot: (options: import('playwright').PageScreenshotOptions) => Promise<unknown> }} ScreenshotElement
+ * @typedef {{ goto: (url: string) => Promise<unknown>, waitForSelector: (selector: string) => Promise<ScreenshotElement>, close: () => Promise<unknown> }} ScreenshotPage
+ * @typedef {{ launch: () => Promise<{ newContext: (options: import('playwright').BrowserContextOptions) => Promise<{ setDefaultTimeout: (timeout: number) => void, newPage: () => Promise<ScreenshotPage> }>, close: () => Promise<unknown> }> }} ChromiumLauncher
  */
 
 /** @type {import('playwright').PageScreenshotOptions} */
 const screenshotOptions = {
-  omitBackground: true,
   animations: 'disabled',
 };
 
@@ -93,7 +103,7 @@ async function stopODiffServer(server) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number }=} options
+ * @param {{ workerCount?: number, chromium?: ChromiumLauncher }=} options
  */
 export async function renderScreenshots(list, options = {}) {
   const queue = [...list];
@@ -105,7 +115,7 @@ export async function renderScreenshots(list, options = {}) {
   await fs.mkdir(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, { recursive: true });
   await fs.mkdir(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, { recursive: true });
 
-  const browser = await chromium.launch();
+  const browser = await (options.chromium ?? chromium).launch();
   await withCleanup(
     async () => {
       const context = await browser.newContext({
@@ -133,6 +143,7 @@ export async function renderScreenshots(list, options = {}) {
                 `file://${path.join(REGRESSION_FIXTURES_PATH, name)}`,
               );
               let element = await page.waitForSelector('svg');
+              await element.evaluate(applyBackground, CHECKERBOARD_BACKGROUND);
               await element.screenshot({
                 ...screenshotOptions,
                 path: originalPath,
@@ -142,6 +153,7 @@ export async function renderScreenshots(list, options = {}) {
                 `file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`,
               );
               element = await page.waitForSelector('svg');
+              await element.evaluate(applyBackground, CHECKERBOARD_BACKGROUND);
               await element.screenshot({
                 ...screenshotOptions,
                 path: optimizedPath,
