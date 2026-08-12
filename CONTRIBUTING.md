@@ -31,10 +31,10 @@ Clone the repository with Git.
 git clone https://github.com/svg/svgo.git
 ```
 
-As this is a Node.js project and uses pnpm for package management, enable Corepack and install the dependencies.
+As this is a Node.js project and uses pnpm for package management, install pnpm and the dependencies.
 
 ```sh
-corepack enable
+npm install --global pnpm@10.34.5
 pnpm install
 ```
 
