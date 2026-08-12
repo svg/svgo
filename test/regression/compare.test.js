@@ -6,8 +6,12 @@ import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('playwright', () => ({ chromium: {} }));
 
-const { compareScreenshots, runTests, withCleanup } =
+const { compareScreenshots, DEFAULT_RENDER_WORKERS, runTests, withCleanup } =
   await import('./compare.js');
+
+test('uses the original render concurrency for comparison', () => {
+  expect(DEFAULT_RENDER_WORKERS).toBe(os.cpus().length * 2);
+});
 
 describe('withCleanup', () => {
   test('preserves the primary error when cleanup also fails', async () => {
