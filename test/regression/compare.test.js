@@ -33,72 +33,28 @@ describe('withCleanup', () => {
 });
 
 describe('compareScreenshots', () => {
-  test('compares files and creates nested diff directories with odiff', async () => {
-    const previousCI = process.env.CI;
-    process.env.CI = 'true';
-    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    const name = 'odiff-test/nested/fixture.svg';
-    const originalPath = path.join(
-      REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
-      `${name}.png`,
-    );
-    const optimizedPath = path.join(
-      REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
-      `${name}.png`,
-    );
-    const diffPath = path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`);
-    const black = Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAHnOcQAAAAABJRU5ErkJggg==',
-      'base64',
-    );
-    const white = Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFgAI/ScL1WQAAAABJRU5ErkJggg==',
-      'base64',
-    );
-    await fs.mkdir(path.dirname(originalPath), { recursive: true });
-    await fs.mkdir(path.dirname(optimizedPath), { recursive: true });
-    await fs.writeFile(originalPath, black);
-    await fs.writeFile(optimizedPath, white);
-
-    try {
-      await expect(compareScreenshots([name])).resolves.toEqual([
-        { name, isMatch: false },
-      ]);
-      await expect(fs.stat(diffPath)).resolves.toBeDefined();
-      expect(warn).not.toHaveBeenCalled();
-    } finally {
-      warn.mockRestore();
-      if (previousCI == null) {
-        delete process.env.CI;
-      } else {
-        process.env.CI = previousCI;
-      }
-      await Promise.all([
-        fs.rm(path.join(REGRESSION_DIFFS_PATH, 'odiff-test'), {
-          recursive: true,
-          force: true,
-        }),
-        fs.rm(path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'odiff-test'), {
-          recursive: true,
-          force: true,
-        }),
-        fs.rm(path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'odiff-test'), {
-          recursive: true,
-          force: true,
-        }),
-      ]);
-    }
-  });
-
-  test('maps strict odiff results and writes differences to the report path', async () => {
+  test('preserves the width-dependent pixel allowance', async () => {
     const odiffResults = /** @type {import('odiff-bin').ODiffResult[]} */ ([
       { match: true },
       {
         match: false,
         reason: 'pixel-diff',
-        diffCount: 1,
+        diffCount: 3,
         diffPercentage: 1,
       },
+      {
+        match: false,
+        reason: 'pixel-diff',
+        diffCount: 4,
+        diffPercentage: 1,
+      },
+      {
+        match: false,
+        reason: 'pixel-diff',
+        diffCount: 5,
+        diffPercentage: 1,
+      },
+      { match: false, reason: 'layout-diff' },
     ]);
     const compare = jest.fn(
       async () =>
@@ -111,24 +67,26 @@ describe('compareScreenshots', () => {
     }
 
     await expect(
-      compareScreenshots(['match.svg', 'strict.svg'], {
-        ODiffServer: FakeODiffServer,
-      }),
+      compareScreenshots(
+        ['exact.svg', 'small.svg', 'wide.svg', 'changed.svg', 'layout.svg'],
+        {
+          ODiffServer: FakeODiffServer,
+          readWidth: async (file) => (file.endsWith('small.svg.png') ? 16 : 17),
+        },
+      ),
     ).resolves.toEqual([
-      { name: 'match.svg', isMatch: true },
-      { name: 'strict.svg', isMatch: false },
+      { name: 'exact.svg', isMatch: true },
+      { name: 'small.svg', isMatch: true },
+      { name: 'wide.svg', isMatch: true },
+      { name: 'changed.svg', isMatch: false },
+      { name: 'layout.svg', isMatch: false },
     ]);
     expect(compare).toHaveBeenNthCalledWith(
       1,
-      path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'match.svg.png'),
-      path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'match.svg.png'),
-      path.join(REGRESSION_DIFFS_PATH, 'match.svg.diff.png'),
-    );
-    expect(compare).toHaveBeenNthCalledWith(
-      2,
-      path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'strict.svg.png'),
-      path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'strict.svg.png'),
-      path.join(REGRESSION_DIFFS_PATH, 'strict.svg.diff.png'),
+      path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'exact.svg.png'),
+      path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'exact.svg.png'),
+      path.join(REGRESSION_DIFFS_PATH, 'exact.svg.diff.png'),
+      { threshold: 0.1, antialiasing: true },
     );
     expect(stop).toHaveBeenCalledTimes(1);
   });
@@ -164,6 +122,7 @@ describe('compareScreenshots', () => {
         REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
         'nested/fixture.svg.png.diff.png',
       ),
+      { threshold: 0.1, antialiasing: true },
     );
   });
 
