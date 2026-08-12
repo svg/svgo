@@ -56,6 +56,18 @@ export const REGRESSION_DIFFS_PATH = path.join(
   TEMP_DIR_PATH,
   'regression-diff',
 );
+export const REGRESSION_SCREENSHOTS_PATH = path.join(
+  TEMP_DIR_PATH,
+  'regression-screenshots',
+);
+export const REGRESSION_ORIGINAL_SCREENSHOTS_PATH = path.join(
+  REGRESSION_SCREENSHOTS_PATH,
+  'original',
+);
+export const REGRESSION_OPTIMIZED_SCREENSHOTS_PATH = path.join(
+  REGRESSION_SCREENSHOTS_PATH,
+  'optimized',
+);
 export const REGRESSION_VERSION_PATH = path.join(
   REGRESSION_FIXTURES_PATH,
   'VERSION',
