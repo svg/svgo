@@ -261,7 +261,11 @@ export const fn = (root, params) => {
                 if (
                   attrsGroups.presentation.has(property) &&
                   !selectors.some((selector) =>
-                    includesAttrSelector(selector.item, property),
+                    includesAttrSelector(
+                      selector.item,
+                      property,
+                      selectedEl.attributes[property],
+                    ),
                   )
                 ) {
                   delete selectedEl.attributes[property];
