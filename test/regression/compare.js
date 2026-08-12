@@ -26,6 +26,12 @@ const DEFAULT_RENDER_WORKERS = Math.min(availableParallelism, 2);
 const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
 const workerUrl = new URL('./compare-worker.js', import.meta.url);
 
+/**
+ * @typedef {import('./compare-worker.js').CompareResult} CompareResult
+ * @typedef {{ name: string, isMatch: boolean }} MatchResult
+ * @typedef {{ new (filename: URL): { postMessage: (value: unknown) => void, on: (event: string, listener: (...args: any[]) => void) => unknown, terminate: () => Promise<number> | number } }} WorkerConstructor
+ */
+
 /** @type {import('playwright').PageScreenshotOptions} */
 const screenshotOptions = {
   omitBackground: true,
@@ -136,17 +142,19 @@ export async function renderScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number, compare?: (name: string) => Promise<{ name: string, matched: number, width: number }>, Worker?: typeof Worker }=} options
- * @returns {Promise<Array<{ name: string, isMatch: boolean }>>}
+ * @param {{ workerCount?: number, compare?: (name: string) => Promise<CompareResult>, Worker?: WorkerConstructor }=} options
+ * @returns {Promise<MatchResult[]>}
  */
 export async function compareScreenshots(list, options = {}) {
   const queue = [...list];
+  /** @type {MatchResult[]} */
   const results = [];
   const workerCount = Math.min(
     options.workerCount ?? DEFAULT_COMPARE_WORKERS,
     queue.length,
   );
 
+  /** @param {string} name */
   const getOptions = (name) => ({
     name,
     originalPath: path.join(
@@ -164,11 +172,12 @@ export async function compareScreenshots(list, options = {}) {
   });
 
   if (options.compare) {
+    const compare = options.compare;
     await Promise.all(
       Array.from({ length: workerCount }, async () => {
         let name;
         while ((name = queue.pop())) {
-          const result = await options.compare(name);
+          const result = await compare(name);
           const threshold = result.width <= 16 ? 3 : 4;
           results.push({
             name: result.name,
@@ -180,7 +189,9 @@ export async function compareScreenshots(list, options = {}) {
     return results;
   }
 
-  const WorkerClass = options.Worker ?? Worker;
+  const WorkerClass =
+    options.Worker ?? /** @type {WorkerConstructor} */ (Worker);
+  /** @type {InstanceType<WorkerConstructor>[]} */
   const workers = [];
   await withCleanup(
     async () => {
@@ -193,6 +204,7 @@ export async function compareScreenshots(list, options = {}) {
             new Promise((resolve, reject) => {
               let active = false;
               let settled = false;
+              /** @param {unknown} error */
               const fail = (error) => {
                 if (!settled) {
                   settled = true;
@@ -203,13 +215,13 @@ export async function compareScreenshots(list, options = {}) {
                 const name = queue.pop();
                 if (name == null) {
                   settled = true;
-                  resolve();
+                  resolve(undefined);
                   return;
                 }
                 active = true;
                 worker.postMessage(getOptions(name));
               };
-              worker.on('message', (result) => {
+              worker.on('message', (/** @type {CompareResult} */ result) => {
                 active = false;
                 const threshold = result.width <= 16 ? 3 : 4;
                 results.push({
@@ -219,7 +231,7 @@ export async function compareScreenshots(list, options = {}) {
                 next();
               });
               worker.on('error', fail);
-              worker.on('exit', (code) => {
+              worker.on('exit', (/** @type {number} */ code) => {
                 if (!settled && (active || code !== 0)) {
                   fail(new Error(`Comparison worker exited with code ${code}`));
                 }
@@ -244,7 +256,7 @@ export async function compareScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ screenshotPath?: string, readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cleanup?: typeof fs.rm }=} options
+ * @param {{ screenshotPath?: string, readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cleanup?: typeof fs.rm, now?: () => number, log?: (message: string) => unknown }=} options
  * @returns {Promise<Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
 export async function runTests(list, options = {}) {
@@ -252,8 +264,11 @@ export async function runTests(list, options = {}) {
   const render = options.render ?? renderScreenshots;
   const compare = options.compare ?? compareScreenshots;
   const cleanup = options.cleanup ?? fs.rm;
+  const now = options.now ?? performance.now.bind(performance);
+  const log = options.log ?? console.info;
   const screenshotPath = options.screenshotPath ?? REGRESSION_SCREENSHOTS_PATH;
   const version = await versionReader();
+  /** @type {Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>} */
   const report = {
     version,
     files: {
@@ -268,8 +283,16 @@ export async function runTests(list, options = {}) {
 
   let primaryError;
   try {
+    const renderStarted = now();
     await render(list);
+    const compareStarted = now();
+    log(
+      `Rendered screenshots in ${((compareStarted - renderStarted) / 1000).toFixed(2)}s`,
+    );
     const results = await compare(list);
+    log(
+      `Compared screenshots in ${((now() - compareStarted) / 1000).toFixed(2)}s`,
+    );
     for (const { name, isMatch } of results) {
       const namePosix = pathToPosix(name);
       const expectedToMismatch = expectMismatch.includes(namePosix);
@@ -312,7 +335,9 @@ async function main() {
     ).filter((name) => name.endsWith('.svg'));
     const report = await runTests(list);
     const combinedReport = { ...report, ...(await readReport()) };
-    printReport(combinedReport);
+    printReport(
+      /** @type {import('./regression-io.js').TestReport} */ (combinedReport),
+    );
     await writeReport(combinedReport);
     if (
       report.results.match !== report.files.toMatch ||

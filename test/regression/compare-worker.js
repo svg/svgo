@@ -11,11 +11,16 @@ import { PNG } from 'pngjs';
  * @property {string} optimizedPath
  * @property {string | null} diffPath
  * @property {typeof fs.rm=} remove
+ *
+ * @typedef CompareResult
+ * @property {string} name
+ * @property {number} matched
+ * @property {number} width
  */
 
 /**
  * @param {CompareOptions} options
- * @returns {Promise<{ name: string, matched: number, width: number }>}
+ * @returns {Promise<CompareResult>}
  */
 export async function compareImages(options) {
   const {
@@ -60,9 +65,10 @@ export async function compareImages(options) {
     result = { name, matched, width: originalPng.width };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    primaryError = new Error(`Failed to compare ${name}: ${message}`, {
-      cause: error,
-    });
+    primaryError = Object.assign(
+      new Error(`Failed to compare ${name}: ${message}`),
+      { cause: error },
+    );
   }
 
   let cleanupError;
@@ -82,12 +88,13 @@ export async function compareImages(options) {
   if (cleanupError) {
     throw cleanupError;
   }
-  return result;
+  return /** @type {CompareResult} */ (result);
 }
 
 if (!isMainThread && parentPort) {
-  parentPort.on('message', async (options) => {
+  const port = parentPort;
+  port.on('message', async (options) => {
     const result = await compareImages(options);
-    parentPort.postMessage(result);
+    port.postMessage(result);
   });
 }

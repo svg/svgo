@@ -5,6 +5,10 @@ import { jest } from '@jest/globals';
 import { PNG } from 'pngjs';
 import { compareImages } from './compare-worker.js';
 
+/**
+ * @param {string} file
+ * @param {number[][]} colors
+ */
 const createPng = async (file, colors) => {
   const png = new PNG({ width: colors.length, height: 1 });
   for (const [index, color] of colors.entries()) {
@@ -14,6 +18,7 @@ const createPng = async (file, colors) => {
 };
 
 describe('compareImages', () => {
+  /** @type {string} */
   let directory;
 
   beforeEach(async () => {

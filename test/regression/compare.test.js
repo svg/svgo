@@ -34,7 +34,10 @@ describe('compareScreenshots', () => {
     await expect(
       compareScreenshots(['small.svg', 'large.svg'], {
         workerCount: 1,
-        compare: async () => results.shift(),
+        compare: async () =>
+          /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
+            results.shift()
+          ),
       }),
     ).resolves.toEqual([
       { name: 'small.svg', isMatch: true },
@@ -51,7 +54,10 @@ describe('compareScreenshots', () => {
     await expect(
       compareScreenshots(['small.svg', 'large.svg'], {
         workerCount: 1,
-        compare: async () => results.shift(),
+        compare: async () =>
+          /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
+            results.shift()
+          ),
       }),
     ).resolves.toEqual([
       { name: 'small.svg', isMatch: false },
@@ -61,11 +67,19 @@ describe('compareScreenshots', () => {
 
   test('rejects when a worker exits before returning its fixture', async () => {
     class ExitingWorker extends EventEmitter {
+      /** @param {URL} _filename */
+      constructor(_filename) {
+        super();
+        void _filename;
+      }
+
       postMessage() {
         queueMicrotask(() => this.emit('exit', 1));
       }
 
-      async terminate() {}
+      async terminate() {
+        return 0;
+      }
     }
 
     await expect(
@@ -80,15 +94,20 @@ describe('compareScreenshots', () => {
     const terminate = jest.fn();
     let constructions = 0;
     class FailingWorker extends EventEmitter {
-      constructor() {
+      /** @param {URL} _filename */
+      constructor(_filename) {
         super();
+        void _filename;
         if (++constructions === 2) {
           throw new Error('worker unavailable');
         }
       }
 
+      postMessage() {}
+
       terminate() {
         terminate();
+        return 0;
       }
     }
 
@@ -103,6 +122,7 @@ describe('compareScreenshots', () => {
 });
 
 describe('runTests', () => {
+  /** @type {string} */
   let screenshotPath;
 
   beforeEach(async () => {
@@ -114,6 +134,7 @@ describe('runTests', () => {
   });
 
   test('finishes rendering before comparison and removes screenshots', async () => {
+    /** @type {string[]} */
     const events = [];
     await fs.writeFile(path.join(screenshotPath, 'partial.png'), 'png');
 
@@ -132,6 +153,31 @@ describe('runTests', () => {
     await expect(fs.stat(screenshotPath)).rejects.toMatchObject({
       code: 'ENOENT',
     });
+  });
+
+  test('reports rendering and comparison durations', async () => {
+    /** @type {string[]} */
+    const messages = [];
+    let now = 0;
+
+    await runTests(['fixture.svg'], {
+      screenshotPath,
+      readVersion: async () => 'version',
+      render: async () => {
+        now = 1500;
+      },
+      compare: async () => {
+        now = 4000;
+        return [{ name: 'fixture.svg', isMatch: true }];
+      },
+      now: () => now,
+      log: (message) => messages.push(message),
+    });
+
+    expect(messages).toEqual([
+      'Rendered screenshots in 1.50s',
+      'Compared screenshots in 2.50s',
+    ]);
   });
 
   test('removes partial screenshots after rendering fails', async () => {
