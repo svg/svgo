@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { Worker } from 'node:worker_threads';
+import { ODiffServer } from 'odiff-bin';
 import { chromium } from 'playwright';
 import { expectMismatch, ignore, skip } from './file-lists.js';
 import { pathToPosix, printReport } from './lib.js';
@@ -21,15 +21,11 @@ import {
 const NAVIGATION_TIMEOUT_MS = 0;
 const WIDTH = 960;
 const HEIGHT = 720;
-const availableParallelism = os.availableParallelism?.() ?? os.cpus().length;
 export const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
-const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
-const workerUrl = new URL('./compare-worker.js', import.meta.url);
 
 /**
- * @typedef {import('./compare-worker.js').CompareResult} CompareResult
  * @typedef {{ name: string, isMatch: boolean }} MatchResult
- * @typedef {{ new (filename: URL): { postMessage: (value: unknown) => void, on: (event: string, listener: (...args: any[]) => void) => unknown, terminate: () => Promise<number> | number } }} WorkerConstructor
+ * @typedef {{ new (): Pick<import('odiff-bin').ODiffServer, 'compare' | 'stop'> }} ODiffServerConstructor
  */
 
 /** @type {import('playwright').PageScreenshotOptions} */
@@ -65,6 +61,34 @@ export async function withCleanup(operation, cleanup) {
     throw cleanupError;
   }
   return /** @type {T} */ (result);
+}
+
+/**
+ * @param {Pick<import('odiff-bin').ODiffServer, 'stop'>} server
+ */
+async function stopODiffServer(server) {
+  const implementation =
+    /** @type {Pick<import('odiff-bin').ODiffServer, 'stop'> & {
+    process: import('node:child_process').ChildProcess | null,
+    exiting: boolean,
+  }} */ (server);
+  const child = implementation.process;
+  if (child == null || child.exitCode != null) {
+    server.stop();
+    return;
+  }
+
+  const stopped = new Promise((resolve, reject) => {
+    child.once('exit', resolve);
+    child.once('error', reject);
+  });
+  server.stop();
+  implementation.exiting = true;
+  try {
+    await stopped;
+  } finally {
+    implementation.exiting = false;
+  }
 }
 
 /**
@@ -142,115 +166,41 @@ export async function renderScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number, compare?: (name: string) => Promise<CompareResult>, Worker?: WorkerConstructor }=} options
+ * @param {{ ODiffServer?: ODiffServerConstructor }=} options
  * @returns {Promise<MatchResult[]>}
  */
 export async function compareScreenshots(list, options = {}) {
-  const queue = [...list];
   /** @type {MatchResult[]} */
   const results = [];
-  const workerCount = Math.min(
-    options.workerCount ?? DEFAULT_COMPARE_WORKERS,
-    queue.length,
-  );
-
-  /** @param {string} name */
-  const getOptions = (name) => ({
-    name,
-    originalPath: path.join(
-      REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
-      `${name}.png`,
-    ),
-    optimizedPath: path.join(
-      REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
-      `${name}.png`,
-    ),
-    diffPath:
-      process.env.NO_DIFF == null
-        ? path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`)
-        : null,
-  });
-
-  if (options.compare) {
-    const compare = options.compare;
-    await Promise.all(
-      Array.from({ length: workerCount }, async () => {
-        let name;
-        while ((name = queue.pop())) {
-          const result = await compare(name);
-          const threshold = result.width <= 16 ? 3 : 4;
-          results.push({
-            name: result.name,
-            isMatch: result.matched <= threshold,
-          });
-        }
-      }),
-    );
-    return results;
+  const ODiffServerClass = options.ODiffServer ?? ODiffServer;
+  const server = new ODiffServerClass();
+  try {
+    for (const name of list) {
+      const originalPath = path.join(
+        REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
+        `${name}.png`,
+      );
+      const optimizedPath = path.join(
+        REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+        `${name}.png`,
+      );
+      const diffPath =
+        process.env.NO_DIFF == null
+          ? path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`)
+          : `${optimizedPath}.diff.png`;
+      if (process.env.NO_DIFF == null) {
+        await fs.mkdir(path.dirname(diffPath), { recursive: true });
+      }
+      const result = await server.compare(
+        originalPath,
+        optimizedPath,
+        diffPath,
+      );
+      results.push({ name, isMatch: result.match });
+    }
+  } finally {
+    await stopODiffServer(server);
   }
-
-  const WorkerClass =
-    options.Worker ?? /** @type {WorkerConstructor} */ (Worker);
-  /** @type {InstanceType<WorkerConstructor>[]} */
-  const workers = [];
-  await withCleanup(
-    async () => {
-      for (let index = 0; index < workerCount; index++) {
-        workers.push(new WorkerClass(workerUrl));
-      }
-      await Promise.all(
-        workers.map(
-          (worker) =>
-            new Promise((resolve, reject) => {
-              let active = false;
-              let settled = false;
-              /** @param {unknown} error */
-              const fail = (error) => {
-                if (!settled) {
-                  settled = true;
-                  reject(error);
-                }
-              };
-              const next = () => {
-                const name = queue.pop();
-                if (name == null) {
-                  settled = true;
-                  resolve(undefined);
-                  return;
-                }
-                active = true;
-                worker.postMessage(getOptions(name));
-              };
-              worker.on('message', (/** @type {CompareResult} */ result) => {
-                active = false;
-                const threshold = result.width <= 16 ? 3 : 4;
-                results.push({
-                  name: result.name,
-                  isMatch: result.matched <= threshold,
-                });
-                next();
-              });
-              worker.on('error', fail);
-              worker.on('exit', (/** @type {number} */ code) => {
-                if (!settled && (active || code !== 0)) {
-                  fail(new Error(`Comparison worker exited with code ${code}`));
-                }
-              });
-              next();
-            }),
-        ),
-      );
-    },
-    async () => {
-      const outcomes = await Promise.allSettled(
-        workers.map((worker) => worker.terminate()),
-      );
-      const failed = outcomes.find((outcome) => outcome.status === 'rejected');
-      if (failed) {
-        throw failed.reason;
-      }
-    },
-  );
   return results;
 }
 

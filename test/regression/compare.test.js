@@ -1,8 +1,12 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { EventEmitter } from 'node:events';
 import { jest } from '@jest/globals';
+import {
+  REGRESSION_DIFFS_PATH,
+  REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+  REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
+} from './regression-io.js';
 
 jest.unstable_mockModule('playwright', () => ({ chromium: {} }));
 
@@ -29,99 +33,156 @@ describe('withCleanup', () => {
 });
 
 describe('compareScreenshots', () => {
-  test('applies the existing width-dependent mismatch allowance', async () => {
-    const results = [
-      { name: 'small.svg', matched: 3, width: 16 },
-      { name: 'large.svg', matched: 4, width: 17 },
-    ];
+  test('compares files and creates nested diff directories with odiff', async () => {
+    const previousCI = process.env.CI;
+    process.env.CI = 'true';
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const name = 'odiff-test/nested/fixture.svg';
+    const originalPath = path.join(
+      REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
+      `${name}.png`,
+    );
+    const optimizedPath = path.join(
+      REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+      `${name}.png`,
+    );
+    const diffPath = path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`);
+    const black = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAHnOcQAAAAABJRU5ErkJggg==',
+      'base64',
+    );
+    const white = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFgAI/ScL1WQAAAABJRU5ErkJggg==',
+      'base64',
+    );
+    await fs.mkdir(path.dirname(originalPath), { recursive: true });
+    await fs.mkdir(path.dirname(optimizedPath), { recursive: true });
+    await fs.writeFile(originalPath, black);
+    await fs.writeFile(optimizedPath, white);
 
-    await expect(
-      compareScreenshots(['small.svg', 'large.svg'], {
-        workerCount: 1,
-        compare: async () =>
-          /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
-            results.shift()
-          ),
-      }),
-    ).resolves.toEqual([
-      { name: 'small.svg', isMatch: true },
-      { name: 'large.svg', isMatch: true },
-    ]);
+    try {
+      await expect(compareScreenshots([name])).resolves.toEqual([
+        { name, isMatch: false },
+      ]);
+      await expect(fs.stat(diffPath)).resolves.toBeDefined();
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+      if (previousCI == null) {
+        delete process.env.CI;
+      } else {
+        process.env.CI = previousCI;
+      }
+      await Promise.all([
+        fs.rm(path.join(REGRESSION_DIFFS_PATH, 'odiff-test'), {
+          recursive: true,
+          force: true,
+        }),
+        fs.rm(path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'odiff-test'), {
+          recursive: true,
+          force: true,
+        }),
+        fs.rm(path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'odiff-test'), {
+          recursive: true,
+          force: true,
+        }),
+      ]);
+    }
   });
 
-  test('rejects differences immediately above both match allowances', async () => {
-    const results = [
-      { name: 'small.svg', matched: 4, width: 16 },
-      { name: 'large.svg', matched: 5, width: 17 },
-    ];
+  test('maps strict odiff results and writes differences to the report path', async () => {
+    const odiffResults = /** @type {import('odiff-bin').ODiffResult[]} */ ([
+      { match: true },
+      {
+        match: false,
+        reason: 'pixel-diff',
+        diffCount: 1,
+        diffPercentage: 1,
+      },
+    ]);
+    const compare = jest.fn(
+      async () =>
+        /** @type {import('odiff-bin').ODiffResult} */ (odiffResults.shift()),
+    );
+    const stop = jest.fn();
+    class FakeODiffServer {
+      compare = compare;
+      stop = stop;
+    }
 
     await expect(
-      compareScreenshots(['small.svg', 'large.svg'], {
-        workerCount: 1,
-        compare: async () =>
-          /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
-            results.shift()
-          ),
+      compareScreenshots(['match.svg', 'strict.svg'], {
+        ODiffServer: FakeODiffServer,
       }),
     ).resolves.toEqual([
-      { name: 'small.svg', isMatch: false },
-      { name: 'large.svg', isMatch: false },
+      { name: 'match.svg', isMatch: true },
+      { name: 'strict.svg', isMatch: false },
     ]);
+    expect(compare).toHaveBeenNthCalledWith(
+      1,
+      path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'match.svg.png'),
+      path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'match.svg.png'),
+      path.join(REGRESSION_DIFFS_PATH, 'match.svg.diff.png'),
+    );
+    expect(compare).toHaveBeenNthCalledWith(
+      2,
+      path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'strict.svg.png'),
+      path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'strict.svg.png'),
+      path.join(REGRESSION_DIFFS_PATH, 'strict.svg.diff.png'),
+    );
+    expect(stop).toHaveBeenCalledTimes(1);
   });
 
-  test('rejects when a worker exits before returning its fixture', async () => {
-    class ExitingWorker extends EventEmitter {
-      /** @param {URL} _filename */
-      constructor(_filename) {
-        super();
-        void _filename;
-      }
+  test('uses disposable output paths when differences are disabled', async () => {
+    const previousNoDiff = process.env.NO_DIFF;
+    process.env.NO_DIFF = '1';
+    const compare = jest.fn(async () => /** @type {const} */ ({ match: true }));
+    class FakeODiffServer {
+      compare = compare;
+      stop() {}
+    }
 
-      postMessage() {
-        queueMicrotask(() => this.emit('exit', 1));
+    try {
+      await compareScreenshots(['nested/fixture.svg'], {
+        ODiffServer: FakeODiffServer,
+      });
+    } finally {
+      if (previousNoDiff == null) {
+        delete process.env.NO_DIFF;
+      } else {
+        process.env.NO_DIFF = previousNoDiff;
       }
+    }
 
-      async terminate() {
-        return 0;
+    expect(compare).toHaveBeenCalledWith(
+      path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'nested/fixture.svg.png'),
+      path.join(
+        REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+        'nested/fixture.svg.png',
+      ),
+      path.join(
+        REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+        'nested/fixture.svg.png.diff.png',
+      ),
+    );
+  });
+
+  test('stops odiff after a comparison failure', async () => {
+    const stop = jest.fn();
+    class FailingODiffServer {
+      /** @returns {Promise<import('odiff-bin').ODiffResult>} */
+      async compare() {
+        throw new Error('odiff failed');
       }
+      stop = stop;
     }
 
     await expect(
       compareScreenshots(['fixture.svg'], {
-        workerCount: 1,
-        Worker: ExitingWorker,
+        ODiffServer: FailingODiffServer,
       }),
-    ).rejects.toThrow('Comparison worker exited with code 1');
-  });
-
-  test('terminates workers created before pool construction fails', async () => {
-    const terminate = jest.fn();
-    let constructions = 0;
-    class FailingWorker extends EventEmitter {
-      /** @param {URL} _filename */
-      constructor(_filename) {
-        super();
-        void _filename;
-        if (++constructions === 2) {
-          throw new Error('worker unavailable');
-        }
-      }
-
-      postMessage() {}
-
-      terminate() {
-        terminate();
-        return 0;
-      }
-    }
-
-    await expect(
-      compareScreenshots(['one.svg', 'two.svg'], {
-        workerCount: 2,
-        Worker: FailingWorker,
-      }),
-    ).rejects.toThrow('worker unavailable');
-    expect(terminate).toHaveBeenCalledTimes(1);
+    ).rejects.toThrow('odiff failed');
+    expect(stop).toHaveBeenCalledTimes(1);
   });
 });
 
