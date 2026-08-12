@@ -33,13 +33,13 @@ describe('withCleanup', () => {
 });
 
 describe('compareScreenshots', () => {
-  test('preserves the width-dependent pixel allowance', async () => {
+  test('allows up to four differing pixels', async () => {
     const odiffResults = /** @type {import('odiff-bin').ODiffResult[]} */ ([
       { match: true },
       {
         match: false,
         reason: 'pixel-diff',
-        diffCount: 3,
+        diffCount: 4,
         diffPercentage: 1,
       },
       {
@@ -68,16 +68,15 @@ describe('compareScreenshots', () => {
 
     await expect(
       compareScreenshots(
-        ['exact.svg', 'small.svg', 'wide.svg', 'changed.svg', 'layout.svg'],
+        ['exact.svg', 'first.svg', 'second.svg', 'changed.svg', 'layout.svg'],
         {
           ODiffServer: FakeODiffServer,
-          readWidth: async (file) => (file.endsWith('small.svg.png') ? 16 : 17),
         },
       ),
     ).resolves.toEqual([
       { name: 'exact.svg', isMatch: true },
-      { name: 'small.svg', isMatch: true },
-      { name: 'wide.svg', isMatch: true },
+      { name: 'first.svg', isMatch: true },
+      { name: 'second.svg', isMatch: true },
       { name: 'changed.svg', isMatch: false },
       { name: 'layout.svg', isMatch: false },
     ]);

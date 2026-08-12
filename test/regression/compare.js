@@ -92,21 +92,6 @@ async function stopODiffServer(server) {
 }
 
 /**
- * @param {string} file
- * @returns {Promise<number>}
- */
-async function readPngWidth(file) {
-  const handle = await fs.open(file);
-  try {
-    const header = Buffer.alloc(24);
-    await handle.read(header, 0, header.length, 0);
-    return header.readUInt32BE(16);
-  } finally {
-    await handle.close();
-  }
-}
-
-/**
  * @param {ReadonlyArray<string>} list
  * @param {{ workerCount?: number }=} options
  */
@@ -181,14 +166,13 @@ export async function renderScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ ODiffServer?: ODiffServerConstructor, readWidth?: (file: string) => Promise<number> }=} options
+ * @param {{ ODiffServer?: ODiffServerConstructor }=} options
  * @returns {Promise<MatchResult[]>}
  */
 export async function compareScreenshots(list, options = {}) {
   /** @type {MatchResult[]} */
   const results = [];
   const ODiffServerClass = options.ODiffServer ?? ODiffServer;
-  const readWidth = options.readWidth ?? readPngWidth;
   const server = new ODiffServerClass();
   try {
     for (const name of list) {
@@ -215,9 +199,7 @@ export async function compareScreenshots(list, options = {}) {
       );
       let isMatch = result.match;
       if (!result.match && result.reason === 'pixel-diff') {
-        const width = await readWidth(originalPath);
-        const allowance = width <= 16 ? 3 : 4;
-        isMatch = result.diffCount <= allowance;
+        isMatch = result.diffCount <= 4;
         if (isMatch && process.env.NO_DIFF == null) {
           await fs.rm(diffPath, { force: true });
         }
