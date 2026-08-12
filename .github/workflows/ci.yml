@@ -60,8 +60,16 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm playwright install --with-deps chromium
       - run: pnpm test
+  test-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with: *setup-node-config
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm playwright install --with-deps --only-shell chromium
       - run: pnpm test:bundles
   test-runtime:
     name: test runtime - ${{ matrix.os }} - Node.js v${{ matrix.node-version }}
