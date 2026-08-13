@@ -21,7 +21,7 @@ const availableParallelism = os.availableParallelism?.() ?? os.cpus().length;
 const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
 const workerUrl = new URL('./compare-worker.js', import.meta.url);
 
-export { DEFAULT_RENDER_WORKERS, renderScreenshots } from './render.js';
+export { DEFAULT_RENDER_CONCURRENCY, renderScreenshots } from './render.js';
 
 /**
  * @typedef {import('./compare-worker.js').CompareResult} CompareResult

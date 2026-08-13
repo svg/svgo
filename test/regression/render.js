@@ -26,14 +26,14 @@ const ErrorWithCause =
  * @property {string} [message]
  */
 
-export const DEFAULT_RENDER_WORKERS = Math.max(
+export const DEFAULT_RENDER_CONCURRENCY = Math.max(
   1,
   os.availableParallelism?.() ?? os.cpus().length,
 );
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number, executable?: string, render?: (input: string, output: string) => Promise<void> }=} options
+ * @param {{ concurrency?: number, executable?: string, execFile?: (file: string, args: string[]) => Promise<unknown>, render?: (input: string, output: string) => Promise<void> }=} options
  */
 export async function renderScreenshots(list, options = {}) {
   const executable = options.executable ?? getResvgPath();
@@ -50,12 +50,12 @@ export async function renderScreenshots(list, options = {}) {
   const render =
     options.render ??
     (async (input, output) => {
-      await execFile(executable, [input, output]);
+      await (options.execFile ?? execFile)(executable, [input, output]);
     });
 
   const queue = [...list];
-  const workerCount = Math.min(
-    options.workerCount ?? DEFAULT_RENDER_WORKERS,
+  const concurrency = Math.min(
+    options.concurrency ?? DEFAULT_RENDER_CONCURRENCY,
     queue.length,
   );
   const variants = [
@@ -70,7 +70,7 @@ export async function renderScreenshots(list, options = {}) {
       REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
     ],
   ];
-  const worker = async () => {
+  const renderNext = async () => {
     let name;
     while ((name = queue.shift()) != null) {
       for (const [variant, inputRoot, outputRoot] of variants) {
@@ -97,7 +97,7 @@ export async function renderScreenshots(list, options = {}) {
   };
 
   const outcomes = await Promise.allSettled(
-    Array.from({ length: workerCount }, worker),
+    Array.from({ length: concurrency }, renderNext),
   );
   const failed = outcomes.find((outcome) => outcome.status === 'rejected');
   if (failed) {

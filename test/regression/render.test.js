@@ -9,7 +9,7 @@ import {
   REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
   REGRESSION_SCREENSHOTS_PATH,
 } from './regression-io.js';
-import { DEFAULT_RENDER_WORKERS, renderScreenshots } from './render.js';
+import { DEFAULT_RENDER_CONCURRENCY, renderScreenshots } from './render.js';
 
 const deferred = () => {
   /** @type {(value?: unknown) => void} */
@@ -31,7 +31,7 @@ test('renders original and optimized SVGs to PNG', async () => {
   /** @type {Array<[string, string]>} */
   const calls = [];
   await renderScreenshots(['icons/one.svg'], {
-    workerCount: 1,
+    concurrency: 1,
     executable: process.execPath,
     render: async (input, output) => {
       calls.push([input, output]);
@@ -75,21 +75,33 @@ test('empty lists perform no render calls', async () => {
 });
 
 test('default renderer passes input and output as CLI arguments', async () => {
-  const executable = path.join(REGRESSION_SCREENSHOTS_PATH, '..', 'fake-resvg');
-  await fs.mkdir(path.dirname(executable), { recursive: true });
-  await fs.writeFile(
-    executable,
-    `#!${process.execPath}\nimport fs from 'node:fs';\nfs.writeFileSync(process.argv[3], JSON.stringify(process.argv.slice(2)));\n`,
-    { mode: 0o755 },
-  );
+  /** @type {Array<[string, string[]]>} */
+  const calls = [];
 
-  await renderScreenshots(['one.svg'], { workerCount: 1, executable });
+  await renderScreenshots(['one.svg'], {
+    concurrency: 1,
+    executable: process.execPath,
+    execFile: async (executable, arguments_) => {
+      calls.push([executable, arguments_]);
+    },
+  });
 
-  const output = path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'one.svg.png');
-  await expect(fs.readFile(output, 'utf8')).resolves.toBe(
-    JSON.stringify([path.join(REGRESSION_FIXTURES_PATH, 'one.svg'), output]),
-  );
-  await fs.rm(executable, { force: true });
+  expect(calls).toEqual([
+    [
+      process.execPath,
+      [
+        path.join(REGRESSION_FIXTURES_PATH, 'one.svg'),
+        path.join(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, 'one.svg.png'),
+      ],
+    ],
+    [
+      process.execPath,
+      [
+        path.join(REGRESSION_OPTIMIZED_PATH, 'one.svg'),
+        path.join(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, 'one.svg.png'),
+      ],
+    ],
+  ]);
 });
 
 test('rejects an unavailable resvg executable before rendering', async () => {
@@ -106,19 +118,19 @@ test('rejects an unavailable resvg executable before rendering', async () => {
   expect(called).toBe(false);
 });
 
-test('uses one native renderer worker per available CPU by default', () => {
-  expect(DEFAULT_RENDER_WORKERS).toBe(
+test('defaults render process concurrency to the available CPU count', () => {
+  expect(DEFAULT_RENDER_CONCURRENCY).toBe(
     Math.max(1, os.availableParallelism?.() ?? os.cpus().length),
   );
 });
 
-test('bounds active fixture pairs by worker count', async () => {
+test('bounds active fixture pairs by process concurrency', async () => {
   const releases = [deferred(), deferred(), deferred()];
   let started = 0;
   let active = 0;
   let maximumActive = 0;
   const rendering = renderScreenshots(['one.svg', 'two.svg', 'three.svg'], {
-    workerCount: 2,
+    concurrency: 2,
     executable: process.execPath,
     render: async (input) => {
       if (input.startsWith(REGRESSION_FIXTURES_PATH)) {
@@ -147,11 +159,11 @@ test('bounds active fixture pairs by worker count', async () => {
   await rendering;
 });
 
-test('waits for all started workers to settle after a render fails', async () => {
+test('waits for all started render processes to settle after a failure', async () => {
   const releaseSlowRender = deferred();
   let slowSettled = false;
   const rendering = renderScreenshots(['broken.svg', 'slow.svg'], {
-    workerCount: 2,
+    concurrency: 2,
     executable: process.execPath,
     render: async (input) => {
       if (input.endsWith('broken.svg')) {
@@ -176,7 +188,7 @@ test('waits for all started workers to settle after a render fails', async () =>
 test('reports fixture, variant, and stderr for render failures', async () => {
   await expect(
     renderScreenshots(['broken.svg'], {
-      workerCount: 1,
+      concurrency: 1,
       executable: process.execPath,
       render: async () => {
         throw Object.assign(new Error('invalid SVG'), {
@@ -191,7 +203,7 @@ test('reports optimized failures with an exit code and original message', async 
   let call = 0;
   await expect(
     renderScreenshots(['broken.svg'], {
-      workerCount: 1,
+      concurrency: 1,
       executable: process.execPath,
       render: async () => {
         if (++call === 2) {

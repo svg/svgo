@@ -4,11 +4,15 @@ import os from 'node:os';
 import path from 'node:path';
 import { EventEmitter } from 'node:events';
 
-const { compareScreenshots, DEFAULT_RENDER_WORKERS, runTests, withCleanup } =
-  await import('./compare.js');
+const {
+  compareScreenshots,
+  DEFAULT_RENDER_CONCURRENCY,
+  runTests,
+  withCleanup,
+} = await import('./compare.js');
 
 test('exports CPU-based render concurrency', () => {
-  expect(DEFAULT_RENDER_WORKERS).toBe(
+  expect(DEFAULT_RENDER_CONCURRENCY).toBe(
     Math.max(1, os.availableParallelism?.() ?? os.cpus().length),
   );
 });

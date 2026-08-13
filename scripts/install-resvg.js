@@ -195,6 +195,7 @@ const isExecutableFile = async (filePath) => {
  * @property {(url: string) => Promise<Buffer>} [download]
  * @property {(archive: Buffer, destination: string, format: Release['format']) => Promise<void>} [extract]
  * @property {(path: string, mode: number) => Promise<void>} [chmod]
+ * @property {(path: string) => Promise<boolean>} [isExecutable]
  */
 
 /**
@@ -205,8 +206,9 @@ export const installResvg = async (options = {}) => {
   const root = options.root ?? repositoryRoot;
   const resvgPath = getResvgPath(root);
   const destination = path.dirname(resvgPath);
+  const isExecutable = options.isExecutable ?? isExecutableFile;
 
-  if (await isExecutableFile(resvgPath)) {
+  if (await isExecutable(resvgPath)) {
     return resvgPath;
   }
   await fs.rm(destination, { recursive: true, force: true });
@@ -226,8 +228,8 @@ export const installResvg = async (options = {}) => {
   try {
     await extract(archive, destination, release.format);
 
-    const stats = await fs.stat(resvgPath).catch((error) => {
-      /** @type {NodeJS.ErrnoException} */ (error);
+    const stats = await fs.stat(resvgPath).catch((caught) => {
+      const error = /** @type {NodeJS.ErrnoException} */ (caught);
       if (error.code === 'ENOENT') {
         return null;
       }

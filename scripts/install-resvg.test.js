@@ -193,11 +193,23 @@ describe('installResvg', () => {
     const resvgPath = getResvgPath(root);
     await fs.mkdir(path.dirname(resvgPath), { recursive: true });
     await fs.writeFile(resvgPath, 'binary');
-    await fs.chmod(resvgPath, 0o755);
     const download = vi.fn();
+    const isExecutable = vi.fn(async () => true);
 
-    await expect(installResvg({ root, download })).resolves.toBe(resvgPath);
+    await expect(
+      installResvg({
+        root,
+        release: {
+          asset: 'resvg-test.tar.gz',
+          format: 'tar.gz',
+          sha256: 'unused',
+        },
+        download,
+        isExecutable,
+      }),
+    ).resolves.toBe(resvgPath);
     expect(download).not.toHaveBeenCalled();
+    expect(isExecutable).toHaveBeenCalledWith(resvgPath);
   });
 
   test('rejects a checksum mismatch before extraction', async () => {
@@ -226,6 +238,11 @@ describe('installResvg', () => {
     await expect(
       installResvg({
         root,
+        release: {
+          asset: 'resvg-test.tar.gz',
+          format: 'tar.gz',
+          sha256: 'unused',
+        },
         download: async () => {
           throw downloadError;
         },
@@ -295,19 +312,14 @@ describe('installResvg', () => {
       format: 'tar.gz',
       sha256: createHash('sha256').update(archive).digest('hex'),
     };
-    /** @type {NonNullable<InstallOptions['extract']>} */
-    const extract = async (_buffer, destination) => {
+    const extract = vi.fn(async (_buffer, destination) => {
       await fs.mkdir(destination, { recursive: true });
       await fs.writeFile(path.join(destination, 'resvg'), 'binary');
-    };
-    let attempt = 0;
-    /** @type {NonNullable<InstallOptions['chmod']>} */
-    const chmod = async (resvgPath, mode) => {
-      if (attempt++ === 0) {
-        throw new Error('chmod failed');
-      }
-      await fs.chmod(resvgPath, mode);
-    };
+    });
+    const chmod = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('chmod failed'))
+      .mockResolvedValue(undefined);
     /** @type {InstallOptions} */
     const options = {
       root,
@@ -318,9 +330,12 @@ describe('installResvg', () => {
     };
 
     await expect(installResvg(options)).rejects.toThrow('chmod failed');
+    await expect(fs.stat(getResvgPath(root))).rejects.toMatchObject({
+      code: 'ENOENT',
+    });
     await expect(installResvg(options)).resolves.toBe(getResvgPath(root));
-    const stats = await fs.stat(getResvgPath(root));
-    expect(stats.mode & 0o111).toBe(0o111);
+    expect(chmod).toHaveBeenCalledTimes(2);
+    expect(extract).toHaveBeenCalledTimes(2);
   });
 
   test('rejects extraction that does not create resvg', async () => {
