@@ -31,12 +31,4 @@ export default [
       strict: 'error',
     },
   },
-  {
-    files: ['**/*.test.js'],
-    languageOptions: {
-      globals: {
-        ...globals.jest,
-      },
-    },
-  },
 ];

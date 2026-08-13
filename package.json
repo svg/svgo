@@ -80,7 +80,7 @@
     "build:types": "pnpm clean:types && tsc && tsc -p tsconfig.build.json",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
+    "test": "vitest run",
     "test:bundles": "pnpm build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
     "test:types": "pnpm build:types && tsc && tsd",
     "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && cross-env NO_DIFF=1 node ./test/regression/compare.js",
@@ -90,16 +90,6 @@
     "clean:types": "rimraf types",
     "spellcheck": "cspell -u .",
     "prepublishOnly": "pnpm clean && pnpm build"
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "fixtures"
-    ],
-    "coverageReporters": [
-      "html",
-      "lcov",
-      "text"
-    ]
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -117,13 +107,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@jest/globals": "^30.4.1",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
     "@types/css-tree": "^2.3.10",
     "@types/csso": "^5.0.4",
-    "@types/jest": "^30.0.0",
     "@types/node": "^26.2.0",
     "@types/pngjs": "^6.0.5",
     "@types/sax": "^1.2.7",
@@ -132,7 +120,6 @@
     "cspell": "^10.0.1",
     "eslint": "^10.8.1",
     "globals": "^17.9.0",
-    "jest": "^30.4.2",
     "pixelmatch": "^7.2.0",
     "playwright": "1.62.1",
     "pngjs": "^7.0.0",
@@ -141,6 +128,7 @@
     "rollup": "^4.62.4",
     "tar-stream": "^3.2.0",
     "tsd": "^0.33.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }

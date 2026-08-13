@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,15 +12,9 @@ describe('svg2js', () => {
     /** @type {any} */
     let root;
 
-    beforeAll((done) => {
-      fs.readFile(filepath, 'utf8', (err, data) => {
-        if (err) {
-          throw err;
-        }
-
-        root = parseSvg(data);
-        done();
-      });
+    beforeAll(async () => {
+      const data = await fs.promises.readFile(filepath, 'utf8');
+      root = parseSvg(data);
     });
 
     describe('root', () => {

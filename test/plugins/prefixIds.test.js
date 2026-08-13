@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { optimize } from '../../lib/svgo.js';
 
 test('should extract prefix from path basename', () => {

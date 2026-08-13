@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { matrixToTransform } from '../../plugins/_transforms.js';
 
 /** @type {import('../../plugins/_transforms.js').TransformParams} */
