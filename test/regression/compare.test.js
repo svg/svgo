@@ -71,6 +71,11 @@ describe('renderScreenshots', () => {
       chromium,
     });
 
+    expect(browser.newContext).toHaveBeenCalledWith({
+      javaScriptEnabled: false,
+      viewport: { width: 960, height: 720 },
+      deviceScaleFactor: 2,
+    });
     for (const element of elements) {
       expect(element.evaluate).toHaveBeenCalledTimes(1);
       const applyBackground =

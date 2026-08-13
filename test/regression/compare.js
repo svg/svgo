@@ -121,6 +121,7 @@ export async function renderScreenshots(list, options = {}) {
       const context = await browser.newContext({
         javaScriptEnabled: false,
         viewport: { width: WIDTH, height: HEIGHT },
+        deviceScaleFactor: 2,
       });
       context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
 
