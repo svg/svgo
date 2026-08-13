@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { execFile as execFileCallback } from 'node:child_process';
 import fs from 'node:fs/promises';
+import http from 'node:http';
 import https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
@@ -15,6 +16,9 @@ const repositoryRoot = path.resolve(
 );
 const execFile = promisify(execFileCallback);
 const releaseBaseUrl = `https://github.com/linebender/resvg/releases/download/v${RESVG_VERSION}`;
+const DOWNLOAD_MAX_REDIRECTS = 5;
+const DOWNLOAD_TIMEOUT_MS = 30_000;
+const DOWNLOAD_MAX_BYTES = 100 * 1024 * 1024;
 
 const releases = {
   'linux-x64': {
@@ -47,35 +51,79 @@ export const selectRelease = (platform, arch) => {
   return release;
 };
 
-const downloadArchive = (url) =>
+export const downloadArchive = (url, options = {}) =>
   new Promise((resolve, reject) => {
-    https
-      .get(url, (response) => {
-        const { statusCode = 0 } = response;
-        if (
-          statusCode >= 300 &&
-          statusCode < 400 &&
-          response.headers.location != null
-        ) {
-          response.resume();
-          downloadArchive(new URL(response.headers.location, url).href).then(
-            resolve,
-            reject,
+    const maxRedirects = options.maxRedirects ?? DOWNLOAD_MAX_REDIRECTS;
+    const timeoutMs = options.timeoutMs ?? DOWNLOAD_TIMEOUT_MS;
+    const maxBytes = options.maxBytes ?? DOWNLOAD_MAX_BYTES;
+    const redirects = options.redirects ?? 0;
+    const client = new URL(url).protocol === 'http:' ? http : https;
+    const request = client.get(url, (response) => {
+      const { statusCode = 0 } = response;
+      if (
+        statusCode >= 300 &&
+        statusCode < 400 &&
+        response.headers.location != null
+      ) {
+        response.resume();
+        if (redirects >= maxRedirects) {
+          reject(
+            new Error(
+              `Failed to download resvg: too many redirects (max ${maxRedirects})`,
+            ),
           );
-          return;
+        } else {
+          downloadArchive(new URL(response.headers.location, url).href, {
+            maxRedirects,
+            timeoutMs,
+            maxBytes,
+            redirects: redirects + 1,
+          }).then(resolve, reject);
         }
-        if (statusCode < 200 || statusCode >= 300) {
-          response.resume();
-          reject(new Error(`Failed to download resvg: HTTP ${statusCode}`));
-          return;
-        }
+        return;
+      }
+      if (statusCode < 200 || statusCode >= 300) {
+        response.resume();
+        reject(new Error(`Failed to download resvg: HTTP ${statusCode}`));
+        return;
+      }
 
-        const chunks = [];
-        response.on('data', (chunk) => chunks.push(chunk));
-        response.on('end', () => resolve(Buffer.concat(chunks)));
-        response.on('error', reject);
-      })
-      .on('error', reject);
+      const contentLength = Number(response.headers['content-length']);
+      if (Number.isFinite(contentLength) && contentLength > maxBytes) {
+        response.resume();
+        reject(
+          new Error(
+            `Failed to download resvg: archive exceeds ${maxBytes} bytes`,
+          ),
+        );
+        return;
+      }
+
+      const chunks = [];
+      let bytes = 0;
+      response.on('data', (chunk) => {
+        bytes += chunk.length;
+        if (bytes > maxBytes) {
+          response.destroy(
+            new Error(
+              `Failed to download resvg: archive exceeds ${maxBytes} bytes`,
+            ),
+          );
+        } else {
+          chunks.push(chunk);
+        }
+      });
+      response.on('end', () => resolve(Buffer.concat(chunks)));
+      response.on('error', reject);
+    });
+    request.setTimeout(timeoutMs, () => {
+      request.destroy(
+        new Error(
+          `Failed to download resvg: request timed out after ${timeoutMs}ms`,
+        ),
+      );
+    });
+    request.on('error', reject);
   });
 
 const extractArchive = async (archive, destination, format) => {
