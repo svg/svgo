@@ -4,13 +4,13 @@ import path from 'node:path';
 import { EventEmitter } from 'node:events';
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('playwright', () => ({ chromium: {} }));
-
 const { compareScreenshots, DEFAULT_RENDER_WORKERS, runTests, withCleanup } =
   await import('./compare.js');
 
-test('uses the original render concurrency for comparison', () => {
-  expect(DEFAULT_RENDER_WORKERS).toBe(os.cpus().length * 2);
+test('exports CPU-based render concurrency', () => {
+  expect(DEFAULT_RENDER_WORKERS).toBe(
+    Math.max(1, os.availableParallelism?.() ?? os.cpus().length),
+  );
 });
 
 describe('withCleanup', () => {
