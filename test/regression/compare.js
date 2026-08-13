@@ -3,40 +3,31 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Worker } from 'node:worker_threads';
-import { chromium } from 'playwright';
 import { expectMismatch, ignore, skip } from './file-lists.js';
 import { pathToPosix, printReport } from './lib.js';
+import { renderScreenshots } from './render.js';
 import {
   readReport,
   readVersion,
   REGRESSION_DIFFS_PATH,
   REGRESSION_FIXTURES_PATH,
-  REGRESSION_OPTIMIZED_PATH,
   REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
   REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
   REGRESSION_SCREENSHOTS_PATH,
   writeReport,
 } from './regression-io.js';
 
-const NAVIGATION_TIMEOUT_MS = 0;
-const WIDTH = 960;
-const HEIGHT = 720;
 const availableParallelism = os.availableParallelism?.() ?? os.cpus().length;
-export const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
 const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
 const workerUrl = new URL('./compare-worker.js', import.meta.url);
+
+export { DEFAULT_RENDER_CONCURRENCY, renderScreenshots } from './render.js';
 
 /**
  * @typedef {import('./compare-worker.js').CompareResult} CompareResult
  * @typedef {{ name: string, isMatch: boolean }} MatchResult
  * @typedef {{ new (filename: URL): { postMessage: (value: unknown) => void, on: (event: string, listener: (...args: any[]) => void) => unknown, terminate: () => Promise<number> | number } }} WorkerConstructor
  */
-
-/** @type {import('playwright').PageScreenshotOptions} */
-const screenshotOptions = {
-  omitBackground: true,
-  animations: 'disabled',
-};
 
 /**
  * @template T
@@ -65,79 +56,6 @@ export async function withCleanup(operation, cleanup) {
     throw cleanupError;
   }
   return /** @type {T} */ (result);
-}
-
-/**
- * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number }=} options
- */
-export async function renderScreenshots(list, options = {}) {
-  const queue = [...list];
-  const workerCount = Math.min(
-    options.workerCount ?? DEFAULT_RENDER_WORKERS,
-    queue.length,
-  );
-  await fs.rm(REGRESSION_SCREENSHOTS_PATH, { recursive: true, force: true });
-  await fs.mkdir(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, { recursive: true });
-  await fs.mkdir(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, { recursive: true });
-
-  const browser = await chromium.launch();
-  await withCleanup(
-    async () => {
-      const context = await browser.newContext({
-        javaScriptEnabled: false,
-        viewport: { width: WIDTH, height: HEIGHT },
-      });
-      context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
-
-      const worker = async () => {
-        const page = await context.newPage();
-        await withCleanup(
-          async () => {
-            let name;
-            while ((name = queue.pop())) {
-              const originalPath = path.join(
-                REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
-                `${name}.png`,
-              );
-              const optimizedPath = path.join(
-                REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
-                `${name}.png`,
-              );
-
-              await page.goto(
-                `file://${path.join(REGRESSION_FIXTURES_PATH, name)}`,
-              );
-              let element = await page.waitForSelector('svg');
-              await element.screenshot({
-                ...screenshotOptions,
-                path: originalPath,
-              });
-
-              await page.goto(
-                `file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`,
-              );
-              element = await page.waitForSelector('svg');
-              await element.screenshot({
-                ...screenshotOptions,
-                path: optimizedPath,
-              });
-            }
-          },
-          () => page.close(),
-        );
-      };
-
-      const outcomes = await Promise.allSettled(
-        Array.from({ length: workerCount }, worker),
-      );
-      const failed = outcomes.find((outcome) => outcome.status === 'rejected');
-      if (failed) {
-        throw failed.reason;
-      }
-    },
-    () => browser.close(),
-  );
 }
 
 /**
