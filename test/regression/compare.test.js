@@ -1,8 +1,8 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { EventEmitter } from 'node:events';
-import { jest } from '@jest/globals';
 
 const { compareScreenshots, DEFAULT_RENDER_WORKERS, runTests, withCleanup } =
   await import('./compare.js');
@@ -95,7 +95,7 @@ describe('compareScreenshots', () => {
   });
 
   test('terminates workers created before pool construction fails', async () => {
-    const terminate = jest.fn();
+    const terminate = vi.fn();
     let constructions = 0;
     class FailingWorker extends EventEmitter {
       /** @param {URL} _filename */
@@ -203,7 +203,7 @@ describe('runTests', () => {
   });
 
   test('preserves a comparison error when root cleanup also fails', async () => {
-    const cleanup = jest.fn(async () => {
+    const cleanup = vi.fn(async () => {
       throw new Error('cleanup failed');
     });
     await expect(

@@ -1,3 +1,4 @@
+import { afterEach, expect, test } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -12,7 +13,7 @@ import { DEFAULT_RENDER_WORKERS, renderScreenshots } from './render.js';
 
 const deferred = () => {
   /** @type {(value?: unknown) => void} */
-  let resolve;
+  let resolve = () => {};
   const promise = new Promise((resolvePromise) => {
     resolve = resolvePromise;
   });
@@ -27,11 +28,14 @@ afterEach(async () => {
 });
 
 test('renders original and optimized SVGs to PNG', async () => {
+  /** @type {Array<[string, string]>} */
   const calls = [];
   await renderScreenshots(['icons/one.svg'], {
     workerCount: 1,
     executable: process.execPath,
-    render: async (input, output) => calls.push([input, output]),
+    render: async (input, output) => {
+      calls.push([input, output]);
+    },
   });
 
   expect(calls).toEqual([

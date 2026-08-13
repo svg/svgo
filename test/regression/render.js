@@ -14,6 +14,17 @@ import {
 } from './regression-io.js';
 
 const execFile = promisify(execFileCallback);
+const ErrorWithCause =
+  /** @type {new (message?: string, options?: { cause?: unknown }) => Error} */ (
+    Error
+  );
+
+/**
+ * @typedef {object} RenderError
+ * @property {string | number} [code]
+ * @property {string | Buffer} [stderr]
+ * @property {string} [message]
+ */
 
 export const DEFAULT_RENDER_WORKERS = Math.max(
   1,
@@ -69,10 +80,14 @@ export async function renderScreenshots(list, options = {}) {
         try {
           await render(input, output);
         } catch (error) {
-          const code = error?.code == null ? '' : ` (exit code ${error.code})`;
+          const renderError = /** @type {RenderError} */ (error);
+          const code =
+            renderError.code == null ? '' : ` (exit code ${renderError.code})`;
           const detail =
-            error?.stderr?.toString().trim() || error?.message || error;
-          throw new Error(
+            renderError.stderr?.toString().trim() ||
+            renderError.message ||
+            renderError;
+          throw new ErrorWithCause(
             `Failed to render ${variant} ${name}${code}: ${detail}`,
             { cause: error },
           );

@@ -20,6 +20,14 @@ const DOWNLOAD_MAX_REDIRECTS = 5;
 const DOWNLOAD_TIMEOUT_MS = 30_000;
 const DOWNLOAD_MAX_BYTES = 100 * 1024 * 1024;
 
+/**
+ * @typedef {object} Release
+ * @property {string} asset
+ * @property {string} sha256
+ * @property {'tar.gz' | 'zip'} format
+ */
+
+/** @type {Record<string, Release>} */
 const releases = {
   'linux-x64': {
     asset: 'resvg-linux-x86_64.tar.gz',
@@ -38,9 +46,15 @@ const releases = {
   },
 };
 
+/** @param {string} [root] */
 export const getResvgPath = (root = repositoryRoot) =>
   path.join(root, '.tools', 'resvg', RESVG_VERSION, 'resvg');
 
+/**
+ * @param {string} platform
+ * @param {string} arch
+ * @returns {Release}
+ */
 export const selectRelease = (platform, arch) => {
   const release = releases[`${platform}-${arch}`];
   if (release == null) {
@@ -51,6 +65,19 @@ export const selectRelease = (platform, arch) => {
   return release;
 };
 
+/**
+ * @typedef {object} DownloadOptions
+ * @property {number} [maxRedirects]
+ * @property {number} [timeoutMs]
+ * @property {number} [maxBytes]
+ * @property {number} [redirects]
+ */
+
+/**
+ * @param {string} url
+ * @param {DownloadOptions} [options]
+ * @returns {Promise<Buffer>}
+ */
 export const downloadArchive = (url, options = {}) =>
   new Promise((resolve, reject) => {
     const maxRedirects = options.maxRedirects ?? DOWNLOAD_MAX_REDIRECTS;
@@ -99,6 +126,7 @@ export const downloadArchive = (url, options = {}) =>
         return;
       }
 
+      /** @type {Buffer[]} */
       const chunks = [];
       let bytes = 0;
       response.on('data', (chunk) => {
@@ -126,6 +154,11 @@ export const downloadArchive = (url, options = {}) =>
     request.on('error', reject);
   });
 
+/**
+ * @param {Buffer} archive
+ * @param {string} destination
+ * @param {Release['format']} format
+ */
 const extractArchive = async (archive, destination, format) => {
   const temporaryDirectory = await fs.mkdtemp(
     path.join(os.tmpdir(), 'resvg-archive-'),
@@ -145,6 +178,7 @@ const extractArchive = async (archive, destination, format) => {
   }
 };
 
+/** @param {string} filePath */
 const isExecutableFile = async (filePath) => {
   try {
     const stats = await fs.stat(filePath);
@@ -154,6 +188,19 @@ const isExecutableFile = async (filePath) => {
   }
 };
 
+/**
+ * @typedef {object} InstallOptions
+ * @property {string} [root]
+ * @property {Release} [release]
+ * @property {(url: string) => Promise<Buffer>} [download]
+ * @property {(archive: Buffer, destination: string, format: Release['format']) => Promise<void>} [extract]
+ * @property {(path: string, mode: number) => Promise<void>} [chmod]
+ */
+
+/**
+ * @param {InstallOptions} [options]
+ * @returns {Promise<string>}
+ */
 export const installResvg = async (options = {}) => {
   const root = options.root ?? repositoryRoot;
   const resvgPath = getResvgPath(root);
@@ -180,6 +227,7 @@ export const installResvg = async (options = {}) => {
     await extract(archive, destination, release.format);
 
     const stats = await fs.stat(resvgPath).catch((error) => {
+      /** @type {NodeJS.ErrnoException} */ (error);
       if (error.code === 'ENOENT') {
         return null;
       }

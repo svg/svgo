@@ -1,9 +1,9 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
 import {
   downloadArchive,
   getResvgPath,
@@ -11,19 +11,35 @@ import {
   selectRelease,
 } from './install-resvg.js';
 
+/**
+ * @typedef {import('node:http').RequestListener} RequestListener
+ * @typedef {import('node:http').Server} Server
+ * @typedef {import('./install-resvg.js').InstallOptions} InstallOptions
+ * @typedef {import('./install-resvg.js').Release} Release
+ */
+
+/** @param {RequestListener} handler */
 const listen = async (handler) => {
   const server = http.createServer(handler);
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address();
+  await new Promise((resolve) =>
+    server.listen(0, '127.0.0.1', () => resolve(undefined)),
+  );
+  const address = server.address();
+  if (address == null || typeof address === 'string') {
+    throw new Error('Expected server to listen on a TCP port');
+  }
   return {
     server,
-    url: `http://127.0.0.1:${port}`,
+    url: `http://127.0.0.1:${address.port}`,
   };
 };
 
+/** @param {Server} server */
 const close = (server) =>
   new Promise((resolve, reject) =>
-    server.close((error) => (error == null ? resolve() : reject(error))),
+    server.close((error) =>
+      error == null ? resolve(undefined) : reject(error),
+    ),
   );
 
 test.each([
@@ -56,6 +72,7 @@ test('rejects unsupported targets', () => {
 });
 
 describe('downloadArchive', () => {
+  /** @type {Server | undefined} */
   let server;
 
   afterEach(async () => {
@@ -137,6 +154,7 @@ describe('downloadArchive', () => {
 });
 
 describe('installResvg', () => {
+  /** @type {string} */
   let root;
 
   beforeEach(async () => {
@@ -149,17 +167,18 @@ describe('installResvg', () => {
 
   test('downloads, verifies, extracts, and enables resvg', async () => {
     const archive = Buffer.from('verified archive');
+    /** @type {Release} */
     const release = {
       asset: 'resvg-test.tar.gz',
       format: 'tar.gz',
       sha256: createHash('sha256').update(archive).digest('hex'),
     };
-    const download = jest.fn(async () => archive);
-    const extract = jest.fn(async (_buffer, destination) => {
+    const download = vi.fn(async () => archive);
+    const extract = vi.fn(async (_buffer, destination) => {
       await fs.mkdir(destination, { recursive: true });
       await fs.writeFile(path.join(destination, 'resvg'), 'binary');
     });
-    const chmod = jest.fn(async () => {});
+    const chmod = vi.fn(async () => {});
 
     await expect(
       installResvg({ root, release, download, extract, chmod }),
@@ -175,14 +194,15 @@ describe('installResvg', () => {
     await fs.mkdir(path.dirname(resvgPath), { recursive: true });
     await fs.writeFile(resvgPath, 'binary');
     await fs.chmod(resvgPath, 0o755);
-    const download = jest.fn();
+    const download = vi.fn();
 
     await expect(installResvg({ root, download })).resolves.toBe(resvgPath);
     expect(download).not.toHaveBeenCalled();
   });
 
   test('rejects a checksum mismatch before extraction', async () => {
-    const extract = jest.fn();
+    const extract = vi.fn();
+    /** @type {Release} */
     const release = {
       asset: 'resvg-test.tar.gz',
       format: 'tar.gz',
@@ -235,12 +255,14 @@ describe('installResvg', () => {
 
   test('retries after extraction leaves a partial resvg', async () => {
     const archive = Buffer.from('verified archive');
+    /** @type {Release} */
     const release = {
       asset: 'resvg-test.tar.gz',
       format: 'tar.gz',
       sha256: createHash('sha256').update(archive).digest('hex'),
     };
     let attempt = 0;
+    /** @type {NonNullable<InstallOptions['extract']>} */
     const extract = async (_buffer, destination) => {
       await fs.mkdir(destination, { recursive: true });
       const resvgPath = path.join(destination, 'resvg');
@@ -250,6 +272,7 @@ describe('installResvg', () => {
       }
       await fs.writeFile(resvgPath, 'complete');
     };
+    /** @type {InstallOptions} */
     const options = {
       root,
       release,
@@ -266,22 +289,26 @@ describe('installResvg', () => {
 
   test('retries after chmod fails', async () => {
     const archive = Buffer.from('verified archive');
+    /** @type {Release} */
     const release = {
       asset: 'resvg-test.tar.gz',
       format: 'tar.gz',
       sha256: createHash('sha256').update(archive).digest('hex'),
     };
+    /** @type {NonNullable<InstallOptions['extract']>} */
     const extract = async (_buffer, destination) => {
       await fs.mkdir(destination, { recursive: true });
       await fs.writeFile(path.join(destination, 'resvg'), 'binary');
     };
     let attempt = 0;
+    /** @type {NonNullable<InstallOptions['chmod']>} */
     const chmod = async (resvgPath, mode) => {
       if (attempt++ === 0) {
         throw new Error('chmod failed');
       }
       await fs.chmod(resvgPath, mode);
     };
+    /** @type {InstallOptions} */
     const options = {
       root,
       release,
