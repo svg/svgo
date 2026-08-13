@@ -17,6 +17,7 @@ dist
 types
 
 node_modules
+.tools/
 .yarn/
 test/cli/output
 coverage

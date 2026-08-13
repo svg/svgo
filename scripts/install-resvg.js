@@ -1,0 +1,141 @@
+import { createHash } from 'node:crypto';
+import { execFile as execFileCallback } from 'node:child_process';
+import fs from 'node:fs/promises';
+import https from 'node:https';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
+
+export const RESVG_VERSION = '0.48.1';
+
+const repositoryRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+);
+const execFile = promisify(execFileCallback);
+const releaseBaseUrl = `https://github.com/linebender/resvg/releases/download/v${RESVG_VERSION}`;
+
+const releases = {
+  'linux-x64': {
+    asset: 'resvg-linux-x86_64.tar.gz',
+    sha256: 'fa8c26495a187e592c501db15bf9e8a9fdc051d4b2b336b39703d5b59f912b9d',
+    format: 'tar.gz',
+  },
+  'darwin-x64': {
+    asset: 'resvg-macos-x86_64.zip',
+    sha256: '0135923e443863db251a26bd78eabc6efb4b59d67b8cdc5469e3e1da26bc0ce2',
+    format: 'zip',
+  },
+  'darwin-arm64': {
+    asset: 'resvg-macos-aarch64.zip',
+    sha256: '06440eb5aa14a28cbfc7e40ae39e1ffa71adc051b89fbaa913b4f1d9b905d09f',
+    format: 'zip',
+  },
+};
+
+export const getResvgPath = (root = repositoryRoot) =>
+  path.join(root, '.tools', 'resvg', RESVG_VERSION, 'resvg');
+
+export const selectRelease = (platform, arch) => {
+  const release = releases[`${platform}-${arch}`];
+  if (release == null) {
+    throw new Error(
+      `resvg does not publish a CLI binary for ${platform} ${arch}`,
+    );
+  }
+  return release;
+};
+
+const downloadArchive = (url) =>
+  new Promise((resolve, reject) => {
+    https
+      .get(url, (response) => {
+        const { statusCode = 0 } = response;
+        if (
+          statusCode >= 300 &&
+          statusCode < 400 &&
+          response.headers.location != null
+        ) {
+          response.resume();
+          downloadArchive(new URL(response.headers.location, url).href).then(
+            resolve,
+            reject,
+          );
+          return;
+        }
+        if (statusCode < 200 || statusCode >= 300) {
+          response.resume();
+          reject(new Error(`Failed to download resvg: HTTP ${statusCode}`));
+          return;
+        }
+
+        const chunks = [];
+        response.on('data', (chunk) => chunks.push(chunk));
+        response.on('end', () => resolve(Buffer.concat(chunks)));
+        response.on('error', reject);
+      })
+      .on('error', reject);
+  });
+
+const extractArchive = async (archive, destination, format) => {
+  const temporaryDirectory = await fs.mkdtemp(
+    path.join(os.tmpdir(), 'resvg-archive-'),
+  );
+  const archivePath = path.join(temporaryDirectory, `resvg.${format}`);
+
+  try {
+    await fs.mkdir(destination, { recursive: true });
+    await fs.writeFile(archivePath, archive);
+    if (format === 'tar.gz') {
+      await execFile('tar', ['-xzf', archivePath, '-C', destination]);
+    } else {
+      await execFile('unzip', ['-jo', archivePath, '-d', destination]);
+    }
+  } finally {
+    await fs.rm(temporaryDirectory, { recursive: true, force: true });
+  }
+};
+
+export const installResvg = async (options = {}) => {
+  const root = options.root ?? repositoryRoot;
+  const resvgPath = getResvgPath(root);
+
+  try {
+    await fs.access(resvgPath);
+    return resvgPath;
+  } catch {
+    // Continue with installation when the versioned executable is absent.
+  }
+
+  const release =
+    options.release ?? selectRelease(process.platform, process.arch);
+  const download = options.download ?? downloadArchive;
+  const extract = options.extract ?? extractArchive;
+  const chmod = options.chmod ?? fs.chmod;
+  const archive = await download(`${releaseBaseUrl}/${release.asset}`);
+  const checksum = createHash('sha256').update(archive).digest('hex');
+
+  if (checksum !== release.sha256) {
+    throw new Error(`Checksum mismatch for ${release.asset}`);
+  }
+
+  const destination = path.dirname(resvgPath);
+  await extract(archive, destination, release.format);
+
+  try {
+    await fs.access(resvgPath);
+  } catch {
+    throw new Error(`resvg was not found after extracting ${release.asset}`);
+  }
+
+  await chmod(resvgPath, 0o755);
+  return resvgPath;
+};
+
+if (
+  process.argv[1] != null &&
+  fileURLToPath(import.meta.url) === path.resolve(process.argv[1])
+) {
+  console.log(await installResvg());
+}
