@@ -1,9 +1,30 @@
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { jest } from '@jest/globals';
-import { getResvgPath, installResvg, selectRelease } from './install-resvg.js';
+import {
+  downloadArchive,
+  getResvgPath,
+  installResvg,
+  selectRelease,
+} from './install-resvg.js';
+
+const listen = async (handler) => {
+  const server = http.createServer(handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const { port } = server.address();
+  return {
+    server,
+    url: `http://127.0.0.1:${port}`,
+  };
+};
+
+const close = (server) =>
+  new Promise((resolve, reject) =>
+    server.close((error) => (error == null ? resolve() : reject(error))),
+  );
 
 test.each([
   [
@@ -32,6 +53,87 @@ test('rejects unsupported targets', () => {
   expect(() => selectRelease('win32', 'x64')).toThrow(
     'resvg does not publish a CLI binary for win32 x64',
   );
+});
+
+describe('downloadArchive', () => {
+  let server;
+
+  afterEach(async () => {
+    if (server != null) {
+      await close(server);
+      server = undefined;
+    }
+  });
+
+  test('downloads through a relative redirect', async () => {
+    const listening = await listen((request, response) => {
+      if (request.url === '/archive') {
+        response.end('archive');
+      } else {
+        response.writeHead(302, { location: '/archive' }).end();
+      }
+    });
+    server = listening.server;
+
+    await expect(downloadArchive(`${listening.url}/release`)).resolves.toEqual(
+      Buffer.from('archive'),
+    );
+  });
+
+  test('rejects non-successful responses', async () => {
+    const listening = await listen((_request, response) => {
+      response.writeHead(503).end('unavailable');
+    });
+    server = listening.server;
+
+    await expect(downloadArchive(listening.url)).rejects.toThrow(
+      'Failed to download resvg: HTTP 503',
+    );
+  });
+
+  test('limits redirects', async () => {
+    const listening = await listen((_request, response) => {
+      response.writeHead(302, { location: '/again' }).end();
+    });
+    server = listening.server;
+
+    await expect(
+      downloadArchive(listening.url, { maxRedirects: 2 }),
+    ).rejects.toThrow('Failed to download resvg: too many redirects (max 2)');
+  });
+
+  test('times out stalled requests', async () => {
+    const listening = await listen(() => {});
+    server = listening.server;
+
+    await expect(
+      downloadArchive(listening.url, { timeoutMs: 20 }),
+    ).rejects.toThrow('Failed to download resvg: request timed out after 20ms');
+  });
+
+  test('rejects an oversized content-length', async () => {
+    const listening = await listen((_request, response) => {
+      response.writeHead(200, { 'content-length': '8' }).end('archive!');
+    });
+    server = listening.server;
+
+    await expect(
+      downloadArchive(listening.url, { maxBytes: 7 }),
+    ).rejects.toThrow('Failed to download resvg: archive exceeds 7 bytes');
+  });
+
+  test('rejects an oversized streamed response', async () => {
+    const listening = await listen((_request, response) => {
+      response.writeHead(200);
+      response.write('archive');
+      response.end('!');
+    });
+    server = listening.server;
+
+    await expect(
+      downloadArchive(listening.url, { maxBytes: 7 }),
+    ).rejects.toThrow('Failed to download resvg: archive exceeds 7 bytes');
+  });
 });
 
 describe('installResvg', () => {
