@@ -78,6 +78,7 @@
     "build": "node scripts/sync-version.js && pnpm build:bundles && pnpm build:types",
     "build:bundles": "pnpm clean:build && rollup -c",
     "build:types": "pnpm clean:types && tsc && tsc -p tsconfig.build.json",
+    "install:resvg": "node scripts/install-resvg.js",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
