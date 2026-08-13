@@ -26,7 +26,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm playwright install --with-deps --only-shell chromium
+      - run: pnpm install:resvg
       - run: pnpm test:regression
       # We use upload/artifacts instead of outputs because our regression test
       # report can exceed 1 MB which is a limit GitHub imposes.

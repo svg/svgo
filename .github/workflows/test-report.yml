@@ -20,7 +20,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm playwright install --with-deps --only-shell chromium
+      - run: pnpm install:resvg
       - run: pnpm test:regression
       - uses: actions/upload-artifact@v7
         with:
