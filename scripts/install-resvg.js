@@ -97,16 +97,24 @@ const extractArchive = async (archive, destination, format) => {
   }
 };
 
+const isExecutableFile = async (filePath) => {
+  try {
+    const stats = await fs.stat(filePath);
+    return stats.isFile() && (stats.mode & 0o111) !== 0;
+  } catch {
+    return false;
+  }
+};
+
 export const installResvg = async (options = {}) => {
   const root = options.root ?? repositoryRoot;
   const resvgPath = getResvgPath(root);
+  const destination = path.dirname(resvgPath);
 
-  try {
-    await fs.access(resvgPath);
+  if (await isExecutableFile(resvgPath)) {
     return resvgPath;
-  } catch {
-    // Continue with installation when the versioned executable is absent.
   }
+  await fs.rm(destination, { recursive: true, force: true });
 
   const release =
     options.release ?? selectRelease(process.platform, process.arch);
@@ -120,16 +128,25 @@ export const installResvg = async (options = {}) => {
     throw new Error(`Checksum mismatch for ${release.asset}`);
   }
 
-  const destination = path.dirname(resvgPath);
-  await extract(archive, destination, release.format);
-
   try {
-    await fs.access(resvgPath);
-  } catch {
-    throw new Error(`resvg was not found after extracting ${release.asset}`);
+    await extract(archive, destination, release.format);
+
+    const stats = await fs.stat(resvgPath).catch((error) => {
+      if (error.code === 'ENOENT') {
+        return null;
+      }
+      throw error;
+    });
+    if (stats == null || !stats.isFile()) {
+      throw new Error(`resvg was not found after extracting ${release.asset}`);
+    }
+
+    await chmod(resvgPath, 0o755);
+  } catch (error) {
+    await fs.rm(destination, { recursive: true, force: true });
+    throw error;
   }
 
-  await chmod(resvgPath, 0o755);
   return resvgPath;
 };
 

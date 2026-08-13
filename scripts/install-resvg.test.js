@@ -72,6 +72,7 @@ describe('installResvg', () => {
     const resvgPath = getResvgPath(root);
     await fs.mkdir(path.dirname(resvgPath), { recursive: true });
     await fs.writeFile(resvgPath, 'binary');
+    await fs.chmod(resvgPath, 0o755);
     const download = jest.fn();
 
     await expect(installResvg({ root, download })).resolves.toBe(resvgPath);
@@ -128,6 +129,69 @@ describe('installResvg', () => {
         },
       }),
     ).rejects.toBe(extractionError);
+  });
+
+  test('retries after extraction leaves a partial resvg', async () => {
+    const archive = Buffer.from('verified archive');
+    const release = {
+      asset: 'resvg-test.tar.gz',
+      format: 'tar.gz',
+      sha256: createHash('sha256').update(archive).digest('hex'),
+    };
+    let attempt = 0;
+    const extract = async (_buffer, destination) => {
+      await fs.mkdir(destination, { recursive: true });
+      const resvgPath = path.join(destination, 'resvg');
+      if (attempt++ === 0) {
+        await fs.writeFile(resvgPath, 'partial');
+        throw new Error('extraction failed');
+      }
+      await fs.writeFile(resvgPath, 'complete');
+    };
+    const options = {
+      root,
+      release,
+      download: async () => archive,
+      extract,
+    };
+
+    await expect(installResvg(options)).rejects.toThrow('extraction failed');
+    await expect(installResvg(options)).resolves.toBe(getResvgPath(root));
+    await expect(fs.readFile(getResvgPath(root), 'utf8')).resolves.toBe(
+      'complete',
+    );
+  });
+
+  test('retries after chmod fails', async () => {
+    const archive = Buffer.from('verified archive');
+    const release = {
+      asset: 'resvg-test.tar.gz',
+      format: 'tar.gz',
+      sha256: createHash('sha256').update(archive).digest('hex'),
+    };
+    const extract = async (_buffer, destination) => {
+      await fs.mkdir(destination, { recursive: true });
+      await fs.writeFile(path.join(destination, 'resvg'), 'binary');
+    };
+    let attempt = 0;
+    const chmod = async (resvgPath, mode) => {
+      if (attempt++ === 0) {
+        throw new Error('chmod failed');
+      }
+      await fs.chmod(resvgPath, mode);
+    };
+    const options = {
+      root,
+      release,
+      download: async () => archive,
+      extract,
+      chmod,
+    };
+
+    await expect(installResvg(options)).rejects.toThrow('chmod failed');
+    await expect(installResvg(options)).resolves.toBe(getResvgPath(root));
+    const stats = await fs.stat(getResvgPath(root));
+    expect(stats.mode & 0o111).toBe(0o111);
   });
 
   test('rejects extraction that does not create resvg', async () => {
