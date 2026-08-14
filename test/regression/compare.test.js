@@ -2,12 +2,31 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { EventEmitter } from 'node:events';
-import { jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-jest.unstable_mockModule('playwright', () => ({ chromium: {} }));
+vi.mock('playwright', () => ({ chromium: {} }));
 
-const { compareScreenshots, DEFAULT_RENDER_WORKERS, runTests, withCleanup } =
-  await import('./compare.js');
+const {
+  compareScreenshots,
+  DEFAULT_RENDER_WORKERS,
+  parseArguments,
+  runTests,
+  withCleanup,
+} = await import('./compare.js');
+
+describe('parseArguments', () => {
+  test('defaults to generating diff images', () => {
+    expect(parseArguments([])).toEqual({ noDiff: false });
+  });
+
+  test('disables diff images with --no-diff', () => {
+    expect(parseArguments(['--no-diff'])).toEqual({ noDiff: true });
+  });
+
+  test('rejects unknown arguments', () => {
+    expect(() => parseArguments(['--unknown'])).toThrow();
+  });
+});
 
 test('uses the original render concurrency for comparison', () => {
   expect(DEFAULT_RENDER_WORKERS).toBe(os.cpus().length * 2);
@@ -29,6 +48,47 @@ describe('withCleanup', () => {
 });
 
 describe('compareScreenshots', () => {
+  test('passes the selected diff path to comparison workers', async () => {
+    /** @type {Array<{ diffPath: string | null }>} */
+    const messages = [];
+    class CapturingWorker extends EventEmitter {
+      /** @param {URL} _filename */
+      constructor(_filename) {
+        super();
+        void _filename;
+      }
+
+      /** @param {unknown} value */
+      postMessage(value) {
+        messages.push(/** @type {{ diffPath: string | null }} */ (value));
+        queueMicrotask(() =>
+          this.emit('message', {
+            name: 'fixture.svg',
+            matched: 0,
+            width: 1,
+          }),
+        );
+      }
+
+      terminate() {
+        return 0;
+      }
+    }
+
+    await compareScreenshots(['fixture.svg'], {
+      workerCount: 1,
+      Worker: CapturingWorker,
+      noDiff: true,
+    });
+    expect(messages[0].diffPath).toBeNull();
+
+    await compareScreenshots(['fixture.svg'], {
+      workerCount: 1,
+      Worker: CapturingWorker,
+    });
+    expect(messages[1].diffPath).toMatch(/fixture\.svg\.diff\.png$/);
+  });
+
   test('applies the existing width-dependent mismatch allowance', async () => {
     const results = [
       { name: 'small.svg', matched: 3, width: 16 },
@@ -95,7 +155,7 @@ describe('compareScreenshots', () => {
   });
 
   test('terminates workers created before pool construction fails', async () => {
-    const terminate = jest.fn();
+    const terminate = vi.fn();
     let constructions = 0;
     class FailingWorker extends EventEmitter {
       /** @param {URL} _filename */
@@ -203,7 +263,7 @@ describe('runTests', () => {
   });
 
   test('preserves a comparison error when root cleanup also fails', async () => {
-    const cleanup = jest.fn(async () => {
+    const cleanup = vi.fn(async () => {
       throw new Error('cleanup failed');
     });
     await expect(
