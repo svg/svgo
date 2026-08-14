@@ -27,6 +27,7 @@ export const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
 const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
 const workerUrl = new URL('./compare-worker.js', import.meta.url);
 
+/** @param {string[]} args */
 export function parseArguments(args) {
   const { values } = parseArgs({
     args,

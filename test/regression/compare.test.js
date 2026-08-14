@@ -58,9 +58,9 @@ describe('compareScreenshots', () => {
         void _filename;
       }
 
-      /** @param {{ diffPath: string | null }} value */
+      /** @param {unknown} value */
       postMessage(value) {
-        messages.push(value);
+        messages.push(/** @type {{ diffPath: string | null }} */ (value));
         queueMicrotask(() =>
           this.emit('message', {
             name: 'fixture.svg',
