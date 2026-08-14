@@ -125,6 +125,7 @@ const generatePrefix = (body, node, info, prefixGenerator, delim, history) => {
  *
  * @author strarsis <strarsis@gmail.com>
  * @type {import('../lib/types.js').Plugin<PrefixIdsParams>}
+ * @since 1.0.0
  */
 export const fn = (_root, params, info) => {
   const {

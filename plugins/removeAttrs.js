@@ -87,6 +87,7 @@ plugins: [
  * @author Benny Schudel
  *
  * @type {import('../lib/types.js').Plugin<RemoveAttrsParams>}
+ * @since 0.5.3
  */
 export const fn = (root, params) => {
   if (typeof params.attrs == 'undefined') {

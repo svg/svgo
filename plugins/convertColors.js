@@ -76,6 +76,7 @@ const convertRgbToHex = ([r, g, b]) => {
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<ConvertColorsParams>}
+ * @since 0.0.1
  */
 export const fn = (_root, params) => {
   const {

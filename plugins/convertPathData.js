@@ -67,6 +67,7 @@ let arcTolerance;
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<ConvertPathDataParams>}
+ * @since 0.0.7
  */
 export const fn = (root, params) => {
   const {

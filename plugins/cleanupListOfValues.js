@@ -39,6 +39,7 @@ const absoluteLengths = {
  * @author kiyopikko
  *
  * @type {import('../lib/types.js').Plugin<CleanupListOfValuesParams>}
+ * @since 0.5.1
  */
 export const fn = (_root, params) => {
   const {

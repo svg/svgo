@@ -20,6 +20,7 @@ export const description = 'removes useless stroke and fill attributes';
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<RemoveUselessStrokeAndFillParams>}
+ * @since 0.1.8
  */
 export const fn = (root, params) => {
   const {

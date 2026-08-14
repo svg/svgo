@@ -54,6 +54,7 @@ plugins: [
  * @author April Arcus
  *
  * @type {import('../lib/types.js').Plugin<AddClassesToSVGElementParams>}
+ * @since 0.5.2
  */
 export const fn = (root, params, info) => {
   if (

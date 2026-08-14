@@ -15,6 +15,7 @@ export const description =
  *
  * @author Seth Falco <seth@falco.fun>
  * @type {import('../lib/types.js').Plugin}
+ * @since 3.0.3
  * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/linearGradient
  * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/radialGradient
  */

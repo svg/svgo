@@ -18,6 +18,7 @@ const regSpaces = /\s{2,}/g;
  *
  * @author Kir Belevich
  * @type {import('../lib/types.js').Plugin<CleanupAttrsParams>}
+ * @since 0.0.1
  */
 export const fn = (root, params) => {
   const { newlines = true, trim = true, spaces = true } = params;

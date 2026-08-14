@@ -33,6 +33,7 @@ function elementHasUrl(computedStyle, attName) {
  * @author Kir Belevich, Lev Solntsev
  *
  * @type {import('../lib/types.js').Plugin<MergePathsParams>}
+ * @since 0.3.0
  */
 export const fn = (root, params) => {
   const {

@@ -52,6 +52,7 @@ plugins: [
  * @author April Arcus
  *
  * @type {import('../lib/types.js').Plugin<AddAttributesToSVGElementParams>}
+ * @since 0.7.0
  */
 export const fn = (root, params) => {
   if (!Array.isArray(params.attributes) && !params.attribute) {

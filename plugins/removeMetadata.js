@@ -11,6 +11,7 @@ export const description = 'removes <metadata>';
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.0.1
  */
 export const fn = () => {
   return {

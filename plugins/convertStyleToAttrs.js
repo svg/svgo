@@ -77,6 +77,7 @@ const regStripComments = new RegExp(
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<ConvertStyleToAttrsParams>}
+ * @since 0.0.1
  */
 export const fn = (_root, params) => {
   const { keepImportant = false } = params;

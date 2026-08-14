@@ -55,6 +55,7 @@ export const description =
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<ConvertTransformParams>}
+ * @since 0.0.8
  */
 export const fn = (_root, params) => {
   const {

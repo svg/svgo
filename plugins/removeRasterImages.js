@@ -11,6 +11,7 @@ export const description = 'removes raster images';
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.2.3
  */
 export const fn = () => {
   return {

@@ -99,6 +99,7 @@ for (const [name, config] of Object.entries(elems)) {
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<RemoveUnknownsAndDefaultsParams>}
+ * @since 0.1.0
  */
 export const fn = (root, params) => {
   const {
