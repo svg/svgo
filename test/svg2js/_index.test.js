@@ -99,4 +99,35 @@ describe('svg2js', () => {
       });
     });
   });
+
+  describe('character references', () => {
+    it.each(['&#x1;', '&#xB;', '&#x1F;', '&#xD800;', '&#xFFFF;'])(
+      'should reject invalid character reference %s in text',
+      (reference) => {
+        expect(() => parseSvg(`<svg>${reference}</svg>`)).toThrow(
+          'Invalid character entity',
+        );
+      },
+    );
+
+    it('should reject invalid character references in attributes', () => {
+      expect(() => parseSvg('<svg data-value="&#xD800;"/>')).toThrow(
+        'Invalid character entity',
+      );
+    });
+
+    it('should parse valid boundary character references', () => {
+      const root = parseSvg(
+        '<svg data-value="&#x20;&#xD7FF;&#xE000;&#xFFFD;&#x10000;&#x10FFFF;"/>',
+      );
+      const svg = root.children[0];
+
+      expect(svg).toMatchObject({
+        type: 'element',
+        attributes: {
+          'data-value': ' \uD7FF\uE000\uFFFD\u{10000}\u{10FFFF}',
+        },
+      });
+    });
+  });
 });
