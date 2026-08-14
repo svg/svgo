@@ -51,6 +51,7 @@ function isNamespaceAwareElem(elem, targetElem, prefixes, targetNamespaces) {
  *
  * @author Patrick Klingemann
  * @type {import('../lib/types.js').Plugin}
+ * @since 1.0.0
  */
 export const fn = () => {
   /**

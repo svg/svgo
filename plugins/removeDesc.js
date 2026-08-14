@@ -20,6 +20,7 @@ const standardDescs = /^(Created with|Created using)/;
  * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc
  *
  * @type {import('../lib/types.js').Plugin<RemoveDescParams>}
+ * @since 0.5.0
  */
 export const fn = (root, params) => {
   const { removeAny = false } = params;

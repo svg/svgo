@@ -9,6 +9,7 @@ export const description = 'converts non-eccentric <ellipse>s to <circle>s';
  * @author Taylor Hunt
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 1.3.0
  */
 export const fn = () => {
   return {

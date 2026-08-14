@@ -24,6 +24,7 @@ const DEFAULT_PRESERVE_PATTERNS = [/^!/];
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<RemoveCommentsParams>}
+ * @since 0.0.1
  */
 export const fn = (_root, params) => {
   const { preservePatterns = DEFAULT_PRESERVE_PATTERNS } = params;

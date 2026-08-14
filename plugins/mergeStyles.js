@@ -10,6 +10,7 @@ export const description = 'merge multiple style elements into one';
  * @author strarsis <strarsis@gmail.com>
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 2.3.0
  */
 export const fn = () => {
   /** @type {?import('../lib/types.js').XastElement} */

@@ -8,6 +8,7 @@ export const description = 'removes unused namespaces declaration';
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.0.8
  */
 export const fn = () => {
   /** @type {Set<string>} */

@@ -31,6 +31,7 @@ export const description = 'minifies styles and removes unused styles';
  *
  * @author strarsis <strarsis@gmail.com>
  * @type {import('../lib/types.js').Plugin<MinifyStylesParams>}
+ * @since 0.6.0
  */
 export const fn = (_root, { usage, ...params }) => {
   /** @type {Map<import('../lib/types.js').XastElement, import('../lib/types.js').XastParent>} */

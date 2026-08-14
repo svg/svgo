@@ -9,6 +9,7 @@ export const description = 'Sorts children of <defs> to improve compression';
  * @author David Leston
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 1.3.0
  */
 export const fn = () => {
   return {

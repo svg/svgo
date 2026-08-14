@@ -26,6 +26,7 @@ export const description =
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.0.1
  */
 export const fn = (root) => {
   // find if any style element is present

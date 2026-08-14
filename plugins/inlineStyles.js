@@ -41,6 +41,7 @@ const preservedPseudos = [
  *
  * @type {import('../lib/types.js').Plugin<InlineStylesParams>}
  * @author strarsis <strarsis@gmail.com>
+ * @since 1.0.0
  */
 export const fn = (root, params) => {
   const {

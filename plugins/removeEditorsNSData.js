@@ -21,6 +21,7 @@ export const description =
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<RemoveEditorsNSDataParams>}
+ * @since 0.0.1
  */
 export const fn = (_root, params) => {
   let namespaces = [...editorNamespaces];

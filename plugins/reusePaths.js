@@ -14,6 +14,7 @@ export const description =
  * @author Jacob Howcroft
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 1.2.0
  */
 export const fn = (root) => {
   const stylesheet = collectStylesheet(root);

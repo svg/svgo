@@ -94,6 +94,7 @@ Without either, the plugin is a noop.`;
  * @author Bradley Mease
  *
  * @type {import('../lib/types.js').Plugin<RemoveAttributesBySelectorParams>}
+ * @since 1.2.0
  */
 export const fn = (root, params) => {
   if (

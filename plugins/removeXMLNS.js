@@ -12,6 +12,7 @@ export const description = 'removes xmlns attribute (for inline svg)';
  * @author Ricardo Tomasi
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.7.0
  */
 export const fn = () => {
   return {

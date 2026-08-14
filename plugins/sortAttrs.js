@@ -13,6 +13,7 @@ export const description = 'Sort element attributes for better compression';
  * @author Nikolay Frantsev
  *
  * @type {import('../lib/types.js').Plugin<SortAttrsParams>}
+ * @since 0.3.2
  */
 export const fn = (_root, params) => {
   const {

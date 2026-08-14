@@ -16,6 +16,7 @@ const viewBoxElems = new Set(['pattern', 'svg', 'symbol']);
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.0.4
  */
 export const fn = () => {
   return {

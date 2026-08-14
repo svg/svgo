@@ -46,6 +46,7 @@ export const description =
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<RemoveHiddenElemsParams>}
+ * @since 0.0.1
  */
 export const fn = (root, params) => {
   const {

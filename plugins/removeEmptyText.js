@@ -28,6 +28,7 @@ export const description = 'removes empty <text> elements';
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<RemoveEmptyTextParams>}
+ * @since 0.0.1
  */
 export const fn = (root, params) => {
   const { text = true, tspan = true, tref = true } = params;
