@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
 import { PNG } from 'pngjs';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { compareImages } from './compare-worker.js';
 
 /**
@@ -137,7 +137,7 @@ describe('compareImages', () => {
     await fs.writeFile(originalPath, 'not a png');
     await fs.writeFile(optimizedPath, 'not a png');
 
-    const remove = jest.fn(async () => {
+    const remove = vi.fn(async () => {
       throw new Error('cleanup failed');
     });
     await expect(
@@ -159,7 +159,7 @@ describe('compareImages', () => {
     await createPng(originalPath, [black]);
     await createPng(optimizedPath, [black]);
     let secondSettled = false;
-    const remove = jest.fn(async (file) => {
+    const remove = vi.fn(async (file) => {
       if (file === originalPath) {
         throw new Error('cleanup failed');
       }

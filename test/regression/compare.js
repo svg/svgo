@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { parseArgs } from 'node:util';
 import { Worker } from 'node:worker_threads';
 import { chromium } from 'playwright';
 import { expectMismatch, ignore, skip } from './file-lists.js';
@@ -25,6 +26,17 @@ const availableParallelism = os.availableParallelism?.() ?? os.cpus().length;
 export const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
 const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
 const workerUrl = new URL('./compare-worker.js', import.meta.url);
+
+export function parseArguments(args) {
+  const { values } = parseArgs({
+    args,
+    options: {
+      'no-diff': { type: 'boolean' },
+    },
+    strict: true,
+  });
+  return { noDiff: values['no-diff'] ?? false };
+}
 
 /**
  * @typedef {import('./compare-worker.js').CompareResult} CompareResult
@@ -142,7 +154,7 @@ export async function renderScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number, compare?: (name: string) => Promise<CompareResult>, Worker?: WorkerConstructor }=} options
+ * @param {{ workerCount?: number, compare?: (name: string) => Promise<CompareResult>, Worker?: WorkerConstructor, noDiff?: boolean }=} options
  * @returns {Promise<MatchResult[]>}
  */
 export async function compareScreenshots(list, options = {}) {
@@ -165,10 +177,9 @@ export async function compareScreenshots(list, options = {}) {
       REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
       `${name}.png`,
     ),
-    diffPath:
-      process.env.NO_DIFF == null
-        ? path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`)
-        : null,
+    diffPath: options.noDiff
+      ? null
+      : path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`),
   });
 
   if (options.compare) {
@@ -256,13 +267,12 @@ export async function compareScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ screenshotPath?: string, readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cleanup?: typeof fs.rm, now?: () => number, log?: (message: string) => unknown }=} options
+ * @param {{ screenshotPath?: string, readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cleanup?: typeof fs.rm, now?: () => number, log?: (message: string) => unknown, noDiff?: boolean }=} options
  * @returns {Promise<Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
 export async function runTests(list, options = {}) {
   const versionReader = options.readVersion ?? readVersion;
   const render = options.render ?? renderScreenshots;
-  const compare = options.compare ?? compareScreenshots;
   const cleanup = options.cleanup ?? fs.rm;
   const now = options.now ?? performance.now.bind(performance);
   const log = options.log ?? console.info;
@@ -289,7 +299,9 @@ export async function runTests(list, options = {}) {
     log(
       `Rendered screenshots in ${((compareStarted - renderStarted) / 1000).toFixed(2)}s`,
     );
-    const results = await compare(list);
+    const results = options.compare
+      ? await options.compare(list)
+      : await compareScreenshots(list, { noDiff: options.noDiff });
     log(
       `Compared screenshots in ${((now() - compareStarted) / 1000).toFixed(2)}s`,
     );
@@ -330,10 +342,11 @@ export async function runTests(list, options = {}) {
 
 async function main() {
   try {
+    const { noDiff } = parseArguments(process.argv.slice(2));
     const list = (
       await fs.readdir(REGRESSION_FIXTURES_PATH, { recursive: true })
     ).filter((name) => name.endsWith('.svg'));
-    const report = await runTests(list);
+    const report = await runTests(list, { noDiff });
     const combinedReport = { ...report, ...(await readReport()) };
     printReport(
       /** @type {import('./regression-io.js').TestReport} */ (combinedReport),
