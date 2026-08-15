@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  sax@1.5.0:
-    hash: 25c0130c4f78e166bc348f7a21469d906b42329c8e4b3e27ba67bf981409fb6f
-    path: patches/sax@1.5.0.patch
+  sax@1.6.1:
+    hash: 202ba53c76ed752bbd220e2bedc5e27439865e12890d94649651dafb07ba5c2d
+    path: patches/sax@1.6.1.patch
 
 importers:
 
@@ -32,8 +32,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       sax:
-        specifier: 1.5.0
-        version: 1.5.0(patch_hash=25c0130c4f78e166bc348f7a21469d906b42329c8e4b3e27ba67bf981409fb6f)
+        specifier: 1.6.1
+        version: 1.6.1(patch_hash=202ba53c76ed752bbd220e2bedc5e27439865e12890d94649651dafb07ba5c2d)
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -1836,8 +1836,8 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
-  sax@1.5.0:
-    resolution: {integrity: sha512-21IYA3Q5cQf089Z6tgaUTr7lDAyzoTPx5HRtbhsME8Udispad8dC/+sziTNugOEx54ilvatQ9YCzl4KQLPcRHA==}
+  sax@1.6.1:
+    resolution: {integrity: sha512-42tBVwLWnaQvW5zc4HbZrTuWccECCZfBi92FDuwtqxasH+JbPB3/FOKb1m222K42R4WxuxzzMsTswfzgtSu64Q==}
     engines: {node: '>=11.0.0'}
 
   semver@5.7.2:
@@ -3669,7 +3669,7 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  sax@1.5.0(patch_hash=25c0130c4f78e166bc348f7a21469d906b42329c8e4b3e27ba67bf981409fb6f): {}
+  sax@1.6.1(patch_hash=202ba53c76ed752bbd220e2bedc5e27439865e12890d94649651dafb07ba5c2d): {}
 
   semver@5.7.2: {}
 

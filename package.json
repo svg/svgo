@@ -103,7 +103,7 @@
     "css-what": "^7.0.0",
     "csso": "^5.0.5",
     "picocolors": "^1.1.1",
-    "sax": "1.5.0"
+    "sax": "1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
