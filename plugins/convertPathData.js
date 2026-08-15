@@ -510,14 +510,24 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
               arc.args[3] = 1;
             }
             arcCurves.push(next);
-            if (2 * Math.PI - angle > 1e-3) {
+            // A single arc can't represent a full turn: if its endpoints
+            // coincide, it renders nothing. This happens for a closed circle
+            // whose measured angle falls just short of 360° (cubic-bezier
+            // approximation error), so the angular check alone misses it.
+            // @ts-expect-error
+            const endDx = next.coords[0] - arc.base[0];
+            // @ts-expect-error
+            const endDy = next.coords[1] - arc.base[1];
+            const wouldVanish =
+              angle > Math.PI &&
+              Math.abs(endDx) < error &&
+              Math.abs(endDy) < error;
+            if (2 * Math.PI - angle > 1e-3 && !wouldVanish) {
               // less than 360°
               // @ts-expect-error
               arc.coords = next.coords;
-              // @ts-expect-error
-              arc.args[5] = arc.coords[0] - arc.base[0];
-              // @ts-expect-error
-              arc.args[6] = arc.coords[1] - arc.base[1];
+              arc.args[5] = endDx;
+              arc.args[6] = endDy;
             } else {
               // full circle, make a half-circle arc and add a second one
               arc.args[5] = 2 * (relCircle.center[0] - nextData[4]);
