@@ -1,5 +1,5 @@
 diff --git a/lib/sax.js b/lib/sax.js
-index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd133213dcc7e0 100644
+index 3ae6728570523de9a800e0ec5cf20aac5a65cc42..d22155e37440de1b91fbc9f699f0ad986cb67032 100644
 --- a/lib/sax.js
 +++ b/lib/sax.js
 @@ -4,8 +4,6 @@
@@ -11,7 +11,7 @@ index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd1332
  
    // When we pass the MAX_BUFFER_LENGTH position, start checking for buffer overruns.
    // When we check, schedule the next check for MAX_BUFFER_LENGTH - (max(buffer lengths)),
-@@ -191,123 +189,6 @@
+@@ -192,193 +190,6 @@
      },
    }
  
@@ -29,6 +29,39 @@ index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd1332
 -
 -  function createStream(strict, opt) {
 -    return new SAXStream(strict, opt)
+-  }
+-
+-  function determineBufferEncoding(data, isEnd) {
+-    // BOM-based detection is the most reliable signal when present.
+-    if (data.length >= 2) {
+-      if (data[0] === 0xff && data[1] === 0xfe) {
+-        return 'utf-16le'
+-      }
+-
+-      if (data[0] === 0xfe && data[1] === 0xff) {
+-        return 'utf-16be'
+-      }
+-    }
+-
+-    if (data.length >= 3 && data[0] === 0xef && data[1] === 0xbb && data[2] === 0xbf) {
+-      return 'utf8'
+-    }
+-
+-    if (data.length >= 4) {
+-      // XML documents without a BOM still start with "<?xml", which is enough
+-      // to distinguish UTF-16LE/BE from UTF-8 by looking at the zero bytes.
+-      if (data[0] === 0x3c && data[1] === 0x00 && data[2] === 0x3f && data[3] === 0x00) {
+-        return 'utf-16le'
+-      }
+-
+-      if (data[0] === 0x00 && data[1] === 0x3c && data[2] === 0x00 && data[3] === 0x3f) {
+-        return 'utf-16be'
+-      }
+-
+-      return 'utf8'
+-    }
+-
+-    return isEnd ? 'utf8' : null
 -  }
 -
 -  function SAXStream(strict, opt) {
@@ -57,7 +90,7 @@ index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd1332
 -    }
 -
 -    this._decoder = null
--
+-    this._decoderBuffer = null
 -    streamWraps.forEach(function (ev) {
 -      Object.defineProperty(me, 'on' + ev, {
 -        get: function () {
@@ -83,16 +116,47 @@ index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd1332
 -    },
 -  })
 -
+-  SAXStream.prototype._decodeBuffer = function (data, isEnd) {
+-    if (this._decoderBuffer) {
+-      // Keep incomplete leading bytes until we have enough data to infer the
+-      // stream encoding, then decode the buffered prefix together with the next chunk.
+-      data = Buffer.concat([this._decoderBuffer, data])
+-      this._decoderBuffer = null
+-    }
+-
+-    if (!this._decoder) {
+-      var encoding = determineBufferEncoding(data, isEnd)
+-      if (!encoding) {
+-        // A very short first chunk may not contain enough bytes to detect the
+-        // encoding yet, so defer decoding until the next write/end call.
+-        this._decoderBuffer = data
+-        return ''
+-      }
+-
+-      // Store the detected transport encoding so strict mode can compare it
+-      // with the optional encoding declared in the XML prolog later on.
+-      this._parser.encoding = encoding
+-      this._decoder = new TextDecoder(encoding)
+-    }
+-
+-    return this._decoder.decode(data, { stream: !isEnd })
+-  }
+-
 -  SAXStream.prototype.write = function (data) {
 -    if (
 -      typeof Buffer === 'function' &&
 -      typeof Buffer.isBuffer === 'function' &&
 -      Buffer.isBuffer(data)
 -    ) {
--      if (!this._decoder) {
--        this._decoder = new TextDecoder('utf8')
+-      data = this._decodeBuffer(data, false)
+-    } else if (this._decoderBuffer) {
+-      // Flush any buffered binary prefix before handling a string chunk.
+-      // This only matters if the caller mixes Buffer and string writes (used in test).
+-      var remaining = this._decodeBuffer(Buffer.alloc(0), true)
+-      if (remaining) {
+-        this._parser.write(remaining)
+-        this.emit('data', remaining)
 -      }
--      data = this._decoder.decode(data, { stream: true })
 -    }
 -
 -    this._parser.write(data.toString())
@@ -105,7 +169,13 @@ index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd1332
 -      this.write(chunk)
 -    }
 -    // Flush any remaining decoded data from the TextDecoder
--    if (this._decoder) {
+-    if (this._decoderBuffer) {
+-      var finalChunk = this._decodeBuffer(Buffer.alloc(0), true)
+-      if (finalChunk) {
+-        this._parser.write(finalChunk)
+-        this.emit('data', finalChunk)
+-      }
+-    } else if (this._decoder) {
 -      var remaining = this._decoder.decode()
 -      if (remaining) {
 -        this._parser.write(remaining)
@@ -134,4 +204,4 @@ index d35adf1a319b7f064d7a7e43c46630ed5ef587ff..4c5a08844f3be4ddceb12285d3fd1332
 -
    // this really needs to be replaced with character classes.
    // XML allows all manner of ridiculous numbers and digits.
-   var CDATA = '[CDATA['
+   var CDATAre = /^\[CDATA\[$/i
