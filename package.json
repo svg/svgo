@@ -91,11 +91,6 @@
     "spellcheck": "cspell -u .",
     "prepublishOnly": "pnpm clean && pnpm build"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "unrs-resolver"
-    ]
-  },
   "dependencies": {
     "commander": "^11.1.0",
     "css-select": "^6.0.0",
