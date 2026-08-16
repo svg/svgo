@@ -77,14 +77,14 @@
   "scripts": {
     "build": "node scripts/sync-version.js && pnpm build:bundles && pnpm build:types",
     "build:bundles": "pnpm clean:build && rollup -c",
-    "build:types": "pnpm clean:types && tsc && tsc -p tsconfig.build.json",
+    "build:types": "pnpm clean:types && tsc -p tsconfig.build.json",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
+    "typecheck": "tsc",
     "test": "vitest run",
     "test:bundles": "pnpm build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
-    "test:types": "pnpm build:types && tsc && tsd",
     "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && node ./test/regression/compare.js --no-diff",
-    "qa": "pnpm lint && pnpm test:types && pnpm test && pnpm test:bundles && pnpm test:regression",
+    "qa": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:bundles && pnpm test:regression",
     "clean": "pnpm clean:build && pnpm clean:types",
     "clean:build": "rimraf dist",
     "clean:types": "rimraf types",
@@ -121,7 +121,6 @@
     "rimraf": "^6.1.3",
     "rollup": "^4.62.4",
     "tar-stream": "^3.2.0",
-    "tsd": "^0.33.0",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   }

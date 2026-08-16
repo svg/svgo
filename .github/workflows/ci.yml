@@ -20,15 +20,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-  types:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v6
-        with: *setup-node-config
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test:types
   spellcheck:
     runs-on: ubuntu-latest
     steps:

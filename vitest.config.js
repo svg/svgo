@@ -4,5 +4,8 @@ export default defineConfig({
   test: {
     environment: 'node',
     maxWorkers: 4,
+    typecheck: {
+      enabled: true,
+    },
   },
 });

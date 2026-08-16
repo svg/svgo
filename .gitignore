@@ -14,7 +14,7 @@ tags
 
 # Ignore generated files for browser, CommonJS, or types
 dist
-types
+/types
 
 node_modules
 .yarn/
