@@ -1,0 +1,21 @@
+Change the default to be shorter
+
+===
+
+<svg>
+    <g fill="red">
+        <path/>
+        <rect fill="blue"/>
+        <circle fill="blue"/>
+    </g>
+</svg>
+
+@@@
+
+<svg>
+    <g fill="blue">
+        <path fill="red"/>
+        <rect/>
+        <circle/>
+    </g>
+</svg>
