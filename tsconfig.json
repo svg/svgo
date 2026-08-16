@@ -17,7 +17,6 @@
     "dist/",
     "node_modules/",
     "rollup.config.js",
-    "test-d/",
     "test/browser.js",
     "test/svgo.cjs"
   ]
