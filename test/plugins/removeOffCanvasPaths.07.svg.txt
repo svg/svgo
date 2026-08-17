@@ -1,0 +1,13 @@
+Should not throw when path starts with relative move and is within the view box
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+    <path d="m10 5-5 5" stroke="#000"></path>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+    <path d="m10 5-5 5" stroke="#000"/>
+</svg>
