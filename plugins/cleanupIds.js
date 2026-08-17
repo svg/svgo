@@ -215,6 +215,13 @@ export const fn = (_root, params) => {
          */
         const isIdPreserved = (id) =>
           preserveIds.has(id) || hasStringPrefix(id, preserveIdPrefixes);
+        /** @type {Set<string>} */
+        const externalIds = new Set();
+        for (const id of referencesById.keys()) {
+          if (!nodeById.has(id)) {
+            externalIds.add(id);
+          }
+        }
         /** @type {?number[]} */
         let currentId = null;
         for (const [id, refs] of referencesById) {
@@ -229,8 +236,10 @@ export const fn = (_root, params) => {
                 currentIdString = getIdString(currentId);
               } while (
                 isIdPreserved(currentIdString) ||
-                (referencesById.has(currentIdString) &&
-                  nodeById.get(currentIdString) == null)
+                externalIds.has(currentIdString) ||
+                (!remove &&
+                  nodeById.has(currentIdString) &&
+                  !referencesById.has(currentIdString))
               );
               node.attributes.id = currentIdString;
               for (const { element, name } of refs) {
