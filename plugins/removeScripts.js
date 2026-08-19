@@ -1,4 +1,5 @@
 import { attrsGroups } from './_collections.js';
+import { isExecutableUrl } from '../lib/svgo/tools.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 
 export const name = 'removeScripts';
@@ -110,10 +111,7 @@ export const fn = () => {
           if (attr === 'href' || attr.endsWith(':href')) {
             if (
               node.attributes[attr] == null ||
-              !node.attributes[attr]
-                .trimStart()
-                .toLowerCase()
-                .startsWith('javascript:')
+              !isExecutableUrl(node.attributes[attr])
             ) {
               continue;
             }
