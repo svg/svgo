@@ -18,7 +18,7 @@ This plugin performs the following operations:
 
 - Removes [`<script>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/script) elements.
 - Removes [SVG event attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Events), such as `onload`, `onclick`, and `oninput`, preserving the element itself.
-- Collapses [`<a>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a) elements whose links use `javascript:` or an executable `data:` media type (`text/html`, `application/xhtml+xml`, or `image/svg+xml`), moving children up to the parent element. The legacy `vbscript:` scheme is not removed because modern browsers do not support it.
+- Collapses [`<a>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a) elements whose links use `javascript:`, legacy `vbscript:`, or an executable `data:` media type (`text/html`, `application/xhtml+xml`, or `image/svg+xml`), moving children up to the parent element.
 
 :::info
 

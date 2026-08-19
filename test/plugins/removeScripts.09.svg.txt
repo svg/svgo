@@ -1,5 +1,5 @@
-Collapses links to executable data documents while preserving data links with
-inert media types and legacy VBScript links.
+Collapses links to executable data documents and legacy VBScript URLs while
+preserving data links with inert media types.
 
 ===
 
@@ -30,7 +30,5 @@ inert media types and legacy VBScript links.
     <a href="data:image/png;base64,iVBORw0KGgo=">
     <text y="40">PNG</text>
   </a>
-    <a href="vbscript:msgbox(1)">
     <text y="50">VBScript</text>
-  </a>
 </svg>
