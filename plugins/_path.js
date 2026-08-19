@@ -337,7 +337,7 @@ export const intersects = function (path1, path2) {
     let value;
     while ((value = dot(polygon.list[index], direction)) > max) {
       max = value;
-      index = ++index % polygon.list.length;
+      index = (index + 1) % polygon.list.length;
     }
     return polygon.list[(index || polygon.list.length) - 1];
   }
@@ -595,7 +595,6 @@ function gatherPoints(pathData) {
           for (
             var cData;
             (cData = curves.splice(0, 6).map(toAbsolute)).length;
-
           ) {
             if (basePoint != null) {
               addPoint(subPath, [
@@ -662,7 +661,7 @@ function convexHull(points) {
   const upper = [];
   let maxY = points.list.length - 1;
   let top = 0;
-  for (let i = points.list.length; i--; ) {
+  for (let i = points.list.length; i--;) {
     while (
       upper.length >= 2 &&
       cross(upper[upper.length - 2], upper[upper.length - 1], points.list[i]) <=

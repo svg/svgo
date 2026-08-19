@@ -61,6 +61,7 @@ const findPrefixedAttrs = (node, prefixes, attr) => {
  *
  * @type {import('../lib/types.js').Plugin<RemoveXlinkParams>}
  * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+ * @since 3.0.4
  */
 export const fn = (_, params) => {
   const { includeLegacy } = params;

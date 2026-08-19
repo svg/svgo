@@ -41,6 +41,7 @@ export const description = 'removes arbitrary elements by ID or className';
  * @author Eli Dupuis (@elidupuis)
  *
  * @type {import('../lib/types.js').Plugin<RemoveElementsByAttrParams>}
+ * @since 0.7.0
  */
 export const fn = (root, params) => {
   const ids =

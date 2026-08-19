@@ -13,6 +13,7 @@ export const description =
  * @author Benny Schudel
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.5.3
  */
 export const fn = () => {
   return {

@@ -13,15 +13,15 @@ jobs:
   test-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: corepack enable
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: yarn
-      - run: yarn install
-      - run: yarn playwright install --with-deps chromium
-      - run: yarn test:regression
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm playwright install --with-deps --only-shell chromium
+      - run: pnpm test:regression
       - uses: actions/upload-artifact@v7
         with:
           name: svgo-test-report

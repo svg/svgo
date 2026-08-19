@@ -11,6 +11,7 @@ export const description = 'removes <style> element';
  * @author Betsy Dupuis
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.6.0
  */
 export const fn = () => {
   return {

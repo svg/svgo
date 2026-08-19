@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { elems } from '../../plugins/_collections.js';
 
 describe('elems.deprecated', () => {

@@ -1,7 +1,8 @@
+import { beforeAll, describe, expect, it } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { parseSvg } from '../../lib/parser.js';
+import { parseSvg, SvgoParserError } from '../../lib/parser.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -11,15 +12,9 @@ describe('svg2js', () => {
     /** @type {any} */
     let root;
 
-    beforeAll((done) => {
-      fs.readFile(filepath, 'utf8', (err, data) => {
-        if (err) {
-          throw err;
-        }
-
-        root = parseSvg(data);
-        done();
-      });
+    beforeAll(async () => {
+      const data = await fs.promises.readFile(filepath, 'utf8');
+      root = parseSvg(data);
     });
 
     describe('root', () => {
@@ -101,6 +96,48 @@ describe('svg2js', () => {
       it('should contain preserved whitespace', () => {
         const textNode = root.children[3].children[1].children[0].children[1];
         expect(textNode.children[0].value).toBe('  test  ');
+      });
+    });
+  });
+
+  describe('character references', () => {
+    /** @param {string} source */
+    const getParserError = (source) => {
+      try {
+        parseSvg(source);
+      } catch (error) {
+        return error;
+      }
+    };
+
+    it.each(['&#1;', '&#x1;', '&#xB;', '&#x1F;', '&#xD800;', '&#xFFFF;'])(
+      'should reject invalid character reference %s in text',
+      (reference) => {
+        const error = getParserError(`<svg>${reference}</svg>`);
+
+        expect(error).toBeInstanceOf(SvgoParserError);
+        expect(error).toHaveProperty('reason', 'Invalid character entity');
+      },
+    );
+
+    it('should reject invalid character references in attributes', () => {
+      const error = getParserError('<svg data-value="&#xD800;"/>');
+
+      expect(error).toBeInstanceOf(SvgoParserError);
+      expect(error).toHaveProperty('reason', 'Invalid character entity');
+    });
+
+    it('should parse valid boundary character references', () => {
+      const root = parseSvg(
+        '<svg data-value="&#x20;&#xD7FF;&#xE000;&#xFFFD;&#x10000;&#x10FFFF;"/>',
+      );
+      const svg = root.children[0];
+
+      expect(svg).toMatchObject({
+        type: 'element',
+        attributes: {
+          'data-value': ' \uD7FF\uE000\uFFFD\u{10000}\u{10FFFF}',
+        },
       });
     });
   });

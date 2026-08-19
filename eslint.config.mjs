@@ -5,8 +5,6 @@ import globals from 'globals';
 export default [
   {
     ignores: [
-      '.yarn/**',
-      '.yarnrc.yml',
       'node_modules/**',
       'dist/**',
       'test/cli/output/**',
@@ -31,14 +29,6 @@ export default [
       'one-var': ['error', 'never'],
       curly: 'error',
       strict: 'error',
-    },
-  },
-  {
-    files: ['**/*.test.js'],
-    languageOptions: {
-      globals: {
-        ...globals.jest,
-      },
     },
   },
 ];

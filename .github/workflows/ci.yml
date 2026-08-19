@@ -12,32 +12,32 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: corepack enable
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with: &setup-node-config
           node-version: 24
-          cache: yarn
-      - run: yarn install
-      - run: yarn lint
-  types:
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+  typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: corepack enable
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with: *setup-node-config
-      - run: yarn install
-      - run: yarn test:types
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
   spellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: corepack enable
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with: *setup-node-config
-      - run: yarn install
-      - run: yarn spellcheck
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm spellcheck
   test:
     name: test - ${{ matrix.os }} - Node.js v${{ matrix.node-version }}
     strategy:
@@ -47,6 +47,35 @@ jobs:
           - 24
           - 22
           - 20
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+  test-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with: *setup-node-config
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm playwright install --with-deps --only-shell chromium
+      - run: pnpm test:bundles
+  test-runtime:
+    name: test runtime - ${{ matrix.os }} - Node.js v${{ matrix.node-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
           - 18
           - 16
         os:
@@ -54,14 +83,13 @@ jobs:
           - windows-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
-      - run: npm install -g corepack@0.20.0 --force
-      - run: corepack enable
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with: *setup-node-config
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:bundles
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn
-      - run: yarn install
-      - run: yarn playwright install --with-deps chromium
-      - run: yarn test
-      - run: yarn test:bundles
+      - run: node ./test/svgo.cjs

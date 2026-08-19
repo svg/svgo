@@ -2,7 +2,6 @@
 title: removeUnknownsAndDefaults
 svgo:
   pluginId: removeUnknownsAndDefaults
-  defaultPlugin: true
   parameters:
     unknownContent:
       description: If to remove elements that are not known or can't be the child of its parent element.
@@ -23,7 +22,7 @@ svgo:
       description: If to keep [`data-*`](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/data-*) attributes. Set to `false` to remove data attributes.
       default: true
     keepAriaAttrs:
-      description: If to keep [ARIA (Accessible Rich Internet Applications)](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes, used for accessibility. This excludes `role`, which is managed with the `keepRoleAttr` parameter.
+      description: If to keep [<abbr title="Accessible Rich Internet Applications">ARIA</abbr>](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes, used for accessibility. This excludes `role`, which is managed with the `keepRoleAttr` parameter.
       default: true
     keepRoleAttr:
       description: If to keep the ARIA [`role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles) attribute.

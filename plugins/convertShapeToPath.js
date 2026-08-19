@@ -21,6 +21,7 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
  * @author Lev Solntsev
  *
  * @type {import('../lib/types.js').Plugin<ConvertShapeToPathParams>}
+ * @since 0.4.3
  */
 export const fn = (root, params) => {
   const { convertArcs = false, floatPrecision: precision } = params;

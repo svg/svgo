@@ -7,16 +7,16 @@
     "allowJs": true,
     "checkJs": true,
     "strict": true,
+    "types": ["node"],
     "resolveJsonModule": true,
+    "noUncheckedSideEffectImports": false,
     "skipLibCheck": true
   },
   "exclude": [
-    ".yarn/",
     "coverage/",
     "dist/",
     "node_modules/",
     "rollup.config.js",
-    "test-d/",
     "test/browser.js",
     "test/svgo.cjs"
   ]

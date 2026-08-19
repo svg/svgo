@@ -128,6 +128,7 @@ const getIdString = (arr) => {
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<CleanupIdsParams>}
+ * @since 0.1.9
  */
 export const fn = (_root, params) => {
   const {

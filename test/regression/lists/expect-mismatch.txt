@@ -13,13 +13,7 @@ W3C_SVG_11_TestSuite/svg/styling-css-04-f.svg
 # broken and pending fix
 charm-icons-0.18.0/docs/img/splash.svg
 oxygen-icons-5.116.0/scalable/actions/hidef/tools-rip-audio-cd.svg
-oxygen-icons-5.116.0/scalable/actions/im-ban-kick-user.svg
-oxygen-icons-5.116.0/scalable/actions/im-ban-user.svg
-oxygen-icons-5.116.0/scalable/actions/irc-close-channel.svg
-oxygen-icons-5.116.0/scalable/actions/irc-remove-operator.svg
-oxygen-icons-5.116.0/scalable/actions/irc-unvoice.svg
 oxygen-icons-5.116.0/scalable/actions/list-add.svg
-oxygen-icons-5.116.0/scalable/actions/list-remove-user.svg
 oxygen-icons-5.116.0/scalable/actions/list-remove.svg
 oxygen-icons-5.116.0/scalable/actions/mail-send.svg
 oxygen-icons-5.116.0/scalable/actions/player-volume.svg
@@ -27,11 +21,8 @@ oxygen-icons-5.116.0/scalable/actions/small/16x16/document-edit-decrypt.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/document-edit-encrypt.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/document-edit-sign.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/document-edit-verify.svg
-oxygen-icons-5.116.0/scalable/actions/small/16x16/im-ban-user.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/im-yahoo.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/irc-close-channel.svg
-oxygen-icons-5.116.0/scalable/actions/small/16x16/irc-remove-operator.svg
-oxygen-icons-5.116.0/scalable/actions/small/16x16/irc-unvoice.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/list-add-user.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/mail-encrypted-full.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/mail-encrypted-part.svg
@@ -44,26 +35,17 @@ oxygen-icons-5.116.0/scalable/actions/small/16x16/mail-tagged.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/tools-media-optical-burn-image.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/view-calendar-list.svg
 oxygen-icons-5.116.0/scalable/actions/small/16x16/view-time-schedule-calculus.svg
-oxygen-icons-5.116.0/scalable/actions/small/22x22/edit-select-none.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/im-google.svg
-oxygen-icons-5.116.0/scalable/actions/small/22x22/irc-close-channel.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/list-add-user.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/mail-forward.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/mail-queue.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/mail-receive.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/mixer-cd.svg
-oxygen-icons-5.116.0/scalable/actions/small/22x22/news-unsubscribe.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/tools-media-optical-burn-image.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/tools-media-optical-copy.svg
 oxygen-icons-5.116.0/scalable/actions/small/22x22/view-calendar-list.svg
-oxygen-icons-5.116.0/scalable/actions/small/22x22/view-time-schedule-baselined-remove.svg
 oxygen-icons-5.116.0/scalable/actions/small/32x32/documentation.svg
-oxygen-icons-5.116.0/scalable/actions/small/32x32/edit-table-delete-column.svg
-oxygen-icons-5.116.0/scalable/actions/small/32x32/edit-table-delete-row.svg
-oxygen-icons-5.116.0/scalable/actions/small/32x32/im-ban-kick-user.svg
-oxygen-icons-5.116.0/scalable/actions/small/32x32/im-ban-user.svg
 oxygen-icons-5.116.0/scalable/actions/small/32x32/im-google.svg
-oxygen-icons-5.116.0/scalable/actions/small/32x32/mail-mark-junk.svg
 oxygen-icons-5.116.0/scalable/actions/small/32x32/tools-media-optical-burn-image.svg
 oxygen-icons-5.116.0/scalable/actions/small/32x32/tools-rip-video-dvd.svg
 oxygen-icons-5.116.0/scalable/actions/small/32x32/view-calendar-birthday.svg
@@ -111,7 +93,6 @@ oxygen-icons-5.116.0/scalable/apps/preferences-system-time.svg
 oxygen-icons-5.116.0/scalable/apps/scribus.svg
 oxygen-icons-5.116.0/scalable/apps/small/22x22/basket.svg
 oxygen-icons-5.116.0/scalable/apps/small/32x32/preferences-system-windows-move.svg
-oxygen-icons-5.116.0/scalable/apps/small/48x48/kig.svg
 oxygen-icons-5.116.0/scalable/apps/small/64x64/kplato.svg
 oxygen-icons-5.116.0/scalable/apps/strigi.svg
 oxygen-icons-5.116.0/scalable/apps/timevault.svg
@@ -153,6 +134,7 @@ oxygen-icons-5.116.0/scalable/mimetypes/small/64x64/application-x-cue.svg
 oxygen-icons-5.116.0/scalable/places/small/64x64/folder-tar.svg
 oxygen-icons-5.116.0/scalable/places/small/64x64/network-server-database.svg
 oxygen-icons-5.116.0/scalable/places/small/64x64/server-database.svg
+oxygen-icons-5.116.0/scalable/status/image-missing.svg
 W3C_SVG_11_TestSuite/svg/color-prop-04-t.svg
 W3C_SVG_11_TestSuite/svg/coords-units-03-b.svg
 W3C_SVG_11_TestSuite/svg/filters-displace-01-f.svg
@@ -160,6 +142,5 @@ W3C_SVG_11_TestSuite/svg/fonts-kern-01-t.svg
 W3C_SVG_11_TestSuite/svg/interact-pevents-01-b.svg
 W3C_SVG_11_TestSuite/svg/struct-cond-03-t.svg
 wikimedia-commons/Aegean_sea_Anatolia_and_Armenian_highlands_regions_large_topographic_basemap.svg
-wikimedia-commons/Italy_-_Regions_and_provinces.svg
 wikimedia-commons/Saariston_Rengastie_route_labels.svg
 wikimedia-commons/Spain_languages-de.svg

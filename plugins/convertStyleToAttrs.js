@@ -77,6 +77,7 @@ const regStripComments = new RegExp(
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<ConvertStyleToAttrsParams>}
+ * @since 0.0.1
  */
 export const fn = (_root, params) => {
   const { keepImportant = false } = params;
@@ -102,7 +103,7 @@ export const fn = (_root, params) => {
           );
 
           regDeclarationBlock.lastIndex = 0;
-          for (var rule; (rule = regDeclarationBlock.exec(styleValue)); ) {
+          for (var rule; (rule = regDeclarationBlock.exec(styleValue));) {
             if (!keepImportant || !rule[3]) {
               styles.push([rule[1], rule[2]]);
             }

@@ -2,7 +2,6 @@
 title: removeComments
 svgo:
   pluginId: removeComments
-  defaultPlugin: true
   parameters:
     preservePatterns:
       description: An array of regular expressions ([RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) or string). If the comment matches any of these, including partial matches, the comment is preserved. Set to `false` to disable this behavior and remove comments indiscriminately.
@@ -22,7 +21,7 @@ For example, the following comment can be found in [Font Awesome Free](https://f
 <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
 ```
 
-Removing a comment like this may be considered a breach of the license terms, as Font Awesome Free is released under [CC-BY-4.0 (Creative Commons Attribution)](https://creativecommons.org/licenses/by/4.0/), but removing the comment would strip away that attribution.
+Removing a comment like this may be considered a breach of the license terms, as Font Awesome Free is released under [<abbr title="Creative Commons Attribution 4.0 International License">CC-BY-4.0</abbr>](https://creativecommons.org/licenses/by/4.0/), but removing the comment would strip away that attribution.
 
 ## Legal Comments
 

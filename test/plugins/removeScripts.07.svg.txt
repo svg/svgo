@@ -1,0 +1,24 @@
+Does not remove <script> elements even when script is declared with an explicit
+namespace that isn't default SVG, or the explicit SVG or XHTML namespace.
+
+Our custom namespace should be treated separately by clients and is not
+executable.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:filmmaker="http://teaparty.diy" viewBox="0 0 100 100" version="1.1">
+  <script>
+    alert('uwu');
+  </script>
+  <filmmaker:script>
+    This is not executable JavaScript!
+  </filmmaker:script>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:filmmaker="http://teaparty.diy" viewBox="0 0 100 100" version="1.1">
+    <filmmaker:script>
+        This is not executable JavaScript!
+    </filmmaker:script>
+</svg>

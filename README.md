@@ -4,7 +4,7 @@
 
 # SVGO [![npm](https://img.shields.io/npm/v/svgo)](https://npmjs.org/package/svgo) [![chat](https://img.shields.io/discord/815166721315831868)](https://discord.gg/z8jX8NYxrE) [![docs](https://img.shields.io/badge/docs-svgo.dev-blue)](https://svgo.dev/)
 
-SVGO, short for **SVG O**ptimizer, is a Node.js library and command-line application for optimizing SVG files.
+SVGO, short for <abbr title="Scalable Vector Graphics">SVG</abbr> Optimizer, is a Node.js library and command-line application for optimizing SVG files.
 
 ## Why?
 

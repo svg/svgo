@@ -72,6 +72,7 @@ function processAttributes(
  * Remove deprecated attributes.
  *
  * @type {import('../lib/types.js').Plugin<RemoveDeprecatedAttrsParams>}
+ * @since 3.3.0
  */
 export function fn(root, params) {
   const stylesheet = collectStylesheet(root);

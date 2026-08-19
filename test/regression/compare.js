@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import pixelmatch from 'pixelmatch';
+import { pathToFileURL } from 'node:url';
+import { parseArgs } from 'node:util';
+import { Worker } from 'node:worker_threads';
 import { chromium } from 'playwright';
-import { PNG } from 'pngjs';
 import { expectMismatch, ignore, skip } from './file-lists.js';
 import { pathToPosix, printReport } from './lib.js';
 import {
@@ -12,12 +13,37 @@ import {
   REGRESSION_DIFFS_PATH,
   REGRESSION_FIXTURES_PATH,
   REGRESSION_OPTIMIZED_PATH,
+  REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+  REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
+  REGRESSION_SCREENSHOTS_PATH,
   writeReport,
 } from './regression-io.js';
 
 const NAVIGATION_TIMEOUT_MS = 0;
 const WIDTH = 960;
 const HEIGHT = 720;
+const availableParallelism = os.availableParallelism?.() ?? os.cpus().length;
+export const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
+const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
+const workerUrl = new URL('./compare-worker.js', import.meta.url);
+
+/** @param {string[]} args */
+export function parseArguments(args) {
+  const { values } = parseArgs({
+    args,
+    options: {
+      'no-diff': { type: 'boolean' },
+    },
+    strict: true,
+  });
+  return { noDiff: values['no-diff'] ?? false };
+}
+
+/**
+ * @typedef {import('./compare-worker.js').CompareResult} CompareResult
+ * @typedef {{ name: string, isMatch: boolean }} MatchResult
+ * @typedef {{ new (filename: URL): { postMessage: (value: unknown) => void, on: (event: string, listener: (...args: any[]) => void) => unknown, terminate: () => Promise<number> | number } }} WorkerConstructor
+ */
 
 /** @type {import('playwright').PageScreenshotOptions} */
 const screenshotOptions = {
@@ -26,156 +52,322 @@ const screenshotOptions = {
 };
 
 /**
+ * @template T
+ * @param {() => Promise<T>} operation
+ * @param {() => Promise<unknown>} cleanup
+ * @returns {Promise<T>}
+ */
+export async function withCleanup(operation, cleanup) {
+  let result;
+  let primaryError;
+  try {
+    result = await operation();
+  } catch (error) {
+    primaryError = error;
+  }
+  let cleanupError;
+  try {
+    await cleanup();
+  } catch (error) {
+    cleanupError = error;
+  }
+  if (primaryError) {
+    throw primaryError;
+  }
+  if (cleanupError) {
+    throw cleanupError;
+  }
+  return /** @type {T} */ (result);
+}
+
+/**
  * @param {ReadonlyArray<string>} list
+ * @param {{ workerCount?: number }=} options
+ */
+export async function renderScreenshots(list, options = {}) {
+  const queue = [...list];
+  const workerCount = Math.min(
+    options.workerCount ?? DEFAULT_RENDER_WORKERS,
+    queue.length,
+  );
+  await fs.rm(REGRESSION_SCREENSHOTS_PATH, { recursive: true, force: true });
+  await fs.mkdir(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, { recursive: true });
+  await fs.mkdir(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, { recursive: true });
+
+  const browser = await chromium.launch();
+  await withCleanup(
+    async () => {
+      const context = await browser.newContext({
+        javaScriptEnabled: false,
+        viewport: { width: WIDTH, height: HEIGHT },
+      });
+      context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
+
+      const worker = async () => {
+        const page = await context.newPage();
+        await withCleanup(
+          async () => {
+            let name;
+            while ((name = queue.pop())) {
+              const originalPath = path.join(
+                REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
+                `${name}.png`,
+              );
+              const optimizedPath = path.join(
+                REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+                `${name}.png`,
+              );
+
+              await page.goto(
+                `file://${path.join(REGRESSION_FIXTURES_PATH, name)}`,
+              );
+              let element = await page.waitForSelector('svg');
+              await element.screenshot({
+                ...screenshotOptions,
+                path: originalPath,
+              });
+
+              await page.goto(
+                `file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`,
+              );
+              element = await page.waitForSelector('svg');
+              await element.screenshot({
+                ...screenshotOptions,
+                path: optimizedPath,
+              });
+            }
+          },
+          () => page.close(),
+        );
+      };
+
+      const outcomes = await Promise.allSettled(
+        Array.from({ length: workerCount }, worker),
+      );
+      const failed = outcomes.find((outcome) => outcome.status === 'rejected');
+      if (failed) {
+        throw failed.reason;
+      }
+    },
+    () => browser.close(),
+  );
+}
+
+/**
+ * @param {ReadonlyArray<string>} list
+ * @param {{ workerCount?: number, compare?: (name: string) => Promise<CompareResult>, Worker?: WorkerConstructor, noDiff?: boolean }=} options
+ * @returns {Promise<MatchResult[]>}
+ */
+export async function compareScreenshots(list, options = {}) {
+  const queue = [...list];
+  /** @type {MatchResult[]} */
+  const results = [];
+  const workerCount = Math.min(
+    options.workerCount ?? DEFAULT_COMPARE_WORKERS,
+    queue.length,
+  );
+
+  /** @param {string} name */
+  const getOptions = (name) => ({
+    name,
+    originalPath: path.join(
+      REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
+      `${name}.png`,
+    ),
+    optimizedPath: path.join(
+      REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
+      `${name}.png`,
+    ),
+    diffPath: options.noDiff
+      ? null
+      : path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`),
+  });
+
+  if (options.compare) {
+    const compare = options.compare;
+    await Promise.all(
+      Array.from({ length: workerCount }, async () => {
+        let name;
+        while ((name = queue.pop())) {
+          const result = await compare(name);
+          const threshold = result.width <= 16 ? 3 : 4;
+          results.push({
+            name: result.name,
+            isMatch: result.matched <= threshold,
+          });
+        }
+      }),
+    );
+    return results;
+  }
+
+  const WorkerClass =
+    options.Worker ?? /** @type {WorkerConstructor} */ (Worker);
+  /** @type {InstanceType<WorkerConstructor>[]} */
+  const workers = [];
+  await withCleanup(
+    async () => {
+      for (let index = 0; index < workerCount; index++) {
+        workers.push(new WorkerClass(workerUrl));
+      }
+      await Promise.all(
+        workers.map(
+          (worker) =>
+            new Promise((resolve, reject) => {
+              let active = false;
+              let settled = false;
+              /** @param {unknown} error */
+              const fail = (error) => {
+                if (!settled) {
+                  settled = true;
+                  reject(error);
+                }
+              };
+              const next = () => {
+                const name = queue.pop();
+                if (name == null) {
+                  settled = true;
+                  resolve(undefined);
+                  return;
+                }
+                active = true;
+                worker.postMessage(getOptions(name));
+              };
+              worker.on('message', (/** @type {CompareResult} */ result) => {
+                active = false;
+                const threshold = result.width <= 16 ? 3 : 4;
+                results.push({
+                  name: result.name,
+                  isMatch: result.matched <= threshold,
+                });
+                next();
+              });
+              worker.on('error', fail);
+              worker.on('exit', (/** @type {number} */ code) => {
+                if (!settled && (active || code !== 0)) {
+                  fail(new Error(`Comparison worker exited with code ${code}`));
+                }
+              });
+              next();
+            }),
+        ),
+      );
+    },
+    async () => {
+      const outcomes = await Promise.allSettled(
+        workers.map((worker) => worker.terminate()),
+      );
+      const failed = outcomes.find((outcome) => outcome.status === 'rejected');
+      if (failed) {
+        throw failed.reason;
+      }
+    },
+  );
+  return results;
+}
+
+/**
+ * @param {ReadonlyArray<string>} list
+ * @param {{ screenshotPath?: string, readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cleanup?: typeof fs.rm, now?: () => number, log?: (message: string) => unknown, noDiff?: boolean }=} options
  * @returns {Promise<Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
-const runTests = async (list) => {
-  const version = await readVersion();
-  const listCopy = [...list];
-
+export async function runTests(list, options = {}) {
+  const versionReader = options.readVersion ?? readVersion;
+  const render = options.render ?? renderScreenshots;
+  const cleanup = options.cleanup ?? fs.rm;
+  const now = options.now ?? performance.now.bind(performance);
+  const log = options.log ?? console.info;
+  const screenshotPath = options.screenshotPath ?? REGRESSION_SCREENSHOTS_PATH;
+  const version = await versionReader();
   /** @type {Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>} */
   const report = {
     version,
     files: {
-      toMatch: listCopy.length - expectMismatch.length - ignore.length,
+      toMatch: list.length - expectMismatch.length - ignore.length,
       toMismatch: expectMismatch.length,
       toIgnore: ignore.length,
       toSkip: skip.length,
     },
-    results: {
-      match: 0,
-      expectMismatch: 0,
-      ignored: 0,
-    },
-    errors: {
-      shouldHaveMatched: [],
-      shouldHaveMismatched: [],
-    },
+    results: { match: 0, expectMismatch: 0, ignored: 0 },
+    errors: { shouldHaveMatched: [], shouldHaveMismatched: [] },
   };
 
-  const totalFiles = listCopy.length;
-  let tested = 0;
-
-  /**
-   * @param {import('playwright').Page} page
-   * @param {string} name
-   */
-  const processFile = async (page, name) => {
-    await page.goto(`file://${path.join(REGRESSION_FIXTURES_PATH, name)}`);
-    let element = await page.waitForSelector('svg');
-    const originalBuffer = await element.screenshot(screenshotOptions);
-
-    await page.goto(`file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`);
-    element = await page.waitForSelector('svg');
-    const optimizedBufferPromise = element.screenshot(screenshotOptions);
-
-    const originalPng = PNG.sync.read(originalBuffer);
-    const optimizedPng = PNG.sync.read(await optimizedBufferPromise);
-    const writeDiffs = process.env.NO_DIFF == null;
-    const diff = writeDiffs
-      ? new PNG({ width: originalPng.width, height: originalPng.height })
-      : null;
-
-    const matched = pixelmatch(
-      originalPng.data,
-      optimizedPng.data,
-      diff?.data,
-      originalPng.width,
-      originalPng.height,
+  let primaryError;
+  try {
+    const renderStarted = now();
+    await render(list);
+    const compareStarted = now();
+    log(
+      `Rendered screenshots in ${((compareStarted - renderStarted) / 1000).toFixed(2)}s`,
     );
-
-    // ignore small aliasing issues
-    const threshold = originalPng.width <= 16 ? 3 : 4;
-    const isMatch = matched <= threshold;
-    const namePosix = pathToPosix(name);
-    const expectedToMismatch = expectMismatch.includes(namePosix);
-
-    if (isMatch) {
-      if (expectedToMismatch) {
-        report.errors.shouldHaveMismatched.push(namePosix);
-      } else if (ignore.includes(namePosix)) {
-        report.results.ignored++;
-      } else {
-        report.results.match++;
-      }
-    } else {
-      if (expectedToMismatch) {
+    const results = options.compare
+      ? await options.compare(list)
+      : await compareScreenshots(list, { noDiff: options.noDiff });
+    log(
+      `Compared screenshots in ${((now() - compareStarted) / 1000).toFixed(2)}s`,
+    );
+    for (const { name, isMatch } of results) {
+      const namePosix = pathToPosix(name);
+      const expectedToMismatch = expectMismatch.includes(namePosix);
+      if (isMatch) {
+        if (expectedToMismatch) {
+          report.errors.shouldHaveMismatched.push(namePosix);
+        } else if (ignore.includes(namePosix)) {
+          report.results.ignored++;
+        } else {
+          report.results.match++;
+        }
+      } else if (expectedToMismatch) {
         report.results.expectMismatch++;
       } else if (!ignore.includes(namePosix)) {
         report.errors.shouldHaveMatched.push(namePosix);
       }
-
-      if (diff) {
-        const file = path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`);
-        await fs.mkdir(path.dirname(file), { recursive: true });
-        await fs.writeFile(file, PNG.sync.write(diff));
-      }
     }
-
-    if (process.stdout.isTTY) {
-      process.stdout.clearLine(0);
-      process.stdout.write(
-        `\rCompared ${(++tested).toLocaleString()} of ${totalFiles.toLocaleString()}…`,
-      );
-    }
-  };
-
-  const worker = async () => {
-    let item;
-    const page = await context.newPage();
-    while ((item = listCopy.pop())) {
-      await processFile(page, item);
-    }
-    await page.close();
-  };
-
-  const browser = await chromium.launch();
-  const context = await browser.newContext({
-    javaScriptEnabled: false,
-    viewport: { width: WIDTH, height: HEIGHT },
-  });
-  context.setDefaultTimeout(NAVIGATION_TIMEOUT_MS);
-
-  await Promise.all(
-    Array.from(new Array(os.cpus().length * 2), () => worker()),
-  );
-  await browser.close();
-
-  if (process.stdout.isTTY) {
-    console.log();
+  } catch (error) {
+    primaryError = error;
   }
-
-  return report;
-};
-
-(async () => {
+  let cleanupError;
   try {
-    const filesPromise = fs.readdir(REGRESSION_FIXTURES_PATH, {
-      recursive: true,
-    });
-    const list = (await filesPromise).filter((name) => name.endsWith('.svg'));
+    await cleanup(screenshotPath, { recursive: true, force: true });
+  } catch (error) {
+    cleanupError = error;
+  }
+  if (primaryError) {
+    throw primaryError;
+  }
+  if (cleanupError) {
+    throw cleanupError;
+  }
+  return report;
+}
 
-    const report = await runTests(list);
-    const metrics = await readReport();
-    const combinedReport = {
-      ...report,
-      ...metrics,
-    };
-
+async function main() {
+  try {
+    const { noDiff } = parseArguments(process.argv.slice(2));
+    const list = (
+      await fs.readdir(REGRESSION_FIXTURES_PATH, { recursive: true })
+    ).filter((name) => name.endsWith('.svg'));
+    const report = await runTests(list, { noDiff });
+    const combinedReport = { ...report, ...(await readReport()) };
     printReport(
-      /** @type {import('./regression-io.js').TestReport}*/ (combinedReport),
+      /** @type {import('./regression-io.js').TestReport} */ (combinedReport),
     );
     await writeReport(combinedReport);
-
-    const failed =
+    if (
       report.results.match !== report.files.toMatch ||
-      report.results.expectMismatch !== report.files.toMismatch;
-
-    if (failed) {
-      process.exit(1);
+      report.results.expectMismatch !== report.files.toMismatch
+    ) {
+      process.exitCode = 1;
     }
   } catch (error) {
     console.error(error);
-    process.exit(1);
+    process.exitCode = 1;
   }
-})();
+}
+
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+) {
+  await main();
+}

@@ -31,6 +31,7 @@ const absoluteLengths = {
  * @author Kir Belevich
  *
  * @type {import('../lib/types.js').Plugin<CleanupNumericValuesParams>}
+ * @since 0.1.3
  */
 export const fn = (_root, params) => {
   const {

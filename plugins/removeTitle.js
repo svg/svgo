@@ -11,6 +11,7 @@ export const description = 'removes <title>';
  * @author Igor Kalashnikov
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 0.4.4
  */
 export const fn = () => {
   return {

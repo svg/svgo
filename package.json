@@ -1,7 +1,7 @@
 {
-  "packageManager": "yarn@3.8.7",
+  "packageManager": "pnpm@10.34.5",
   "name": "svgo",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "SVGO is a Node.js library and command-line application for optimizing vector images.",
   "license": "MIT",
   "type": "module",
@@ -33,7 +33,7 @@
     },
     {
       "name": "Bogdan Chadkin",
-      "email": "trysound@yandex.ru",
+      "email": "opensource@trysound.io",
       "url": "https://github.com/TrySound"
     },
     {
@@ -75,70 +75,53 @@
     "node": ">=16"
   },
   "scripts": {
-    "build": "node scripts/sync-version.js && yarn build:bundles && yarn build:types",
-    "build:bundles": "yarn clean:build && rollup -c",
-    "build:types": "yarn clean:types && tsc && tsc -p tsconfig.build.json",
+    "build": "node scripts/sync-version.js && pnpm build:bundles && pnpm build:types",
+    "build:bundles": "pnpm clean:build && rollup -c",
+    "build:types": "pnpm clean:types && tsc -p tsconfig.build.json",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
-    "test:bundles": "yarn build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
-    "test:types": "yarn build:types && tsc && tsd",
-    "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && cross-env NO_DIFF=1 node ./test/regression/compare.js",
-    "qa": "yarn lint && yarn test:types && yarn test && yarn test:bundles && yarn test:regression",
-    "clean": "yarn clean:build && yarn clean:types",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "test:bundles": "pnpm build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
+    "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && node ./test/regression/compare.js --no-diff",
+    "qa": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:bundles && pnpm test:regression",
+    "clean": "pnpm clean:build && pnpm clean:types",
     "clean:build": "rimraf dist",
     "clean:types": "rimraf types",
     "spellcheck": "cspell -u .",
-    "prepublishOnly": "yarn clean && yarn build"
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "fixtures"
-    ],
-    "coverageReporters": [
-      "html",
-      "lcov",
-      "text"
-    ]
+    "prepublishOnly": "pnpm clean && pnpm build"
   },
   "dependencies": {
     "commander": "^11.1.0",
-    "css-select": "^5.1.0",
+    "css-select": "^6.0.0",
     "css-tree": "^3.0.1",
-    "css-what": "^6.1.0",
+    "css-what": "^7.0.0",
     "csso": "^5.0.5",
     "picocolors": "^1.1.1",
-    "sax": "^1.5.0"
+    "sax": "1.6.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.25.1",
-    "@jest/globals": "^29.7.0",
-    "@rollup/plugin-commonjs": "^26.0.3",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@eslint/js": "^10.0.1",
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
     "@types/css-tree": "^2.3.10",
     "@types/csso": "^5.0.4",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.3",
+    "@types/node": "^26.2.0",
     "@types/pngjs": "^6.0.5",
     "@types/sax": "^1.2.7",
-    "@types/tar-stream": "^3.1.3",
-    "cross-env": "^7.0.3",
-    "cspell": "^9.2.2",
-    "eslint": "^9.25.1",
-    "globals": "^14.0.0",
-    "jest": "^29.7.0",
-    "pixelmatch": "^7.1.0",
-    "playwright": "1.53.2",
+    "@types/tar-stream": "^3.1.4",
+    "cspell": "^10.0.1",
+    "eslint": "^10.8.1",
+    "globals": "^17.9.0",
+    "pixelmatch": "^7.2.0",
+    "playwright": "1.62.1",
     "pngjs": "^7.0.0",
-    "prettier": "^3.5.3",
-    "rimraf": "^5.0.10",
-    "rollup": "^4.22.4",
-    "tar-stream": "^3.1.7",
-    "tsd": "^0.32.0",
-    "typescript": "^5.8.3"
-  },
-  "resolutions": {
-    "sax@^1.5.0": "patch:sax@npm%3A1.5.0#./.yarn/patches/sax-npm-1.5.0-d40bca2226.patch"
+    "prettier": "^3.9.6",
+    "rimraf": "^6.1.3",
+    "rollup": "^4.62.4",
+    "tar-stream": "^3.2.0",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }

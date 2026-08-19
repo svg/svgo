@@ -21,7 +21,7 @@ See our [Security Policy](https://github.com/svg/svgo/security/policy).
 ### Requirements
 
 - [Git](https://git-scm.com/)
-- [Node.js >=16](https://nodejs.org/) — Our CI pipeline includes Node.js v16, so even development code must be runnable in a Node.js v16 environment.
+- [Node.js >=22.18](https://nodejs.org/) for development. SVGO still supports Node.js v16 at runtime, which is tested in CI.
 
 ### Getting Started
 
@@ -31,16 +31,17 @@ Clone the repository with Git.
 git clone https://github.com/svg/svgo.git
 ```
 
-As this is a Node.js project and uses Yarn for package management, install the dependencies.
+As this is a Node.js project and uses pnpm for package management, install pnpm and the dependencies.
 
 ```sh
-yarn install
+npm install --global pnpm@10.34.5
+pnpm install
 ```
 
 Finally, make sure all quality assurance checks pass before making changes. This will lint, build, and test the project.
 
 ```sh
-yarn run qa
+pnpm run qa
 ```
 
 ### Plugins

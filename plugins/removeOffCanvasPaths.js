@@ -13,6 +13,7 @@ export const description =
  * @author JoshyPHP
  *
  * @type {import('../lib/types.js').Plugin}
+ * @since 1.2.0
  */
 export const fn = () => {
   /**
