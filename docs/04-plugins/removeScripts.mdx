@@ -17,6 +17,7 @@ This **will** break interactive SVGs that rely on JavaScript.
 This plugin performs the following operations:
 
 - Removes [`<script>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/script) elements.
+- Sanitizes HTML inside [`<foreignObject>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/foreignObject) elements by removing event attributes, `srcdoc`, and executable URLs from HTML URL attributes such as `action`, `data`, `formaction`, `href`, and `src`. The elements and other visual content are preserved.
 - Removes [SVG event attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Events), such as `onload`, `onclick`, and `oninput`, preserving the element itself.
 - Collapses [`<a>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a) elements whose links use `javascript:`, legacy `vbscript:`, or an executable `data:` media type (`text/html`, `application/xhtml+xml`, or `image/svg+xml`), moving children up to the parent element.
 
