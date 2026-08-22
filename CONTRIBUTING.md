@@ -62,6 +62,8 @@ Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typ
 
 Our regression test suite includes larger SVGs that may take a long time to optimize and render, especially on older machines. If an SVG can not be optimized within 10 minutes in CI, then that indicates a significant performance problem that must be addressed.
 
+Regression fixtures, run output, and reusable screenshots are stored under the project-local `.cache/svgo-regression/` directory. Set `SVGO_REGRESSION_CACHE_DIR` to override its location. Screenshot filenames include the test-suite version, renderer, fixture name, and optimized SVG checksum so only compatible images are reused.
+
 > [!IMPORTANT]  
 > Regression test results vary between hosts. It's not known why yet, but it's likely related to the host environment, such as system packages, drivers, or hardware.
 >

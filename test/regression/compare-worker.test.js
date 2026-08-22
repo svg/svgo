@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { PNG } from 'pngjs';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { compareImages } from './compare-worker.js';
 
 /**
@@ -29,7 +29,7 @@ describe('compareImages', () => {
     await fs.rm(directory, { recursive: true, force: true });
   });
 
-  test('compares files, writes a diff, and deletes screenshots', async () => {
+  test('compares cached files and writes a diff', async () => {
     const originalPath = path.join(directory, 'original.png');
     const optimizedPath = path.join(directory, 'optimized.png');
     const diffPath = path.join(directory, 'diff', 'result.png');
@@ -47,12 +47,8 @@ describe('compareImages', () => {
       }),
     ).resolves.toEqual({ name: 'fixture.svg', matched: 5, width: 5 });
     await expect(fs.stat(diffPath)).resolves.toBeDefined();
-    await expect(fs.stat(originalPath)).rejects.toMatchObject({
-      code: 'ENOENT',
-    });
-    await expect(fs.stat(optimizedPath)).rejects.toMatchObject({
-      code: 'ENOENT',
-    });
+    await expect(fs.stat(originalPath)).resolves.toBeDefined();
+    await expect(fs.stat(optimizedPath)).resolves.toBeDefined();
   });
 
   test('does not write a diff for differences within the match allowance', async () => {
@@ -109,7 +105,7 @@ describe('compareImages', () => {
     ).rejects.toThrow('Image dimensions do not match');
   });
 
-  test('identifies the fixture and deletes files after a decode error', async () => {
+  test('identifies the fixture after a decode error', async () => {
     const originalPath = path.join(directory, 'original.png');
     const optimizedPath = path.join(directory, 'optimized.png');
     await fs.writeFile(originalPath, 'not a png');
@@ -123,59 +119,7 @@ describe('compareImages', () => {
         diffPath: null,
       }),
     ).rejects.toThrow('Failed to compare broken.svg');
-    await expect(fs.stat(originalPath)).rejects.toMatchObject({
-      code: 'ENOENT',
-    });
-    await expect(fs.stat(optimizedPath)).rejects.toMatchObject({
-      code: 'ENOENT',
-    });
-  });
-
-  test('preserves a comparison error when screenshot cleanup also fails', async () => {
-    const originalPath = path.join(directory, 'original.png');
-    const optimizedPath = path.join(directory, 'optimized.png');
-    await fs.writeFile(originalPath, 'not a png');
-    await fs.writeFile(optimizedPath, 'not a png');
-
-    const remove = vi.fn(async () => {
-      throw new Error('cleanup failed');
-    });
-    await expect(
-      compareImages({
-        name: 'broken.svg',
-        originalPath,
-        optimizedPath,
-        diffPath: null,
-        remove,
-      }),
-    ).rejects.toThrow('Failed to compare broken.svg');
-    expect(remove).toHaveBeenCalled();
-  });
-
-  test('waits for both screenshot removals before reporting cleanup failure', async () => {
-    const originalPath = path.join(directory, 'original.png');
-    const optimizedPath = path.join(directory, 'optimized.png');
-    const black = [0, 0, 0, 255];
-    await createPng(originalPath, [black]);
-    await createPng(optimizedPath, [black]);
-    let secondSettled = false;
-    const remove = vi.fn(async (file) => {
-      if (file === originalPath) {
-        throw new Error('cleanup failed');
-      }
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      secondSettled = true;
-    });
-
-    await expect(
-      compareImages({
-        name: 'fixture.svg',
-        originalPath,
-        optimizedPath,
-        diffPath: null,
-        remove,
-      }),
-    ).rejects.toThrow('cleanup failed');
-    expect(secondSettled).toBe(true);
+    await expect(fs.stat(originalPath)).resolves.toBeDefined();
+    await expect(fs.stat(optimizedPath)).resolves.toBeDefined();
   });
 });

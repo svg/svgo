@@ -8,6 +8,9 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -27,18 +30,31 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm playwright install --with-deps --only-shell chromium
-      - run: pnpm test:regression
+      - run: node ./test/regression/extract.js
+      - uses: actions/cache@v5
+        with:
+          path: .cache/svgo-regression/screenshots
+          key: regression-screenshots-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.cache/svgo-regression/test-suite/regression-fixtures/VERSION') }}-${{ github.sha }}
+          restore-keys: regression-screenshots-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.cache/svgo-regression/test-suite/regression-fixtures/VERSION') }}-
+      - run: node ./test/regression/optimize.js
+      - run: node ./test/regression/compare.js --no-diff
       # We use upload/artifacts instead of outputs because our regression test
       # report can exceed 1 MB which is a limit GitHub imposes.
       - uses: actions/upload-artifact@v7
-        if: success() || failure()
+        if: (success() || failure()) && github.event_name == 'pull_request'
         with:
           name: svgo-test-report-${{ github.sha }}
-          path: /tmp/svgo.${{ github.sha }}/svgo-test-report.json
+          path: .cache/svgo-regression/runs/${{ github.sha }}/svgo-test-report.json
           if-no-files-found: error
           retention-days: 1
+      - uses: actions/upload-artifact@v7
+        if: (success() || failure()) && github.event_name != 'pull_request'
+        with:
+          name: svgo-test-report
+          path: .cache/svgo-regression/runs/${{ github.sha }}/svgo-test-report.json
+          if-no-files-found: error
   delta:
-    if: success() || failure()
+    if: (success() || failure()) && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     needs:
       - regression
@@ -52,6 +68,6 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report-${{ github.sha }} -D /tmp/svgo.${{ github.sha }}/
-      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report -D /tmp/svgo.main/
-      - run: ./test/regression/delta.js /tmp/svgo.main/svgo-test-report.json /tmp/svgo.${{ github.sha }}/svgo-test-report.json
+      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report-${{ github.sha }} -D .cache/reports/head/
+      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report -D .cache/reports/main/
+      - run: ./test/regression/delta.js .cache/reports/main/svgo-test-report.json .cache/reports/head/svgo-test-report.json

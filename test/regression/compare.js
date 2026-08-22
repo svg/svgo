@@ -6,16 +6,14 @@ import { parseArgs } from 'node:util';
 import { chromium } from 'playwright';
 import Tinypool from 'tinypool';
 import { expectMismatch, ignore, skip } from './file-lists.js';
-import { pathToPosix, printReport } from './lib.js';
+import { md5sum, pathToPosix, printReport } from './lib.js';
 import {
   readReport,
   readVersion,
   REGRESSION_DIFFS_PATH,
   REGRESSION_FIXTURES_PATH,
   REGRESSION_OPTIMIZED_PATH,
-  REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
-  REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
-  REGRESSION_SCREENSHOTS_PATH,
+  REGRESSION_SCREENSHOT_CACHE_PATH,
   writeReport,
 } from './regression-io.js';
 
@@ -26,6 +24,62 @@ const availableParallelism = os.availableParallelism?.() ?? os.cpus().length;
 const DEFAULT_RENDER_WORKERS = os.cpus().length * 2;
 const DEFAULT_COMPARE_WORKERS = Math.min(availableParallelism, 2);
 const workerUrl = new URL('./compare-worker.js', import.meta.url);
+
+/** @type {import('playwright').PageScreenshotOptions} */
+const screenshotOptions = {
+  omitBackground: true,
+  animations: 'disabled',
+};
+
+/** @param {string} version */
+const getScreenshotCacheKey = (version) =>
+  md5sum(
+    JSON.stringify({
+      suite: version,
+      version: 1,
+      chromium: chromium.executablePath(),
+      platform: process.platform,
+      arch: process.arch,
+      imageOS: process.env.ImageOS,
+      imageVersion: process.env.ImageVersion,
+      viewport: [WIDTH, HEIGHT],
+      screenshotOptions,
+    }),
+  );
+
+/**
+ * @param {string} cacheKey
+ * @param {string} name
+ * @param {string} checksum
+ */
+const getScreenshotPaths = (cacheKey, name, checksum) => ({
+  originalPath: path.join(
+    REGRESSION_SCREENSHOT_CACHE_PATH,
+    cacheKey,
+    'original',
+    `${name}.png`,
+  ),
+  optimizedPath: path.join(
+    REGRESSION_SCREENSHOT_CACHE_PATH,
+    cacheKey,
+    'optimized',
+    name,
+    `${checksum}.png`,
+  ),
+});
+
+/** @param {string} file */
+const fileExists = async (file) => {
+  try {
+    await fs.access(file);
+    return true;
+  } catch (error) {
+    if (/** @type {NodeJS.ErrnoException} */ (error).code === 'ENOENT') {
+      return false;
+    }
+    throw error;
+  }
+};
 
 /** @param {string[]} args */
 export function parseArguments(args) {
@@ -45,25 +99,51 @@ export function parseArguments(args) {
  * @typedef {{ run: (value: import('./compare-worker.js').CompareOptions) => Promise<CompareResult>, destroy: () => Promise<void> }} ComparePool
  */
 
-/** @type {import('playwright').PageScreenshotOptions} */
-const screenshotOptions = {
-  omitBackground: true,
-  animations: 'disabled',
-};
-
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ workerCount?: number }=} options
+ * @param {{ cacheKey: string, checksums: Record<string, string>, workerCount?: number }} options
  */
-export async function renderScreenshots(list, options = {}) {
-  const queue = [...list];
+export async function renderScreenshots(list, options) {
+  /** @type {Array<{ name: string, originalPath: string, optimizedPath: string, hasOriginal: boolean, hasOptimized: boolean }>} */
+  const queue = [];
+  for (const name of list) {
+    const checksum = options.checksums[pathToPosix(name)];
+    if (checksum == null) {
+      throw new Error(`Missing optimized checksum for ${name}`);
+    }
+    const paths = getScreenshotPaths(options.cacheKey, name, checksum);
+    const [hasOriginal, hasOptimized] = await Promise.all([
+      fileExists(paths.originalPath),
+      fileExists(paths.optimizedPath),
+    ]);
+    if (!hasOriginal || !hasOptimized) {
+      queue.push({ name, ...paths, hasOriginal, hasOptimized });
+    }
+  }
+
   const workerCount = Math.min(
     options.workerCount ?? DEFAULT_RENDER_WORKERS,
     queue.length,
   );
-  await fs.rm(REGRESSION_SCREENSHOTS_PATH, { recursive: true, force: true });
-  await fs.mkdir(REGRESSION_ORIGINAL_SCREENSHOTS_PATH, { recursive: true });
-  await fs.mkdir(REGRESSION_OPTIMIZED_SCREENSHOTS_PATH, { recursive: true });
+  if (workerCount === 0) {
+    return;
+  }
+
+  /**
+   * @param {import('playwright').ElementHandle} element
+   * @param {string} output
+   */
+  const screenshot = async (element, output) => {
+    const temporary = `${output}.tmp`;
+    await fs.mkdir(path.dirname(output), { recursive: true });
+    try {
+      const png = await element.screenshot(screenshotOptions);
+      await fs.writeFile(temporary, png);
+      await fs.rename(temporary, output);
+    } finally {
+      await fs.rm(temporary, { force: true });
+    }
+  };
 
   const browser = await chromium.launch();
   try {
@@ -76,34 +156,22 @@ export async function renderScreenshots(list, options = {}) {
     const worker = async () => {
       const page = await context.newPage();
       try {
-        let name;
-        while ((name = queue.pop())) {
-          const originalPath = path.join(
-            REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
-            `${name}.png`,
-          );
-          const optimizedPath = path.join(
-            REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
-            `${name}.png`,
-          );
-
-          await page.goto(
-            `file://${path.join(REGRESSION_FIXTURES_PATH, name)}`,
-          );
-          let element = await page.waitForSelector('svg');
-          await element.screenshot({
-            ...screenshotOptions,
-            path: originalPath,
-          });
-
-          await page.goto(
-            `file://${path.join(REGRESSION_OPTIMIZED_PATH, name)}`,
-          );
-          element = await page.waitForSelector('svg');
-          await element.screenshot({
-            ...screenshotOptions,
-            path: optimizedPath,
-          });
+        let task;
+        while ((task = queue.pop())) {
+          if (!task.hasOriginal) {
+            await page.goto(
+              `file://${path.join(REGRESSION_FIXTURES_PATH, task.name)}`,
+            );
+            const element = await page.waitForSelector('svg');
+            await screenshot(element, task.originalPath);
+          }
+          if (!task.hasOptimized) {
+            await page.goto(
+              `file://${path.join(REGRESSION_OPTIMIZED_PATH, task.name)}`,
+            );
+            const element = await page.waitForSelector('svg');
+            await screenshot(element, task.optimizedPath);
+          }
         }
       } finally {
         await page.close();
@@ -124,7 +192,7 @@ export async function renderScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ pool?: ComparePool, noDiff?: boolean }=} options
+ * @param {{ pool?: ComparePool, noDiff?: boolean, cacheKey?: string, checksums?: Record<string, string> }=} options
  * @returns {Promise<MatchResult[]>}
  */
 export async function compareScreenshots(list, options = {}) {
@@ -142,22 +210,20 @@ export async function compareScreenshots(list, options = {}) {
   let compared;
   try {
     compared = await Promise.all(
-      list.map((name) =>
-        pool.run({
+      list.map((name) => {
+        const paths = getScreenshotPaths(
+          options.cacheKey ?? 'test',
           name,
-          originalPath: path.join(
-            REGRESSION_ORIGINAL_SCREENSHOTS_PATH,
-            `${name}.png`,
-          ),
-          optimizedPath: path.join(
-            REGRESSION_OPTIMIZED_SCREENSHOTS_PATH,
-            `${name}.png`,
-          ),
+          options.checksums?.[pathToPosix(name)] ?? 'current',
+        );
+        return pool.run({
+          name,
+          ...paths,
           diffPath: options.noDiff
             ? null
             : path.join(REGRESSION_DIFFS_PATH, `${name}.diff.png`),
-        }),
-      ),
+        });
+      }),
     );
   } finally {
     await pool.destroy();
@@ -170,16 +236,20 @@ export async function compareScreenshots(list, options = {}) {
 
 /**
  * @param {ReadonlyArray<string>} list
- * @param {{ screenshotPath?: string, readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cleanup?: typeof fs.rm, now?: () => number, log?: (message: string) => unknown, noDiff?: boolean }=} options
+ * @param {{ readVersion?: () => Promise<string>, render?: (list: ReadonlyArray<string>) => Promise<unknown>, compare?: (list: ReadonlyArray<string>) => Promise<Array<{ name: string, isMatch: boolean }>>, cacheKey?: string, checksums?: Record<string, string>, now?: () => number, log?: (message: string) => unknown, noDiff?: boolean }=} options
  * @returns {Promise<Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
 export async function runTests(list, options = {}) {
   const versionReader = options.readVersion ?? readVersion;
-  const render = options.render ?? renderScreenshots;
-  const cleanup = options.cleanup ?? fs.rm;
+  const render =
+    options.render ??
+    ((pending) =>
+      renderScreenshots(pending, {
+        cacheKey: options.cacheKey ?? 'test',
+        checksums: options.checksums ?? {},
+      }));
   const now = options.now ?? performance.now.bind(performance);
   const log = options.log ?? console.info;
-  const screenshotPath = options.screenshotPath ?? REGRESSION_SCREENSHOTS_PATH;
   const version = await versionReader();
   /** @type {Omit<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>} */
   const report = {
@@ -194,38 +264,38 @@ export async function runTests(list, options = {}) {
     errors: { shouldHaveMatched: [], shouldHaveMismatched: [] },
   };
 
-  try {
-    const renderStarted = now();
-    await render(list);
-    const compareStarted = now();
-    log(
-      `Rendered screenshots in ${((compareStarted - renderStarted) / 1000).toFixed(2)}s`,
-    );
-    const results = options.compare
-      ? await options.compare(list)
-      : await compareScreenshots(list, { noDiff: options.noDiff });
-    log(
-      `Compared screenshots in ${((now() - compareStarted) / 1000).toFixed(2)}s`,
-    );
-    for (const { name, isMatch } of results) {
-      const namePosix = pathToPosix(name);
-      const expectedToMismatch = expectMismatch.includes(namePosix);
-      if (isMatch) {
-        if (expectedToMismatch) {
-          report.errors.shouldHaveMismatched.push(namePosix);
-        } else if (ignore.includes(namePosix)) {
-          report.results.ignored++;
-        } else {
-          report.results.match++;
-        }
-      } else if (expectedToMismatch) {
-        report.results.expectMismatch++;
-      } else if (!ignore.includes(namePosix)) {
-        report.errors.shouldHaveMatched.push(namePosix);
+  const renderStarted = now();
+  await render(list);
+  const compareStarted = now();
+  log(
+    `Rendered screenshots in ${((compareStarted - renderStarted) / 1000).toFixed(2)}s`,
+  );
+  const results = options.compare
+    ? await options.compare(list)
+    : await compareScreenshots(list, {
+        cacheKey: options.cacheKey,
+        checksums: options.checksums,
+        noDiff: options.noDiff,
+      });
+  log(
+    `Compared screenshots in ${((now() - compareStarted) / 1000).toFixed(2)}s`,
+  );
+  for (const { name, isMatch } of results) {
+    const namePosix = pathToPosix(name);
+    const expectedToMismatch = expectMismatch.includes(namePosix);
+    if (isMatch) {
+      if (expectedToMismatch) {
+        report.errors.shouldHaveMismatched.push(namePosix);
+      } else if (ignore.includes(namePosix)) {
+        report.results.ignored++;
+      } else {
+        report.results.match++;
       }
+    } else if (expectedToMismatch) {
+      report.results.expectMismatch++;
+    } else if (!ignore.includes(namePosix)) {
+      report.errors.shouldHaveMatched.push(namePosix);
     }
-  } finally {
-    await cleanup(screenshotPath, { recursive: true, force: true });
   }
   return report;
 }
@@ -236,8 +306,16 @@ async function main() {
     const list = (
       await fs.readdir(REGRESSION_FIXTURES_PATH, { recursive: true })
     ).filter((name) => name.endsWith('.svg'));
-    const report = await runTests(list, { noDiff });
-    const combinedReport = { ...report, ...(await readReport()) };
+    const optimizationReport = await readReport();
+    const version = await readVersion();
+    const cacheKey = getScreenshotCacheKey(version);
+    const checksums = optimizationReport.checksums ?? {};
+    const report = await runTests(list, {
+      cacheKey,
+      checksums,
+      noDiff,
+    });
+    const combinedReport = { ...report, ...optimizationReport };
     printReport(
       /** @type {import('./regression-io.js').TestReport} */ (combinedReport),
     );
