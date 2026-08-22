@@ -63,7 +63,7 @@ function writeReport(deltaReport) {
   console.log(`${HEADING}
        Files Affected: ${filesAffected.toLocaleString()} / ${totalFiles.toLocaleString()}
         Bytes Saved Δ: ${toDisplayString(bytesDelta, (n) => bytesToHumanReadable(n))}
-         Time Taken Δ: ${toDisplayString(secsDelta, (n) => secsToHumanReadable(n))}
+  Optimization Time Δ: ${toDisplayString(secsDelta, (n) => secsToHumanReadable(n))}
   Peak Memory Alloc Δ: ${toDisplayString(memDelta, (n) => bytesToHumanReadable(n, 'KiB'))}`);
 }
 
