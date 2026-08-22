@@ -1,0 +1,25 @@
+Preserve both href and xlink:href attributes on the <a> element.
+
+See: https://github.com/svg/svgo/issues/2230
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 160 40">
+    <a href="https://developer.mozilla.org/">
+        <text x="10" y="25">MDN Web Docs</text>
+    </a>
+    <a xlink:href="https://svgo.dev/">
+        <text x="10" y="35">SVGO</text>
+    </a>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 160 40">
+    <a href="https://developer.mozilla.org/">
+        <text x="10" y="25">MDN Web Docs</text>
+    </a>
+    <a xlink:href="https://svgo.dev/">
+        <text x="10" y="35">SVGO</text>
+    </a>
+</svg>
