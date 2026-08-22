@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { isMainThread, parentPort } from 'node:worker_threads';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
@@ -91,10 +90,4 @@ export async function compareImages(options) {
   return /** @type {CompareResult} */ (result);
 }
 
-if (!isMainThread && parentPort) {
-  const port = parentPort;
-  port.on('message', async (options) => {
-    const result = await compareImages(options);
-    port.postMessage(result);
-  });
-}
+export default compareImages;
