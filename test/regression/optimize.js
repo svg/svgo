@@ -1,5 +1,4 @@
 import fs from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
 import {
   REGRESSION_FIXTURES_PATH,
@@ -13,7 +12,7 @@ import { optimize } from '../../lib/svgo.js';
 const SVGO_OPTS = { floatPrecision: 4 };
 
 /**
- * @param {string[]} list
+ * @param {ReadonlyArray<string>} list
  * @returns {Promise<Partial<import('./regression-io.js').TestReport>>}
  */
 const optimizeFixtures = async (list) => {
@@ -58,16 +57,14 @@ const optimizeFixtures = async (list) => {
     }
   };
 
-  const worker = async () => {
-    let item;
-    while ((item = list.pop())) {
-      await processFile(item);
-    }
-  };
-
-  await Promise.all(
-    Array.from(new Array(os.cpus().length * 2), () => worker()),
-  );
+  // optimize() is synchronous, so async workers cannot optimize in parallel.
+  // They only read multiple fixtures ahead of the active optimization, retaining
+  // several large inputs at once and increasing peak memory without adding CPU
+  // throughput. Keep one fixture in flight until optimization moves to actual
+  // worker threads with a memory-aware scheduler.
+  for (const name of list) {
+    await processFile(name);
+  }
 
   report.metrics.timeTakenSecs = process.uptime();
   report.metrics.peakMemoryAlloc = process.resourceUsage().maxRSS;
