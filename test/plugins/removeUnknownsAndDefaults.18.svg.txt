@@ -1,0 +1,27 @@
+Don't remove unknown attributes or attributes that override an inherited value
+when they're referenced by an attribute selector in CSS, otherwise the
+stylesheet stops matching the element.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect[fill] { stroke: red; }
+        [state] { stroke-width: 2; }
+    </style>
+    <g fill="blue">
+        <rect fill="blue" state="active" width="10" height="10"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect[fill] { stroke: red; }
+        [state] { stroke-width: 2; }
+    </style>
+    <g fill="blue">
+        <rect fill="blue" state="active" width="10" height="10"/>
+    </g>
+</svg>
