@@ -1,15 +1,17 @@
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
+import Tinypool from 'tinypool';
 import {
   REGRESSION_FIXTURES_PATH,
   REGRESSION_OPTIMIZED_PATH,
   writeReport,
 } from './regression-io.js';
-import { md5sum, pathToPosix } from './lib.js';
-import { optimize } from '../../lib/svgo.js';
+import { pathToPosix } from './lib.js';
 
-/** @type {import('../../lib/types.js').Config} */
-const SVGO_OPTS = { floatPrecision: 4 };
+// Keep concurrent large ASTs bounded on memory-constrained CI runners.
+const DEFAULT_OPTIMIZE_WORKERS = Math.min(os.availableParallelism(), 2);
+const workerUrl = new URL('./optimize-worker.js', import.meta.url);
 
 /**
  * @param {ReadonlyArray<string>} list
@@ -29,41 +31,40 @@ const optimizeFixtures = async (list) => {
     checksums: {},
   };
 
-  /**
-   * @param {string} name
-   */
-  const processFile = async (name) => {
-    const original = await fs.readFile(
-      path.join(REGRESSION_FIXTURES_PATH, name),
-      'utf-8',
-    );
-    const optimized = optimize(original, SVGO_OPTS).data;
-    const namePosix = pathToPosix(name);
-    report.checksums[namePosix] = md5sum(optimized);
-
-    const prevFileSize = Buffer.byteLength(original, 'utf8');
-    const resultFileSize = Buffer.byteLength(optimized, 'utf8');
-    report.metrics.bytesSaved += prevFileSize - resultFileSize;
-
-    const file = path.join(REGRESSION_OPTIMIZED_PATH, name);
-    await fs.mkdir(path.dirname(file), { recursive: true });
-    await fs.writeFile(file, optimized);
-
-    if (process.stdout.isTTY) {
-      process.stdout.clearLine(0);
-      process.stdout.write(
-        `\rOptimized ${(++processed).toLocaleString()} of ${totalFiles.toLocaleString()}…`,
+  const workerCount = Math.min(DEFAULT_OPTIMIZE_WORKERS, list.length);
+  if (workerCount !== 0) {
+    const pool = new Tinypool({
+      filename: workerUrl.href,
+      minThreads: workerCount,
+      maxThreads: workerCount,
+    });
+    /** @type {import('./optimize-worker.js').OptimizeResult[]} */
+    let results;
+    try {
+      results = await Promise.all(
+        list.map(async (name) => {
+          const result = await pool.run({
+            name,
+            originalPath: path.join(REGRESSION_FIXTURES_PATH, name),
+            optimizedPath: path.join(REGRESSION_OPTIMIZED_PATH, name),
+          });
+          if (process.stdout.isTTY) {
+            process.stdout.clearLine(0);
+            process.stdout.write(
+              `\rOptimized ${(++processed).toLocaleString()} of ${totalFiles.toLocaleString()}…`,
+            );
+          }
+          return result;
+        }),
       );
+    } finally {
+      await pool.destroy();
     }
-  };
 
-  // optimize() is synchronous, so async workers cannot optimize in parallel.
-  // They only read multiple fixtures ahead of the active optimization, retaining
-  // several large inputs at once and increasing peak memory without adding CPU
-  // throughput. Keep one fixture in flight until optimization moves to actual
-  // worker threads with a memory-aware scheduler.
-  for (const name of list) {
-    await processFile(name);
+    for (const result of results) {
+      report.checksums[pathToPosix(result.name)] = result.checksum;
+      report.metrics.bytesSaved += result.bytesSaved;
+    }
   }
 
   report.metrics.timeTakenSecs = process.uptime();
