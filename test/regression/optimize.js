@@ -15,9 +15,10 @@ const workerUrl = new URL('./optimize-worker.js', import.meta.url);
 
 /**
  * @param {ReadonlyArray<string>} list
- * @returns {Promise<Partial<import('./regression-io.js').TestReport>>}
+ * @returns {Promise<Pick<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
 const optimizeFixtures = async (list) => {
+  const started = performance.now();
   const totalFiles = list.length;
   let processed = 0;
 
@@ -67,7 +68,7 @@ const optimizeFixtures = async (list) => {
     }
   }
 
-  report.metrics.timeTakenSecs = process.uptime();
+  report.metrics.timeTakenSecs = (performance.now() - started) / 1000;
   report.metrics.peakMemoryAlloc = process.resourceUsage().maxRSS;
   return report;
 };
@@ -79,7 +80,12 @@ const optimizeFixtures = async (list) => {
     });
     const list = (await filesPromise).filter((name) => name.endsWith('.svg'));
     const report = await optimizeFixtures(list);
-    console.log();
+    if (process.stdout.isTTY) {
+      console.log();
+    }
+    console.info(
+      `Optimized SVGs in ${report.metrics.timeTakenSecs.toFixed(2)}s`,
+    );
     await writeReport(report);
   } catch (error) {
     console.error(error);

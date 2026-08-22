@@ -22,7 +22,7 @@ import { getCommitRef } from './lib.js';
  *
  * @typedef Metrics
  * @property {number} bytesSaved Total bytes saved throughout this test run.
- * @property {number} timeTakenSecs Total time taken throughout this test run.
+ * @property {number} timeTakenSecs Time taken to optimize all fixtures.
  * @property {number} peakMemoryAlloc
  *   Peak memory allocation throughout this test run in kibibytes (1,024 bytes).
  *
