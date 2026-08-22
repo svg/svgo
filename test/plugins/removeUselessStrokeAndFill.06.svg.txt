@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <g id="test">
+            <rect fill-opacity=".5" width="100" height="100"/>
+        </g>
+    </defs>
+    <rect width="10" height="10" fill="transparent" stroke="none"/>
+    <rect width="20" height="20" fill="rgba(255, 0, 0, 0)" stroke="transparent"/>
+    <rect width="30" height="30" fill="hsla(120, 100%, 50%, 0)" stroke="hsla(240, 100%, 50%, 0)"/>
+    <rect width="40" height="40" fill="rgba(0, 0, 0, 0)" stroke="rgba(255, 255, 255, 0%)"/>
+    
+    <rect width="50" height="50" fill="transparent" stroke="red"/>
+    <rect width="60" height="60" fill="blue" stroke="transparent"/>
+    <rect width="70" height="70" fill="rgba(255, 0, 0, 0.5)" stroke="none"/>
+    
+    <circle r="15" cx="60" cy="50" fill="green" stroke="transparent" stroke-width="5"/>
+    <circle r="25" cx="60" cy="50" fill="blue" stroke="rgba(0, 0, 0, 0)" stroke-width="5"/>
+    <circle r="35" cx="60" cy="50" fill="red" stroke="hsla(120, 100%, 50%, 0)" stroke-dasharray="5,5"/>
+    <circle fill="none" fill-rule="evenodd" cx="60" cy="60" r="50"/>
+
+    
+    <ellipse rx="17" ry="20" fill="transparent" stroke="blue" stroke-width="2"/>
+    <ellipse rx="27" ry="20" fill="rgba(255, 255, 255, 0)" stroke="blue" stroke-width="2"/>
+    <ellipse rx="37" ry="20" fill="hsla(0, 0%, 0%, 0%)" stroke="blue" stroke-width="2"/>
+    
+    <path d="M10,10 L50,50" fill="rgba(0, 0, 0, 0)" stroke="transparent"/>
+    <path d="M20,20 L60,60" fill="hsla(120, 100%, 50%, 0)" stroke="hsla(240, 100%, 50%, 0%)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <g id="test">
+            <rect fill-opacity=".5" width="100" height="100"/>
+        </g>
+    </defs>
+    <rect width="10" height="10" fill="none"/>
+    <rect width="20" height="20" fill="none"/>
+    <rect width="30" height="30" fill="none"/>
+    <rect width="40" height="40" fill="none"/>
+    <rect width="50" height="50" fill="none" stroke="red"/>
+    <rect width="60" height="60" fill="blue"/>
+    <rect width="70" height="70" fill="rgba(255, 0, 0, 0.5)"/>
+    <circle r="15" cx="60" cy="50" fill="green"/>
+    <circle r="25" cx="60" cy="50" fill="blue"/>
+    <circle r="35" cx="60" cy="50" fill="red"/>
+    <circle fill="none" cx="60" cy="60" r="50"/>
+    <ellipse rx="17" ry="20" fill="none" stroke="blue" stroke-width="2"/>
+    <ellipse rx="27" ry="20" fill="none" stroke="blue" stroke-width="2"/>
+    <ellipse rx="37" ry="20" fill="none" stroke="blue" stroke-width="2"/>
+    <path d="M10,10 L50,50" fill="none"/>
+    <path d="M20,20 L60,60" fill="none"/>
+</svg>
