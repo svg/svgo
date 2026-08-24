@@ -62,6 +62,9 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "publishConfig": {
+    "tag": "v3"
+  },
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=4 --coverage",
     "lint": "eslint --ignore-path .gitignore . && prettier --check . --ignore-path .gitignore",

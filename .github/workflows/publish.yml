@@ -20,4 +20,4 @@ jobs:
       - run: npm install --global npm@11.5.1
       - run: yarn install
       - run: yarn prepublishOnly
-      - run: npm publish --ignore-scripts --access public --tag v3
+      - run: npm publish --ignore-scripts --access public
