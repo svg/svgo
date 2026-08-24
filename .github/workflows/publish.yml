@@ -23,13 +23,13 @@ jobs:
       - run: |
           VERSION=$(jq -r .version <package.json)
           if [[ "$VERSION" = *"-rc."* ]]; then
-            pnpm publish --access public --tag rc
+            pnpm publish --access public --tag rc --no-git-checks
           else
             LATEST_VERSION="$(gh release view --json tagName -q '.tagName' --repo ${{ github.repository }})"
-            if [[ "${{ github.ref_name }}" = "$LATEST_VERSION" ]]; then
-              pnpm publish --access public
+            if [[ "v$VERSION" = "$LATEST_VERSION" ]]; then
+              pnpm publish --access public --no-git-checks
             else
               MAJOR="$(awk -F '.' '{ print $1 }' <<< "$VERSION")"
-              pnpm publish --access public --tag "v$MAJOR"
+              pnpm publish --access public --tag "v$MAJOR" --no-git-checks
             fi
           fi
