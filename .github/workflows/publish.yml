@@ -10,25 +10,14 @@ permissions:
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: 16
+          node-version: 24
           registry-url: https://registry.npmjs.org
+      - run: corepack enable
+      - run: npm install --global npm@11.5.1
       - run: yarn install
-      - run: |
-          VERSION=$(jq -r .version <package.json)
-          if [[ "$VERSION" = *"-rc."* ]]; then
-            yarn npm publish --access public --tag rc
-          else
-            LATEST_VERSION="$(gh release view --json tagName -q '.tagName' --repo ${{ github.repository }})"
-            if [[ "${{ github.ref_name }}" = "$LATEST_VERSION" ]]; then
-              yarn npm publish --access public
-            else
-              MAJOR="$(awk -F '.' '{ print $1 }' <<< "$VERSION")"
-              yarn npm publish --access public --tag "v$MAJOR"
-            fi
-          fi
+      - run: yarn prepublishOnly
+      - run: npm publish --ignore-scripts --access public
