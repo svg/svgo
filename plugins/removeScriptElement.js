@@ -1,6 +1,7 @@
 'use strict';
 
 const { detachNodeFromParent } = require('../lib/xast.js');
+const { isExecutableUrl } = require('../lib/svgo/tools.js');
 const { attrsGroups } = require('./_collections.js');
 
 exports.name = 'removeScriptElement';
@@ -15,11 +16,19 @@ const eventAttrs = [
   ...attrsGroups.graphicalEvent,
 ];
 
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+
+/** Namespaces that support SVG <foreignObject> elements. */
+const FOREIGN_OBJECT_NAMESPACES = [SVG_NAMESPACE];
+
+/** Namespaces that support SVG <a> elements. */
+const ANCHOR_NAMESPACES = [SVG_NAMESPACE];
+
 /** Namespaces that support executable <script> elements. */
-const SCRIPT_NAMESPACES = [
-  'http://www.w3.org/2000/svg',
-  'http://www.w3.org/1999/xhtml',
-];
+const SCRIPT_NAMESPACES = [SVG_NAMESPACE, 'http://www.w3.org/1999/xhtml'];
+
+/** Attributes that can load or navigate to executable documents in HTML. */
+const HTML_URL_ATTRS = new Set(['action', 'data', 'formaction', 'href', 'src']);
 
 /**
  * @param {string} elem
@@ -62,6 +71,7 @@ exports.fn = () => {
    *
    * @type {Map<string, string[]>} */
   const prefixes = new Map();
+  let foreignObjectDepth = 0;
 
   return {
     element: {
@@ -81,19 +91,54 @@ exports.fn = () => {
         }
 
         if (
+          isNamespaceAwareElem(
+            node.name,
+            'foreignObject',
+            prefixes,
+            FOREIGN_OBJECT_NAMESPACES,
+          )
+        ) {
+          foreignObjectDepth += 1;
+        }
+
+        if (
           isNamespaceAwareElem(node.name, 'script', prefixes, SCRIPT_NAMESPACES)
         ) {
           detachNodeFromParent(node, parentNode);
           return;
         }
 
-        for (const attr of eventAttrs) {
-          if (node.attributes[attr] != null) {
+        for (const [attr, value] of Object.entries(node.attributes)) {
+          const localAttr = attr.slice(attr.lastIndexOf(':') + 1).toLowerCase();
+          const isEventAttr =
+            eventAttrs.includes(attr) ||
+            (foreignObjectDepth > 0 && localAttr.startsWith('on'));
+          const isEmbeddedDocumentAttr =
+            foreignObjectDepth > 0 && localAttr === 'srcdoc';
+          const isExecutableHtmlUrl =
+            foreignObjectDepth > 0 &&
+            HTML_URL_ATTRS.has(localAttr) &&
+            isExecutableUrl(value);
+
+          if (isEventAttr || isEmbeddedDocumentAttr || isExecutableHtmlUrl) {
             delete node.attributes[attr];
           }
         }
       },
       exit: (node, parentNode) => {
+        const isForeignObject = isNamespaceAwareElem(
+          node.name,
+          'foreignObject',
+          prefixes,
+          FOREIGN_OBJECT_NAMESPACES,
+        );
+        const isAnchor = isNamespaceAwareElem(
+          node.name,
+          'a',
+          prefixes,
+          ANCHOR_NAMESPACES,
+        );
+
         for (const k of Object.keys(node.attributes)) {
           if (!k.startsWith('xmlns:')) {
             continue;
@@ -103,33 +148,32 @@ exports.fn = () => {
           /** @type {string[]} */ (prefixes.get(prefix)).pop();
         }
 
-        if (node.name !== 'a') {
-          return;
-        }
+        if (isAnchor) {
+          for (const attr of Object.keys(node.attributes)) {
+            if (attr === 'href' || attr.endsWith(':href')) {
+              if (
+                node.attributes[attr] == null ||
+                !isExecutableUrl(node.attributes[attr])
+              ) {
+                continue;
+              }
 
-        for (const attr of Object.keys(node.attributes)) {
-          if (attr === 'href' || attr.endsWith(':href')) {
-            if (
-              node.attributes[attr] == null ||
-              !node.attributes[attr]
-                .trimStart()
-                .toLowerCase()
-                .startsWith('javascript:')
-            ) {
-              continue;
-            }
+              const index = parentNode.children.indexOf(node);
+              parentNode.children.splice(index, 1, ...node.children);
 
-            const index = parentNode.children.indexOf(node);
-            parentNode.children.splice(index, 1, ...node.children);
-
-            // TODO remove legacy parentNode in v4
-            for (const child of node.children) {
-              Object.defineProperty(child, 'parentNode', {
-                writable: true,
-                value: parentNode,
-              });
+              // TODO remove legacy parentNode in v4
+              for (const child of node.children) {
+                Object.defineProperty(child, 'parentNode', {
+                  writable: true,
+                  value: parentNode,
+                });
+              }
             }
           }
+        }
+
+        if (isForeignObject) {
+          foreignObjectDepth -= 1;
         }
       },
     },
