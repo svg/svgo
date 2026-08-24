@@ -19,6 +19,9 @@ const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 /** Namespaces that support SVG <foreignObject> elements. */
 const FOREIGN_OBJECT_NAMESPACES = [SVG_NAMESPACE];
 
+/** Namespaces that support SVG <a> elements. */
+const ANCHOR_NAMESPACES = [SVG_NAMESPACE];
+
 /** Namespaces that support executable <script> elements. */
 const SCRIPT_NAMESPACES = [SVG_NAMESPACE, 'http://www.w3.org/1999/xhtml'];
 
@@ -128,6 +131,12 @@ export const fn = () => {
           prefixes,
           FOREIGN_OBJECT_NAMESPACES,
         );
+        const isAnchor = isNamespaceAwareElem(
+          node.name,
+          'a',
+          prefixes,
+          ANCHOR_NAMESPACES,
+        );
 
         for (const k of Object.keys(node.attributes)) {
           if (!k.startsWith('xmlns:')) {
@@ -138,7 +147,7 @@ export const fn = () => {
           /** @type {string[]} */ (prefixes.get(prefix)).pop();
         }
 
-        if (node.name === 'a') {
+        if (isAnchor) {
           for (const attr of Object.keys(node.attributes)) {
             if (attr === 'href' || attr.endsWith(':href')) {
               if (
