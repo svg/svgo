@@ -68,6 +68,25 @@ export const fn = (root, params) => {
   } = params;
   const stylesheet = collectStylesheet(root);
 
+  /** @type {WeakMap<import('../lib/types.js').XastElement, import('../lib/types.js').ComputedStyles>} */
+  const computedStyles = new WeakMap();
+
+  /**
+   * Computing styles walks the node's ancestors and matches every stylesheet
+   * rule. This plugin visits most rendered elements twice, but does not mutate
+   * their attributes, so reuse the result between passes.
+   *
+   * @param {import('../lib/types.js').XastElement} node
+   * @returns {import('../lib/types.js').ComputedStyles}
+   */
+  const getComputedStyle = (node) => {
+    let computedStyle = computedStyles.get(node);
+    if (computedStyle == null) {
+      computedStyle = computeStyle(stylesheet, node, computedStyles);
+    }
+    return computedStyle;
+  };
+
   /**
    * Skip non-rendered nodes initially, and only detach if they have no ID, or
    * their ID is not referenced by another node.
@@ -139,7 +158,7 @@ export const fn = (root, params) => {
           nonRenderedNodes.set(node, parentNode);
           return visitSkip;
         }
-        const computedStyle = computeStyle(stylesheet, node);
+        const computedStyle = getComputedStyle(node);
         // opacity="0"
         //
         // https://www.w3.org/TR/SVG11/masking.html#ObjectAndGroupOpacityProperties
@@ -362,7 +381,7 @@ export const fn = (root, params) => {
 
         // Removes hidden elements
         // https://www.w3schools.com/cssref/pr_class_visibility.asp
-        const computedStyle = computeStyle(stylesheet, node);
+        const computedStyle = getComputedStyle(node);
         if (
           isHidden &&
           computedStyle.visibility &&
@@ -402,7 +421,7 @@ export const fn = (root, params) => {
             removeElement(node, parentNode);
             return;
           }
-          const pathData = parsePathData(node.attributes.d);
+          const pathData = parsePathData(node.attributes.d, 2);
           if (pathData.length === 0) {
             removeElement(node, parentNode);
             return;
