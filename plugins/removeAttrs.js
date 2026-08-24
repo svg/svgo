@@ -105,27 +105,31 @@ export const fn = (root, params) => {
       : false;
   const attrs = Array.isArray(params.attrs) ? params.attrs : [params.attrs];
 
+  // patterns are static, so compile them once instead of on every element
+  const patterns = attrs.map((attr) => {
+    let pattern = attr;
+    // if no element separators (:), assume it's attribute name, and apply to all elements *regardless of value*
+    if (!pattern.includes(elemSeparator)) {
+      pattern = ['.*', pattern, '.*'].join(elemSeparator);
+      // if only 1 separator, assume it's element and attribute name, and apply regardless of attribute value
+    } else if (pattern.split(elemSeparator).length < 3) {
+      pattern = [pattern, '.*'].join(elemSeparator);
+    }
+
+    // create regexps for element, attribute name, and attribute value
+    return pattern.split(elemSeparator).map((value) => {
+      // adjust single * to match anything
+      if (value === '*') {
+        value = '.*';
+      }
+      return new RegExp(['^', value, '$'].join(''), 'i');
+    });
+  });
+
   return {
     element: {
       enter: (node) => {
-        for (let pattern of attrs) {
-          // if no element separators (:), assume it's attribute name, and apply to all elements *regardless of value*
-          if (!pattern.includes(elemSeparator)) {
-            pattern = ['.*', pattern, '.*'].join(elemSeparator);
-            // if only 1 separator, assume it's element and attribute name, and apply regardless of attribute value
-          } else if (pattern.split(elemSeparator).length < 3) {
-            pattern = [pattern, '.*'].join(elemSeparator);
-          }
-
-          // create regexps for element, attribute name, and attribute value
-          const list = pattern.split(elemSeparator).map((value) => {
-            // adjust single * to match anything
-            if (value === '*') {
-              value = '.*';
-            }
-            return new RegExp(['^', value, '$'].join(''), 'i');
-          });
-
+        for (const list of patterns) {
           // matches element
           if (list[0].test(node.name)) {
             // loop attributes
