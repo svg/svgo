@@ -72,6 +72,11 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report-${{ github.sha }} -D .cache/reports/head/
-      - run: gh run download -R ${{ env.REPO }} -n svgo-test-report -D .cache/reports/main/
+      - run: gh run download -R "$REPO" -n "svgo-test-report-$SHA" -D .cache/reports/head/
+        env:
+          REPO: ${{ env.REPO }}
+          SHA: ${{ github.sha }}
+      - run: gh run download -R "$REPO" -n svgo-test-report -D .cache/reports/main/
+        env:
+          REPO: ${{ env.REPO }}
       - run: ./test/regression/delta.js .cache/reports/main/svgo-test-report.json .cache/reports/head/svgo-test-report.json

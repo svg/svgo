@@ -28,7 +28,7 @@ jobs:
           if [[ "$VERSION" = *"-rc."* ]]; then
             pnpm publish --access public --tag rc --no-git-checks
           else
-            LATEST_VERSION="$(gh release view --json tagName -q '.tagName' --repo ${{ github.repository }})"
+            LATEST_VERSION="$(gh release view --json tagName -q '.tagName' --repo "$GH_REPOSITORY")"
             if [[ "v$VERSION" = "$LATEST_VERSION" ]]; then
               pnpm publish --access public --no-git-checks
             else
@@ -36,3 +36,5 @@ jobs:
               pnpm publish --access public --tag "v$MAJOR" --no-git-checks
             fi
           fi
+        env:
+          GH_REPOSITORY: ${{ github.repository }}
