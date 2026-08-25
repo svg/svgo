@@ -8,13 +8,21 @@ SVGO can run in the browser, but how to use it depends on the structure of your 
 
 These instructions are for when you're writing your website in a Node.js environment, probably with tools like [webpack](https://webpack.js.org/) or [Rollup](https://rollupjs.org/) to build it.
 
-Ensure you've installed the dependency by following the instructions in [Getting Started](../01-index.mdx#installation), then you can import `svgo/browser` to use SVGO on client-side.
+Ensure you've installed the dependency by following the instructions in [Getting Started](../01-index.mdx#installation).
+
+### Module resolution
+
+SVGO resolves `svgo` through three conditional exports:
+
+- `default` — resolves to the Node.js build (which additionally exposes `loadConfig`).
+- `browser` — resolves to the bundled browser build when a bundler enables the [`browser` condition](https://nodejs.org/api/packages.html#community-conditions-definitions).
+- `node` — resolves to the Node.js build (which additionally exposes `loadConfig`).
 
 Here's a minimal example using [React](https://react.dev/):
 
 ```js
 import React from 'react';
-import { optimize } from 'svgo/browser';
+import { optimize } from 'svgo';
 
 export default function SvgoDemo(props) {
   const { svg, svgoConfig } = props;
@@ -28,6 +36,12 @@ export default function SvgoDemo(props) {
   );
 }
 ```
+
+You can just import `optimize` from `svgo` and let the bundler resolve the browser version. This allows you to bundle for browser environments without changing the import. If for some reason this does not work, or you want to explicitly import the SVGO browser build, import `svgo/browser` instead of 'svgo';
+
+If your bundler resolves `import 'svgo'` to the browser bundle, TypeScript might keep resolving the Node.js types. Add `"customConditions": ["browser"]` to select the matching browser types. See the [TypeScript `customConditions` documentation](https://www.typescriptlang.org/tsconfig/customConditions.html) for the supported `moduleResolution` values and configuration.
+
+To force the Node.js build when bundling for the browser, remove the `browser` condition from your resolver. Refer to your bundler's documentation for the exact configuration.
 
 ## Without Build Tools
 

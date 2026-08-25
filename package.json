@@ -54,13 +54,24 @@
   "types": "./types/lib/svgo-node.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/svgo-node.js",
-      "require": "./dist/svgo-node.cjs",
-      "types": "./types/lib/svgo-node.d.ts"
+      "browser": {
+        "types": "./types/lib/svgo.d.ts",
+        "default": "./dist/svgo.browser.js"
+      },
+      "node": {
+        "types": "./types/lib/svgo-node.d.ts",
+        "import": "./lib/svgo-node.js",
+        "require": "./dist/svgo-node.cjs"
+      },
+      "default": {
+        "types": "./types/lib/svgo-node.d.ts",
+        "import": "./lib/svgo-node.js",
+        "require": "./dist/svgo-node.cjs"
+      }
     },
     "./browser": {
-      "import": "./dist/svgo.browser.js",
-      "types": "./types/lib/svgo.d.ts"
+      "types": "./types/lib/svgo.d.ts",
+      "import": "./dist/svgo.browser.js"
     }
   },
   "files": [
@@ -80,9 +91,9 @@
     "build:types": "pnpm clean:types && tsc -p tsconfig.build.json",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
-    "typecheck": "tsc",
+    "typecheck": "tsc && tsc -p test/tsconfig.browser.json",
     "test": "vitest run",
-    "test:bundles": "pnpm build:bundles && node ./test/svgo.cjs && node ./test/browser.js",
+    "test:bundles": "pnpm build:bundles && node ./test/svgo.cjs && node ./test/exports.js && node ./test/browser.js",
     "test:regression": "node ./test/regression/extract.js && node ./test/regression/optimize.js && node ./test/regression/compare.js --no-diff",
     "qa": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:bundles && pnpm test:regression",
     "clean": "pnpm clean:build && pnpm clean:types",

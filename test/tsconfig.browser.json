@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "customConditions": ["browser"]
+  },
+  "include": ["types/browser.test-d.ts"]
+}

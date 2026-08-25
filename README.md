@@ -166,6 +166,16 @@ You can also specify a path and customize the current working directory.
 const config = await loadConfig(configFile, cwd);
 ```
 
+## Module resolution
+
+`svgo` is exposed through three conditional exports:
+
+- `default` — the Node.js build, which additionally exposes `loadConfig`.
+- `browser` — the bundled browser build, selected when a bundler targets the browser.
+- `node` — same as the default build
+
+In most cases you can just `import { optimize } from 'svgo'` and let the runtime pick the right build.
+
 ## Donors
 
 | [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/8.0.0/fontello-image.svg" width="80">](https://fontello.com/) |
