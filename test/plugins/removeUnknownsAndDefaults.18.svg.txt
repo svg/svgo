@@ -1,0 +1,23 @@
+Keep inheritable default attributes inside a referenceable subtree.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+  <g id="a">
+    <rect width="10" height="10" fill-opacity="1"/>
+  </g>
+  <g fill-opacity=".3">
+    <use href="#a"/>
+  </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g id="a">
+        <rect width="10" height="10" fill-opacity="1"/>
+    </g>
+    <g fill-opacity=".3">
+        <use href="#a"/>
+    </g>
+</svg>
