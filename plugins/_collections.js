@@ -428,6 +428,7 @@ export const elems = {
     attrs: new Set([
       'class',
       'externalResourcesRequired',
+      'href',
       'style',
       'target',
       'transform',
