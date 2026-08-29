@@ -1,0 +1,49 @@
+Preserve both xlink:href and href attributes in animation elements.
+
+See: https://github.com/svg/svgo/issues/2061
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <animate href="#a" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze" />
+    <animate xlink:href="#b" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze" />
+    <circle id="a" cx="12" cy="12" r="8" fill="green" fill-opacity="0"/>
+    <circle id="b" cx="36" cy="12" r="8" fill="blue" fill-opacity="0"/>
+
+    <animateMotion href="#c" dur="10s" repeatCount="indefinite" path="M20,30 h60 z" />
+    <animateMotion xlink:href="#d" dur="10s" repeatCount="indefinite" path="M0,30 h60 z" />
+    <circle id="c" r="5" fill="red"/>
+    <circle id="d" r="5" fill="orange"/>
+
+    <animateTransform href="#e" attributeName="transform" attributeType="XML" type="rotate" from="0 5 50" to="360 5 50" dur="10s" repeatCount="indefinite" />
+    <animateTransform xlink:href="#f" attributeName="transform" attributeType="XML" type="rotate" from="0 50 50" to="360 50 50" dur="10s" repeatCount="indefinite" />
+    <rect id="e" x="5" y="50" width="10" height="8" fill="yellow"/>
+    <rect id="f" x="50" y="50" width="10" height="8" fill="pink"/>
+
+    <set href="#g" attributeName="r" to="20" begin="1s" dur="2s" />
+    <set xlink:href="#h" attributeName="r" to="20" begin="1s" dur="2s" />
+    <circle id="g" cx="10" cy="70" r="5" fill="purple"/>
+    <circle id="h" cx="30" cy="70" r="5" fill="silver"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <animate href="#a" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze"/>
+    <animate xlink:href="#b" attributeName="fill-opacity" values="0;1" dur="4s" fill="freeze"/>
+    <circle id="a" cx="12" cy="12" r="8" fill="green" fill-opacity="0"/>
+    <circle id="b" cx="36" cy="12" r="8" fill="blue" fill-opacity="0"/>
+    <animateMotion href="#c" dur="10s" repeatCount="indefinite" path="M20,30 h60 z"/>
+    <animateMotion xlink:href="#d" dur="10s" repeatCount="indefinite" path="M0,30 h60 z"/>
+    <circle id="c" r="5" fill="red"/>
+    <circle id="d" r="5" fill="orange"/>
+    <animateTransform href="#e" attributeName="transform" attributeType="XML" type="rotate" from="0 5 50" to="360 5 50" dur="10s" repeatCount="indefinite"/>
+    <animateTransform xlink:href="#f" attributeName="transform" attributeType="XML" type="rotate" from="0 50 50" to="360 50 50" dur="10s" repeatCount="indefinite"/>
+    <rect id="e" x="5" y="50" width="10" height="8" fill="yellow"/>
+    <rect id="f" x="50" y="50" width="10" height="8" fill="pink"/>
+    <set href="#g" attributeName="r" to="20" begin="1s" dur="2s"/>
+    <set xlink:href="#h" attributeName="r" to="20" begin="1s" dur="2s"/>
+    <circle id="g" cx="10" cy="70" r="5" fill="purple"/>
+    <circle id="h" cx="30" cy="70" r="5" fill="silver"/>
+</svg>
