@@ -61,6 +61,10 @@
     "./browser": {
       "import": "./dist/svgo.browser.js",
       "types": "./types/lib/svgo.d.ts"
+    },
+    "./lib/*": {
+      "import": "./lib/*.js",
+      "types": "./types/lib/*.d.ts"
     }
   },
   "files": [
