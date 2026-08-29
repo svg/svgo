@@ -1,0 +1,20 @@
+Removes width/height from the top-most <svg> only, not nested <svg> elements
+(nested <svg> rely on width/height for sizing/positioning).
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
+    <path fill="pink" d="M0 0h10v10H0Z"/>
+    <svg x="1" y="1" width="8" height="8" viewBox="0 0 33 33">
+        <path fill="red" d="M1 16a1 1 0 0 0 31 1 1 1 0 0 0-31-1"/>
+    </svg>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+    <path fill="pink" d="M0 0h10v10H0Z"/>
+    <svg x="1" y="1" width="8" height="8" viewBox="0 0 33 33">
+        <path fill="red" d="M1 16a1 1 0 0 0 31 1 1 1 0 0 0-31-1"/>
+    </svg>
+</svg>
