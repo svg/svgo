@@ -1,4 +1,4 @@
-import * as csso from 'csso';
+import * as csso from '../lib/csso.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { hasScripts } from '../lib/svgo/tools.js';
 

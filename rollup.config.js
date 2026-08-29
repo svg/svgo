@@ -40,13 +40,13 @@ export default [
       format: 'cjs',
       exports: 'named',
     },
-    external: [
-      'os',
-      'fs/promises',
-      'url',
-      'path',
-      ...Object.keys(PKG.dependencies),
-    ],
+    external: (id) => {
+      if (['os', 'fs/promises', 'url', 'path'].includes(id)) {
+        return true;
+      }
+      const deps = Object.keys(PKG.dependencies);
+      return deps.some((dep) => id === dep || id.startsWith(dep + '/'));
+    },
     onwarn(warning) {
       throw Error(warning.toString());
     },
