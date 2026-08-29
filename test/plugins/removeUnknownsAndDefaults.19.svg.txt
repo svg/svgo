@@ -1,0 +1,39 @@
+Do not treat a parent's own non-inheriting presentation attributes as inherited
+by its children. Only properties in the inheritable set may be dropped from a
+child as a useless override; overflow, vector-effect, stop-color, stop-opacity,
+flood-color and friends apply to the element that carries them and must survive
+even when the parent happens to carry the same value.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" overflow="visible" vector-effect="non-scaling-stroke">
+    <svg overflow="visible" x="10">
+        <rect width="10" height="10" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <linearGradient stop-color="red" stop-opacity="0.5">
+        <stop offset="0" stop-color="red" stop-opacity="0.5"/>
+    </linearGradient>
+    <filter flood-color="blue">
+        <feFlood flood-color="blue"/>
+    </filter>
+    <g fill="red" stroke-width="2">
+        <rect width="10" height="10" fill="red" stroke-width="2"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" overflow="visible" vector-effect="non-scaling-stroke">
+    <svg overflow="visible" x="10">
+        <rect width="10" height="10" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <linearGradient stop-color="red" stop-opacity="0.5">
+        <stop offset="0" stop-color="red" stop-opacity="0.5"/>
+    </linearGradient>
+    <filter flood-color="blue">
+        <feFlood flood-color="blue"/>
+    </filter>
+    <g fill="red" stroke-width="2">
+        <rect width="10" height="10"/>
+    </g>
+</svg>
