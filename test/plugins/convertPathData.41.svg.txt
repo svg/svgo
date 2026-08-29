@@ -1,0 +1,20 @@
+A closed circle whose curves fit an arc must stay a full circle.
+The measured arc angle can fall just short of 360° due to bezier
+approximation, so a single arc would have coincident endpoints and
+render nothing. It must be emitted as two half-circle arcs instead.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2195.656274 1486.713736 52.67746 185.305106">
+    <path d="m2226.68 1586.64061c0-.550781-.45-.996093-.996-.996093c-.551 0-.997 .445312-.997 .996093c0 .550782 .446 .996094 .997 .996094c.546 0 .996-.445312 .996-.996094z"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2195.656274 1486.713736 52.67746 185.305106">
+    <path d="M2226.68 1586.64a.996.996 0 1 0-1.994 0 .996.996 0 0 0 1.994 0"/>
+</svg>
+
+@@@
+
+{ "floatPrecision": 3 }
