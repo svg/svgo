@@ -1,3 +1,4 @@
+import { visitSkip } from '../lib/util/visit.js';
 import { attrsGroups } from './_collections.js';
 
 /**
@@ -84,6 +85,11 @@ export const fn = (_root, params) => {
   return {
     element: {
       enter: (node) => {
+        // skip <foreignObject> content
+        if (node.name === 'foreignObject') {
+          return visitSkip;
+        }
+
         if (node.attributes.style != null) {
           // ['opacity: 1', 'color: #000']
           let styles = [];
