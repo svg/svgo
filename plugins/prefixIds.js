@@ -258,10 +258,20 @@ export const fn = (_root, params, info) => {
             node.attributes[name] != null &&
             node.attributes[name].length !== 0
           ) {
-            const parts = node.attributes[name].split(/\s*;\s+/).map((val) => {
-              if (val.endsWith('.end') || val.endsWith('.start')) {
-                const [id, postfix] = val.split('.');
-                return `${prefixId(prefixGenerator, id)}.${postfix}`;
+            // Semicolon-separated SMIL timing values don't require
+            // whitespace after the semicolon (e.g. "0;b.end-0.5s" is valid),
+            // so whitespace on either side must be optional here, not
+            // required after.
+            const parts = node.attributes[name].split(/\s*;\s*/).map((val) => {
+              // A syncbase-value is "id.begin" or "id.end", optionally
+              // followed by a "+"/"-" clock-value offset (e.g. "b.end-0.5s",
+              // "a.begin+0.1s") -- a plain suffix check misses any value
+              // with an offset, since it doesn't end with just ".begin" or
+              // ".end" anymore.
+              const match = /^([^.]+)\.(begin|end)([+-].+)?$/.exec(val);
+              if (match) {
+                const [, id, postfix, offset = ''] = match;
+                return `${prefixId(prefixGenerator, id)}.${postfix}${offset}`;
               }
               return val;
             });
