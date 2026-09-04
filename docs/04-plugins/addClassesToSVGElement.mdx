@@ -10,11 +10,11 @@ svgo:
       description: Adds the specified class name to the outer most `<svg>` element. If `classNames` is specified, this is ignored.
 ---
 
-Overrides the `class` attribute in the outer most `<svg>` element, omitting duplicates or null classes if found in your configuration.
+Adds the configured class names to the outer most `<svg>` element, omitting duplicates or null classes if found in your configuration.
 
 :::caution
 
-If there is no `class` attribute to begin with, it will be added. However, if the there were already classes assigned, these are removed and replaced with the classes configured in this plugin.
+If there is no `class` attribute to begin with, it will be added. If the element already has classes, the ones from your configuration are added alongside the existing ones rather than replacing them.
 
 :::
 
