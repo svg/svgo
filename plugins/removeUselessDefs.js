@@ -41,11 +41,29 @@ export const fn = () => {
 const collectUsefulNodes = (node, usefulNodes) => {
   for (const child of node.children) {
     if (child.type === 'element') {
-      if (child.attributes.id != null || child.name === 'style') {
+      if (
+        child.attributes.id != null ||
+        child.name === 'style' ||
+        isAnimationWithTarget(child)
+      ) {
         usefulNodes.push(child);
       } else {
         collectUsefulNodes(child, usefulNodes);
       }
     }
   }
+};
+
+/**
+ * Animation elements that reference their target through href apply to that
+ * target even when they are placed in a non-rendering element such as defs.
+ *
+ * @param {import('../lib/types.js').XastElement} node
+ * @returns {boolean}
+ */
+const isAnimationWithTarget = (node) => {
+  return (
+    elemsGroups.animation.has(node.name) &&
+    (node.attributes.href != null || node.attributes['xlink:href'] != null)
+  );
 };
