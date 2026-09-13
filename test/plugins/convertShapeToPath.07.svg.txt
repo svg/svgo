@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="5">
+        <animate attributeName="r" values="5;10" dur="1s"/>
+    </circle>
+    <circle cx="30" cy="10" r="5">
+        <animate attributeName="opacity" values="1;0" dur="1s"/>
+    </circle>
+    <ellipse cx="10" cy="30" rx="5" ry="4">
+        <set attributeName="cx" to="20"/>
+    </ellipse>
+    <ellipse cx="40" cy="30" rx="5" ry="4"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="5">
+        <animate attributeName="r" values="5;10" dur="1s"/>
+    </circle>
+    <path d="M30 5A5 5 0 1 0 30 15 5 5 0 1 0 30 5z">
+        <animate attributeName="opacity" values="1;0" dur="1s"/>
+    </path>
+    <ellipse cx="10" cy="30" rx="5" ry="4">
+        <set attributeName="cx" to="20"/>
+    </ellipse>
+    <path d="M40 26A5 4 0 1 0 40 34 5 4 0 1 0 40 26z"/>
+</svg>
+
+@@@
+
+{ "convertArcs": true }

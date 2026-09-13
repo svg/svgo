@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect x="2" y="4" width="20" height="16" fill="#307594">
+        <set attributeName="height" to="0"/>
+        <animate attributeName="height" values="0;16" dur="1s" fill="freeze"/>
+    </rect>
+    <rect width="10" height="10">
+        <animate attributeName="fill" values="red;blue" dur="1s"/>
+    </rect>
+    <rect id="target" width="10" height="10"/>
+    <animate href="#target" attributeName="width" values="10;20" dur="1s"/>
+    <line x1="10" y1="10" x2="20" y2="20">
+        <animate attributeName="x2" values="20;30" dur="1s"/>
+    </line>
+    <polygon points="0 0 10 0 10 10">
+        <set attributeName="points" to="0 0 5 0 5 5"/>
+    </polygon>
+    <polyline points="0 0 10 0 10 10">
+        <animateTransform attributeName="transform" type="translate" values="0 0;1 1" dur="1s"/>
+    </polyline>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect x="2" y="4" width="20" height="16" fill="#307594">
+        <set attributeName="height" to="0"/>
+        <animate attributeName="height" values="0;16" dur="1s" fill="freeze"/>
+    </rect>
+    <path d="M0 0H10V10H0z">
+        <animate attributeName="fill" values="red;blue" dur="1s"/>
+    </path>
+    <rect id="target" width="10" height="10"/>
+    <animate href="#target" attributeName="width" values="10;20" dur="1s"/>
+    <line x1="10" y1="10" x2="20" y2="20">
+        <animate attributeName="x2" values="20;30" dur="1s"/>
+    </line>
+    <polygon points="0 0 10 0 10 10">
+        <set attributeName="points" to="0 0 5 0 5 5"/>
+    </polygon>
+    <path d="M0 0 10 0 10 10">
+        <animateTransform attributeName="transform" type="translate" values="0 0;1 1" dur="1s"/>
+    </path>
+</svg>

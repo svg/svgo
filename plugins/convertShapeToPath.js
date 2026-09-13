@@ -1,5 +1,7 @@
 import { stringifyPathData } from '../lib/path.js';
 import { detachNodeFromParent } from '../lib/xast.js';
+import { visit } from '../lib/util/visit.js';
+import { elemsGroups } from './_collections.js';
 
 /**
  * @typedef ConvertShapeToPathParams
@@ -11,6 +13,22 @@ export const name = 'convertShapeToPath';
 export const description = 'converts basic shapes to more compact path form';
 
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
+
+/**
+ * Attributes that are lost when a shape is converted to a path. Animations
+ * that change them no longer work after the conversion, so shapes using them
+ * must be preserved.
+ *
+ * @type {Readonly<Record<string, Set<string>>>}
+ */
+const shapeOnlyAttributes = {
+  circle: new Set(['cx', 'cy', 'r']),
+  ellipse: new Set(['cx', 'cy', 'rx', 'ry']),
+  line: new Set(['x1', 'y1', 'x2', 'y2']),
+  polygon: new Set(['points']),
+  polyline: new Set(['points']),
+  rect: new Set(['x', 'y', 'width', 'height', 'rx', 'ry']),
+};
 
 /**
  * Converts basic shape to more compact path. It also allows further
@@ -26,9 +44,62 @@ const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 export const fn = (root, params) => {
   const { convertArcs = false, floatPrecision: precision } = params;
 
+  // collect the attributes that animations change on each element
+  /** @type {Map<import('../lib/types.js').XastElement, Set<string>>} */
+  const animatedAttrs = new Map();
+  /** @type {Map<string, import('../lib/types.js').XastElement>} */
+  const elementsById = new Map();
+  /** @type {[import('../lib/types.js').XastElement, import('../lib/types.js').XastParent][]} */
+  const animations = [];
+  visit(root, {
+    element: {
+      enter: (node, parentNode) => {
+        if (node.attributes.id != null) {
+          elementsById.set(node.attributes.id, node);
+        }
+        if (elemsGroups.animation.has(node.name)) {
+          animations.push([node, parentNode]);
+        }
+      },
+    },
+  });
+  for (const [node, parentNode] of animations) {
+    const attributeName = node.attributes.attributeName;
+    if (attributeName == null) {
+      continue;
+    }
+    const href = node.attributes.href ?? node.attributes['xlink:href'];
+    // animation elements target their parent element unless an href points
+    // to another element in the same document
+    const target = href == null ? parentNode : elementsById.get(href.slice(1));
+    if (target == null || target.type !== 'element') {
+      continue;
+    }
+    let attrs = animatedAttrs.get(target);
+    if (attrs == null) {
+      attrs = new Set();
+      animatedAttrs.set(target, attrs);
+    }
+    attrs.add(attributeName);
+  }
+
   return {
     element: {
       enter: (node, parentNode) => {
+        // skip shapes with animations of the attributes that a path does not
+        // have, so the animations keep working
+        const shapeAttrs = shapeOnlyAttributes[node.name];
+        if (shapeAttrs != null) {
+          const animated = animatedAttrs.get(node);
+          if (animated != null) {
+            for (const attributeName of animated) {
+              if (shapeAttrs.has(attributeName)) {
+                return;
+              }
+            }
+          }
+        }
+
         // convert rect to path
         if (
           node.name === 'rect' &&

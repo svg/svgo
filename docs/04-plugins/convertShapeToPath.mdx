@@ -12,3 +12,5 @@ svgo:
 ---
 
 Convert basic shapes to [`<path>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path) elements.
+
+Shapes with [animations](https://developer.mozilla.org/en-US/docs/Web/SVG/Guides/SVG_animation_with_SMIL) that change attributes a path does not have, such as `width` or `points`, are not converted, so the animations keep working.
