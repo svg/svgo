@@ -1,0 +1,20 @@
+Only unwrap once when both href and xlink:href are executable so siblings
+are preserved and children are not duplicated (#2295).
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect id="keep-me" width="10" height="10"/>
+  <a href="javascript:alert(1)" xlink:href="javascript:alert(1)">
+    <text>click</text>
+  </a>
+  <circle id="also-keep" r="5"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <rect id="keep-me" width="10" height="10"/>
+    <text>click</text>
+    <circle id="also-keep" r="5"/>
+</svg>
