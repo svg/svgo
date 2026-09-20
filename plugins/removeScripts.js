@@ -148,16 +148,26 @@ export const fn = () => {
         }
 
         if (isAnchor) {
+          // Unwrap at most once. Anchors often carry both `href` and
+          // `xlink:href` for compatibility; splicing once per executable
+          // attribute deletes the next sibling and duplicates children
+          // (see #2295).
+          let hasExecutableHref = false;
           for (const attr of Object.keys(node.attributes)) {
             if (attr === 'href' || attr.endsWith(':href')) {
               if (
-                node.attributes[attr] == null ||
-                !isExecutableUrl(node.attributes[attr])
+                node.attributes[attr] != null &&
+                isExecutableUrl(node.attributes[attr])
               ) {
-                continue;
+                hasExecutableHref = true;
+                break;
               }
+            }
+          }
 
-              const index = parentNode.children.indexOf(node);
+          if (hasExecutableHref) {
+            const index = parentNode.children.indexOf(node);
+            if (index !== -1) {
               const usefulChildren = node.children.filter(
                 (child) => child.type !== 'text',
               );
