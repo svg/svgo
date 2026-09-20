@@ -72,10 +72,21 @@ export const fn = () => {
           firstStyleElement = node;
         } else {
           detachNodeFromParent(node, parentNode);
-          /** @type {import('../lib/types.js').XastChild} */
-          const child = { type: styleContentType, value: collectedStyles };
-          firstStyleElement.children = [child];
         }
+      },
+    },
+
+    root: {
+      exit: () => {
+        // Flush collected CSS after all <style> elements are visited.
+        // Without this, a lone <style media="..."> deletes the media
+        // attribute but never rewrites its children with the @media wrap.
+        if (firstStyleElement == null) {
+          return;
+        }
+        /** @type {import('../lib/types.js').XastChild} */
+        const child = { type: styleContentType, value: collectedStyles };
+        firstStyleElement.children = [child];
       },
     },
   };
