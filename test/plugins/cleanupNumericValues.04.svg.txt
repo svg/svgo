@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g id="100px" class="100px" data-code="0123" aria-valuenow="01">
+        <circle r="5.00" width="10.00px"/>
+    </g>
+    <use href="#100px"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g id="100px" class="100px" data-code="0123" aria-valuenow="01">
+        <circle r="5" width="10"/>
+    </g>
+    <use href="#100px"/>
+</svg>

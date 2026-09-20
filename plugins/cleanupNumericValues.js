@@ -59,8 +59,16 @@ export const fn = (_root, params) => {
         }
 
         for (const [name, value] of Object.entries(node.attributes)) {
-          // The `version` attribute is a text string and cannot be rounded
-          if (name === 'version') {
+          // Skip non-dimension identifier / metadata attributes (see #2296).
+          // Rounding `id`/`class`/`data-*`/`aria-*` breaks selectors and refs.
+          if (
+            name === 'version' ||
+            name === 'id' ||
+            name === 'xml:id' ||
+            name === 'class' ||
+            name.startsWith('data-') ||
+            name.startsWith('aria-')
+          ) {
             continue;
           }
 
