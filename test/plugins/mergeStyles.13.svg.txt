@@ -1,0 +1,17 @@
+Preserve media attribute on a single style element by wrapping CSS in @media.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print">.a{display:none}</style>
+    <text class="a">x</text>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        @media print{.a{display:none}}
+    </style>
+    <text class="a">x</text>
+</svg>
