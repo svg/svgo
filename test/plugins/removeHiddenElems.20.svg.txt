@@ -1,0 +1,23 @@
+Keep single-point paths that use the SVG marker shorthand (#2297).
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="m" markerWidth="4" markerHeight="4" refX="2" refY="2">
+      <circle cx="2" cy="2" r="2"/>
+    </marker>
+  </defs>
+  <path marker="url(#m)" d="M10 10"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="m" markerWidth="4" markerHeight="4" refX="2" refY="2">
+            <circle cx="2" cy="2" r="2"/>
+        </marker>
+    </defs>
+    <path marker="url(#m)" d="M10 10"/>
+</svg>

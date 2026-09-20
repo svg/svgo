@@ -196,7 +196,9 @@ export const fn = (root, params) => {
             }
 
             const hasMarker =
+              node.attributes.marker != null ||
               node.attributes['marker-start'] != null ||
+              node.attributes['marker-mid'] != null ||
               node.attributes['marker-end'] != null;
             const isMarkersOnlyPath =
               hasMarker &&
