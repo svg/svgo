@@ -14,9 +14,11 @@
     "unenc", // unencoded
     // SVG Nodes / Attributes and CSS Properties, including plurals
     "bbox",
+    "describedby",
     "hkern",
     "horiz",
     "hrefs",
+    "labelledby",
     "mpath",
     "onbegin",
     "onrepeat",
