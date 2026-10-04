@@ -60,17 +60,16 @@ export const fn = () => {
         }
 
         // collect css and wrap with media query if present in attribute
-        if (node.attributes.media == null) {
-          collectedStyles += css;
-        } else {
-          collectedStyles += `@media ${node.attributes.media}{${css}}`;
-          delete node.attributes.media;
+        if (node.attributes.media != null) {
+          css = `@media ${node.attributes.media}{${css}}`;
         }
+        collectedStyles += css;
 
         // combine collected styles in the first style element
         if (firstStyleElement == null) {
           firstStyleElement = node;
         } else {
+          delete firstStyleElement.attributes.media;
           detachNodeFromParent(node, parentNode);
           /** @type {import('../lib/types.js').XastChild} */
           const child = { type: styleContentType, value: collectedStyles };

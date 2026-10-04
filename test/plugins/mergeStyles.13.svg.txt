@@ -1,0 +1,17 @@
+Preserve a single style element's media query.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print">.hidden { display: none; }</style>
+    <rect class="hidden" width="100" height="100"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print">
+        .hidden { display: none; }
+    </style>
+    <rect class="hidden" width="100" height="100"/>
+</svg>

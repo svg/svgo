@@ -1,0 +1,17 @@
+Keep imports at the stylesheet root in a single conditional style.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print">@import url("data:text/css,.shape%7Bfill%3Ablue%7D");</style>
+    <rect class="shape" width="100" height="100"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print">
+        @import url(&quot;data:text/css,.shape%7Bfill%3Ablue%7D&quot;);
+    </style>
+    <rect class="shape" width="100" height="100"/>
+</svg>

@@ -1,0 +1,15 @@
+Preserve a single CDATA style element's media query.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="(prefers-color-scheme: dark)"><![CDATA[.shape { fill: white; }]]></style>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="(prefers-color-scheme: dark)">
+        <![CDATA[.shape { fill: white; }]]>
+    </style>
+</svg>

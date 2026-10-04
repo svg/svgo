@@ -1,0 +1,15 @@
+A whitespace-only media query list applies to all media.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="  ">.shape { fill: green; }</style>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="  ">
+        .shape { fill: green; }
+    </style>
+</svg>

@@ -1,0 +1,16 @@
+Preserve a media query list around mixed text and CDATA content with a nested query.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print, screen and (min-width: 600px)">.shape { fill: red; }<![CDATA[@media (orientation: landscape) { .shape { fill: blue; } }]]></style>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style media="print, screen and (min-width: 600px)">
+        .shape { fill: red; }
+        <![CDATA[@media (orientation: landscape) { .shape { fill: blue; } }]]>
+    </style>
+</svg>
