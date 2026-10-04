@@ -59,7 +59,6 @@ export const fn = (root, params) => {
    * }[]}
    */
   const styles = [];
-  let hasConditionalStyles = false;
   /**
    * @type {{
    *   node: csstree.Selector,
@@ -84,16 +83,6 @@ export const fn = (root, params) => {
           node.attributes.type !== '' &&
           node.attributes.type !== 'text/css'
         ) {
-          return;
-        }
-
-        const media = node.attributes.media;
-        if (
-          media != null &&
-          media !== '' &&
-          !/^[\t\n\f\r ]*all[\t\n\f\r ]*$/i.test(media)
-        ) {
-          hasConditionalStyles = true;
           return;
         }
 
@@ -191,7 +180,7 @@ export const fn = (root, params) => {
 
     root: {
       exit: () => {
-        if (hasConditionalStyles || styles.length === 0) {
+        if (styles.length === 0) {
           return;
         }
         const sortedSelectors = selectors
@@ -410,6 +399,7 @@ export const fn = (root, params) => {
             const firstChild = style.node.children[0];
             if (firstChild.type === 'text' || firstChild.type === 'cdata') {
               firstChild.value = csstree.generate(style.cssAst);
+              style.node.children = [firstChild];
             }
           }
         }
