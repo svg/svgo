@@ -1,0 +1,15 @@
+Should not apply a malformed transform, as renderers ignore it.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <path d="M10 10h20v20H10z" transform="translate(10"/>
+    <path d="M10 10h20v20H10z" transform="bogus(10)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <path d="M10 10h20v20H10z" transform="translate(10"/>
+    <path d="M10 10h20v20H10z" transform="bogus(10)"/>
+</svg>
