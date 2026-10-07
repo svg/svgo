@@ -1,0 +1,23 @@
+Pseudo-element rules don't apply to the element itself, so they must not make
+it hidden, and must not break style computation.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .a::after { display: none; } .b::before { opacity: 0; }
+    </style>
+    <rect class="a" x="0" y="0" width="20" height="20" />
+    <rect class="b" x="0" y="0" width="20" height="20" />
+    <rect display="none" x="0" y="0" width="20" height="20" />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .a::after { display: none; } .b::before { opacity: 0; }
+    </style>
+    <rect class="a" x="0" y="0" width="20" height="20"/>
+    <rect class="b" x="0" y="0" width="20" height="20"/>
+</svg>
