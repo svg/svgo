@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { isMainThread, parentPort } from 'node:worker_threads';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
@@ -10,7 +9,6 @@ import { PNG } from 'pngjs';
  * @property {string} originalPath
  * @property {string} optimizedPath
  * @property {string | null} diffPath
- * @property {typeof fs.rm=} remove
  *
  * @typedef CompareResult
  * @property {string} name
@@ -23,15 +21,7 @@ import { PNG } from 'pngjs';
  * @returns {Promise<CompareResult>}
  */
 export async function compareImages(options) {
-  const {
-    name,
-    originalPath,
-    optimizedPath,
-    diffPath,
-    remove = fs.rm,
-  } = options;
-  let primaryError;
-  let result;
+  const { name, originalPath, optimizedPath, diffPath } = options;
   try {
     const [originalBuffer, optimizedBuffer] = await Promise.all([
       fs.readFile(originalPath),
@@ -62,39 +52,13 @@ export async function compareImages(options) {
       await fs.writeFile(diffPath, PNG.sync.write(diff));
     }
 
-    result = { name, matched, width: originalPng.width };
+    return { name, matched, width: originalPng.width };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    primaryError = Object.assign(
-      new Error(`Failed to compare ${name}: ${message}`),
-      { cause: error },
-    );
+    throw Object.assign(new Error(`Failed to compare ${name}: ${message}`), {
+      cause: error,
+    });
   }
-
-  let cleanupError;
-  const cleanupResults = await Promise.allSettled([
-    remove(originalPath, { force: true }),
-    remove(optimizedPath, { force: true }),
-  ]);
-  const failedCleanup = cleanupResults.find(
-    (outcome) => outcome.status === 'rejected',
-  );
-  if (failedCleanup) {
-    cleanupError = failedCleanup.reason;
-  }
-  if (primaryError) {
-    throw primaryError;
-  }
-  if (cleanupError) {
-    throw cleanupError;
-  }
-  return /** @type {CompareResult} */ (result);
 }
 
-if (!isMainThread && parentPort) {
-  const port = parentPort;
-  port.on('message', async (options) => {
-    const result = await compareImages(options);
-    port.postMessage(result);
-  });
-}
+export default compareImages;

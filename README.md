@@ -6,6 +6,8 @@
 
 SVGO, short for <abbr title="Scalable Vector Graphics">SVG</abbr> Optimizer, is a Node.js library and command-line application for optimizing SVG files.
 
+> 💖 [Sponsor SVGO on Open Collective](https://opencollective.com/svgo) to support continued improvements in stability and performance.
+
 ## Why?
 
 SVG files, especially those exported from vector editors, usually contain a lot of redundant information. This includes editor metadata, comments, hidden elements, default or suboptimal values, and other stuff that can be safely removed or converted without impacting rendering.
@@ -165,12 +167,6 @@ You can also specify a path and customize the current working directory.
 ```js
 const config = await loadConfig(configFile, cwd);
 ```
-
-## Donors
-
-| [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/8.0.0/fontello-image.svg" width="80">](https://fontello.com/) |
-| :------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: |
-|                       [SheetJS LLC](https://sheetjs.com/)                        |                                              [Fontello](https://fontello.com/)                                               |
 
 ## License and Copyright
 

@@ -13,7 +13,7 @@ import {
   readPrevEtag,
   REGRESSION_FIXTURES_PATH,
   writeEtag,
-  TEMP_DIR_PATH,
+  REGRESSION_RUN_PATH,
 } from './regression-io.js';
 
 const pipeline = util.promisify(stream.pipeline);
@@ -89,7 +89,7 @@ const extractTarGz = async (url, baseDir) => {
 
 (async () => {
   try {
-    console.info('Using temporary directory: %s\n', TEMP_DIR_PATH);
+    console.info('Using regression run directory: %s\n', REGRESSION_RUN_PATH);
     await extractTarGz(
       'https://svg.github.io/svgo-test-suite/svgo-test-suite.tar.gz',
       REGRESSION_FIXTURES_PATH,

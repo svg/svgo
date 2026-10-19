@@ -1,22 +1,24 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import Tinypool from 'tinypool';
 import {
   REGRESSION_FIXTURES_PATH,
   REGRESSION_OPTIMIZED_PATH,
   writeReport,
 } from './regression-io.js';
-import { md5sum, pathToPosix } from './lib.js';
-import { optimize } from '../../lib/svgo.js';
+import { pathToPosix } from './lib.js';
 
-/** @type {import('../../lib/types.js').Config} */
-const SVGO_OPTS = { floatPrecision: 4 };
+// Keep concurrent large ASTs bounded on memory-constrained CI runners.
+const DEFAULT_OPTIMIZE_WORKERS = Math.min(os.availableParallelism(), 2);
+const workerUrl = new URL('./optimize-worker.js', import.meta.url);
 
 /**
- * @param {string[]} list
- * @returns {Promise<Partial<import('./regression-io.js').TestReport>>}
+ * @param {ReadonlyArray<string>} list
+ * @returns {Promise<Pick<import('./regression-io.js').TestReport, 'metrics' | 'checksums'>>}
  */
 const optimizeFixtures = async (list) => {
+  const started = performance.now();
   const totalFiles = list.length;
   let processed = 0;
 
@@ -30,46 +32,43 @@ const optimizeFixtures = async (list) => {
     checksums: {},
   };
 
-  /**
-   * @param {string} name
-   */
-  const processFile = async (name) => {
-    const original = await fs.readFile(
-      path.join(REGRESSION_FIXTURES_PATH, name),
-      'utf-8',
-    );
-    const optimized = optimize(original, SVGO_OPTS).data;
-    const namePosix = pathToPosix(name);
-    report.checksums[namePosix] = md5sum(optimized);
-
-    const prevFileSize = Buffer.byteLength(original, 'utf8');
-    const resultFileSize = Buffer.byteLength(optimized, 'utf8');
-    report.metrics.bytesSaved += prevFileSize - resultFileSize;
-
-    const file = path.join(REGRESSION_OPTIMIZED_PATH, name);
-    await fs.mkdir(path.dirname(file), { recursive: true });
-    await fs.writeFile(file, optimized);
-
-    if (process.stdout.isTTY) {
-      process.stdout.clearLine(0);
-      process.stdout.write(
-        `\rOptimized ${(++processed).toLocaleString()} of ${totalFiles.toLocaleString()}…`,
+  const workerCount = Math.min(DEFAULT_OPTIMIZE_WORKERS, list.length);
+  if (workerCount !== 0) {
+    const pool = new Tinypool({
+      filename: workerUrl.href,
+      minThreads: workerCount,
+      maxThreads: workerCount,
+    });
+    /** @type {import('./optimize-worker.js').OptimizeResult[]} */
+    let results;
+    try {
+      results = await Promise.all(
+        list.map(async (name) => {
+          const result = await pool.run({
+            name,
+            originalPath: path.join(REGRESSION_FIXTURES_PATH, name),
+            optimizedPath: path.join(REGRESSION_OPTIMIZED_PATH, name),
+          });
+          if (process.stdout.isTTY) {
+            process.stdout.clearLine(0);
+            process.stdout.write(
+              `\rOptimized ${(++processed).toLocaleString()} of ${totalFiles.toLocaleString()}…`,
+            );
+          }
+          return result;
+        }),
       );
+    } finally {
+      await pool.destroy();
     }
-  };
 
-  const worker = async () => {
-    let item;
-    while ((item = list.pop())) {
-      await processFile(item);
+    for (const result of results) {
+      report.checksums[pathToPosix(result.name)] = result.checksum;
+      report.metrics.bytesSaved += result.bytesSaved;
     }
-  };
+  }
 
-  await Promise.all(
-    Array.from(new Array(os.cpus().length * 2), () => worker()),
-  );
-
-  report.metrics.timeTakenSecs = process.uptime();
+  report.metrics.timeTakenSecs = (performance.now() - started) / 1000;
   report.metrics.peakMemoryAlloc = process.resourceUsage().maxRSS;
   return report;
 };
@@ -81,7 +80,12 @@ const optimizeFixtures = async (list) => {
     });
     const list = (await filesPromise).filter((name) => name.endsWith('.svg'));
     const report = await optimizeFixtures(list);
-    console.log();
+    if (process.stdout.isTTY) {
+      console.log();
+    }
+    console.info(
+      `Optimized SVGs in ${report.metrics.timeTakenSecs.toFixed(2)}s`,
+    );
     await writeReport(report);
   } catch (error) {
     console.error(error);

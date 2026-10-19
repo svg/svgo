@@ -1,18 +1,9 @@
-import fs from 'node:fs/promises';
-import os from 'node:os';
-import path from 'node:path';
-import { EventEmitter } from 'node:events';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 vi.mock('playwright', () => ({ chromium: {} }));
 
-const {
-  compareScreenshots,
-  DEFAULT_RENDER_WORKERS,
-  parseArguments,
-  runTests,
-  withCleanup,
-} = await import('./compare.js');
+const { compareScreenshots, parseArguments, runTests } =
+  await import('./compare.js');
 
 describe('parseArguments', () => {
   test('defaults to generating diff images', () => {
@@ -28,65 +19,33 @@ describe('parseArguments', () => {
   });
 });
 
-test('uses the original render concurrency for comparison', () => {
-  expect(DEFAULT_RENDER_WORKERS).toBe(os.cpus().length * 2);
-});
-
-describe('withCleanup', () => {
-  test('preserves the primary error when cleanup also fails', async () => {
-    await expect(
-      withCleanup(
-        async () => {
-          throw new Error('primary failed');
-        },
-        async () => {
-          throw new Error('cleanup failed');
-        },
-      ),
-    ).rejects.toThrow('primary failed');
-  });
-});
-
 describe('compareScreenshots', () => {
   test('passes the selected diff path to comparison workers', async () => {
-    /** @type {Array<{ diffPath: string | null }>} */
+    /** @type {Array<{ diffPath: string | null, optimizedPath: string }>} */
     const messages = [];
-    class CapturingWorker extends EventEmitter {
-      /** @param {URL} _filename */
-      constructor(_filename) {
-        super();
-        void _filename;
-      }
-
-      /** @param {unknown} value */
-      postMessage(value) {
-        messages.push(/** @type {{ diffPath: string | null }} */ (value));
-        queueMicrotask(() =>
-          this.emit('message', {
-            name: 'fixture.svg',
-            matched: 0,
-            width: 1,
-          }),
-        );
-      }
-
-      terminate() {
-        return 0;
-      }
-    }
+    const pool = {
+      /** @param {{ diffPath: string | null, optimizedPath: string }} value */
+      run: async (value) => {
+        messages.push(value);
+        return { name: 'fixture.svg', matched: 0, width: 1 };
+      },
+      destroy: vi.fn(async () => {}),
+    };
 
     await compareScreenshots(['fixture.svg'], {
-      workerCount: 1,
-      Worker: CapturingWorker,
+      pool,
       noDiff: true,
+      cacheKey: 'renderer-and-suite',
+      checksums: { 'fixture.svg': 'optimized-checksum' },
     });
     expect(messages[0].diffPath).toBeNull();
+    expect(messages[0].optimizedPath).toMatch(
+      /renderer-and-suite.*fixture\.svg.*optimized-checksum\.png$/,
+    );
 
-    await compareScreenshots(['fixture.svg'], {
-      workerCount: 1,
-      Worker: CapturingWorker,
-    });
+    await compareScreenshots(['fixture.svg'], { pool });
     expect(messages[1].diffPath).toMatch(/fixture\.svg\.diff\.png$/);
+    expect(pool.destroy).toHaveBeenCalledTimes(2);
   });
 
   test('applies the existing width-dependent mismatch allowance', async () => {
@@ -97,11 +56,13 @@ describe('compareScreenshots', () => {
 
     await expect(
       compareScreenshots(['small.svg', 'large.svg'], {
-        workerCount: 1,
-        compare: async () =>
-          /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
-            results.shift()
-          ),
+        pool: {
+          run: async () =>
+            /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
+              results.shift()
+            ),
+          destroy: async () => {},
+        },
       }),
     ).resolves.toEqual([
       { name: 'small.svg', isMatch: true },
@@ -117,93 +78,27 @@ describe('compareScreenshots', () => {
 
     await expect(
       compareScreenshots(['small.svg', 'large.svg'], {
-        workerCount: 1,
-        compare: async () =>
-          /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
-            results.shift()
-          ),
+        pool: {
+          run: async () =>
+            /** @type {NonNullable<ReturnType<typeof results.shift>>} */ (
+              results.shift()
+            ),
+          destroy: async () => {},
+        },
       }),
     ).resolves.toEqual([
       { name: 'small.svg', isMatch: false },
       { name: 'large.svg', isMatch: false },
     ]);
   });
-
-  test('rejects when a worker exits before returning its fixture', async () => {
-    class ExitingWorker extends EventEmitter {
-      /** @param {URL} _filename */
-      constructor(_filename) {
-        super();
-        void _filename;
-      }
-
-      postMessage() {
-        queueMicrotask(() => this.emit('exit', 1));
-      }
-
-      async terminate() {
-        return 0;
-      }
-    }
-
-    await expect(
-      compareScreenshots(['fixture.svg'], {
-        workerCount: 1,
-        Worker: ExitingWorker,
-      }),
-    ).rejects.toThrow('Comparison worker exited with code 1');
-  });
-
-  test('terminates workers created before pool construction fails', async () => {
-    const terminate = vi.fn();
-    let constructions = 0;
-    class FailingWorker extends EventEmitter {
-      /** @param {URL} _filename */
-      constructor(_filename) {
-        super();
-        void _filename;
-        if (++constructions === 2) {
-          throw new Error('worker unavailable');
-        }
-      }
-
-      postMessage() {}
-
-      terminate() {
-        terminate();
-        return 0;
-      }
-    }
-
-    await expect(
-      compareScreenshots(['one.svg', 'two.svg'], {
-        workerCount: 2,
-        Worker: FailingWorker,
-      }),
-    ).rejects.toThrow('worker unavailable');
-    expect(terminate).toHaveBeenCalledTimes(1);
-  });
 });
 
 describe('runTests', () => {
-  /** @type {string} */
-  let screenshotPath;
-
-  beforeEach(async () => {
-    screenshotPath = await fs.mkdtemp(path.join(os.tmpdir(), 'svgo-run-'));
-  });
-
-  afterEach(async () => {
-    await fs.rm(screenshotPath, { recursive: true, force: true });
-  });
-
-  test('finishes rendering before comparison and removes screenshots', async () => {
+  test('finishes rendering before comparison', async () => {
     /** @type {string[]} */
     const events = [];
-    await fs.writeFile(path.join(screenshotPath, 'partial.png'), 'png');
 
     const report = await runTests(['fixture.svg'], {
-      screenshotPath,
       readVersion: async () => 'version',
       render: async () => events.push('render'),
       compare: async () => {
@@ -214,9 +109,6 @@ describe('runTests', () => {
 
     expect(events).toEqual(['render', 'compare']);
     expect(report.results.match).toBe(1);
-    await expect(fs.stat(screenshotPath)).rejects.toMatchObject({
-      code: 'ENOENT',
-    });
   });
 
   test('reports rendering and comparison durations', async () => {
@@ -225,7 +117,6 @@ describe('runTests', () => {
     let now = 0;
 
     await runTests(['fixture.svg'], {
-      screenshotPath,
       readVersion: async () => 'version',
       render: async () => {
         now = 1500;
@@ -244,12 +135,9 @@ describe('runTests', () => {
     ]);
   });
 
-  test('removes partial screenshots after rendering fails', async () => {
-    await fs.writeFile(path.join(screenshotPath, 'partial.png'), 'png');
-
+  test('propagates rendering failures', async () => {
     await expect(
       runTests(['fixture.svg'], {
-        screenshotPath,
         readVersion: async () => 'version',
         render: async () => {
           throw new Error('render failed');
@@ -257,26 +145,5 @@ describe('runTests', () => {
         compare: async () => [],
       }),
     ).rejects.toThrow('render failed');
-    await expect(fs.stat(screenshotPath)).rejects.toMatchObject({
-      code: 'ENOENT',
-    });
-  });
-
-  test('preserves a comparison error when root cleanup also fails', async () => {
-    const cleanup = vi.fn(async () => {
-      throw new Error('cleanup failed');
-    });
-    await expect(
-      runTests(['fixture.svg'], {
-        screenshotPath,
-        readVersion: async () => 'version',
-        render: async () => {},
-        compare: async () => {
-          throw new Error('comparison failed');
-        },
-        cleanup,
-      }),
-    ).rejects.toThrow('comparison failed');
-    expect(cleanup).toHaveBeenCalled();
   });
 });

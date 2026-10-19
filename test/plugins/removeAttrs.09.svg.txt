@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <path fill="red" stroke="blue" d="M0 0"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path stroke="blue" d="M0 0"/>
+</svg>
+
+@@@
+
+{"attrs":["svg|version","path|fill"],"elemSeparator":"|"}

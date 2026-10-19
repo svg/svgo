@@ -289,6 +289,7 @@ export type StylesheetRule = {
 export type Stylesheet = {
   rules: StylesheetRule[];
   parents: Map<XastElement, XastParent>;
+  declarationCache: Map<string, StylesheetDeclaration[]>;
 };
 
 export type StaticStyle = {
