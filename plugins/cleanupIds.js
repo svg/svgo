@@ -241,8 +241,8 @@ export const fn = (_root, params) => {
                 const value = element.attributes[name];
                 if (ariaReferenceProps.has(name)) {
                   element.attributes[name] = value
-                    .trim()
-                    .split(/\s+/)
+                    .split(/[\t\n\f\r ]+/)
+                    .filter(Boolean)
                     .map((reference) =>
                       reference === id ? currentIdString : reference,
                     )
