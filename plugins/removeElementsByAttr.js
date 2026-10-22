@@ -4,13 +4,15 @@ import { detachNodeFromParent } from '../lib/xast.js';
  * @typedef RemoveElementsByAttrParams
  * @property {string | string[]=} id
  * @property {string | string[]=} class
+ * @property {string | string[]=} element
  */
 
 export const name = 'removeElementsByAttr';
-export const description = 'removes arbitrary elements by ID or className';
+export const description =
+  'removes arbitrary elements by element name, ID or className';
 
 /**
- * Remove arbitrary SVG elements by ID or className.
+ * Remove arbitrary SVG elements by element name, ID or className.
  *
  * @example id
  *     > single: remove element with ID of `elementID`
@@ -38,6 +40,19 @@ export const description = 'removes arbitrary elements by ID or className';
  *         - 'elementClass'
  *         - 'anotherClass'
  *
+ * @example element
+ *     > single: remove all elements with the tag name `foreignObject`
+ *     ---
+ *     removeElementsByAttr:
+ *       element: 'foreignObject'
+ *
+ *     > list: remove all elements with tag name `foreignObject` or `script`
+ *     ---
+ *     removeElementsByAttr:
+ *       element:
+ *         - 'foreignObject'
+ *         - 'script'
+ *
  * @author Eli Dupuis (@elidupuis)
  *
  * @type {import('../lib/types.js').Plugin<RemoveElementsByAttrParams>}
@@ -52,9 +67,20 @@ export const fn = (root, params) => {
       : Array.isArray(params.class)
         ? params.class
         : [params.class];
+  const elements =
+    params.element == null
+      ? []
+      : Array.isArray(params.element)
+        ? params.element
+        : [params.element];
   return {
     element: {
       enter: (node, parentNode) => {
+        // remove element if its tag name matches configured `element` params
+        if (elements.length !== 0 && elements.includes(node.name)) {
+          detachNodeFromParent(node, parentNode);
+          return;
+        }
         // remove element if it's `id` matches configured `id` params
         if (node.attributes.id != null && ids.length !== 0) {
           if (ids.includes(node.attributes.id)) {
