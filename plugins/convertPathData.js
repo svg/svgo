@@ -146,10 +146,15 @@ export const fn = (root, params) => {
             arcThreshold = makeArcs.threshold;
             arcTolerance = makeArcs.tolerance;
           }
-          // the `marker` shorthand sets marker-mid as well, so a path
-          // using only the shorthand still has mid markers on its vertices
+          // a marker only renders when the property is set to something
+          // other than `none`; dynamic values can't be ruled out. The
+          // `marker` shorthand sets the longhands too, so check it as well
+          const maybeHasMarker = (/** @type {string} */ prop) =>
+            computedStyle[prop] != null &&
+            (computedStyle[prop].type === 'dynamic' ||
+              computedStyle[prop].value !== 'none');
           const hasMarkerMid =
-            computedStyle['marker-mid'] != null || computedStyle.marker != null;
+            maybeHasMarker('marker-mid') || maybeHasMarker('marker');
 
           const maybeHasStroke =
             computedStyle.stroke &&
@@ -199,14 +204,18 @@ export const fn = (root, params) => {
             }
 
             const hasMarker =
-              node.attributes['marker-start'] != null ||
-              node.attributes['marker-mid'] != null ||
-              node.attributes['marker-end'] != null ||
-              node.attributes.marker != null ||
-              computedStyle['marker-start'] != null ||
-              computedStyle['marker-mid'] != null ||
-              computedStyle['marker-end'] != null ||
-              computedStyle.marker != null;
+              (node.attributes['marker-start'] != null &&
+                node.attributes['marker-start'] !== 'none') ||
+              (node.attributes['marker-mid'] != null &&
+                node.attributes['marker-mid'] !== 'none') ||
+              (node.attributes['marker-end'] != null &&
+                node.attributes['marker-end'] !== 'none') ||
+              (node.attributes.marker != null &&
+                node.attributes.marker !== 'none') ||
+              maybeHasMarker('marker-start') ||
+              maybeHasMarker('marker-mid') ||
+              maybeHasMarker('marker-end') ||
+              maybeHasMarker('marker');
             const isMarkersOnlyPath =
               hasMarker &&
               includesVertices &&

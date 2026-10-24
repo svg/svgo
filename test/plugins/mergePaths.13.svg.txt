@@ -1,4 +1,4 @@
-Do not merge paths when the `marker` shorthand applies, because merged paths lose their ends and markers are rendered incorrectly.
+Do not merge paths when the `marker` shorthand applies, because merged paths lose their ends and markers are rendered incorrectly. Paths whose marker is set to `none` render no markers, so they still merge.
 
 ===
 
@@ -13,6 +13,8 @@ Do not merge paths when the `marker` shorthand applies, because merged paths los
     </defs>
     <path d="M 10,60 h60" stroke="black" class="a"/>
     <path d="M 10,70 h60" stroke="black" class="a"/>
+    <path d="M 10,80 h60" stroke="black" marker="none"/>
+    <path d="M 10,90 h60" stroke="black" marker="none"/>
 </svg>
 
 @@@
@@ -28,4 +30,5 @@ Do not merge paths when the `marker` shorthand applies, because merged paths los
     </defs>
     <path d="M 10,60 h60" stroke="black" class="a"/>
     <path d="M 10,70 h60" stroke="black" class="a"/>
+    <path d="M10 80h60M10 90h60" stroke="black" marker="none"/>
 </svg>

@@ -90,7 +90,12 @@ export const fn = (root, params) => {
               (strokeWidth != null &&
                 strokeWidth.type === 'static' &&
                 strokeWidth.value === '0') ||
-              (markerEnd == null && marker == null)
+              // markers set to `none` don't render, so they don't
+              // keep the stroke attributes alive either
+              ((markerEnd == null ||
+                (markerEnd.type === 'static' && markerEnd.value === 'none')) &&
+                (marker == null ||
+                  (marker.type === 'static' && marker.value === 'none')))
             ) {
               for (const name of Object.keys(node.attributes)) {
                 if (name.startsWith('stroke')) {
