@@ -146,7 +146,10 @@ export const fn = (root, params) => {
             arcThreshold = makeArcs.threshold;
             arcTolerance = makeArcs.tolerance;
           }
-          const hasMarkerMid = computedStyle['marker-mid'] != null;
+          // the `marker` shorthand sets marker-mid as well, so a path
+          // using only the shorthand still has mid markers on its vertices
+          const hasMarkerMid =
+            computedStyle['marker-mid'] != null || computedStyle.marker != null;
 
           const maybeHasStroke =
             computedStyle.stroke &&
@@ -197,7 +200,13 @@ export const fn = (root, params) => {
 
             const hasMarker =
               node.attributes['marker-start'] != null ||
-              node.attributes['marker-end'] != null;
+              node.attributes['marker-mid'] != null ||
+              node.attributes['marker-end'] != null ||
+              node.attributes.marker != null ||
+              computedStyle['marker-start'] != null ||
+              computedStyle['marker-mid'] != null ||
+              computedStyle['marker-end'] != null ||
+              computedStyle.marker != null;
             const isMarkersOnlyPath =
               hasMarker &&
               includesVertices &&

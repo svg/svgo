@@ -408,10 +408,14 @@ export const fn = (root, params) => {
             return;
           }
           // keep single point paths for markers
+          // the `marker` shorthand sets marker-start, marker-mid and
+          // marker-end, so it must be checked alongside the longhands
           if (
             pathData.length === 1 &&
             computedStyle['marker-start'] == null &&
-            computedStyle['marker-end'] == null
+            computedStyle['marker-mid'] == null &&
+            computedStyle['marker-end'] == null &&
+            computedStyle.marker == null
           ) {
             removeElement(node, parentNode);
             return;

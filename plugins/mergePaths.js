@@ -101,6 +101,8 @@ export const fn = (root, params) => {
             computedStyle['marker-start'] ||
             computedStyle['marker-mid'] ||
             computedStyle['marker-end'] ||
+            // the `marker` shorthand sets all three longhands
+            computedStyle.marker ||
             computedStyle['clip-path'] ||
             computedStyle['mask'] ||
             computedStyle['mask-image'] ||

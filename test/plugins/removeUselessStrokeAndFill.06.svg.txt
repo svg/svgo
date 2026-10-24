@@ -1,0 +1,17 @@
+Keep stroke-width when the `marker` shorthand is used, because stroke-width affects the size of the markers the shorthand sets. Without any marker, the useless stroke attributes are still removed.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path stroke="none" stroke-width="2" marker="url(#dot)" d="M10 10h50"/>
+    <path stroke="none" stroke-width="2" style="marker:url(#dot)" d="M10 30h50"/>
+    <path stroke="none" stroke-width="2" d="M10 20h50"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path stroke="none" stroke-width="2" marker="url(#dot)" d="M10 10h50"/>
+    <path stroke="none" stroke-width="2" style="marker:url(#dot)" d="M10 30h50"/>
+    <path d="M10 20h50"/>
+</svg>
