@@ -23,6 +23,7 @@ coverage
 .cache/
 .DS_Store
 .vscode
+.idea
 *.log
 package-lock.json
 yarn.lock
