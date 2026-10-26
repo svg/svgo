@@ -9,6 +9,9 @@ svgo:
     class:
       description: Remove elements where the `class` attribute includes at least one of these classes.
       default: []
+    element:
+      description: Remove elements where the tag name matches one of these names, for example `foreignObject` or `script`.
+      default: []
 ---
 
-Removes arbitrary elements by ID or className.
+Removes arbitrary elements by element name, ID or className.
