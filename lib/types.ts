@@ -357,4 +357,5 @@ export type Config = {
 
 export type Output = {
   data: string;
+  ast: XastRoot;
 };
