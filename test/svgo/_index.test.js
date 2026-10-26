@@ -55,6 +55,14 @@ describe('svgo', () => {
     const result = optimize('<svg />', { path: 'input.svg' });
     expect(result.data).toBe('<svg/>');
   });
+  it('should preserve IDs referenced by ARIA attributes', () => {
+    const result = optimize(
+      '<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="title description"><title id="title">Name</title><desc id="description">Description</desc><path d="M0 0h1v1H0z"/></svg>',
+    );
+    expect(result.data).toContain('aria-labelledby="a b"');
+    expect(result.data).toContain('<title id="a">Name</title>');
+    expect(result.data).toContain('<desc id="b">Description</desc>');
+  });
   it('should preserve style specificity over attributes', async () => {
     const [original, expected] = await parseFixture(
       'style-specificity.svg.txt',
