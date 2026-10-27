@@ -200,7 +200,7 @@ export const fn = (root, params) => {
             if (
               computedParentStyle?.[name] == null &&
               !stylesheet.rules.some((rule) =>
-                includesAttrSelector(rule.selector, name),
+                includesAttrSelector(rule.selector, name, value),
               )
             ) {
               delete node.attributes[name];

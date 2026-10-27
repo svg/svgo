@@ -1,0 +1,27 @@
+Remove a presentation attribute when a selector references it with a value that does not match.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <style>
+    .a {
+      stroke: red;
+    }
+
+    [stroke^="purple"] + path {
+      stroke: purple;
+    }
+  </style>
+  <path class="a" d="M10 10h20" stroke="red"/>
+  <path d="M10 20h20"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <style>
+        [stroke^=&quot;purple&quot;]+path{stroke:purple}
+    </style>
+    <path d="M10 10h20" style="stroke:red"/>
+    <path d="M10 20h20"/>
+</svg>

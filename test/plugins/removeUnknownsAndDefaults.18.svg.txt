@@ -1,0 +1,23 @@
+Remove a default attribute when an attribute selector does not match its value.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 202 40">
+  <style>
+      [preserveAspectRatio^="y"] { fill: yellow; stroke: black; }
+  </style>
+  <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+    <path d="M50,10 A40,40,1,1,1,50,90 A40,40,1,1,1,50,10 M30,40 Q36,35,42,40 M58,40 Q64,35,70,40 M30,60 Q50,75,70,60 Q50,75,30,60"/>
+  </svg>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 202 40">
+    <style>
+        [preserveAspectRatio^=&quot;y&quot;] { fill: yellow; stroke: black; }
+    </style>
+    <svg viewBox="0 0 100 100">
+        <path d="M50,10 A40,40,1,1,1,50,90 A40,40,1,1,1,50,10 M30,40 Q36,35,42,40 M58,40 Q64,35,70,40 M30,60 Q50,75,70,60 Q50,75,30,60"/>
+    </svg>
+</svg>
