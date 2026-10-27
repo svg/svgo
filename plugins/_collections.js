@@ -109,7 +109,7 @@ export const elemsGroups = {
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre
  * @type {Readonly<Set<string>>}
  */
-export const textElems = new Set([...elemsGroups.textContent, 'pre', 'title']);
+export const textElems = new Set([...elemsGroups.textContent, 'pre']);
 
 /**
  * @type {Readonly<Set<string>>}
