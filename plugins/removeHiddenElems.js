@@ -408,11 +408,21 @@ export const fn = (root, params) => {
             return;
           }
           // keep single point paths for markers
-          if (
-            pathData.length === 1 &&
-            computedStyle['marker-start'] == null &&
-            computedStyle['marker-end'] == null
-          ) {
+          // the `marker` shorthand sets marker-start, marker-mid and
+          // marker-end, so it must be checked alongside the longhands;
+          // a marker set to `none` renders nothing, so it doesn't count
+          const hasMarker = [
+            'marker-start',
+            'marker-mid',
+            'marker-end',
+            'marker',
+          ].some(
+            (prop) =>
+              computedStyle[prop] &&
+              (computedStyle[prop].type === 'dynamic' ||
+                computedStyle[prop].value !== 'none'),
+          );
+          if (pathData.length === 1 && !hasMarker) {
             removeElement(node, parentNode);
             return;
           }

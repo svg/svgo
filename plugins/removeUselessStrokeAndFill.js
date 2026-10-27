@@ -61,6 +61,8 @@ export const fn = (root, params) => {
         const strokeOpacity = computedStyle['stroke-opacity'];
         const strokeWidth = computedStyle['stroke-width'];
         const markerEnd = computedStyle['marker-end'];
+        // the `marker` shorthand sets marker-end as well
+        const marker = computedStyle.marker;
         const fill = computedStyle.fill;
         const fillOpacity = computedStyle['fill-opacity'];
         const computedParentStyle =
@@ -88,7 +90,12 @@ export const fn = (root, params) => {
               (strokeWidth != null &&
                 strokeWidth.type === 'static' &&
                 strokeWidth.value === '0') ||
-              markerEnd == null
+              // markers set to `none` don't render, so they don't
+              // keep the stroke attributes alive either
+              ((markerEnd == null ||
+                (markerEnd.type === 'static' && markerEnd.value === 'none')) &&
+                (marker == null ||
+                  (marker.type === 'static' && marker.value === 'none')))
             ) {
               for (const name of Object.keys(node.attributes)) {
                 if (name.startsWith('stroke')) {

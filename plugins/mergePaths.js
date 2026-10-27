@@ -98,9 +98,14 @@ export const fn = (root, params) => {
 
           const computedStyle = computeStyle(stylesheet, child);
           if (
-            computedStyle['marker-start'] ||
-            computedStyle['marker-mid'] ||
-            computedStyle['marker-end'] ||
+            // the `marker` shorthand sets all three longhands; a marker
+            // set to `none` renders nothing, so it doesn't block merging
+            ['marker-start', 'marker-mid', 'marker-end', 'marker'].some(
+              (prop) =>
+                computedStyle[prop] &&
+                (computedStyle[prop].type === 'dynamic' ||
+                  computedStyle[prop].value !== 'none'),
+            ) ||
             computedStyle['clip-path'] ||
             computedStyle['mask'] ||
             computedStyle['mask-image'] ||

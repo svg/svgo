@@ -1,0 +1,28 @@
+Keep single point paths that use the `marker` shorthand, and their marker definitions. The shorthand sets marker-start, marker-mid and marker-end. A marker set to `none` renders nothing, so those paths are still removed.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="dot">
+            <circle r="5"/>
+        </marker>
+    </defs>
+    <path marker="url(#dot)" d="M10 10"/>
+    <path style="marker:url(#dot)" d="M30 30"/>
+    <path marker="none" d="M40 40"/>
+    <path style="marker:none" d="M50 50"/>
+    <path d="M20 20"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="dot">
+            <circle r="5"/>
+        </marker>
+    </defs>
+    <path marker="url(#dot)" d="M10 10"/>
+    <path style="marker:url(#dot)" d="M30 30"/>
+</svg>
