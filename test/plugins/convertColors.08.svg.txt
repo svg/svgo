@@ -1,0 +1,41 @@
+Do not convert the fill timing attribute of animation elements.
+
+See: https://github.com/svg/svgo/issues/1777
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="10" height="10" fill="black">
+        <animate attributeName="width" from="10" to="20" dur="1s" fill="freeze"/>
+        <set attributeName="visibility" to="hidden" begin="1s" fill="remove"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1s" fill="freeze"/>
+        <animateMotion path="M0 0h10" dur="1s" fill="freeze"/>
+    </rect>
+    <mask id="mask">
+        <rect width="10" height="10" fill="white">
+            <animate attributeName="width" from="10" to="20" dur="1s" fill="freeze"/>
+        </rect>
+    </mask>
+    <path fill="red" mask="url(#mask)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="10" height="10" fill="currentColor">
+        <animate attributeName="width" from="10" to="20" dur="1s" fill="freeze"/>
+        <set attributeName="visibility" to="hidden" begin="1s" fill="remove"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1s" fill="freeze"/>
+        <animateMotion path="M0 0h10" dur="1s" fill="freeze"/>
+    </rect>
+    <mask id="mask">
+        <rect width="10" height="10" fill="#fff">
+            <animate attributeName="width" from="10" to="20" dur="1s" fill="freeze"/>
+        </rect>
+    </mask>
+    <path fill="currentColor" mask="url(#mask)"/>
+</svg>
+
+@@@
+
+{ "currentColor": true }
