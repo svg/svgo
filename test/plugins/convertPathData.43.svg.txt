@@ -1,0 +1,41 @@
+Do not collapse repeated commands when the `marker` shorthand is used, because collapsing destroys the vertex that carries the mid marker. The shorthand applies whether it comes from the attribute, an inline style, or a stylesheet rule. A markers-only path using the shorthand still gains a closing segment. A marker set to `none` renders nothing, so those paths collapse as usual.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="dot">
+            <circle r="2"/>
+        </marker>
+    </defs>
+    <style>
+        .marker { marker: url(#dot); }
+    </style>
+    <path marker="url(#dot)" d="M0 0 h20 h30"/>
+    <path class="marker" d="M0 0 h20 h30"/>
+    <path style="marker:url(#dot)" d="M0 0 v20 v30"/>
+    <path marker="url(#dot)" d="M5 5 h0"/>
+    <path marker="none" d="M0 0 h20 h30"/>
+    <path style="marker:none" d="M0 0 v20 v30"/>
+    <path d="M0 0 h20 h30"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="dot">
+            <circle r="2"/>
+        </marker>
+    </defs>
+    <style>
+        .marker { marker: url(#dot); }
+    </style>
+    <path marker="url(#dot)" d="M0 0h20 30"/>
+    <path class="marker" d="M0 0h20 30"/>
+    <path style="marker:url(#dot)" d="M0 0v20 30"/>
+    <path marker="url(#dot)" d="M5 5z"/>
+    <path marker="none" d="M0 0h50"/>
+    <path style="marker:none" d="M0 0v50"/>
+    <path d="M0 0h50"/>
+</svg>

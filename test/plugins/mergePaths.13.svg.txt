@@ -1,34 +1,14 @@
-Do not merge paths when the `marker` shorthand applies, because merged paths lose their ends and markers are rendered incorrectly. Paths whose marker is set to `none` render no markers, so they still merge.
+Should keep the position of a relative moveto that follows another moveto.
 
 ===
 
-<svg width="100" height="100">
-    <defs>
-        <style>
-            .a {marker: url(#arrowhead);}
-        </style>
-        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="6" refY="3">
-            <path d="M 0,0 l 6,3 l -6,3" stroke="black"/>
-        </marker>
-    </defs>
-    <path d="M 10,60 h60" stroke="black" class="a"/>
-    <path d="M 10,70 h60" stroke="black" class="a"/>
-    <path d="M 10,80 h60" stroke="black" marker="none"/>
-    <path d="M 10,90 h60" stroke="black" marker="none"/>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10m5 5h1"/>
+    <path d="M30 30h1"/>
 </svg>
 
 @@@
 
-<svg width="100" height="100">
-    <defs>
-        <style>
-            .a {marker: url(#arrowhead);}
-        </style>
-        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="6" refY="3">
-            <path d="M 0,0 l 6,3 l -6,3" stroke="black"/>
-        </marker>
-    </defs>
-    <path d="M 10,60 h60" stroke="black" class="a"/>
-    <path d="M 10,70 h60" stroke="black" class="a"/>
-    <path d="M10 80h60M10 90h60" stroke="black" marker="none"/>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10m5 5h1M30 30h1"/>
 </svg>

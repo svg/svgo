@@ -193,26 +193,8 @@ export const js2path = function (path, data, params) {
   // @ts-expect-error legacy
   path.pathJS = data;
 
-  const pathData = [];
-  for (const item of data) {
-    // remove moveto commands which are followed by moveto commands
-    if (
-      pathData.length !== 0 &&
-      (item.command === 'M' || item.command === 'm')
-    ) {
-      const last = pathData[pathData.length - 1];
-      if (last.command === 'M' || last.command === 'm') {
-        pathData.pop();
-      }
-    }
-    pathData.push({
-      command: item.command,
-      args: item.args,
-    });
-  }
-
   path.attributes.d = stringifyPathData({
-    pathData,
+    pathData: data,
     precision: params.floatPrecision,
     disableSpaceAfterFlags: params.noSpaceAfterFlags,
   });
