@@ -1,0 +1,19 @@
+Remove G attributes which are overridden
+
+===
+
+<svg>
+    <g fill="red">
+        <rect fill="green"/>
+        <circle fill="blue"/>
+    </g>
+</svg>
+
+@@@
+
+<svg>
+    <g>
+        <rect fill="green"/>
+        <circle fill="blue"/>
+    </g>
+</svg>
