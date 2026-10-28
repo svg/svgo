@@ -2099,6 +2099,7 @@ export const editorNamespaces = new Set([
   'http://www.figma.com/figma/ns',
   'http://www.inkscape.org/namespaces/inkscape',
   'http://www.serif.com/',
+  'https://www.affinity.studio/',
   'http://www.vector.evaxdesign.sk',
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
   'https://boxy-svg.com',
