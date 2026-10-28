@@ -1,3 +1,4 @@
+import { visitSkip } from '../lib/util/visit.js';
 import { attrsGroups } from './_collections.js';
 
 /**
@@ -139,6 +140,11 @@ export const fn = (_root, params) => {
               delete node.attributes.style;
             }
           }
+        }
+
+        // skip <foreignObject> content
+        if (node.name === 'foreignObject') {
+          return visitSkip;
         }
       },
     },
