@@ -1,0 +1,14 @@
+Should keep consecutive movetos when the path has mid markers, as each moveto is
+a vertex that gets a marker.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10M50 50h20" marker-mid="url(#marker)"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10m40 40h20" marker-mid="url(#marker)"/>
+</svg>

@@ -144,6 +144,14 @@ export const fn = (root, params) => {
           prevPathData = prevPathData ?? path2js(prevChild);
 
           if (force || !intersects(prevPathData, currentPathData)) {
+            // a moveto followed by an absolute moveto draws nothing
+            const last = prevPathData[prevPathData.length - 1];
+            if (
+              (last?.command === 'M' || last?.command === 'm') &&
+              currentPathData[0]?.command === 'M'
+            ) {
+              prevPathData.pop();
+            }
             prevPathData.push(...currentPathData);
             elementsToRemove.add(child);
             continue;

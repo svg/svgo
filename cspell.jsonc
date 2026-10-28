@@ -11,6 +11,7 @@
     // Abbreviations
     "descs", // descriptions
     "elems", // elements
+    "SMIL", // Synchronized Multimedia Integration Language
     "unenc", // unencoded
     // SVG Nodes / Attributes and CSS Properties, including plurals
     "bbox",
