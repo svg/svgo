@@ -65,6 +65,7 @@ export const fn = (root, params, info) => {
     return null;
   }
   const classNames = params.classNames || [params.className];
+  const clearClasses = String(params.clearClasses) === 'true';
   return {
     element: {
       enter: (node, parentNode) => {
@@ -72,7 +73,9 @@ export const fn = (root, params, info) => {
           const classList = new Set(
             node.attributes.class == null
               ? null
-              : node.attributes.class.split(' '),
+              : clearClasses
+                ? null
+                : node.attributes.class.split(' '),
           );
           for (const className of classNames) {
             if (className != null) {
