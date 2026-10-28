@@ -1,0 +1,28 @@
+With remove disabled, unreferenced IDs are kept, so a generated ID must not
+collide with one of them or the document ends up with duplicate IDs.
+
+See: https://github.com/svg/svgo/issues/2237
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <path id="x" d="M0 0"/>
+        <path id="a" d="M1 1"/>
+    </defs>
+    <use href="#x"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <path id="b" d="M0 0"/>
+        <path id="a" d="M1 1"/>
+    </defs>
+    <use href="#b"/>
+</svg>
+
+@@@
+
+{"remove":false}

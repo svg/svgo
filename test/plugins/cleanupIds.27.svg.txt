@@ -1,0 +1,27 @@
+Minified IDs must be consecutive and stable in a single pass, even when IDs are
+referenced out of alphabetical order. An ID that has already been reassigned
+must not be mistaken for an external reference.
+
+See: https://github.com/svg/svgo/issues/2237
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <path id="b" d="M0 0"/>
+        <path id="a" d="M1 1"/>
+    </defs>
+    <use href="#b"/>
+    <use href="#a"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <path id="a" d="M0 0"/>
+        <path id="b" d="M1 1"/>
+    </defs>
+    <use href="#a"/>
+    <use href="#b"/>
+</svg>
