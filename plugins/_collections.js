@@ -124,6 +124,7 @@ export const attrsGroups = {
   animationAddition: new Set(['additive', 'accumulate']),
   animationAttributeTarget: new Set(['attributeType', 'attributeName']),
   animationEvent: new Set(['onbegin', 'onend', 'onrepeat', 'onload']),
+  animationTargetElement: new Set(['href']),
   animationTiming: new Set([
     'begin',
     'dur',
@@ -499,6 +500,7 @@ export const elems = {
       'animationAddition',
       'animationAttributeTarget',
       'animationEvent',
+      'animationTargetElement',
       'animationTiming',
       'animationValue',
       'conditionalProcessing',
@@ -528,6 +530,7 @@ export const elems = {
     attrsGroups: new Set([
       'animationAddition',
       'animationEvent',
+      'animationTargetElement',
       'animationTiming',
       'animationValue',
       'conditionalProcessing',
@@ -552,6 +555,7 @@ export const elems = {
       'animationAddition',
       'animationAttributeTarget',
       'animationEvent',
+      'animationTargetElement',
       'animationTiming',
       'animationValue',
       'conditionalProcessing',
@@ -1748,6 +1752,7 @@ export const elems = {
     attrsGroups: new Set([
       'animation',
       'animationAttributeTarget',
+      'animationTargetElement',
       'animationTiming',
       'conditionalProcessing',
       'core',
