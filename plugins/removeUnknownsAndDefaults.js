@@ -3,13 +3,14 @@ import {
   attrsGroupsDefaults,
   elems,
   elemsGroups,
+  inheritableAttrs,
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { visitSkip } from '../lib/util/visit.js';
 import {
   collectStylesheet,
-  computeStyle,
+  computeOwnStyle,
   includesAttrSelector,
 } from '../lib/style.js';
 
@@ -93,6 +94,69 @@ for (const [name, config] of Object.entries(elems)) {
 }
 
 /**
+ * Walk the ancestors of node once, collecting the two views of the cascade this
+ * plugin needs:
+ *
+ * - `parent` is the full computed style of the parent element, equivalent to
+ *   `computeStyle(stylesheet, parentNode)`. Its own presentation attributes are
+ *   all included, whether they inherit or not; everything above it contributes
+ *   only inheritable properties.
+ * - `inherited` is what node actually inherits within its own referenceable
+ *   subtree. The walk stops above the first ancestor with an `id`, `<defs>`, or
+ *   `<symbol>`, because such an ancestor may be instantiated via `<use>`
+ *   somewhere else entirely, where the ancestors above it do not apply. Their
+ *   styles must therefore not be treated as inherited by node. The boundary
+ *   ancestor itself is included, since it is cloned along with node.
+ *
+ * Both are collected in a single pass: each level re-matches the whole
+ * stylesheet, so walking twice doubles the cost of the plugin on deep documents.
+ *
+ * @param {import('../lib/types.js').Stylesheet} stylesheet
+ * @param {import('../lib/types.js').XastElement} node
+ * @returns {{ parent: import('../lib/types.js').ComputedStyles, inherited: import('../lib/types.js').ComputedStyles }}
+ */
+const computeAncestorStyles = (stylesheet, node) => {
+  const { parents } = stylesheet;
+  /** @type {import('../lib/types.js').ComputedStyles} */
+  const parentStyles = {};
+  /** @type {import('../lib/types.js').ComputedStyles} */
+  const inheritedStyles = {};
+  let parent = parents.get(node);
+  let isParent = true;
+  let crossedBoundary = false;
+  while (parent != null && parent.type === 'element') {
+    const ownStyles = computeOwnStyle(stylesheet, parent, parents);
+    for (const [name, computed] of Object.entries(ownStyles)) {
+      const inheritable =
+        inheritableAttrs.has(name) &&
+        !presentationNonInheritableGroupAttrs.has(name);
+      if (isParent) {
+        parentStyles[name] = computed;
+      } else if (parentStyles[name] == null && inheritable) {
+        parentStyles[name] = { ...computed, inherited: true };
+      }
+      if (!crossedBoundary && inheritedStyles[name] == null && inheritable) {
+        inheritedStyles[name] = { ...computed, inherited: true };
+      }
+    }
+    // Anything reachable by <use> or url(#…) needs an id, so the id check alone
+    // is sufficient in practice. <defs> and <symbol> are kept as a safety net:
+    // their content is never rendered in place, so treating them as a boundary
+    // can only ever retain attributes, never drop one that was needed.
+    if (
+      parent.attributes.id != null ||
+      parent.name === 'defs' ||
+      parent.name === 'symbol'
+    ) {
+      crossedBoundary = true;
+    }
+    isParent = false;
+    parent = parents.get(parent);
+  }
+  return { parent: parentStyles, inherited: inheritedStyles };
+};
+
+/**
  * Remove unknown elements content and attributes,
  * remove attributes with default values.
  *
@@ -155,10 +219,13 @@ export const fn = (root, params) => {
 
         const allowedAttributes = allowedAttributesPerElement.get(node.name);
         const attributesDefaults = attributesDefaultsPerElement.get(node.name);
-        const computedParentStyle =
-          parentNode.type === 'element'
-            ? computeStyle(stylesheet, parentNode)
-            : null;
+        const {
+          parent: computedParentStyle,
+          inherited: computedInheritedStyle,
+        } =
+          defaultAttrs || uselessOverrides
+            ? computeAncestorStyles(stylesheet, node)
+            : { parent: null, inherited: null };
 
         // remove element's unknown attrs and attrs with default values
         for (const [name, value] of Object.entries(node.attributes)) {
@@ -207,7 +274,7 @@ export const fn = (root, params) => {
             }
           }
           if (uselessOverrides && node.attributes.id == null) {
-            const style = computedParentStyle?.[name];
+            const style = computedInheritedStyle?.[name];
             if (
               presentationNonInheritableGroupAttrs.has(name) === false &&
               style != null &&

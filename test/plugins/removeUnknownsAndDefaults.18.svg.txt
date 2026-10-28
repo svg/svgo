@@ -1,0 +1,43 @@
+Do not remove presentation attributes on elements inside an element with an
+id, <defs>, or <symbol> that match styles inherited from an ancestor outside,
+as they may be instantiated via <use> without that ancestor.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="none">
+    <g id="icon">
+        <rect width="10" height="10" stroke="red" fill="none"/>
+    </g>
+    <defs>
+        <rect width="10" height="10" stroke="blue" fill="none"/>
+    </defs>
+    <symbol id="sym">
+        <rect width="10" height="10" stroke="green" fill="none"/>
+    </symbol>
+    <g id="with-fill" fill="yellow">
+        <rect width="10" height="10" stroke="black" fill="yellow"/>
+    </g>
+    <g>
+        <rect width="10" height="10" stroke="purple" fill="none"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="none">
+    <g id="icon">
+        <rect width="10" height="10" stroke="red" fill="none"/>
+    </g>
+    <defs>
+        <rect width="10" height="10" stroke="blue" fill="none"/>
+    </defs>
+    <symbol id="sym">
+        <rect width="10" height="10" stroke="green" fill="none"/>
+    </symbol>
+    <g id="with-fill" fill="yellow">
+        <rect width="10" height="10" stroke="black"/>
+    </g>
+    <g>
+        <rect width="10" height="10" stroke="purple"/>
+    </g>
+</svg>
