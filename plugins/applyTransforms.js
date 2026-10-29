@@ -60,9 +60,14 @@ export const applyTransforms = (root, params) => {
           return;
         }
 
-        const matrix = transformsMultiply(
-          transform2js(node.attributes.transform),
-        );
+        const transforms = transform2js(node.attributes.transform);
+
+        // Malformed transform, which renderers ignore entirely
+        if (transforms.length === 0) {
+          return;
+        }
+
+        const matrix = transformsMultiply(transforms);
 
         const stroke =
           computedStyle.stroke?.type === 'static'
