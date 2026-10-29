@@ -31,12 +31,39 @@ const screenshotOptions = {
   animations: 'disabled',
 };
 
+/**
+ * LCD (subpixel) text antialiasing is toggled by Chromium depending on
+ * layer contents, so e.g. converting a <rect> to a <path> can change how
+ * unrelated text is rasterized.
+ */
+const CHROMIUM_ARGS = ['--disable-lcd-text'];
+
+/**
+ * Document time (seconds) to freeze SMIL animations at. Playwright's
+ * `animations: 'disabled'` only covers CSS animations, so SMIL would otherwise
+ * be captured at whatever frame is current when the screenshot is taken.
+ */
+const SMIL_TIME = 0;
+
+/**
+ * Works with JavaScript disabled, as Playwright evaluates in its own context.
+ *
+ * @param {import('playwright').ElementHandle} element
+ */
+const freezeSmil = (element) =>
+  element.evaluate((svg, time) => {
+    /** @type {any} */ (svg).pauseAnimations();
+    /** @type {any} */ (svg).setCurrentTime(time);
+  }, SMIL_TIME);
+
 /** @param {string} version */
 const getScreenshotCacheKey = (version) =>
   md5sum(
     JSON.stringify({
       suite: version,
-      version: 1,
+      version: 2,
+      smilTime: SMIL_TIME,
+      chromiumArgs: CHROMIUM_ARGS,
       chromium: chromium.executablePath(),
       platform: process.platform,
       arch: process.arch,
@@ -145,7 +172,7 @@ export async function renderScreenshots(list, options) {
     }
   };
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ args: CHROMIUM_ARGS });
   try {
     const context = await browser.newContext({
       javaScriptEnabled: false,
@@ -163,6 +190,7 @@ export async function renderScreenshots(list, options) {
               `file://${path.join(REGRESSION_FIXTURES_PATH, task.name)}`,
             );
             const element = await page.waitForSelector('svg');
+            await freezeSmil(element);
             await screenshot(element, task.originalPath);
           }
           if (!task.hasOptimized) {
@@ -170,6 +198,7 @@ export async function renderScreenshots(list, options) {
               `file://${path.join(REGRESSION_OPTIMIZED_PATH, task.name)}`,
             );
             const element = await page.waitForSelector('svg');
+            await freezeSmil(element);
             await screenshot(element, task.optimizedPath);
           }
         }

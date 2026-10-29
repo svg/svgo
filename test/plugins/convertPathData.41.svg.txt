@@ -1,0 +1,17 @@
+Should keep consecutive movetos in place when collapseRepeated is disabled.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0h10M20 20m5 5h1"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0h10m10 20m5 5h1"/>
+</svg>
+
+@@@
+
+{ "collapseRepeated": false }
