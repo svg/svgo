@@ -64,14 +64,16 @@ export const fn = () => {
           collectedStyles += css;
         } else {
           collectedStyles += `@media ${node.attributes.media}{${css}}`;
-          delete node.attributes.media;
         }
 
         // combine collected styles in the first style element
         if (firstStyleElement == null) {
+          // keep its media attribute: a lone <style> is left as it is, and the
+          // attribute is only dropped once its css is rewritten in @media below
           firstStyleElement = node;
         } else {
           detachNodeFromParent(node, parentNode);
+          delete firstStyleElement.attributes.media;
           /** @type {import('../lib/types.js').XastChild} */
           const child = { type: styleContentType, value: collectedStyles };
           firstStyleElement.children = [child];
