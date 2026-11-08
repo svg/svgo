@@ -120,7 +120,12 @@ export const fn = (_root, { usage, ...params }) => {
             styleNode.children[0].type === 'text' ||
             styleNode.children[0].type === 'cdata'
           ) {
-            const cssText = styleNode.children[0].value;
+            const cssText = styleNode.children
+              .filter(
+                (child) => child.type === 'text' || child.type === 'cdata',
+              )
+              .map((child) => child.value)
+              .join('');
             const minified = csso.minify(cssText, {
               ...params,
               usage: cssoUsage,
@@ -133,12 +138,13 @@ export const fn = (_root, { usage, ...params }) => {
 
             // preserve cdata if necessary
             // TODO split cdata -> text optimization into separate plugin
-            if (cssText.indexOf('>') >= 0 || cssText.indexOf('<') >= 0) {
-              styleNode.children[0].type = 'cdata';
-              styleNode.children[0].value = minified;
+            if (
+              (cssText.indexOf('>') >= 0 || cssText.indexOf('<') >= 0) &&
+              !minified.includes(']]>')
+            ) {
+              styleNode.children = [{ type: 'cdata', value: minified }];
             } else {
-              styleNode.children[0].type = 'text';
-              styleNode.children[0].value = minified;
+              styleNode.children = [{ type: 'text', value: minified }];
             }
           }
         }

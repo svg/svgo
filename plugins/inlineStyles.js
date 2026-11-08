@@ -399,6 +399,7 @@ export const fn = (root, params) => {
             const firstChild = style.node.children[0];
             if (firstChild.type === 'text' || firstChild.type === 'cdata') {
               firstChild.value = csstree.generate(style.cssAst);
+              style.node.children = [firstChild];
             }
           }
         }
