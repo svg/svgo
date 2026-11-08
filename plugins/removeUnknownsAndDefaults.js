@@ -3,6 +3,7 @@ import {
   attrsGroupsDefaults,
   elems,
   elemsGroups,
+  inheritableAttrs,
   presentationNonInheritableGroupAttrs,
 } from './_collections.js';
 import { detachNodeFromParent } from '../lib/xast.js';
@@ -114,6 +115,28 @@ export const fn = (root, params) => {
   } = params;
   const stylesheet = collectStylesheet(root);
 
+  /**
+   * A referenced subtree may be instantiated by a `use` element, whose
+   * inherited styles must not replace defaults declared inside the subtree.
+   *
+   * @param {import('../lib/types.js').XastNode} node
+   * @returns {boolean}
+   */
+  const hasReferenceableAncestor = (node) => {
+    let ancestor = node;
+    while (ancestor.type === 'element') {
+      if (ancestor.attributes.id != null) {
+        return true;
+      }
+      const parent = stylesheet.parents.get(ancestor);
+      if (parent == null) {
+        return false;
+      }
+      ancestor = parent;
+    }
+    return false;
+  };
+
   return {
     instruction: {
       enter: (node) => {
@@ -194,7 +217,11 @@ export const fn = (root, params) => {
             defaultAttrs &&
             node.attributes.id == null &&
             attributesDefaults &&
-            attributesDefaults.get(name) === value
+            attributesDefaults.get(name) === value &&
+            // An inheritable default inside a referenceable subtree may keep
+            // that subtree from inheriting a different value via `use`.
+            (inheritableAttrs.has(name) === false ||
+              hasReferenceableAncestor(parentNode) === false)
           ) {
             // keep defaults if parent has own or inherited style
             if (
