@@ -1,0 +1,44 @@
+Preserve and minify references in ARIA IDREF attributes.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     aria-labelledby="title description"
+     aria-describedby="help"
+     aria-details="details"
+     aria-errormessage="error"
+     aria-activedescendant="active"
+     aria-controls="controls panel"
+     aria-flowto="next"
+     aria-owns="owned">
+    <title id="title">Title</title>
+    <desc id="description">Description</desc>
+    <g id="help" />
+    <g id="details" />
+    <g id="error" />
+    <g id="active" />
+    <g id="controls" />
+    <g id="panel" />
+    <g id="next" />
+    <g id="owned" />
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="a b" aria-describedby="c" aria-details="d" aria-errormessage="e" aria-activedescendant="f" aria-controls="g h" aria-flowto="i" aria-owns="j">
+    <title id="a">Title</title>
+    <desc id="b">
+        Description
+    </desc>
+    <g id="c"/>
+    <g id="d"/>
+    <g id="e"/>
+    <g id="f"/>
+    <g id="g"/>
+    <g id="h"/>
+    <g id="i"/>
+    <g id="j"/>
+</svg>
+
+@@@
+{}

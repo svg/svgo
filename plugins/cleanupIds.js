@@ -1,5 +1,9 @@
 import { visitSkip } from '../lib/util/visit.js';
-import { findReferences, hasScripts } from '../lib/svgo/tools.js';
+import {
+  ariaReferenceProps,
+  findReferences,
+  hasScripts,
+} from '../lib/svgo/tools.js';
 
 /**
  * @typedef CleanupIdsParams
@@ -235,7 +239,15 @@ export const fn = (_root, params) => {
               node.attributes.id = currentIdString;
               for (const { element, name } of refs) {
                 const value = element.attributes[name];
-                if (value.includes('#')) {
+                if (ariaReferenceProps.has(name)) {
+                  element.attributes[name] = value
+                    .split(/[\t\n\f\r ]+/)
+                    .filter(Boolean)
+                    .map((reference) =>
+                      reference === id ? currentIdString : reference,
+                    )
+                    .join(' ');
+                } else if (value.includes('#')) {
                   // replace id in href and url()
                   element.attributes[name] = value
                     .replace(`#${encodeURI(id)}`, `#${currentIdString}`)
