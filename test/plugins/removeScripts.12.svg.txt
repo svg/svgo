@@ -1,0 +1,41 @@
+Unwraps an anchor once when both href and xlink:href are executable, and
+keeps the surrounding elements. An empty executable anchor does not hide the
+anchor that follows it.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <a href="javascript:alert(1)" xlink:href="javascript:alert(2)">
+    <rect id="kept"/>
+  </a>
+  <circle id="sibling"/>
+  <rect id="before"/>
+  <a href="javascript:alert(1)" xlink:href="javascript:alert(2)"/>
+  <circle id="after"/>
+  <a href="https://example.com" xlink:href="javascript:alert(1)">
+    <rect id="mixed"/>
+  </a>
+  <circle id="mixed-sibling"/>
+  <a href="javascript:alert(1)"/>
+  <a href="javascript:alert(2)">
+    <rect id="next"/>
+  </a>
+  <a href="javascript:alert(1)">
+    <a href="javascript:alert(2)">
+      <rect id="nested"/>
+    </a>
+  </a>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <rect id="kept"/>
+    <circle id="sibling"/>
+    <rect id="before"/>
+    <circle id="after"/>
+    <rect id="mixed"/>
+    <circle id="mixed-sibling"/>
+    <rect id="next"/>
+    <rect id="nested"/>
+</svg>

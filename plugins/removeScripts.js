@@ -71,8 +71,27 @@ export const fn = () => {
    * @type {Map<string, string[]>} */
   const prefixes = new Map();
   let foreignObjectDepth = 0;
+  /** @type {{ node: import('../lib/types.js').XastElement, parentNode: import('../lib/types.js').XastParent }[]} */
+  const anchorsToUnwrap = [];
 
   return {
+    root: {
+      exit: () => {
+        // The parent walk is still live while an anchor's exit runs. Splicing
+        // there shifts the child list and the next sibling is skipped, and a
+        // second href would splice at index -1. Unwrap after the walk instead.
+        for (const { node, parentNode } of anchorsToUnwrap) {
+          const index = parentNode.children.indexOf(node);
+          if (index === -1) {
+            continue;
+          }
+          const usefulChildren = node.children.filter(
+            (child) => child.type !== 'text',
+          );
+          parentNode.children.splice(index, 1, ...usefulChildren);
+        }
+      },
+    },
     element: {
       enter: (node, parentNode) => {
         for (const [k, v] of Object.entries(node.attributes)) {
@@ -157,11 +176,8 @@ export const fn = () => {
                 continue;
               }
 
-              const index = parentNode.children.indexOf(node);
-              const usefulChildren = node.children.filter(
-                (child) => child.type !== 'text',
-              );
-              parentNode.children.splice(index, 1, ...usefulChildren);
+              anchorsToUnwrap.push({ node, parentNode });
+              break;
             }
           }
         }
