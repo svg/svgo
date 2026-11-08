@@ -1,0 +1,22 @@
+Inline a style element's rules when its media attribute is listed in useMqs,
+but leave @media rules nested inside it alone.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <style media="print">.no-print{display:none}@media (min-width:100px){.wide{fill:blue}}</style>
+    <rect width="100" height="100" class="no-print wide"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <style media="print">
+        @media (min-width:100px){.wide{fill:blue}}
+    </style>
+    <rect width="100" height="100" class="wide" style="display:none"/>
+</svg>
+
+@@@
+
+{"useMqs": ["media print", "media (min-width:100px)"]}

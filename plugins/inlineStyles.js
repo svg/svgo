@@ -86,6 +86,17 @@ export const fn = (root, params) => {
           return;
         }
 
+        // A media attribute scopes the whole stylesheet, the same way an @media
+        // rule around it would, so its rules are matched against useMqs too.
+        let styleMediaQuery = '';
+        const media = node.attributes.media?.trim();
+        if (media != null && media !== '' && media !== 'all') {
+          const mediaQueryList = csstree.parse(media, {
+            context: 'mediaQueryList',
+          });
+          styleMediaQuery = `media ${csstree.generate(mediaQueryList)}`;
+        }
+
         const cssText = node.children
           .filter((child) => child.type === 'text' || child.type === 'cdata')
           .map((child) => child.value)
@@ -116,8 +127,13 @@ export const fn = (root, params) => {
             const atrule = this.atrule;
 
             // skip media queries not included into useMqs param
-            let mediaQuery = '';
+            let mediaQuery = styleMediaQuery;
             if (atrule != null) {
+              // an at-rule inside a <style media="…"> combines both conditions,
+              // which no useMqs entry describes
+              if (styleMediaQuery !== '') {
+                return;
+              }
               mediaQuery = atrule.name;
               if (atrule.prelude != null) {
                 mediaQuery += ` ${csstree.generate(atrule.prelude)}`;
