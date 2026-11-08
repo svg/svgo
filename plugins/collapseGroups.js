@@ -76,6 +76,9 @@ export const fn = (root) => {
           if (
             firstChild.type === 'element' &&
             firstChild.attributes.id == null &&
+            node.attributes['transform-origin'] == null &&
+            (node.attributes.transform == null ||
+              firstChild.attributes['transform-origin'] == null) &&
             !nodeHasFilter &&
             (node.attributes.class == null ||
               firstChild.attributes.class == null) &&

@@ -1,0 +1,19 @@
+Preserve path and group transform origins with the default preset
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <path d="M40 40h20v20H40z" transform="rotate(45)" transform-origin="50 50"/>
+    <g transform="scale(2)" transform-origin="50 50">
+        <path d="M40 40h20v20H40z"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <path d="M40 40h20v20H40z" transform="rotate(45)" transform-origin="50 50"/>
+    <g transform="scale(2)" transform-origin="50 50">
+        <path d="M40 40h20v20H40z"/>
+    </g>
+</svg>

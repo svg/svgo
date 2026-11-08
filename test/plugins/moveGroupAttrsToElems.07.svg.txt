@@ -1,0 +1,25 @@
+Do not move transforms between elements with different origins
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(2)" transform-origin="50 50">
+        <path d="M40 40h20v20H40z"/>
+        <path d="M10 10h5v5h-5z"/>
+    </g>
+    <g transform="scale(2)">
+        <path d="M40 40h20v20H40z" transform="rotate(45)" transform-origin="50 50"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(2)" transform-origin="50 50">
+        <path d="M40 40h20v20H40z"/>
+        <path d="M10 10h5v5h-5z"/>
+    </g>
+    <g transform="scale(2)">
+        <path d="M40 40h20v20H40z" transform="rotate(45)" transform-origin="50 50"/>
+    </g>
+</svg>

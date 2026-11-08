@@ -35,6 +35,7 @@ export const fn = () => {
           node.name === 'g' &&
           node.children.length !== 0 &&
           node.attributes.transform != null &&
+          node.attributes['transform-origin'] == null &&
           Object.entries(node.attributes).some(
             ([name, value]) =>
               referencesProps.has(name) && includesUrlReference(value),
@@ -43,7 +44,8 @@ export const fn = () => {
             (child) =>
               child.type === 'element' &&
               pathElemsWithGroupsAndText.includes(child.name) &&
-              child.attributes.id == null,
+              child.attributes.id == null &&
+              child.attributes['transform-origin'] == null,
           )
         ) {
           for (const child of node.children) {

@@ -41,6 +41,7 @@ export const applyTransforms = (root, params) => {
           // styles are not considered when applying transform
           // can be fixed properly with new style engine
           node.attributes.style != null ||
+          node.attributes['transform-origin'] != null ||
           Object.entries(node.attributes).some(
             ([name, value]) =>
               referencesProps.has(name) && includesUrlReference(value),
