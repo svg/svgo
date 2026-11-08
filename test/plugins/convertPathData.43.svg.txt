@@ -1,0 +1,16 @@
+Should reflect the cubic's second control point into a following s when the
+cubic is lowered to a quadratic, not the quadratic's control point.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 6c0 4 2 6 6 6s6 3 6 6"/>
+    <path d="M0 6C0 10 2 12 6 12S12 15 12 18"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 6q0 6 6 6c4 0 6 3 6 6"/>
+    <path d="M0 6q0 6 6 6c4 0 6 3 6 6"/>
+</svg>

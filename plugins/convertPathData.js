@@ -731,11 +731,13 @@ function filters(path, params, { isSafeToUseZ, isSafeToRemove, hasMarkerMid }) {
             const originalLength = cleanupOutData(data, params).length;
             const newLength = cleanupOutData(newData, params).length;
             if (newLength < originalLength) {
-              command = 'q';
-              data = newData;
+              // fix up next curve: an s reflects the cubic's second control
+              // point, which the quadratic no longer carries
               if (next && next.command == 's') {
                 makeLonghand(next, data);
-              } // fix up next curve
+              }
+              command = 'q';
+              data = newData;
             }
           }
         }
