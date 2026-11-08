@@ -2184,6 +2184,7 @@ export const presentationNonInheritableGroupAttrs = new Set([
   'opacity',
   'text-decoration',
   'transform',
+  'transform-origin',
   'unicode-bidi',
 ]);
 

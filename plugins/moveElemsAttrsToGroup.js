@@ -88,11 +88,17 @@ export const fn = (root) => {
           }
         }
 
-        // preserve transform on children when group has filter or clip-path or mask
+        // Preserve transforms when moving them would change their origin or references.
         if (
           node.attributes['filter'] != null ||
           node.attributes['clip-path'] != null ||
-          node.attributes.mask != null
+          node.attributes.mask != null ||
+          node.attributes['transform-origin'] != null ||
+          node.children.some(
+            (child) =>
+              child.type === 'element' &&
+              child.attributes['transform-origin'] != null,
+          )
         ) {
           commonAttributes.delete('transform');
         }
