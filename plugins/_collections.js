@@ -573,6 +573,7 @@ export const elems = {
       'cx',
       'cy',
       'externalResourcesRequired',
+      'pathLength',
       'r',
       'style',
       'transform',
@@ -674,6 +675,7 @@ export const elems = {
       'cx',
       'cy',
       'externalResourcesRequired',
+      'pathLength',
       'rx',
       'ry',
       'style',
@@ -1365,6 +1367,7 @@ export const elems = {
     attrs: new Set([
       'class',
       'externalResourcesRequired',
+      'pathLength',
       'style',
       'transform',
       'x1',
@@ -1648,6 +1651,7 @@ export const elems = {
     attrs: new Set([
       'class',
       'externalResourcesRequired',
+      'pathLength',
       'points',
       'style',
       'transform',
@@ -1664,6 +1668,7 @@ export const elems = {
     attrs: new Set([
       'class',
       'externalResourcesRequired',
+      'pathLength',
       'points',
       'style',
       'transform',
@@ -1726,6 +1731,7 @@ export const elems = {
       'class',
       'externalResourcesRequired',
       'height',
+      'pathLength',
       'rx',
       'ry',
       'style',

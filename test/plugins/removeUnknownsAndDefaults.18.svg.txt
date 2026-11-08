@@ -1,0 +1,27 @@
+Keep pathLength on basic shapes, as on paths, but not on other elements.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+  <circle r="7" pathLength="36" bogus="removed"/>
+  <ellipse rx="7" ry="4" pathLength="36" bogus="removed"/>
+  <line x2="7" y2="4" pathLength="36" bogus="removed"/>
+  <polygon points="0,0 7,4 0,4" pathLength="36" bogus="removed"/>
+  <polyline points="0,0 7,4 0,4" pathLength="36" bogus="removed"/>
+  <rect width="7" height="4" pathLength="36" bogus="removed"/>
+  <path d="M0 0L7 4" pathLength="36" bogus="removed"/>
+  <g pathLength="36" bogus="removed"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle r="7" pathLength="36"/>
+    <ellipse rx="7" ry="4" pathLength="36"/>
+    <line x2="7" y2="4" pathLength="36"/>
+    <polygon points="0,0 7,4 0,4" pathLength="36"/>
+    <polyline points="0,0 7,4 0,4" pathLength="36"/>
+    <rect width="7" height="4" pathLength="36"/>
+    <path d="M0 0L7 4" pathLength="36"/>
+    <g/>
+</svg>
