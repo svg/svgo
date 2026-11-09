@@ -1,4 +1,6 @@
+import { collectStylesheet } from '../lib/style.js';
 import { pathElems, referencesProps } from './_collections.js';
+import { hasTransformOrigin } from './_hasTransformOrigin.js';
 import { includesUrlReference } from '../lib/svgo/tools.js';
 
 export const name = 'moveGroupAttrsToElems';
@@ -26,7 +28,9 @@ const pathElemsWithGroupsAndText = [...pathElems, 'g', 'text'];
  * @type {import('../lib/types.js').Plugin}
  * @since 0.0.1
  */
-export const fn = () => {
+export const fn = (root) => {
+  const stylesheet = collectStylesheet(root);
+
   return {
     element: {
       enter: (node) => {
@@ -35,6 +39,7 @@ export const fn = () => {
           node.name === 'g' &&
           node.children.length !== 0 &&
           node.attributes.transform != null &&
+          !hasTransformOrigin(node, stylesheet) &&
           Object.entries(node.attributes).some(
             ([name, value]) =>
               referencesProps.has(name) && includesUrlReference(value),
@@ -43,7 +48,8 @@ export const fn = () => {
             (child) =>
               child.type === 'element' &&
               pathElemsWithGroupsAndText.includes(child.name) &&
-              child.attributes.id == null,
+              child.attributes.id == null &&
+              !hasTransformOrigin(child, stylesheet),
           )
         ) {
           for (const child of node.children) {

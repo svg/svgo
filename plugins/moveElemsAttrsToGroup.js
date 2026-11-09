@@ -1,5 +1,7 @@
+import { collectStylesheet } from '../lib/style.js';
 import { visit } from '../lib/util/visit.js';
 import { inheritableAttrs, pathElems } from './_collections.js';
+import { hasTransformOrigin } from './_hasTransformOrigin.js';
 
 export const name = 'moveElemsAttrsToGroup';
 export const description =
@@ -40,6 +42,8 @@ export const fn = (root) => {
       },
     },
   });
+
+  const stylesheet = collectStylesheet(root);
 
   return {
     element: {
@@ -93,6 +97,19 @@ export const fn = (root) => {
           node.attributes['filter'] != null ||
           node.attributes['clip-path'] != null ||
           node.attributes.mask != null
+        ) {
+          commonAttributes.delete('transform');
+        }
+
+        // preserve the origin context of both the children and the group
+        if (
+          commonAttributes.has('transform') &&
+          (hasTransformOrigin(node, stylesheet) ||
+            node.children.some(
+              (child) =>
+                child.type === 'element' &&
+                hasTransformOrigin(child, stylesheet),
+            ))
         ) {
           commonAttributes.delete('transform');
         }
