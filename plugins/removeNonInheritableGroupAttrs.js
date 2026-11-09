@@ -23,6 +23,7 @@ export const fn = () => {
         if (node.name === 'g') {
           for (const name of Object.keys(node.attributes)) {
             if (
+              name !== 'transform-origin' &&
               attrsGroups.presentation.has(name) &&
               !inheritableAttrs.has(name) &&
               !presentationNonInheritableGroupAttrs.has(name)

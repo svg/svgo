@@ -1,5 +1,6 @@
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { elemsGroups, inheritableAttrs } from './_collections.js';
+import { hasTransformOrigin } from './_hasTransformOrigin.js';
 
 export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
@@ -60,6 +61,19 @@ export const fn = (root) => {
         }
         // non-empty groups
         if (node.name !== 'g' || node.children.length === 0) {
+          return;
+        }
+
+        // preserve group boundaries around transform origins
+        if (
+          hasTransformOrigin(node, stylesheet) ||
+          hasTransformOrigin(parentNode, stylesheet) ||
+          node.children.some(
+            (child) =>
+              child.type === 'element' &&
+              hasTransformOrigin(child, stylesheet),
+          )
+        ) {
           return;
         }
 

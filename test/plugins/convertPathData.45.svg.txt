@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path style="transform:scale(2);transform-origin:50px 50px" d="M40 40h20v20H40z"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path style="transform:scale(2);transform-origin:50px 50px" d="M40 40h20v20H40z"/>
+</svg>

@@ -5,6 +5,7 @@ import {
   transformsMultiply,
 } from './_transforms.js';
 import { attrsGroupsDefaults, referencesProps } from './_collections.js';
+import { hasTransformOrigin } from './_hasTransformOrigin.js';
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 
 import { includesUrlReference, removeLeadingZero } from '../lib/svgo/tools.js';
@@ -46,6 +47,11 @@ export const applyTransforms = (root, params) => {
               referencesProps.has(name) && includesUrlReference(value),
           )
         ) {
+          return;
+        }
+
+        // the transform matrix alone does not include transform-origin
+        if (hasTransformOrigin(node, stylesheet)) {
           return;
         }
 

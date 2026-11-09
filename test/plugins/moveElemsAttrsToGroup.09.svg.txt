@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path transform="scale(2)" transform-origin="50 50" d="M40 40h20v20H40z"/>
+        <text transform="scale(2)" x="10" y="10">a</text>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path transform="scale(2)" transform-origin="50 50" d="M40 40h20v20H40z"/>
+        <text transform="scale(2)" x="10" y="10">a</text>
+    </g>
+</svg>
