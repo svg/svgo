@@ -1,0 +1,30 @@
+Prefix IDs should prefix begin/end syncbase references that carry a clock-value
+offset (e.g. "b.end-0.5s"), not just a bare "id.begin"/"id.end" -- and should
+split semicolon-separated values without requiring whitespace after the
+semicolon.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle>
+        <animate id="a" attributeName="r" begin="0;b.end-0.5s" dur="1s" values="0;10;0"/>
+    </circle>
+    <circle>
+        <animate id="b" attributeName="r" begin="a.begin+0.1s" dur="1s" values="0;10;0"/>
+    </circle>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <circle>
+        <animate id="icon-a" attributeName="r" begin="0; icon-b.end-0.5s" dur="1s" values="0;10;0"/>
+    </circle>
+    <circle>
+        <animate id="icon-b" attributeName="r" begin="icon-a.begin+0.1s" dur="1s" values="0;10;0"/>
+    </circle>
+</svg>
+
+@@@
+
+{"prefix": "icon", "delim": "-"}
