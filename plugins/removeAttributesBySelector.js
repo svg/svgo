@@ -4,13 +4,13 @@ import { querySelectorAll } from '../lib/xast.js';
  * @typedef AttributesBySelector
  * @property {string} selector
  * @property {string | string[]} attributes
- * @property {never} selectors
+ * @property {never=} selectors
  */
 
 /**
  * @typedef AttributesBySelectors
- * @property {never} selector
- * @property {never} attributes
+ * @property {never=} selector
+ * @property {never=} attributes
  * @property {Array<AttributesBySelector>} selectors
  */
 
@@ -107,7 +107,7 @@ export const fn = (root, params) => {
 
   const selectors = Array.isArray(params.selectors)
     ? params.selectors
-    : [params];
+    : /** @type {Array<AttributesBySelector>} */ ([params]);
   for (const { selector, attributes } of selectors) {
     const nodes = querySelectorAll(root, selector);
     for (const node of nodes) {
