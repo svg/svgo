@@ -1101,13 +1101,33 @@ function getIntersection(coords) {
 function strongRound(data) {
   const precisionNum = precision || 0;
   for (let i = data.length; i-- > 0;) {
-    const fixed = toFixed(data[i], precisionNum);
-    if (fixed !== data[i]) {
-      const rounded = toFixed(data[i], precisionNum - 1);
+    const original = data[i];
+    const fixed = toFixed(original, precisionNum);
+    if (fixed !== original) {
+      const rounded = toFixed(original, precisionNum - 1);
       data[i] =
-        toFixed(Math.abs(rounded - data[i]), precisionNum + 1) >= error
+        toFixed(Math.abs(rounded - original), precisionNum + 1) >= error
           ? fixed
           : rounded;
+    }
+    if (precisionNum > 15 && original !== 0) {
+      // Doubles carry ~15-17 significant decimal digits, so at precisions
+      // above 15 the rounding grid is finer than the noise left by
+      // arithmetic (e.g. relative conversion: -1.265 - 2.13 is
+      // -3.3949999999999996, not -3.395). That noise survives rounding and
+      // inflates the output, so drop decimals while the shorter value
+      // stays within a few ULPs of the original.
+      // IEEE-754 Unit in the Last Place (ULP) for this magnitude.
+      const ulp =
+        Number.EPSILON * 2 ** Math.floor(Math.log2(Math.abs(original)));
+      const tolerance = 4 * ulp;
+      for (let p = precisionNum - 1; p >= 0; p--) {
+        const shorter = toFixed(original, p);
+        if (Math.abs(shorter - original) > tolerance) {
+          break;
+        }
+        data[i] = shorter;
+      }
     }
   }
   return data;

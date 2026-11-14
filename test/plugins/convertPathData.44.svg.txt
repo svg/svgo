@@ -1,0 +1,22 @@
+Should not expand numbers into long floating-point forms at high float
+precision settings. Relative conversion leaves float noise (e.g. -1.265 - 2.13
+is -3.3949999999999996, not -3.395) which survives rounding when the precision
+grid is finer than doubles can represent, inflating the output.
+
+https://github.com/svg/svgo/issues/2199
+
+===
+
+<svg>
+    <path d="M13.017 2.13-4.61-1.265"/>
+</svg>
+
+@@@
+
+<svg>
+    <path d="M13.017 2.13-4.61-1.265"/>
+</svg>
+
+@@@
+
+{ "floatPrecision": 16 }
