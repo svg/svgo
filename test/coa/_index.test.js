@@ -103,6 +103,43 @@ describe('coa', function () {
     expect(initWeight).toBeLessThanOrEqual(optimizedWeight);
   });
 
+  it('should exclude files matching pattern', async () => {
+    await runProgram([
+      '--folder',
+      svgFolderPathRecursively,
+      '--output',
+      tempFolder,
+      '--quiet',
+      '--recursive',
+      '--exclude',
+      'test\\.1\\.svg$',
+    ]);
+    expect(fs.readdirSync(tempFolder).sort()).toStrictEqual([
+      'depth-1',
+      'test.svg',
+    ]);
+    expect(
+      fs.readdirSync(path.join(tempFolder, 'depth-1/depth-2')),
+    ).toStrictEqual(['test.svg']);
+  });
+
+  it('should exclude folders matching pattern', async () => {
+    await runProgram([
+      '--folder',
+      svgFolderPathRecursively,
+      '--output',
+      tempFolder,
+      '--quiet',
+      '--recursive',
+      '--exclude',
+      'depth-2',
+    ]);
+    expect(fs.readdirSync(tempFolder).sort()).toStrictEqual([
+      'test.1.svg',
+      'test.svg',
+    ]);
+  });
+
   it('should optimize several files', async () => {
     const initWeight = calcFolderSvgWeight(svgFolderPath);
     await runProgram([
