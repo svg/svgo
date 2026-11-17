@@ -56,7 +56,7 @@ You should read our [Plugin Architecture](https://svgo.dev/docs/plugins-api/) do
 
 SVGO plugins can optionally have parameters. These can be consumed by the plugin to tailor the behavior.
 
-Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typedef) at the top of the file. For new plugins, you must also append the appropriate type in [`lib/types.d.ts`](https://github.com/svg/svgo/blob/main/lib/types.d.ts). This way built-in plugins will have code completion and type checking as you'd expect while editing the plugin.
+Parameters must have types declared in a [`@typedef`](https://jsdoc.app/tags-typedef) at the top of the file. For new plugins, you must also append the appropriate type in [`lib/types.ts`](https://github.com/svg/svgo/blob/main/lib/types.ts). This way built-in plugins will have code completion and type checking as you'd expect while editing the plugin.
 
 ### Testing
 
