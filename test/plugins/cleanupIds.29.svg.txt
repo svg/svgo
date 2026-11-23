@@ -1,0 +1,23 @@
+Should keep and rename every id used in the `begin` and `end` lists of animation elements, including ids with hyphens.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect id="first-anim" width="10" height="10"/>
+    <rect id="second-anim" width="10" height="10"/>
+    <rect id="a" width="10" height="10"/>
+    <rect id="ba" width="10" height="10"/>
+    <animate attributeName="x" to="1" begin="0s; first-anim.end + 1s; second-anim.begin" end="a.end"/>
+    <animate attributeName="y" to="1" begin="ba.end;a.begin"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect id="a" width="10" height="10"/>
+    <rect id="b" width="10" height="10"/>
+    <rect id="c" width="10" height="10"/>
+    <rect id="d" width="10" height="10"/>
+    <animate attributeName="x" to="1" begin="0s; a.end + 1s; b.begin" end="c.end"/>
+    <animate attributeName="y" to="1" begin="d.end;c.begin"/>
+</svg>

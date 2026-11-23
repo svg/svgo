@@ -1,0 +1,15 @@
+Should not throw on a begin value that is not a valid id reference.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect id="a" width="10" height="10"/>
+    <animate attributeName="x" to="1" begin="50%.end; a.end"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect id="a" width="10" height="10"/>
+    <animate attributeName="x" to="1" begin="50%.end; a.end"/>
+</svg>
