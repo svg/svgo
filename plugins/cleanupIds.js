@@ -1,5 +1,9 @@
 import { visitSkip } from '../lib/util/visit.js';
-import { findReferences, hasScripts } from '../lib/svgo/tools.js';
+import {
+  findReferences,
+  hasScripts,
+  replaceTimingReference,
+} from '../lib/svgo/tools.js';
 
 /**
  * @typedef CleanupIdsParams
@@ -242,9 +246,10 @@ export const fn = (_root, params) => {
                     .replace(`#${id}`, `#${currentIdString}`);
                 } else {
                   // replace id in begin attribute
-                  element.attributes[name] = value.replace(
-                    `${id}.`,
-                    `${currentIdString}.`,
+                  element.attributes[name] = replaceTimingReference(
+                    value,
+                    id,
+                    currentIdString,
                   );
                 }
               }
