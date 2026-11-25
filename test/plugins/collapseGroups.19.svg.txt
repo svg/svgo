@@ -1,0 +1,43 @@
+Preserve a group when its attributes stack with the child's own value
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+    <g opacity=".5">
+        <path opacity=".5" d="M0 0h10v10H0z"/>
+    </g>
+    <g opacity=".5">
+        <path opacity=".8" d="M0 0h10v10H0z"/>
+    </g>
+    <g opacity=".5">
+        <path opacity="inherit" d="M0 0h10v10H0z"/>
+    </g>
+    <g opacity=".5">
+        <path d="M0 0h10v10H0z"/>
+    </g>
+    <g mask="url(#a)">
+        <g mask="url(#a)">
+            <path d="M0 0h10v10H0z"/>
+        </g>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+    <g opacity=".5">
+        <path opacity=".5" d="M0 0h10v10H0z"/>
+    </g>
+    <g opacity=".5">
+        <path opacity=".8" d="M0 0h10v10H0z"/>
+    </g>
+    <g opacity=".5">
+        <path opacity="inherit" d="M0 0h10v10H0z"/>
+    </g>
+    <path d="M0 0h10v10H0z" opacity=".5"/>
+    <g mask="url(#a)">
+        <g mask="url(#a)">
+            <path d="M0 0h10v10H0z"/>
+        </g>
+    </g>
+</svg>
