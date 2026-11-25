@@ -1,6 +1,16 @@
 import { collectStylesheet, computeStyle } from '../lib/style.js';
 import { elemsGroups, inheritableAttrs } from './_collections.js';
 
+/**
+ * Attributes whose effect stacks when they are applied to both a group and
+ * its child. The opacities of nested elements multiply and nested masks are
+ * applied on top of each other, so a group cannot be collapsed when the child
+ * already declares one of these attributes, even with the same value.
+ *
+ * @type {Readonly<Set<string>>}
+ */
+const compoundingAttrs = new Set(['mask', 'opacity']);
+
 export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
 
@@ -97,6 +107,8 @@ export const fn = (root) => {
                 newChildElemAttrs[name] = value;
               } else if (name === 'transform') {
                 newChildElemAttrs[name] = value + ' ' + newChildElemAttrs[name];
+              } else if (compoundingAttrs.has(name)) {
+                return;
               } else if (newChildElemAttrs[name] === 'inherit') {
                 newChildElemAttrs[name] = value;
               } else if (
