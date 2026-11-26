@@ -1,0 +1,16 @@
+An empty lang or xml:lang is not the same as no attribute, it resets the
+language inherited from an ancestor, so it must be preserved.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" lang="ja" xml:lang="ja">
+    <text y="15" lang="">直</text>
+    <text y="35" xml:lang="" class="">直</text>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" lang="ja" xml:lang="ja">
+    <text y="15" lang="">直</text>
+    <text y="35" xml:lang="">直</text>
+</svg>
