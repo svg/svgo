@@ -1,0 +1,20 @@
+Preserve the lang attribute, a core attribute in SVG 2 that replaces the
+deprecated xml:lang.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" lang="ja">
+    <text y="15">直</text>
+    <g lang="en">
+        <text y="35" lang="">直</text>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" lang="ja">
+    <text y="15">直</text>
+    <g lang="en">
+        <text y="35" lang="">直</text>
+    </g>
+</svg>

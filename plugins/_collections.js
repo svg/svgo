@@ -149,7 +149,16 @@ export const attrsGroups = {
     'requiredFeatures',
     'systemLanguage',
   ]),
-  core: new Set(['id', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
+  core: new Set([
+    'id',
+    // SVG 2 core attribute that replaces xml:lang
+    // https://www.w3.org/TR/SVG2/struct.html#LangSpaceAttrs
+    'lang',
+    'tabindex',
+    'xml:base',
+    'xml:lang',
+    'xml:space',
+  ]),
   graphicalEvent: new Set([
     'onactivate',
     'onclick',
