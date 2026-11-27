@@ -376,6 +376,24 @@ export const fn = (root, params) => {
           return;
         }
 
+        const retainedReferences = new Set(
+          selectors
+            .filter((selector) => selector.matchedElements == null)
+            .flatMap((selector) =>
+              csstree
+                .findAll(
+                  selector.node,
+                  (node) =>
+                    node.type === 'ClassSelector' || node.type === 'IdSelector',
+                )
+                .flatMap((node) =>
+                  node.type === 'ClassSelector' || node.type === 'IdSelector'
+                    ? [`${node.type}:${node.name}`]
+                    : [],
+                ),
+            ),
+        );
+
         // clean up matched class + ID attribute values
         for (const selector of sortedSelectors) {
           if (selector.matchedElements == null) {
@@ -398,6 +416,7 @@ export const fn = (root, params) => {
             for (const child of selector.node.children) {
               if (
                 child.type === 'ClassSelector' &&
+                !retainedReferences.has(`ClassSelector:${child.name}`) &&
                 !selectors.some((selector) =>
                   includesAttrSelector(
                     selector.item,
@@ -422,6 +441,7 @@ export const fn = (root, params) => {
             if (
               firstSubSelector?.type === 'IdSelector' &&
               selectedEl.attributes.id === firstSubSelector.name &&
+              !retainedReferences.has(`IdSelector:${firstSubSelector.name}`) &&
               !selectors.some((selector) =>
                 includesAttrSelector(
                   selector.item,
