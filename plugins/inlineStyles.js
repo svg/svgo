@@ -183,7 +183,21 @@ export const fn = (root, params) => {
         if (styles.length === 0) {
           return;
         }
-        const dynamicSelectors = selectors.flatMap((selector) => {
+        const propertyFamilies = new Map(
+          selectors.map((selector) => [
+            selector.rule,
+            new Set(
+              selector.rule.block.children.toArray().flatMap((child) => {
+                if (child.type !== 'Declaration') {
+                  return [];
+                }
+                const { basename, custom } = csstree.property(child.property);
+                return [custom ? basename : basename.split('-')[0]];
+              }),
+            ),
+          ]),
+        );
+        const retainedSelectors = selectors.flatMap((selector) => {
           const pseudos = selector.node.children
             .toArray()
             .filter(
@@ -212,16 +226,12 @@ export const fn = (root, params) => {
           } catch {
             matchedElements = null;
           }
-          const properties = new Set(
-            selector.rule.block.children
-              .toArray()
-              .flatMap((child) =>
-                child.type === 'Declaration'
-                  ? [child.property.toLowerCase()]
-                  : [],
-              ),
-          );
-          return [{ properties, matchedElements }];
+          return [
+            {
+              properties: propertyFamilies.get(selector.rule),
+              matchedElements,
+            },
+          ];
         });
         const sortedSelectors = selectors
           .slice()
@@ -253,24 +263,22 @@ export const fn = (root, params) => {
 
           // apply styles to matched elements
           // skip selectors that match more than once if option onlyMatchedOnce is enabled
-          if (onlyMatchedOnce && matchedElements.length > 1) {
-            continue;
-          }
-
+          const properties = propertyFamilies.get(selector.rule);
           if (
-            dynamicSelectors.some(
-              ({ properties, matchedElements: dynamicMatches }) =>
-                selector.rule.block.children.some(
-                  (child) =>
-                    child.type === 'Declaration' &&
-                    properties.has(child.property.toLowerCase()),
-                ) &&
-                (dynamicMatches == null ||
-                  matchedElements.some((element) =>
-                    dynamicMatches.has(element),
-                  )),
+            (onlyMatchedOnce && matchedElements.length > 1) ||
+            retainedSelectors.some(
+              ({ properties: retainedProperties, matchedElements: retained }) =>
+                (retained == null ||
+                  matchedElements.some((element) => retained.has(element))) &&
+                Array.from(properties ?? []).some((property) =>
+                  retainedProperties?.has(property),
+                ),
             )
           ) {
+            retainedSelectors.push({
+              properties,
+              matchedElements: new Set(matchedElements),
+            });
             continue;
           }
 
