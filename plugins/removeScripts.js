@@ -25,6 +25,35 @@ const ANCHOR_NAMESPACES = [SVG_NAMESPACE];
 /** Namespaces that support executable <script> elements. */
 const SCRIPT_NAMESPACES = [SVG_NAMESPACE, 'http://www.w3.org/1999/xhtml'];
 
+/** Namespaces that support SMIL animation elements. */
+const ANIMATION_NAMESPACES = [SVG_NAMESPACE];
+
+/**
+ * Whether a SMIL animation element retargets an `href` attribute to an
+ * executable URL. Animations apply at runtime, so an anchor whose `href`
+ * is only set by a nested `<set>` or `<animate>` element carries no
+ * executable URL in its own attributes and must be caught here instead.
+ *
+ * @param {import('../lib/types.js').XastElement} node
+ * @returns {boolean}
+ */
+function isExecutableHrefAnimation(node) {
+  const attributeName = node.attributes.attributeName;
+  if (attributeName !== 'href' && !attributeName?.endsWith(':href')) {
+    return false;
+  }
+
+  const targets = [];
+  if (node.attributes.to != null) {
+    targets.push(node.attributes.to);
+  }
+  if (node.attributes.values != null) {
+    targets.push(...node.attributes.values.split(';'));
+  }
+
+  return targets.some((value) => isExecutableUrl(value));
+}
+
 /** Attributes that can load or navigate to executable documents in HTML. */
 const HTML_URL_ATTRS = new Set(['action', 'data', 'formaction', 'href', 'src']);
 
@@ -102,6 +131,15 @@ export const fn = () => {
 
         if (
           isNamespaceAwareElem(node.name, 'script', prefixes, SCRIPT_NAMESPACES)
+        ) {
+          detachNodeFromParent(node, parentNode);
+          return;
+        }
+
+        if (
+          (isNamespaceAwareElem(node.name, 'set', prefixes, ANIMATION_NAMESPACES) ||
+            isNamespaceAwareElem(node.name, 'animate', prefixes, ANIMATION_NAMESPACES)) &&
+          isExecutableHrefAnimation(node)
         ) {
           detachNodeFromParent(node, parentNode);
           return;
