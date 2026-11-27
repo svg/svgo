@@ -1,0 +1,73 @@
+Don't inline anything onto an element that a dynamic pseudo-class rule may
+match, as inline styles would take precedence over it. Rules that stay in the
+stylesheet keep the elements they match from being inlined over too, and keep
+the classes and IDs they use.
+
+See: https://github.com/svg/svgo/issues/2067
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <style>
+    circle {
+      fill: blue;
+    }
+    circle:active {
+      fill: yellow;
+    }
+    #a {
+      stroke: red;
+    }
+    #a:hover {
+      stroke: green;
+    }
+    ellipse.foo {
+      fill: blue;
+      stroke: red;
+    }
+    ellipse:hover {
+      fill: yellow;
+    }
+    ellipse {
+      stroke: green;
+    }
+    text {
+      font: 12px serif;
+    }
+    text:hover {
+      font-size: 24px;
+    }
+    .bar {
+      fill: blue;
+    }
+    .bar {
+      stroke: red;
+    }
+    .bar:hover {
+      stroke: green;
+    }
+    rect {
+      fill: purple;
+    }
+  </style>
+  <circle cx="5" cy="10" r="1"/>
+  <path id="a" d="M2 2h10"/>
+  <ellipse class="foo" cx="5" cy="20" rx="2" ry="1"/>
+  <text y="30">a</text>
+  <polyline class="bar" points="0 40 10 40"/>
+  <rect width="5" height="5"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <style>
+        circle{fill:blue}circle:active{fill:yellow}#a{stroke:red}#a:hover{stroke:green}ellipse.foo{fill:blue;stroke:red}ellipse:hover{fill:yellow}ellipse{stroke:green}text{font:12px serif}text:hover{font-size:24px}.bar{fill:blue}.bar{stroke:red}.bar:hover{stroke:green}
+    </style>
+    <circle cx="5" cy="10" r="1"/>
+    <path id="a" d="M2 2h10"/>
+    <ellipse class="foo" cx="5" cy="20" rx="2" ry="1"/>
+    <text y="30">a</text>
+    <polyline class="bar" points="0 40 10 40"/>
+    <rect width="5" height="5" style="fill:purple"/>
+</svg>

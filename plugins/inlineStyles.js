@@ -183,6 +183,34 @@ export const fn = (root, params) => {
         if (styles.length === 0) {
           return;
         }
+        const dynamicMatches = selectors.flatMap((selector) => {
+          const pseudos = selector.node.children
+            .toArray()
+            .filter(
+              (child) =>
+                (child.type === 'PseudoClassSelector' ||
+                  child.type === 'PseudoElementSelector') &&
+                !preservedPseudos.includes(child.name),
+            );
+          if (
+            pseudos.length === 0 ||
+            pseudos.some((pseudo) => pseudo.type === 'PseudoElementSelector')
+          ) {
+            return [];
+          }
+          const selectorText = csstree.generate({
+            type: 'Selector',
+            children: selector.node.children.filter(
+              (child) => !pseudos.includes(child),
+            ),
+          });
+          try {
+            return querySelectorAll(root, selectorText || '*');
+          } catch {
+            return querySelectorAll(root, '*');
+          }
+        });
+        const retainedElements = new Set(dynamicMatches);
         const sortedSelectors = selectors
           .slice()
           .sort((a, b) => {
@@ -213,7 +241,13 @@ export const fn = (root, params) => {
 
           // apply styles to matched elements
           // skip selectors that match more than once if option onlyMatchedOnce is enabled
-          if (onlyMatchedOnce && matchedElements.length > 1) {
+          if (
+            (onlyMatchedOnce && matchedElements.length > 1) ||
+            matchedElements.some((element) => retainedElements.has(element))
+          ) {
+            for (const element of matchedElements) {
+              retainedElements.add(element);
+            }
             continue;
           }
 
@@ -311,6 +345,24 @@ export const fn = (root, params) => {
           return;
         }
 
+        const retainedReferences = new Set(
+          selectors
+            .filter((selector) => selector.matchedElements == null)
+            .flatMap((selector) =>
+              csstree
+                .findAll(
+                  selector.node,
+                  (node) =>
+                    node.type === 'ClassSelector' || node.type === 'IdSelector',
+                )
+                .flatMap((node) =>
+                  node.type === 'ClassSelector' || node.type === 'IdSelector'
+                    ? [`${node.type}:${node.name}`]
+                    : [],
+                ),
+            ),
+        );
+
         // clean up matched class + ID attribute values
         for (const selector of sortedSelectors) {
           if (selector.matchedElements == null) {
@@ -333,6 +385,7 @@ export const fn = (root, params) => {
             for (const child of selector.node.children) {
               if (
                 child.type === 'ClassSelector' &&
+                !retainedReferences.has(`ClassSelector:${child.name}`) &&
                 !selectors.some((selector) =>
                   includesAttrSelector(
                     selector.item,
@@ -357,6 +410,7 @@ export const fn = (root, params) => {
             if (
               firstSubSelector?.type === 'IdSelector' &&
               selectedEl.attributes.id === firstSubSelector.name &&
+              !retainedReferences.has(`IdSelector:${firstSubSelector.name}`) &&
               !selectors.some((selector) =>
                 includesAttrSelector(
                   selector.item,
