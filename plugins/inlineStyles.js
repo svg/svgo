@@ -183,21 +183,7 @@ export const fn = (root, params) => {
         if (styles.length === 0) {
           return;
         }
-        const propertyFamilies = new Map(
-          selectors.map((selector) => [
-            selector.rule,
-            new Set(
-              selector.rule.block.children.toArray().flatMap((child) => {
-                if (child.type !== 'Declaration') {
-                  return [];
-                }
-                const { basename, custom } = csstree.property(child.property);
-                return [custom ? basename : basename.split('-')[0]];
-              }),
-            ),
-          ]),
-        );
-        const retainedSelectors = selectors.flatMap((selector) => {
+        const dynamicMatches = selectors.flatMap((selector) => {
           const pseudos = selector.node.children
             .toArray()
             .filter(
@@ -218,21 +204,13 @@ export const fn = (root, params) => {
               (child) => !pseudos.includes(child),
             ),
           });
-          let matchedElements;
           try {
-            matchedElements = new Set(
-              querySelectorAll(root, selectorText || '*'),
-            );
+            return querySelectorAll(root, selectorText || '*');
           } catch {
-            matchedElements = null;
+            return querySelectorAll(root, '*');
           }
-          return [
-            {
-              properties: propertyFamilies.get(selector.rule),
-              matchedElements,
-            },
-          ];
         });
+        const retainedElements = new Set(dynamicMatches);
         const sortedSelectors = selectors
           .slice()
           .sort((a, b) => {
@@ -263,22 +241,13 @@ export const fn = (root, params) => {
 
           // apply styles to matched elements
           // skip selectors that match more than once if option onlyMatchedOnce is enabled
-          const properties = propertyFamilies.get(selector.rule);
           if (
             (onlyMatchedOnce && matchedElements.length > 1) ||
-            retainedSelectors.some(
-              ({ properties: retainedProperties, matchedElements: retained }) =>
-                (retained == null ||
-                  matchedElements.some((element) => retained.has(element))) &&
-                Array.from(properties ?? []).some((property) =>
-                  retainedProperties?.has(property),
-                ),
-            )
+            matchedElements.some((element) => retainedElements.has(element))
           ) {
-            retainedSelectors.push({
-              properties,
-              matchedElements: new Set(matchedElements),
-            });
+            for (const element of matchedElements) {
+              retainedElements.add(element);
+            }
             continue;
           }
 
