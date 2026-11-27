@@ -183,6 +183,46 @@ export const fn = (root, params) => {
         if (styles.length === 0) {
           return;
         }
+        const dynamicSelectors = selectors.flatMap((selector) => {
+          const pseudos = selector.node.children
+            .toArray()
+            .filter(
+              (child) =>
+                (child.type === 'PseudoClassSelector' ||
+                  child.type === 'PseudoElementSelector') &&
+                !preservedPseudos.includes(child.name),
+            );
+          if (
+            pseudos.length === 0 ||
+            pseudos.some((pseudo) => pseudo.type === 'PseudoElementSelector')
+          ) {
+            return [];
+          }
+          const selectorText = csstree.generate({
+            type: 'Selector',
+            children: selector.node.children.filter(
+              (child) => !pseudos.includes(child),
+            ),
+          });
+          let matchedElements;
+          try {
+            matchedElements = new Set(
+              querySelectorAll(root, selectorText || '*'),
+            );
+          } catch {
+            matchedElements = null;
+          }
+          const properties = new Set(
+            selector.rule.block.children
+              .toArray()
+              .flatMap((child) =>
+                child.type === 'Declaration'
+                  ? [child.property.toLowerCase()]
+                  : [],
+              ),
+          );
+          return [{ properties, matchedElements }];
+        });
         const sortedSelectors = selectors
           .slice()
           .sort((a, b) => {
@@ -214,6 +254,23 @@ export const fn = (root, params) => {
           // apply styles to matched elements
           // skip selectors that match more than once if option onlyMatchedOnce is enabled
           if (onlyMatchedOnce && matchedElements.length > 1) {
+            continue;
+          }
+
+          if (
+            dynamicSelectors.some(
+              ({ properties, matchedElements: dynamicMatches }) =>
+                selector.rule.block.children.some(
+                  (child) =>
+                    child.type === 'Declaration' &&
+                    properties.has(child.property.toLowerCase()),
+                ) &&
+                (dynamicMatches == null ||
+                  matchedElements.some((element) =>
+                    dynamicMatches.has(element),
+                  )),
+            )
+          ) {
             continue;
           }
 

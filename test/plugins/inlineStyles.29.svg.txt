@@ -1,0 +1,40 @@
+Don't inline declarations that a dynamic pseudo-class rule matching the same
+element also sets, as the inline style would take precedence over it.
+
+See: https://github.com/svg/svgo/issues/2067
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <style>
+    circle {
+      fill: blue;
+    }
+    circle:active {
+      fill: yellow;
+    }
+    #a {
+      stroke: red;
+    }
+    #a:hover {
+      stroke: green;
+    }
+    rect {
+      fill: purple;
+    }
+  </style>
+  <circle cx="5" cy="10" r="1"/>
+  <path id="a" d="M2 2h10"/>
+  <rect width="5" height="5"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <style>
+        circle{fill:blue}circle:active{fill:yellow}#a{stroke:red}#a:hover{stroke:green}
+    </style>
+    <circle cx="5" cy="10" r="1"/>
+    <path id="a" d="M2 2h10"/>
+    <rect width="5" height="5" style="fill:purple"/>
+</svg>
