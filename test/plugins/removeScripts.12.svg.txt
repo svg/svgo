@@ -1,0 +1,23 @@
+Removes SMIL animations that retarget an href attribute to an executable URL.
+The animation applies at runtime, so the anchor itself carries no executable
+href for the anchor check to find. Animations to inert URLs and animations of
+other attributes are kept.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><a><set attributeName="href" to="javascript:alert(1)"/><text x="0" y="15">Set to javascript</text></a><a><animate attributeName="href" values="https://example.com;javascript:alert(2)"/><text x="0" y="35">Animate values with javascript</text></a><a xlink:href="https://example.com"><set attributeName="xlink:href" to="javascript:alert(3)"/><text x="0" y="55">Set xlink href</text></a><a href="https://example.com"><set attributeName="href" to="data:image/svg+xml;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="/><text x="0" y="75">Set to data URL</text></a><image href="a.png"><animate attributeName="href" values="a.png;b.png"/></image><circle r="5"><animate attributeName="r" values="5;10"/></circle></svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <a><text x="0" y="15">Set to javascript</text></a>
+    <a><text x="0" y="35">Animate values with javascript</text></a>
+    <a xlink:href="https://example.com"><text x="0" y="55">Set xlink href</text></a>
+    <a href="https://example.com"><text x="0" y="75">Set to data URL</text></a>
+    <image href="a.png">
+        <animate attributeName="href" values="a.png;b.png"/>
+    </image>
+    <circle r="5">
+        <animate attributeName="r" values="5;10"/>
+    </circle>
+</svg>
