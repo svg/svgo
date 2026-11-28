@@ -1,0 +1,28 @@
+Don't remove animation elements that target another element with href.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <animateTransform xlink:href="#mover" attributeName="transform" type="translate" values="0 0;120 0;0 0" dur="2s" repeatCount="indefinite"/>
+        <g>
+            <animate href="#mover" attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/>
+        </g>
+        <animate attributeName="opacity" values="1;0;1" dur="2s"/>
+    </defs>
+    <g id="mover">
+        <circle cx="40" cy="50" r="20" fill="#ff156d"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <animateTransform xlink:href="#mover" attributeName="transform" type="translate" values="0 0;120 0;0 0" dur="2s" repeatCount="indefinite"/>
+        <animate href="#mover" attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/>
+    </defs>
+    <g id="mover">
+        <circle cx="40" cy="50" r="20" fill="#ff156d"/>
+    </g>
+</svg>
