@@ -1,0 +1,25 @@
+Do not change the case of the fill timing attribute of animation elements.
+
+See: https://github.com/svg/svgo/issues/1777
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="10" height="10" fill="#aabbcc">
+        <animate attributeName="width" from="10" to="20" dur="1s" fill="freeze"/>
+        <set attributeName="visibility" to="hidden" begin="1s" fill="remove"/>
+    </rect>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="10" height="10" fill="#ABC">
+        <animate attributeName="width" from="10" to="20" dur="1s" fill="freeze"/>
+        <set attributeName="visibility" to="hidden" begin="1s" fill="remove"/>
+    </rect>
+</svg>
+
+@@@
+
+{ "convertCase": "upper" }

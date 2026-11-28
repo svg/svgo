@@ -1,4 +1,9 @@
-import { colorsNames, colorsProps, colorsShortNames } from './_collections.js';
+import {
+  colorsNames,
+  colorsProps,
+  colorsShortNames,
+  elemsGroups,
+} from './_collections.js';
 import {
   includesCssVarReference,
   includesUrlReference,
@@ -97,6 +102,11 @@ export const fn = (_root, params) => {
           maskCounter++;
         }
         for (const [name, value] of Object.entries(node.attributes)) {
+          // On animation elements, fill is a timing attribute (freeze or
+          // remove), not a paint, so it is never a color.
+          if (name === 'fill' && elemsGroups.animation.has(node.name)) {
+            continue;
+          }
           if (colorsProps.has(name)) {
             let val = value;
 
