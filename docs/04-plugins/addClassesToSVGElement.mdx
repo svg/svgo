@@ -8,13 +8,16 @@ svgo:
       default: null
     className:
       description: Adds the specified class name to the outer most `<svg>` element. If `classNames` is specified, this is ignored.
+    clearClasses:
+      description: Whether any existing classes on the outer most `<svg>` element should be cleared before adding new classes.
+      default: false
 ---
 
 Overrides the `class` attribute in the outer most `<svg>` element, omitting duplicates or null classes if found in your configuration.
 
 :::caution
 
-If there is no `class` attribute to begin with, it will be added. However, if the there were already classes assigned, these are removed and replaced with the classes configured in this plugin.
+If there is no `class` attribute to begin with, it will be added. However, if there were already classes assigned, the classes configured in this plugin are appended to these, unless the `clearClasses` parameter is set to `true` in this plugin's configuration.
 
 :::
 
